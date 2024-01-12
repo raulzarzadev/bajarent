@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "70933298-2b4f-460b-a807-a8da32da8e7f"
+      }
+    },
+    "owner": "zarza"
   }
 }
