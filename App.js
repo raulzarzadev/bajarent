@@ -1,31 +1,10 @@
-import Button from '/src/components/Button'
-import { StatusBar } from 'expo-status-bar'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import Navbar from './src/components/Navbar'
+import { NavigationContainer } from '@react-navigation/native'
+import AppBar from './src/components/AppBar'
 
 export default function App() {
-  const windowWidth = Dimensions.get('window').width
-
   return (
-    <View style={styles.container}>
-      <Navbar />
-      {/* <Text>Bienvenido a BajaRent 2</Text> */}
-      {/* <StatusBar style="auto" />
-      <Button
-        title="Presiona aquí"
-        onPress={() => {
-          alert('Has presionado el botón!')
-        }}
-      /> */}
-    </View>
+    <NavigationContainer>
+      <AppBar />
+    </NavigationContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
