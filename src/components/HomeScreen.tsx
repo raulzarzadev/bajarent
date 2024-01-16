@@ -7,6 +7,9 @@ function HomeScreen({ navigation }) {
       <Pressable onPress={() => navigation.navigate('Orders')}>
         <Text>Go to Orders</Text>
       </Pressable>
+      <Pressable onPress={() => navigation.navigate('NewOrder')}>
+        <Text>New order</Text>
+      </Pressable>
     </View>
   )
 }

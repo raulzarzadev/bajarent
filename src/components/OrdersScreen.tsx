@@ -1,6 +1,5 @@
 import { FlatList, Pressable, Text, View } from 'react-native'
-import OrdersList from './Orders'
-import DATA from '../DATA'
+import DATA, { Order } from '../DATA'
 
 function OrdersScreen({ navigation }) {
   return (
@@ -9,6 +8,7 @@ function OrdersScreen({ navigation }) {
         <Text>Go to Home</Text>
       </Pressable>
       <FlatList
+        style={{ width: '100%' }}
         data={DATA.orders}
         renderItem={({ item }) => (
           <Pressable
@@ -24,10 +24,10 @@ function OrdersScreen({ navigation }) {
   )
 }
 
-export const OrderItem = ({ order }) => {
+export const OrderItem = ({ order }: { order: Order }) => {
   return (
-    <View>
-      <Text>Cliente: {order?.client?.name} </Text>
+    <View style={{ marginVertical: 24 }}>
+      <Text>Cliente: {order?.clientName} </Text>
       <Text>Ver</Text>
     </View>
   )

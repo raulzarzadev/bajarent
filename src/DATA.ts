@@ -1,110 +1,19 @@
-const orders = [
-  {
-    id: 1,
-    client: {
-      id: 1,
-      name: 'Juan',
-      lastName: 'Perez',
-      email: 'juan@mail.com',
-      phone: '1234567890',
-      address: 'Calle 123',
-      city: 'Bogota',
-      country: 'Colombia',
-      location: 'Calle 123, Bogota, Colombia'
-    },
-    items: [
-      {
-        id: 1,
-        status: 'in-use',
-        startAt: '2021-01-01T00:00:00.000Z',
-        price: {
-          amount: 100,
-          title: 'Normal',
-          time: 24 * 60
-        }
-      },
-      {
-        id: 2,
-        status: 'finished',
-        finishedAt: '2021-01-01T00:00:00.000Z',
-        startAt: '2021-01-01T00:00:00.000Z',
-        price: {
-          amount: 200,
-          title: 'Normal',
-          time: 24 * 60
-        }
-      }
-    ],
-    shipping: {
-      date: '2021-01-01T00:00:00.000Z',
-      location: 'Calle 123, Bogota, Colombia'
-    },
-    totalOrder: 300,
-    payments: [
-      {
-        id: 1,
-        amount: 100,
-        date: '2021-01-01T00:00:00.000Z',
-        type: 'cash'
-      },
-      {
-        id: 2,
-        amount: 200,
-        date: '2021-01-01T00:00:00.000Z',
-        type: 'cash'
-      }
-    ]
-  },
-  {
-    id: 2,
-    client: {
-      id: 2,
-      name: 'Maria',
-      lastName: 'Lopez',
-      email: 'maria@mail.com',
-      phone: '0987654321',
-      address: 'Calle 456',
-      city: 'Medellin',
-      country: 'Colombia',
-      location: 'Calle 456, Medellin, Colombia'
-    },
-    items: [
-      {
-        id: 3,
-        status: 'in-use',
-        startAt: '2021-02-01T00:00:00.000Z',
-        price: {
-          amount: 150,
-          title: 'Normal',
-          time: 24 * 60
-        }
-      },
-      {
-        id: 4,
-        status: 'finished',
-        finishedAt: '2021-02-01T00:00:00.000Z',
-        startAt: '2021-02-01T00:00:00.000Z',
-        price: {
-          amount: 250,
-          title: 'Normal',
-          time: 24 * 60
-        }
-      }
-    ],
-    shipping: {
-      date: '2021-02-01T00:00:00.000Z',
-      location: 'Calle 456, Medellin, Colombia'
-    },
-    totalOrder: 400,
-    payments: [
-      {
-        id: 3,
-        amount: 150,
-        date: '2021-02-01T00:00:00.000Z',
-        type: 'cash'
-      }
-    ]
-  }
+export type Order = {
+  id: string
+  clientName: string
+}
+const orders: Order[] = [
+  { id: '2', clientName: 'John Doe' },
+  { id: '3', clientName: 'Jose Manuel' },
+  { id: '4', clientName: 'Elvira Jasito' },
+  { id: '5', clientName: 'Jane Smith' },
+  { id: '6', clientName: 'Michael Johnson' },
+  { id: '7', clientName: 'Maria Rodriguez' },
+  { id: '8', clientName: 'David Lee' },
+  { id: '9', clientName: 'Sophia Martinez' },
+  { id: '10', clientName: 'Daniel Kim' },
+  { id: '11', clientName: 'Emma Thompson' },
+  { id: '12', clientName: 'Alexander Garcia' }
 ]
 
 const DATA = {
