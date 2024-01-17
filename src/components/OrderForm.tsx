@@ -1,22 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Formik } from 'formik'
+import { Formik, useField } from 'formik'
 import StyledTextInput from './StyledTextInput'
 import StyledButton from './StyledButton'
+import theme from './theme'
 
 const OrderForm = () => {
   return (
     <Formik
-      initialValues={{ email: '' }}
+      initialValues={{ email: '', userName: '' }}
       onSubmit={(values) => console.log(values)}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
-        <View>
-          <StyledTextInput
-            onChangeText={handleChange('email')}
-            onBlur={handleBlur('email')}
-            value={values.email}
-          />
+      {({ handleSubmit }) => (
+        <View style={styles.form}>
+          <FormikInputValue name={'userName'} placeholder="Nombre" />
+          <FormikInputValue name={'email'} placeholder="Correo" />
+          <FormikInputValue name={'phone'} placeholder="Telefono" />
           <StyledButton
             onPress={handleSubmit}
             title="Submit"
@@ -28,6 +27,21 @@ const OrderForm = () => {
   )
 }
 
+const FormikInputValue = ({ name, ...props }) => {
+  const [field, meta, helpers] = useField(name)
+  return (
+    <StyledTextInput
+      value={field.value}
+      onChangeText={helpers.setValue}
+      {...props}
+    />
+  )
+}
+
 export default OrderForm
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  form: {
+    padding: theme.padding.md
+  }
+})

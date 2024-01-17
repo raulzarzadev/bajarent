@@ -27,9 +27,27 @@ const BottomAppBar = () => {
         }
       }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Orders" component={OrdersScreen} />
-      <Tab.Screen name="NewOrder" component={NewOrderScreen} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'Home'
+        }}
+      />
+      <Tab.Screen
+        name="Orders"
+        component={OrdersScreen}
+        options={{
+          title: 'Ordenes'
+        }}
+      />
+      <Tab.Screen
+        name="NewOrder"
+        component={NewOrderScreen}
+        options={{
+          title: 'Nueva Orden'
+        }}
+      />
     </Tab.Navigator>
   )
 }

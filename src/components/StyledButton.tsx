@@ -14,9 +14,9 @@ export default StyledButton
 
 const styles = StyleSheet.create({
   button: {
-    borderWidth: 1,
-    borderColor: theme.colors.highlight,
-    borderRadius: theme.borderRadius.sm,
+    // borderWidth: 1,
+    // borderColor: theme.colors.highlight,
+    borderRadius: theme.borderRadius.md,
     padding: theme.padding.sm,
     marginVertical: 1,
     width: '100%',
