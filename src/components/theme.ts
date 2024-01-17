@@ -9,9 +9,28 @@ const theme = {
     error: '#ff0000',
     success: '#00cc00'
   },
-  typography: {
-    fontFamily: 'System',
-    fontSize: '16px'
+  font: {
+    family: 'System',
+    size: {
+      sm: 12,
+      md: 16,
+      lg: 24
+    }
+  },
+  padding: {
+    sm: 8,
+    md: 16,
+    lg: 32
+  },
+  margin: {
+    sm: 8,
+    md: 16,
+    lg: 32
+  },
+  borderRadius: {
+    sm: 4,
+    md: 8,
+    lg: 16
   }
 
   // Add any additional theme properties here

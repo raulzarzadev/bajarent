@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import OrderForm from './OrderForm'
 
 const NewOrderScreen = () => {
   return (
     <View>
-      <Text>Nueva order</Text>
+      <OrderForm />
     </View>
   )
 }

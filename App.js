@@ -1,10 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native'
-import AppBar from './src/components/AppBar'
+import BottomAppBar from './src/components/BottomAppBar'
 
 export default function App() {
   return (
     <NavigationContainer>
-      <AppBar />
+      <BottomAppBar />
     </NavigationContainer>
   )
 }
