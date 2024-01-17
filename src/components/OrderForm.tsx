@@ -14,8 +14,7 @@ const OrderForm = () => {
       {({ handleSubmit }) => (
         <View style={styles.form}>
           <FormikInputValue name={'userName'} placeholder="Nombre" />
-          <FormikInputValue name={'email'} placeholder="Correo" />
-          <FormikInputValue name={'phone'} placeholder="Telefono" />
+          <FormikInputValue name={'phone'} placeholder="Teléfono" />
           <StyledButton
             onPress={handleSubmit}
             title="Submit"

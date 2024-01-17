@@ -1,16 +1,13 @@
 import { Pressable, Text, View } from 'react-native'
+import ProductCard from './ProductCard'
 
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Bienvendio a baja rent</Text>
-      <Pressable
-        onPress={() => {
-          alert('hola')
-        }}
-      >
-        <Text>Di hola</Text>
-      </Pressable>
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
     </View>
   )
 }

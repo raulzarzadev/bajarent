@@ -14,13 +14,25 @@ const BottomAppBar = () => {
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName
+            let iconName:
+              | 'home'
+              | 'list'
+              | 'add'
+              | 'home-outline'
+              | 'list-outline'
+              | 'add-circle-outline'
+              | 'add-circle'
+              | 'search'
+              | 'search-outline' = 'home'
+
             if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home-outline'
             } else if (route.name === 'Orders') {
               iconName = focused ? 'list' : 'list-outline'
             } else if (route.name === 'NewOrder') {
               iconName = focused ? 'add-circle' : 'add-circle-outline'
+            } else if (route.name === 'Rentar') {
+              iconName = focused ? 'search' : 'search-outline'
             }
             return <Ionicons name={iconName} size={size} color={color} />
           }
@@ -28,10 +40,10 @@ const BottomAppBar = () => {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="Rentar"
         component={HomeScreen}
         options={{
-          title: 'Home'
+          title: 'Rentar'
         }}
       />
       <Tab.Screen
@@ -45,7 +57,7 @@ const BottomAppBar = () => {
         name="NewOrder"
         component={NewOrderScreen}
         options={{
-          title: 'Nueva Orden'
+          title: 'Nueva Orden '
         }}
       />
     </Tab.Navigator>
