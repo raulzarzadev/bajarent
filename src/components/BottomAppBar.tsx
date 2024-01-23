@@ -1,14 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import OrdersScreen from './ScreenOrders'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import NewOrderScreen from './ScreenNewOrder'
 import ScreenProfile from './ScreenProfile'
 import ScreenCreateStore from './ScreenCreateStore'
-import { StoreContext, useStore } from '../contexts/storeContext'
+import { useStore } from '../contexts/storeContext'
 import ScreenStore from './ScreenStore'
-import ScreenOrderDetail from './ScreenOrderDetail'
+import OrdersStackScreen from './ScreenOrderStack'
 
 const Tab = createBottomTabNavigator()
 
@@ -49,39 +47,15 @@ const BottomAppBar = () => {
           }
         }}
       >
-        {/* <Tab.Screen
-        name="Rentar"
-        component={HomeScreen}
-        options={{
-          title: 'Rentar'
-        }} ncqfiHRU2kNZMmvj1cGj
-      /> */}
-
         <Tab.Screen
           name="Orders"
-          component={OrdersScreen}
+          component={OrdersStackScreen}
           options={{
-            title: 'Ordenes'
+            title: 'Ordenes',
+            headerShown: false
           }}
         />
 
-        <Tab.Screen
-          name="OrderDetails"
-          initialParams={{ orderId: 'ncqfiHRU2kNZMmvj1cGj' }}
-          component={ScreenOrderDetail}
-          options={{
-            title: 'Detalle de orden',
-            tabBarButton: () => null
-          }}
-        />
-
-        <Tab.Screen
-          name="NewOrder"
-          component={NewOrderScreen}
-          options={{
-            title: 'Nueva Orden '
-          }}
-        />
         {/* TODO: apply validation to hidde when no store is selected in localstorage */}
         <Tab.Screen
           name="Store"

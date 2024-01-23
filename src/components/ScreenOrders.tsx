@@ -6,6 +6,8 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderRow from './OrderRow'
 
+import { NavigationProp } from '@react-navigation/native'
+
 function ScreenOrders({ navigation }) {
   const { storeId } = useStore()
   const [orders, setOrders] = useState<OrderType[]>([])
@@ -16,6 +18,7 @@ function ScreenOrders({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Button onPress={() => navigation.push('NewOrder')}>Nueva orden</Button>
       <FlatList
         style={styles.orderList}
         data={orders}

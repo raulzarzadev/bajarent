@@ -1,12 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import OrdersScreen from './ScreenOrders'
-import HomeScreen from './ScreenHome'
 import OrderDetailScreen from './ScreenOrderDetail'
 import NewOrderScreen from './ScreenNewOrder'
 
 const Stack = createNativeStackNavigator()
 
-export default function AppBar() {
+export default function StackNavigator({ children }) {
   return (
     <>
       <Stack.Navigator>
@@ -23,6 +22,7 @@ export default function AppBar() {
           options={{ title: 'Order details' }}
         />
       </Stack.Navigator>
+      {children}
     </>
   )
 }
