@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
-import StyledButton from './StyledButton'
-import theme from './theme'
+import theme from '../theme'
 import FormikInputValue from './FormikInputValue'
+import Button from './Button'
 
 const FormStore = ({
   onSubmit = async (values) => {
@@ -20,11 +20,7 @@ const FormStore = ({
       {({ handleSubmit }) => (
         <View style={styles.form}>
           <FormikInputValue name={'name'} placeholder="Nombre" />
-          <StyledButton
-            onPress={handleSubmit}
-            title="Submit"
-            label={'Guardar'}
-          />
+          <Button onPress={handleSubmit} label={'Guardar'} />
         </View>
       )}
     </Formik>

@@ -56,6 +56,15 @@ const BottomAppBar = () => {
           title: 'Rentar'
         }} ncqfiHRU2kNZMmvj1cGj
       /> */}
+
+        <Tab.Screen
+          name="Orders"
+          component={OrdersScreen}
+          options={{
+            title: 'Ordenes'
+          }}
+        />
+
         <Tab.Screen
           name="OrderDetails"
           initialParams={{ orderId: 'ncqfiHRU2kNZMmvj1cGj' }}
@@ -65,13 +74,7 @@ const BottomAppBar = () => {
             tabBarButton: () => null
           }}
         />
-        <Tab.Screen
-          name="Orders"
-          component={OrdersScreen}
-          options={{
-            title: 'Ordenes'
-          }}
-        />
+
         <Tab.Screen
           name="NewOrder"
           component={NewOrderScreen}

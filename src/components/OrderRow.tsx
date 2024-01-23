@@ -3,11 +3,11 @@ import React from 'react'
 import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import dictionary from '../dictionary'
-import statusColors from '../libs/statusColor'
+import theme from '../theme'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
   const orderStatus = order.status || 'PENDING'
-  const statusColor = statusColors[orderStatus]
+  const statusColor = theme.statusColor[orderStatus]
 
   return (
     <View style={[styles.container, { backgroundColor: statusColor }]}>
@@ -25,8 +25,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginVertical: 5,
-    borderRadius: 5,
+    borderRadius: theme.borderRadius.sm,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    borderColor: theme.colors.disabled,
+    borderWidth: 1
   }
 })

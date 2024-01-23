@@ -4,10 +4,9 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import P from './P'
-import theme from './theme'
+import theme from '../theme'
 import OrderActions from './OrderActions'
 import dictionary from '../dictionary'
-import statusColors from '../libs/statusColor'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route.params
@@ -45,11 +44,13 @@ const ScreenOrderDetail = ({ route }) => {
 }
 
 const OrderStatus = ({ status }: { status: OrderType['status'] }) => {
+  const color = theme.statusColor[status || 'PENDING']
+
   return (
     <View
       style={{
         padding: theme.padding.sm,
-        backgroundColor: statusColors[status || 'PENDING'],
+        backgroundColor: color,
         borderRadius: theme.borderRadius.sm,
         marginVertical: theme.margin.md
       }}

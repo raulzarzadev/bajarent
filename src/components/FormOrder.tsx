@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Formik, useField } from 'formik'
-import StyledButton from './StyledButton'
-import theme from './theme'
+import { Formik } from 'formik'
+import theme from '../theme'
 import FormikInputValue from './FormikInputValue'
 import OrderType from '../types/OrderType'
+import Button from './Button'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -26,11 +26,7 @@ const FormOrder = ({
         <View style={styles.form}>
           <FormikInputValue name={'firstName'} placeholder="Nombre" />
           <FormikInputValue name={'phone'} placeholder="Teléfono" />
-          <StyledButton
-            onPress={handleSubmit}
-            title="Submit"
-            label={'Guardar'}
-          />
+          <Button onPress={handleSubmit} label={'Guardar'} />
         </View>
       )}
     </Formik>

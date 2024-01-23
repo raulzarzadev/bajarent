@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/authContext'
 import PhoneLogin from './PhoneLogin'
 import Button from './Button'
 import { ServiceStores } from '../firebase/ServiceStore'
-import theme from './theme'
+import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
 
 const ScreenProfile = ({ navigation }) => {

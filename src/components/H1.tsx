@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import theme from './theme'
+import theme from '../theme'
 
 const H1 = ({ children, size = 'lg' }) => {
   const fontSize = {

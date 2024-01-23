@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import theme from './theme'
+import theme from '../theme'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'

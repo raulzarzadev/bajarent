@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextStyle, View } from 'react-native'
 import React, { ReactNode } from 'react'
-import theme from './theme'
+import theme from '../theme'
 
 const P = ({
   children,

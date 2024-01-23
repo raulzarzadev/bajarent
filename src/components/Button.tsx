@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Pressable, Text, ViewStyle } from 'react-native'
-import theme from './theme'
+import theme from '../theme'
 
 interface ButtonProps {
   onPress?: () => void
@@ -43,11 +43,11 @@ const baseStyles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: theme.colors.highlight
+    borderColor: theme.colors.lightgrey
   },
   buttonDisabled: {
-    backgroundColor: 'lightgray',
-    borderColor: 'lightgray'
+    backgroundColor: theme.colors.disabled,
+    borderColor: theme.colors.lightgrey
   },
   buttonText: {
     color: theme.colors.white,
