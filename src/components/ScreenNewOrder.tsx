@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import OrderForm from './OrderForm'
 
-const NewOrderScreen = () => {
+const ScreenNewOrder = () => {
   return (
     <View>
       <OrderForm />
@@ -10,6 +10,6 @@ const NewOrderScreen = () => {
   )
 }
 
-export default NewOrderScreen
+export default ScreenNewOrder
 
 const styles = StyleSheet.create({})

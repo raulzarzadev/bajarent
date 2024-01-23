@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import OrdersScreen from './OrdersScreen'
-import HomeScreen from './HomeScreen'
-import OrderDetailScreen from './OrderDetailScreen'
-import NewOrderScreen from './NewOrderScreen'
+import OrdersScreen from './ScreenOrders'
+import HomeScreen from './ScreenHome'
+import OrderDetailScreen from './ScreenOrderDetail'
+import NewOrderScreen from './ScreenNewOrder'
 
 const Stack = createNativeStackNavigator()
 
@@ -10,7 +10,7 @@ export default function AppBar() {
   return (
     <>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
         <Stack.Screen name="Orders" component={OrdersScreen} />
         <Stack.Screen
           name="NewOrder"

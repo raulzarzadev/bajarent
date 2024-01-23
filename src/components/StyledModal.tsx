@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View, Modal } from 'react-native'
 import React from 'react'
+import { Ionicons } from '@expo/vector-icons' // Asegúrate de instalar @expo/vector-icons
 
-const StyledModal = ({ open, setOpen }) => {
+const StyledModal = ({ open, setOpen, children, title }) => {
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -15,13 +16,13 @@ const StyledModal = ({ open, setOpen }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setOpen(!open)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+            <View style={styles.topBar}>
+              <Text style={styles.title}>{title}</Text>
+              <Pressable onPress={() => setOpen(!open)}>
+                <Ionicons name="close" size={24} color="black" />
+              </Pressable>
+            </View>
+            {children}
           </View>
         </View>
       </Modal>
@@ -30,7 +31,6 @@ const StyledModal = ({ open, setOpen }) => {
 }
 
 export default StyledModal
-
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -53,24 +53,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF'
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3'
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center'
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center'
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold'
   }
 })

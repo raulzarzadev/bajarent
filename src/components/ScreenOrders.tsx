@@ -1,7 +1,7 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import DATA, { Order } from '../DATA'
 
-function OrdersScreen({ navigation }) {
+function ScreenOrders({ navigation }) {
   return (
     <View style={styles.container}>
       <Pressable onPress={() => navigation.navigate('NewOrder')}>
@@ -45,4 +45,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default OrdersScreen
+export default ScreenOrders

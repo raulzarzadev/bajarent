@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 
-const OrderDetailScreen = ({ route }) => {
+const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route.params
   return (
     <View>
@@ -9,4 +9,4 @@ const OrderDetailScreen = ({ route }) => {
   )
 }
 
-export default OrderDetailScreen
+export default ScreenOrderDetail

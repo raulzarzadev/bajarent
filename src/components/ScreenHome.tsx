@@ -1,7 +1,7 @@
-import { Pressable, Text, View } from 'react-native'
+import { View } from 'react-native'
 import ProductCard from './ProductCard'
 
-function HomeScreen({ navigation }) {
+function ScreenHome({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <ProductCard />
@@ -12,4 +12,4 @@ function HomeScreen({ navigation }) {
   )
 }
 
-export default HomeScreen
+export default ScreenHome
