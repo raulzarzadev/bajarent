@@ -1,8 +1,11 @@
 import BaseType from './BaseType'
 import { RentItem } from './RentItem'
+import StoreType from './StoreType'
 
 type OrderBase = {
-  fistName: string
+  storeId: StoreType['id']
+
+  firstName: string
   lastName: string
   email: string
   phone: string
@@ -20,7 +23,16 @@ type OrderBase = {
   scheduledAt: Date
 
   items: RentItem[]
+
+  status: OrderStatus
 }
+
+export type OrderStatus =
+  | 'PENDING'
+  | 'AUTHORIZED'
+  | 'DELIVERED'
+  | 'CANCELLED'
+  | 'REPORT'
 
 type OrderType = OrderBase & BaseType
 

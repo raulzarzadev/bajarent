@@ -6,10 +6,13 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import NewOrderScreen from './ScreenNewOrder'
 import ScreenProfile from './ScreenProfile'
 import ScreenCreateStore from './ScreenCreateStore'
+import { StoreContext, useStore } from '../contexts/storeContext'
+import ScreenStore from './ScreenStore'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
+  const { store } = useStore()
   return (
     <>
       <Tab.Navigator
@@ -53,20 +56,6 @@ const BottomAppBar = () => {
         }}
       /> */}
         <Tab.Screen
-          name="Perfil"
-          component={ScreenProfile}
-          options={{
-            title: 'Profile '
-          }}
-        />
-        <Tab.Screen
-          name="Crear tienda"
-          component={ScreenCreateStore}
-          options={{
-            tabBarButton: () => null
-          }}
-        />
-        <Tab.Screen
           name="Orders"
           component={OrdersScreen}
           options={{
@@ -78,6 +67,29 @@ const BottomAppBar = () => {
           component={NewOrderScreen}
           options={{
             title: 'Nueva Orden '
+          }}
+        />
+        {/* TODO: apply validation to hidde when no store is selected in localstorage */}
+        <Tab.Screen
+          name="Store"
+          component={ScreenStore}
+          options={{
+            title: 'Tienda '
+          }}
+        />
+        <Tab.Screen
+          name="Perfil"
+          component={ScreenProfile}
+          options={{
+            title: 'Profile '
+          }}
+        />
+
+        <Tab.Screen
+          name="Crear tienda"
+          component={ScreenCreateStore}
+          options={{
+            tabBarButton: () => null
           }}
         />
       </Tab.Navigator>

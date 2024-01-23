@@ -37,6 +37,9 @@ export class FirebaseGenericService<T extends Identifiable> {
   async listen(itemId: T['id'], cb: CallableFunction) {
     return await this.itemCRUD.listenItem(itemId || '', cb)
   }
+  async listenMany(filters = [], cb: CallableFunction) {
+    return await this.itemCRUD.listenItems(filters, cb)
+  }
   async getItems(filters: any[] = []) {
     return await this.itemCRUD.getItems(filters)
   }
