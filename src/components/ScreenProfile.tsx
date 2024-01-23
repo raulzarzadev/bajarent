@@ -1,25 +1,26 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { useAuth } from '../contexts/authContext'
+
+import PhoneLogin from './PhoneLogin'
 import Button from './Button'
-import StyledTextInput from './StyledTextInput'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import { RecaptchaVerifier, signInWithPhoneNumber } from '@firebase/auth'
-import { auth } from '../firebase/auth'
-import { useNavigation } from '@react-navigation/core'
+import { ServiceStores } from '../firebase/ServiceStore'
+import theme from './theme'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
 
-  const [phone, setPhone] = React.useState('')
-  const handleAuth = () => {}
-  const [code, setCode] = React.useState('')
+  useEffect(() => {
+    if (user) {
+      ServiceStores.getStoresByUserId(user.id)
+        .then(setStores)
+        .catch(console.error)
+    }
+  }, [user])
 
-  const handleSetCode = () => {
-    // setCode
-    console.log({ code })
-  }
+  const [stores, setStores] = React.useState([])
+  const { handleSetStoreId, storeId } = useStore()
 
   if (user === undefined)
     return (
@@ -27,57 +28,46 @@ const ScreenProfile = ({ navigation }) => {
         <Text>Loading...</Text>
       </View>
     )
-  if (user === null) return <Login navigation={navigation} />
+  if (user === null) return <PhoneLogin />
   return (
     <View>
-      <Text>{user?.name}</Text>
-    </View>
-  )
-}
-
-const Login = () => {
-  const [phone, setPhone] = React.useState('')
-
-  const onSignInSubmit = () => {
-    auth.settings.appVerificationDisabledForTesting = true
-    const appVerifier = window.recaptchaVerifier
-    signInWithPhoneNumber(auth, phone, appVerifier)
-      .then((confirmationResult) => {
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
-        window.confirmationResult = confirmationResult
-
-        console.log({ confirmationResult })
-
-        // * ... redirect to ConfirmCode
-      })
-      .catch((error) => {
-        // Error; SMS not sent
-        // ...
-        console.error(error)
-      })
-  }
-  useEffect(() => {
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
-      size: 'invisible',
-      callback: (response) => {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        console.log(response)
-        //onSignInSubmit()
-      }
-    })
-    //const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId)
-  }, [])
-  return (
-    <View>
-      <Text
-        style={{ textAlign: 'center', fontWeight: '600', marginVertical: 10 }}
-      >
-        Registrate con tu telefono celular
+      <Text style={{ textAlign: 'center', marginTop: 16 }}>
+        Telefono: {user.phone}
       </Text>
-      <StyledTextInput onChangeText={setPhone}></StyledTextInput>
-      <View id="sign-in-button"></View>
-      <Button onPress={onSignInSubmit}>Enviar</Button>
+
+      <View>
+        <Text>Tiendas</Text>
+        {stores.map((store) => (
+          <Button
+            onPress={() => {
+              handleSetStoreId(store.id)
+            }}
+            styles={{
+              marginVertical: 16,
+              backgroundColor:
+                storeId === store.id
+                  ? theme.colors.primary
+                  : theme.colors.secondary
+            }}
+            key={store.id}
+          >
+            {store.name}
+          </Button>
+        ))}
+      </View>
+
+      {user?.canCreateStore && (
+        <Button
+          onPress={() => {
+            navigation.navigate('CreateStore')
+          }}
+          styles={{
+            marginVertical: 16
+          }}
+        >
+          Crear tienda
+        </Button>
+      )}
     </View>
   )
 }

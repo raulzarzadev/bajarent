@@ -37,17 +37,20 @@ export const createUserFromGoogleProvider = async (newItem: any) => {
 
 export async function authStateChanged(cb: CallableFunction) {
   onAuthStateChanged(auth, async (user) => {
-    if (user?.email) {
-      //const dbUser = await getUser(user.uid)
+    if (user?.uid) {
       const dbUser = await User.get(user.uid)
-      //* create a default new user when is the first login
+      if (dbUser) return cb(dbUser)
       const newUser = {
         name: user.displayName || '',
         email: user.email || '',
-        rol: 'CLIENT',
-        image: user.photoURL || ''
+        // rol: 'CLIENT',
+        image: user.photoURL || '',
+        phone: user.phoneNumber || ''
       }
-      cb(dbUser || newUser)
+      await User.set(user.uid, newUser)
+      const userCreated = await User.get(user.uid)
+      //* create a default new user when is the first login
+      cb(userCreated)
     } else {
       cb(null)
     }

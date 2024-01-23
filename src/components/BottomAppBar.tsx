@@ -5,7 +5,7 @@ import OrdersScreen from './ScreenOrders'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import NewOrderScreen from './ScreenNewOrder'
 import ScreenProfile from './ScreenProfile'
-import ScreenConfirmCode from './ScreenConfirmCode'
+import ScreenCreateStore from './ScreenCreateStore'
 
 const Tab = createBottomTabNavigator()
 
@@ -60,6 +60,13 @@ const BottomAppBar = () => {
           }}
         />
         <Tab.Screen
+          name="Crear tienda"
+          component={ScreenCreateStore}
+          options={{
+            tabBarButton: () => null
+          }}
+        />
+        <Tab.Screen
           name="Orders"
           component={OrdersScreen}
           options={{
@@ -71,15 +78,6 @@ const BottomAppBar = () => {
           component={NewOrderScreen}
           options={{
             title: 'Nueva Orden '
-          }}
-        />
-
-        <Tab.Screen
-          name="ConfirmCode"
-          component={ScreenConfirmCode}
-          options={{
-            title: 'Confirmar codigo ',
-            tabBarButton: () => null
           }}
         />
       </Tab.Navigator>

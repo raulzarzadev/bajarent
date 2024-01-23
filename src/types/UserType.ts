@@ -7,6 +7,7 @@ export type UserBase = {
   image?: string
   rol: 'admin' | 'user'
   super_user?: boolean
+  canCreateStore?: boolean
 }
 
 type UserType = BaseType & UserBase

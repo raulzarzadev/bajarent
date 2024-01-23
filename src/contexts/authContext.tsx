@@ -6,10 +6,15 @@ import {
   useEffect
 } from 'react'
 import { authStateChanged } from '../firebase/auth'
+import UserType from '../types/UserType'
 
-const initialAutState = {
+const initialAutState: {
+  isAuthenticated: boolean
+  user?: null | UserType
+  setAuth?: (value: SetStateAction<typeof initialAutState>) => void
+} = {
   isAuthenticated: false,
-  user: null,
+  user: undefined,
   setAuth: (value: SetStateAction<typeof initialAutState>) => {} // Modify the setAuth definition to accept at least one argument
 }
 
@@ -20,7 +25,7 @@ const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     authStateChanged((user) => {
-      console.log({ user })
+      setAuth({ isAuthenticated: !!user, user })
     })
     // Check if the user is logged in
     // If so, update the auth state

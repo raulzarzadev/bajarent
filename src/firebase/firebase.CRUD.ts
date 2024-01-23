@@ -146,27 +146,28 @@ export class FirebaseCRUD {
   createItemMetadata() {
     const currentUser = getAuth().currentUser
     return {
-      created: {
-        at: new Date(),
-        by: currentUser?.uid,
-        byEmail: currentUser?.email
-      },
-      updated: {
-        at: new Date(),
-        by: currentUser?.uid,
-        byEmail: currentUser?.email
-      }
+      createdBy: currentUser?.uid,
+      createdAt: new Date()
     }
+    // return {
+    //   created: {
+    //     at: new Date(),
+    //     by: currentUser?.uid,
+    //     byEmail: currentUser?.email
+    //   },
+    //   updated: {
+    //     at: new Date(),
+    //     by: currentUser?.uid,
+    //     byEmail: currentUser?.email
+    //   }
+    // }
   }
 
   updateItemMetadata() {
     const currentUser = getAuth().currentUser
     return {
-      updated: {
-        at: new Date(),
-        by: currentUser?.uid,
-        byEmail: currentUser?.email
-      }
+      updatedAt: new Date(),
+      updatedBy: currentUser?.uid
     }
   }
 

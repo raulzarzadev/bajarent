@@ -2,12 +2,14 @@ const theme = {
   colors: {
     primary: '#0070f3',
     background: '#f5f5f5',
-    text: '#333333',
+    // text: '#333333',
     accent: '#ffcc00',
     secondary: '#999999',
-    highlight: '#ff6600',
+    highlight: '#333333',
     error: '#ff0000',
-    success: '#00cc00'
+    success: '#00cc00',
+    white: '#ffffff',
+    black: '#000000'
   },
   font: {
     family: 'System',
