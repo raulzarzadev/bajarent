@@ -8,6 +8,7 @@ import ScreenProfile from './ScreenProfile'
 import ScreenCreateStore from './ScreenCreateStore'
 import { StoreContext, useStore } from '../contexts/storeContext'
 import ScreenStore from './ScreenStore'
+import ScreenOrderDetail from './ScreenOrderDetail'
 
 const Tab = createBottomTabNavigator()
 
@@ -53,8 +54,17 @@ const BottomAppBar = () => {
         component={HomeScreen}
         options={{
           title: 'Rentar'
-        }}
+        }} ncqfiHRU2kNZMmvj1cGj
       /> */}
+        <Tab.Screen
+          name="OrderDetails"
+          initialParams={{ orderId: 'ncqfiHRU2kNZMmvj1cGj' }}
+          component={ScreenOrderDetail}
+          options={{
+            title: 'Detalle de orden',
+            tabBarButton: () => null
+          }}
+        />
         <Tab.Screen
           name="Orders"
           component={OrdersScreen}

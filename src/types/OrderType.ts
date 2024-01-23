@@ -22,6 +22,9 @@ type OrderBase = {
   assignTo: string
   scheduledAt: Date
 
+  deliveredAt: Date
+  deliveredBy: string
+
   items: RentItem[]
 
   status: OrderStatus

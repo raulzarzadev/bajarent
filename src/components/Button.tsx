@@ -8,6 +8,7 @@ interface ButtonProps {
   children?: string
   id?: string
   styles?: ViewStyle
+  disabled?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,10 +16,20 @@ const Button: React.FC<ButtonProps> = ({
   label,
   children = 'Label',
   id,
-  styles
+  styles,
+  disabled
 }) => {
   return (
-    <Pressable id={id} style={[baseStyles.button, styles]} onPress={onPress}>
+    <Pressable
+      disabled={disabled}
+      id={id}
+      style={[
+        baseStyles.button,
+        styles,
+        disabled ? baseStyles.buttonDisabled : null
+      ]}
+      onPress={onPress}
+    >
       <Text style={baseStyles.buttonText}>
         <Text>{label || children}</Text>
       </Text>
@@ -33,6 +44,10 @@ const baseStyles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: theme.colors.highlight
+  },
+  buttonDisabled: {
+    backgroundColor: 'lightgray',
+    borderColor: 'lightgray'
   },
   buttonText: {
     color: theme.colors.white,

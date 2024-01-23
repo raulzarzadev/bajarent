@@ -3,13 +3,8 @@ import React from 'react'
 import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import dictionary from '../dictionary'
-const statusColors = {
-  PENDING: 'yellow',
-  AUTHORIZED: 'green',
-  DELIVERED: 'blue',
-  CANCELLED: 'red',
-  REPORT: 'purple'
-}
+import statusColors from '../libs/statusColor'
+
 const OrderRow = ({ order }: { order: OrderType }) => {
   const orderStatus = order.status || 'PENDING'
   const statusColor = statusColors[orderStatus]

@@ -42,6 +42,12 @@ const customLocale = {
     options?: { addSuffix?: boolean }
   ) => {
     switch (token) {
+      case 'xSeconds':
+        return options?.addSuffix
+          ? count > 0
+            ? 'hace ' + count + ' s'
+            : 'en ' + count + ' s'
+          : count + 'm'
       case 'xMinutes':
         return options?.addSuffix
           ? count > 0

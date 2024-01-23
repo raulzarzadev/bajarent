@@ -1,10 +1,10 @@
 import { ViewStyle } from 'react-native'
 
 const measures = (scale: number = 1) => ({
-  xs: 4 * scale,
-  sm: 8 * scale,
-  md: 16 * scale,
-  lg: 32 * scale
+  xs: 8 * scale,
+  sm: 10 * scale,
+  md: 12 * scale,
+  lg: 18 * scale
 })
 
 const font = {
