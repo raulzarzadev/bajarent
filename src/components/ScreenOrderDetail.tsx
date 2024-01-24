@@ -1,27 +1,29 @@
 import { useEffect, useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import P from './P'
 import theme from '../theme'
 import OrderActions from './OrderActions'
-import dictionary from '../dictionary'
-import orderStatus from '../libs/orderStatus'
+
 import OrderComments from './OrderComments'
+import { ServiceComments } from '../firebase/ServiceComments'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route.params
   const [order, setOrder] = useState<OrderType | null | undefined>()
+  const [comments, setComments] = useState<OrderType['comments']>([])
   useEffect(() => {
     ServiceOrders.listen(orderId, setOrder)
+    ServiceComments.orderComments(orderId, setComments)
   }, [orderId])
 
   if (order === undefined) return <Text>Cargando...</Text>
   if (order === null) return <Text>Orden no encontrada</Text>
 
   return (
-    <View style={{ marginVertical: 16 }}>
+    <ScrollView style={{ marginVertical: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <P size="xs">{fromNow(order.createdAt)}</P>
         <P size="xs"> {order.id}</P>
@@ -40,9 +42,9 @@ const ScreenOrderDetail = ({ route }) => {
           {order.phone}
         </P>
       </View>
-      <OrderActions order={order} />
-      <OrderComments order={order} />
-    </View>
+      <OrderActions order={{ ...order, comments }} />
+      <OrderComments orderId={orderId} />
+    </ScrollView>
   )
 }
 

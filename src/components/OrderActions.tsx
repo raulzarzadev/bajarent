@@ -38,12 +38,12 @@ const OrderActions = ({ order }: { order: OrderType }) => {
             onPress={handleAction('delivery')}
           />
         </View>
-        <View style={styles.item}>
+        {/* <View style={styles.item}>
           <ButtonReport orderId={order.id} />
-        </View>
-        <View style={styles.item}>
+        </View> */}
+        {/* <View style={styles.item}>
           <ButtonComment orderId={order.id} />
-        </View>
+        </View> */}
         <View style={styles.item}>
           <Button label="Editar" />
         </View>

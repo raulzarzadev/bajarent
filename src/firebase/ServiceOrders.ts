@@ -1,7 +1,12 @@
-import { FieldValue, arrayUnion, where } from 'firebase/firestore'
-import OrderType, { Comment } from '../types/OrderType'
+import { where } from 'firebase/firestore'
+import OrderType from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
-import { auth } from './auth'
+
+import ShortUniqueId from 'short-unique-id'
+import { ServiceComments } from './ServiceComments'
+import { CommentType, CreateCommentType } from '../types/CommentType'
+
+const uid = new ShortUniqueId()
 
 type Type = OrderType
 class ServiceOrdersClass extends FirebaseGenericService<Type> {
@@ -15,35 +20,29 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 
   async addComment(
     orderId: string,
-    type: 'report' | 'comment',
+    type: CommentType['type'],
     content: string
   ) {
-    const comment: Comment = {
+    const comment: CreateCommentType = {
+      orderId,
       type,
-      content,
-      createAt: new Date(),
-      createdBy: auth.currentUser?.uid
+      content
     }
-    // if (type === 'report') {
-    //   await super
-    //     .update(orderId, {
-    //       status: 'REPORT'
-    //     })
-    //     .then(console.log)
-    //     .catch(console.error)
-    // }
-    await super
-      .update(orderId, {
-        comments: arrayUnion(comment)
-      })
+
+    return await ServiceComments.create(comment)
       .then(console.log)
       .catch(console.error)
-    // Implementa tu método personalizado
   }
 
   async report(orderId: string, content: string) {
     return this.addComment(orderId, 'report', content)
     // Implementa tu método personalizado
+  }
+
+  async updateComment(commentId, updates) {
+    return await ServiceComments.update(commentId, updates)
+      .then(console.log)
+      .catch(console.error)
   }
 
   // Agrega tus métodos aquí

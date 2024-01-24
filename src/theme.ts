@@ -29,7 +29,7 @@ const colors = {
   red: '#ff0000',
   green: '#00cc00',
   gray: '#999999',
-  lightGray: '#929292',
+  lightGray: '#C0C0C0',
   darkGray: '#333333'
 }
 

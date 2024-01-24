@@ -4,8 +4,8 @@ const orderStatus = (order: OrderType): OrderStatus => {
   let status: OrderStatus = 'PENDING'
 
   status = order?.status || 'PENDING'
-
-  if (order?.comments?.find((comment) => comment?.type === 'report')) {
+  const report = order?.comments?.find((comment) => comment?.type === 'report')
+  if (report && !report?.solved) {
     status = 'REPORTED'
   }
 
