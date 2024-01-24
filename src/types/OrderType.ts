@@ -40,6 +40,7 @@ export type OrderStatus =
   | 'DELIVERED'
   | 'CANCELLED'
   | 'REPORTED'
+  | 'PICKUP'
 
 type OrderType = OrderBase & BaseType
 

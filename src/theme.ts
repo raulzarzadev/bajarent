@@ -38,7 +38,8 @@ const statusColor: Record<OrderStatus, string> = {
   AUTHORIZED: colors.lightBlue,
   DELIVERED: colors.green,
   CANCELLED: colors.gray,
-  REPORTED: colors.red
+  REPORTED: colors.red,
+  PICKUP: colors.lightGray
 }
 
 const h1 = {

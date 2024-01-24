@@ -22,7 +22,14 @@ const OrderStatus = ({
         borderColor: theme.colors.disabled
       }}
     >
-      <P>{dictionary(status || 'PENDING')}</P>
+      <P
+        styles={{
+          fontWeight: 'bold',
+          color: status === 'PENDING' ? theme.colors.black : theme.colors.white
+        }}
+      >
+        {dictionary(status || 'PENDING').toUpperCase()}
+      </P>
     </View>
   )
 }

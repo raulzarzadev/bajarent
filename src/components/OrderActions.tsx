@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import theme from '../theme'
 import Button from './Button'
 import P from './P'
@@ -11,6 +10,7 @@ import StyledTextInput from './StyledTextInput'
 import useModal from '../hooks/useModal'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
+import { useState } from 'react'
 
 const OrderActions = ({ order }: { order: OrderType }) => {
   const { user } = useAuth()
@@ -32,10 +32,17 @@ const OrderActions = ({ order }: { order: OrderType }) => {
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
         <View style={styles.item}>
-          <Button
-            disabled={order.status === 'DELIVERED'}
-            label="Entregar"
-            onPress={handleAction('delivery')}
+          <ButtonDelivery
+            orderId={order.id}
+            disabled={order.status === 'CANCELLED' || order.status === 'PICKUP'}
+            isDelivered={order.status === 'DELIVERED'}
+          />
+        </View>
+        <View style={styles.item}>
+          <ButtonCancel
+            orderId={order.id}
+            disabled={order.status === 'DELIVERED' || order.status === 'PICKUP'}
+            isCancelled={order.status === 'CANCELLED'}
           />
         </View>
         {/* <View style={styles.item}>
@@ -44,91 +51,77 @@ const OrderActions = ({ order }: { order: OrderType }) => {
         {/* <View style={styles.item}>
           <ButtonComment orderId={order.id} />
         </View> */}
-        <View style={styles.item}>
+        {/* <View style={styles.item}>
           <Button label="Editar" />
-        </View>
-        <View style={styles.item}>
-          <Button label="Eliminar" />
-        </View>
-        <View style={styles.item}>
+        </View> */}
+
+        {/* <View style={styles.item}>
           <Button label="Cancelar" />
-        </View>
+        </View> */}
       </View>
     </View>
   )
 }
-const ButtonComment = ({ orderId }) => {
-  const modal = useModal({ title: 'Comentar' })
-  const [value, setValue] = React.useState('')
-  const handleComment = () => {
-    ServiceOrders.addComment(orderId, 'comment', value)
+const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
+  const handleCancel = () => {
+    ServiceOrders.update(orderId, {
+      status: isCancelled ? 'PENDING' : 'CANCELLED'
+    })
+      .then(console.log)
+      .catch(console.error)
+    ServiceOrders.addComment(
+      orderId,
+      'comment',
+      isCancelled ? 'Orden reanudada' : 'Orden cancelada'
+    )
       .then(console.log)
       .catch(console.error)
   }
   return (
     <>
-      <StyledModal {...modal}>
-        <View>
-          <StyledTextInput
-            onChangeText={(e) => {
-              setValue(e)
-            }}
-            value={value}
-            placeholder="Comentario"
-          ></StyledTextInput>
-          <Button
-            onPress={() => {
-              handleComment()
-            }}
-            styles={{ borderColor: theme.colors.error }}
-          >
-            Comentar
-          </Button>
-        </View>
-      </StyledModal>
       <Button
-        label="Comentar"
+        disabled={disabled}
+        styles={{
+          backgroundColor: isCancelled
+            ? theme.statusColor.CANCELLED
+            : theme.colors.error
+        }}
+        label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
         onPress={() => {
-          modal.toggleOpen()
+          handleCancel()
         }}
       />
     </>
   )
 }
-const ButtonReport = ({ orderId }) => {
-  const modal = useModal({ title: 'Reportar' })
-  const [value, setValue] = React.useState('')
-  const handleReport = () => {
-    ServiceOrders.report(orderId, value).then(console.log).catch(console.error)
+const ButtonDelivery = ({ orderId, isDelivered, disabled }) => {
+  const handleDelivery = () => {
+    ServiceOrders.update(orderId, {
+      status: isDelivered ? 'PICKUP' : 'DELIVERED'
+    })
+      .then(console.log)
+      .catch(console.error)
+    ServiceOrders.addComment(
+      orderId,
+      'comment',
+      isDelivered ? 'Orden recogida' : 'Orden entregada'
+    )
+      .then(console.log)
+      .catch(console.error)
   }
   return (
-    <>
-      <StyledModal {...modal}>
-        <View>
-          <StyledTextInput
-            onChangeText={(e) => {
-              setValue(e)
-            }}
-            value={value}
-            placeholder="Describa el problema"
-          ></StyledTextInput>
-          <Button
-            onPress={() => {
-              handleReport()
-            }}
-            styles={{ borderColor: theme.colors.error }}
-          >
-            Reportar
-          </Button>
-        </View>
-      </StyledModal>
-      <Button
-        label="Reportar"
-        onPress={() => {
-          modal.toggleOpen()
-        }}
-      />
-    </>
+    <Button
+      disabled={disabled}
+      styles={{
+        backgroundColor: isDelivered
+          ? theme.colors.primary
+          : theme.colors.secondary
+      }}
+      label={isDelivered ? 'Recoger' : 'Entregar'}
+      onPress={() => {
+        handleDelivery()
+      }}
+    />
   )
 }
 const styles = StyleSheet.create({

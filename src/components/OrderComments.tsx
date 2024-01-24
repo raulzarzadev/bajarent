@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import OrderType from '../types/OrderType'
 import dictionary from '../dictionary'

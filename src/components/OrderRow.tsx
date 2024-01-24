@@ -15,7 +15,7 @@ const OrderRow = ({ order }: { order: OrderType }) => {
       <Text style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}>
         {order.firstName}
       </Text>
-      <Text style={styles.text}>{dictionary(status)}</Text>
+      <Text style={styles.text}>{dictionary(status).toUpperCase()}</Text>
       <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
     </View>
   )
