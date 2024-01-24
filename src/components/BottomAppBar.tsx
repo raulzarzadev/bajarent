@@ -6,10 +6,13 @@ import ScreenProfile from './ScreenProfile'
 import ScreenCreateStore from './ScreenCreateStore'
 import ScreenStore from './ScreenStore'
 import OrdersStackScreen from './ScreenOrderStack'
+import { useAuth } from '../contexts/authContext'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
+  const { user } = useAuth()
+
   return (
     <>
       <Tab.Navigator
@@ -46,29 +49,42 @@ const BottomAppBar = () => {
         }}
       >
         <Tab.Screen
-          name="Orders"
-          component={OrdersStackScreen}
-          options={{
-            title: 'Ordenes',
-            headerShown: false
-          }}
-        />
-
-        {/* TODO: apply validation to hidde when no store is selected in localstorage */}
-        <Tab.Screen
           name="Store"
           component={ScreenStore}
           options={{
             title: 'Tienda '
           }}
         />
-        <Tab.Screen
-          name="Perfil"
-          component={ScreenProfile}
-          options={{
-            title: 'Profile '
-          }}
-        />
+        {!!user && (
+          <Tab.Screen
+            name="Orders"
+            component={OrdersStackScreen}
+            options={{
+              title: 'Ordenes',
+              headerShown: false
+            }}
+          />
+        )}
+
+        {/* TODO: apply validation to hidde when no store is selected in localstorage */}
+        {!user && (
+          <Tab.Screen
+            name="Perfil"
+            component={ScreenProfile}
+            options={{
+              title: 'Ingresa '
+            }}
+          />
+        )}
+        {user && (
+          <Tab.Screen
+            name="Perfil"
+            component={ScreenProfile}
+            options={{
+              title: 'Profile '
+            }}
+          />
+        )}
 
         <Tab.Screen
           name="Crear tienda"

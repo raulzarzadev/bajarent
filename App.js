@@ -4,7 +4,6 @@ import { AuthContextProvider } from './src/contexts/authContext'
 import { StoreContextProvider } from './src/contexts/storeContext'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator } from 'react-native'
-import { Linking, Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function App() {
@@ -17,9 +16,13 @@ export default function App() {
     const restoreState = async () => {
       try {
         const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY)
+
         const state = savedStateString
           ? JSON.parse(savedStateString)
           : undefined
+
+        console.log('e', { state })
+
         if (state !== undefined) {
           setInitialState(state)
         }

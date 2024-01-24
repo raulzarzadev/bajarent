@@ -26,27 +26,31 @@ const PhoneLogin = () => {
         // ...
       })
   }
-  const onSignInSubmit = () => {
-    //@ts-ignore
-    const appVerifier = window.recaptchaVerifier
-    console.log({ appVerifier })
-    if (!appVerifier) return console.error('appVerifier is not defined')
-    signInWithPhoneNumber(auth, phone, appVerifier)
-      .then((confirmationResult) => {
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
-        //@ts-ignore
-        window.confirmationResult = confirmationResult
-        setMsmSent(true)
-        console.log({ confirmationResult })
 
-        // * ... redirect to ConfirmCode
-      })
-      .catch((error) => {
-        // Error; SMS not sent
-        // ...
-        console.error(error)
-      })
+  const onSignInSubmit = async () => {
+    //TODO: CREATE SIGN IN FOR ANDROID AND IOS
+    if (Platform.OS === 'web') {
+      //@ts-ignore
+      const appVerifier = window.recaptchaVerifier
+      console.log({ appVerifier })
+      signInWithPhoneNumber(auth, phone, appVerifier)
+        .then((confirmationResult) => {
+          // SMS sent. Prompt user to type the code from the message, then sign the
+          // user in with confirmationResult.confirm(code).
+          //@ts-ignore
+          window.confirmationResult = confirmationResult
+          setMsmSent(true)
+          console.log({ confirmationResult })
+
+          // * ... redirect to ConfirmCode
+        })
+        .catch((error) => {
+          // Error; SMS not sent
+          // ...
+          console.error(error)
+        })
+      return
+    }
   }
   useEffect(() => {
     //@ts-ignore

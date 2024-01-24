@@ -1,11 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Formik } from 'formik'
+import { Formik, useField } from 'formik'
 import theme from '../theme'
 import FormikInputValue from './FormikInputValue'
 import OrderType from '../types/OrderType'
 import Button from './Button'
-import PhoneInput from './PhoneInput'
+
+import FormikInputPhone from './FormikInputPhone'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -17,7 +18,6 @@ const FormOrder = ({
   },
   defaultValues = initialValues
 }) => {
-  console.log({ defaultValues })
   return (
     <Formik
       initialValues={defaultValues}
@@ -25,11 +25,11 @@ const FormOrder = ({
         onSubmit(values).then(console.log).catch(console.error)
       }}
     >
-      {({ handleSubmit }) => (
+      {({ handleSubmit, values }) => (
         <View style={styles.form}>
           <FormikInputValue name={'firstName'} placeholder="Nombre" />
-          <FormikInputValue name={'phone'} placeholder="Teléfono" />
-          {/* <PhoneInput /> */}
+          <FormikInputPhone name={'phone'} />
+
           <Button onPress={handleSubmit} label={'Guardar'} />
         </View>
       )}

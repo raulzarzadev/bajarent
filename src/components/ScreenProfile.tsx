@@ -31,7 +31,7 @@ const ScreenProfile = ({ navigation }) => {
     )
   if (user === null) return <PhoneLogin />
   return (
-    <View>
+    <View style={{ padding: 2 }}>
       <Text style={{ textAlign: 'center', marginTop: 16 }}>
         Telefono: {user.phone}
       </Text>
@@ -45,10 +45,10 @@ const ScreenProfile = ({ navigation }) => {
             }}
             styles={{
               marginVertical: 16,
-              backgroundColor:
-                storeId === store.id
-                  ? theme.colors.primary
-                  : theme.colors.secondary
+              backgroundColor: theme.colors.secondary,
+              borderWidth: 2,
+              borderColor:
+                storeId === store.id ? theme.colors.primary : 'transparent'
             }}
             key={store.id}
           >

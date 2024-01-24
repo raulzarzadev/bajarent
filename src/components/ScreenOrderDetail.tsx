@@ -38,13 +38,19 @@ const ScreenOrderDetail = ({ route }) => {
         <P size="lg" bold styles={{ textAlign: 'left' }}>
           {order.firstName}
         </P>
-        <P styles={{ textAlign: 'left', marginTop: theme.margin.sm }}>
-          {order.phone}
-        </P>
+        <PhoneCard phone={order.phone} />
       </View>
       <OrderActions order={{ ...order, comments }} />
       <OrderComments orderId={orderId} />
     </ScrollView>
+  )
+}
+
+const PhoneCard = ({ phone }) => {
+  return (
+    <View>
+      <P>{phone}</P>
+    </View>
   )
 }
 
