@@ -5,12 +5,15 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderType from '../types/OrderType'
 
-const ScreenNewOrder = () => {
+const ScreenNewOrder = ({ navigation }) => {
   const { storeId } = useStore()
   const handleSubmit = async (values: OrderType) => {
     return await ServiceOrders.create({ storeId, ...values })
-      .then(() => {
-        alert('Orden creada')
+      .then((res) => {
+        const orderId = res?.res?.id
+        console.log({ res })
+        navigation.push('OrderDetails', { orderId: orderId })
+        // alert('Orden creada')
       })
       .catch(console.error)
   }

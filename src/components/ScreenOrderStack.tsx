@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ScreenOrders from './ScreenOrders'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenNewOrder from './ScreenNewOrder'
+import ScreenOrderEdit from './ScreenOrderEdit'
 
 const OrdersStack = createStackNavigator()
 function OrdersStackScreen() {
@@ -27,6 +28,14 @@ function OrdersStackScreen() {
           title: 'Nueva Orden'
         }}
         component={ScreenNewOrder}
+      />
+
+      <OrdersStack.Screen
+        name="EditOrder"
+        options={{
+          title: 'Editar Orden'
+        }}
+        component={ScreenOrderEdit}
       />
     </OrdersStack.Navigator>
   )

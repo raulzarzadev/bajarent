@@ -13,11 +13,13 @@ const initialValues: Partial<OrderType> = {
 const FormOrder = ({
   onSubmit = async (values) => {
     console.log(values)
-  }
+  },
+  defaultValues = initialValues
 }) => {
+  console.log({ defaultValues })
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={defaultValues}
       onSubmit={async (values) => {
         onSubmit(values).then(console.log).catch(console.error)
       }}

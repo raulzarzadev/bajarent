@@ -5,27 +5,12 @@ import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useAuth } from '../contexts/authContext'
 import OrderType from '../types/OrderType'
-import StyledModal from './StyledModal'
-import StyledTextInput from './StyledTextInput'
-import useModal from '../hooks/useModal'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
-import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 const OrderActions = ({ order }: { order: OrderType }) => {
-  const { user } = useAuth()
-  const handleAction = (action: 'delivery') => () => {
-    if (action === 'delivery') {
-      ServiceOrders.update(order.id, {
-        status: 'DELIVERED',
-        deliveredAt: new Date(),
-        deliveredBy: user.id
-      })
-        .then(console.log)
-        .catch(console.error)
-    }
-  }
-
+  const navigation = useNavigation()
   return (
     <View style={{ padding: theme.padding.md }}>
       <OrderStatus status={orderStatus(order)} />
@@ -45,15 +30,21 @@ const OrderActions = ({ order }: { order: OrderType }) => {
             isCancelled={order.status === 'CANCELLED'}
           />
         </View>
+
         {/* <View style={styles.item}>
           <ButtonReport orderId={order.id} />
         </View> */}
         {/* <View style={styles.item}>
           <ButtonComment orderId={order.id} />
         </View> */}
-        {/* <View style={styles.item}>
-          <Button label="Editar" />
-        </View> */}
+        <View style={styles.item}>
+          <Button
+            onPress={() => {
+              navigation.navigate('EditOrder', { orderId: order.id })
+            }}
+            label="Editar"
+          />
+        </View>
 
         {/* <View style={styles.item}>
           <Button label="Cancelar" />
