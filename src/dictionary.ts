@@ -33,6 +33,9 @@ const labels = {
   DELIVERED: 'Entregada',
   CANCELLED: 'Cancelada',
   REPORT: 'Reporte',
+  REPORTED: 'Reportada',
+  comment: 'comentario',
+  report: 'reporte',
   '': ''
 } as const
 export type Labels = keyof typeof labels

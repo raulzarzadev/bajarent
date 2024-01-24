@@ -1,7 +1,13 @@
-import { StyleSheet, TextInput } from 'react-native'
+import { StyleSheet, TextInput, TextInputProps } from 'react-native'
 import theme from '../theme'
 
-const StyledTextInput = ({ ...props }) => {
+/**
+ * Componente de entrada de texto estilizado.
+ *
+ * @param {TextInputProps} props - Propiedades del componente TextInput.
+ * @returns {JSX.Element} - Elemento JSX que representa el componente StyledTextInput.
+ */
+const StyledTextInput = ({ ...props }: TextInputProps) => {
   return <TextInput style={styles.inputStyle} {...props} />
 }
 

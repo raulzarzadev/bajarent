@@ -1,3 +1,4 @@
+import { FieldValue } from 'firebase/firestore'
 import BaseType from './BaseType'
 import { RentItem } from './RentItem'
 import StoreType from './StoreType'
@@ -28,6 +29,19 @@ type OrderBase = {
   items: RentItem[]
 
   status: OrderStatus
+
+  comments: Comment[]
+}
+
+export type Comment = {
+  type: 'report' | 'comment'
+  content: string
+  createAt: Date
+  createdBy: string
+  solved?: boolean
+  solvedAt?: Date
+  solvedBy?: string
+  solvedComment?: string
 }
 
 export type OrderStatus =
@@ -35,7 +49,7 @@ export type OrderStatus =
   | 'AUTHORIZED'
   | 'DELIVERED'
   | 'CANCELLED'
-  | 'REPORT'
+  | 'REPORTED'
 
 type OrderType = OrderBase & BaseType
 

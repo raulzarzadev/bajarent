@@ -7,6 +7,8 @@ import P from './P'
 import theme from '../theme'
 import OrderActions from './OrderActions'
 import dictionary from '../dictionary'
+import orderStatus from '../libs/orderStatus'
+import OrderComments from './OrderComments'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route.params
@@ -17,14 +19,14 @@ const ScreenOrderDetail = ({ route }) => {
 
   if (order === undefined) return <Text>Cargando...</Text>
   if (order === null) return <Text>Orden no encontrada</Text>
-  console.log({ order })
+
   return (
     <View style={{ marginVertical: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <P size="xs">{fromNow(order.createdAt)}</P>
         <P size="xs"> {order.id}</P>
       </View>
-      <OrderStatus status={order.status} />
+
       <View
         style={{
           marginTop: 32,
@@ -39,23 +41,7 @@ const ScreenOrderDetail = ({ route }) => {
         </P>
       </View>
       <OrderActions order={order} />
-    </View>
-  )
-}
-
-const OrderStatus = ({ status }: { status: OrderType['status'] }) => {
-  const color = theme.statusColor[status || 'PENDING']
-
-  return (
-    <View
-      style={{
-        padding: theme.padding.sm,
-        backgroundColor: color,
-        borderRadius: theme.borderRadius.sm,
-        marginVertical: theme.margin.md
-      }}
-    >
-      <P>{dictionary(status || 'PENDING')}</P>
+      <OrderComments order={order} />
     </View>
   )
 }

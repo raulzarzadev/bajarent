@@ -10,7 +10,8 @@ const measures = (scale: number = 1) => ({
 
 const font = {
   family: 'System',
-  size: measures(1)
+  size: measures(1),
+  bold: 'bold'
 }
 
 const borderRadius = measures()
@@ -37,7 +38,7 @@ const statusColor: Record<OrderStatus, string> = {
   AUTHORIZED: colors.lightBlue,
   DELIVERED: colors.green,
   CANCELLED: colors.gray,
-  REPORT: colors.red
+  REPORTED: colors.red
 }
 
 const h1 = {

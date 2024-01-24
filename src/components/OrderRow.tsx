@@ -4,16 +4,19 @@ import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import dictionary from '../dictionary'
 import theme from '../theme'
+import orderStatus from '../libs/orderStatus'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
-  const orderStatus = order.status || 'PENDING'
-  const statusColor = theme.statusColor[orderStatus]
+  const status = orderStatus(order)
+  const color = theme.statusColor[status]
 
   return (
-    <View style={[styles.container, { backgroundColor: statusColor }]}>
-      <Text>{order.firstName}</Text>
-      <Text>{dictionary(orderStatus)}</Text>
-      <Text>{fromNow(order.createdAt)}</Text>
+    <View style={[styles.container, { backgroundColor: color }]}>
+      <Text style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}>
+        {order.firstName}
+      </Text>
+      <Text style={styles.text}>{dictionary(status)}</Text>
+      <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
     </View>
   )
 }
@@ -21,6 +24,10 @@ const OrderRow = ({ order }: { order: OrderType }) => {
 export default OrderRow
 
 const styles = StyleSheet.create({
+  text: {
+    width: '33%',
+    textAlign: 'center'
+  },
   container: {
     flex: 1,
     padding: 10,

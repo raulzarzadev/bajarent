@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenOrders from './ScreenOrders'
 import ScreenOrderDetail from './ScreenOrderDetail'
-import FormOrder from './FormOrder'
+import ScreenNewOrder from './ScreenNewOrder'
 
 const OrdersStack = createStackNavigator()
 function OrdersStackScreen() {
@@ -14,8 +14,20 @@ function OrdersStackScreen() {
         }}
         component={ScreenOrders}
       />
-      <OrdersStack.Screen name="OrderDetails" component={ScreenOrderDetail} />
-      <OrdersStack.Screen name="NewOrder" component={FormOrder} />
+      <OrdersStack.Screen
+        name="OrderDetails"
+        options={{
+          title: 'Detalle de  orden'
+        }}
+        component={ScreenOrderDetail}
+      />
+      <OrdersStack.Screen
+        name="NewOrder"
+        options={{
+          title: 'Nueva Orden'
+        }}
+        component={ScreenNewOrder}
+      />
     </OrdersStack.Navigator>
   )
 }
