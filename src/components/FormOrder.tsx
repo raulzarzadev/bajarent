@@ -5,6 +5,7 @@ import theme from '../theme'
 import FormikInputValue from './FormikInputValue'
 import OrderType from '../types/OrderType'
 import Button from './Button'
+import PhoneInput from './PhoneInput'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -28,6 +29,7 @@ const FormOrder = ({
         <View style={styles.form}>
           <FormikInputValue name={'firstName'} placeholder="Nombre" />
           <FormikInputValue name={'phone'} placeholder="Teléfono" />
+          {/* <PhoneInput /> */}
           <Button onPress={handleSubmit} label={'Guardar'} />
         </View>
       )}

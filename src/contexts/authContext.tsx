@@ -7,6 +7,7 @@ import {
 } from 'react'
 import { authStateChanged } from '../firebase/auth'
 import UserType from '../types/UserType'
+import { Platform } from 'react-native'
 
 const initialAutState: {
   isAuthenticated: boolean
@@ -37,6 +38,7 @@ const AuthContextProvider = ({ children }) => {
     </AuthContext.Provider>
   )
 }
+console.log(Platform.OS)
 
 export const useAuth = () => {
   return useContext(AuthContext)

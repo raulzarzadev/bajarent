@@ -7,6 +7,7 @@ import Button from './Button'
 import { ServiceStores } from '../firebase/ServiceStore'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
+import { logout } from '../firebase/auth'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -68,6 +69,23 @@ const ScreenProfile = ({ navigation }) => {
           Crear tienda
         </Button>
       )}
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Button
+          styles={{
+            borderWidth: 1,
+            borderColor: theme.colors.error,
+            backgroundColor: 'transparent',
+            width: 200
+          }}
+          onPress={() => {
+            logout()
+          }}
+          textStyles={{ color: theme.colors.error }}
+          size="sm"
+        >
+          Cerrar sesión
+        </Button>
+      </View>
     </View>
   )
 }

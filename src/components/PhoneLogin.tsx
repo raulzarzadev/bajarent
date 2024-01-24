@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import StyledTextInput from './StyledTextInput'
 import Button from './Button'
-import { signInWithPhoneNumber } from 'firebase/auth'
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { auth } from '../firebase/auth'
+import PhoneInput from './PhoneInput'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
@@ -28,7 +29,8 @@ const PhoneLogin = () => {
   const onSignInSubmit = () => {
     //@ts-ignore
     const appVerifier = window.recaptchaVerifier
-
+    console.log({ appVerifier })
+    if (!appVerifier) return console.error('appVerifier is not defined')
     signInWithPhoneNumber(auth, phone, appVerifier)
       .then((confirmationResult) => {
         // SMS sent. Prompt user to type the code from the message, then sign the
@@ -48,16 +50,21 @@ const PhoneLogin = () => {
   }
   useEffect(() => {
     //@ts-ignore
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
-      size: 'invisible',
-      callback: (response) => {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        console.log(response)
-        //onSignInSubmit()
-      }
-    })
+    if (Platform.OS === 'web') {
+      //@ts-ignore
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
+        size: 'invisible',
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          console.log(response)
+          //onSignInSubmit()
+        }
+      })
+    }
+
     //const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId)
   }, [])
+
   return (
     <View>
       {!msmSent && (
@@ -71,7 +78,8 @@ const PhoneLogin = () => {
           >
             Registrate con tu telefono celular
           </Text>
-          <StyledTextInput onChangeText={setPhone}></StyledTextInput>
+          {/* <StyledTextInput onChangeText={setPhone}></StyledTextInput> */}
+          <PhoneInput onChange={setPhone} />
           <Button onPress={onSignInSubmit}>Enviar</Button>
           <View id="sign-in-button"></View>
         </>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Pressable, Text, ViewStyle } from 'react-native'
+import { StyleSheet, Pressable, Text, ViewStyle, TextStyle } from 'react-native'
 import theme from '../theme'
 
 interface ButtonProps {
@@ -9,6 +9,8 @@ interface ButtonProps {
   id?: string
   styles?: ViewStyle
   disabled?: boolean
+  textStyles?: TextStyle
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,8 +19,24 @@ const Button: React.FC<ButtonProps> = ({
   children = 'Label',
   id,
   styles,
-  disabled
+  disabled,
+  textStyles,
+  size = 'md'
 }) => {
+  const sizes = {
+    sm: {
+      padding: 8,
+      fontSize: 12
+    },
+    md: {
+      padding: 10,
+      fontSize: 14
+    },
+    lg: {
+      padding: 12,
+      fontSize: 16
+    }
+  }
   return (
     <Pressable
       disabled={disabled}
@@ -26,12 +44,19 @@ const Button: React.FC<ButtonProps> = ({
       style={[
         baseStyles.button,
         styles,
-        disabled ? baseStyles.buttonDisabled : null
+        disabled ? baseStyles.buttonDisabled : null,
+        { padding: sizes[size].padding }
       ]}
       onPress={onPress}
     >
-      <Text style={baseStyles.buttonText}>
-        <Text>{label || children}</Text>
+      <Text
+        style={[
+          baseStyles.buttonText,
+          textStyles,
+          { fontSize: sizes[size].fontSize }
+        ]}
+      >
+        {label || children}
       </Text>
     </Pressable>
   )
@@ -53,7 +78,8 @@ const baseStyles = StyleSheet.create({
     color: theme.colors.white,
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    textTransform: 'uppercase'
   }
 })
 

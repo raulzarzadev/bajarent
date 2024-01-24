@@ -1,17 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import ScreenProfile from './ScreenProfile'
 import ScreenCreateStore from './ScreenCreateStore'
-import { useStore } from '../contexts/storeContext'
 import ScreenStore from './ScreenStore'
 import OrdersStackScreen from './ScreenOrderStack'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
-  const { store } = useStore()
   return (
     <>
       <Tab.Navigator
