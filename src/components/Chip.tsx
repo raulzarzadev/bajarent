@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Chip as RNEChip } from 'react-native-elements'
-import dictionary from '../dictionary'
 
 const Chip = ({
   title,
@@ -28,7 +27,6 @@ const Chip = ({
       padding: 10
     }
   }
-  console.log({ color })
   return (
     <RNEChip
       title={title}

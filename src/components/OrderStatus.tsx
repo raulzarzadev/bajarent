@@ -14,12 +14,13 @@ const OrderStatus = ({
   return (
     <View
       style={{
-        padding: 6,
+        padding: 2,
         backgroundColor: color,
-        borderRadius: 4,
+        borderRadius: 100,
         marginVertical: 6,
         borderWidth: 1,
-        borderColor: color
+        borderColor: color,
+        width: 150
       }}
     >
       <P

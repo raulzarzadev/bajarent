@@ -9,10 +9,20 @@ import { useNavigation } from '@react-navigation/native'
 
 const OrderActions = ({ order }: { order: OrderType }) => {
   const navigation = useNavigation()
-  console.log(order.status)
   return (
     <View style={{ padding: 4 }}>
-      <OrderStatus status={orderStatus(order)} />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <P size="lg" bold styles={{ marginRight: 2 }}>
+          Status:{' '}
+        </P>
+        <OrderStatus status={orderStatus(order)} />
+      </View>
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
         <View style={styles.item}>
