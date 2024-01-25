@@ -36,7 +36,7 @@ const dark: Theme = {
   base: '#272e38',
   info: '#0090d7',
   success: '#65a30d',
-  warning: '#a3e635',
+  warning: '#facc15',
   error: '#ef4444',
   white: '#e5e5e5',
   black: '#000000'
