@@ -9,6 +9,24 @@ import { useNavigation } from '@react-navigation/native'
 
 const OrderActions = ({ order }: { order: OrderType }) => {
   const navigation = useNavigation()
+  const status = orderStatus(order)
+
+  const disabledDeliveryButton: boolean = [
+    'CANCELLED',
+    'PICKUP',
+    'PENDING'
+  ].includes(status)
+
+  const disabledCancelButton: boolean = ['DELIVERED', 'PICKUP'].includes(status)
+
+  const disabledAuthorizeButton: boolean = [
+    'CANCELLED',
+    'DELIVERED',
+    'PICKUP'
+  ].includes(status)
+
+  const disabledEditButton: boolean = ['PICKUP', 'CANCELLED'].includes(status)
+
   return (
     <View style={{ padding: 4 }}>
       <View
@@ -18,47 +36,35 @@ const OrderActions = ({ order }: { order: OrderType }) => {
           justifyContent: 'center'
         }}
       >
-        <P size="lg" bold styles={{ marginRight: 2 }}>
-          Status:{' '}
-        </P>
-        <OrderStatus status={orderStatus(order)} />
+        <OrderStatus orderId={order.id} />
       </View>
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
         <View style={styles.item}>
           <ButtonDelivery
             orderId={order.id}
-            disabled={order.status === 'CANCELLED' || order.status === 'PICKUP'}
-            isDelivered={order.status === 'DELIVERED'}
+            disabled={disabledDeliveryButton}
+            isDelivered={status === 'DELIVERED'}
           />
         </View>
         <View style={styles.item}>
           <ButtonCancel
             orderId={order.id}
-            disabled={order.status === 'DELIVERED' || order.status === 'PICKUP'}
-            isCancelled={order.status === 'CANCELLED'}
+            disabled={disabledCancelButton}
+            isCancelled={status === 'CANCELLED'}
           />
         </View>
         <View style={styles.item}>
           <ButtonAuthorize
             orderId={order.id}
-            disabled={
-              order.status === 'CANCELLED' ||
-              order.status === 'DELIVERED' ||
-              order.status === 'PICKUP'
-            }
-            isAuthorized={order.status === 'AUTHORIZED'}
+            disabled={disabledAuthorizeButton}
+            isAuthorized={status === 'AUTHORIZED'}
           />
         </View>
 
-        {/* <View style={styles.item}>
-          <ButtonReport orderId={order.id} />
-        </View> */}
-        {/* <View style={styles.item}>
-          <ButtonComment orderId={order.id} />
-        </View> */}
         <View style={styles.item}>
           <Button
+            disabled={disabledEditButton}
             onPress={() => {
               navigation.navigate('EditOrder', { orderId: order.id })
             }}

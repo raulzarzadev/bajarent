@@ -5,13 +5,13 @@ import theme, { BORDER_RADIUS, PADDING } from '../theme'
  * Componente de entrada de texto estilizado.
  *
  * @param {TextInputProps} props - Propiedades del componente TextInput.
- * @returns {JSX.Element} - Elemento JSX que representa el componente StyledTextInput.
+ * @returns {JSX.Element} - Elemento JSX que representa el componente InputTextStyledText.
  */
-const StyledTextInput = ({ ...props }: TextInputProps) => {
+const InputTextStyled = ({ ...props }: TextInputProps) => {
   return <TextInput {...props} style={[baseStyle.inputStyle]} />
 }
 
-export default StyledTextInput
+export default InputTextStyled
 const placeholderOpacity = 'bb'
 const baseStyle = StyleSheet.create({
   inputStyle: {

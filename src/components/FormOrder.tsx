@@ -1,18 +1,21 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Formik, useField } from 'formik'
-import FormikInputValue from './FormikInputValue'
+import { Formik } from 'formik'
+import InputValueFormik from './InputValueFormik'
 import OrderType from '../types/OrderType'
 import Button from './Button'
 
-import FormikInputPhone from './FormikInputPhone'
+import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
 import asDate from '../libs/utils-date'
+import InputLocationFormik from './InputLocationFormik'
+import InputRadiosFormik from './InputRadiosFormik'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
   phone: '',
-  scheduledAt: new Date()
+  scheduledAt: new Date(),
+  type: 'RENT'
 }
 const FormOrder = ({
   onSubmit = async (values) => {
@@ -40,14 +43,27 @@ const FormOrder = ({
               }
             />
           </View>
-          <View style={[styles.item]}>
-            <FormikInputValue name={'firstName'} placeholder="Nombre (s)" />
+          <View style={[styles.item, { justifyContent: 'center' }]}>
+            <InputRadiosFormik
+              name="type"
+              options={[
+                { label: 'Renta', value: 'RENT' },
+                { label: 'Reparación', value: 'REPAIR' }
+              ]}
+              label="Tipo de orden"
+            />
           </View>
           <View style={[styles.item]}>
-            <FormikInputValue name={'lastName'} placeholder="Apellido (s)" />
+            <InputValueFormik name={'firstName'} placeholder="Nombre (s)" />
+          </View>
+          <View style={[styles.item]}>
+            <InputValueFormik name={'lastName'} placeholder="Apellido (s)" />
           </View>
           <View style={[styles.item]}>
             <FormikInputPhone name={'phone'} />
+          </View>
+          <View style={[styles.item]}>
+            <InputLocationFormik name={'location'} />
           </View>
           <View style={[styles.item]}>
             <Button onPress={handleSubmit} label={'Guardar'} />

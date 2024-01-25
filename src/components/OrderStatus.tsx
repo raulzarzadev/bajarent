@@ -1,34 +1,28 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import OrderType from '../types/OrderType'
 import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
 import P from './P'
+import { useStore } from '../contexts/storeContext'
 
-const OrderStatus = ({
-  status = 'PENDING'
-}: {
-  status: OrderType['status']
-}) => {
-  const color = STATUS_COLOR[status]
+const OrderStatus = ({ orderId }: { orderId?: string }) => {
+  const { orders } = useStore()
+  const order = orders.find((order) => order.id === orderId)
+  const status = order?.status
+  const color = STATUS_COLOR[order?.status]
+  const hasReport = order?.hasNotSolvedReports
+
   return (
     <View
-      style={{
-        padding: 2,
-        backgroundColor: color,
-        borderRadius: 100,
-        marginVertical: 6,
-        borderWidth: 1,
-        borderColor: color,
-        width: 150
-      }}
+      style={[
+        styles.container,
+        {
+          backgroundColor: hasReport ? STATUS_COLOR.REPORTED : color,
+          borderColor: color
+        }
+      ]}
     >
-      <P
-        styles={{
-          fontWeight: 'bold'
-          // color: status === 'PENDING' ? theme.colors.black : theme.colors.white
-        }}
-      >
+      <P styles={styles.text}>
         {dictionary(status || 'PENDING').toUpperCase()}
       </P>
     </View>
@@ -37,4 +31,16 @@ const OrderStatus = ({
 
 export default OrderStatus
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    padding: 1,
+    borderRadius: 100,
+    marginVertical: 0,
+    borderWidth: 1,
+
+    width: 150
+  },
+  text: {
+    fontWeight: 'bold'
+  }
+})

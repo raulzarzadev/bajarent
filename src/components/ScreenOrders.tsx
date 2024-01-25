@@ -1,27 +1,18 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
-import OrderType from '../types/OrderType'
-import { useEffect, useState } from 'react'
-import { ServiceOrders } from '../firebase/ServiceOrders'
+
 import { useStore } from '../contexts/storeContext'
 import OrderRow from './OrderRow'
 
-import { NavigationProp } from '@react-navigation/native'
-
 function ScreenOrders({ navigation }) {
-  const { storeId } = useStore()
-  const [orders, setOrders] = useState<OrderType[]>([])
-
-  useEffect(() => {
-    if (storeId) ServiceOrders.storeOrders(storeId, setOrders)
-  }, [storeId])
+  const { orders } = useStore()
 
   return (
     <View style={styles.container}>
       <Button onPress={() => navigation.push('NewOrder')}>Nueva orden</Button>
       <FlatList
         style={styles.orderList}
-        data={orders}
+        data={orders.map((order) => ({ ...order, id: order.id, comments: [] }))}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {

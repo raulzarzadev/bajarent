@@ -32,6 +32,10 @@ type OrderBase = {
   status: OrderStatus
 
   comments: CommentType[]
+
+  type: 'RENT' | 'SALE' | 'REPAIR'
+
+  hasNotSolvedReports?: boolean
 }
 
 export type OrderStatus =

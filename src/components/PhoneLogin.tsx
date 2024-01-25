@@ -1,10 +1,10 @@
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
-import StyledTextInput from './StyledTextInput'
+import StyledTextInput from './InputTextStyled'
 import Button from './Button'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { auth } from '../firebase/auth'
-import PhoneInput from './PhoneInput'
+import PhoneInput from './InputPhone'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')

@@ -8,26 +8,21 @@ import { fromNow } from '../libs/utils-date'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { ServiceComments } from '../firebase/ServiceComments'
 import Chip from './Chip'
-import StyledTextInput from './StyledTextInput'
+import StyledTextInput from './InputTextStyled'
 import { CheckBox } from 'react-native-elements'
 import Button from './Button'
+import { useStore } from '../contexts/storeContext'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
-  const [comments, setComments] = useState<OrderType['comments']>([])
-  useEffect(() => {
-    ServiceComments.orderComments(orderId, setComments)
-  }, [orderId])
+  const { orders } = useStore()
+  const orderComments = orders.find((order) => order.id === orderId)?.comments
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto' }}>
       <P bold>Comentarios</P>
       <InputComment orderId={orderId} />
       <View style={{ padding: 6 }}>
-        {comments?.map((comment, i) => (
-          <OrderComment
-            key={i}
-            comment={comment}
-            //orderId={orderId}
-          />
+        {orderComments?.map((comment, i) => (
+          <OrderComment key={i} comment={comment} />
         ))}
       </View>
     </View>
@@ -37,6 +32,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
 const InputComment = ({ orderId }: { orderId: string }) => {
   const [content, setContent] = useState('')
   const [isReport, setIsReport] = useState(false)
+  const { storeId } = useStore()
   const handleToggleIsReport = () => setIsReport(!isReport)
 
   const reset = () => {
@@ -46,6 +42,7 @@ const InputComment = ({ orderId }: { orderId: string }) => {
   const handleAddComment = async () => {
     await ServiceComments.create({
       orderId,
+      storeId,
       content,
       type: isReport ? 'report' : 'comment'
     })

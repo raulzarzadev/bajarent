@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import StyledTextInput from './StyledTextInput'
+import StyledTextInput from './InputTextStyled'
 import { useField } from 'formik'
 
-const FormikInputValue = ({ name, ...props }) => {
+const InputValueFormik = ({ name, ...props }) => {
   const [field, meta, helpers] = useField(name)
   return (
     <StyledTextInput
@@ -14,6 +14,6 @@ const FormikInputValue = ({ name, ...props }) => {
   )
 }
 
-export default FormikInputValue
+export default InputValueFormik
 
 const styles = StyleSheet.create({})

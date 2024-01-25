@@ -8,7 +8,7 @@ type PhoneInputProps = {
   stylesInput?: ViewStyle
   onChange?: (phoneNumber: string) => void
 }
-export default function PhoneInput({
+export default function InputPhone({
   defaultNumber = '+52',
   stylesContainer,
   onChange = (phoneNumber: string) => console.log(phoneNumber)

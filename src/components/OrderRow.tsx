@@ -1,26 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import OrderType, { OrderStatus } from '../types/OrderType'
+import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
-import dictionary from '../dictionary'
-import orderStatus from '../libs/orderStatus'
-import { STATUS_COLOR } from '../theme'
+import theme, { STATUS_COLOR } from '../theme'
+import OrderStatus from './OrderStatus'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
-  const status = orderStatus(order)
   return (
-    <View style={[styles.container, { backgroundColor: STATUS_COLOR[status] }]}>
+    <View style={[styles.container]}>
       <Text style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}>
         {order.firstName}
       </Text>
       <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
       <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
       <Text style={styles.text}>
-        {dictionary(orderStatus(order)).toUpperCase()}
+        <OrderStatus orderId={order.id} />
       </Text>
-      {/* <Button onPress={() => {}} size="xs">
-        {orderStatus(order)}
-      </Button> */}
     </View>
   )
 }
@@ -41,6 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: 'transparent'
+    borderColor: theme.neutral,
+    backgroundColor: STATUS_COLOR.PENDING
   }
 })

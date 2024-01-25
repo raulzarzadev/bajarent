@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import theme from '../theme'
-import FormikInputValue from './FormikInputValue'
+import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 
 const FormStore = ({
