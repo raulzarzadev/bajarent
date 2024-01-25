@@ -7,10 +7,13 @@ import OrderType from '../types/OrderType'
 import Button from './Button'
 
 import FormikInputPhone from './FormikInputPhone'
+import InputDate from './InputDate'
+import asDate from '../libs/utils-date'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
-  phone: ''
+  phone: '',
+  scheduledAt: new Date()
 }
 const FormOrder = ({
   onSubmit = async (values) => {
@@ -25,9 +28,16 @@ const FormOrder = ({
         onSubmit(values).then(console.log).catch(console.error)
       }}
     >
-      {({ handleSubmit, values }) => (
+      {({ handleSubmit, setValues, values }) => (
         <View style={styles.form}>
-          <FormikInputValue name={'firstName'} placeholder="Nombre" />
+          <InputDate
+            value={asDate(values.scheduledAt) || new Date()}
+            setValue={(value) =>
+              setValues((values) => ({ ...values, scheduledAt: value }), false)
+            }
+          />
+          <FormikInputValue name={'firstName'} placeholder="Nombre (s)" />
+          <FormikInputValue name={'lastName'} placeholder="Apellido (s)" />
           <FormikInputPhone name={'phone'} />
 
           <Button onPress={handleSubmit} label={'Guardar'} />

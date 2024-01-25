@@ -79,7 +79,7 @@ const InputComment = ({ orderId }: { orderId: string }) => {
           containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
         />
         <Button
-          styles={{ alignSelf: 'center' }}
+          buttonStyles={{ alignSelf: 'center' }}
           disabled={!content.length}
           onPress={handleAddComment}
         >

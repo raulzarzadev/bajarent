@@ -21,8 +21,6 @@ export default function App() {
           ? JSON.parse(savedStateString)
           : undefined
 
-        console.log('e', { state })
-
         if (state !== undefined) {
           setInitialState(state)
         }

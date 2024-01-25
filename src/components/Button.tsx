@@ -1,85 +1,128 @@
 import React from 'react'
-import { StyleSheet, Pressable, Text, ViewStyle, TextStyle } from 'react-native'
-import theme from '../theme'
+import { Text, Pressable, StyleSheet, ViewStyle, TextStyle } from 'react-native'
 
-interface ButtonProps {
-  onPress?: () => void
+type ButtonProps = {
+  onPress: () => void
   label?: string
-  children?: string
-  id?: string
-  styles?: ViewStyle
+  size?: 'small' | 'medium' | 'large'
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'danger'
+    | 'warning'
+    | 'info'
+    | 'light'
+    | 'dark'
+  variant?: 'filled' | 'outline'
   disabled?: boolean
+  children?: string
+  buttonStyles?: ViewStyle
   textStyles?: TextStyle
-  size?: 'sm' | 'md' | 'lg'
 }
 
 const Button: React.FC<ButtonProps> = ({
   onPress,
   label,
-  children = 'Label',
-  id,
-  styles,
-  disabled,
-  textStyles,
-  size = 'md'
+  size = 'medium',
+  color = 'primary',
+  variant = 'filled',
+  disabled = false,
+  children = 'Button label',
+  buttonStyles,
+  textStyles
 }) => {
-  const sizes = {
-    sm: {
-      padding: 8,
-      fontSize: 12
-    },
-    md: {
-      padding: 10,
-      fontSize: 14
-    },
-    lg: {
-      padding: 12,
-      fontSize: 16
-    }
-  }
+  const buttonBaseButtonStyles = [
+    baseButtonStyles.button,
+    baseButtonStyles[size],
+    baseButtonStyles[color],
+    variant === 'outline' && baseButtonStyles.outline,
+    disabled && baseButtonStyles.disabled
+  ]
+
+  const textBaseButtonStyles = [
+    baseButtonStyles.text,
+    variant === 'outline' && baseButtonStyles.outlineText,
+    disabled && baseButtonStyles.disabledText
+  ]
+
   return (
     <Pressable
-      disabled={disabled}
-      id={id}
-      style={[
-        baseStyles.button,
-        styles,
-        disabled ? baseStyles.buttonDisabled : null,
-        { padding: sizes[size].padding }
+      style={({ pressed }) => [
+        buttonBaseButtonStyles,
+        pressed && baseButtonStyles.pressed,
+        buttonStyles
       ]}
       onPress={onPress}
+      disabled={disabled}
     >
-      <Text
-        style={[
-          baseStyles.buttonText,
-          textStyles,
-          { fontSize: sizes[size].fontSize }
-        ]}
-      >
-        {label || children}
+      <Text style={[textBaseButtonStyles, textStyles]}>
+        {(label || children).toUpperCase()}
       </Text>
     </Pressable>
   )
 }
 
-const baseStyles = StyleSheet.create({
+const baseButtonStyles = StyleSheet.create({
   button: {
-    backgroundColor: theme.colors.primary,
-    padding: 10,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: theme.colors.lightgrey
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10
   },
-  buttonDisabled: {
-    backgroundColor: theme.colors.disabled,
-    borderColor: theme.colors.lightgrey
-  },
-  buttonText: {
-    color: theme.colors.white,
+  text: {
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    textTransform: 'uppercase'
+    color: '#fff'
+  },
+  small: {
+    padding: 8
+  },
+  medium: {
+    padding: 10
+  },
+  large: {
+    padding: 12
+  },
+  primary: {
+    backgroundColor: '#007bff'
+  },
+  secondary: {
+    backgroundColor: '#6c757d'
+  },
+  success: {
+    backgroundColor: '#28a745'
+  },
+  danger: {
+    backgroundColor: '#dc3545'
+  },
+  warning: {
+    backgroundColor: '#ffc107'
+  },
+  info: {
+    backgroundColor: '#17a2b8'
+  },
+  light: {
+    backgroundColor: '#f8f9fa'
+  },
+  dark: {
+    backgroundColor: '#343a40'
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    borderColor: '#007bff',
+    borderWidth: 1
+  },
+  outlineText: {
+    color: '#007bff'
+  },
+  disabled: {
+    backgroundColor: '#6c757d'
+  },
+  disabledText: {
+    color: '#fff'
+  },
+  pressed: {
+    backgroundColor: '#0056b3'
   }
 })
 

@@ -55,36 +55,25 @@ const BottomAppBar = () => {
             title: 'Tienda '
           }}
         />
-        {!!user && (
-          <Tab.Screen
-            name="Orders"
-            component={OrdersStackScreen}
-            options={{
-              title: 'Ordenes',
-              headerShown: false
-            }}
-          />
-        )}
+
+        <Tab.Screen
+          name="Orders"
+          component={OrdersStackScreen}
+          options={{
+            title: 'Ordenes',
+            headerShown: false
+          }}
+        />
 
         {/* TODO: apply validation to hidde when no store is selected in localstorage */}
-        {!user && (
-          <Tab.Screen
-            name="Perfil"
-            component={ScreenProfile}
-            options={{
-              title: 'Ingresa '
-            }}
-          />
-        )}
-        {user && (
-          <Tab.Screen
-            name="Perfil"
-            component={ScreenProfile}
-            options={{
-              title: 'Profile '
-            }}
-          />
-        )}
+
+        <Tab.Screen
+          name="Perfil"
+          component={ScreenProfile}
+          options={{
+            title: user ? 'Perfil' : 'Iniciar sesión'
+          }}
+        />
 
         <Tab.Screen
           name="Crear tienda"

@@ -82,6 +82,8 @@ const ScreenProfile = ({ navigation }) => {
           }}
           textStyles={{ color: theme.colors.error }}
           size="sm"
+          variant="outline"
+          color="error"
         >
           Cerrar sesión
         </Button>
