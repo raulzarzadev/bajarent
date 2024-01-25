@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType from '../types/OrderType'
-import { fromNow } from '../libs/utils-date'
+import { dateFormat, fromNow } from '../libs/utils-date'
 import P from './P'
 import OrderActions from './OrderActions'
 
@@ -24,8 +24,12 @@ const ScreenOrderDetail = ({ route }) => {
   return (
     <ScrollView style={{ marginVertical: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <P size="xs">{fromNow(order.createdAt)}</P>
-        <P size="xs"> {order.id}</P>
+        <P size="sm">
+          {` ${dateFormat(order.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
+            order.createdAt
+          )} `}
+        </P>
+        <P size="sm"> {order.id}</P>
       </View>
 
       <View
@@ -34,10 +38,20 @@ const ScreenOrderDetail = ({ route }) => {
           padding: 4
         }}
       >
-        <P size="lg" bold styles={{ textAlign: 'left' }}>
+        <P size="lg" bold styles={{ textAlign: 'center' }}>
           {order.firstName}
         </P>
         <PhoneCard phone={order.phone} />
+      </View>
+      <View>
+        {order.scheduledAt && (
+          <P size="lg" styles={{ textAlign: 'center' }}>
+            {` Entrega programada: ${dateFormat(
+              order.scheduledAt,
+              'dd/MMM/yy'
+            )} ${fromNow(order.scheduledAt)} `}
+          </P>
+        )}
       </View>
       <OrderActions order={{ ...order, comments }} />
       <OrderComments orderId={orderId} />

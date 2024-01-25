@@ -4,7 +4,6 @@ import OrderType, { OrderStatus } from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import dictionary from '../dictionary'
 import orderStatus from '../libs/orderStatus'
-import useTheme from '../hooks/useTheme'
 import { STATUS_COLOR } from '../theme'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
@@ -15,6 +14,7 @@ const OrderRow = ({ order }: { order: OrderType }) => {
         {order.firstName}
       </Text>
       <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
+      <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
       <Text style={styles.text}>
         {dictionary(orderStatus(order)).toUpperCase()}
       </Text>

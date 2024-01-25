@@ -1,9 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import theme, { STATUS_COLOR } from '../theme'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { useAuth } from '../contexts/authContext'
 import OrderType from '../types/OrderType'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
@@ -11,6 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const OrderActions = ({ order }: { order: OrderType }) => {
   const navigation = useNavigation()
+  console.log(order.status)
   return (
     <View style={{ padding: 4 }}>
       <OrderStatus status={orderStatus(order)} />
@@ -28,6 +27,17 @@ const OrderActions = ({ order }: { order: OrderType }) => {
             orderId={order.id}
             disabled={order.status === 'DELIVERED' || order.status === 'PICKUP'}
             isCancelled={order.status === 'CANCELLED'}
+          />
+        </View>
+        <View style={styles.item}>
+          <ButtonAuthorize
+            orderId={order.id}
+            disabled={
+              order.status === 'CANCELLED' ||
+              order.status === 'DELIVERED' ||
+              order.status === 'PICKUP'
+            }
+            isAuthorized={order.status === 'AUTHORIZED'}
           />
         </View>
 
@@ -75,6 +85,34 @@ const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
         label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
         onPress={() => {
           handleCancel()
+        }}
+      />
+    </>
+  )
+}
+const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
+  const handleAuthorize = () => {
+    ServiceOrders.update(orderId, {
+      status: isAuthorized ? 'PENDING' : 'AUTHORIZED'
+    })
+      .then(console.log)
+      .catch(console.error)
+    ServiceOrders.addComment(
+      orderId,
+      'comment',
+      isAuthorized ? 'Orden no autorizada' : 'Orden autorizada'
+    )
+      .then(console.log)
+      .catch(console.error)
+  }
+  return (
+    <>
+      <Button
+        variant="outline"
+        disabled={disabled}
+        label={isAuthorized ? 'No autorizar' : 'Autorizar'}
+        onPress={() => {
+          handleAuthorize()
         }}
       />
     </>

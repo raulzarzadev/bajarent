@@ -50,12 +50,20 @@ const Button: React.FC<ButtonProps> = ({
         baseStyles.button,
         buttonColor,
         buttonVariant,
+        disabled && baseStyles.disabled,
         buttonStyles
       ]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[baseStyles.text, textColor, textStyles]}>
+      <Text
+        style={[
+          baseStyles.text,
+          textColor,
+          textStyles,
+          disabled && { color: 'black' }
+        ]}
+      >
         {(label || children).toUpperCase()}
       </Text>
     </Pressable>
@@ -75,6 +83,11 @@ const baseStyles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  disabled: {
+    backgroundColor: 'lightgrey',
+    opacity: 0.2,
+    borderColor: 'transparent'
   }
 })
 

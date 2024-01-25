@@ -39,45 +39,26 @@ const customLocale = {
   formatDistance: (
     token: string,
     count: number,
-    options?: { addSuffix?: boolean }
+    options?: { addSuffix?: boolean; comparison?: number }
   ) => {
-    switch (token) {
-      case 'xSeconds':
-        return options?.addSuffix
-          ? count > 0
-            ? 'hace ' + count + ' s'
-            : 'en ' + count + ' s'
-          : count + 'm'
-      case 'xMinutes':
-        return options?.addSuffix
-          ? count > 0
-            ? 'hace ' + count + ' m'
-            : 'en ' + count + ' m'
-          : count + 'm'
-      case 'xHours':
-        return options?.addSuffix
-          ? count > 0
-            ? 'hace ' + count + ' h'
-            : 'en ' + count + ' h'
-          : count + ' h'
-      case 'xWeeks':
-        return options?.addSuffix
-          ? count > 0
-            ? 'hace ' + count + ' s'
-            : 'en ' + count + ' s'
-          : count + ' s'
-      case 'xMonths':
-        return options?.addSuffix
-          ? count > 0
-            ? 'hace ' + count + ' M'
-            : 'en ' + count + ' M'
-          : count + ' M'
-      default:
-        return (
-          es.formatDistance?.(token as FormatDistanceToken, count, options) ||
-          ''
-        )
+    const units = {
+      xSeconds: 's',
+      xMinutes: 'm',
+      xHours: 'h',
+      xDays: 'd',
+      xWeeks: 'S',
+      xMonths: 'M'
     }
+    const unit = units[token]
+    if (!unit) {
+      throw new Error(`Invalid time unit: ${token}`)
+    }
+    const days = count * options.comparison
+    return options?.addSuffix
+      ? days < 0
+        ? 'hace ' + count + ' ' + unit
+        : 'en ' + count + ' ' + unit
+      : count + unit
   }
 }
 
