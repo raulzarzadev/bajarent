@@ -28,7 +28,7 @@ const theme: Theme = {
 
 export type Colors = keyof Theme
 
-const dark: Theme = {
+const darkTheme: Theme = {
   primary: '#009cff',
   secondary: '#1d4ed8',
   accent: '#d1d5db',
@@ -57,6 +57,7 @@ export const BORDER_RADIUS = 4
 export const PADDING = 4
 export const MARGIN = 4
 
-const light = theme
+const light = darkTheme
+const dark = darkTheme
 export { dark, light }
 export default theme
