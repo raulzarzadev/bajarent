@@ -21,7 +21,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
     <View style={{ maxWidth: 400, marginHorizontal: 'auto' }}>
       <P bold>Comentarios</P>
       <InputComment orderId={orderId} />
-      <View style={{ padding: theme.padding.sm }}>
+      <View style={{ padding: 6 }}>
         {comments?.map((comment, i) => (
           <OrderComment
             key={i}
@@ -109,23 +109,19 @@ const OrderComment = ({
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
           <P styles={{ fontWeight: 'bold', marginRight: 4 }}>Raul Zarza</P>
-          <P styles={{ fontSize: theme.font.size.md, marginRight: 4 }}>
-            {fromNow(comment.createdAt)}
-          </P>
+          <P styles={{ marginRight: 4 }}>{fromNow(comment.createdAt)}</P>
           {comment?.type === 'report' && (
             <Chip
               title={dictionary(comment?.type)}
-              color={theme.statusColor.REPORTED}
-              titleColor={theme.colors.white}
+              color={theme.error}
+              titleColor={theme.neutral}
               size="sm"
             />
           )}
 
           <Ionicons
             name="checkmark-done-circle"
-            color={
-              comment.solved ? theme.colors.success : theme.colors.lightgrey
-            }
+            color={comment.solved ? theme.success : theme.accent}
             style={{ alignItems: 'baseline' }}
             onPress={() => handleToggleSolveReport(comment.id, comment.solved)}
             size={30}
@@ -136,7 +132,7 @@ const OrderComment = ({
         styles={{
           width: '100%',
           textAlign: 'left',
-          paddingVertical: theme.padding.md
+          paddingVertical: 6
         }}
       >
         {comment?.content}

@@ -1,22 +1,26 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import OrderType from '../types/OrderType'
+import OrderType, { OrderStatus } from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import dictionary from '../dictionary'
-import theme from '../theme'
 import orderStatus from '../libs/orderStatus'
+import useTheme from '../hooks/useTheme'
+import { STATUS_COLOR } from '../theme'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
   const status = orderStatus(order)
-  const color = theme.statusColor[status]
-
   return (
-    <View style={[styles.container, { backgroundColor: color }]}>
+    <View style={[styles.container, { backgroundColor: STATUS_COLOR[status] }]}>
       <Text style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}>
         {order.firstName}
       </Text>
-      <Text style={styles.text}>{dictionary(status).toUpperCase()}</Text>
       <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
+      <Text style={styles.text}>
+        {dictionary(orderStatus(order)).toUpperCase()}
+      </Text>
+      {/* <Button onPress={() => {}} size="xs">
+        {orderStatus(order)}
+      </Button> */}
     </View>
   )
 }
@@ -26,16 +30,17 @@ export default OrderRow
 const styles = StyleSheet.create({
   text: {
     width: '33%',
-    textAlign: 'center'
+    textAlign: 'center',
+    alignSelf: 'center'
   },
   container: {
     flex: 1,
     padding: 10,
     marginVertical: 5,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderColor: theme.colors.disabled,
-    borderWidth: 1
+    borderWidth: 1,
+    borderColor: 'transparent'
   }
 })

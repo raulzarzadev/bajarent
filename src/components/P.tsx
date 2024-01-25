@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextStyle, View } from 'react-native'
 import React, { ReactNode } from 'react'
-import theme from '../theme'
+import theme, { FONT_SIZE } from '../theme'
 
 const P = ({
   children,
@@ -14,10 +14,10 @@ const P = ({
   styles?: TextStyle
 }) => {
   const fontSize = {
-    xs: theme.font.size.md * 0.8,
-    sm: theme.font.size.md * 1,
-    md: theme.font.size.md * 1.2,
-    lg: theme.font.size.md * 1.6
+    xs: FONT_SIZE * 0.8,
+    sm: FONT_SIZE * 1,
+    md: FONT_SIZE * 1.2,
+    lg: FONT_SIZE * 1.6
   }
   return (
     <Text
@@ -36,6 +36,8 @@ export default P
 
 const defaultStyles = StyleSheet.create({
   text: {
-    ...theme.p
+    color: theme.black,
+    textAlign: 'center',
+    marginVertical: 8
   }
 })

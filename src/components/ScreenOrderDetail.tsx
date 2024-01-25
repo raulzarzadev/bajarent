@@ -4,7 +4,6 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import P from './P'
-import theme from '../theme'
 import OrderActions from './OrderActions'
 
 import OrderComments from './OrderComments'
@@ -32,7 +31,7 @@ const ScreenOrderDetail = ({ route }) => {
       <View
         style={{
           marginTop: 32,
-          padding: theme.padding.sm
+          padding: 4
         }}
       >
         <P size="lg" bold styles={{ textAlign: 'left' }}>

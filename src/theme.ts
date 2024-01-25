@@ -1,82 +1,62 @@
-import { ViewStyle } from 'react-native'
-import { OrderStatus } from './types/OrderType'
-
-const measures = (scale: number = 1) => ({
-  xs: 8 * scale,
-  sm: 10 * scale,
-  md: 12 * scale,
-  lg: 18 * scale
-})
-
-const font = {
-  family: 'System',
-  size: measures(1),
-  bold: 'bold'
+export type Theme = {
+  primary: string
+  secondary: string
+  accent: string
+  neutral: string
+  base: string
+  info: string
+  success: string
+  warning: string
+  error: string
+  white: string
+  black: string
 }
 
-const borderRadius = measures()
+const theme: Theme = {
+  primary: '#c7d2fe',
+  secondary: '#a78bfa',
+  accent: '#e7e5efb',
+  neutral: '#fecaca',
+  base: '#cffafe',
+  info: '#60a5fa',
+  success: '#65a30d',
+  warning: '#fef08a',
+  error: '#f87171',
+  white: '#e5e5e5',
+  black: '#000000'
+} as const
 
-const padding = measures()
+export type Colors = keyof Theme
 
-const margin = measures()
-
-const colors = {
-  blue: '#0070f3',
-  lightBlue: '#79b8ff',
-  white: '#ffffff',
-  black: '#000000',
-  yellow: '#ffcc00',
-  red: '#ff0000',
-  green: '#00cc00',
-  gray: '#999999',
-  lightGray: '#C0C0C0',
-  darkGray: '#333333'
+const dark: Theme = {
+  primary: '#009cff',
+  secondary: '#1d4ed8',
+  accent: '#d1d5db',
+  neutral: '#13131d',
+  base: '#272e38',
+  info: '#0090d7',
+  success: '#65a30d',
+  warning: '#a3e635',
+  error: '#ef4444',
+  white: '#e5e5e5',
+  black: '#000000'
 }
 
-const statusColor: Record<OrderStatus, string> = {
-  PENDING: 'transparent',
-  AUTHORIZED: colors.lightBlue,
-  DELIVERED: colors.green,
-  CANCELLED: colors.gray,
-  REPORTED: colors.red,
-  PICKUP: colors.lightGray
+export const STATUS_COLOR = {
+  PENDING: '#ffe4e6',
+  AUTHORIZED: '#fde68a',
+  DELIVERED: theme.success,
+  CANCELLED: '#9ca3af',
+  REPORTED: theme.error,
+  PICKUP: '#f472b6'
 }
 
-const h1 = {
-  fontSize: font.size.lg,
-  fontWeight: 600,
-  textAlign: 'center'
-} as ViewStyle
-const p = {
-  fontSize: font.size.md,
-  fontWeight: 400,
-  textAlign: 'center'
-} as ViewStyle
+export const FONT_SIZE = 10
+export const FONT_FAMILY = 'Roboto'
+export const BORDER_RADIUS = 4
+export const PADDING = 4
+export const MARGIN = 4
 
-const theme = {
-  colors: {
-    primary: colors.blue,
-    background: colors.lightGray,
-    // text: '#333333',
-    accent: colors.yellow,
-    secondary: colors.lightBlue,
-    highlight: colors.darkGray,
-    error: colors.red,
-    success: colors.green,
-    white: colors.white,
-    black: colors.black,
-    disabled: colors.lightGray,
-    lightgrey: colors.lightGray
-  },
-  font,
-  padding,
-  margin,
-  borderRadius,
-  h1,
-  p,
-  statusColor
-
-  // Add any additional theme properties here
-}
-
+const light = theme
+export { dark, light }
 export default theme

@@ -8,10 +8,13 @@ import { ServiceStores } from '../firebase/ServiceStore'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
 import { logout } from '../firebase/auth'
+import useTheme from '../hooks/useTheme'
+import P from './P'
+import H1 from './H1'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
-
+  const { theme } = useTheme()
   useEffect(() => {
     if (user) {
       ServiceStores.getStoresByUserId(user.id)
@@ -35,53 +38,45 @@ const ScreenProfile = ({ navigation }) => {
       <Text style={{ textAlign: 'center', marginTop: 16 }}>
         Telefono: {user.phone}
       </Text>
-
+      <H1 size="lg">Tiendas</H1>
       <View>
-        <Text>Tiendas</Text>
         {stores.map((store) => (
-          <Button
-            onPress={() => {
-              handleSetStoreId(store.id)
-            }}
-            styles={{
-              marginVertical: 16,
-              backgroundColor: theme.colors.secondary,
-              borderWidth: 2,
-              borderColor:
-                storeId === store.id ? theme.colors.primary : 'transparent'
-            }}
-            key={store.id}
-          >
-            {store.name}
-          </Button>
+          <View style={styles.store} key={store.id}>
+            <Button
+              onPress={() => {
+                handleSetStoreId(store.id)
+                navigation.navigate('Store')
+              }}
+              buttonStyles={{
+                marginVertical: 6,
+                borderWidth: 2,
+                borderColor: storeId === store.id ? theme.black : 'transparent'
+                // backgroundColor: theme.colors.secondary,
+              }}
+            >
+              {store.name}
+            </Button>
+          </View>
         ))}
       </View>
 
       {user?.canCreateStore && (
-        <Button
-          onPress={() => {
-            navigation.navigate('CreateStore')
-          }}
-          styles={{
-            marginVertical: 16
-          }}
-        >
-          Crear tienda
-        </Button>
+        <View style={styles.buttons}>
+          <Button
+            onPress={() => {
+              navigation.navigate('CreateStore')
+            }}
+            variant="outline"
+          >
+            Crear tienda
+          </Button>
+        </View>
       )}
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.buttons}>
         <Button
-          styles={{
-            borderWidth: 1,
-            borderColor: theme.colors.error,
-            backgroundColor: 'transparent',
-            width: 200
-          }}
           onPress={() => {
             logout()
           }}
-          textStyles={{ color: theme.colors.error }}
-          size="sm"
           variant="outline"
           color="error"
         >
@@ -94,4 +89,9 @@ const ScreenProfile = ({ navigation }) => {
 
 export default ScreenProfile
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  store: {
+    marginVertical: 6
+  },
+  buttons: { justifyContent: 'center', alignItems: 'center', marginVertical: 6 }
+})

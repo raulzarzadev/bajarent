@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import theme from '../theme'
+import theme, { STATUS_COLOR } from '../theme'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 const OrderActions = ({ order }: { order: OrderType }) => {
   const navigation = useNavigation()
   return (
-    <View style={{ padding: theme.padding.md }}>
+    <View style={{ padding: 4 }}>
       <OrderStatus status={orderStatus(order)} />
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
@@ -72,11 +72,6 @@ const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
     <>
       <Button
         disabled={disabled}
-        styles={{
-          backgroundColor: isCancelled
-            ? theme.statusColor.CANCELLED
-            : theme.colors.error
-        }}
         label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
         onPress={() => {
           handleCancel()
@@ -103,11 +98,6 @@ const ButtonDelivery = ({ orderId, isDelivered, disabled }) => {
   return (
     <Button
       disabled={disabled}
-      styles={{
-        backgroundColor: isDelivered
-          ? theme.colors.primary
-          : theme.colors.secondary
-      }}
       label={isDelivered ? 'Recoger' : 'Entregar'}
       onPress={() => {
         handleDelivery()

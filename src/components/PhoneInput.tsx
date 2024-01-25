@@ -33,7 +33,6 @@ PhoneInputProps) {
     <View style={[{ width: '100%' }, stylesContainer]}>
       <RNPhoneInput
         customMask={['## ## ## ## ##']}
-        // style={[stylesInput]}
         language="es"
         defaultValue={defaultNumber}
         value={inputValue}

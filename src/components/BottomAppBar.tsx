@@ -7,6 +7,8 @@ import ScreenCreateStore from './ScreenCreateStore'
 import ScreenStore from './ScreenStore'
 import OrdersStackScreen from './ScreenOrderStack'
 import { useAuth } from '../contexts/authContext'
+import ScreenComponents from './ScreenComponents'
+import ScreenProfileStack from './ScreenProfileStack'
 
 const Tab = createBottomTabNavigator()
 
@@ -68,19 +70,27 @@ const BottomAppBar = () => {
         {/* TODO: apply validation to hidde when no store is selected in localstorage */}
 
         <Tab.Screen
-          name="Perfil"
-          component={ScreenProfile}
+          name="Profile"
+          component={ScreenProfileStack}
           options={{
-            title: user ? 'Perfil' : 'Iniciar sesión'
+            title: user ? 'Perfil' : 'Iniciar sesión',
+            headerShown: false
           }}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Crear tienda"
           component={ScreenCreateStore}
           options={{
             tabBarButton: () => null
           }}
+        /> */}
+        <Tab.Screen
+          name="Components"
+          component={ScreenComponents}
+          // options={{
+          //   tabBarButton: () => null
+          // }}
         />
       </Tab.Navigator>
     </>

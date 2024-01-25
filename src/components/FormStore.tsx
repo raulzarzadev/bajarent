@@ -19,8 +19,12 @@ const FormStore = ({
     >
       {({ handleSubmit }) => (
         <View style={styles.form}>
-          <FormikInputValue name={'name'} placeholder="Nombre" />
-          <Button onPress={handleSubmit} label={'Guardar'} />
+          <View style={styles.input}>
+            <FormikInputValue name={'name'} placeholder="Nombre" />
+          </View>
+          <View style={styles.input}>
+            <Button onPress={handleSubmit} label={'Guardar'} />
+          </View>
         </View>
       )}
     </Formik>
@@ -31,6 +35,9 @@ export default FormStore
 
 const styles = StyleSheet.create({
   form: {
-    padding: theme.padding.md
+    padding: 10
+  },
+  input: {
+    marginVertical: 10
   }
 })

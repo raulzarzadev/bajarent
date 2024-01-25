@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Formik, useField } from 'formik'
-import theme from '../theme'
 import FormikInputValue from './FormikInputValue'
 import OrderType from '../types/OrderType'
 import Button from './Button'
@@ -30,17 +29,29 @@ const FormOrder = ({
     >
       {({ handleSubmit, setValues, values }) => (
         <View style={styles.form}>
-          <InputDate
-            value={asDate(values.scheduledAt) || new Date()}
-            setValue={(value) =>
-              setValues((values) => ({ ...values, scheduledAt: value }), false)
-            }
-          />
-          <FormikInputValue name={'firstName'} placeholder="Nombre (s)" />
-          <FormikInputValue name={'lastName'} placeholder="Apellido (s)" />
-          <FormikInputPhone name={'phone'} />
-
-          <Button onPress={handleSubmit} label={'Guardar'} />
+          <View style={[styles.item]}>
+            <InputDate
+              value={asDate(values.scheduledAt) || new Date()}
+              setValue={(value) =>
+                setValues(
+                  (values) => ({ ...values, scheduledAt: value }),
+                  false
+                )
+              }
+            />
+          </View>
+          <View style={[styles.item]}>
+            <FormikInputValue name={'firstName'} placeholder="Nombre (s)" />
+          </View>
+          <View style={[styles.item]}>
+            <FormikInputValue name={'lastName'} placeholder="Apellido (s)" />
+          </View>
+          <View style={[styles.item]}>
+            <FormikInputPhone name={'phone'} />
+          </View>
+          <View style={[styles.item]}>
+            <Button onPress={handleSubmit} label={'Guardar'} />
+          </View>
         </View>
       )}
     </Formik>
@@ -51,6 +62,10 @@ export default FormOrder
 
 const styles = StyleSheet.create({
   form: {
-    padding: theme.padding.md
+    padding: 10
+    // padding: theme.padding.md
+  },
+  item: {
+    marginVertical: 10
   }
 })

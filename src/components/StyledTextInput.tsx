@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput, TextInputProps } from 'react-native'
-import theme from '../theme'
+import theme, { BORDER_RADIUS, PADDING } from '../theme'
 
 /**
  * Componente de entrada de texto estilizado.
@@ -8,19 +8,18 @@ import theme from '../theme'
  * @returns {JSX.Element} - Elemento JSX que representa el componente StyledTextInput.
  */
 const StyledTextInput = ({ ...props }: TextInputProps) => {
-  return <TextInput {...props} style={[styles.inputStyle, props.style]} />
+  return <TextInput {...props} style={[baseStyle.inputStyle]} />
 }
 
 export default StyledTextInput
 const placeholderOpacity = 'bb'
-const styles = StyleSheet.create({
+const baseStyle = StyleSheet.create({
   inputStyle: {
     borderWidth: 1,
-    borderColor: theme.colors.lightgrey,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.padding.sm,
-    marginVertical: theme.margin.sm,
+    borderColor: theme.neutral,
+    borderRadius: BORDER_RADIUS * 1.8,
+    padding: PADDING * 3,
     width: '100%',
-    placeholderTextColor: theme.colors.black + placeholderOpacity // Set placeholder text color to transparent
+    placeholderTextColor: theme.black + placeholderOpacity // Set placeholder text color to transparent
   }
 })
