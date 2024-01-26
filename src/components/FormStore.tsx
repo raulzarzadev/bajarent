@@ -6,13 +6,14 @@ import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 
 const FormStore = ({
+  defaultValues,
   onSubmit = async (values) => {
     console.log(values)
   }
 }) => {
   return (
     <Formik
-      initialValues={{ name: '' }}
+      initialValues={{ name: '', ...defaultValues }}
       onSubmit={async (values) => {
         await onSubmit(values).then(console.log).catch(console.error)
       }}

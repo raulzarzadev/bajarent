@@ -5,7 +5,7 @@ import ScreenNewOrder from './ScreenNewOrder'
 import ScreenOrderEdit from './ScreenOrderEdit'
 
 const OrdersStack = createStackNavigator()
-function OrdersStackScreen() {
+function StackOrders() {
   return (
     <OrdersStack.Navigator>
       <OrdersStack.Screen
@@ -40,4 +40,4 @@ function OrdersStackScreen() {
     </OrdersStack.Navigator>
   )
 }
-export default OrdersStackScreen
+export default StackOrders

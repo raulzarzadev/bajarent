@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
-import P from './P'
 import { useStore } from '../contexts/storeContext'
 
 const OrderStatus = ({ orderId }: { orderId?: string }) => {

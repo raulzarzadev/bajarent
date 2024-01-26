@@ -48,7 +48,8 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (storeId) {
-      ServiceStores.get(storeId).then(setStore).catch(console.error)
+      ServiceStores.listen(storeId, setStore)
+      //.then(setStore).catch(console.error)
     } else {
       setStore(null)
     }
