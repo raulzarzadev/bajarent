@@ -11,8 +11,8 @@ import UserType from '../types/UserType'
 import H1 from './H1'
 const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
   const [_user, _setUser] = useState(user)
-
   useEffect(() => {
+    _setUser(user)
     if (userId && !user)
       ServiceUsers.get(userId).then((res) => {
         _setUser(res)

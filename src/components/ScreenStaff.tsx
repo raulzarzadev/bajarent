@@ -7,18 +7,25 @@ import {
   Text,
   View
 } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
-import { useNavigation } from '@react-navigation/native'
 import theme from '../theme'
-import { ServiceUsers } from '../firebase/ServiceUser'
+import StaffType from '../types/StaffType'
+import { dateFormat } from '../libs/utils-date'
 
 const ScreenStaff = ({ navigation }) => {
   const { staff } = useStore()
   if (!staff) return <ActivityIndicator />
   return (
-    <ScrollView style={{ padding: 6 }}>
+    <ScrollView
+      style={{
+        padding: 6,
+        maxWidth: 400,
+        width: '100%',
+        marginHorizontal: 'auto'
+      }}
+    >
       <Button
         onPress={() => {
           navigation.navigate('StaffNew')
@@ -47,7 +54,21 @@ const ScreenStaff = ({ navigation }) => {
   )
 }
 
-export const StaffRow = ({ staff, onPress }) => {
+export const StaffRow = ({
+  staff,
+  onPress,
+  fields = ['name', 'position']
+}: {
+  staff: StaffType
+  onPress: () => void
+  fields?: (keyof StaffType)[]
+}) => {
+  const text = (field?: string | Date): string => {
+    if (typeof field === 'string') return field
+    if (field instanceof Date) {
+      return dateFormat(field)
+    }
+  }
   return (
     <Pressable
       onPress={() => {
@@ -70,19 +91,16 @@ export const StaffRow = ({ staff, onPress }) => {
           flexDirection: 'row'
         }}
       >
-        <Text>{staff?.position}</Text>
-        <Text>{staff?.name}</Text>
-        <Text>{staff?.phone}</Text>
-        <Text>{staff?.email}</Text>
+        {fields?.map((field) => (
+          <Text
+            key={field}
+            style={{ marginHorizontal: 4, width: `${100 / fields.length}%` }}
+            numberOfLines={1}
+          >
+            {text(staff[field])}
+          </Text>
+        ))}
       </View>
-      <View></View>
-      {/* <ButtonIcon
-        icon="edit"
-        variant="ghost"
-        onPress={() => {
-          navigate('StaffEdit', { staffId: staff.id })
-        }}
-      ></ButtonIcon> */}
     </Pressable>
   )
 }

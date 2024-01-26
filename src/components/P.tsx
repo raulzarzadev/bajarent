@@ -8,7 +8,7 @@ const P = ({
   bold = false,
   styles
 }: {
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   children: ReactNode
   bold?: boolean
   styles?: TextStyle
@@ -17,7 +17,8 @@ const P = ({
     xs: FONT_SIZE * 0.8,
     sm: FONT_SIZE * 1,
     md: FONT_SIZE * 1.2,
-    lg: FONT_SIZE * 1.6
+    lg: FONT_SIZE * 1.6,
+    xl: FONT_SIZE * 2.4
   }
   return (
     <Text

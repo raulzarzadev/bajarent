@@ -10,6 +10,9 @@ import { useStore } from '../contexts/storeContext'
 import { StaffRow } from './ScreenStaff'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import Button from './Button'
+import P from './P'
+import CardStaff from './CardStaff'
+import H1 from './H1'
 
 const ScreenAssignOrder = ({ route, navigation }) => {
   const { orderId } = route.params
@@ -19,19 +22,35 @@ const ScreenAssignOrder = ({ route, navigation }) => {
   const handleAssignOrder = (staffId: string) => {
     ServiceOrders.update(orderId, { assignTo: staffId })
       .then(() => {
-        navigation.navigate('OrderDetails', { orderId })
+        // navigation.navigate('OrderDetails', { orderId })
       })
       .catch(console.error)
   }
   const assignTo = order.assignTo || ''
-  console.log({ assignTo, staff })
   return (
-    <View>
-      <Text>
-        Orden asignada a: {staff.find((s) => s.id === assignTo)?.name}{' '}
-        {staff.find((s) => s.id === assignTo)?.position}
-      </Text>
-      {assignTo && (
+    <View
+      style={{
+        maxWidth: 400,
+        margin: 'auto',
+        paddingVertical: 16,
+        width: '100%'
+      }}
+    >
+      <View
+        style={{
+          marginBottom: 16
+        }}
+      >
+        {!!assignTo ? (
+          <>
+            <Text>Orden asignada a: </Text>
+            <CardStaff staff={staff.find((s) => s?.id === assignTo)} />
+          </>
+        ) : (
+          <H1>Asignar orden</H1>
+        )}
+      </View>
+      {!!assignTo && (
         <Button
           onPress={() => {
             handleAssignOrder('')
@@ -42,12 +61,17 @@ const ScreenAssignOrder = ({ route, navigation }) => {
       <FlatList
         data={staff}
         renderItem={({ item }) => (
-          <StaffRow
-            staff={item}
-            onPress={() => {
-              handleAssignOrder(item.id)
-            }}
-          />
+          <>
+            {assignTo !== item.id ? (
+              <StaffRow
+                staff={item}
+                onPress={() => {
+                  handleAssignOrder(item.id)
+                }}
+                fields={['name', 'position', 'phone']}
+              />
+            ) : null}
+          </>
         )}
         keyExtractor={({ id }) => id}
       />

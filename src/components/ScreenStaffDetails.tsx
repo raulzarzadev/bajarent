@@ -2,8 +2,8 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import ButtonIcon from './ButtonIcon'
-import CardUser from './CardUser'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import CardStaff from './CardStaff'
 
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
@@ -18,9 +18,6 @@ const ScreenStaffDetails = ({ route, navigation }) => {
           margin: 'auto'
         }}
       >
-        {/* <P bold size="lg">
-          {employee.name}
-        </P> */}
         <View style={{ margin: 'auto', flexDirection: 'row' }}>
           <ButtonIcon
             icon="delete"
@@ -41,10 +38,7 @@ const ScreenStaffDetails = ({ route, navigation }) => {
             }}
           ></ButtonIcon>
         </View>
-        <CardUser userId={employee.userId} />
-        <View>
-          <Text>Puesto: {employee.position}</Text>
-        </View>
+        <CardStaff staff={employee} />
       </View>
     </View>
   )
