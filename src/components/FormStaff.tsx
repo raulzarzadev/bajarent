@@ -1,12 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
-import theme from '../theme'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 
-const FormStore = ({
-  defaultValues,
+const FormStaff = ({
+  defaultValues = {},
   onSubmit = async (values) => {
     console.log(values)
   }
@@ -23,9 +22,7 @@ const FormStore = ({
           <View style={styles.input}>
             <FormikInputValue name={'name'} placeholder="Nombre" />
           </View>
-          <View style={styles.input}>
-            <FormikInputValue name={'description'} placeholder="Descripción" />
-          </View>
+
           <View style={styles.input}>
             <Button onPress={handleSubmit} label={'Guardar'} />
           </View>
@@ -35,7 +32,7 @@ const FormStore = ({
   )
 }
 
-export default FormStore
+export default FormStaff
 
 const styles = StyleSheet.create({
   form: {

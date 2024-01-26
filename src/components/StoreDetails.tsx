@@ -1,9 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import H1 from './H1'
 import P from './P'
 import StoreType from '../types/StoreType'
-import { Icon } from 'react-native-elements'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
 
@@ -30,7 +29,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
           }}
         ></ButtonIcon>
       </View>
-      <P>Buenos dias pasadena</P>
+      <P>{store.description}</P>
     </View>
   )
 }

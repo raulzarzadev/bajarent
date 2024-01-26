@@ -2,25 +2,25 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ScreenCreateStore from './ScreenStoreCreate'
 import ScreenProfile from './ScreenProfile'
 
-const OrdersStack = createStackNavigator()
+const Stack = createStackNavigator()
 function StackProfile() {
   return (
-    <OrdersStack.Navigator>
-      <OrdersStack.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name="Profile"
         options={{
           title: 'Perfil'
         }}
         component={ScreenProfile}
       />
-      <OrdersStack.Screen
+      <Stack.Screen
         name="CreateStore"
         options={{
           title: 'Crear tienda'
         }}
         component={ScreenCreateStore}
       />
-    </OrdersStack.Navigator>
+    </Stack.Navigator>
   )
 }
 export default StackProfile

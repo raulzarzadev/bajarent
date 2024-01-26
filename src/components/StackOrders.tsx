@@ -4,25 +4,25 @@ import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenNewOrder from './ScreenNewOrder'
 import ScreenOrderEdit from './ScreenOrderEdit'
 
-const OrdersStack = createStackNavigator()
+const Stack = createStackNavigator()
 function StackOrders() {
   return (
-    <OrdersStack.Navigator>
-      <OrdersStack.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name="ScreenOrders"
         options={{
           title: 'Ordenes'
         }}
         component={ScreenOrders}
       />
-      <OrdersStack.Screen
+      <Stack.Screen
         name="OrderDetails"
         options={{
           title: 'Detalle de  orden'
         }}
         component={ScreenOrderDetail}
       />
-      <OrdersStack.Screen
+      <Stack.Screen
         name="NewOrder"
         options={{
           title: 'Nueva Orden'
@@ -30,14 +30,14 @@ function StackOrders() {
         component={ScreenNewOrder}
       />
 
-      <OrdersStack.Screen
+      <Stack.Screen
         name="EditOrder"
         options={{
           title: 'Editar Orden'
         }}
         component={ScreenOrderEdit}
       />
-    </OrdersStack.Navigator>
+    </Stack.Navigator>
   )
 }
 export default StackOrders

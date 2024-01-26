@@ -10,14 +10,18 @@ const ScreenStore = ({ navigation }) => {
   return (
     <View>
       <StoreDetails store={store} />
-
-      {/* <Button
-        buttonStyles={{ width: 150, margin: 'auto' }}
-        onPress={() => {
-          navigation.navigate('EditStore')
+      <Button
+        buttonStyles={{
+          width: 100,
+          margin: 'auto',
+          marginVertical: 16
         }}
-        label="Editar"
-      ></Button> */}
+        onPress={() => {
+          navigation.navigate('Staff')
+        }}
+      >
+        Staff
+      </Button>
     </View>
   )
 }

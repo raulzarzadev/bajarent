@@ -8,14 +8,16 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
 import { ServiceComments } from '../firebase/ServiceComments'
 import orderStatus from '../libs/orderStatus'
+import { ServiceStaff } from '../firebase/ServiceStaff'
 
 export type StoreContextType = {
-  store?: null | UserType
+  store?: null | StoreType
   setStore?: React.Dispatch<any>
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
   orders?: OrderType[]
   comments?: CommentType[]
+  staff?: StoreType['staff']
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -26,11 +28,13 @@ const StoreContextProvider = ({ children }) => {
 
   const [orders, setOrders] = useState<StoreContextType['orders']>([])
   const [comments, setComments] = useState<StoreContextType['comments']>([])
+  const [staff, setStaff] = useState<StoreContextType['staff']>([])
 
   const handleSetStoreId = (storeId: string) => {
     setStoreId(storeId)
     AsyncStorage.setItem('storeId', storeId)
   }
+
   useEffect(() => {
     const setLocalStorage = async () => {
       const storeId = await AsyncStorage.getItem('storeId')
@@ -43,6 +47,7 @@ const StoreContextProvider = ({ children }) => {
     if (store) {
       ServiceOrders.storeOrders(storeId, setOrders)
       ServiceComments.storeComments(storeId, setComments)
+      ServiceStaff.storeStaff(storeId, setStaff)
     }
   }, [store])
 
@@ -73,7 +78,8 @@ const StoreContextProvider = ({ children }) => {
       })
       setOrderFormatted(orderFormatted)
     }
-  }, [orders, comments])
+  }, [orders, comments, staff])
+  console.log({ staff })
   return (
     <StoreContext.Provider
       value={{
@@ -82,7 +88,8 @@ const StoreContextProvider = ({ children }) => {
         storeId,
         handleSetStoreId,
         orders: orderFormatted,
-        comments
+        comments,
+        staff
       }}
     >
       {children}

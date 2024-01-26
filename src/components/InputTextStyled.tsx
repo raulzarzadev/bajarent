@@ -12,7 +12,7 @@ const InputTextStyled = ({ ...props }: TextInputProps) => {
 }
 
 export default InputTextStyled
-const placeholderOpacity = 'bb'
+const placeholderOpacity = 'ee'
 const baseStyle = StyleSheet.create({
   inputStyle: {
     borderWidth: 1,
@@ -20,6 +20,6 @@ const baseStyle = StyleSheet.create({
     borderRadius: BORDER_RADIUS * 1.8,
     padding: PADDING * 3,
     width: '100%',
-    placeholderTextColor: theme.black + placeholderOpacity // Set placeholder text color to transparent
+    placeholderTextColor: 'lightgrey' + placeholderOpacity // Set placeholder text color to transparent
   }
 })
