@@ -18,7 +18,13 @@ const buttons: ButtonType[] = [
   { variant: 'outline', color: 'success', title: 'Outlined success' },
   { variant: 'outline', color: 'error', title: 'Outlined danger' },
   { variant: 'outline', color: 'warning', title: 'Outlined warning' },
-  { variant: 'outline', color: 'info', title: 'Outlined info' }
+  { variant: 'outline', color: 'info', title: 'Outlined info' },
+  { variant: 'ghost', color: 'primary', title: 'Ghost primary' },
+  { variant: 'ghost', color: 'secondary', title: 'Ghost secondary' },
+  { variant: 'ghost', color: 'success', title: 'Ghost success' },
+  { variant: 'ghost', color: 'error', title: 'Ghost danger' },
+  { variant: 'ghost', color: 'warning', title: 'Ghost warning' },
+  { variant: 'ghost', color: 'info', title: 'Ghost info' }
   // Agrega aquí más botones si es necesario
 ]
 

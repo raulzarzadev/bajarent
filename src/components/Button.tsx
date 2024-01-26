@@ -8,9 +8,9 @@ export type ButtonProps = {
   label?: string
   size?: 'xs' | 'small' | 'medium' | 'large'
   color?: Colors
-  variant?: 'filled' | 'outline'
+  variant?: 'filled' | 'outline' | 'ghost'
   disabled?: boolean
-  children?: string
+  children?: string | React.ReactNode
   buttonStyles?: ViewStyle
   textStyles?: TextStyle
 }
@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   onPress,
   label,
   disabled = false,
-  children = 'Button label',
+  children,
   buttonStyles,
   textStyles,
   variant = 'filled',
@@ -38,6 +38,10 @@ const Button: React.FC<ButtonProps> = ({
     outline: {
       backgroundColor: 'transparent',
       borderColor: theme[color]
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderColor: 'transparent'
     }
   }
   const buttonVariant = buttonVariants[variant]
@@ -56,16 +60,32 @@ const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text
-        style={[
-          baseStyles.text,
-          textColor,
-          textStyles,
-          disabled && { color: 'black' }
-        ]}
-      >
-        {(label || children).toUpperCase()}
-      </Text>
+      {!children && (
+        <Text
+          style={[
+            baseStyles.text,
+            textColor,
+            textStyles,
+            disabled && { color: 'black' }
+          ]}
+        >
+          {label}
+        </Text>
+      )}
+      {typeof children === 'string' && !label ? (
+        <Text
+          style={[
+            baseStyles.text,
+            textColor,
+            textStyles,
+            disabled && { color: 'black' }
+          ]}
+        >
+          {children.toUpperCase()}
+        </Text>
+      ) : (
+        children
+      )}
     </Pressable>
   )
 }

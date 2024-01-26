@@ -7,7 +7,7 @@ const H1 = ({
   size = 'md'
 }: {
   children: string
-  size: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg'
 }) => {
   const fontSize = {
     xs: FONT_SIZE * 1.1,
