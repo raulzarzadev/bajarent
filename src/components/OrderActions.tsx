@@ -33,7 +33,10 @@ const OrderActions = ({ order }: { order: OrderType }) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          maxWidth: 200,
+          width: '100%',
+          margin: 'auto'
         }}
       >
         <OrderStatus orderId={order.id} />
