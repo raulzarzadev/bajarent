@@ -83,41 +83,4 @@ const ScreenOrderDetail = ({ route }) => {
   )
 }
 
-const PhoneCard = ({ phone }) => {
-  const formatPhoneNumber = (phone: string): string => {
-    // Remove any non-digit characters from the phone number
-    const cleanedPhoneNumber = phone.replace(/\D/g, '')
-
-    // Format the phone number with dashes
-    const formattedPhoneNumber = cleanedPhoneNumber.replace(
-      /(\d{2})(\d{2})(\d{4})(\d{4})/,
-      '($1) $2 $3 $4'
-    )
-
-    return formattedPhoneNumber
-  }
-
-  return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-      <P size="lg">{formatPhoneNumber(phone)}</P>
-      <Pressable
-        style={{ marginHorizontal: 16 }}
-        onPress={() => {
-          Linking.openURL(`tel:${phone}`)
-        }}
-      >
-        <Ionicons name="call" size={24} color={theme.secondary} />
-      </Pressable>
-      <Pressable
-        style={{ marginHorizontal: 16 }}
-        onPress={() => {
-          Linking.openURL(`https://wa.me/${phone.replace('+', '')}`)
-        }}
-      >
-        <Ionicons name="logo-whatsapp" size={24} color={theme.success} />
-      </Pressable>
-    </View>
-  )
-}
-
 export default ScreenOrderDetail

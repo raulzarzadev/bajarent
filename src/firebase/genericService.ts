@@ -43,4 +43,10 @@ export class FirebaseGenericService<T extends Identifiable> {
   async getItems(filters: any[] = []) {
     return await this.itemCRUD.getItems(filters)
   }
+  async findOne(filters: any[] = []) {
+    return await this.itemCRUD.getItems(filters).then((items) => items[0])
+  }
+  async findMany(filters: any[] = []) {
+    return await this.itemCRUD.getItems(filters)
+  }
 }

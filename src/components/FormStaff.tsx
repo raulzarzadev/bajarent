@@ -19,10 +19,21 @@ const FormStaff = ({
     >
       {({ handleSubmit }) => (
         <View style={styles.form}>
-          <View style={styles.input}>
-            <FormikInputValue name={'name'} placeholder="Nombre" />
+          {/* <View style={styles.input}>
+            <FormikInputValue name={'name'} disabled placeholder="Nombre" />
           </View>
 
+          <View style={styles.input}>
+            <FormikInputValue name={'phone'} disabled placeholder="Telefono" />
+          </View>
+
+          <View style={styles.input}>
+            <FormikInputValue name={'email'} disabled placeholder="Correo" />
+          </View> */}
+
+          <View style={styles.input}>
+            <FormikInputValue name={'position'} placeholder="Puesto" />
+          </View>
           <View style={styles.input}>
             <Button onPress={handleSubmit} label={'Guardar'} />
           </View>
@@ -36,7 +47,7 @@ export default FormStaff
 
 const styles = StyleSheet.create({
   form: {
-    padding: 10
+    padding: 0
   },
   input: {
     marginVertical: 10

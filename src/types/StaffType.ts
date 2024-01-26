@@ -5,6 +5,7 @@ export type BaseStaffType = {
   storeId: string
   phone?: string
   email?: string
+  position?: string
 }
 
 type StaffType = BaseType & BaseStaffType

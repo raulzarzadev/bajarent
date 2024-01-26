@@ -9,8 +9,8 @@ import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
 import { logout } from '../firebase/auth'
 import useTheme from '../hooks/useTheme'
-import P from './P'
 import H1 from './H1'
+import PhoneCard from './PhoneCard'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -35,9 +35,13 @@ const ScreenProfile = ({ navigation }) => {
   if (user === null) return <PhoneLogin />
   return (
     <View style={{ padding: 2 }}>
-      <Text style={{ textAlign: 'center', marginTop: 16 }}>
+      <Text style={{ textAlign: 'center', marginTop: 16 }}>{user.name}</Text>
+      {/* <Text style={{ textAlign: 'center', marginTop: 16 }}>
         Telefono: {user.phone}
-      </Text>
+      </Text> */}
+      <PhoneCard phone={user.phone} />
+      <Text style={{ textAlign: 'center', marginTop: 16 }}>{user.email}</Text>
+
       <H1 size="lg">Tiendas</H1>
       <View>
         {stores.map((store) => (
@@ -72,6 +76,16 @@ const ScreenProfile = ({ navigation }) => {
           </Button>
         </View>
       )}
+      <View style={styles.buttons}>
+        <Button
+          onPress={() => {
+            navigation.navigate('EditProfile')
+          }}
+          variant="outline"
+        >
+          Editar información
+        </Button>
+      </View>
       <View style={styles.buttons}>
         <Button
           onPress={() => {

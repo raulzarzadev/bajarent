@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenCreateStore from './ScreenStoreCreate'
 import ScreenProfile from './ScreenProfile'
+import ScreenProfileEdit from './ScreenProfileEdit'
 
 const Stack = createStackNavigator()
 function StackProfile() {
@@ -19,6 +20,13 @@ function StackProfile() {
           title: 'Crear tienda'
         }}
         component={ScreenCreateStore}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        options={{
+          title: 'Editar'
+        }}
+        component={ScreenProfileEdit}
       />
     </Stack.Navigator>
   )

@@ -4,12 +4,13 @@ import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 
-const FormStore = ({
+const FormUser = ({
   defaultValues,
   onSubmit = async (values) => {
     console.log(values)
   }
 }) => {
+  console.log({ defaultValues })
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -23,7 +24,10 @@ const FormStore = ({
             <FormikInputValue name={'name'} placeholder="Nombre" />
           </View>
           <View style={styles.input}>
-            <FormikInputValue name={'description'} placeholder="Descripción" />
+            <FormikInputValue name={'phone'} placeholder="Telefono" disabled />
+          </View>
+          <View style={styles.input}>
+            <FormikInputValue name={'email'} placeholder="Correo" />
           </View>
           <View style={styles.input}>
             <Button onPress={handleSubmit} label={'Guardar'} />
@@ -34,7 +38,7 @@ const FormStore = ({
   )
 }
 
-export default FormStore
+export default FormUser
 
 const styles = StyleSheet.create({
   form: {

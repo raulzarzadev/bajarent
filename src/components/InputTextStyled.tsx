@@ -7,8 +7,17 @@ import theme, { BORDER_RADIUS, PADDING } from '../theme'
  * @param {TextInputProps} props - Propiedades del componente TextInput.
  * @returns {JSX.Element} - Elemento JSX que representa el componente InputTextStyledText.
  */
-const InputTextStyled = ({ ...props }: TextInputProps) => {
-  return <TextInput {...props} style={[baseStyle.inputStyle]} />
+const InputTextStyled = ({
+  disabled,
+  ...props
+}: TextInputProps & { disabled?: boolean }): JSX.Element => {
+  return (
+    <TextInput
+      {...props}
+      editable={!disabled}
+      style={[baseStyle.inputStyle, disabled && { opacity: 0.5 }]}
+    />
+  )
 }
 
 export default InputTextStyled
