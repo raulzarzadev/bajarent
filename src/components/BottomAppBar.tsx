@@ -2,14 +2,11 @@ import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import ScreenProfile from './ScreenProfile'
-import ScreenCreateStore from './ScreenCreateStore'
 import ScreenStore from './ScreenStore'
 import OrdersStackScreen from './ScreenOrderStack'
 import { useAuth } from '../contexts/authContext'
 import ScreenComponents from './ScreenComponents'
 import ScreenProfileStack from './ScreenProfileStack'
-
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
@@ -21,31 +18,15 @@ const BottomAppBar = () => {
         screenOptions={({ route }) => {
           return {
             tabBarIcon: ({ focused, color, size }) => {
-              let iconName:
-                | 'home'
-                | 'list'
-                | 'add'
-                | 'home-outline'
-                | 'list-outline'
-                | 'add-circle-outline'
-                | 'add-circle'
-                | 'search'
-                | 'search-outline'
-                | 'person'
-                | 'person-outline' = 'home'
-
-              if (route.name === 'Home') {
-                iconName = focused ? 'home' : 'home-outline'
-              } else if (route.name === 'Orders') {
-                iconName = focused ? 'list' : 'list-outline'
-              } else if (route.name === 'NewOrder') {
-                iconName = focused ? 'add-circle' : 'add-circle-outline'
-              } else if (route.name === 'Rentar') {
-                iconName = focused ? 'search' : 'search-outline'
-              } else if (route.name === 'Perfil') {
-                iconName = focused ? 'person' : 'person-outline'
+              const icons = {
+                Store: 'home',
+                Orders: 'list',
+                Profile: 'person',
+                Components: 'apps-outline'
               }
-              return <Ionicons name={iconName} size={size} color={color} />
+              return (
+                <Ionicons name={icons[route.name]} size={size} color={color} />
+              )
             }
           }
         }}
