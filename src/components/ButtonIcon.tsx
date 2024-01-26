@@ -14,14 +14,15 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
   }
   return (
     <Button
-      {...props}
       buttonStyles={{
         borderRadius: 9999,
         padding: 4,
         aspectRatio: '1',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: sizes[props.size || 'medium'] * 1.4
       }}
+      {...props}
     >
       <Icon
         name={props.icon}

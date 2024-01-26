@@ -10,7 +10,8 @@ import { useStore } from '../contexts/storeContext'
 import { logout } from '../firebase/auth'
 import useTheme from '../hooks/useTheme'
 import H1 from './H1'
-import PhoneCard from './PhoneCard'
+import PhoneCard from './CardPhone'
+import CardUser from './CardUser'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -35,12 +36,7 @@ const ScreenProfile = ({ navigation }) => {
   if (user === null) return <PhoneLogin />
   return (
     <View style={{ padding: 2 }}>
-      <Text style={{ textAlign: 'center', marginTop: 16 }}>{user.name}</Text>
-      {/* <Text style={{ textAlign: 'center', marginTop: 16 }}>
-        Telefono: {user.phone}
-      </Text> */}
-      <PhoneCard phone={user.phone} />
-      <Text style={{ textAlign: 'center', marginTop: 16 }}>{user.email}</Text>
+      <CardUser user={user} />
 
       <H1 size="lg">Tiendas</H1>
       <View>

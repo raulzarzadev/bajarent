@@ -3,7 +3,7 @@ import P from './P'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 import theme from '../theme'
-const PhoneCard = ({ phone }) => {
+const CardPhone = ({ phone }) => {
   const formatPhoneNumber = (phone: string): string => {
     // Remove any non-digit characters from the phone number
     const cleanedPhoneNumber = phone.replace(/\D/g, '')
@@ -16,6 +16,8 @@ const PhoneCard = ({ phone }) => {
 
     return formattedPhoneNumber
   }
+
+  if (!phone) return null
 
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -44,4 +46,4 @@ const PhoneCard = ({ phone }) => {
   )
 }
 
-export default PhoneCard
+export default CardPhone

@@ -3,6 +3,8 @@ import React from 'react'
 import FormStaff from './FormStaff'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { Card } from 'react-native-elements'
+import CardUser from './CardUser'
 
 const ScreenStaffEdit = ({ route, navigation }) => {
   const { staff } = useStore()
@@ -11,6 +13,7 @@ const ScreenStaffEdit = ({ route, navigation }) => {
   const employee = staff.find(({ id }) => id === staffId)
   return (
     <View>
+      <CardUser userId={employee.userId} />
       <FormStaff
         defaultValues={employee}
         onSubmit={async (values) => {

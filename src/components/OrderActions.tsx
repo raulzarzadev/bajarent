@@ -27,6 +27,8 @@ const OrderActions = ({ order }: { order: OrderType }) => {
 
   const disabledEditButton: boolean = ['PICKUP', 'CANCELLED'].includes(status)
 
+  const disabledAssignButton: boolean = [].includes(status)
+
   return (
     <View style={{ padding: 4 }}>
       <View
@@ -72,6 +74,16 @@ const OrderActions = ({ order }: { order: OrderType }) => {
               navigation.navigate('EditOrder', { orderId: order.id })
             }}
             label="Editar"
+          />
+        </View>
+
+        <View style={styles.item}>
+          <Button
+            disabled={disabledAssignButton}
+            onPress={() => {
+              navigation.navigate('AssignOrder', { orderId: order.id })
+            }}
+            label="Asignar"
           />
         </View>
 

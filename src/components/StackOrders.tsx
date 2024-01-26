@@ -3,6 +3,7 @@ import ScreenOrders from './ScreenOrders'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenNewOrder from './ScreenNewOrder'
 import ScreenOrderEdit from './ScreenOrderEdit'
+import ScreenAssignOrder from './ScreenAssignOrder'
 
 const Stack = createStackNavigator()
 function StackOrders() {
@@ -36,6 +37,14 @@ function StackOrders() {
           title: 'Editar Orden'
         }}
         component={ScreenOrderEdit}
+      />
+
+      <Stack.Screen
+        name="AssignOrder"
+        options={{
+          title: 'Asignar Orden'
+        }}
+        component={ScreenAssignOrder}
       />
     </Stack.Navigator>
   )

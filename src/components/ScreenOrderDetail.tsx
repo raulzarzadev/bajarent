@@ -8,6 +8,7 @@ import OrderComments from './OrderComments'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
+import CardPhone from './CardPhone'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route.params
@@ -37,7 +38,7 @@ const ScreenOrderDetail = ({ route }) => {
         <P size="lg" bold styles={{ textAlign: 'center' }}>
           {order.firstName} {order.lastName}
         </P>
-        <PhoneCard phone={order.phone} />
+        <CardPhone phone={order.phone} />
       </View>
       <View style={{ alignItems: 'center' }}>
         {order.scheduledAt && (

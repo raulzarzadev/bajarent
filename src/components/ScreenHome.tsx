@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import ProductCard from './ProductCard'
+import ProductCard from './CardProduct'
 
 function ScreenHome({ navigation }) {
   return (

@@ -5,8 +5,8 @@ export type UserBase = {
   phone: string
   email: string
   image?: string
-  rol: 'admin' | 'user'
-  super_user?: boolean
+  // rol?: 'admin' | 'user'
+  // super_user?: boolean
   canCreateStore?: boolean
 }
 

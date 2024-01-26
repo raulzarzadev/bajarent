@@ -9,6 +9,7 @@ import { CommentType } from '../types/CommentType'
 import { ServiceComments } from '../firebase/ServiceComments'
 import orderStatus from '../libs/orderStatus'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { ServiceUsers } from '../firebase/ServiceUser'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -79,7 +80,32 @@ const StoreContextProvider = ({ children }) => {
       setOrderFormatted(orderFormatted)
     }
   }, [orders, comments, staff])
-  console.log({ staff })
+
+  const [staffFormatted, setStaffFormatted] = useState<UserType[]>([])
+  useEffect(() => {
+    const getStaffDetails = async () => {
+      const users = staff.map(
+        async ({ userId }) => await ServiceUsers.get(userId)
+      )
+      const staffFormatted = await Promise.all(users)
+      return staffFormatted.map((user) => {
+        const userData = {
+          name: user.name,
+          email: user.email,
+          phone: user.phone
+          //  photoURL: user.photoURL
+        }
+        return {
+          ...userData,
+          ...staff.find(({ userId }) => userId === user.id)
+        }
+      })
+    }
+    if (staff.length) getStaffDetails().then(setStaffFormatted)
+  }, [staff])
+
+  console.log({ staffFormatted })
+
   return (
     <StoreContext.Provider
       value={{
@@ -89,7 +115,7 @@ const StoreContextProvider = ({ children }) => {
         handleSetStoreId,
         orders: orderFormatted,
         comments,
-        staff
+        staff: staffFormatted
       }}
     >
       {children}

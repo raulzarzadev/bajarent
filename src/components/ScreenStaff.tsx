@@ -7,11 +7,12 @@ import {
   Text,
   View
 } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import theme from '../theme'
+import { ServiceUsers } from '../firebase/ServiceUser'
 
 const ScreenStaff = ({ navigation }) => {
   const { staff } = useStore()
@@ -32,19 +33,25 @@ const ScreenStaff = ({ navigation }) => {
       </Button>
       <FlatList
         data={staff || []}
-        renderItem={({ item }) => <StaffRow staff={item} />}
+        renderItem={({ item }) => (
+          <StaffRow
+            staff={item}
+            onPress={() =>
+              navigation.navigate('StaffDetails', { staffId: item.id })
+            }
+          />
+        )}
         keyExtractor={(item) => item.id}
       />
     </ScrollView>
   )
 }
 
-export const StaffRow = ({ staff }) => {
-  const { navigate } = useNavigation()
+export const StaffRow = ({ staff, onPress }) => {
   return (
     <Pressable
       onPress={() => {
-        navigate('StaffDetails', { staffId: staff.id })
+        onPress()
       }}
       style={{
         flexDirection: 'row',
@@ -63,9 +70,10 @@ export const StaffRow = ({ staff }) => {
           flexDirection: 'row'
         }}
       >
-        <Text>{staff.name}</Text>
-        <Text>{staff.phone}</Text>
-        <Text>{staff.email}</Text>
+        <Text>{staff?.position}</Text>
+        <Text>{staff?.name}</Text>
+        <Text>{staff?.phone}</Text>
+        <Text>{staff?.email}</Text>
       </View>
       <View></View>
       {/* <ButtonIcon

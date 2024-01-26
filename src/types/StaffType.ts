@@ -1,11 +1,14 @@
 import BaseType from './BaseType'
 
 export type BaseStaffType = {
-  name: string
   storeId: string
-  phone?: string
-  email?: string
   position?: string
+  userId: string
+
+  //* this fields are provided by the user data
+  name: string
+  email?: string
+  phone?: string
 }
 
 type StaffType = BaseType & BaseStaffType

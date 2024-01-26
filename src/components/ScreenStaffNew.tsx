@@ -5,12 +5,12 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import InputTextStyled from './InputTextStyled'
-import { set } from 'date-fns'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import useDebounce from '../hooks/useDebunce'
 import theme from '../theme'
 import UserType from '../types/UserType'
 import P from './P'
+import CardUser from './CardUser'
 
 const ScreenStaffNew = () => {
   const { store } = useStore()
@@ -22,13 +22,7 @@ const ScreenStaffNew = () => {
         {`Ten en cuenta que el usuario debera estar previamente registrado`}
       </P>
       <SearchStaff setUser={setUser} />
-      {user && (
-        <View>
-          <Text>{user.name}</Text>
-          <Text>{user.phone}</Text>
-          <Text>{user.email}</Text>
-        </View>
-      )}
+      {user && <CardUser user={user} />}
       {user && (
         <FormStaff
           defaultValues={{
@@ -36,10 +30,13 @@ const ScreenStaffNew = () => {
             position: ''
           }}
           onSubmit={async (values) => {
-            console.log('onSubmit', values)
-            values.storeId = store.id
-            ServiceStaff.create(values).then((res) => {
-              console.log(res)
+            const newStaff = {
+              //name: user.name || '',
+              position: values.position || '',
+              storeId: store.id,
+              userId: user.id || ''
+            }
+            ServiceStaff.create(newStaff).then((res) => {
               navigate('Staff')
             })
           }}
@@ -90,11 +87,11 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
             }}
             key={user.id}
             style={{
-              padding: 4,
+              padding: 8,
               borderRadius: 20,
               backgroundColor: theme.primary,
               flexDirection: 'row',
-              justifyContent: 'space-between'
+              justifyContent: 'space-evenly'
             }}
           >
             <Text>{user.name}</Text>

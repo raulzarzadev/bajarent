@@ -48,6 +48,7 @@ const Button: React.FC<ButtonProps> = ({
   const textColor = {
     color: variant === 'filled' ? theme.white : theme[color]
   }
+
   return (
     <Pressable
       style={({ pressed }) => [

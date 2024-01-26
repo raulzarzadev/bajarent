@@ -1,8 +1,9 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
-import P from './P'
 import ButtonIcon from './ButtonIcon'
+import CardUser from './CardUser'
+import { ServiceStaff } from '../firebase/ServiceStaff'
 
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
@@ -13,21 +14,37 @@ const ScreenStaffDetails = ({ route, navigation }) => {
     <View>
       <View
         style={{
-          flexDirection: 'row',
           justifyContent: 'center',
           margin: 'auto'
         }}
       >
-        <P bold size="lg">
+        {/* <P bold size="lg">
           {employee.name}
-        </P>
-        <ButtonIcon
-          icon="edit"
-          variant="ghost"
-          onPress={() => {
-            navigation.navigate('StaffEdit', { staffId })
-          }}
-        ></ButtonIcon>
+        </P> */}
+        <View style={{ margin: 'auto', flexDirection: 'row' }}>
+          <ButtonIcon
+            icon="delete"
+            variant="ghost"
+            color="error"
+            onPress={() => {
+              ServiceStaff.delete(staffId).then(() => {
+                navigation.navigate('Staff')
+              })
+            }}
+          ></ButtonIcon>
+          <ButtonIcon
+            icon="edit"
+            variant="ghost"
+            color="secondary"
+            onPress={() => {
+              navigation.navigate('StaffEdit', { staffId })
+            }}
+          ></ButtonIcon>
+        </View>
+        <CardUser userId={employee.userId} />
+        <View>
+          <Text>Puesto: {employee.position}</Text>
+        </View>
       </View>
     </View>
   )
