@@ -9,7 +9,9 @@ function ScreenOrders({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => navigation.push('NewOrder')}>Nueva orden</Button>
+      <View style={{ padding: 4 }}>
+        <Button onPress={() => navigation.push('NewOrder')}>Nueva orden</Button>
+      </View>
       <FlatList
         style={styles.orderList}
         data={orders.map((order) => ({ ...order, id: order.id, comments: [] }))}
@@ -37,13 +39,15 @@ function ScreenOrders({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    //padding: 12,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
   orderList: {
-    width: '100%'
+    width: '100%',
+    // paddingVertical: 40,
+    paddingHorizontal: 4
   }
 })
 
