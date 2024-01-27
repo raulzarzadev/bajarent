@@ -1,15 +1,11 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet, View } from 'react-native'
 import Button from './Button'
 
 import { useStore } from '../contexts/storeContext'
 import OrderRow from './OrderRow'
-import { useAuth } from '../contexts/authContext'
 
 function ScreenMyOrders({ navigation }) {
-  const { orders, staff } = useStore()
-  const { user } = useAuth()
-  const myStaffId = staff.find((s) => s.userId === user.id)?.id
-  const myOrders = orders.filter((order) => order.assignTo === myStaffId)
+  const { myOrders } = useStore()
 
   return (
     <View style={styles.container}>
@@ -19,9 +15,9 @@ function ScreenMyOrders({ navigation }) {
       <FlatList
         style={styles.orderList}
         data={myOrders.map((order) => ({
-          ...order,
-          id: order.id,
-          comments: []
+          ...order
+          // id: order.id,
+          //  comments: []
         }))}
         renderItem={({ item }) => (
           <Pressable
@@ -36,14 +32,6 @@ function ScreenMyOrders({ navigation }) {
     </View>
   )
 }
-
-// export const Order = ({ order }: { order: OrderType }) => {
-//   return (
-//     <View style={{ marginVertical: 24 }}>
-//       <Text>{order?.firstName} </Text>
-//     </View>
-//   )
-// }
 
 const styles = StyleSheet.create({
   container: {

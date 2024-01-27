@@ -10,6 +10,7 @@ import InputDate from './InputDate'
 import asDate from '../libs/utils-date'
 import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './InputRadiosFormik'
+import { useStore } from '../contexts/storeContext'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -23,6 +24,8 @@ const FormOrder = ({
   },
   defaultValues = initialValues
 }) => {
+  const { staff } = useStore()
+
   return (
     <Formik
       initialValues={defaultValues}
@@ -53,6 +56,13 @@ const FormOrder = ({
               label="Tipo de orden"
             />
           </View>
+          <View style={[styles.item, { justifyContent: 'center' }]}>
+            <InputRadiosFormik
+              name="assignTo"
+              options={staff.map((s) => ({ label: s.position, value: s.id }))}
+              label="Asignar a"
+            />
+          </View>
           <View style={[styles.item]}>
             <InputValueFormik name={'firstName'} placeholder="Nombre (s)" />
           </View>
@@ -78,6 +88,9 @@ export default FormOrder
 
 const styles = StyleSheet.create({
   form: {
+    maxWidth: 500,
+    width: '100%',
+    marginHorizontal: 'auto',
     padding: 10
     // padding: theme.padding.md
   },

@@ -10,6 +10,7 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
+import { useAuth } from './authContext'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -19,10 +20,14 @@ export type StoreContextType = {
   orders?: OrderType[]
   comments?: CommentType[]
   staff?: StoreType['staff']
+  myStaffId?: string
+  myOrders?: OrderType[]
 }
 const StoreContext = createContext<StoreContextType>({})
 
 const StoreContextProvider = ({ children }) => {
+  const { user } = useAuth()
+
   const [storeId, setStoreId] = useState<StoreContextType['store']['id']>(null)
 
   const [store, setStore] = useState<StoreContextType['store']>(null)
@@ -30,6 +35,9 @@ const StoreContextProvider = ({ children }) => {
   const [orders, setOrders] = useState<StoreContextType['orders']>([])
   const [comments, setComments] = useState<StoreContextType['comments']>([])
   const [staff, setStaff] = useState<StoreContextType['staff']>([])
+
+  const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
+  const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
 
   const handleSetStoreId = (storeId: string) => {
     setStoreId(storeId)
@@ -61,7 +69,6 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [storeId])
 
-  const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
   useEffect(() => {
     if (orders.length > 0) {
       const orderFormatted = orders.map((order) => {
@@ -81,7 +88,6 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [orders, comments, staff])
 
-  const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
   useEffect(() => {
     const getStaffDetails = async () => {
       const staffs: Promise<StaffType>[] = staff.map(
@@ -117,6 +123,10 @@ const StoreContextProvider = ({ children }) => {
     if (staff.length) getStaffDetails().then(setStaffFormatted)
   }, [staff])
 
+  const myStaffId = staff?.find((s) => s.userId === user.id)?.id || ''
+  const myOrders =
+    orderFormatted?.filter((order) => order.assignTo === myStaffId) || []
+
   return (
     <StoreContext.Provider
       value={{
@@ -126,7 +136,9 @@ const StoreContextProvider = ({ children }) => {
         handleSetStoreId,
         orders: orderFormatted,
         comments,
-        staff: staffFormatted
+        staff: staffFormatted,
+        myOrders,
+        myStaffId
       }}
     >
       {children}

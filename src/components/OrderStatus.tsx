@@ -11,7 +11,6 @@ const OrderStatus = ({ orderId }: { orderId?: string }) => {
   const color = STATUS_COLOR[order?.status]
   const hasReport = order?.hasNotSolvedReports
   const [width, setWidth] = useState(0)
-
   const MIN_WIDTH = 120
 
   const displayText = dictionary(status)

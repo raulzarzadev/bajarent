@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useMemo, useState } from 'react'
 import RadioGroup from 'react-native-radio-buttons-group'
 export type InputRadioOption = {
@@ -23,10 +23,12 @@ const InputRadios = ({
 
   return (
     <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
-      {label && <Text style={{ textAlign: 'center' }}>{label}</Text>}
+      {label && (
+        <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{label}</Text>
+      )}
       <RadioGroup
-        accessibilityLabel="Radio buttons"
-        layout="row"
+        accessibilityLabel={label}
+        layout={Dimensions.get('window').width > 600 ? 'row' : 'column'}
         radioButtons={radioButtons}
         onPress={setValue}
         selectedId={value}
