@@ -5,6 +5,7 @@ import StoreType from './StoreType'
 import { CommentType } from './CommentType'
 
 type OrderBase = {
+  folio: number
   storeId: StoreType['id']
 
   firstName: string

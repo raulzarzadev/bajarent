@@ -27,6 +27,7 @@ function OrdersList({
     setOrdersSorted(res)
   }
   const sortFields = [
+    { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
     //{ key: 'lastName', label: 'Apellido' },
     { key: 'createdAt', label: 'Creada' },

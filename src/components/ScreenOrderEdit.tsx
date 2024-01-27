@@ -16,10 +16,11 @@ const ScreenOrderEdit = ({ route, navigation }) => {
     <FormOrder
       defaultValues={order}
       onSubmit={async (values) => {
+        console.log(values)
         ServiceOrders.update(orderId, values)
           .then((res) => {
             console.log(res)
-            navigation.goBack()
+            // navigation.goBack()
           })
           .catch(console.error)
       }}

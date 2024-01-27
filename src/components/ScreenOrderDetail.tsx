@@ -20,13 +20,32 @@ const ScreenOrderDetail = ({ route }) => {
 
   return (
     <ScrollView style={{}}>
-      <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <View
+        style={{
+          maxWidth: 500,
+          width: '100%',
+          marginHorizontal: 'auto',
+          marginTop: 12
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center'
+          }}
+        >
           <P size="sm">
             {` ${dateFormat(order.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
               order.createdAt
             )} `}
           </P>
+          <Text style={{ textAlign: 'center' }}>
+            <P bold size="lg">
+              Folio:{' '}
+            </P>
+            <P size="lg">{order?.folio}</P>
+          </Text>
           <P size="sm"> {order.id}</P>
         </View>
         <View

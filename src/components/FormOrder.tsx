@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
@@ -12,6 +12,7 @@ import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './InputRadiosFormik'
 import { useStore } from '../contexts/storeContext'
 import FormikInputImage from './FormikInputImage'
+import P from './P'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -27,9 +28,14 @@ const FormOrder = ({
   defaultValues = initialValues
 }) => {
   const { staff } = useStore()
-
   return (
     <ScrollView>
+      <Text style={{ textAlign: 'center', marginTop: 12 }}>
+        <P bold size="xl">
+          Folio:{' '}
+        </P>
+        <P size="xl">{defaultValues?.folio}</P>
+      </Text>
       <Formik
         initialValues={defaultValues}
         onSubmit={async (values) => {

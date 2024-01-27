@@ -16,7 +16,12 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 
   async create(order: Type) {
-    const currentFolio = ServiceStores.get
+    if (!order.storeId) console.error('No storeId provided')
+    const store = await ServiceStores.get(order?.storeId)
+    const currentFolio = store?.currentFolio || 0
+    const nextFolio = currentFolio + 1
+    ServiceStores.update(store.id, { currentFolio: nextFolio })
+    order.folio = nextFolio
     return super.create(order)
   }
 

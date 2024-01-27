@@ -4,12 +4,19 @@ import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
 import OrderStatus from './OrderStatus'
+import { Order } from '../DATA'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
   return (
     <View style={[styles.container]}>
-      <Text style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}>
-        {order.firstName}
+      <Text style={[styles.folio, { textAlign: 'left', fontWeight: 'bold' }]}>
+        {order.folio}
+      </Text>
+      <Text
+        style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}
+        numberOfLines={2}
+      >
+        {order.firstName} {order.lastName}
       </Text>
       <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
       <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
@@ -23,6 +30,11 @@ const OrderRow = ({ order }: { order: OrderType }) => {
 export default OrderRow
 
 const styles = StyleSheet.create({
+  folio: {
+    width: '5%',
+    textAlign: 'center',
+    alignSelf: 'center'
+  },
   text: {
     width: '33%',
     textAlign: 'center',

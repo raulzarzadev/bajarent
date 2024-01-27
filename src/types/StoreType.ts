@@ -5,6 +5,7 @@ export type BaseStoreType = {
   name: string
   description?: string
   staff?: StaffType[]
+  currentFolio?: number
 }
 
 type StoreType = BaseType & BaseStoreType
