@@ -14,7 +14,6 @@ import theme from '../theme'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useNavigation()
-
   return (
     <View>
       <View

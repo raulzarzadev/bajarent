@@ -7,6 +7,9 @@ import ScreenComponents from './ScreenComponents'
 import StackOrders from './StackOrders'
 import StackProfile from './StackProfile'
 import StackStore from './StackStore'
+import ScreenMyOrders from './ScreenMyOrders'
+import { Icon } from 'react-native-elements'
+import StackMyOrders from './StackMyOrders'
 
 const Tab = createBottomTabNavigator()
 
@@ -19,14 +22,13 @@ const BottomAppBar = () => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
             const icons = {
-              Store: 'home',
+              Store: 'storefront',
               Orders: 'list',
               Profile: 'person',
-              Components: 'apps-outline'
+              Components: 'apps-outline',
+              MyOrders: 'fastfood'
             }
-            return (
-              <Ionicons name={icons[route.name]} size={size} color={color} />
-            )
+            return <Icon name={icons[route.name]} size={size} color={color} />
           }
         }
       }}
@@ -49,6 +51,18 @@ const BottomAppBar = () => {
         }}
       />
 
+      <Tab.Screen
+        name="MyOrders"
+        component={StackMyOrders}
+        options={{
+          title: 'Mis ordenes',
+          headerShown: false
+        }}
+        // options={{
+        //   tabBarButton: () => null
+        // }}
+      />
+
       {/* TODO: apply validation to hidde when no store is selected in localstorage */}
 
       <Tab.Screen
@@ -67,13 +81,13 @@ const BottomAppBar = () => {
             tabBarButton: () => null
           }}
         /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Components"
         component={ScreenComponents}
-        // options={{
-        //   tabBarButton: () => null
-        // }}
-      />
+        options={{
+          // tabBarButton: () => null
+        }}
+      /> */}
     </Tab.Navigator>
   )
 }

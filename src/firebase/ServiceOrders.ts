@@ -18,13 +18,20 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return super.listenMany([where('storeId', '==', storeId)], cb)
   }
 
-  async addComment(
-    orderId: string,
-    type: CommentType['type'],
+  async addComment({
+    orderId,
+    storeId,
+    type,
+    content
+  }: {
+    storeId: string
+    orderId: string
+    type: CommentType['type']
     content: string
-  ) {
+  }) {
     const comment: CreateCommentType = {
       orderId,
+      storeId,
       type,
       content
     }
@@ -34,8 +41,16 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       .catch(console.error)
   }
 
-  async report(orderId: string, content: string) {
-    return this.addComment(orderId, 'report', content)
+  async report({
+    orderId,
+    storeId,
+    content
+  }: {
+    orderId: string
+    storeId: string
+    content: string
+  }) {
+    return this.addComment({ orderId, type: 'report', storeId, content })
     // Implementa tu método personalizado
   }
 

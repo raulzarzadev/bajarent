@@ -6,6 +6,7 @@ import OrderType from '../types/OrderType'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
 import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
 
 const OrderActions = ({ order }: { order: OrderType }) => {
   const navigation = useNavigation()
@@ -27,7 +28,7 @@ const OrderActions = ({ order }: { order: OrderType }) => {
 
   const disabledEditButton: boolean = ['PICKUP', 'CANCELLED'].includes(status)
 
-  const disabledAssignButton: boolean = [].includes(status)
+  const disabledAssignButton: boolean = ['PICKUP', 'CANCELLED'].includes(status)
 
   return (
     <View style={{ padding: 4 }}>
@@ -86,26 +87,24 @@ const OrderActions = ({ order }: { order: OrderType }) => {
             label="Asignar"
           />
         </View>
-
-        {/* <View style={styles.item}>
-          <Button label="Cancelar" />
-        </View> */}
       </View>
     </View>
   )
 }
 const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
+  const { storeId } = useStore()
   const handleCancel = () => {
     ServiceOrders.update(orderId, {
       status: isCancelled ? 'PENDING' : 'CANCELLED'
     })
       .then(console.log)
       .catch(console.error)
-    ServiceOrders.addComment(
+    ServiceOrders.addComment({
+      content: isCancelled ? 'Orden reanudada' : 'Orden cancelada',
+      type: 'comment',
       orderId,
-      'comment',
-      isCancelled ? 'Orden reanudada' : 'Orden cancelada'
-    )
+      storeId
+    })
       .then(console.log)
       .catch(console.error)
   }
@@ -128,11 +127,13 @@ const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
     })
       .then(console.log)
       .catch(console.error)
-    ServiceOrders.addComment(
+
+    ServiceOrders.addComment({
+      content: isAuthorized ? 'Orden no autorizada' : 'Orden autorizada',
+      type: 'comment',
       orderId,
-      'comment',
-      isAuthorized ? 'Orden no autorizada' : 'Orden autorizada'
-    )
+      storeId
+    })
       .then(console.log)
       .catch(console.error)
   }
@@ -150,19 +151,24 @@ const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
   )
 }
 const ButtonDelivery = ({ orderId, isDelivered, disabled }) => {
+  const { storeId } = useStore()
   const handleDelivery = () => {
     ServiceOrders.update(orderId, {
       status: isDelivered ? 'PICKUP' : 'DELIVERED'
     })
       .then(console.log)
       .catch(console.error)
-    ServiceOrders.addComment(
+    ServiceOrders.addComment({
+      storeId,
       orderId,
-      'comment',
-      isDelivered ? 'Orden recogida' : 'Orden entregada'
-    )
+      type: 'comment',
+      content: isDelivered ? 'Orden recogida' : 'Orden entregada'
+    })
       .then(console.log)
       .catch(console.error)
+    // orderId,
+    // 'comment',
+    // isDelivered ? 'Orden recogida' : 'Orden entregada'
   }
   return (
     <Button
