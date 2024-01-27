@@ -5,6 +5,7 @@ import { FirebaseGenericService } from './genericService'
 import ShortUniqueId from 'short-unique-id'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
+import { ServiceStores } from './ServiceStore'
 
 const uid = new ShortUniqueId()
 
@@ -12,6 +13,11 @@ type Type = OrderType
 class ServiceOrdersClass extends FirebaseGenericService<Type> {
   constructor() {
     super('orders')
+  }
+
+  async create(order: Type) {
+    const currentFolio = ServiceStores.get
+    return super.create(order)
   }
 
   storeOrders(storeId: string, cb: CallableFunction): Promise<void> {
@@ -29,6 +35,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     type: CommentType['type']
     content: string
   }) {
+    if (!orderId) return console.error('No orderId provided')
+    if (!storeId) return console.error('No storeId provided')
+    if (!type) type = 'comment'
+    if (!content) content = ''
+
     const comment: CreateCommentType = {
       orderId,
       storeId,

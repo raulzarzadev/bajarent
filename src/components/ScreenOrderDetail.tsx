@@ -19,11 +19,7 @@ const ScreenOrderDetail = ({ route }) => {
   if (order === null) return <Text>Orden no encontrada</Text>
 
   return (
-    <ScrollView
-      style={{
-        marginVertical: 16
-      }}
-    >
+    <ScrollView style={{}}>
       <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
           <P size="sm">
@@ -35,7 +31,7 @@ const ScreenOrderDetail = ({ route }) => {
         </View>
         <View
           style={{
-            marginTop: 32,
+            // marginTop: 32,
             padding: 4
           }}
         >
