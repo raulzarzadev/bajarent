@@ -1,8 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import UserType from '../types/UserType'
 import { ServiceStores } from '../firebase/ServiceStore'
 import StoreType from '../types/StoreType'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import OrderType from '../types/OrderType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
@@ -11,6 +9,7 @@ import orderStatus from '../libs/orderStatus'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType from '../types/StaffType'
+import { getItem, setItem } from '../libs/storage'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -34,12 +33,12 @@ const StoreContextProvider = ({ children }) => {
 
   const handleSetStoreId = (storeId: string) => {
     setStoreId(storeId)
-    AsyncStorage.setItem('storeId', storeId)
+    setItem('storeId', storeId)
   }
 
   useEffect(() => {
     const setLocalStorage = async () => {
-      const storeId = await AsyncStorage.getItem('storeId')
+      const storeId = await getItem('storeId')
       setStoreId(storeId)
     }
     setLocalStorage()
