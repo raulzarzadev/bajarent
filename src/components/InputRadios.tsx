@@ -1,10 +1,12 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import RadioGroup from 'react-native-radio-buttons-group'
+
 export type InputRadioOption = {
   label: string
   value: string
 }
+
 const InputRadios = ({
   options = [],
   setValue,

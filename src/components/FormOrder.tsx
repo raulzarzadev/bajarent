@@ -11,6 +11,7 @@ import asDate from '../libs/utils-date'
 import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './InputRadiosFormik'
 import { useStore } from '../contexts/storeContext'
+import FormikInputImage from './FormikInputImage'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -18,6 +19,7 @@ const initialValues: Partial<OrderType> = {
   scheduledAt: new Date(),
   type: 'RENT'
 }
+
 const FormOrder = ({
   onSubmit = async (values) => {
     console.log(values)
@@ -46,6 +48,7 @@ const FormOrder = ({
               }
             />
           </View>
+
           <View style={[styles.item, { justifyContent: 'center' }]}>
             <InputRadiosFormik
               name="type"
@@ -74,6 +77,13 @@ const FormOrder = ({
           </View>
           <View style={[styles.item]}>
             <InputLocationFormik name={'location'} />
+          </View>
+          <View style={[styles.item]}></View>
+          <View style={[styles.item]}>
+            <FormikInputImage name="imageID" label="Subir identificación" />
+          </View>
+          <View style={[styles.item]}>
+            <FormikInputImage name="imageHouse" label="Subir fachada " />
           </View>
           <View style={[styles.item]}>
             <Button onPress={handleSubmit} label={'Guardar'} />

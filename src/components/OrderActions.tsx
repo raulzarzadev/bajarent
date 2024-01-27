@@ -121,6 +121,7 @@ const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
   )
 }
 const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
+  const { storeId } = useStore()
   const handleAuthorize = () => {
     ServiceOrders.update(orderId, {
       status: isAuthorized ? 'PENDING' : 'AUTHORIZED'
