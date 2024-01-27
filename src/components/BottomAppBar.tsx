@@ -33,47 +33,60 @@ const BottomAppBar = () => {
         }
       }}
     >
-      <Tab.Screen
-        name="Store"
-        component={StackStore}
-        options={{
-          title: 'Tienda ',
-          headerShown: false
-        }}
-      />
+      {!user && (
+        <Tab.Screen
+          name="Profile"
+          component={StackProfile}
+          options={{
+            title: 'Perfil',
+            headerShown: false
+          }}
+        />
+      )}
+      {!!user && (
+        <>
+          <Tab.Screen
+            name="Store"
+            component={StackStore}
+            options={{
+              title: 'Tienda ',
+              headerShown: false
+            }}
+          />
 
-      <Tab.Screen
-        name="Orders"
-        component={StackOrders}
-        options={{
-          title: 'Ordenes',
-          headerShown: false
-        }}
-      />
+          <Tab.Screen
+            name="Orders"
+            component={StackOrders}
+            options={{
+              title: 'Ordenes',
+              headerShown: false
+            }}
+          />
 
-      <Tab.Screen
-        name="MyOrders"
-        component={StackMyOrders}
-        options={{
-          title: 'Mis ordenes',
-          headerShown: false
-        }}
-        // options={{
-        //   tabBarButton: () => null
-        // }}
-      />
+          <Tab.Screen
+            name="MyOrders"
+            component={StackMyOrders}
+            options={{
+              title: 'Mis ordenes',
+              headerShown: false
+            }}
+            // options={{
+            //   tabBarButton: () => null
+            // }}
+          />
 
-      {/* TODO: apply validation to hidde when no store is selected in localstorage */}
+          {/* TODO: apply validation to hidde when no store is selected in localstorage */}
 
-      <Tab.Screen
-        name="Profile"
-        component={StackProfile}
-        options={{
-          title: user ? 'Perfil' : 'Iniciar sesión',
-          headerShown: false
-        }}
-      />
-
+          <Tab.Screen
+            name="Profile"
+            component={StackProfile}
+            options={{
+              title: 'Perfil',
+              headerShown: false
+            }}
+          />
+        </>
+      )}
       {/* <Tab.Screen
           name="Crear tienda"
           component={ScreenCreateStore}

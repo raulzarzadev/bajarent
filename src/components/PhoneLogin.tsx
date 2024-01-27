@@ -5,6 +5,7 @@ import Button from './Button'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { auth } from '../firebase/auth'
 import PhoneInput from './InputPhone'
+import InputCode from './InputCode'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
@@ -73,34 +74,32 @@ const PhoneLogin = () => {
     <View>
       {!msmSent && (
         <>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: '600',
-              marginVertical: 10
-            }}
-          >
-            Registrate con tu telefono celular
-          </Text>
+          <Text style={styles.title}>Registrate con tu telefono celular</Text>
           {/* <StyledTextInput onChangeText={setPhone}></StyledTextInput> */}
-          <PhoneInput onChange={setPhone} />
-          <Button onPress={onSignInSubmit}>Enviar</Button>
-          <View id="sign-in-button"></View>
+          <View style={styles.form}>
+            <View style={styles.item}>
+              <PhoneInput onChange={setPhone} />
+            </View>
+            <View style={styles.item}>
+              <Button onPress={onSignInSubmit}>Enviar</Button>
+            </View>
+            <View id="sign-in-button"></View>
+          </View>
         </>
       )}
       {msmSent && (
         <>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: '600',
-              marginVertical: 10
-            }}
-          >
+          <Text style={styles.title}>
             Ingresa el codigo que te enviamos por SMS
           </Text>
-          <StyledTextInput onChangeText={setCode}></StyledTextInput>
-          <Button onPress={onSendCode}>Enviar</Button>
+          <View style={styles.form}>
+            <View style={styles.item}>
+              <InputCode value={code} setValue={setCode} cellCount={6} />
+            </View>
+            <View style={styles.item}>
+              <Button onPress={onSendCode}>Enviar</Button>
+            </View>
+          </View>
         </>
       )}
     </View>
@@ -109,4 +108,18 @@ const PhoneLogin = () => {
 
 export default PhoneLogin
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  title: {
+    textAlign: 'center',
+    fontWeight: '600',
+    marginVertical: 10
+  },
+  form: {
+    maxWidth: 400,
+    width: '100%',
+    margin: 'auto'
+  },
+  item: {
+    marginVertical: 10
+  }
+})
