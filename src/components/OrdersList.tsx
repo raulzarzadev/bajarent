@@ -1,15 +1,16 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import Button from './Button'
 
-import { useStore } from '../contexts/storeContext'
 import OrderRow from './OrderRow'
 import { useState } from 'react'
-import { set } from 'date-fns'
-import OrdersList from './OrdersList'
+import OrderType from '../types/OrderType'
 
-function ScreenOrders({ navigation }) {
-  const { orders } = useStore()
-
+function OrdersList({
+  orders,
+  onPressRow
+}: {
+  orders: OrderType[]
+  onPressRow?: (orderId: string) => void
+}) {
   const [ordersSorted, setOrdersSorted] = useState(orders)
   const [orderSortedBy, setOrderSortedBy] = useState('status')
   const sortBy = (field = 'status') => {
@@ -33,34 +34,47 @@ function ScreenOrders({ navigation }) {
     { key: 'status', label: 'Estado' }
   ]
   return (
-    <>
+    <View style={styles.container}>
       <View
         style={{
-          padding: 4,
-          width: 150,
-          justifyContent: 'center',
-          margin: 'auto'
+          padding: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          width: '100%'
         }}
       >
-        <Button onPress={() => navigation.push('NewOrder')}>Nueva orden</Button>
+        {sortFields.map((field) => (
+          <Pressable
+            onPress={() => {
+              sortBy(field.key)
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: orderSortedBy === field.key ? 'bold' : 'normal'
+              }}
+            >
+              {field.label}
+            </Text>
+          </Pressable>
+        ))}
       </View>
-      <OrdersList
-        orders={orders}
-        onPressRow={(itemId) => {
-          navigation.navigate('OrderDetails', { orderId: itemId })
-        }}
-      />
-    </>
+      <FlatList
+        style={styles.orderList}
+        data={ordersSorted}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() => {
+              onPressRow && onPressRow(item.id)
+            }}
+          >
+            <OrderRow order={item} />
+          </Pressable>
+        )}
+      ></FlatList>
+    </View>
   )
 }
-
-// export const Order = ({ order }: { order: OrderType }) => {
-//   return (
-//     <View style={{ marginVertical: 24 }}>
-//       <Text>{order?.firstName} </Text>
-//     </View>
-//   )
-// }
 
 const styles = StyleSheet.create({
   container: {
@@ -76,4 +90,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ScreenOrders
+export default OrdersList
