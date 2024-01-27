@@ -17,11 +17,7 @@ const ScreenNewOrder = ({ navigation }) => {
       })
       .catch(console.error)
   }
-  return (
-    <ScrollView>
-      <FormOrder onSubmit={handleSubmit} />
-    </ScrollView>
-  )
+  return <FormOrder onSubmit={handleSubmit} />
 }
 
 export default ScreenNewOrder

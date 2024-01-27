@@ -40,15 +40,18 @@ const ScreenOrderDetail = ({ route }) => {
           </P>
         </View>
         <View>
-          <Image
-            source={{ uri: order.imageID }}
-            style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
-          />
-
-          <Image
-            source={{ uri: order.imageHouse }}
-            style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
-          />
+          {order.imageID && (
+            <Image
+              source={{ uri: order.imageID }}
+              style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
+            />
+          )}
+          {order.imageID && (
+            <Image
+              source={{ uri: order.imageHouse }}
+              style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
+            />
+          )}
         </View>
         <CardPhone phone={order.phone} />
 
