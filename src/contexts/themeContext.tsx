@@ -25,9 +25,8 @@ export const ThemeProvider: FC<{}> = ({
   children: ReactNode
 }) => {
   // default theme to the system
-  const scheme = useColorScheme()
+  //const scheme = useColorScheme()
   const [theme, setTheme] = useState<ThemeOptions>('light')
-  console.log(theme)
   // fetch locally cached theme
   useEffect(() => {
     const fetchTheme = async () => {
@@ -43,9 +42,10 @@ export const ThemeProvider: FC<{}> = ({
   }, [])
 
   // set new theme to local storage
-  useEffect(() => {
-    setItem('theme', theme)
-  }, [theme])
+  // useEffect(() => {
+  //   setItem('theme', theme)
+  //   console.log({ theme })
+  // }, [theme])
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

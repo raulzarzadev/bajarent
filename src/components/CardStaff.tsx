@@ -4,7 +4,6 @@ import StaffType from '../types/StaffType'
 import CardUser from './CardUser'
 
 const CardStaff = ({ staff }: { staff?: StaffType }) => {
-  console.log({ staff })
   return (
     <View style={{ justifyContent: 'center' }}>
       <CardUser user={staff as UserType} />

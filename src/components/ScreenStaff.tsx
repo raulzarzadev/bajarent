@@ -42,13 +42,15 @@ const ScreenStaff = ({ navigation }) => {
         data={staff || []}
         renderItem={({ item }) => (
           <StaffRow
+            key={item.id}
             staff={item}
+            fields={['name', 'position']}
             onPress={() =>
               navigation.navigate('StaffDetails', { staffId: item.id })
             }
           />
         )}
-        keyExtractor={(item) => item.id}
+        //keyExtractor={(item) => item.id}
       />
     </ScrollView>
   )
