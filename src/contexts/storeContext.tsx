@@ -22,6 +22,7 @@ export type StoreContextType = {
   staff?: StoreType['staff']
   myStaffId?: string
   myOrders?: OrderType[]
+  userStores?: StoreType[]
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -38,6 +39,16 @@ const StoreContextProvider = ({ children }) => {
 
   const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
   const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
+
+  const [userStores, setUserStores] = useState([])
+
+  useEffect(() => {
+    if (user) {
+      ServiceStores.getStoresByUserId(user?.id)
+        .then(setUserStores)
+        .catch(console.error)
+    }
+  }, [user])
 
   const handleSetStoreId = (storeId: string) => {
     setStoreId(storeId)
@@ -138,7 +149,8 @@ const StoreContextProvider = ({ children }) => {
         comments,
         staff: staffFormatted,
         myOrders,
-        myStaffId
+        myStaffId,
+        userStores
       }}
     >
       {children}

@@ -10,11 +10,13 @@ import StackStore from './StackStore'
 import ScreenMyOrders from './ScreenMyOrders'
 import { Icon } from 'react-native-elements'
 import StackMyOrders from './StackMyOrders'
+import { useStore } from '../contexts/storeContext'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { user } = useAuth()
+  const { store } = useStore()
 
   return (
     <Tab.Navigator
@@ -53,27 +55,30 @@ const BottomAppBar = () => {
               headerShown: false
             }}
           />
+          {!!store && (
+            <>
+              <Tab.Screen
+                name="Orders"
+                component={StackOrders}
+                options={{
+                  title: 'Ordenes',
+                  headerShown: false
+                }}
+              />
 
-          <Tab.Screen
-            name="Orders"
-            component={StackOrders}
-            options={{
-              title: 'Ordenes',
-              headerShown: false
-            }}
-          />
-
-          <Tab.Screen
-            name="MyOrders"
-            component={StackMyOrders}
-            options={{
-              title: 'Mis ordenes',
-              headerShown: false
-            }}
-            // options={{
-            //   tabBarButton: () => null
-            // }}
-          />
+              <Tab.Screen
+                name="MyOrders"
+                component={StackMyOrders}
+                options={{
+                  title: 'Mis ordenes',
+                  headerShown: false
+                }}
+                // options={{
+                //   tabBarButton: () => null
+                // }}
+              />
+            </>
+          )}
 
           {/* TODO: apply validation to hidde when no store is selected in localstorage */}
 

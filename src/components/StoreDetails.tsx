@@ -41,34 +41,34 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
   )
 }
 
-export const ChangeStore = () => {
+export const ChangeStore = ({ label = '' }) => {
   const storesModal = useModal({ title: 'Seleccionar tienda' })
-  const { user } = useAuth()
-  const [stores, setStores] = React.useState([])
-  const { handleSetStoreId, storeId } = useStore()
-  useEffect(() => {
-    if (user) {
-      ServiceStores.getStoresByUserId(user.id)
-        .then(setStores)
-        .catch(console.error)
-    }
-  }, [user])
+  const { handleSetStoreId, storeId, userStores } = useStore()
   return (
     <View>
-      <ButtonIcon
-        icon="autorenew"
-        variant="ghost"
-        color="secondary"
-        buttonStyles={{ marginLeft: 10, width: 40, height: 40 }}
-        size="medium"
-        onPress={() => {
-          storesModal.toggleOpen()
-          // navigate('EditStore')
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
-      ></ButtonIcon>
+      >
+        {!!label && <Text>{label}</Text>}
+        <ButtonIcon
+          icon={storeId ? 'autorenew' : 'storefront'}
+          variant="ghost"
+          color="secondary"
+          buttonStyles={{ marginLeft: 10, width: 40, height: 40 }}
+          size="medium"
+          onPress={() => {
+            storesModal.toggleOpen()
+            // navigate('EditStore')
+          }}
+        ></ButtonIcon>
+      </View>
       <StyledModal {...storesModal}>
         <View>
-          {stores.map((store) => (
+          {userStores.map((store) => (
             <Pressable
               style={{
                 padding: 8,
@@ -89,6 +89,24 @@ export const ChangeStore = () => {
               </View>
             </Pressable>
           ))}
+          {storeId && (
+            <Pressable
+              style={{
+                padding: 8,
+                borderRadius: 8,
+                borderColor: 'transparent',
+                borderWidth: 1,
+                backgroundColor: 'transparent'
+              }}
+              onPress={() => {
+                handleSetStoreId(null)
+              }}
+            >
+              <View style={[styles.store]}>
+                <Text style={{ textAlign: 'center' }}>Salir</Text>
+              </View>
+            </Pressable>
+          )}
         </View>
       </StyledModal>
     </View>
