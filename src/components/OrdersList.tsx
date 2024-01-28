@@ -3,6 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import OrderRow from './OrderRow'
 import { useState } from 'react'
 import OrderType from '../types/OrderType'
+import { Timestamp } from 'firebase/firestore'
 
 function OrdersList({
   orders,
@@ -16,12 +17,19 @@ function OrdersList({
   const [order, setOrder] = useState<'asc' | 'des'>('asc')
   const sortBy = (field = 'status') => {
     const res = [...orders].sort((a, b) => {
-      if (a[field] === b[field]) {
+      let aField = a[field]
+      let bField = b[field]
+
+      if (aField instanceof Date && aField instanceof Timestamp) {
+        aField = aField.toDate().getTime()
+        bField = bField.toDate().getTime()
+      }
+      if (aField === bField) {
         return 0
       }
 
       const isAscending = order === 'asc'
-      const comparison = a[field] < b[field] ? -1 : 1
+      const comparison = aField < bField ? -1 : 1
 
       return isAscending ? comparison : -comparison
     })

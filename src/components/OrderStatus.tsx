@@ -14,8 +14,8 @@ const OrderStatus = ({ orderId }: { orderId?: string }) => {
   const MIN_WIDTH = 120
 
   const displayText = dictionary(status)
-    .toUpperCase()
-    .slice(0, width < MIN_WIDTH ? 3 : 200)
+    ?.toUpperCase()
+    ?.slice(0, width < MIN_WIDTH ? 3 : 200)
 
   return (
     <View

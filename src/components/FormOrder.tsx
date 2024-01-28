@@ -28,6 +28,9 @@ const FormOrder = ({
   defaultValues = initialValues
 }) => {
   const { staff } = useStore()
+  const [loading, setLoading] = React.useState(false)
+
+  const disabledSave = loading
   return (
     <ScrollView>
       <Text style={{ textAlign: 'center', marginTop: 12 }}>
@@ -39,7 +42,15 @@ const FormOrder = ({
       <Formik
         initialValues={defaultValues}
         onSubmit={async (values) => {
-          onSubmit(values).then(console.log).catch(console.error)
+          setLoading(true)
+          await onSubmit(values)
+            .then((res) => {
+              console.log(res)
+            })
+            .catch(console.error)
+            .finally(() => {
+              setLoading(false)
+            })
         }}
       >
         {({ handleSubmit, setValues, values }) => (
@@ -93,7 +104,11 @@ const FormOrder = ({
               <FormikInputImage name="imageHouse" label="Subir fachada " />
             </View>
             <View style={[styles.item]}>
-              <Button onPress={handleSubmit} label={'Guardar'} />
+              <Button
+                disabled={disabledSave}
+                onPress={handleSubmit}
+                label={'Guardar'}
+              />
             </View>
           </View>
         )}

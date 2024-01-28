@@ -87,6 +87,20 @@ const OrderActions = ({ order }: { order: OrderType }) => {
             label="Asignar"
           />
         </View>
+        <View style={styles.item}>
+          <Button
+            color="error"
+            variant="outline"
+            // disabled={disabledAssignButton}
+            onPress={() => {
+              ServiceOrders.delete(order.id).then((res) => {
+                console.log('deleted', res)
+                navigation.goBack()
+              })
+            }}
+            label="Eliminar orden"
+          />
+        </View>
       </View>
     </View>
   )
