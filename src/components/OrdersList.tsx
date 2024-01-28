@@ -13,19 +13,25 @@ function OrdersList({
 }) {
   const [ordersSorted, setOrdersSorted] = useState(orders)
   const [orderSortedBy, setOrderSortedBy] = useState('status')
+  const [order, setOrder] = useState<'asc' | 'des'>('asc')
   const sortBy = (field = 'status') => {
-    const res = orders.sort((a, b) => {
-      if (a[field] < b[field]) {
-        return 1
+    const res = [...orders].sort((a, b) => {
+      if (a[field] === b[field]) {
+        return 0
       }
-      if (a[field] > b[field]) {
-        return -1
-      }
-      return 0
+
+      const isAscending = order === 'asc'
+      const comparison = a[field] < b[field] ? -1 : 1
+
+      return isAscending ? comparison : -comparison
     })
+
+    // Cambiar el orden para la próxima vez que se llame a la función
+    setOrder(order === 'asc' ? 'des' : 'asc')
     setOrderSortedBy(field)
     setOrdersSorted(res)
   }
+
   const sortFields = [
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
