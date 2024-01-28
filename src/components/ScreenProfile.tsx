@@ -1,17 +1,40 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import { useAuth } from '../contexts/authContext'
 import PhoneLogin from './PhoneLogin'
 import Button from './Button'
 import { logout } from '../firebase/auth'
 import CardUser from './CardUser'
+import useLocation from '../hooks/useLocation'
+import { Icon } from 'react-native-elements'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
+  const { locationEnabled, askLocation } = useLocation()
   if (user === undefined) return <ActivityIndicator />
   if (user === null) return <PhoneLogin />
   return (
     <View style={{ padding: 2 }}>
+      <Pressable
+        onPress={async () => {
+          // const position = await askLocation()
+        }}
+      >
+        {locationEnabled ? (
+          <Icon name="location-on" />
+        ) : (
+          <Icon name="location-off" />
+        )}
+      </Pressable>
+      {/* <Text style={{ textAlign: 'center' }}>
+        Ubicación:{locationEnabled ? 'Habilitada' : 'No habilitada'}
+      </Text> */}
       <CardUser user={user} />
 
       {user?.canCreateStore && (
