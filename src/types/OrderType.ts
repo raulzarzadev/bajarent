@@ -39,13 +39,28 @@ type OrderBase = {
   hasNotSolvedReports?: boolean
 }
 
-export type OrderStatus =
-  | 'PENDING'
-  | 'AUTHORIZED'
-  | 'DELIVERED'
-  | 'CANCELLED'
-  | 'REPORTED'
-  | 'PICKUP'
+export enum order_status {
+  PENDING = 'PENDING',
+  AUTHORIZED = 'AUTHORIZED',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+  REPORTED = 'REPORTED',
+  PICKUP = 'PICKUP'
+}
+
+export enum order_type {
+  RENT,
+  SALE,
+  REPAIR
+}
+
+export type OrderStatus = order_status
+// | 'PENDING'
+// | 'AUTHORIZED'
+// | 'DELIVERED'
+// | 'CANCELLED'
+// | 'REPORTED'
+// | 'PICKUP'
 
 type OrderType = OrderBase & BaseType
 

@@ -1,9 +1,9 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import OrderRow from './OrderRow'
-import { useState } from 'react'
 import OrderType from '../types/OrderType'
-import { Timestamp } from 'firebase/firestore'
+import useSort from '../hooks/useSort'
+import { Icon } from 'react-native-elements'
 
 function OrdersList({
   orders,
@@ -12,33 +12,7 @@ function OrdersList({
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
 }) {
-  const [ordersSorted, setOrdersSorted] = useState(orders)
-  const [orderSortedBy, setOrderSortedBy] = useState('status')
-  const [order, setOrder] = useState<'asc' | 'des'>('asc')
-  const sortBy = (field = 'status') => {
-    const res = [...orders].sort((a, b) => {
-      let aField = a[field]
-      let bField = b[field]
-
-      if (aField instanceof Date && aField instanceof Timestamp) {
-        aField = aField.toDate().getTime()
-        bField = bField.toDate().getTime()
-      }
-      if (aField === bField) {
-        return 0
-      }
-
-      const isAscending = order === 'asc'
-      const comparison = aField < bField ? -1 : 1
-
-      return isAscending ? comparison : -comparison
-    })
-
-    // Cambiar el orden para la próxima vez que se llame a la función
-    setOrder(order === 'asc' ? 'des' : 'asc')
-    setOrderSortedBy(field)
-    setOrdersSorted(res)
-  }
+  const { sortBy, order, sortedBy, sortedData } = useSort({ data: orders })
 
   const sortFields = [
     { key: 'folio', label: 'Folio' },
@@ -48,6 +22,7 @@ function OrdersList({
     { key: 'scheduledAt', label: 'Programada' },
     { key: 'status', label: 'Estado' }
   ]
+
   return (
     <View style={styles.container}>
       <View
@@ -63,20 +38,32 @@ function OrdersList({
             onPress={() => {
               sortBy(field.key)
             }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
           >
             <Text
               style={{
-                fontWeight: orderSortedBy === field.key ? 'bold' : 'normal'
+                fontWeight: sortedBy === field.key ? 'bold' : 'normal'
               }}
             >
               {field.label}
             </Text>
+            {sortedBy === field.key && (
+              <Icon
+                name={order === 'asc' ? 'chevron-up' : 'chevron-down'}
+                type="font-awesome"
+                size={12}
+                color="black"
+              />
+            )}
           </Pressable>
         ))}
       </View>
       <FlatList
         style={styles.orderList}
-        data={ordersSorted}
+        data={sortedData}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {

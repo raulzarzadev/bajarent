@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import { ServiceStores } from '../firebase/ServiceStore'
 import StoreType from '../types/StoreType'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
 import { ServiceComments } from '../firebase/ServiceComments'
@@ -136,7 +136,18 @@ const StoreContextProvider = ({ children }) => {
 
   const myStaffId = staff?.find((s) => s.userId === user.id)?.id || ''
   const myOrders =
-    orderFormatted?.filter((order) => order.assignTo === myStaffId) || []
+    orderFormatted
+      //* filter orders are assigned to me
+      ?.filter((order) => order.assignTo === myStaffId)
+      //* filter  orders with status PICKUP
+      ?.filter(
+        (o: OrderType) =>
+          ![
+            order_status.PENDING,
+            order_status.CANCELLED,
+            order_status.PICKUP
+          ].includes(o.status)
+      ) || []
 
   return (
     <StoreContext.Provider
