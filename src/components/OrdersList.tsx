@@ -35,6 +35,7 @@ function OrdersList({
       >
         {sortFields.map((field) => (
           <Pressable
+            key={field.key}
             onPress={() => {
               sortBy(field.key)
             }}
