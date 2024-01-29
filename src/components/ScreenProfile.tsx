@@ -23,7 +23,7 @@ const ScreenProfile = ({ navigation }) => {
     <View style={{ padding: 2 }}>
       <Pressable
         onPress={async () => {
-          // const position = await askLocation()
+          const position = await askLocation()
         }}
       >
         {locationEnabled ? (

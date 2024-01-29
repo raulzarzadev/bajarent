@@ -56,12 +56,16 @@ const StoreContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    const setLocalStorage = async () => {
-      const storeId = await getItem('storeId')
-      setStoreId(storeId)
+    if (user) {
+      const setLocalStorage = async () => {
+        const storeId = await getItem('storeId')
+        setStoreId(storeId)
+      }
+      setLocalStorage()
+    } else {
+      setStoreId(null)
     }
-    setLocalStorage()
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (store) {
@@ -134,7 +138,7 @@ const StoreContextProvider = ({ children }) => {
     if (staff.length) getStaffDetails().then(setStaffFormatted)
   }, [staff])
 
-  const myStaffId = staff?.find((s) => s.userId === user.id)?.id || ''
+  const myStaffId = staff?.find((s) => s?.userId === user?.id)?.id || ''
   const myOrders =
     orderFormatted
       //* filter orders are assigned to me
