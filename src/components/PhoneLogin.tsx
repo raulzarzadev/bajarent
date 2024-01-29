@@ -76,7 +76,7 @@ const PhoneLogin = () => {
   }, [])
 
   return (
-    <View>
+    <View style={{ padding: 4 }}>
       {!msmSent && (
         <>
           <Text style={styles.title}>Registrate con tu telefono celular</Text>
