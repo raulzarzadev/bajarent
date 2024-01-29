@@ -11,12 +11,14 @@ const InputRadios = ({
   options = [],
   setValue,
   value,
-  label
+  label,
+  layout
 }: {
   options: InputRadioOption[]
   value: string
   setValue: (value: string) => void
   label?: string
+  layout?: 'row' | 'column'
 }) => {
   const radioButtons = useMemo(
     () => options.map((option) => ({ ...option, id: option.value })),
@@ -30,7 +32,9 @@ const InputRadios = ({
       )}
       <RadioGroup
         accessibilityLabel={label}
-        layout={Dimensions.get('window').width > 600 ? 'row' : 'column'}
+        layout={
+          layout || Dimensions.get('window').width > 600 ? 'row' : 'column'
+        }
         radioButtons={radioButtons}
         onPress={setValue}
         selectedId={value}

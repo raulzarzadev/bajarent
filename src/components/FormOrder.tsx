@@ -13,6 +13,8 @@ import InputRadiosFormik from './InputRadiosFormik'
 import { useStore } from '../contexts/storeContext'
 import FormikInputImage from './FormikInputImage'
 import P from './P'
+import FormikSelectCategoryItem from './FormikSelectCategoryItem'
+import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -102,6 +104,13 @@ const FormOrder = ({
             </View>
             <View style={[styles.item]}>
               <FormikInputImage name="imageHouse" label="Subir fachada " />
+            </View>
+            <View style={[styles.item]}>
+              <FormikSelectCategoryItem
+                name="item"
+                label="Selecciona un artículo"
+                categories={CATEGORIES_ITEMS.categories}
+              />
             </View>
             <View style={[styles.item]}>
               <Button

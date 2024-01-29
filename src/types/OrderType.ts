@@ -29,6 +29,7 @@ type OrderBase = {
   deliveredBy: string
 
   items: RentItem[]
+  item: RentItem
 
   status: OrderStatus
 

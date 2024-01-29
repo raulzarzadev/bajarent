@@ -9,6 +9,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
 import CardPhone from './CardPhone'
+import CurrencyAmount from './CurrencyAmount'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route.params
@@ -18,6 +19,7 @@ const ScreenOrderDetail = ({ route }) => {
   if (order === undefined) return <Text>Cargando...</Text>
   if (order === null) return <Text>Orden no encontrada</Text>
 
+  console.log({ order })
   return (
     <ScrollView style={{}}>
       <View
@@ -112,6 +114,29 @@ const ScreenOrderDetail = ({ route }) => {
               <Ionicons name="location" size={24} color={theme.secondary} />
             </Pressable>
           )}
+        </View>
+        <View>
+          <P bold size="xl">
+            Articulo
+          </P>
+          <View
+            style={{
+              marginVertical: 16,
+              paddingVertical: 16,
+              backgroundColor: theme.base
+            }}
+          >
+            <P>{order?.item?.categoryName}</P>
+            <P>{order?.item?.priceSelected.title}</P>
+            <CurrencyAmount
+              style={{
+                alignContent: 'center',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}
+              amount={order?.item?.priceSelected?.amount}
+            />
+          </View>
         </View>
         <OrderActions order={order} />
         <OrderComments orderId={orderId} />
