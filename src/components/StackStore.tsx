@@ -6,7 +6,21 @@ import ScreenStaff from './ScreenStaff'
 import ScreenStaffNew from './ScreenStaffNew'
 import ScreenStaffDetails from './ScreenStaffDetails'
 import ScreenStaffEdit from './ScreenStaffEdit'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 
+export type StackStoreNavigationProps = {
+  Store: undefined
+  CreateStore: undefined
+  EditStore: undefined
+  Staff: undefined
+  StaffNew: undefined
+  StaffDetails: undefined
+  StaffEdit: undefined
+}
+export const useStoreNavigation = () => {
+  const navigation = useNavigation<NavigationProp<StackStoreNavigationProps>>()
+  return navigation
+}
 const Stack = createStackNavigator()
 function StackStore() {
   return (

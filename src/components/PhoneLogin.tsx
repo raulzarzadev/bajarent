@@ -12,7 +12,7 @@ const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
   const [code, setCode] = React.useState('')
   const [msmSent, setMsmSent] = React.useState(false)
-  const [error, setError] = React.useState()
+  const [error, setError] = React.useState<string | null>(null)
   const onSendCode = () => {
     //@ts-ignore
     window.confirmationResult

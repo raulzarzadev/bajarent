@@ -1,7 +1,6 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import ProductImage from './ProductImage'
-import theme from '../theme'
 
 const ProductCard = () => {
   return (
@@ -19,13 +18,13 @@ export default ProductCard
 const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
-    borderRadius: theme.borderRadius.md,
+    borderRadius: 8,
     width: 150,
     height: 250,
     alignItems: 'center'
   },
   image: {
-    borderRadius: theme.borderRadius.md,
+    borderRadius: 8,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     width: 150,

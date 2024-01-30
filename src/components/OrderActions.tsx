@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -83,6 +83,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           <Button
             disabled={disabledEditButton}
             onPress={() => {
+              //@ts-ignore
               navigation.navigate('EditOrder', { orderId: orderId })
             }}
             label="Editar"
@@ -93,6 +94,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           <Button
             disabled={disabledAssignButton}
             onPress={() => {
+              //@ts-ignore
               navigation.navigate('AssignOrder', { orderId: orderId })
             }}
             label="Asignar"

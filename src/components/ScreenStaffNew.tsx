@@ -11,10 +11,11 @@ import theme from '../theme'
 import UserType from '../types/UserType'
 import P from './P'
 import CardUser from './CardUser'
+import { useStoreNavigation } from './StackStore'
 
 const ScreenStaffNew = () => {
   const { store } = useStore()
-  const { navigate } = useNavigation()
+  const { navigate } = useStoreNavigation()
   const [user, setUser] = React.useState<UserType>()
   return (
     <View style={{ padding: 10 }}>

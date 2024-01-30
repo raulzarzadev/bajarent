@@ -1,19 +1,18 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import H1 from './H1'
 import P from './P'
 import StoreType from '../types/StoreType'
 import ButtonIcon from './ButtonIcon'
-import { useNavigation } from '@react-navigation/native'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import { useStore } from '../contexts/storeContext'
-import { ServiceStores } from '../firebase/ServiceStore'
-import { useAuth } from '../contexts/authContext'
 import theme from '../theme'
+import { useStoreNavigation } from './StackStore'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
-  const { navigate } = useNavigation()
+  const { navigate } = useStoreNavigation()
+
   return (
     <View>
       <View

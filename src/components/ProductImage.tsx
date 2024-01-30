@@ -11,7 +11,7 @@ const ProductImage = ({ style, src }) => {
       <Pressable onPress={modal.toggleOpen}>
         <Image source={source} style={[style, styles.image]} />
       </Pressable>
-      <StyledModal {...modal} />
+      {/* <StyledModal {...modal} /> */}
     </View>
   )
 }

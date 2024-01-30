@@ -3,12 +3,16 @@ import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
+import StoreType from '../types/StoreType'
 
 const FormStore = ({
   defaultValues,
   onSubmit = async (values) => {
     console.log(values)
   }
+}: {
+  defaultValues?: Partial<StoreType>
+  onSubmit?: (values: Partial<StoreType>) => Promise<any>
 }) => {
   return (
     <Formik
