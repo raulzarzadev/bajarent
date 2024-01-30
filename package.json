@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build:web": "npx expo export:web",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "pre-commit": "git status && npm run type-check &&  git add . &&  git commit"
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
