@@ -9,7 +9,7 @@ import { ThemeProvider } from './src/contexts/themeContext'
 
 export default function App() {
   const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
-  const [isReady, setIsReady] = useState(__DEV__ ? false : true)
+  const [isReady, setIsReady] = useState(!__DEV__)
 
   const [initialState, setInitialState] = useState()
 
