@@ -2,33 +2,44 @@ import { StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
 
-const OrderActions = ({ order }: { order: OrderType }) => {
+const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const navigation = useNavigation()
   const status = orderStatus(order)
 
+  const orderId = order?.id || ''
+
   const disabledDeliveryButton: boolean = [
-    'CANCELLED',
-    'PICKUP',
-    'PENDING'
+    order_status.CANCELLED,
+    order_status.PICKUP,
+    order_status.PENDING
   ].includes(status)
 
-  const disabledCancelButton: boolean = ['DELIVERED', 'PICKUP'].includes(status)
+  const disabledCancelButton: boolean = [
+    order_status.CANCELLED,
+    order_status.PICKUP
+  ].includes(status)
 
   const disabledAuthorizeButton: boolean = [
-    'CANCELLED',
-    'DELIVERED',
-    'PICKUP'
+    order_status.CANCELLED,
+    order_status.PICKUP,
+    order_status.DELIVERED
   ].includes(status)
 
-  const disabledEditButton: boolean = ['PICKUP', 'CANCELLED'].includes(status)
+  const disabledEditButton: boolean = [
+    order_status.CANCELLED,
+    order_status.PICKUP
+  ].includes(status)
 
-  const disabledAssignButton: boolean = ['PICKUP', 'CANCELLED'].includes(status)
+  const disabledAssignButton: boolean = [
+    order_status.CANCELLED,
+    order_status.PICKUP
+  ].includes(status)
 
   return (
     <View style={{ padding: 4 }}>
@@ -42,29 +53,29 @@ const OrderActions = ({ order }: { order: OrderType }) => {
           margin: 'auto'
         }}
       >
-        <OrderStatus orderId={order.id} />
+        <OrderStatus orderId={orderId} />
       </View>
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
         <View style={styles.item}>
           <ButtonDelivery
-            orderId={order.id}
+            orderId={orderId}
             disabled={disabledDeliveryButton}
-            isDelivered={status === 'DELIVERED'}
+            isDelivered={status === order_status.DELIVERED}
           />
         </View>
         <View style={styles.item}>
           <ButtonCancel
-            orderId={order.id}
+            orderId={orderId}
             disabled={disabledCancelButton}
-            isCancelled={status === 'CANCELLED'}
+            isCancelled={status === order_status.CANCELLED}
           />
         </View>
         <View style={styles.item}>
           <ButtonAuthorize
-            orderId={order.id}
+            orderId={orderId}
             disabled={disabledAuthorizeButton}
-            isAuthorized={status === 'AUTHORIZED'}
+            isAuthorized={status === order_status.AUTHORIZED}
           />
         </View>
 
@@ -72,7 +83,7 @@ const OrderActions = ({ order }: { order: OrderType }) => {
           <Button
             disabled={disabledEditButton}
             onPress={() => {
-              navigation.navigate('EditOrder', { orderId: order.id })
+              navigation.navigate('EditOrder', { orderId: orderId })
             }}
             label="Editar"
           />
@@ -82,7 +93,7 @@ const OrderActions = ({ order }: { order: OrderType }) => {
           <Button
             disabled={disabledAssignButton}
             onPress={() => {
-              navigation.navigate('AssignOrder', { orderId: order.id })
+              navigation.navigate('AssignOrder', { orderId: orderId })
             }}
             label="Asignar"
           />
@@ -93,7 +104,7 @@ const OrderActions = ({ order }: { order: OrderType }) => {
             variant="outline"
             // disabled={disabledAssignButton}
             onPress={() => {
-              ServiceOrders.delete(order.id).then((res) => {
+              ServiceOrders.delete(orderId).then((res) => {
                 console.log('deleted', res)
                 navigation.goBack()
               })
@@ -109,7 +120,7 @@ const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
   const { storeId } = useStore()
   const handleCancel = () => {
     ServiceOrders.update(orderId, {
-      status: isCancelled ? 'PENDING' : 'CANCELLED'
+      status: isCancelled ? order_status.PENDING : order_status.CANCELLED
     })
       .then(console.log)
       .catch(console.error)
@@ -138,7 +149,7 @@ const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
   const { storeId } = useStore()
   const handleAuthorize = () => {
     ServiceOrders.update(orderId, {
-      status: isAuthorized ? 'PENDING' : 'AUTHORIZED'
+      status: isAuthorized ? order_status.PENDING : order_status.AUTHORIZED
     })
       .then(console.log)
       .catch(console.error)
@@ -169,7 +180,7 @@ const ButtonDelivery = ({ orderId, isDelivered, disabled }) => {
   const { storeId } = useStore()
   const handleDelivery = () => {
     ServiceOrders.update(orderId, {
-      status: isDelivered ? 'PICKUP' : 'DELIVERED'
+      status: isDelivered ? order_status.PICKUP : order_status.DELIVERED
     })
       .then(console.log)
       .catch(console.error)
