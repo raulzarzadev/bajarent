@@ -12,14 +12,13 @@ import CardPhone from './CardPhone'
 import CurrencyAmount from './CurrencyAmount'
 
 const ScreenOrderDetail = ({ route }) => {
-  const { orderId } = route.params
+  const { orderId } = route?.params
   const { orders } = useStore()
-  const order = orders.find((order) => order.id === orderId)
+  const order = orders?.find((order) => order?.id === orderId)
 
   if (order === undefined) return <Text>Cargando...</Text>
   if (order === null) return <Text>Orden no encontrada</Text>
 
-  console.log({ order })
   return (
     <ScrollView style={{}}>
       <View
@@ -38,8 +37,8 @@ const ScreenOrderDetail = ({ route }) => {
           }}
         >
           <P size="sm">
-            {` ${dateFormat(order.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
-              order.createdAt
+            {` ${dateFormat(order?.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
+              order?.createdAt
             )} `}
           </P>
           <Text style={{ textAlign: 'center' }}>
@@ -48,7 +47,7 @@ const ScreenOrderDetail = ({ route }) => {
             </P>
             <P size="lg">{order?.folio}</P>
           </Text>
-          <P size="sm"> {order.id}</P>
+          <P size="sm"> {order?.id}</P>
         </View>
         <View
           style={{
@@ -57,30 +56,30 @@ const ScreenOrderDetail = ({ route }) => {
           }}
         >
           <P size="lg" bold styles={{ textAlign: 'center' }}>
-            {order.firstName} {order.lastName}
+            {order?.firstName} {order?.lastName}
           </P>
         </View>
         <View>
-          {order.imageID && (
+          {order?.imageID && (
             <Image
-              source={{ uri: order.imageID }}
+              source={{ uri: order?.imageID }}
               style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
             />
           )}
-          {order.imageID && (
+          {order?.imageID && (
             <Image
-              source={{ uri: order.imageHouse }}
+              source={{ uri: order?.imageHouse }}
               style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
             />
           )}
         </View>
-        <CardPhone phone={order.phone} />
+        <CardPhone phone={order?.phone} />
 
         <View style={{ alignItems: 'center' }}>
-          {order.scheduledAt && (
+          {order?.scheduledAt && (
             <P size="lg" styles={{ textAlign: 'center' }}>
-              {`  ${dateFormat(order.scheduledAt, 'dd/MMM/yy')} ${fromNow(
-                order.scheduledAt
+              {`  ${dateFormat(order?.scheduledAt, 'dd/MMM/yy')} ${fromNow(
+                order?.scheduledAt
               )} `}
               <Ionicons
                 style={{ marginLeft: 6, opacity: 0.5 }}
@@ -92,14 +91,14 @@ const ScreenOrderDetail = ({ route }) => {
           )}
         </View>
         <View>
-          {order.location && (
+          {order?.location && (
             <Pressable
               style={{ flexDirection: 'row', justifyContent: 'center' }}
               onPress={() => {
-                const isUrl = /^https?:\/\/\S+$/.test(order.location)
-                if (isUrl) return Linking.openURL(order.location)
+                const isUrl = /^https?:\/\/\S+$/.test(order?.location)
+                if (isUrl) return Linking.openURL(order?.location)
 
-                const [lat, lon] = order.location.split(',')
+                const [lat, lon] = order?.location?.split(',') ?? []
                 const areCoordinates =
                   !isNaN(Number(lat)) && !isNaN(Number(lon))
                 if (areCoordinates)
@@ -111,7 +110,7 @@ const ScreenOrderDetail = ({ route }) => {
               }}
             >
               <P>{`Ubicación`} </P>
-              <Ionicons name="location" size={24} color={theme.secondary} />
+              <Ionicons name="location" size={24} color={theme?.secondary} />
             </Pressable>
           )}
         </View>
@@ -123,11 +122,11 @@ const ScreenOrderDetail = ({ route }) => {
             style={{
               marginVertical: 16,
               paddingVertical: 16,
-              backgroundColor: theme.base
+              backgroundColor: theme?.base
             }}
           >
             <P>{order?.item?.categoryName}</P>
-            <P>{order?.item?.priceSelected.title}</P>
+            <P>{order?.item?.priceSelected?.title}</P>
             <CurrencyAmount
               style={{
                 alignContent: 'center',

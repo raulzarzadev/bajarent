@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextStyle } from 'react-native'
 import React from 'react'
 
 const CurrencyAmount = ({
-  amount,
+  amount = 0,
   style
 }: {
   amount: number
@@ -10,7 +10,7 @@ const CurrencyAmount = ({
 }) => {
   return (
     <Text style={[style]}>
-      {amount.toLocaleString('es-MX', {
+      {amount?.toLocaleString('es-MX', {
         style: 'currency',
         currency: 'MXN'
       })}
