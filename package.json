@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "build:web": "npx expo export:web",
     "type-check": "tsc --noEmit",
-    "pre-commit": "git status && npm run type-check &&  git add . &&  git commit"
+    "pre-commit": "git status && npm run type-check &&  git add . &&  git commit",
+    "merge:main": "git switch main && git merge dev && git push origin main && git switch dev"
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
