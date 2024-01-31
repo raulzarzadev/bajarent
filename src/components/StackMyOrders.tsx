@@ -1,9 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenOrders from './ScreenOrders'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenNewOrder from './ScreenNewOrder'
-import ScreenOrderEdit from './ScreenOrderEdit'
-import ScreenAssignOrder from './ScreenAssignOrder'
 import ScreenMyOrders from './ScreenMyOrders'
 
 const Stack = createStackNavigator()

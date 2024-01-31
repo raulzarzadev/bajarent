@@ -11,7 +11,6 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -146,20 +145,28 @@ const StoreContextProvider = ({ children }) => {
   }, [staff])
 
   const myStaffId = staff?.find((s) => s?.userId === user?.id)?.id || ''
-  const myOrders =
-    orderFormatted
-      //* filter orders are assigned to me
-      ?.filter((order) => order.assignTo === myStaffId)
-      //* filter  orders with status PICKUP
-      ?.filter(
-        (o: OrderType) =>
-          ![
-            order_status.PENDING,
-            order_status.CANCELLED,
-            order_status.PICKUP
-          ].includes(o.status)
-      ) || []
 
+  const [myOrders, setMyOrders] = useState<OrderType[]>([])
+  useEffect(() => {
+    if (myStaffId) {
+      const orders =
+        orderFormatted
+          //* filter orders are assigned to me
+          ?.filter((order) => order.assignTo === myStaffId)
+          //* filter  orders with status PICKUP
+          ?.filter(
+            (o: OrderType) =>
+              ![
+                // order_status.PENDING,  // hide pending, just show when is already authorized ?
+                order_status.CANCELLED,
+                order_status.PICKUP
+              ].includes(o.status)
+          ) || []
+      console.log({ orderFormatted, myStaffId, orders })
+
+      setMyOrders(orders)
+    }
+  }, [myStaffId, orderFormatted])
   return (
     <StoreContext.Provider
       value={{

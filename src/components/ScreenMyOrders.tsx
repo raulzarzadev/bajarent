@@ -6,7 +6,7 @@ import OrdersList from './OrdersList'
 
 function ScreenMyOrders({ navigation }) {
   const { myOrders } = useStore()
-
+  console.log({ myOrders })
   return (
     <>
       <View
@@ -31,7 +31,7 @@ function ScreenMyOrders({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    //padding: 12,
+    // padding: 12,
 
     alignItems: 'center',
     justifyContent: 'center',
