@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, TextInputProps } from 'react-native'
+import { StyleSheet, TextInput, TextInputProps, View, Text } from 'react-native'
 import theme, { BORDER_RADIUS, PADDING } from '../theme'
 
 /**
@@ -9,20 +9,38 @@ import theme, { BORDER_RADIUS, PADDING } from '../theme'
  */
 const InputTextStyled = ({
   disabled,
+  helperText,
+  helperTextColor,
   ...props
-}: TextInputProps & { disabled?: boolean }): JSX.Element => {
+}: TextInputProps & {
+  disabled?: boolean
+  helperText?: string
+  helperTextColor?: 'error' | 'primary' | 'black' | 'white'
+}): JSX.Element => {
   return (
-    <TextInput
-      {...props}
-      editable={!disabled}
-      style={[baseStyle.inputStyle, disabled && { opacity: 0.5 }]}
-    />
+    <View>
+      <TextInput
+        {...props}
+        editable={!disabled}
+        style={[baseStyle.inputStyle, disabled && { opacity: 0.5 }]}
+      />
+      {!!helperText && (
+        <Text style={[baseStyle.helperText, { color: helperTextColor }]}>
+          {helperText}
+        </Text>
+      )}
+    </View>
   )
 }
 
 export default InputTextStyled
 const placeholderOpacity = 'ee'
 const baseStyle = StyleSheet.create({
+  helperText: {
+    fontSize: 10,
+    opacity: 0.7,
+    color: theme?.black
+  },
   inputStyle: {
     borderWidth: 1,
     borderColor: theme.neutral,

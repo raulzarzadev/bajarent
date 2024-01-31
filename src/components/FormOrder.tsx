@@ -15,6 +15,8 @@ import FormikInputImage from './FormikInputImage'
 import P from './P'
 import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
+import CurrencyAmount from './CurrencyAmount'
+import theme from '../theme'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -70,7 +72,12 @@ const FormOrder = ({
             </View>
 
             <View style={[styles.item]}>
-              <InputValueFormik name={'firstName'} placeholder="Nombre (s)" />
+              <InputValueFormik
+                name={'firstName'}
+                placeholder="Nombre (s)"
+                helperText={!values.firstName && 'Nombre es requerido'}
+                helperTextColor={theme.error}
+              />
             </View>
             <View style={[styles.item]}>
               <InputValueFormik name={'lastName'} placeholder="Apellido (s)" />
@@ -113,10 +120,20 @@ const FormOrder = ({
 
             <View style={[styles.item]}>
               {values.type === 'REPAIR' && (
-                <InputValueFormik
-                  name={'description'}
-                  placeholder="Describe la falla"
-                />
+                <View>
+                  <Text style={{ marginVertical: 4 }}>
+                    Costo por visita{' '}
+                    <Text style={{ fontWeight: 'bold' }}>
+                      <CurrencyAmount amount={300} />
+                    </Text>
+                    . Reembolsable si se realiza la reparación
+                  </Text>
+                  <InputValueFormik
+                    name={'description'}
+                    placeholder="Describe la falla"
+                    helperText="Ejemplo: Lavadora marca Mytag, no lava, hace ruido."
+                  />
+                </View>
               )}
               {values.type === 'RENT' && (
                 <FormikSelectCategoryItem
@@ -135,7 +152,7 @@ const FormOrder = ({
             </View>
             <View style={[styles.item]}>
               <Button
-                disabled={disabledSave}
+                disabled={disabledSave || !values.firstName}
                 onPress={handleSubmit}
                 label={'Guardar'}
               />
