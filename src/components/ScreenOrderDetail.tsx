@@ -1,15 +1,6 @@
-import { View, Text, ScrollView, Pressable, Linking, Image } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import OrderDetails from './OrderDetails'
-import { dateFormat, fromNow } from '../libs/utils-date'
-import P from './P'
-import OrderActions from './OrderActions'
-
-import OrderComments from './OrderComments'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
-import CardPhone from './CardPhone'
-import CurrencyAmount from './CurrencyAmount'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params

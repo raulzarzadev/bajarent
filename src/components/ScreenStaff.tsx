@@ -4,7 +4,8 @@ import {
   Pressable,
   ScrollView,
   Text,
-  View
+  View,
+  ViewStyle
 } from 'react-native'
 import React from 'react'
 import Button from './Button'
@@ -58,11 +59,13 @@ const ScreenStaff = ({ navigation }) => {
 export const StaffRow = ({
   staff,
   onPress,
-  fields = ['name', 'position']
+  fields = ['name', 'position'],
+  style
 }: {
   staff: StaffType
   onPress: () => void
   fields?: (keyof StaffType)[]
+  style?: ViewStyle
 }) => {
   const text = (field?: string | Date): string => {
     if (typeof field === 'string') return field
@@ -75,15 +78,18 @@ export const StaffRow = ({
       onPress={() => {
         onPress()
       }}
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 5,
-        backgroundColor: theme.primary,
-        padding: 8,
-        borderRadius: 6
-      }}
+      style={[
+        {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginVertical: 5,
+          backgroundColor: theme.primary,
+          padding: 8,
+          borderRadius: 6
+        },
+        style
+      ]}
     >
       <View
         style={{

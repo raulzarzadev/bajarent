@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -11,7 +11,7 @@ import { useStore } from '../contexts/storeContext'
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const navigation = useNavigation()
   const status = orderStatus(order)
-
+  const { staff } = useStore()
   const orderId = order?.id || ''
 
   const disabledDeliveryButton: boolean = [
@@ -41,6 +41,9 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     order_status.PICKUP
   ].includes(status)
 
+  const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
+  const assignedName = assignedTo?.name || assignedTo?.position
+  console.log({ assignedName })
   return (
     <View style={{ padding: 4 }}>
       <View
@@ -83,8 +86,8 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           <Button
             disabled={disabledEditButton}
             onPress={() => {
-              //@ts-ignore
-              navigation.navigate('EditOrder', { orderId: orderId })
+              // @ts-ignore
+              navigation.navigate('EditOrder', { orderId })
             }}
             label="Editar"
           />
@@ -94,10 +97,12 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           <Button
             disabled={disabledAssignButton}
             onPress={() => {
-              //@ts-ignore
-              navigation.navigate('AssignOrder', { orderId: orderId })
+              // @ts-ignore
+              navigation.navigate('AssignOrder', { orderId })
             }}
-            label="Asignar"
+            label={`${
+              assignedName ? `Asignado a: ${assignedName}` : 'Asignar'
+            }`}
           />
         </View>
         <View style={styles.item}>

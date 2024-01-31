@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image, Linking, Pressable } from 'react-native'
 import React from 'react'
 import OrderType from '../types/OrderType'
-import { Image, Linking, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import P from './P'
 import CardPhone from './CardPhone'
