@@ -11,6 +11,7 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -32,8 +33,6 @@ const StoreContextProvider = ({ children }) => {
 
   const [storeId, setStoreId] = useState<StoreContextType['store']['id']>(null)
 
-  const [store, setStore] = useState<StoreContextType['store']>(null)
-
   const [orders, setOrders] = useState<StoreContextType['orders']>([])
   const [comments, setComments] = useState<StoreContextType['comments']>([])
   const [staff, setStaff] = useState<StoreContextType['staff']>([])
@@ -41,72 +40,20 @@ const StoreContextProvider = ({ children }) => {
   const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
   const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
 
-  const [userStores, setUserStores] = useState([])
-
-  const [userPositions, setUserPositions] = useState<StaffType[]>([])
-
-  useEffect(() => {
-    if (user?.id) {
-      // get stores where user is  owner
-
-      ServiceStores.getStoresByUserId(user?.id)
-        .then((res) => {
-          setUserStores(res)
-        })
-        .catch(console.error)
-
-      // get stores where user is staff
-
-      ServiceStaff.getStaffPositions(user?.id)
-        .then(async (res) => {
-          const positionsWithStoreData = res.map(async (res) => ({
-            store: await ServiceStores.get(res.storeId),
-            ...res
-          }))
-          const positions = await Promise.all(positionsWithStoreData)
-          setUserPositions(positions)
-        })
-        .catch(console.error)
-    }
-  }, [user])
-
-  const handleSetStoreId = (storeId: string) => {
-    setStoreId(storeId)
-    setItem('storeId', storeId)
-  }
-
-  useEffect(() => {
-    if (user) {
-      const setLocalStorage = async () => {
-        const storeId = await getItem('storeId')
-        setStoreId(storeId)
-      }
-      setLocalStorage()
-    } else {
-      setStoreId(null)
-    }
-  }, [user])
-
+  const [userStores, userPositions] = useUserStores()
+  const store = useSelectedStore()
+  console.log(orders)
   useEffect(() => {
     if (store) {
       ServiceOrders.storeOrders(storeId, setOrders)
       ServiceComments.storeComments(storeId, setComments)
       ServiceStaff.storeStaff(storeId, setStaff)
     }
-  }, [store])
-
-  useEffect(() => {
-    if (storeId) {
-      ServiceStores.listen(storeId, setStore)
-      // .then(setStore).catch(console.error)
-    } else {
-      setStore(null)
-    }
-  }, [storeId])
+  }, [store, storeId])
 
   useEffect(() => {
     if (orders.length > 0) {
-      const orderFormatted = orders.map((order) => {
+      const orderFormatted = [...orders].map((order) => {
         const orderComments = comments?.filter(
           (comment) => comment.orderId === order.id
         )
@@ -121,7 +68,9 @@ const StoreContextProvider = ({ children }) => {
       })
       setOrderFormatted(orderFormatted)
     }
-  }, [orders, comments, staff])
+  }, [orders, comments, staff, store, storeId])
+
+  console.log({ orders, comments, store, storeId })
 
   useEffect(() => {
     const getStaffDetails = async () => {
@@ -159,8 +108,9 @@ const StoreContextProvider = ({ children }) => {
   }, [staff])
 
   const myStaffId = staff?.find((s) => s?.userId === user?.id)?.id || ''
+
   const myOrders =
-    orderFormatted
+    [...orderFormatted]
       //* filter orders are assigned to me
       ?.filter((order) => order.assignTo === myStaffId)
       //* filter  orders with status PICKUP
@@ -173,11 +123,15 @@ const StoreContextProvider = ({ children }) => {
           ].includes(o.status)
       ) || []
 
+  const handleSetStoreId = (storeId: string) => {
+    setStoreId(storeId)
+    setItem('storeId', storeId)
+  }
+
   return (
     <StoreContext.Provider
       value={{
         store,
-        setStore,
         storeId,
         handleSetStoreId,
         orders: orderFormatted,
@@ -199,3 +153,53 @@ export const useStore = () => {
 }
 
 export { StoreContext, StoreContextProvider }
+
+const useSelectedStore = () => {
+  const [store, setStore] = useState<StoreType>()
+  useEffect(() => {
+    const getStore = async () => {
+      const storeId = await getItem('storeId')
+      if (storeId) {
+        const store = await ServiceStores.get(storeId)
+        setStore(store)
+      }
+    }
+    getStore()
+
+    // if store is selected
+    // get store details
+    // if
+  }, [])
+  return store
+}
+
+const useUserStores = () => {
+  const { user } = useAuth()
+  const [userStores, setUserStores] = useState([])
+  const [userPositions, setUserPositions] = useState<StaffType[]>([])
+  useEffect(() => {
+    if (user?.id) {
+      // get stores where user is  owner
+
+      ServiceStores.getStoresByUserId(user?.id)
+        .then((res) => {
+          setUserStores(res)
+        })
+        .catch(console.error)
+
+      // get stores where user is staff
+
+      ServiceStaff.getStaffPositions(user?.id)
+        .then(async (res) => {
+          const positionsWithStoreData = res.map(async (res) => ({
+            store: await ServiceStores.get(res.storeId),
+            ...res
+          }))
+          const positions = await Promise.all(positionsWithStoreData)
+          setUserPositions(positions)
+        })
+        .catch(console.error)
+    }
+  }, [user])
+  return [userStores, userPositions]
+}
