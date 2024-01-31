@@ -1,8 +1,7 @@
-import { StyleSheet } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { ActivityIndicator } from 'react-native'
 
 const ScreenOrderEdit = ({ route, navigation }) => {
   const orderId = route?.params?.orderId
@@ -16,10 +15,9 @@ const ScreenOrderEdit = ({ route, navigation }) => {
     <FormOrder
       defaultValues={order}
       onSubmit={async (values) => {
-        console.log(values)
         ServiceOrders.update(orderId, values)
           .then((res) => {
-            console.log(res)
+            // console.log(res)
             // navigation.goBack()
           })
           .catch(console.error)
@@ -29,5 +27,3 @@ const ScreenOrderEdit = ({ route, navigation }) => {
 }
 
 export default ScreenOrderEdit
-
-const styles = StyleSheet.create({})

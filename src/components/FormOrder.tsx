@@ -69,23 +69,6 @@ const FormOrder = ({
               />
             </View>
 
-            <View style={[styles.item, { justifyContent: 'center' }]}>
-              <InputRadiosFormik
-                name="type"
-                options={[
-                  { label: 'Renta', value: 'RENT' },
-                  { label: 'Reparación', value: 'REPAIR' }
-                ]}
-                label="Tipo de orden"
-              />
-            </View>
-            <View style={[styles.item, { justifyContent: 'center' }]}>
-              <InputRadiosFormik
-                name="assignTo"
-                options={staff.map((s) => ({ label: s.position, value: s.id }))}
-                label="Asignar a"
-              />
-            </View>
             <View style={[styles.item]}>
               <InputValueFormik name={'firstName'} placeholder="Nombre (s)" />
             </View>
@@ -98,18 +81,56 @@ const FormOrder = ({
             <View style={[styles.item]}>
               <InputLocationFormik name={'location'} />
             </View>
-            <View style={[styles.item]}></View>
+            <View style={[styles.item]}>
+              <InputValueFormik name={'neighborhood'} placeholder="Colonia" />
+            </View>
+            <View style={[styles.item]}>
+              <InputValueFormik name={'street'} placeholder="Calle y numero" />
+            </View>
+            <View style={[styles.item]}>
+              <InputValueFormik
+                name={'betweenStreets'}
+                placeholder="Entre calles"
+              />
+            </View>
+
             <View style={[styles.item]}>
               <FormikInputImage name="imageID" label="Subir identificación" />
             </View>
             <View style={[styles.item]}>
               <FormikInputImage name="imageHouse" label="Subir fachada " />
             </View>
+            <View style={[styles.item, { justifyContent: 'center' }]}>
+              <InputRadiosFormik
+                name="type"
+                options={[
+                  { label: 'Renta', value: 'RENT' },
+                  { label: 'Reparación', value: 'REPAIR' }
+                ]}
+                label="Tipo de orden"
+              />
+            </View>
+
             <View style={[styles.item]}>
-              <FormikSelectCategoryItem
-                name="item"
-                label="Selecciona un artículo"
-                categories={CATEGORIES_ITEMS.categories}
+              {values.type === 'REPAIR' && (
+                <InputValueFormik
+                  name={'description'}
+                  placeholder="Describe la falla"
+                />
+              )}
+              {values.type === 'RENT' && (
+                <FormikSelectCategoryItem
+                  name="item"
+                  label="Selecciona un artículo"
+                  categories={CATEGORIES_ITEMS.categories}
+                />
+              )}
+            </View>
+            <View style={[styles.item, { justifyContent: 'center' }]}>
+              <InputRadiosFormik
+                name="assignTo"
+                options={staff.map((s) => ({ label: s.position, value: s.id }))}
+                label="Asignar a"
               />
             </View>
             <View style={[styles.item]}>

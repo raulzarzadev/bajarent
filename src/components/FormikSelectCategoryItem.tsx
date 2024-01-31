@@ -18,11 +18,14 @@ const FormikSelectCategoryItem = ({
     <FormSelectItem
       value={value}
       setValue={(value) => {
+        const priceSelected =
+          categories
+            ?.find((category) => category?.name === value?.categoryName)
+            ?.prices?.find((price) => price?.id === value?.priceSelectedId) ||
+          null
         helpers.setValue({
           ...value,
-          priceSelected: categories
-            ?.find((category) => category?.name === value?.categoryName)
-            ?.prices?.find((price) => price?.id === value?.priceSelectedId)
+          priceSelected
         })
       }}
       categories={categories}

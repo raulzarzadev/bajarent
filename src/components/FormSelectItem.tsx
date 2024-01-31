@@ -36,11 +36,11 @@ const FormSelectItem = ({
 }) => {
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
-  >(value?.categoryName)
+  >(value?.categoryName || null)
 
   const [priceId, setPriceId] = useState<
     ItemSelected['priceSelectedId'] | null
-  >(value?.priceSelectedId)
+  >(value?.priceSelectedId || null)
 
   const prices =
     categories?.find((category) => category?.name === categoryId)?.prices || []
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     aspectRatio: '2/1',
     backgroundColor: theme.primary,
     borderRadius: 8,
-    //borderColor: theme.secondary,
+    // borderColor: theme.secondary,
     borderColor: 'black',
     borderWidth: 2,
     shadowColor: theme.black,

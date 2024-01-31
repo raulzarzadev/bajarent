@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -11,8 +10,8 @@ const ScreenNewOrder = ({ navigation }) => {
     return await ServiceOrders.create({ storeId, ...values })
       .then((res) => {
         const orderId = res?.res?.id
-        console.log({ res })
-        navigation.push('OrderDetails', { orderId: orderId })
+        //  console.log({ res })
+        navigation.push('OrderDetails', { orderId })
         // alert('Orden creada')
       })
       .catch(console.error)
@@ -21,5 +20,3 @@ const ScreenNewOrder = ({ navigation }) => {
 }
 
 export default ScreenNewOrder
-
-const styles = StyleSheet.create({})
