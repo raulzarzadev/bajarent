@@ -23,6 +23,7 @@ export type StoreContextType = {
   myStaffId?: string
   myOrders?: OrderType[]
   userStores?: StoreType[]
+  userPositions?: StaffType[]
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -42,6 +43,8 @@ const StoreContextProvider = ({ children }) => {
 
   const [userStores, setUserStores] = useState([])
 
+  const [userPositions, setUserPositions] = useState<StaffType[]>([])
+
   useEffect(() => {
     if (user?.id) {
       // get stores where user is  owner
@@ -54,20 +57,18 @@ const StoreContextProvider = ({ children }) => {
 
       // get stores where user is staff
 
-      ServiceStores.getStoresAsStaffId(user?.id)
-        .then((res) => {
-          setUserStores((prev) => [...prev, ...res])
+      ServiceStaff.getStaffPositions(user?.id)
+        .then(async (res) => {
+          const positionsWithStoreData = res.map(async (res) => ({
+            store: await ServiceStores.get(res.storeId),
+            ...res
+          }))
+          const positions = await Promise.all(positionsWithStoreData)
+          setUserPositions(positions)
         })
         .catch(console.error)
     }
   }, [user])
-  // useEffect(() => {
-  //   if (user) {
-  //     ServiceStores.getStoresByUserId(user?.id)
-  //       .then(setUserStores)
-  //       .catch(console.error)
-  //   }
-  // }, [user])
 
   const handleSetStoreId = (storeId: string) => {
     setStoreId(storeId)
@@ -184,7 +185,8 @@ const StoreContextProvider = ({ children }) => {
         staff: staffFormatted,
         myOrders,
         myStaffId,
-        userStores
+        userStores,
+        userPositions
       }}
     >
       {children}

@@ -42,7 +42,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
 
 export const ChangeStore = ({ label = '' }) => {
   const storesModal = useModal({ title: 'Seleccionar tienda' })
-  const { handleSetStoreId, storeId, userStores } = useStore()
+  const { handleSetStoreId, storeId, userStores, userPositions } = useStore()
   return (
     <View>
       <View
@@ -67,6 +67,7 @@ export const ChangeStore = ({ label = '' }) => {
       </View>
       <StyledModal {...storesModal}>
         <View>
+          {!!userStores.length && <P bold>Tiendas propias</P>}
           {userStores.map((store) => (
             <Pressable
               style={{
@@ -85,6 +86,22 @@ export const ChangeStore = ({ label = '' }) => {
             >
               <View style={styles.store} key={store.id}>
                 <Text>{store.name}</Text>
+              </View>
+            </Pressable>
+          ))}
+          {!!userPositions.length && <P bold>Posiciones</P>}
+          {userPositions.map((position) => (
+            <Pressable
+              key={position.id}
+              onPress={() => {
+                handleSetStoreId(position.storeId)
+              }}
+            >
+              <View style={styles.store} key={position.id}>
+                <Text style={{ textAlign: 'center' }}>
+                  {position?.store?.name}
+                </Text>
+                <Text>{position?.position}</Text>
               </View>
             </Pressable>
           ))}

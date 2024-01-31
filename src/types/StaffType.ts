@@ -1,4 +1,5 @@
 import BaseType from './BaseType'
+import StoreType from './StoreType'
 
 export type BaseStaffType = {
   storeId: string
@@ -9,6 +10,8 @@ export type BaseStaffType = {
   name: string
   email?: string
   phone?: string
+
+  store?: Partial<StoreType>
 }
 
 type StaffType = BaseType & BaseStaffType

@@ -3,7 +3,6 @@ import {
   FlatList,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   View
 } from 'react-native'
@@ -50,7 +49,7 @@ const ScreenStaff = ({ navigation }) => {
             }
           />
         )}
-        //keyExtractor={(item) => item.id}
+        // keyExtractor={(item) => item.id}
       />
     </ScrollView>
   )
@@ -99,7 +98,7 @@ export const StaffRow = ({
             style={{ marginHorizontal: 4, width: `${100 / fields.length}%` }}
             numberOfLines={1}
           >
-            {text(staff[field])}
+            {text(staff[field] as string)}
           </Text>
         ))}
       </View>
@@ -108,5 +107,3 @@ export const StaffRow = ({
 }
 
 export default ScreenStaff
-
-const styles = StyleSheet.create({})

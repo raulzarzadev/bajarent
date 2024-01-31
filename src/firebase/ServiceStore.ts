@@ -10,10 +10,6 @@ class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     return this.getItems([where('createdBy', '==', userId)])
   }
 
-  async getStoresAsStaffId(userId: string) {
-    return this.getItems([where('staff', 'array-contains', userId)])
-  }
-
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
