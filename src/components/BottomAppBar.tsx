@@ -14,7 +14,12 @@ const Tab = createBottomTabNavigator()
 const BottomAppBar = () => {
   const { user } = useAuth()
   const { store } = useStore()
+  if (!user) return <NotUserTabs />
+  if (!store) return <NotStoreTabs />
+  return <UserAndStoreTabs />
+}
 
+const NotStoreTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -32,63 +37,124 @@ const BottomAppBar = () => {
         }
       }}
     >
-      {!user && (
-        <Tab.Screen
-          name="Profile"
-          component={StackProfile}
-          options={{
-            title: 'Perfil',
-            headerShown: false
-          }}
-        />
-      )}
-      {!!user && (
-        <>
-          <Tab.Screen
-            name="Store"
-            component={StackStore}
-            options={{
-              title: 'Tienda ',
-              headerShown: false
-            }}
-          />
-          {!!store && (
-            <>
-              <Tab.Screen
-                name="Orders"
-                component={StackOrders}
-                options={{
-                  title: 'Ordenes',
-                  headerShown: false
-                }}
-              />
+      <Tab.Screen
+        name="Profile"
+        component={StackProfile}
+        options={{
+          title: 'Perfil',
+          headerShown: false
+        }}
+      />
+      <Tab.Screen
+        name="Store"
+        component={StackStore}
+        options={{
+          title: 'Tienda ',
+          headerShown: false
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
 
-              <Tab.Screen
-                name="MyOrders"
-                component={StackMyOrders}
-                options={{
-                  title: 'Mis ordenes',
-                  headerShown: false
-                }}
-                // options={{
-                //   tabBarButton: () => null
-                // }}
-              />
-            </>
-          )}
+const NotUserTabs = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => {
+        return {
+          tabBarIcon: ({ focused, color, size }) => {
+            const icons = {
+              Store: 'storefront',
+              Orders: 'list',
+              Profile: 'person',
+              Components: 'apps-outline',
+              MyOrders: 'fastfood'
+            }
+            return <Icon name={icons[route.name]} size={size} color={color} />
+          }
+        }
+      }}
+    >
+      <Tab.Screen
+        name="Profile"
+        component={StackProfile}
+        options={{
+          title: 'Perfil',
+          headerShown: false
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
 
-          {/* TODO: apply validation to hidde when no store is selected in localstorage */}
+const UserAndStoreTabs = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => {
+        return {
+          tabBarIcon: ({ focused, color, size }) => {
+            const icons = {
+              Store: 'storefront',
+              Orders: 'list',
+              Profile: 'person',
+              Components: 'apps-outline',
+              MyOrders: 'fastfood'
+            }
+            return <Icon name={icons[route.name]} size={size} color={color} />
+          }
+        }
+      }}
+    >
+      <Tab.Screen
+        name="Profile"
+        component={StackProfile}
+        options={{
+          title: 'Perfil',
+          headerShown: false
+        }}
+      />
 
-          <Tab.Screen
-            name="Profile"
-            component={StackProfile}
-            options={{
-              title: 'Perfil',
-              headerShown: false
-            }}
-          />
-        </>
-      )}
+      <Tab.Screen
+        name="Store"
+        component={StackStore}
+        options={{
+          title: 'Tienda ',
+          headerShown: false
+        }}
+      />
+
+      <Tab.Screen
+        name="Orders"
+        component={StackOrders}
+        options={{
+          title: 'Ordenes',
+          headerShown: false
+        }}
+      />
+
+      <Tab.Screen
+        name="MyOrders"
+        component={StackMyOrders}
+        options={{
+          title: 'Mis ordenes',
+          headerShown: false
+        }}
+        // options={{
+        //   tabBarButton: () => null
+        // }}
+      />
+
+      {/* TODO: apply validation to hidde when no store is selected in localstorage */}
+
+      {/* <Tab.Screen
+        name="Profile"
+        component={StackProfile}
+        options={{
+          title: 'Perfil',
+          headerShown: false
+        }}
+      /> */}
+
       {/* <Tab.Screen
           name="Crear tienda"
           component={ScreenCreateStore}
