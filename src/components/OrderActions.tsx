@@ -41,8 +41,8 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     order_status.PICKUP
   ].includes(status)
 
-  const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
-  const assignedName = assignedTo?.name || assignedTo?.position
+  // const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
+  // const assignedName = assignedTo?.name || assignedTo?.position
 
   return (
     <View style={{ padding: 4 }}>
@@ -101,7 +101,9 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
               navigation.navigate('AssignOrder', { orderId })
             }}
             label={`${
-              assignedName ? `Asignado a: ${assignedName}` : 'Asignar'
+              order.assignToPosition
+                ? `Asignado a: ${order.assignToPosition}`
+                : 'Asignar'
             }`}
           />
         </View>

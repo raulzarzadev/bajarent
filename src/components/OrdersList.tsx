@@ -62,7 +62,6 @@ function OrdersList({
             )}
           </Pressable>
         ))}
-        TSTI
       </View>
       <FlatList
         style={styles.orderList}

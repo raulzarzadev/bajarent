@@ -18,7 +18,7 @@ const OrderRow = ({ order }: { order: OrderType }) => {
         {order.firstName} {order.lastName}
       </Text>
       {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
-      <Text style={styles.text}>{order?.assignToPosition}</Text>
+      <Text style={styles.text}>{order?.assignToPosition || ''}</Text>
       <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
       <Text style={styles.text}>
         <OrderStatus orderId={order.id} />

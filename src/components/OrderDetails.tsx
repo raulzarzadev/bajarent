@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Linking, Pressable } from 'react-native'
+import { Text, View, Image, Linking, Pressable } from 'react-native'
 import React from 'react'
 import OrderType from '../types/OrderType'
 import { Ionicons } from '@expo/vector-icons'
@@ -119,6 +119,14 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
             amount={order?.item?.priceSelected?.amount}
           />
         </View>
+      </View>
+      <View>
+        <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
+          Asignada a:{' '}
+        </Text>
+        <Text style={{ fontSize: 16, textAlign: 'center', marginBottom: 8 }}>
+          {order?.assignToPosition || 'No asignada'}
+        </Text>
       </View>
       <OrderActions order={order} />
       <OrderComments orderId={order.id} />
