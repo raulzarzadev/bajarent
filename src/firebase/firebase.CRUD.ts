@@ -17,6 +17,7 @@ import {
   onSnapshot,
   Query,
   query,
+  QueryConstraint,
   setDoc,
   Timestamp,
   updateDoc,
@@ -31,6 +32,7 @@ export class FirebaseCRUD {
   ) {
     throw new Error('Method not implemented.')
   }
+
   collectionName: string
   db: any
   storage: any
@@ -209,7 +211,7 @@ export class FirebaseCRUD {
     return await setDoc(doc(this.db, this.collectionName, itemId), item)
       .then((res) =>
         this.formatResponse(true, `${this.collectionName}_CREATED`, {
-          item: item
+          item
         })
       )
       .catch((err) => console.error(err))
@@ -229,7 +231,7 @@ export class FirebaseCRUD {
    * * get all documents in a collection implementing filters
    * @param filters: where(itemField,'==','value')
    */
-  async getItems(filters: any[]) {
+  async getItems(filters: QueryConstraint[]) {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
@@ -253,9 +255,9 @@ export class FirebaseCRUD {
 
   /**
    * * get all documents in a collection implementing filters
-   * @param filters: where(itemField,'==','value')
+   * @param filters: QueryConstraint  where(itemField,'==','value')
    */
-  async getUserItems(filters: any[]) {
+  async getUserItems(filters: QueryConstraint[]) {
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
     const querySnapshot = await getDocs(q)
@@ -282,11 +284,10 @@ export class FirebaseCRUD {
    * @param filters[]: where(itemField,'==','value')
    * @param cb callback with array of items
    */
-  async listenItems(filters: any, cb: CallableFunction) {
+  async listenItems(filters: QueryConstraint[], cb: CallableFunction) {
     this.validateFilters(filters, this.collectionName)
 
     const q = query(collection(this.db, this.collectionName), ...filters)
-
     onSnapshot(q, (querySnapshot) => {
       const res: any[] = []
       querySnapshot.forEach((doc) => {
@@ -296,7 +297,7 @@ export class FirebaseCRUD {
     })
   }
 
-  async listenUserItems(filters: any = [], cb: CallableFunction) {
+  async listenUserItems(filters: QueryConstraint[] = [], cb: CallableFunction) {
     const userId = getAuth().currentUser?.uid
     this.listenItems([where('userId', '==', userId), ...filters], cb)
   }
@@ -329,22 +330,35 @@ export class FirebaseCRUD {
     }
   }
 
-  validateFilters(filters: any[], collectionName: string) {
-    if (!filters) return console.error('Should have filters implanted')
-    if (!Array.isArray(filters))
-      return console.error('filter is not an array', {
+  validateFilters(
+    filters: QueryConstraint[],
+    collectionName: string
+  ): QueryConstraint[] | null {
+    if (!filters) {
+      console.error('Should have filters implanted')
+      return null
+    }
+    if (!Array.isArray(filters)) {
+      console.error('filter is not an array', {
         collectionName
       })
+      return null
+    }
 
     //* Validate inside each filter and find if any a the values is invalid
-    filters.map((filter) => {
+    filters.forEach((filter) => {
       //* Looks like firebase define a function unsolved if the value of
-      if (typeof filter._a === 'function') {
-        return console.error('invalid data', {
-          segment: filter.fa.segments[0],
+      if (!(filter instanceof QueryConstraint))
+        return console.error('invalid filter', {
+          filter,
           collectionName
         })
-      }
+      // if (typeof filter._a === 'function') {
+      //   return console.error('invalid data', {
+      //     segment: filter.fa.segments[0],
+      //     collectionName
+      //   })
+      // }
     })
 
     return filters

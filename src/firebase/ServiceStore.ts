@@ -1,3 +1,4 @@
+import { where } from 'firebase/firestore'
 import StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 class ServiceStoresClass extends FirebaseGenericService<StoreType> {
@@ -6,7 +7,7 @@ class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   }
 
   async getStoresByUserId(userId: string) {
-    return this.getItems([['userId', '==', userId]])
+    return this.getItems([where('createdBy', '==', userId)])
   }
 
   // Agrega tus métodos aquí

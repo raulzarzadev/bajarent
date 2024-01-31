@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import StoreDetails, { ChangeStore } from './StoreDetails'
 import { useStore } from '../contexts/storeContext'
@@ -6,7 +6,6 @@ import Button from './Button'
 
 const ScreenStore = ({ navigation }) => {
   const { store, userStores, storeId } = useStore()
-  //if (!store) return <ActivityIndicator />
   return (
     <View>
       {!!userStores.length && !storeId && <ChangeStore label="Entrar " />}
@@ -32,5 +31,3 @@ const ScreenStore = ({ navigation }) => {
 }
 
 export default ScreenStore
-
-const styles = StyleSheet.create({})

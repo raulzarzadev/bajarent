@@ -13,6 +13,10 @@ class ServiceUsersClass extends FirebaseGenericService<StoreType> {
     const byPhone = await super.findOne([where('phone', '==', text)])
     return [byEmail, byName, byPhone].filter((item) => item)
   }
+
+  async findByEmail(email: string) {
+    return await super.findOne([where('email', '==', email)])
+  }
   // Agrega tus métodos aquí
 }
 

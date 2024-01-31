@@ -43,12 +43,23 @@ const StoreContextProvider = ({ children }) => {
   const [userStores, setUserStores] = useState([])
 
   useEffect(() => {
-    if (user) {
+    console.log({ user })
+    if (user?.id) {
+      console.log(user.id)
       ServiceStores.getStoresByUserId(user?.id)
-        .then(setUserStores)
+        .then((res) => {
+          console.log(res)
+        })
         .catch(console.error)
     }
   }, [user])
+  // useEffect(() => {
+  //   if (user) {
+  //     ServiceStores.getStoresByUserId(user?.id)
+  //       .then(setUserStores)
+  //       .catch(console.error)
+  //   }
+  // }, [user])
 
   const handleSetStoreId = (storeId: string) => {
     setStoreId(storeId)
@@ -78,7 +89,7 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     if (storeId) {
       ServiceStores.listen(storeId, setStore)
-      //.then(setStore).catch(console.error)
+      // .then(setStore).catch(console.error)
     } else {
       setStore(null)
     }

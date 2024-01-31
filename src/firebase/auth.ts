@@ -15,7 +15,8 @@ import { FirebaseCRUD } from './firebase.CRUD'
 import { app, db } from './main'
 // import { findUserByEmail, getUser, setUser } from './users'
 import UserType from '../types/UserType'
-import User from './users'
+import { ServiceUsers } from './ServiceUser'
+import { where } from 'firebase/firestore'
 
 export const auth = getAuth(app)
 auth.languageCode = 'es'
@@ -25,7 +26,7 @@ export const storage = getStorage(app)
 export const usersCRUD = new FirebaseCRUD('users', db, storage)
 
 export const createUserFromGoogleProvider = async (newItem: any) => {
-  const { uid, photoURL, emailVerified, email, displayName } = newItem
+  const { uid, photoURL, email, displayName } = newItem
   const userFormatted: Partial<UserType> = {
     id: uid,
     image: photoURL,
@@ -38,7 +39,7 @@ export const createUserFromGoogleProvider = async (newItem: any) => {
 export async function authStateChanged(cb: CallableFunction) {
   onAuthStateChanged(auth, async (user) => {
     if (user?.uid) {
-      const dbUser = await User.get(user.uid)
+      const dbUser = await ServiceUsers.get(user.uid)
       if (dbUser) return cb(dbUser)
       const newUser = {
         name: user.displayName || '',
@@ -47,8 +48,8 @@ export async function authStateChanged(cb: CallableFunction) {
         image: user.photoURL || '',
         phone: user.phoneNumber || ''
       }
-      await User.set(user.uid, newUser)
-      const userCreated = await User.get(user.uid)
+      await ServiceUsers.set(user.uid, newUser)
+      const userCreated = await ServiceUsers.get(user.uid)
       //* create a default new user when is the first login
       cb(userCreated)
     } else {
@@ -62,21 +63,23 @@ export async function googleLogin() {
   return await signInWithPopup(auth, provider)
     .then(async (result) => {
       // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result)
-      const token = credential?.accessToken
+      // const credential = GoogleAuthProvider.credentialFromResult(result)
+      // const token = credential?.accessToken
       // The signed-in user info.
       const user = result.user
 
       if (user) {
         // const dbUser = await findUserByEmail({ email: user.email || '' })
-        const dbUser = await User.findOneByEmail({ email: user.email || '' })
+        const dbUser = await ServiceUsers.findOne([
+          where('email', '==', user.email || '')
+        ])
         if (dbUser) return dbUser
 
-        const newUser = await User.set(user.uid, {
-          name: user.displayName || '',
-          email: user.email || '',
-          //rol: 'CLIENT',
-          image: user.photoURL || ''
+        const newUser = await ServiceUsers.set(user.uid, {
+          name: user.displayName || ''
+          // email: user.email || '',
+          // rol: 'CLIENT',
+          // image: user.photoURL || ''
         })
 
         return newUser
@@ -90,9 +93,9 @@ export async function googleLogin() {
       const email = error?.customData?.email
       // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error)
-      console.error({ error })
+      console.error({ errorCode, errorMessage, email, credential })
       throw new Error('error in google login')
-      return null
+      // return null
     })
 }
 
@@ -111,14 +114,14 @@ export async function createUserWithPassword({
       const user = userCredential.user
 
       if (user) {
-        const dbUser = await User.findOneByEmail({ email: user.email || '' })
+        const dbUser = await ServiceUsers.findByEmail(user.email)
         if (dbUser) return dbUser
 
-        const newUser = await User.set(user.uid, {
-          name: user.displayName || name || '',
-          email: user.email || '',
-          //rol: 'CLIENT',
-          image: user.photoURL || ''
+        const newUser = await ServiceUsers.set(user.uid, {
+          name: user.displayName || name || ''
+          //  email: user.email || '',
+          // rol: 'CLIENT',
+          //  image: user.photoURL || ''
         })
 
         return newUser

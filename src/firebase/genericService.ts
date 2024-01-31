@@ -1,3 +1,4 @@
+import { QueryConstraint } from 'firebase/firestore'
 import { storage } from './auth'
 import { FirebaseCRUD } from './firebase.CRUD'
 import { db } from './main'
@@ -37,16 +38,20 @@ export class FirebaseGenericService<T extends Identifiable> {
   async listen(itemId: T['id'], cb: CallableFunction) {
     return await this.itemCRUD.listenItem(itemId || '', cb)
   }
-  async listenMany(filters = [], cb: CallableFunction) {
+
+  async listenMany(filters: QueryConstraint[] = [], cb: CallableFunction) {
     return await this.itemCRUD.listenItems(filters, cb)
   }
-  async getItems(filters: any[] = []) {
+
+  async getItems(filters: QueryConstraint[] = []) {
     return await this.itemCRUD.getItems(filters)
   }
-  async findOne(filters: any[] = []) {
+
+  async findOne(filters: QueryConstraint[] = []) {
     return await this.itemCRUD.getItems(filters).then((items) => items[0])
   }
-  async findMany(filters: any[] = []) {
+
+  async findMany(filters: QueryConstraint[] = []) {
     return await this.itemCRUD.getItems(filters)
   }
 }
