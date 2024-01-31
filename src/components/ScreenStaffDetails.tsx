@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import ButtonIcon from './ButtonIcon'
@@ -24,9 +24,12 @@ const ScreenStaffDetails = ({ route, navigation }) => {
             variant="ghost"
             color="error"
             onPress={() => {
-              ServiceStaff.delete(staffId).then(() => {
-                navigation.navigate('Staff')
-              })
+              ServiceStaff.removeStaffFromStore(employee.storeId, staffId)
+                .then((res) => {
+                  console.log(res)
+                  navigation.goBack()
+                })
+                .catch(console.error)
             }}
           ></ButtonIcon>
           <ButtonIcon
@@ -45,5 +48,3 @@ const ScreenStaffDetails = ({ route, navigation }) => {
 }
 
 export default ScreenStaffDetails
-
-const styles = StyleSheet.create({})

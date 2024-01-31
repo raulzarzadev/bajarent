@@ -388,7 +388,18 @@ export class FirebaseCRUD {
     }
   }
 
-  formatResponse = (ok: boolean, type: string, res: any) => {
+  formatResponse = (
+    ok: boolean,
+    type: string,
+    res: any
+  ): {
+    type: string
+    ok: boolean
+
+    res: {
+      id: string
+    }
+  } => {
     if (!ok) {
       console.error(type, { type, res })
     }

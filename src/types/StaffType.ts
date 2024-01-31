@@ -13,4 +13,6 @@ export type BaseStaffType = {
 
 type StaffType = BaseType & BaseStaffType
 
+export type CreateStaffType = Partial<BaseStaffType>
+
 export default StaffType

@@ -1,9 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import FormStaff from './FormStaff'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
-import { useNavigation } from '@react-navigation/native'
 import InputTextStyled from './InputTextStyled'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import useDebounce from '../hooks/useDebunce'
@@ -12,6 +11,7 @@ import UserType from '../types/UserType'
 import P from './P'
 import CardUser from './CardUser'
 import { useStoreNavigation } from './StackStore'
+import { CreateStaffType } from '../types/StaffType'
 
 const ScreenStaffNew = () => {
   const { store } = useStore()
@@ -31,13 +31,14 @@ const ScreenStaffNew = () => {
             position: ''
           }}
           onSubmit={async (values) => {
-            const newStaff = {
-              //name: user.name || '',
+            const newStaff: CreateStaffType = {
+              // name: user.name || '',
+
               position: values.position || '',
               storeId: store.id,
               userId: user.id || ''
             }
-            ServiceStaff.create(newStaff).then((res) => {
+            ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
               navigate('Staff')
             })
           }}
@@ -106,5 +107,3 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
 }
 
 export default ScreenStaffNew
-
-const styles = StyleSheet.create({})

@@ -43,12 +43,20 @@ const StoreContextProvider = ({ children }) => {
   const [userStores, setUserStores] = useState([])
 
   useEffect(() => {
-    console.log({ user })
     if (user?.id) {
-      console.log(user.id)
+      // get stores where user is  owner
+
       ServiceStores.getStoresByUserId(user?.id)
         .then((res) => {
-          console.log(res)
+          setUserStores(res)
+        })
+        .catch(console.error)
+
+      // get stores where user is staff
+
+      ServiceStores.getStoresAsStaffId(user?.id)
+        .then((res) => {
+          setUserStores((prev) => [...prev, ...res])
         })
         .catch(console.error)
     }
