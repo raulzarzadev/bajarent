@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import Button from './Button'
 
 import { useStore } from '../contexts/storeContext'
@@ -6,7 +6,6 @@ import OrdersList from './OrdersList'
 
 function ScreenMyOrders({ navigation }) {
   const { myOrders } = useStore()
-  console.log({ myOrders })
   return (
     <>
       <View
@@ -28,15 +27,5 @@ function ScreenMyOrders({ navigation }) {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    // padding: 12,
-
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%'
-  }
-})
 
 export default ScreenMyOrders

@@ -127,5 +127,3 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 export default OrderDetails
-
-const styles = StyleSheet.create({})

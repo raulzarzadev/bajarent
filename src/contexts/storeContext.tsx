@@ -162,7 +162,6 @@ const StoreContextProvider = ({ children }) => {
                 order_status.PICKUP
               ].includes(o.status)
           ) || []
-      console.log({ orderFormatted, myStaffId, orders })
 
       setMyOrders(orders)
     }

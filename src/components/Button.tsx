@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, Pressable, StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import useTheme from '../hooks/useTheme'
-import { Colors, Theme } from '../theme'
+import { Colors } from '../theme'
 
 export type ButtonProps = {
   onPress: () => void

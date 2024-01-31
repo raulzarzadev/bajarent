@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -43,7 +43,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
 
   const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
   const assignedName = assignedTo?.name || assignedTo?.position
-  console.log({ assignedName })
+
   return (
     <View style={{ padding: 4 }}>
       <View
