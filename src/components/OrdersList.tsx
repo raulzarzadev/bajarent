@@ -14,6 +14,7 @@ import dictionary from '../dictionary'
 import Chip from './Chip'
 import theme from '../theme'
 import Button from './Button'
+import useFilter from '../hooks/useFilter'
 
 function OrdersList({
   orders,
@@ -23,10 +24,12 @@ function OrdersList({
   onPressRow?: (orderId: string) => void
 }) {
   const { staff } = useStore()
-  const { sortBy, order, sortedBy, sortedData, filterBy, cleanFilter } =
-    useSort({
-      data: orders
-    })
+  const { filterBy, cleanFilter, filteredData, filteredBy } = useFilter({
+    data: orders
+  })
+  const { sortBy, order, sortedBy, sortedData } = useSort({
+    data: filteredData
+  })
 
   const sortFields = [
     { key: 'folio', label: 'Folio' },
@@ -39,7 +42,7 @@ function OrdersList({
   ]
 
   const filterModal = useModal({ title: 'Filtrar por' })
-
+  console.log({ filteredBy })
   return (
     <>
       <View style={styles.container}>
@@ -99,7 +102,12 @@ function OrdersList({
                 renderItem={({ item }) => {
                   return (
                     <Chip
-                      style={{ margin: 4 }}
+                      style={{
+                        margin: 4,
+                        borderWidth: 2,
+                        borderColor:
+                          filteredBy === item ? theme.success : 'transparent'
+                      }}
                       title={dictionary(item).toUpperCase() || ''}
                       color={theme.primary}
                       titleColor={theme.accent}
@@ -120,7 +128,14 @@ function OrdersList({
                 renderItem={({ item }) => {
                   return (
                     <Chip
-                      style={{ margin: 4 }}
+                      style={{
+                        margin: 4,
+                        borderWidth: 2,
+                        borderColor:
+                          filteredBy === item.position
+                            ? theme.success
+                            : 'transparent'
+                      }}
                       title={item?.position?.toUpperCase() || ''}
                       color={theme.primary}
                       titleColor={theme.accent}

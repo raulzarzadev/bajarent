@@ -9,9 +9,6 @@ export default function useSort({ data } = { data: [] }) {
   const [sortedBy, setSortedBy] = useState('status')
   const [order, setOrder] = useState<'asc' | 'des'>('asc')
 
-  const [filteredBy, setFilteredBy] = useState('')
-  const [filteredData, setFilteredData] = useState([])
-
   const sortBy = (field = 'status') => {
     const res = [...data].sort((a, b) => {
       let aField = a[field] || ''
@@ -32,26 +29,5 @@ export default function useSort({ data } = { data: [] }) {
     setSortedData(res)
   }
 
-  const filterBy = (field = '', value = '') => {
-    const res = [...data].filter((item) => {
-      return item[field] === value
-    })
-    setFilteredBy(field)
-    setFilteredData(res)
-    //setSortedData(res)
-  }
-
-  const cleanFilter = () => {
-    setSortedData(data)
-  }
-
-  return {
-    sortedData,
-    sortedBy,
-    order,
-    sortBy,
-    filterBy,
-    cleanFilter,
-    filteredBy
-  }
+  return { sortedData, sortedBy, order, sortBy }
 }
