@@ -22,7 +22,10 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: ['@typescript-eslint', 'react', 'react-native'],
-  rules: {},
+  rules: {
+    'no-unused-vars': 'error',
+    camelcase: 'off'
+  },
   globals: {
     __DEV__: true
   }

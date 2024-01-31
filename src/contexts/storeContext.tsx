@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react'
+import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
 import { ServiceStores } from '../firebase/ServiceStore'
 import StoreType from '../types/StoreType'
 import OrderType, { order_status } from '../types/OrderType'
@@ -14,7 +14,7 @@ import { useAuth } from './authContext'
 
 export type StoreContextType = {
   store?: null | StoreType
-  setStore?: React.Dispatch<any>
+  setStore?: Dispatch<any>
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
   orders?: OrderType[]

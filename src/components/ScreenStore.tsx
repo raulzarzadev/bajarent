@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import StoreDetails, { ChangeStore } from './StoreDetails'
 import { useStore } from '../contexts/storeContext'
