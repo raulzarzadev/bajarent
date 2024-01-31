@@ -1,4 +1,3 @@
-import { FieldValue } from 'firebase/firestore'
 import BaseType from './BaseType'
 import { RentItem } from './RentItem'
 import StoreType from './StoreType'
@@ -30,6 +29,7 @@ type OrderBase = {
 
   items: RentItem[]
   item: RentItem
+  expireAt?: Date | null
 
   status: OrderStatus
 
@@ -41,6 +41,9 @@ type OrderBase = {
 
   assignToPosition?: string
   assignToName?: string
+
+  renewedAt: Date
+  renewedFrom: string
 }
 
 export enum order_status {
@@ -49,7 +52,9 @@ export enum order_status {
   DELIVERED = 'DELIVERED',
   CANCELLED = 'CANCELLED',
   REPORTED = 'REPORTED',
-  PICKUP = 'PICKUP'
+  PICKUP = 'PICKUP',
+  EXPIRED = 'EXPIRED',
+  RENEWED = 'RENEWED'
 }
 
 export enum order_type {

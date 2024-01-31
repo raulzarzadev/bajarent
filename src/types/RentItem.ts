@@ -1,5 +1,17 @@
-import { PriceType } from '../components/FormSelectItem'
+export type TimePriceType = `${number} ${
+  | 'day'
+  | 'month'
+  | 'year'
+  | 'week'
+  | 'hour'
+  | 'minute'}`
 
+export type PriceType = {
+  title: string
+  amount: number
+  id: string
+  time: TimePriceType
+}
 export type RentItem = {
   // id: ItemType['id']
   // amount: number
@@ -9,3 +21,5 @@ export type RentItem = {
   priceSelectedId: string
   priceSelected: PriceType
 }
+
+export type Category = { name: string; id: string; prices?: PriceType[] }

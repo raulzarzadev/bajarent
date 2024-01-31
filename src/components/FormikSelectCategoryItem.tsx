@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { useField } from 'formik'
-import FormSelectItem, { Category } from './FormSelectItem'
+import FormSelectItem from './FormSelectItem'
+import { Category } from '../types/RentItem'
 
 const FormikSelectCategoryItem = ({
   name,

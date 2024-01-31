@@ -7,6 +7,7 @@ import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const navigation = useNavigation()
@@ -15,29 +16,44 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
 
   const disabledDeliveryButton: boolean = [
     order_status.CANCELLED,
-    // order_status.PICKUP,
-    order_status.PENDING
+    order_status.PICKUP,
+    order_status.PENDING,
+    order_status.RENEWED
   ].includes(status)
 
   const disabledCancelButton: boolean = [
     order_status.CANCELLED,
-    order_status.PICKUP
+    order_status.PICKUP,
+    order_status.DELIVERED,
+    order_status.EXPIRED,
+    order_status.RENEWED
   ].includes(status)
 
   const disabledAuthorizeButton: boolean = [
     order_status.CANCELLED,
     order_status.PICKUP,
-    order_status.DELIVERED
+    order_status.DELIVERED,
+    order_status.EXPIRED,
+    order_status.RENEWED
   ].includes(status)
 
   const disabledEditButton: boolean = [
     order_status.CANCELLED,
-    order_status.PICKUP
+    order_status.PICKUP,
+    order_status.RENEWED
   ].includes(status)
 
   const disabledAssignButton: boolean = [
     order_status.CANCELLED,
-    order_status.PICKUP
+    order_status.PICKUP,
+    order_status.RENEWED
+  ].includes(status)
+
+  const disabledRenewButton: boolean = [
+    order_status.CANCELLED,
+    order_status.PICKUP,
+    order_status.RENEWED,
+    order_status.AUTHORIZED
   ].includes(status)
 
   // const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
@@ -59,12 +75,21 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
+        {order.status === order_status.PICKUP && (
+          <View style={styles.item}>
+            <ButtonDelivery orderId={orderId} cancelPickup />
+          </View>
+        )}
         <View style={styles.item}>
           <ButtonDelivery
             orderId={orderId}
             disabled={disabledDeliveryButton}
             isDelivered={status === order_status.DELIVERED}
+            isExpired={status === order_status.EXPIRED}
           />
+        </View>
+        <View style={styles.item}>
+          <ButtonRenew orderId={orderId} disabled={disabledRenewButton} />
         </View>
         <View style={styles.item}>
           <ButtonCancel
@@ -184,14 +209,94 @@ const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
     </>
   )
 }
-const ButtonDelivery = ({ orderId, isDelivered, disabled }) => {
-  const { storeId } = useStore()
-  const handleDelivery = () => {
+
+const ButtonRenew = ({ orderId, disabled }) => {
+  const { storeId, orders } = useStore()
+  const order = orders.find((o) => o.id === orderId)
+  console.log({ order })
+  const handleRenew = async () => {
+    const order = orders.find((o) => o.id === orderId)
+
     ServiceOrders.update(orderId, {
-      status: isDelivered ? order_status.PICKUP : order_status.DELIVERED
+      status: order_status.RENEWED
     })
-      .then(console.log)
+    //   .then(console.log)
+    //   .catch(console.error)
+    const renewedOrder = {
+      ...order,
+      status: order_status.DELIVERED,
+      deliveredAt: order.expireAt,
+      renewedAt: new Date(),
+      renewedFrom: orderId
+    }
+
+    delete renewedOrder.id
+    delete renewedOrder.createdAt
+    delete renewedOrder.updatedAt
+    delete renewedOrder.scheduledAt
+    delete renewedOrder.createdBy
+    delete renewedOrder.updatedBy
+    delete renewedOrder.comments
+    delete renewedOrder.assignToPosition
+    delete renewedOrder.assignToName
+    delete renewedOrder.expireAt
+
+    console.log({ renewedOrder })
+    await ServiceOrders.create(renewedOrder)
+      .then((res) => {
+        if (res.ok)
+          ServiceOrders.addComment({
+            storeId,
+            orderId,
+            type: 'comment',
+            content: 'Orden renovada '
+          })
+            .then(console.log)
+            .catch(console.error)
+      })
       .catch(console.error)
+  }
+  return (
+    <Button
+      disabled={disabled}
+      label={'Renovar'}
+      onPress={() => {
+        handleRenew()
+      }}
+    />
+  )
+}
+const ButtonDelivery = ({
+  orderId,
+  isDelivered,
+  disabled,
+  cancelPickup,
+  isExpired
+}: {
+  orderId: string
+  isDelivered?: boolean
+  disabled?: boolean
+  cancelPickup?: boolean
+  isExpired?: boolean
+}) => {
+  const { storeId } = useStore()
+  const { user } = useAuth()
+  const handleDelivery = () => {
+    if (cancelPickup) {
+      ServiceOrders.update(orderId, {
+        status: isDelivered ? order_status.PICKUP : order_status.DELIVERED
+      })
+        .then(console.log)
+        .catch(console.error)
+    } else {
+      ServiceOrders.update(orderId, {
+        status: isDelivered ? order_status.PICKUP : order_status.DELIVERED,
+        deliveredAt: new Date(),
+        deliveredBy: user?.id
+      })
+        .then(console.log)
+        .catch(console.error)
+    }
     ServiceOrders.addComment({
       storeId,
       orderId,
@@ -207,7 +312,13 @@ const ButtonDelivery = ({ orderId, isDelivered, disabled }) => {
   return (
     <Button
       disabled={disabled}
-      label={isDelivered ? 'Recoger' : 'Entregar'}
+      label={
+        cancelPickup
+          ? 'Regresar'
+          : isDelivered || isExpired
+          ? 'Recoger'
+          : 'Entregar'
+      }
       onPress={() => {
         handleDelivery()
       }}

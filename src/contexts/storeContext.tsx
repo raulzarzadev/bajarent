@@ -11,6 +11,7 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
+import expireDate from '../libs/expireDate'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -105,7 +106,10 @@ const StoreContextProvider = ({ children }) => {
         comments: orderComments,
         status: orderStatus(order),
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
-        assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position
+        assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position,
+        expireAt:
+          expireDate(order?.item?.priceSelected?.time, order?.deliveredAt) ||
+          null
       }
     })
     setOrderFormatted(orderFormatted)

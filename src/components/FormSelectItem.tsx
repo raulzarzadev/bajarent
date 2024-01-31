@@ -11,6 +11,7 @@ import InputRadios from './InputRadios'
 import theme from '../theme'
 import CurrencyAmount from './CurrencyAmount'
 import P from './P'
+import { Category, PriceType } from '../types/RentItem'
 
 export type ItemSelected = {
   categoryName?: string
@@ -18,10 +19,6 @@ export type ItemSelected = {
   // priceId?: string
   // timestamp?: Date
 }
-
-export type PriceType = { title: string; amount: number; id: string }
-
-export type Category = { name: string; id: string; prices?: PriceType[] }
 
 const FormSelectItem = ({
   categories = [],

@@ -118,6 +118,17 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
             }}
             amount={order?.item?.priceSelected?.amount}
           />
+          {order?.expireAt && (
+            <View style={{ marginTop: 12 }}>
+              <P bold styles={{ marginBottom: 0 }}>
+                Expira{' '}
+              </P>
+              <P styles={{ marginBottom: 0 }}>
+                {dateFormat(order?.expireAt, 'dd/MM/yy HH:mm')}
+              </P>
+              <P>{fromNow(order?.expireAt)}</P>
+            </View>
+          )}
         </View>
       </View>
       <View>

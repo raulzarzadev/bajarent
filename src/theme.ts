@@ -1,3 +1,5 @@
+import { order_status } from './types/OrderType'
+
 export type Theme = {
   primary: string
   secondary: string
@@ -42,13 +44,15 @@ const darkTheme: Theme = {
   black: '#000000'
 }
 
-export const STATUS_COLOR = {
+export const STATUS_COLOR: Record<order_status, string> = {
   PENDING: '#ffe4e6',
   AUTHORIZED: '#fde68a',
   DELIVERED: theme.success,
   CANCELLED: '#9ca3af',
   REPORTED: theme.error,
-  PICKUP: '#f472b6'
+  PICKUP: '#f472b6',
+  EXPIRED: '',
+  RENEWED: ''
 }
 
 export const FONT_SIZE = 10
