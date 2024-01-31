@@ -68,7 +68,7 @@ export const fromNow = (date?: number | Date | Timestamp | null) => {
   const res = formatDistanceToNowStrict(validDate, {
     locale: customLocale,
     addSuffix: true,
-    roundingMethod: 'ceil'
+    roundingMethod: 'round'
   })
   return res
 }

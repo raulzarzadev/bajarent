@@ -7,12 +7,6 @@ const CATEGORIES_ITEMS: { categories: Category[] } = {
       id: 'lavadora',
       prices: [
         {
-          id: '5',
-          title: '1 minuto',
-          amount: 100,
-          time: '1 minute'
-        },
-        {
           id: '1',
           title: '1 semana',
           amount: 300,
@@ -43,28 +37,28 @@ const CATEGORIES_ITEMS: { categories: Category[] } = {
       id: 'secadora',
       prices: [
         {
-          id: '1',
-          title: '1 semana',
-          amount: 300,
-          time: '1 week'
+          id: '5',
+          title: '1 minuto',
+          amount: 100,
+          time: '1 minute'
         },
         {
-          id: '2',
-          title: '2 semanas',
-          amount: 300,
-          time: '2 week'
+          id: '8',
+          title: '5 minutos',
+          amount: 100,
+          time: '5 minute'
         },
         {
-          id: '3',
-          title: '1 mes',
-          amount: 600,
-          time: '1 month'
+          id: '9',
+          title: '1 dia',
+          amount: 100,
+          time: '1 day'
         },
         {
-          id: '4',
-          title: '1 mes*',
-          amount: 700,
-          time: '1 month'
+          id: '10',
+          title: '1 año',
+          amount: 100,
+          time: '1 year'
         }
       ]
     }

@@ -211,50 +211,10 @@ const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
 }
 
 const ButtonRenew = ({ orderId, disabled }) => {
-  const { storeId, orders } = useStore()
-  const order = orders.find((o) => o.id === orderId)
-  console.log({ order })
+  const { navigate } = useNavigation()
   const handleRenew = async () => {
-    const order = orders.find((o) => o.id === orderId)
-
-    ServiceOrders.update(orderId, {
-      status: order_status.RENEWED
-    })
-    //   .then(console.log)
-    //   .catch(console.error)
-    const renewedOrder = {
-      ...order,
-      status: order_status.DELIVERED,
-      deliveredAt: order.expireAt,
-      renewedAt: new Date(),
-      renewedFrom: orderId
-    }
-
-    delete renewedOrder.id
-    delete renewedOrder.createdAt
-    delete renewedOrder.updatedAt
-    delete renewedOrder.scheduledAt
-    delete renewedOrder.createdBy
-    delete renewedOrder.updatedBy
-    delete renewedOrder.comments
-    delete renewedOrder.assignToPosition
-    delete renewedOrder.assignToName
-    delete renewedOrder.expireAt
-
-    console.log({ renewedOrder })
-    await ServiceOrders.create(renewedOrder)
-      .then((res) => {
-        if (res.ok)
-          ServiceOrders.addComment({
-            storeId,
-            orderId,
-            type: 'comment',
-            content: 'Orden renovada '
-          })
-            .then(console.log)
-            .catch(console.error)
-      })
-      .catch(console.error)
+    // @ts-ignore
+    navigate('RenewOrder', { orderId })
   }
   return (
     <Button
