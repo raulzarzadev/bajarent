@@ -38,6 +38,9 @@ type OrderBase = {
   type: 'RENT' | 'SALE' | 'REPAIR'
 
   hasNotSolvedReports?: boolean
+
+  assignToPosition?: string
+  assignToName?: string
 }
 
 export enum order_status {

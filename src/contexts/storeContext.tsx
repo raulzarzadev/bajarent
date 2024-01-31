@@ -103,7 +103,9 @@ const StoreContextProvider = ({ children }) => {
           (comment) => comment.type === 'report' && !comment.solved
         ),
         comments: orderComments,
-        status: orderStatus(order)
+        status: orderStatus(order),
+        assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
+        assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position
       }
     })
     setOrderFormatted(orderFormatted)

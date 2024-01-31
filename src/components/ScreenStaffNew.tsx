@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import FormStaff from './FormStaff'
 import { ServiceStaff } from '../firebase/ServiceStaff'
@@ -19,10 +19,8 @@ const ScreenStaffNew = () => {
   const [user, setUser] = React.useState<UserType>()
   return (
     <View style={{ padding: 10 }}>
-      <P size="sm" styles={{ textAlign: 'left', opacity: 0.7 }}>
-        {`Ten en cuenta que el usuario debera estar previamente registrado`}
-      </P>
       <SearchStaff setUser={setUser} />
+
       {user && <CardUser user={user} />}
       {user && (
         <FormStaff
@@ -60,26 +58,50 @@ const ScreenStaffNew = () => {
 
 const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
   const [text, setText] = React.useState('')
+  const [error, setError] = React.useState<string | null>('')
+  const [loading, setLoading] = React.useState(false)
   const debouncedSearchTerm = useDebounce(text, 800)
   const [users, setUsers] = React.useState([])
   useEffect(() => {
     if (debouncedSearchTerm) {
       ServiceUsers.searchUser(debouncedSearchTerm)
         .then((res) => {
+          console.log({ res })
+          if (!res.length)
+            setError(
+              'Usuario no encontrado, asegurate que esta registrado, y su nombre, telefono o email es correcto'
+            )
+
           setUsers(res)
         })
-        .catch(console.error)
+        .catch(() => {})
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }, [debouncedSearchTerm])
   return (
-    <View>
+    <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
       <InputTextStyled
         value={text}
-        onChangeText={setText}
+        onChangeText={(text) => {
+          setText(text)
+          setLoading(true)
+          setError(null)
+        }}
         placeholder="Nombre, teléfono o email"
       />
 
-      <View style={{ padding: 4 }}>
+      {error ? (
+        <P styles={{ color: theme.error }}>{error}</P>
+      ) : (
+        <P size="sm" styles={{ textAlign: 'left', opacity: 0.7 }}>
+          {`Usuario deberá estar previamente registrado`}
+        </P>
+      )}
+
+      <View style={{ padding: 4, justifyContent: 'center' }}>
+        {loading && <ActivityIndicator />}
         {users.map((user) => (
           <Pressable
             onPress={() => {

@@ -4,7 +4,6 @@ import OrderType from '../types/OrderType'
 import { fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
 import OrderStatus from './OrderStatus'
-import { Order } from '../DATA'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
   return (
@@ -18,7 +17,8 @@ const OrderRow = ({ order }: { order: OrderType }) => {
       >
         {order.firstName} {order.lastName}
       </Text>
-      <Text style={styles.text}>{fromNow(order.createdAt)}</Text>
+      {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
+      <Text style={styles.text}>{order?.assignToPosition}</Text>
       <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
       <Text style={styles.text}>
         <OrderStatus orderId={order.id} />

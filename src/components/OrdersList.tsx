@@ -18,6 +18,7 @@ function OrdersList({
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
     // { key: 'lastName', label: 'Apellido' },
+    { key: 'assignToPosition', label: 'Asignada' },
     { key: 'createdAt', label: 'Creada' },
     { key: 'scheduledAt', label: 'Programada' },
     { key: 'status', label: 'Estado' }
@@ -61,6 +62,7 @@ function OrdersList({
             )}
           </Pressable>
         ))}
+        TSTI
       </View>
       <FlatList
         style={styles.orderList}

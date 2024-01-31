@@ -11,21 +11,16 @@ export default function useSort({ data } = { data: [] }) {
 
   const sortBy = (field = 'status') => {
     const res = [...data].sort((a, b) => {
-      let aField = a[field]
-      let bField = b[field]
-
+      let aField = a[field] || ''
+      let bField = b[field] || ''
       if (aField instanceof Date && aField instanceof Timestamp) {
         aField = aField.toDate().getTime()
         bField = bField.toDate().getTime()
       }
-      if (aField === bField) {
-        return 0
-      }
-
       const isAscending = order === 'asc'
-      const comparison = aField < bField ? -1 : 1
-
-      return isAscending ? comparison : -comparison
+      if (aField < bField) return isAscending ? -1 : 1
+      if (aField > bField) return isAscending ? 1 : -1
+      return 0
     })
 
     // Cambiar el orden para la próxima vez que se llame a la función
