@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import React from 'react'
 import { FONT_SIZE } from '../theme'
 
@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 16
+    marginVertical: 0
   }
 })

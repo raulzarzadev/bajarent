@@ -1,17 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import React from 'react'
-import { Chip as RNEChip } from 'react-native-elements'
+import { ChipProps, Chip as RNEChip } from 'react-native-elements'
 
 const Chip = ({
   title,
   color,
   titleColor,
-  size = 'md'
-}: {
+  size = 'md',
+  style,
+  ...props
+}: ChipProps & {
   title: string
   color: string
   titleColor: string
   size?: 'sm' | 'md' | 'lg'
+  style: ViewStyle
 }) => {
   const sizes = {
     sm: {
@@ -30,19 +33,21 @@ const Chip = ({
   return (
     <RNEChip
       title={title}
-      buttonStyle={{
-        padding: sizes[size].padding,
-        backgroundColor: color
-      }}
+      buttonStyle={[
+        {
+          padding: sizes[size].padding,
+          backgroundColor: color
+        },
+        style
+      ]}
       titleStyle={{
         color: titleColor,
         fontSize: sizes[size].fontSize,
         fontWeight: 'bold'
       }}
+      {...props}
     />
   )
 }
 
 export default Chip
-
-const styles = StyleSheet.create({})
