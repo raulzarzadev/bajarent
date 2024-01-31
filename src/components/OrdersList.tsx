@@ -17,7 +17,7 @@ function OrdersList({
   const sortFields = [
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
-    //{ key: 'lastName', label: 'Apellido' },
+    // { key: 'lastName', label: 'Apellido' },
     { key: 'createdAt', label: 'Creada' },
     { key: 'scheduledAt', label: 'Programada' },
     { key: 'status', label: 'Estado' }
@@ -81,7 +81,7 @@ function OrdersList({
 
 const styles = StyleSheet.create({
   container: {
-    //padding: 12,
+    // padding: 12,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
