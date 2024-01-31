@@ -11,12 +11,11 @@ import { useStore } from '../contexts/storeContext'
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const navigation = useNavigation()
   const status = orderStatus(order)
-  const { staff } = useStore()
   const orderId = order?.id || ''
 
   const disabledDeliveryButton: boolean = [
     order_status.CANCELLED,
-    order_status.PICKUP,
+    // order_status.PICKUP,
     order_status.PENDING
   ].includes(status)
 
