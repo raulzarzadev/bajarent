@@ -58,21 +58,25 @@ const StoreContextProvider = ({ children }) => {
       //* get stores where user is staff
 
       ServiceStaff.getStaffPositions(user?.id)
-        .then(async (res) => {
-          console.log({ res })
-          const positionsWithStoreData = res.map(async (res) => ({
-            store: await ServiceStores.get(res.storeId),
-            ...res
-          }))
-          const positions = await Promise.all(positionsWithStoreData)
-          setUserPositions(positions)
+        .then(async (positions) => {
+          console.log({ positions })
+          const positionsWithStoreDataPromises = positions.map(
+            async (position) => ({
+              ...position,
+              store: await ServiceStores.get(position.storeId)
+            })
+          )
+          const positionsWithStore = await Promise.all(
+            positionsWithStoreDataPromises
+          )
+          console.log({ positionsWithStore })
+          setUserPositions(positionsWithStore)
         })
         .catch(console.error)
     }
   }, [user])
 
   const handleSetStoreId = async (storeId: string) => {
-    console.log(storeId)
     setStoreId(storeId)
     setItem('storeId', storeId)
   }
@@ -80,8 +84,6 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     getItem('storeId').then(setStoreId)
   }, [])
-
-  console.log({ staff })
 
   useEffect(() => {
     if (storeId) {
