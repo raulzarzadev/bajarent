@@ -7,6 +7,8 @@ import Button from './Button'
 const ScreenStore = ({ navigation }) => {
   const { store, userStores, userPositions } = useStore()
 
+  console.log({ userPositions, userStores })
+
   const hasStores = userStores.length > 1 || userPositions.length > 1
   return (
     <View>
