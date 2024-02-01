@@ -51,7 +51,7 @@ const StoreContextProvider = ({ children }) => {
 
       ServiceStores.getStoresByUserId(user?.id)
         .then((res) => {
-          // setUserStores(res)
+          setUserStores(res)
         })
         .catch(console.error)
 
@@ -78,6 +78,8 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     getItem('storeId').then(setStoreId)
   }, [])
+
+  console.log({ staff })
 
   useEffect(() => {
     if (storeId) {
@@ -116,33 +118,16 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getStaffDetails = async () => {
-      const staffs: Promise<StaffType>[] = staff.map(
-        async ({
-          userId,
+      const staffs: Promise<StaffType>[] = staff.map(async (employee) => {
+        const user = await ServiceUsers.get(employee.userId)
+        return {
+          ...employee,
+          staffId: employee.id,
           storeId,
-          id,
-          createdAt,
-          createdBy,
-          position,
-          updatedAt,
-          updatedBy
-        }) => {
-          const user = await ServiceUsers.get(userId)
-          return {
-            id,
-            userId,
-            staffId: id,
-            storeId,
-            createdAt,
-            createdBy,
-            position,
-            name: user.name,
-            email: user.email,
-            updatedAt,
-            updatedBy
-          }
+          name: user.name,
+          email: user.email
         }
-      )
+      })
 
       return await Promise.all(staffs)
     }

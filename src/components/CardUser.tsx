@@ -1,8 +1,4 @@
-import { ActivityIndicator, Linking, Pressable, View } from 'react-native'
-import P from './P'
-import Ionicons from '@expo/vector-icons/Ionicons'
-
-import theme from '../theme'
+import { ActivityIndicator, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import CardPhone from './CardPhone'

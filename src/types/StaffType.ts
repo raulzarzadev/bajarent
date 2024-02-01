@@ -6,6 +6,8 @@ export type BaseStaffType = {
   position?: string
   userId: string
 
+  isAdmin?: boolean
+
   //* this fields are provided by the user data
   name: string
   email?: string
