@@ -16,7 +16,7 @@ export const getItem = async (key: string) => {
 }
 
 export const setItem = async (key: string, payload: string) => {
-  if (key && payload) {
+  if (key && typeof payload === 'string') {
     return os === 'web'
       ? webStorage.setItem(key, payload)
       : await appStorage.setItem(key, payload)

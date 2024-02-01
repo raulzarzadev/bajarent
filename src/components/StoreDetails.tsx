@@ -115,7 +115,7 @@ export const ChangeStore = ({ label = '' }) => {
                 backgroundColor: 'transparent'
               }}
               onPress={() => {
-                handleSetStoreId(null)
+                handleSetStoreId('')
               }}
             >
               <View style={[styles.store]}>

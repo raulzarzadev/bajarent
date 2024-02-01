@@ -47,7 +47,7 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user?.id) {
-      // get stores where user is  owner
+      //* get stores where user is  owner
 
       ServiceStores.getStoresByUserId(user?.id)
         .then((res) => {
@@ -55,10 +55,11 @@ const StoreContextProvider = ({ children }) => {
         })
         .catch(console.error)
 
-      // get stores where user is staff
+      //* get stores where user is staff
 
       ServiceStaff.getStaffPositions(user?.id)
         .then(async (res) => {
+          console.log({ res })
           const positionsWithStoreData = res.map(async (res) => ({
             store: await ServiceStores.get(res.storeId),
             ...res
@@ -71,8 +72,9 @@ const StoreContextProvider = ({ children }) => {
   }, [user])
 
   const handleSetStoreId = async (storeId: string) => {
+    console.log(storeId)
     setStoreId(storeId)
-    await setItem('storeId', storeId)
+    setItem('storeId', storeId)
   }
 
   useEffect(() => {
@@ -91,6 +93,11 @@ const StoreContextProvider = ({ children }) => {
           ServiceStaff.storeStaff(storeId, setStaff)
         }
       })
+    } else {
+      setStore(null)
+      setOrders([])
+      setComments([])
+      setStaff([])
     }
   }, [storeId])
 
