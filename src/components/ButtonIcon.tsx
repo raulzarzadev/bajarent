@@ -14,6 +14,7 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
   }
   return (
     <Button
+      {...props}
       buttonStyles={{
         borderRadius: 9999,
         padding: 4,
@@ -22,7 +23,6 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
         alignItems: 'center',
         width: sizes[props.size || 'medium'] * 1.4
       }}
-      {...props}
     >
       <Icon
         name={props.icon}

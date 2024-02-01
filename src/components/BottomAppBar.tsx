@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useAuth } from '../contexts/authContext'
@@ -106,15 +105,6 @@ const UserAndStoreTabs = () => {
       }}
     >
       <Tab.Screen
-        name="Profile"
-        component={StackProfile}
-        options={{
-          title: 'Perfil',
-          headerShown: false
-        }}
-      />
-
-      <Tab.Screen
         name="Store"
         component={StackStore}
         options={{
@@ -139,40 +129,18 @@ const UserAndStoreTabs = () => {
           title: 'Mis ordenes',
           headerShown: false
         }}
-        // options={{
-        //   tabBarButton: () => null
-        // }}
       />
 
-      {/* TODO: apply validation to hidde when no store is selected in localstorage */}
-
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Profile"
         component={StackProfile}
         options={{
           title: 'Perfil',
           headerShown: false
         }}
-      /> */}
-
-      {/* <Tab.Screen
-          name="Crear tienda"
-          component={ScreenCreateStore}
-          options={{
-            tabBarButton: () => null
-          }}
-        /> */}
-      {/* <Tab.Screen
-        name="Components"
-        component={ScreenComponents}
-        options={{
-          // tabBarButton: () => null
-        }}
-      /> */}
+      />
     </Tab.Navigator>
   )
 }
 
 export default BottomAppBar
-
-const styles = StyleSheet.create({})

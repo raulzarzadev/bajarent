@@ -15,6 +15,7 @@ import Chip from './Chip'
 import theme, { STATUS_COLOR } from '../theme'
 import Button from './Button'
 import useFilter from '../hooks/useFilter'
+import InputTextStyled from './InputTextStyled'
 
 function OrdersList({
   orders,
@@ -24,9 +25,11 @@ function OrdersList({
   onPressRow?: (orderId: string) => void
 }) {
   const { staff } = useStore()
-  const { filterBy, cleanFilter, filteredData, filteredBy } = useFilter({
-    data: orders
-  })
+  const { filterBy, cleanFilter, filteredData, filteredBy, search } = useFilter(
+    {
+      data: orders
+    }
+  )
   const { sortBy, order, sortedBy, sortedData } = useSort({
     data: filteredData
   })
@@ -42,18 +45,45 @@ function OrdersList({
   ]
 
   const filterModal = useModal({ title: 'Filtrar por' })
+
+  let timerId = null
+
+  const handleDebounceSearch = (e: string) => {
+    if (timerId) {
+      clearTimeout(timerId)
+    }
+
+    timerId = setTimeout(() => {
+      search(e)
+    }, 300)
+  }
+
   return (
     <>
       <View style={styles.container}>
-        <View>
-          <ButtonIcon
-            variant={!filteredBy ? 'ghost' : 'filled'}
-            color={!filteredBy ? 'black' : 'primary'}
-            icon="filter-list"
-            onPress={() => {
-              filterModal.toggleOpen()
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <InputTextStyled
+            placeholder="Buscar..."
+            onChangeText={(e) => {
+              handleDebounceSearch(e)
             }}
           />
+          <View style={{ marginLeft: 8 }}>
+            <ButtonIcon
+              variant={!filteredBy ? 'ghost' : 'filled'}
+              color={!filteredBy ? 'black' : 'primary'}
+              icon="filter-list"
+              onPress={() => {
+                filterModal.toggleOpen()
+              }}
+            />
+          </View>
           <StyledModal {...filterModal}>
             <H1>Filtrar</H1>
             <P bold>Por status</P>
@@ -63,14 +93,16 @@ function OrdersList({
                   key={index}
                   style={{
                     margin: 4,
-                    borderWidth: 2,
+                    borderWidth: 4,
                     borderColor:
-                      filteredBy === item ? theme.success : 'transparent'
+                      filteredBy === item ? theme.black : 'transparent'
                   }}
                   title={dictionary(item as order_status).toUpperCase() || ''}
                   color={STATUS_COLOR[item]}
                   titleColor={theme.accent}
                   onPress={() => {
+                    if (item === 'REPORTED')
+                      return filterBy('hasNotSolvedReports', true)
                     filterBy('status', item)
                   }}
                 />
@@ -84,11 +116,9 @@ function OrdersList({
                   key={index}
                   style={{
                     margin: 4,
-                    borderWidth: 2,
+                    borderWidth: 4,
                     borderColor:
-                      filteredBy === item.position
-                        ? theme.success
-                        : 'transparent'
+                      filteredBy === item.position ? theme.black : 'transparent'
                   }}
                   title={item?.position?.toUpperCase() || ''}
                   color={theme.primary}

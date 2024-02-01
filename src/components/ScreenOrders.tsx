@@ -6,7 +6,6 @@ import OrdersList from './OrdersList'
 
 function ScreenOrders({ navigation }) {
   const { orders } = useStore()
-
   return (
     <>
       <View

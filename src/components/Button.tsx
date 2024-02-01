@@ -56,8 +56,8 @@ const Button: React.FC<ButtonProps> = ({
         buttonColor,
         buttonVariant,
         disabled && baseStyles.disabled,
-        buttonStyles,
-        pressed && { opacity: 0.5 }
+        pressed && { opacity: 0.5 },
+        buttonStyles
       ]}
       onPress={onPress}
       disabled={disabled}

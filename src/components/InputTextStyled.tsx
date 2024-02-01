@@ -22,7 +22,11 @@ const InputTextStyled = ({
       <TextInput
         {...props}
         editable={!disabled}
-        style={[baseStyle.inputStyle, disabled && { opacity: 0.5 }]}
+        style={[
+          baseStyle.inputStyle,
+          disabled && { opacity: 0.5 },
+          props.style
+        ]}
       />
       {!!helperText && (
         <Text style={[baseStyle.helperText, { color: helperTextColor }]}>

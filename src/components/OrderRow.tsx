@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import OrderType from '../types/OrderType'
-import { fromNow } from '../libs/utils-date'
+import { dateFormat, fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
 import OrderStatus from './OrderStatus'
 
@@ -19,7 +19,12 @@ const OrderRow = ({ order }: { order: OrderType }) => {
       </Text>
       {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
       <Text style={styles.text}>{order?.assignToPosition || ''}</Text>
-      <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
+      <View style={styles.text}>
+        <Text style={styles.text}>
+          {dateFormat(order.scheduledAt, 'dd-MMM-yy HH:mm')}
+        </Text>
+        <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
+      </View>
       <Text style={styles.text}>
         <OrderStatus orderId={order.id} />
       </Text>
