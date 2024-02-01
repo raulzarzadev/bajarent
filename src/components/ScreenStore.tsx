@@ -5,10 +5,14 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 
 const ScreenStore = ({ navigation }) => {
-  const { store, userStores, storeId } = useStore()
+  const { store, userStores, userPositions } = useStore()
+  console.log({ userStores })
+  // can change store if user has more than one store or position
+
+  const showChangeStore = userStores.length > 1 || userPositions.length > 1
   return (
     <View>
-      {!!userStores.length && !storeId && <ChangeStore label="Entrar " />}
+      {showChangeStore && <ChangeStore label="Entrar " />}
       {store && (
         <>
           <StoreDetails store={store} />
