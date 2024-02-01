@@ -6,7 +6,6 @@ import Button from './Button'
 
 const ScreenStore = ({ navigation }) => {
   const { store } = useStore()
-  console.log({ store })
   return (
     <View>
       {!store && <ChangeStore label="Entrar " />}
