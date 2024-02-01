@@ -61,6 +61,7 @@ const FormOrder = ({
           <View style={styles.form}>
             <View style={[styles.item]}>
               <InputDate
+                label="Fecha programada"
                 value={asDate(values.scheduledAt) || new Date()}
                 setValue={(value) =>
                   setValues(

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { DatePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Button from './Button'
