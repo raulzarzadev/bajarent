@@ -8,11 +8,13 @@ import {
 import { authStateChanged } from '../firebase/auth'
 import UserType from '../types/UserType'
 import { Platform } from 'react-native'
+import StaffType from '../types/StaffType'
 
 const initialAutState: {
   isAuthenticated: boolean
   user?: null | UserType
   setAuth?: (value: SetStateAction<typeof initialAutState>) => void
+  staff?: StaffType
 } = {
   isAuthenticated: false,
   user: undefined,
@@ -23,7 +25,7 @@ const AuthContext = createContext(initialAutState)
 
 const AuthContextProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialAutState)
-
+  // const [staff, setStaff] = useState<StaffType | null>(null)
   useEffect(() => {
     authStateChanged((user) => {
       setAuth({ isAuthenticated: !!user, user })
