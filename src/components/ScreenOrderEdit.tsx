@@ -18,7 +18,7 @@ const ScreenOrderEdit = ({ route, navigation }) => {
         ServiceOrders.update(orderId, values)
           .then((res) => {
             // console.log(res)
-            // navigation.goBack()
+            navigation.goBack()
           })
           .catch(console.error)
       }}
