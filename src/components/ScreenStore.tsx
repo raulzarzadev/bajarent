@@ -5,14 +5,11 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 
 const ScreenStore = ({ navigation }) => {
-  const { store, userStores, userPositions } = useStore()
-
-  console.log({ userPositions, userStores })
-
-  const hasStores = userStores.length > 1 || userPositions.length > 1
+  const { store } = useStore()
+  console.log({ store })
   return (
     <View>
-      {hasStores && !store && <ChangeStore label="Entrar " />}
+      {!store && <ChangeStore label="Entrar " />}
       {store && (
         <>
           <StoreDetails store={store} />

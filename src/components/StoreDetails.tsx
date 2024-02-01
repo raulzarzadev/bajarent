@@ -43,6 +43,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
 export const ChangeStore = ({ label = '' }) => {
   const storesModal = useModal({ title: 'Seleccionar tienda' })
   const { handleSetStoreId, storeId, userStores, userPositions } = useStore()
+
   return (
     <View>
       <View

@@ -59,7 +59,6 @@ const StoreContextProvider = ({ children }) => {
 
       ServiceStaff.getStaffPositions(user?.id)
         .then(async (positions) => {
-          console.log({ positions })
           const positionsWithStoreDataPromises = positions.map(
             async (position) => ({
               ...position,
@@ -69,7 +68,6 @@ const StoreContextProvider = ({ children }) => {
           const positionsWithStore = await Promise.all(
             positionsWithStoreDataPromises
           )
-          console.log({ positionsWithStore })
           setUserPositions(positionsWithStore)
         })
         .catch(console.error)
