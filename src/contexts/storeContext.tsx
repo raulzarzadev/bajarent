@@ -153,11 +153,14 @@ const StoreContextProvider = ({ children }) => {
           //* filter  orders with status PICKUP
           ?.filter(
             (o: OrderType) =>
-              ![
-                // order_status.PENDING,  // hide pending, just show when is already authorized ?
-                order_status.CANCELLED,
-                order_status.PICKUP
-              ].includes(o.status)
+              [
+                //* show orders EXPIRED, REPORTED, AUTHORIZED
+                order_status.AUTHORIZED,
+                order_status.EXPIRED,
+                order_status.REPORTED
+              ].includes(o.status) ||
+              //* show orders with reports
+              o.hasNotSolvedReports
           ) || []
 
       setMyOrders(orders)
