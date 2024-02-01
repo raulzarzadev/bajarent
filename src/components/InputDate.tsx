@@ -1,14 +1,16 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import { DatePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Button from './Button'
 import { dateFormat } from '../libs/utils-date'
 
 export default function InputDate({
-  value,
+  label = 'Fecha',
+  value = new Date(),
   setValue
 }: {
+  label: string
   value: Date
   setValue: (value: Date) => void
 }) {
@@ -36,9 +38,10 @@ export default function InputDate({
         // uppercase={false}
         // mode="outlined"
       >
-        {date
+        {`${label} ${!!date && dateFormat(date, 'EEEE dd / MMM / yy')}`}
+        {/* {date
           ? `Fecha de entrega : ${dateFormat(date, 'EEEE dd / MMM / yy')}`
-          : 'Seleccionar fecha '}
+          : 'Seleccionar fecha '} */}
       </Button>
       <SafeAreaProvider>
         <View
