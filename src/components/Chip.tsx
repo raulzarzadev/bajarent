@@ -14,7 +14,7 @@ const Chip = ({
   color: string
   titleColor: string
   size?: 'sm' | 'md' | 'lg'
-  style: ViewStyle
+  style?: ViewStyle
 }) => {
   const sizes = {
     sm: {

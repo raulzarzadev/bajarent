@@ -12,7 +12,7 @@ import H1 from './H1'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import Chip from './Chip'
-import theme from '../theme'
+import theme, { STATUS_COLOR } from '../theme'
 import Button from './Button'
 import useFilter from '../hooks/useFilter'
 
@@ -42,10 +42,68 @@ function OrdersList({
   ]
 
   const filterModal = useModal({ title: 'Filtrar por' })
-  console.log({ filteredBy })
   return (
     <>
       <View style={styles.container}>
+        <View>
+          <ButtonIcon
+            variant={!filteredBy ? 'ghost' : 'filled'}
+            color={!filteredBy ? 'black' : 'primary'}
+            icon="filter-list"
+            onPress={() => {
+              filterModal.toggleOpen()
+            }}
+          />
+          <StyledModal {...filterModal}>
+            <H1>Filtrar</H1>
+            <P bold>Por status</P>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {Object.keys(order_status).map((item, index) => (
+                <Chip
+                  key={index}
+                  style={{
+                    margin: 4,
+                    borderWidth: 2,
+                    borderColor:
+                      filteredBy === item ? theme.success : 'transparent'
+                  }}
+                  title={dictionary(item as order_status).toUpperCase() || ''}
+                  color={STATUS_COLOR[item]}
+                  titleColor={theme.accent}
+                  onPress={() => {
+                    filterBy('status', item)
+                  }}
+                />
+              ))}
+            </View>
+
+            <P bold>Asignada a</P>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {staff.map((item, index) => (
+                <Chip
+                  key={index}
+                  style={{
+                    margin: 4,
+                    borderWidth: 2,
+                    borderColor:
+                      filteredBy === item.position
+                        ? theme.success
+                        : 'transparent'
+                  }}
+                  title={item?.position?.toUpperCase() || ''}
+                  color={theme.primary}
+                  titleColor={theme.accent}
+                  onPress={() => {
+                    filterBy('assignToPosition', item.position)
+                  }}
+                />
+              ))}
+            </View>
+            <Button buttonStyles={{ marginTop: 16 }} onPress={cleanFilter}>
+              Borrar filtros
+            </Button>
+          </StyledModal>
+        </View>
         <View
           style={{
             padding: 16,
@@ -84,73 +142,6 @@ function OrdersList({
               </Pressable>
             </View>
           ))}
-          <View>
-            <ButtonIcon
-              variant="ghost"
-              color="black"
-              icon="filter-list"
-              onPress={() => {
-                filterModal.toggleOpen()
-              }}
-            />
-            <StyledModal {...filterModal}>
-              <H1>Filtrar</H1>
-              <P bold>Por status</P>
-              <FlatList
-                numColumns={4}
-                data={Object.keys(order_status) as order_status[]}
-                renderItem={({ item }) => {
-                  return (
-                    <Chip
-                      style={{
-                        margin: 4,
-                        borderWidth: 2,
-                        borderColor:
-                          filteredBy === item ? theme.success : 'transparent'
-                      }}
-                      title={dictionary(item).toUpperCase() || ''}
-                      color={theme.primary}
-                      titleColor={theme.accent}
-                      onPress={() => {
-                        filterBy('status', item)
-                        console.log('filter by status', item)
-                      }}
-                    ></Chip>
-                  )
-                }}
-                keyExtractor={(item) => item}
-              ></FlatList>
-
-              <P bold>Asignada a</P>
-              <FlatList
-                horizontal
-                data={staff}
-                renderItem={({ item }) => {
-                  return (
-                    <Chip
-                      style={{
-                        margin: 4,
-                        borderWidth: 2,
-                        borderColor:
-                          filteredBy === item.position
-                            ? theme.success
-                            : 'transparent'
-                      }}
-                      title={item?.position?.toUpperCase() || ''}
-                      color={theme.primary}
-                      titleColor={theme.accent}
-                      onPress={() => {
-                        filterBy('assignToPosition', item.position)
-                      }}
-                    ></Chip>
-                  )
-                }}
-              ></FlatList>
-              <Button buttonStyles={{ marginTop: 16 }} onPress={cleanFilter}>
-                Borrar filtros
-              </Button>
-            </StyledModal>
-          </View>
         </View>
         <FlatList
           style={styles.orderList}

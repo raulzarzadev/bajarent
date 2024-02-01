@@ -1,3 +1,4 @@
+import { th } from 'date-fns/locale'
 import { order_status } from './types/OrderType'
 
 export type Theme = {
@@ -45,14 +46,17 @@ const darkTheme: Theme = {
 }
 
 export const STATUS_COLOR: Record<order_status, string> = {
-  PENDING: '#ffe4e6',
-  AUTHORIZED: '#fde68a',
+  PENDING: theme.white,
+  AUTHORIZED: theme.warning,
+
   DELIVERED: theme.success,
-  CANCELLED: '#9ca3af',
-  REPORTED: theme.error,
   PICKUP: '#f472b6',
-  EXPIRED: '',
-  RENEWED: ''
+
+  CANCELLED: theme.neutral,
+  RENEWED: theme.primary,
+
+  REPORTED: theme.error,
+  EXPIRED: theme.error
 }
 
 export const FONT_SIZE = 10

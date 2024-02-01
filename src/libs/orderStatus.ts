@@ -14,14 +14,7 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
     !(status === order_status.RENEWED)
   ) {
     status = order_status.EXPIRED
-    console.log({ status })
   }
-  // const notSolvedReports = order?.comments?.find(
-  //   (comment) => comment?.type === 'report' && !comment?.solved
-  // )
-  // if (notSolvedReports) {
-  //   status = 'REPORTED'
-  // }
 
   return status
 }
