@@ -17,6 +17,7 @@ import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
 import CurrencyAmount from './CurrencyAmount'
 import theme from '../theme'
+import FormikCheckbox from './FormikCheckbox'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -70,6 +71,12 @@ const FormOrder = ({
                   )
                 }
               />
+            </View>
+
+            <View
+              style={[styles.item, { justifyContent: 'center', width: '100%' }]}
+            >
+              <FormikCheckbox name="hasDelivered" label="Entregada" />
             </View>
 
             <View style={[styles.item]}>

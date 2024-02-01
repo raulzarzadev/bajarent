@@ -44,6 +44,8 @@ type OrderBase = {
 
   renewedAt: Date
   renewedFrom: string
+
+  hasDelivered: boolean
 }
 
 export enum order_status {

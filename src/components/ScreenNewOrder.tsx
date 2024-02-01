@@ -2,12 +2,20 @@ import React from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenNewOrder = ({ navigation }) => {
   const { storeId } = useStore()
+  const { user } = useAuth()
   const handleSubmit = async (values: OrderType) => {
-    return await ServiceOrders.create({ storeId, ...values })
+    if (values.hasDelivered) {
+      values.status = order_status.DELIVERED
+      values.deliveredAt = values.scheduledAt
+      values.deliveredBy = user.id
+    }
+    values.storeId = storeId
+    return await ServiceOrders.create(values)
       .then((res) => {
         const orderId = res?.res?.id
         //  console.log({ res })
