@@ -39,6 +39,15 @@ const labels = {
   PICKUP: 'recogida',
   EXPIRED: 'Vencida',
   RENEWED: 'Renovada',
+  isAdmin: 'Administrador',
+  canDeliveryOrder: 'Entregar Orden',
+  canCancelOrder: 'Cancelar Orden',
+  canAuthorizeOrder: 'Autorizar Orden',
+  canEditOrder: 'Editar orden',
+  canAssignOrder: 'Asignar Orden',
+  canRenewOrder: 'Renovar Orden',
+  canCreateOrder: 'Crear Orden',
+  canDeleteOrder: 'Eliminar Orden',
   '': ''
 } as const
 export type Labels = keyof typeof labels

@@ -8,11 +8,11 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import orderStatus from '../libs/orderStatus'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
-import StaffType from '../types/StaffType'
+import StaffType, { StaffPermissionType } from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
 import expireDate from '../libs/expireDate'
-
+export type StaffPermissions = StaffPermissionType
 export type StoreContextType = {
   store?: null | StoreType
   setStore?: Dispatch<any>
@@ -25,6 +25,8 @@ export type StoreContextType = {
   myOrders?: OrderType[]
   userStores?: StoreType[]
   userPositions?: StaffType[]
+  handleSetMyStaffId?: (staffId: string) => any
+  staffPermissions?: Partial<StaffPermissions>
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -44,6 +46,9 @@ const StoreContextProvider = ({ children }) => {
 
   const [userStores, setUserStores] = useState([])
   const [userPositions, setUserPositions] = useState<StaffType[]>([])
+
+  const [myOrders, setMyOrders] = useState<OrderType[]>([])
+  const [myStaffId, setMyStaffId] = useState<string>('')
 
   useEffect(() => {
     if (user?.id) {
@@ -128,11 +133,12 @@ const StoreContextProvider = ({ children }) => {
       const staffs: Promise<StaffType>[] = staff.map(async (employee) => {
         const user = await ServiceUsers.get(employee.userId)
         return {
-          ...employee,
           staffId: employee.id,
           storeId,
           name: user.name,
-          email: user.email
+          email: user.email,
+          // @ts-ignore // FIXME: fix this
+          ...employee
         }
       })
 
@@ -141,9 +147,12 @@ const StoreContextProvider = ({ children }) => {
     if (staff.length) getStaffDetails().then(setStaffFormatted)
   }, [staff])
 
-  const myStaffId = staff?.find((s) => s?.userId === user?.id)?.id || ''
+  useEffect(() => {
+    // const staffId = staff?.find((s) => s?.userId === user?.id)?.id || ''
+    // setMyStaffId(staffId)
+    getItem('myStaffId').then(setMyStaffId)
+  }, [])
 
-  const [myOrders, setMyOrders] = useState<OrderType[]>([])
   useEffect(() => {
     if (myStaffId) {
       const orders =
@@ -166,6 +175,24 @@ const StoreContextProvider = ({ children }) => {
       setMyOrders(orders)
     }
   }, [myStaffId, orderFormatted])
+
+  const handleSetMyStaffId = async (staffId: string) => {
+    setMyStaffId(staffId)
+    setItem('myStaffId', staffId)
+  }
+
+  const [staffPermissions, setStaffPermissions] =
+    useState<Partial<StaffPermissions>>(null)
+  useEffect(() => {
+    const staffData = staff.find((s) => s.id === myStaffId)
+    if (staffData) {
+      setStaffPermissions({
+        isAdmin: !!staffData?.isAdmin
+      })
+    } else {
+      setStaffPermissions(null)
+    }
+  }, [user, staff, storeId, myStaffId])
   return (
     <StoreContext.Provider
       value={{
@@ -179,7 +206,9 @@ const StoreContextProvider = ({ children }) => {
         myOrders,
         myStaffId,
         userStores,
-        userPositions
+        userPositions,
+        handleSetMyStaffId,
+        staffPermissions
       }}
     >
       {children}

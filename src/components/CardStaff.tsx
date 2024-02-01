@@ -5,6 +5,7 @@ import CardUser from './CardUser'
 import H1 from './H1'
 
 const CardStaff = ({ staff }: { staff?: StaffType }) => {
+  console.log({ staff })
   return (
     <View style={{ justifyContent: 'center' }}>
       <CardUser user={staff as UserType} />
@@ -14,7 +15,7 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
 
       <View>
         <H1>Permisos</H1>
-        {staff?.isAdmin && (
+        {staff.isAdmin && (
           <Text style={{ textAlign: 'center' }}>Administrador</Text>
         )}
       </View>

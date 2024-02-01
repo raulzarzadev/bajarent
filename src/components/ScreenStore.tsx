@@ -5,25 +5,27 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 
 const ScreenStore = ({ navigation }) => {
-  const { store } = useStore()
+  const { store, staffPermissions } = useStore()
   return (
     <View>
       {!store && <ChangeStore label="Entrar " />}
       {store && (
         <>
           <StoreDetails store={store} />
-          <Button
-            buttonStyles={{
-              width: 100,
-              margin: 'auto',
-              marginVertical: 16
-            }}
-            onPress={() => {
-              navigation.navigate('Staff')
-            }}
-          >
-            Staff
-          </Button>
+          {staffPermissions?.isAdmin && (
+            <Button
+              buttonStyles={{
+                width: 100,
+                margin: 'auto',
+                marginVertical: 16
+              }}
+              onPress={() => {
+                navigation.navigate('Staff')
+              }}
+            >
+              Staff
+            </Button>
+          )}
         </>
       )}
     </View>

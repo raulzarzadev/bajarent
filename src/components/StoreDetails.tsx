@@ -42,8 +42,15 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
 
 export const ChangeStore = ({ label = '' }) => {
   const storesModal = useModal({ title: 'Seleccionar tienda' })
-  const { handleSetStoreId, storeId, userStores, userPositions } = useStore()
-
+  const {
+    handleSetStoreId,
+    storeId,
+    userStores,
+    userPositions,
+    handleSetMyStaffId,
+    myStaffId
+  } = useStore()
+  // console.log({ handleSetMyStaffId, myStaffId })
   return (
     <View>
       <View
@@ -71,6 +78,10 @@ export const ChangeStore = ({ label = '' }) => {
           {!!userStores.length && <P bold>Tiendas propias</P>}
           {userStores.map((store) => (
             <Pressable
+              key={store.id}
+              onPress={() => {
+                handleSetStoreId(store.id)
+              }}
               style={{
                 padding: 8,
                 borderRadius: 8,
@@ -79,10 +90,6 @@ export const ChangeStore = ({ label = '' }) => {
                 borderWidth: 1,
                 backgroundColor:
                   storeId === store.id ? theme.primary : 'transparent'
-              }}
-              key={store.id}
-              onPress={() => {
-                handleSetStoreId(store.id)
               }}
             >
               <View style={styles.store} key={store.id}>
@@ -96,6 +103,16 @@ export const ChangeStore = ({ label = '' }) => {
               key={position.id}
               onPress={() => {
                 handleSetStoreId(position.storeId)
+                handleSetMyStaffId(position.id)
+              }}
+              style={{
+                padding: 8,
+                borderRadius: 8,
+                borderColor:
+                  myStaffId === position.id ? theme.secondary : 'transparent',
+                borderWidth: 1,
+                backgroundColor:
+                  myStaffId === position.id ? theme.primary : 'transparent'
               }}
             >
               <View style={styles.store} key={position.id}>

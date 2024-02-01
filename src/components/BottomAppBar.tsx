@@ -87,6 +87,7 @@ const NotUserTabs = () => {
 }
 
 const UserAndStoreTabs = () => {
+  const { staffPermissions } = useStore()
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -112,15 +113,16 @@ const UserAndStoreTabs = () => {
           headerShown: false
         }}
       />
-
-      <Tab.Screen
-        name="Orders"
-        component={StackOrders}
-        options={{
-          title: 'Ordenes',
-          headerShown: false
-        }}
-      />
+      {staffPermissions?.isAdmin && (
+        <Tab.Screen
+          name="Orders"
+          component={StackOrders}
+          options={{
+            title: 'Ordenes',
+            headerShown: false
+          }}
+        />
+      )}
 
       <Tab.Screen
         name="MyOrders"

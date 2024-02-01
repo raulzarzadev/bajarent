@@ -10,51 +10,64 @@ import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
+  const { staffPermissions } = useStore()
   const navigation = useNavigation()
   const status = orderStatus(order)
   const orderId = order?.id || ''
 
-  const disabledDeliveryButton: boolean = [
-    order_status.CANCELLED,
-    order_status.PICKUP,
-    order_status.PENDING,
-    order_status.RENEWED
-  ].includes(status)
+  const disabledDeliveryButton: boolean =
+    [
+      order_status.CANCELLED,
+      order_status.PICKUP,
+      order_status.PENDING,
+      order_status.RENEWED
+    ].includes(status) &&
+    (staffPermissions.isAdmin || staffPermissions.canDeliveryOrder)
 
-  const disabledCancelButton: boolean = [
-    order_status.CANCELLED,
-    order_status.PICKUP,
-    order_status.DELIVERED,
-    order_status.EXPIRED,
-    order_status.RENEWED
-  ].includes(status)
+  const disabledCancelButton: boolean =
+    [
+      order_status.CANCELLED,
+      order_status.PICKUP,
+      order_status.DELIVERED,
+      order_status.EXPIRED,
+      order_status.RENEWED
+    ].includes(status) &&
+    (staffPermissions.isAdmin || staffPermissions.canCancelOrder)
 
-  const disabledAuthorizeButton: boolean = [
-    order_status.CANCELLED,
-    order_status.PICKUP,
-    order_status.DELIVERED,
-    order_status.EXPIRED,
-    order_status.RENEWED
-  ].includes(status)
+  const disabledAuthorizeButton: boolean =
+    [
+      order_status.CANCELLED,
+      order_status.PICKUP,
+      order_status.DELIVERED,
+      order_status.EXPIRED,
+      order_status.RENEWED
+    ].includes(status) &&
+    (staffPermissions.isAdmin || staffPermissions.canAuthorizeOrder)
 
-  const disabledEditButton: boolean = [
-    order_status.CANCELLED,
-    order_status.PICKUP,
-    order_status.RENEWED
-  ].includes(status)
+  const disabledEditButton: boolean =
+    [
+      order_status.CANCELLED,
+      order_status.PICKUP,
+      order_status.RENEWED
+    ].includes(status) &&
+    (staffPermissions.isAdmin || staffPermissions.canEditOrder)
 
-  const disabledAssignButton: boolean = [
-    order_status.CANCELLED,
-    order_status.PICKUP,
-    order_status.RENEWED
-  ].includes(status)
+  const disabledAssignButton: boolean =
+    [
+      order_status.CANCELLED,
+      order_status.PICKUP,
+      order_status.RENEWED
+    ].includes(status) &&
+    (staffPermissions.isAdmin || staffPermissions.canAssignOrder)
 
-  const disabledRenewButton: boolean = [
-    order_status.CANCELLED,
-    order_status.PICKUP,
-    order_status.RENEWED,
-    order_status.AUTHORIZED
-  ].includes(status)
+  const disabledRenewButton: boolean =
+    [
+      order_status.CANCELLED,
+      order_status.PICKUP,
+      order_status.RENEWED,
+      order_status.AUTHORIZED
+    ].includes(status) &&
+    (staffPermissions.isAdmin || staffPermissions.canRenewOrder)
 
   // const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
   // const assignedName = assignedTo?.name || assignedTo?.position
