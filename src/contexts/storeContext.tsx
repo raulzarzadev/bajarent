@@ -43,7 +43,6 @@ const StoreContextProvider = ({ children }) => {
   const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
 
   const [userStores, setUserStores] = useState([])
-
   const [userPositions, setUserPositions] = useState<StaffType[]>([])
 
   useEffect(() => {
@@ -52,7 +51,7 @@ const StoreContextProvider = ({ children }) => {
 
       ServiceStores.getStoresByUserId(user?.id)
         .then((res) => {
-          setUserStores(res)
+          // setUserStores(res)
         })
         .catch(console.error)
 

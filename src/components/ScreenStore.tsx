@@ -6,7 +6,7 @@ import Button from './Button'
 
 const ScreenStore = ({ navigation }) => {
   const { store, userStores, userPositions } = useStore()
-  console.log({ userStores })
+  console.log({ userStores, userPositions })
   // can change store if user has more than one store or position
 
   const showChangeStore = userStores.length > 1 || userPositions.length > 1
