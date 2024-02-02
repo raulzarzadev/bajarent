@@ -13,64 +13,132 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
   const navigation = useNavigation()
   const status = orderStatus(order)
+  const areIn = (statuses: order_status[]) => statuses.includes(status)
   const orderId = order?.id || ''
 
-  const disabledDeliveryButton: boolean =
-    [
-      order_status.CANCELLED,
-      order_status.PICKUP,
-      order_status.PENDING,
-      order_status.RENEWED
-    ].includes(status) &&
-    (staffPermissions.isAdmin || staffPermissions.canDeliveryOrder)
+  const canDelivery =
+    areIn([order_status.AUTHORIZED]) &&
+    (staffPermissions.canDeliveryOrder || staffPermissions.isAdmin)
 
-  const disabledCancelButton: boolean =
-    [
-      order_status.CANCELLED,
-      order_status.PICKUP,
-      order_status.DELIVERED,
-      order_status.EXPIRED,
-      order_status.RENEWED
-    ].includes(status) &&
-    (staffPermissions.isAdmin || staffPermissions.canCancelOrder)
+  const canCancel =
+    areIn([order_status.PENDING, order_status.AUTHORIZED]) &&
+    staffPermissions.isAdmin
 
-  const disabledAuthorizeButton: boolean =
-    [
-      order_status.CANCELLED,
-      order_status.PICKUP,
-      order_status.DELIVERED,
-      order_status.EXPIRED,
-      order_status.RENEWED
-    ].includes(status) &&
-    (staffPermissions.isAdmin || staffPermissions.canAuthorizeOrder)
+  const canRenew =
+    areIn([order_status.DELIVERED]) &&
+    (staffPermissions.canRenewOrder || staffPermissions.isAdmin)
 
-  const disabledEditButton: boolean =
-    [
-      order_status.CANCELLED,
-      order_status.PICKUP,
-      order_status.RENEWED
-    ].includes(status) &&
-    (staffPermissions.isAdmin || staffPermissions.canEditOrder)
+  const canAuthorize =
+    areIn([order_status.PENDING]) &&
+    (staffPermissions.canAuthorizeOrder || staffPermissions.isAdmin)
+  const canPickup =
+    areIn([order_status.DELIVERED]) &&
+    (staffPermissions.canPickupOrder || staffPermissions.isAdmin)
 
-  const disabledAssignButton: boolean =
-    [
-      order_status.CANCELLED,
-      order_status.PICKUP,
-      order_status.RENEWED
-    ].includes(status) &&
-    (staffPermissions.isAdmin || staffPermissions.canAssignOrder)
+  const canReturn = areIn([order_status.PICKUP]) && staffPermissions.isAdmin
 
-  const disabledRenewButton: boolean =
-    [
-      order_status.CANCELLED,
-      order_status.PICKUP,
-      order_status.RENEWED,
-      order_status.AUTHORIZED
-    ].includes(status) &&
-    (staffPermissions.isAdmin || staffPermissions.canRenewOrder)
+  const canAssign = staffPermissions.canAssignOrder || staffPermissions.isAdmin
 
-  // const assignedTo = staff?.find((s) => s?.id === order?.assignTo)
-  // const assignedName = assignedTo?.name || assignedTo?.position
+  const canEdit = staffPermissions.canEditOrder || staffPermissions.isAdmin
+
+  const canDelete = staffPermissions.canDeleteOrder || staffPermissions.isAdmin
+
+  const buttons = [
+    {
+      label: 'Entregar',
+      show: canDelivery,
+      button: <ButtonDelivery orderId={orderId} />
+    },
+    {
+      label: 'Recoger',
+      show: canPickup,
+      button: <ButtonDelivery orderId={orderId} isDelivered />
+    },
+    {
+      label: 'Regresar',
+      show: canReturn,
+      button: <ButtonDelivery orderId={orderId} cancelPickup />
+    },
+    {
+      label: 'Cancelar',
+      show: canCancel,
+      button: (
+        <ButtonCancel
+          orderId={orderId}
+          isCancelled={status === order_status.CANCELLED}
+        />
+      )
+    },
+    {
+      label: 'Renovar',
+      show: canRenew,
+      button: <ButtonRenew orderId={orderId} />
+    },
+    {
+      label: 'Autorizar',
+      show: canAuthorize,
+      button: (
+        <ButtonAuthorize
+          orderId={orderId}
+          isAuthorized={status === order_status.AUTHORIZED}
+        />
+      )
+    },
+    {
+      label: 'Editar',
+      show: canEdit,
+      button: (
+        <Button
+          onPress={() => {
+            // @ts-ignore
+            navigation.navigate('Orders', {
+              params: { orderId },
+              screen: 'EditOrder'
+            })
+          }}
+          label="Editar"
+        />
+      )
+    },
+    {
+      label: 'Asignar',
+      show: canAssign,
+      button: (
+        <Button
+          onPress={() => {
+            // @ts-ignore
+            navigation.navigate('Orders', {
+              params: { orderId },
+              screen: 'AssignOrder'
+            })
+          }}
+          label={`${
+            order.assignToPosition
+              ? `Asignado a: ${order.assignToPosition}`
+              : 'Asignar'
+          }`}
+        />
+      )
+    },
+    {
+      label: 'Eliminar',
+      show: canDelete,
+      button: (
+        <Button
+          color="error"
+          variant="outline"
+          // disabled={disabledAssignButton}
+          onPress={() => {
+            ServiceOrders.delete(orderId).then((res) => {
+              console.log('deleted', res)
+              navigation.goBack()
+            })
+          }}
+          label="Eliminar orden"
+        />
+      )
+    }
+  ]
 
   return (
     <View style={{ padding: 4 }}>
@@ -88,81 +156,27 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
-        {order.status === order_status.PICKUP && (
-          <View style={styles.item}>
-            <ButtonDelivery orderId={orderId} cancelPickup />
-          </View>
+        {buttons.map(
+          ({ button, label, show }) =>
+            show && (
+              <View style={styles.item} key={label}>
+                {button}
+              </View>
+            )
         )}
-        <View style={styles.item}>
-          <ButtonDelivery
-            orderId={orderId}
-            disabled={disabledDeliveryButton}
-            isDelivered={status === order_status.DELIVERED}
-            isExpired={status === order_status.EXPIRED}
-          />
-        </View>
-        <View style={styles.item}>
-          <ButtonRenew orderId={orderId} disabled={disabledRenewButton} />
-        </View>
-        <View style={styles.item}>
-          <ButtonCancel
-            orderId={orderId}
-            disabled={disabledCancelButton}
-            isCancelled={status === order_status.CANCELLED}
-          />
-        </View>
-        <View style={styles.item}>
-          <ButtonAuthorize
-            orderId={orderId}
-            disabled={disabledAuthorizeButton}
-            isAuthorized={status === order_status.AUTHORIZED}
-          />
-        </View>
-
-        <View style={styles.item}>
-          <Button
-            disabled={disabledEditButton}
-            onPress={() => {
-              // @ts-ignore
-              navigation.navigate('EditOrder', { orderId })
-            }}
-            label="Editar"
-          />
-        </View>
-
-        <View style={styles.item}>
-          <Button
-            disabled={disabledAssignButton}
-            onPress={() => {
-              // @ts-ignore
-              navigation.navigate('AssignOrder', { orderId })
-            }}
-            label={`${
-              order.assignToPosition
-                ? `Asignado a: ${order.assignToPosition}`
-                : 'Asignar'
-            }`}
-          />
-        </View>
-        <View style={styles.item}>
-          <Button
-            color="error"
-            variant="outline"
-            // disabled={disabledAssignButton}
-            onPress={() => {
-              ServiceOrders.delete(orderId).then((res) => {
-                console.log('deleted', res)
-                navigation.goBack()
-              })
-            }}
-            label="Eliminar orden"
-          />
-        </View>
       </View>
     </View>
   )
 }
-const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
+const ButtonCancel = ({
+  orderId,
+  isCancelled,
+  disabled
+}: {
+  orderId?: string
+  isCancelled?: boolean
+  disabled?: boolean
+}) => {
   const { storeId } = useStore()
   const handleCancel = () => {
     ServiceOrders.update(orderId, {
@@ -180,18 +194,24 @@ const ButtonCancel = ({ orderId, isCancelled, disabled }) => {
       .catch(console.error)
   }
   return (
-    <>
-      <Button
-        disabled={disabled}
-        label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
-        onPress={() => {
-          handleCancel()
-        }}
-      />
-    </>
+    <Button
+      disabled={disabled}
+      label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
+      onPress={() => {
+        handleCancel()
+      }}
+    />
   )
 }
-const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
+const ButtonAuthorize = ({
+  orderId,
+  isAuthorized,
+  disabled
+}: {
+  orderId: string
+  isAuthorized: boolean
+  disabled?: boolean
+}) => {
   const { storeId } = useStore()
   const handleAuthorize = () => {
     ServiceOrders.update(orderId, {
@@ -210,20 +230,24 @@ const ButtonAuthorize = ({ orderId, isAuthorized, disabled }) => {
       .catch(console.error)
   }
   return (
-    <>
-      <Button
-        variant="outline"
-        disabled={disabled}
-        label={isAuthorized ? 'No autorizar' : 'Autorizar'}
-        onPress={() => {
-          handleAuthorize()
-        }}
-      />
-    </>
+    <Button
+      variant="outline"
+      disabled={disabled}
+      label={isAuthorized ? 'No autorizar' : 'Autorizar'}
+      onPress={() => {
+        handleAuthorize()
+      }}
+    />
   )
 }
 
-const ButtonRenew = ({ orderId, disabled }) => {
+const ButtonRenew = ({
+  orderId,
+  disabled
+}: {
+  orderId: string
+  disabled?: boolean
+}) => {
   const { navigate } = useNavigation()
   const handleRenew = async () => {
     // @ts-ignore

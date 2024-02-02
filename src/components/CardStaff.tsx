@@ -1,13 +1,27 @@
 import { Text, View } from 'react-native'
 import UserType from '../types/UserType'
-import StaffType from '../types/StaffType'
+import StaffType, { staff_permissions } from '../types/StaffType'
 import CardUser from './CardUser'
 import H1 from './H1'
+import Chip from './Chip'
+import dictionary from '../dictionary'
+import theme from '../theme'
+import { useStore } from '../contexts/storeContext'
+// import Chip from './Chip'
+// import dictionary from '../dictionary'
 
 const CardStaff = ({ staff }: { staff?: StaffType }) => {
-  console.log({ staff })
+  const permissions = Object.keys(staff_permissions)
+  const { staffPermissions } = useStore()
   return (
-    <View style={{ justifyContent: 'center' }}>
+    <View
+      style={{
+        justifyContent: 'center',
+        maxWidth: 500,
+        width: '100%',
+        marginHorizontal: 'auto'
+      }}
+    >
       <CardUser user={staff as UserType} />
       <View>
         <Text style={{ textAlign: 'center' }}>Puesto: {staff?.position}</Text>
@@ -15,9 +29,30 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
 
       <View>
         <H1>Permisos</H1>
-        {staff.isAdmin && (
-          <Text style={{ textAlign: 'center' }}>Administrador</Text>
-        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between'
+          }}
+        >
+          {permissions?.map((permission) => (
+            <View key={permission} style={{ margin: 4 }}>
+              {permission && staffPermissions[permission] && (
+                <Chip
+                  color={theme.secondary}
+                  titleColor="white"
+                  title={dictionary(permission as staff_permissions)}
+                >
+                  {permissions}
+                </Chip>
+              )}
+            </View>
+          ))}
+        </View>
+        {/* {staff.isAdmin && (
+          <Chip title={dictionary()}>Administrador</Chip>
+        )} */}
       </View>
     </View>
   )

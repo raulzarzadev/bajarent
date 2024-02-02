@@ -11,7 +11,8 @@ export enum staff_permissions {
   canAssignOrder = 'canAssignOrder',
   canRenewOrder = 'canRenewOrder',
   canCreateOrder = 'canCreateOrder',
-  canDeleteOrder = 'canDeleteOrder'
+  canDeleteOrder = 'canDeleteOrder',
+  canPickupOrder = 'canPickupOrder'
 }
 
 export type StaffPermissionType = {

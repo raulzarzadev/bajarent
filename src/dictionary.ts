@@ -48,6 +48,7 @@ const labels = {
   canRenewOrder: 'Renovar Orden',
   canCreateOrder: 'Crear Orden',
   canDeleteOrder: 'Eliminar Orden',
+  canPickupOrder: 'Recoger Orden',
   '': ''
 } as const
 export type Labels = keyof typeof labels

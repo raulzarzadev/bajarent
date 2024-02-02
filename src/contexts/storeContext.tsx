@@ -187,7 +187,16 @@ const StoreContextProvider = ({ children }) => {
     const staffData = staff.find((s) => s.id === myStaffId)
     if (staffData) {
       setStaffPermissions({
-        isAdmin: !!staffData?.isAdmin
+        isAdmin: !!staffData?.isAdmin,
+        canEditOrder: !!staffData?.canEditOrder,
+        canCancelOrder: !!staffData?.canCancelOrder,
+        canAuthorizeOrder: !!staffData?.canAuthorizeOrder,
+        canAssignOrder: !!staffData?.canAssignOrder,
+        canRenewOrder: !!staffData?.canRenewOrder,
+        canDeliveryOrder: !!staffData?.canDeliveryOrder,
+        canCreateOrder: !!staffData?.canCreateOrder,
+        canDeleteOrder: !!staffData?.canDeleteOrder,
+        canPickupOrder: !!staffData?.canPickupOrder
       })
     } else {
       setStaffPermissions(null)
