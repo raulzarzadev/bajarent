@@ -24,7 +24,7 @@ function OrdersList({
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
 }) {
-  const { staff, staffPermissions } = useStore()
+  const { staff } = useStore()
   const { filterBy, cleanFilter, filteredData, filteredBy, search } = useFilter(
     {
       data: orders
@@ -47,7 +47,6 @@ function OrdersList({
   const filterModal = useModal({ title: 'Filtrar por' })
 
   let timerId = null
-  console.log({ staffPermissions })
   const handleDebounceSearch = (e: string) => {
     if (timerId) {
       clearTimeout(timerId)

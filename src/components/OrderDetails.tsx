@@ -98,6 +98,11 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         )}
       </View>
       <View>
+        <Text style={{ textAlign: 'center' }}>{order?.street}</Text>
+        <Text style={{ textAlign: 'center' }}>{order?.betweenStreets}</Text>
+        <Text style={{ textAlign: 'center' }}>{order?.neighborhood}</Text>
+      </View>
+      <View>
         <P bold size="xl">
           Articulo
         </P>
