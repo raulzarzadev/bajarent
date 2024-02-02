@@ -98,6 +98,7 @@ const OrderComment = ({
   comment: OrderType['comments'][number]
   // orderId: string
 }) => {
+  const { staff } = useStore()
   const handleToggleSolveReport = async (commentId, solved) => {
     await ServiceComments.update(commentId, {
       solved: !solved
@@ -109,7 +110,9 @@ const OrderComment = ({
     <View style={{ width: '100%', marginHorizontal: 'auto' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-          <P styles={{ fontWeight: 'bold', marginRight: 4 }}>Raul Zarza</P>
+          <P styles={{ fontWeight: 'bold', marginRight: 4 }}>
+            {staff?.find((s) => s?.userId === comment?.createdBy)?.name}
+          </P>
           <P styles={{ marginRight: 4 }}>{fromNow(comment.createdAt)}</P>
           {comment?.type === 'report' && (
             <Chip
