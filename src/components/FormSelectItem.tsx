@@ -24,12 +24,14 @@ const FormSelectItem = ({
   categories = [],
   setValue,
   value,
-  label = 'Categorias'
+  label = 'Categorias',
+  selectPrice = false
 }: {
   categories: Category[]
   setValue: (value: ItemSelected) => void
   value: ItemSelected
   label?: string
+  selectPrice?: boolean
 }) => {
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
@@ -59,17 +61,18 @@ const FormSelectItem = ({
           label={label}
         />
       </View>
-
-      <View>
-        <FormSelectPrice
-          value={priceId || null}
-          setValue={(priceId) => {
-            setPriceId(priceId)
-            setValue({ categoryName: categoryId, priceSelectedId: priceId })
-          }}
-          prices={prices}
-        />
-      </View>
+      {selectPrice && (
+        <View>
+          <FormSelectPrice
+            value={priceId || null}
+            setValue={(priceId) => {
+              setPriceId(priceId)
+              setValue({ categoryName: categoryId, priceSelectedId: priceId })
+            }}
+            prices={prices}
+          />
+        </View>
+      )}
     </View>
   )
 }

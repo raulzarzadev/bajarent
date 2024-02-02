@@ -132,6 +132,11 @@ const FormOrder = ({
             <View style={[styles.item]}>
               {values.type === 'REPAIR' && (
                 <View>
+                  <FormikSelectCategoryItem
+                    name="item"
+                    label="Selecciona un artículo"
+                    categories={CATEGORIES_ITEMS.categories}
+                  />
                   <Text style={{ marginVertical: 4 }}>
                     Costo por visita{' '}
                     <Text style={{ fontWeight: 'bold' }}>
@@ -142,7 +147,16 @@ const FormOrder = ({
                   <InputValueFormik
                     name={'description'}
                     placeholder="Describe la falla"
-                    helperText="Ejemplo: Lavadora marca Mytag, no lava, hace ruido."
+                    helperText="Ejemplo: Lavadora no lava, hace ruido."
+                  />
+                  <InputValueFormik
+                    name={'itemBrand'}
+                    placeholder="Marca"
+                    helperText="Ejemplo: Mytag"
+                  />
+                  <InputValueFormik
+                    name={'itemSerial'}
+                    placeholder="Numero de serie"
                   />
                 </View>
               )}
@@ -151,6 +165,7 @@ const FormOrder = ({
                   name="item"
                   label="Selecciona un artículo"
                   categories={CATEGORIES_ITEMS.categories}
+                  selectPrice
                 />
               )}
             </View>
