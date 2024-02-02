@@ -7,7 +7,7 @@ import OrdersList from './OrdersList'
 function ScreenMyOrders({ navigation }) {
   const { myOrders, staffPermissions } = useStore()
   const canCreateOrder =
-    staffPermissions?.canCreateOrder || staffPermissions.isAdmin
+    staffPermissions?.canCreateOrder || staffPermissions?.isAdmin
   return (
     <>
       <View

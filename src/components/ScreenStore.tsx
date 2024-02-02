@@ -44,7 +44,19 @@ const ScreenStore = ({ navigation }) => {
                   </View>
                   <Text style={styles.item}>
                     <Text style={styles.label}>Todas</Text>:
-                    <Text style={styles.num}>{orders.length}</Text>
+                    <Text style={styles.num}>{orders?.length || 0}</Text>
+                  </Text>
+                  <Text style={styles.item}>
+                    <Text style={styles.label}>Reparaciónes</Text>:
+                    <Text style={styles.num}>
+                      {orders?.filter((o) => o?.type === 'REPAIR')?.length}
+                    </Text>
+                  </Text>
+                  <Text style={styles.item}>
+                    <Text style={styles.label}>Rentas</Text>:
+                    <Text style={styles.num}>
+                      {orders?.filter((o) => o?.type === 'RENT')?.length}
+                    </Text>
                   </Text>
                   <Text style={styles.item}>
                     <Text style={styles.label}>Pendientes</Text>:{' '}
