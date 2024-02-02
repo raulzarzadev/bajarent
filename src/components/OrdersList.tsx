@@ -129,10 +129,20 @@ function OrdersList({
                 />
               ))}
             </View>
+            <View>
+              <Text style={{ textAlign: 'center' }}>
+                {filteredData.length} ordenes
+              </Text>
+            </View>
             <Button buttonStyles={{ marginTop: 16 }} onPress={cleanFilter}>
               Borrar filtros
             </Button>
           </StyledModal>
+        </View>
+        <View>
+          <Text style={{ textAlign: 'center' }}>
+            {filteredData.length} ordenes
+          </Text>
         </View>
         <View
           style={{

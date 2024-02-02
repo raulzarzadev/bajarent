@@ -8,22 +8,29 @@ import OrderStatus from './OrderStatus'
 const OrderRow = ({ order }: { order: OrderType }) => {
   return (
     <View style={[styles.container]}>
-      <Text style={[styles.folio, { textAlign: 'left', fontWeight: 'bold' }]}>
+      <Text
+        style={[
+          styles.folio,
+          { textAlign: 'left', fontWeight: 'bold', width: 60 }
+        ]}
+        numberOfLines={1}
+      >
         {order.folio}
       </Text>
-      <Text
-        style={[styles.text, { textAlign: 'left', fontWeight: 'bold' }]}
-        numberOfLines={2}
-      >
+      <Text style={[styles.text, { textAlign: 'left' }]} numberOfLines={2}>
         {order.firstName} {order.lastName}
       </Text>
       {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
-      <Text style={styles.text}>{order?.assignToPosition || ''}</Text>
-      <View style={styles.text}>
-        <Text style={styles.text}>
-          {dateFormat(order.scheduledAt, 'dd-MMM-yy HH:mm')}
+      <Text style={[styles.text, { fontSize: 10 }]}>
+        {order?.assignToPosition || ''}
+      </Text>
+      <View style={[styles.text]}>
+        <Text style={[{ textAlign: 'center' }]}>
+          {dateFormat(order.scheduledAt, 'dd-MMM-yy')}
         </Text>
-        <Text style={styles.text}>{fromNow(order.scheduledAt)}</Text>
+        <Text style={[{ textAlign: 'center' }]}>
+          {fromNow(order.scheduledAt)}
+        </Text>
       </View>
       <Text style={styles.text}>
         <OrderStatus orderId={order.id} />
