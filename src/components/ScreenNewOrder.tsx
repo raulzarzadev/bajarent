@@ -13,6 +13,10 @@ const ScreenNewOrder = ({ navigation }) => {
       values.status = order_status.DELIVERED
       values.deliveredAt = values.scheduledAt
       values.deliveredBy = user.id
+    } else {
+      values.status = order_status.PENDING
+      values.deliveredAt = null
+      values.deliveredBy = null
     }
     values.storeId = storeId
     return await ServiceOrders.create(values)
