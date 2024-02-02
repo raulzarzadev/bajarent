@@ -12,7 +12,7 @@ import { useStore } from '../contexts/storeContext'
 
 const CardStaff = ({ staff }: { staff?: StaffType }) => {
   const permissions = Object.keys(staff_permissions)
-  const { staffPermissions } = useStore()
+  // const { staffPermissions } = useStore()
   return (
     <View
       style={{
@@ -27,7 +27,7 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
         <Text style={{ textAlign: 'center' }}>Puesto: {staff?.position}</Text>
       </View>
 
-      <View>
+      <View style={{ marginVertical: 16 }}>
         <H1>Permisos</H1>
         <View
           style={{
@@ -38,7 +38,7 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
         >
           {permissions?.map((permission) => (
             <View key={permission} style={{ margin: 4 }}>
-              {permission && staffPermissions[permission] && (
+              {permission && staff[permission] && (
                 <Chip
                   color={theme.secondary}
                   titleColor="white"
@@ -50,9 +50,6 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
             </View>
           ))}
         </View>
-        {/* {staff.isAdmin && (
-          <Chip title={dictionary()}>Administrador</Chip>
-        )} */}
       </View>
     </View>
   )

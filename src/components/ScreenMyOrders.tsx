@@ -5,7 +5,9 @@ import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
 
 function ScreenMyOrders({ navigation }) {
-  const { myOrders } = useStore()
+  const { myOrders, staffPermissions } = useStore()
+  const canCreateOrder =
+    staffPermissions?.canCreateOrder || staffPermissions.isAdmin
   return (
     <>
       <View
@@ -16,7 +18,11 @@ function ScreenMyOrders({ navigation }) {
           margin: 'auto'
         }}
       >
-        <Button onPress={() => navigation.push('NewOrder')}>Nueva orden</Button>
+        {!!canCreateOrder && (
+          <Button onPress={() => navigation.push('NewOrder')}>
+            Nueva orden
+          </Button>
+        )}
       </View>
       <OrdersList
         orders={myOrders}

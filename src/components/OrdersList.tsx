@@ -24,7 +24,7 @@ function OrdersList({
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
 }) {
-  const { staff } = useStore()
+  const { staff, staffPermissions } = useStore()
   const { filterBy, cleanFilter, filteredData, filteredBy, search } = useFilter(
     {
       data: orders
@@ -47,7 +47,7 @@ function OrdersList({
   const filterModal = useModal({ title: 'Filtrar por' })
 
   let timerId = null
-
+  console.log({ staffPermissions })
   const handleDebounceSearch = (e: string) => {
     if (timerId) {
       clearTimeout(timerId)
@@ -84,6 +84,7 @@ function OrdersList({
               }}
             />
           </View>
+
           <StyledModal {...filterModal}>
             <H1>Filtrar</H1>
             <P bold>Por status</P>
