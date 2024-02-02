@@ -46,6 +46,11 @@ type OrderBase = {
   renewedFrom: string
 
   hasDelivered: boolean
+
+  //* to repair orders
+  description: string
+  itemBrand: string
+  itemSerial: string
 }
 
 export enum order_status {

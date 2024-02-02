@@ -9,6 +9,7 @@ import { dateFormat, fromNow } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
+import H1 from './H1'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -101,6 +102,13 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={{ textAlign: 'center' }}>{order?.street}</Text>
         <Text style={{ textAlign: 'center' }}>{order?.betweenStreets}</Text>
         <Text style={{ textAlign: 'center' }}>{order?.neighborhood}</Text>
+      </View>
+      <View>
+        <H1>Detalles de reparacion </H1>
+        <Text>{order?.item.categoryName}</Text>
+        <Text>{order?.description}</Text>
+        <Text>{order?.itemBrand}</Text>
+        <Text>{order?.itemSerial}</Text>
       </View>
       <View>
         <P bold size="xl">
