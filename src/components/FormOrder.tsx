@@ -113,6 +113,13 @@ const FormOrder = ({
             </View>
 
             <View style={[styles.item]}>
+              <InputValueFormik
+                name={'references'}
+                placeholder="Referencias de la casa"
+              />
+            </View>
+
+            <View style={[styles.item]}>
               <FormikInputImage name="imageID" label="Subir identificación" />
             </View>
             <View style={[styles.item]}>
@@ -144,6 +151,7 @@ const FormOrder = ({
                     </Text>
                     . Reembolsable si se realiza la reparación
                   </Text>
+
                   <InputValueFormik
                     name={'description'}
                     placeholder="Describe la falla"
