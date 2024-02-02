@@ -119,12 +119,6 @@ const FormOrder = ({
               />
             </View>
 
-            <View style={[styles.item]}>
-              <FormikInputImage name="imageID" label="Subir identificación" />
-            </View>
-            <View style={[styles.item]}>
-              <FormikInputImage name="imageHouse" label="Subir fachada " />
-            </View>
             <View style={[styles.item, { justifyContent: 'center' }]}>
               <InputRadiosFormik
                 name="type"
@@ -169,12 +163,27 @@ const FormOrder = ({
                 </View>
               )}
               {values.type === 'RENT' && (
-                <FormikSelectCategoryItem
-                  name="item"
-                  label="Selecciona un artículo"
-                  categories={CATEGORIES_ITEMS.categories}
-                  selectPrice
-                />
+                <>
+                  <FormikSelectCategoryItem
+                    name="item"
+                    label="Selecciona un artículo"
+                    categories={CATEGORIES_ITEMS.categories}
+                    selectPrice
+                  />
+
+                  <View style={[styles.item]}>
+                    <FormikInputImage
+                      name="imageID"
+                      label="Subir identificación"
+                    />
+                  </View>
+                  <View style={[styles.item]}>
+                    <FormikInputImage
+                      name="imageHouse"
+                      label="Subir fachada "
+                    />
+                  </View>
+                </>
               )}
             </View>
             <View style={[styles.item, { justifyContent: 'center' }]}>
