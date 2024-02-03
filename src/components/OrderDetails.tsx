@@ -105,7 +105,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <View>
         <H1>Detalles de reparacion </H1>
-        <Text>{order?.item.categoryName}</Text>
+        <Text>{order?.item?.categoryName}</Text>
         <Text>{order?.description}</Text>
         <Text>{order?.itemBrand}</Text>
         <Text>{order?.itemSerial}</Text>
