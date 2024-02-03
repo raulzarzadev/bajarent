@@ -4,7 +4,7 @@ import FormSection from './FormSection'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { useStore } from '../contexts/storeContext'
 
-const ScreenSectionsNew = ({ navigator }) => {
+const ScreenSectionsNew = ({ navigation }) => {
   const { storeId } = useStore()
   return (
     <View style={styles.container}>
@@ -14,7 +14,7 @@ const ScreenSectionsNew = ({ navigator }) => {
           return await ServiceSections.create(value)
             .then((res) => {
               console.log(res)
-              navigator.goBack()
+              navigation?.goBack()
             })
             .catch((err) => {
               console.log({ err })
