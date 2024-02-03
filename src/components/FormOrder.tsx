@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
-import OrderType from '../types/OrderType'
+import OrderType, { order_type } from '../types/OrderType'
 import Button from './Button'
 
 import FormikInputPhone from './InputPhoneFormik'
@@ -23,7 +23,7 @@ const initialValues: Partial<OrderType> = {
   firstName: '',
   phone: '',
   scheduledAt: new Date(),
-  type: 'RENT'
+  type: order_type.RENT
 }
 
 const FormOrder = ({
@@ -123,15 +123,15 @@ const FormOrder = ({
               <InputRadiosFormik
                 name="type"
                 options={[
-                  { label: 'Renta', value: 'RENT' },
-                  { label: 'Reparación', value: 'REPAIR' }
+                  { label: 'Renta', value: order_type.RENT },
+                  { label: 'Reparación', value: order_type.REPAIR }
                 ]}
                 label="Tipo de orden"
               />
             </View>
 
             <View style={[styles.item]}>
-              {values.type === 'REPAIR' && (
+              {values.type === order_type.REPAIR && (
                 <View>
                   <FormikSelectCategoryItem
                     name="item"
@@ -162,7 +162,7 @@ const FormOrder = ({
                   />
                 </View>
               )}
-              {values.type === 'RENT' && (
+              {values.type === order_type.RENT && (
                 <>
                   <FormikSelectCategoryItem
                     name="item"

@@ -1,7 +1,7 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import OrderRow from './OrderRow'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import useSort from '../hooks/useSort'
 import { Icon } from 'react-native-elements'
 import ButtonIcon from './ButtonIcon'
@@ -86,6 +86,38 @@ function OrdersList({
 
           <StyledModal {...filterModal}>
             <H1>Filtrar</H1>
+            <View>
+              <Text style={{ textAlign: 'center' }}>
+                {filteredData.length} ordenes
+              </Text>
+            </View>
+            <Button
+              buttonStyles={{ marginTop: 16 }}
+              variant="outline"
+              onPress={cleanFilter}
+            >
+              Todas
+            </Button>
+            <P bold>Por tipo</P>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {[order_type.RENT, order_type.REPAIR].map((item, index) => (
+                <Chip
+                  key={index}
+                  style={{
+                    margin: 4,
+                    borderWidth: 4,
+                    borderColor:
+                      filteredBy === item ? theme.black : 'transparent'
+                  }}
+                  title={dictionary(item as order_type).toUpperCase() || ''}
+                  color={STATUS_COLOR[item]}
+                  titleColor={theme.accent}
+                  onPress={() => {
+                    return filterBy('type', item)
+                  }}
+                />
+              ))}
+            </View>
             <P bold>Por status</P>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {Object.keys(order_status).map((item, index) => (
@@ -129,14 +161,6 @@ function OrdersList({
                 />
               ))}
             </View>
-            <View>
-              <Text style={{ textAlign: 'center' }}>
-                {filteredData.length} ordenes
-              </Text>
-            </View>
-            <Button buttonStyles={{ marginTop: 16 }} onPress={cleanFilter}>
-              Borrar filtros
-            </Button>
           </StyledModal>
         </View>
         <View>

@@ -35,8 +35,7 @@ type OrderBase = {
 
   comments: CommentType[]
 
-  type: 'RENT' | 'SALE' | 'REPAIR'
-
+  type: TypeOfOrderType
   hasNotSolvedReports?: boolean
 
   assignToPosition?: string
@@ -65,18 +64,12 @@ export enum order_status {
 }
 
 export enum order_type {
-  RENT,
-  SALE,
-  REPAIR
+  RENT = 'RENT',
+  SALE = 'SALE',
+  REPAIR = 'REPAIR'
 }
-
+export type TypeOfOrderType = order_type
 export type OrderStatus = order_status
-// | 'PENDING'
-// | 'AUTHORIZED'
-// | 'DELIVERED'
-// | 'CANCELLED'
-// | 'REPORTED'
-// | 'PICKUP'
 
 type OrderType = OrderBase & BaseType
 

@@ -49,6 +49,10 @@ const labels = {
   canCreateOrder: 'Crear Orden',
   canDeleteOrder: 'Eliminar Orden',
   canPickupOrder: 'Recoger Orden',
+  REPAIR: 'Reparación',
+  RENT: 'Renta',
+  SALE: 'Venta',
+
   '': ''
 } as const
 export type Labels = keyof typeof labels
