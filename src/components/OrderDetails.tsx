@@ -10,6 +10,7 @@ import CurrencyAmount from './CurrencyAmount'
 import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
 import H1 from './H1'
+import dictionary from '../dictionary'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -40,6 +41,9 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           padding: 4
         }}
       >
+        <P size="lg" bold styles={{ textAlign: 'center' }}>
+          {dictionary(order?.type)}
+        </P>
         <P size="lg" bold styles={{ textAlign: 'center' }}>
           {order?.firstName} {order?.lastName}
         </P>
@@ -105,7 +109,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <View>
         <H1>Detalles de reparacion </H1>
-        <Text>{order?.item.categoryName}</Text>
+        <Text>{order?.item?.categoryName}</Text>
         <Text>{order?.description}</Text>
         <Text>{order?.itemBrand}</Text>
         <Text>{order?.itemSerial}</Text>
