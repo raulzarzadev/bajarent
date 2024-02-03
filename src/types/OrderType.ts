@@ -38,6 +38,8 @@ type OrderBase = {
   type: TypeOfOrderType
   hasNotSolvedReports?: boolean
 
+  assignToSection?: string
+
   assignToPosition?: string
   assignToName?: string
 

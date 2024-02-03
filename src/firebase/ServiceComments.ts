@@ -18,6 +18,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       cb
     )
   }
+
   storeComments(storeId: string, cb: CallableFunction): Promise<void> {
     return super.listenMany([where('storeId', '==', storeId)], cb)
   }

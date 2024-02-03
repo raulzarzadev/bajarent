@@ -5,21 +5,47 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import { order_status } from '../types/OrderType'
 import H1 from './H1'
+import { useAuth } from '../contexts/authContext'
+import theme from '../theme'
 
 const ScreenStore = ({ navigation }) => {
   const { store, staffPermissions, orders } = useStore()
+  const { user } = useAuth()
   const orderByStatus = (status) => {
     if (status === order_status.REPORTED)
       return orders.filter((o) => o.hasNotSolvedReports).length
     return orders.filter((o) => o.status === status).length
   }
+  const isOwner = store.createdBy === user?.id
   return (
     <ScrollView>
       {!store && <ChangeStore label="Entrar " />}
+      {isOwner && (
+        <View
+          style={{
+            borderRadius: 9999,
+            marginVertical: 16,
+            backgroundColor: theme.success,
+            width: 80,
+            margin: 'auto',
+            padding: 8
+          }}
+        >
+          <Text
+            style={{
+              color: theme.white,
+              fontWeight: 'bold',
+              textAlign: 'center'
+            }}
+          >
+            Dueño
+          </Text>
+        </View>
+      )}
       {store && (
         <>
           <StoreDetails store={store} />
-          {staffPermissions?.isAdmin && (
+          {(staffPermissions?.isAdmin || isOwner) && (
             <>
               <View>
                 <Button

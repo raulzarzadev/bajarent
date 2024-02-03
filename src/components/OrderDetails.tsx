@@ -11,8 +11,11 @@ import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
 import H1 from './H1'
 import dictionary from '../dictionary'
+import { useStore } from '../contexts/storeContext'
+import OrderAssignedTo from './OrderAssignedTo'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
+  const { storeSections } = useStore()
   return (
     <View>
       <View
@@ -147,14 +150,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           )}
         </View>
       </View>
-      <View>
-        <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
-          Asignada a:{' '}
-        </Text>
-        <Text style={{ fontSize: 16, textAlign: 'center', marginBottom: 8 }}>
-          {order?.assignToPosition || 'No asignada'}
-        </Text>
-      </View>
+      <OrderAssignedTo orderId={order.id} />
       <OrderActions order={order} />
       <OrderComments orderId={order.id} />
     </View>

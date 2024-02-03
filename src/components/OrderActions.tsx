@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { SectionList, StyleSheet, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -8,6 +8,9 @@ import orderStatus from '../libs/orderStatus'
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import ListSections from './ListSections'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -104,20 +107,21 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       label: 'Asignar',
       show: canAssign,
       button: (
-        <Button
-          onPress={() => {
-            // @ts-ignore
-            navigation.navigate('Orders', {
-              params: { orderId },
-              screen: 'AssignOrder'
-            })
-          }}
-          label={`${
-            order.assignToPosition
-              ? `Asignado a: ${order.assignToPosition}`
-              : 'Asignar'
-          }`}
-        />
+        <ModalAssignOrder orderId={orderId} />
+        // <Button
+        //   onPress={() => {
+        //     // @ts-ignore
+        //     navigation.navigate('Orders', {
+        //       params: { orderId },
+        //       screen: 'AssignOrder'
+        //     })
+        //   }}
+        //   label={`${
+        //     order.assignToPosition
+        //       ? `Asignado a: ${order.assignToPosition}`
+        //       : 'Asignar'
+        //   }`}
+        // />
       )
     },
     {
@@ -333,5 +337,42 @@ const styles = StyleSheet.create({
     marginVertical: '1%' // spacing between items
   }
 })
+
+const ModalAssignOrder = ({ orderId }: { orderId: string }) => {
+  const modal = useModal({ title: 'Asignar a' })
+  const { storeSections } = useStore()
+  const { orders } = useStore()
+  const assignToName = orders.find((o) => o.id === orderId).assignToName
+
+  return (
+    <>
+      <Button onPress={modal.toggleOpen}>
+        {assignToName ? `Asignada a ${assignToName}` : 'Asignar'}
+      </Button>
+      <StyledModal {...modal}>
+        <ListSections
+          sections={storeSections}
+          onPress={(sectionId) => {
+            ServiceOrders.update(orderId, { assignToSection: sectionId })
+              .then(() => {
+                modal.toggleOpen()
+              })
+              .catch(console.error)
+          }}
+        ></ListSections>
+        {/* <ListStaff
+          staff={staff}
+          onPress={(staffId) => {
+            ServiceOrders.update(orderId, { assignTo: staffId })
+              .then(() => {
+                modal.toggleOpen()
+              })
+              .catch(console.error)
+          }}
+        ></ListStaff> */}
+      </StyledModal>
+    </>
+  )
+}
 
 export default OrderActions
