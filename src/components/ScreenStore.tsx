@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import StoreDetails, { ChangeStore } from './StoreDetails'
 import { useStore } from '../contexts/storeContext'
@@ -14,7 +14,7 @@ const ScreenStore = ({ navigation }) => {
     return orders.filter((o) => o.status === status).length
   }
   return (
-    <View>
+    <ScrollView>
       {!store && <ChangeStore label="Entrar " />}
       {store && (
         <>
@@ -33,6 +33,18 @@ const ScreenStore = ({ navigation }) => {
                   }}
                 >
                   Staff
+                </Button>
+                <Button
+                  buttonStyles={{
+                    width: 100,
+                    margin: 'auto',
+                    marginVertical: 16
+                  }}
+                  onPress={() => {
+                    navigation.navigate('Areas')
+                  }}
+                >
+                  Areas
                 </Button>
               </View>
               <View>
@@ -106,7 +118,7 @@ const ScreenStore = ({ navigation }) => {
           )}
         </>
       )}
-    </View>
+    </ScrollView>
   )
 }
 

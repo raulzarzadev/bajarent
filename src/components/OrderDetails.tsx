@@ -37,7 +37,6 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <View
         style={{
-          // marginTop: 32,
           padding: 4
         }}
       >

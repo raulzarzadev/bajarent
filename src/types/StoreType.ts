@@ -1,4 +1,5 @@
 import BaseType from './BaseType'
+import { SectionType } from './SectionType'
 import StaffType from './StaffType'
 
 export type BaseStoreType = {
@@ -6,6 +7,7 @@ export type BaseStoreType = {
   description?: string
   staff?: StaffType[]
   currentFolio?: number
+  sections?: SectionType[]
 }
 
 type StoreType = BaseType & BaseStoreType

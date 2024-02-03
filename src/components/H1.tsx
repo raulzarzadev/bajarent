@@ -1,6 +1,7 @@
-import { StyleSheet, Text } from 'react-native'
+import { Text } from 'react-native'
 import React from 'react'
 import { FONT_SIZE } from '../theme'
+import { gStyles } from '../styles'
 
 const H1 = ({
   children,
@@ -17,16 +18,8 @@ const H1 = ({
     xl: FONT_SIZE * 3
   }
   return (
-    <Text style={[styles.text, { fontSize: fontSize[size] }]}>{children}</Text>
+    <Text style={[gStyles.h1, { fontSize: fontSize[size] }]}>{children}</Text>
   )
 }
 
 export default H1
-
-const styles = StyleSheet.create({
-  text: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 0
-  }
-})

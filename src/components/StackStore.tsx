@@ -7,6 +7,10 @@ import ScreenStaffNew from './ScreenStaffNew'
 import ScreenStaffDetails from './ScreenStaffDetails'
 import ScreenStaffEdit from './ScreenStaffEdit'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
+import ScreenStoreSections from './ScreenSections'
+import ScreenSectionsNew from './ScreenSectionsNew'
+import ScreenSectionsDetails from './ScreenSectionsDetails'
+import ScreenSectionsEdit from './ScreenSectionsEdit'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -39,6 +43,7 @@ function StackStore() {
         }}
         component={ScreenCreateStore}
       />
+
       <Stack.Screen
         name="EditStore"
         options={{
@@ -46,6 +51,8 @@ function StackStore() {
         }}
         component={ScreenStoreEdit}
       />
+
+      {/* STAFF */}
       <Stack.Screen
         name="Staff"
         options={{
@@ -73,6 +80,36 @@ function StackStore() {
           title: 'Edit staff'
         }}
         component={ScreenStaffEdit}
+      />
+
+      {/* SECTIONS  */}
+      <Stack.Screen
+        name="Areas"
+        options={{
+          title: 'Areas'
+        }}
+        component={ScreenStoreSections}
+      />
+      <Stack.Screen
+        name="CreateSection"
+        options={{
+          title: 'Crear area'
+        }}
+        component={ScreenSectionsNew}
+      />
+      <Stack.Screen
+        name="SectionDetails"
+        options={{
+          title: 'Detalles de area'
+        }}
+        component={ScreenSectionsDetails}
+      />
+      <Stack.Screen
+        name="EditSection"
+        options={{
+          title: 'Editar  area'
+        }}
+        component={ScreenSectionsEdit}
       />
     </Stack.Navigator>
   )

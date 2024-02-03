@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  FlatList,
   Pressable,
   ScrollView,
   Text,
@@ -7,15 +8,21 @@ import {
   ViewStyle
 } from 'react-native'
 import React from 'react'
-import Button from './Button'
-import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import StaffType from '../types/StaffType'
 import { dateFormat } from '../libs/utils-date'
-import ListStaff from './ListStaff'
 
-const ScreenStaff = ({ navigation }) => {
-  const { staff } = useStore()
+const ListStaff = ({
+  staffSelected = [],
+  onPress,
+  staff = []
+}: {
+  staffSelected?: string[]
+  onPress: (staffId: string) => void
+  staff: StaffType[]
+}) => {
+  console.log({ staffSelected, staff })
+  // const { staff } = useStore()
   if (!staff) return <ActivityIndicator />
   return (
     <ScrollView
@@ -26,23 +33,25 @@ const ScreenStaff = ({ navigation }) => {
         marginHorizontal: 'auto'
       }}
     >
-      <Button
-        onPress={() => {
-          navigation.navigate('StaffNew')
-        }}
-        buttonStyles={{
-          width: 140,
-          margin: 'auto',
-          marginVertical: 10
-        }}
-      >
-        Agregar
-      </Button>
-      <ListStaff
-        onPress={(staffId) => {
-          navigation.navigate('StaffDetails', { staffId })
-        }}
-        staff={staff}
+      <FlatList
+        data={staff || []}
+        renderItem={({ item }) => (
+          <StaffRow
+            style={{
+              borderColor: staffSelected?.includes(item?.id)
+                ? theme.secondary
+                : 'transparent',
+              borderWidth: 2
+            }}
+            key={item?.id}
+            staff={item}
+            fields={['name', 'position']}
+            onPress={
+              () => onPress(item?.id)
+              // navigation.navigate('StaffDetails', { staffId: item.id })
+            }
+          />
+        )}
       />
     </ScrollView>
   )
@@ -96,7 +105,7 @@ export const StaffRow = ({
             style={{ marginHorizontal: 4, width: `${100 / fields.length}%` }}
             numberOfLines={1}
           >
-            {text(staff[field] as string)}
+            {text(staff?.[field] as string)}
           </Text>
         ))}
       </View>
@@ -104,4 +113,4 @@ export const StaffRow = ({
   )
 }
 
-export default ScreenStaff
+export default ListStaff

@@ -12,6 +12,8 @@ import StaffType, { StaffPermissionType } from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
 import expireDate from '../libs/expireDate'
+import { ServiceSections } from '../firebase/ServiceSections'
+import { SectionType } from '../types/SectionType'
 export type StaffPermissions = StaffPermissionType
 export type StoreContextType = {
   store?: null | StoreType
@@ -27,6 +29,7 @@ export type StoreContextType = {
   userPositions?: StaffType[]
   handleSetMyStaffId?: (staffId: string) => any
   staffPermissions?: Partial<StaffPermissions>
+  storeSections?: SectionType[]
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -49,6 +52,12 @@ const StoreContextProvider = ({ children }) => {
 
   const [myOrders, setMyOrders] = useState<OrderType[]>([])
   const [myStaffId, setMyStaffId] = useState<string>('')
+
+  const [storeSections, setStoreSections] = useState([])
+
+  useEffect(() => {
+    if (storeId) ServiceSections.listenByStore(storeId, setStoreSections)
+  }, [storeId])
 
   useEffect(() => {
     if (user?.id) {
@@ -217,7 +226,8 @@ const StoreContextProvider = ({ children }) => {
         userStores,
         userPositions,
         handleSetMyStaffId,
-        staffPermissions
+        staffPermissions,
+        storeSections
       }}
     >
       {children}
