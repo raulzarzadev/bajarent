@@ -7,14 +7,18 @@ import { auth } from '../firebase/auth'
 import PhoneInput from './InputPhone'
 import InputCode from './InputCode'
 import theme from '../theme'
+import { set } from 'date-fns'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
   const [code, setCode] = React.useState('')
   const [msmSent, setMsmSent] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [sending, setSending] = React.useState(false)
+
   const onSendCode = () => {
-    //@ts-ignore
+    setSending(true)
+    // @ts-ignore
     window.confirmationResult
       .confirm(code)
       .then((result) => {
@@ -30,19 +34,23 @@ const PhoneLogin = () => {
         // User couldn't sign in (bad verification code?)
         // ...
       })
+      .finally(() => {
+        setSending(false)
+      })
   }
 
   const onSignInSubmit = async () => {
-    //TODO: CREATE SIGN IN FOR ANDROID AND IOS
+    setSending(true)
+    // TODO: CREATE SIGN IN FOR ANDROID AND IOS
     if (Platform.OS === 'web') {
-      //@ts-ignore
+      // @ts-ignore
       const appVerifier = window.recaptchaVerifier
       // console.log({ appVerifier })
       signInWithPhoneNumber(auth, phone, appVerifier)
         .then((confirmationResult) => {
           // SMS sent. Prompt user to type the code from the message, then sign the
           // user in with confirmationResult.confirm(code).
-          //@ts-ignore
+          // @ts-ignore
           window.confirmationResult = confirmationResult
           setMsmSent(true)
           console.log({ confirmationResult })
@@ -55,24 +63,26 @@ const PhoneLogin = () => {
           setError('Error al enviar el teléfono')
           console.error(error)
         })
-      return
+        .finally(() => {
+          setSending(false)
+        })
     }
   }
   useEffect(() => {
-    //@ts-ignore
+    // @ts-ignore
     if (Platform.OS === 'web') {
-      //@ts-ignore
+      // @ts-ignore
       window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
         size: 'invisible',
         callback: (response) => {
           // reCAPTCHA solved, allow signInWithPhoneNumber.
           // console.log(response)
-          //onSignInSubmit()
+          // onSignInSubmit()
         }
       })
     }
 
-    //const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId)
+    // const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId)
   }, [])
 
   return (
@@ -93,7 +103,9 @@ const PhoneLogin = () => {
               </View>
             )}
             <View style={styles.item}>
-              <Button onPress={onSignInSubmit}>Enviar</Button>
+              <Button onPress={onSignInSubmit} disabled={sending}>
+                Enviar
+              </Button>
             </View>
 
             <View id="sign-in-button"></View>
@@ -117,7 +129,9 @@ const PhoneLogin = () => {
               </View>
             )}
             <View style={styles.item}>
-              <Button onPress={onSendCode}>Enviar</Button>
+              <Button onPress={onSendCode} disabled={sending}>
+                Enviar
+              </Button>
             </View>
           </View>
         </>
