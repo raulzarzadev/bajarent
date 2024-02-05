@@ -1,6 +1,6 @@
 import { Text, View, Image, Linking, Pressable } from 'react-native'
 import React from 'react'
-import OrderType from '../types/OrderType'
+import OrderType, { order_type } from '../types/OrderType'
 import { Ionicons } from '@expo/vector-icons'
 import P from './P'
 import CardPhone from './CardPhone'
@@ -13,6 +13,11 @@ import H1 from './H1'
 import dictionary from '../dictionary'
 import { useStore } from '../contexts/storeContext'
 import OrderAssignedTo from './OrderAssignedTo'
+import Chip from './Chip'
+import OrderStatus from './OrderStatus'
+import useAssignOrder from '../hooks/useAssignOrder'
+import { gStyles } from '../styles'
+import ErrorBoundary from './ErrorBoundary'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   const { storeSections } = useStore()
@@ -38,14 +43,13 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         </Text>
         <P size="sm"> {order?.id}</P>
       </View>
+
+      <OrderDirectives order={order} />
       <View
         style={{
           padding: 4
         }}
       >
-        <P size="lg" bold styles={{ textAlign: 'center' }}>
-          {dictionary(order?.type)}
-        </P>
         <P size="lg" bold styles={{ textAlign: 'center' }}>
           {order?.firstName} {order?.lastName}
         </P>
@@ -109,50 +113,97 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={{ textAlign: 'center' }}>{order?.betweenStreets}</Text>
         <Text style={{ textAlign: 'center' }}>{order?.neighborhood}</Text>
       </View>
-      <View>
-        <H1>Detalles de reparacion </H1>
-        <Text>{order?.item?.categoryName}</Text>
-        <Text>{order?.description}</Text>
-        <Text>{order?.itemBrand}</Text>
-        <Text>{order?.itemSerial}</Text>
-      </View>
-      <View>
-        <P bold size="xl">
-          Articulo
-        </P>
-        <View
-          style={{
-            marginVertical: 16,
-            paddingVertical: 16,
-            backgroundColor: theme?.base
-          }}
-        >
-          <P>{order?.item?.categoryName}</P>
-          <P>{order?.item?.priceSelected?.title}</P>
-          <CurrencyAmount
-            style={{
-              alignContent: 'center',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}
-            amount={order?.item?.priceSelected?.amount}
-          />
-          {order?.expireAt && (
-            <View style={{ marginTop: 12 }}>
-              <P bold styles={{ marginBottom: 0 }}>
-                Expira{' '}
-              </P>
-              <P styles={{ marginBottom: 0 }}>
-                {dateFormat(order?.expireAt, 'dd/MM/yy HH:mm')}
-              </P>
-              <P>{fromNow(order?.expireAt)}</P>
-            </View>
-          )}
-        </View>
-      </View>
-      <OrderAssignedTo orderId={order.id} />
+      <ErrorBoundary componentName="ItemDetails">
+        <ItemDetails order={order} />
+      </ErrorBoundary>
+
       <OrderActions order={order} />
       <OrderComments orderId={order.id} />
+    </View>
+  )
+}
+
+const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
+  return (
+    <View
+      style={{
+        marginVertical: 16,
+        paddingVertical: 16,
+        backgroundColor: theme?.base
+      }}
+    >
+      <Text style={gStyles.h3}>Articulo</Text>
+      {order?.type === order_type.RENT && (
+        <View>
+          <View>
+            <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
+            <Text style={[gStyles.p]}>{order?.item?.priceSelected?.title}</Text>
+            <CurrencyAmount
+              style={{
+                alignContent: 'center',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}
+              amount={order?.item?.priceSelected?.amount}
+            />
+            {order?.expireAt && (
+              <View style={{ marginTop: 12 }}>
+                <Text style={[gStyles.p, gStyles.tCenter, gStyles.tBold]}>
+                  Expira
+                </Text>
+                <Text style={[gStyles.p, gStyles.tCenter]}>
+                  {dateFormat(order?.expireAt, 'dd/MM/yy HH:mm')}
+                </Text>
+                <Text style={[gStyles.p, gStyles.tCenter]}>
+                  {fromNow(order?.expireAt)}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+      {order.type === order_type.REPAIR && (
+        <View>
+          <Text style={gStyles.h3}>Detalles de reparacion </Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>
+            {order?.item?.categoryName}
+          </Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.description}</Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemBrand}</Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemSerial}</Text>
+        </View>
+      )}
+    </View>
+  )
+}
+
+const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
+  const { assignedToSection, assignedToStaff } = useAssignOrder({
+    orderId: order.id
+  })
+
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+      <Chip
+        title={dictionary(order.type)?.toUpperCase()}
+        color={theme.primary}
+        titleColor={theme.black}
+      ></Chip>
+      <OrderStatus orderId={order.id} style={{ width: '33%' }} />
+      {assignedToSection && (
+        <Chip
+          title={assignedToSection.toUpperCase()}
+          color={theme.info}
+          titleColor={theme.white}
+        ></Chip>
+      )}
+      {assignedToStaff && (
+        <Chip
+          title={assignedToStaff?.toUpperCase()}
+          color={theme.info}
+          titleColor={theme.white}
+        ></Chip>
+      )}
     </View>
   )
 }

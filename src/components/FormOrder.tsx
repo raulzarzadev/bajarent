@@ -191,7 +191,10 @@ const FormOrder = ({
               <ErrorBoundary>
                 <ModalAssignOrder
                   assignToSection={(sectionId) => {
-                    setValues((values) => ({ ...values, assignTo: sectionId }))
+                    setValues((values) => ({
+                      ...values,
+                      assignToSection: sectionId
+                    }))
                   }}
                   assignedToSection={values?.assignToSection}
                 />

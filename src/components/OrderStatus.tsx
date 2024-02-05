@@ -1,10 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { useState } from 'react'
 import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
 import { useStore } from '../contexts/storeContext'
 
-const OrderStatus = ({ orderId }: { orderId?: string }) => {
+const OrderStatus = ({
+  orderId,
+  style
+}: {
+  orderId?: string
+  style?: ViewStyle
+}) => {
   const { orders } = useStore()
   const order = orders.find((order) => order.id === orderId)
   const status = order?.status
@@ -29,7 +35,8 @@ const OrderStatus = ({ orderId }: { orderId?: string }) => {
           backgroundColor: hasReport ? STATUS_COLOR.REPORTED : color,
           borderColor: color,
           width: '100%'
-        }
+        },
+        style
       ]}
     >
       <Text style={[styles.text]}>{displayText}</Text>

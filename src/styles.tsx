@@ -30,5 +30,15 @@ export const gStyles = StyleSheet.create({
     margin: 'auto',
     width: '100%',
     padding: 8
+  },
+  p: {
+    fontSize: 16,
+    marginBottom: 4
+  },
+  tCenter: {
+    textAlign: 'center'
+  },
+  tBold: {
+    fontWeight: 'bold'
   }
 })

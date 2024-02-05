@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
   container: {},
   item: {
     width: '48%', // for 2 items in a row
-    marginVertical: '1%' // spacing between items
+    marginVertical: '1%', // spacing between items
+    textAlign: 'center',
+    marginHorizontal: 'auto'
   }
 })
