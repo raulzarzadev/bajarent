@@ -7,15 +7,31 @@ import StackStore from './StackStore'
 import { Icon } from 'react-native-elements'
 import StackMyOrders from './StackMyOrders'
 import { useStore } from '../contexts/storeContext'
+import ErrorBoundary from './ErrorBoundary'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { user } = useAuth()
   const { store } = useStore()
-  if (!user) return <NotUserTabs />
-  if (!store) return <NotStoreTabs />
-  return <UserAndStoreTabs />
+  if (!user)
+    return (
+      <ErrorBoundary componentName="NotUserTabs">
+        <NotUserTabs />
+      </ErrorBoundary>
+    )
+
+  if (!store)
+    return (
+      <ErrorBoundary componentName="NotStoreTabs">
+        <NotStoreTabs />
+      </ErrorBoundary>
+    )
+  return (
+    <ErrorBoundary componentName="UserAndStoreTabs">
+      <UserAndStoreTabs />
+    </ErrorBoundary>
+  )
 }
 
 const NotStoreTabs = () => {
