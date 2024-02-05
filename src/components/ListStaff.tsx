@@ -21,8 +21,6 @@ const ListStaff = ({
   onPress: (staffId: string) => void
   staff: StaffType[]
 }) => {
-  console.log({ staffSelected, staff })
-  // const { staff } = useStore()
   if (!staff) return <ActivityIndicator />
   return (
     <ScrollView

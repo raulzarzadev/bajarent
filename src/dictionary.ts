@@ -49,6 +49,7 @@ const labels = {
   canCreateOrder: 'Crear Orden',
   canDeleteOrder: 'Eliminar Orden',
   canPickupOrder: 'Recoger Orden',
+  canViewMyOrders: 'Ver mis Ordenes',
   REPAIR: 'Reparación',
   RENT: 'Renta',
   SALE: 'Venta',

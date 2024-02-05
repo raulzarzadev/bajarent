@@ -124,14 +124,16 @@ const UserAndStoreTabs = () => {
         />
       )}
 
-      <Tab.Screen
-        name="MyOrders"
-        component={StackMyOrders}
-        options={{
-          title: 'Mis ordenes',
-          headerShown: false
-        }}
-      />
+      {(staffPermissions?.canViewMyOrders || staffPermissions?.isAdmin) && (
+        <Tab.Screen
+          name="MyOrders"
+          component={StackMyOrders}
+          options={{
+            title: 'Mis ordenes',
+            headerShown: false
+          }}
+        />
+      )}
 
       <Tab.Screen
         name="Profile"
