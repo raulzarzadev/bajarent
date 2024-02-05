@@ -62,7 +62,6 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     if (user?.id) {
       //* get stores where user is  owner
-
       ServiceStores.getStoresByUserId(user?.id)
         .then((res) => {
           setUserStores(res)

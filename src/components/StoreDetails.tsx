@@ -50,6 +50,7 @@ export const ChangeStore = ({ label = '' }) => {
     handleSetMyStaffId,
     myStaffId
   } = useStore()
+  console.log({ userStores, userPositions })
   // console.log({ handleSetMyStaffId, myStaffId })
   return (
     <View>
@@ -123,7 +124,7 @@ export const ChangeStore = ({ label = '' }) => {
               </View>
             </Pressable>
           ))}
-          {storeId && (
+          {!!storeId && (
             <Pressable
               style={{
                 padding: 8,
