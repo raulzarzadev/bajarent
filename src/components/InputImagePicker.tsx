@@ -18,7 +18,7 @@ export default function InputImagePicker({
   const [progress, setProgress] = useState(null)
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
@@ -36,9 +36,9 @@ export default function InputImagePicker({
         .then((blob) => {
           // Pasar el Blob a uploadFile
           uploadFile(blob, name, ({ progress, downloadURL }) => {
-            //console.log({ progress, downloadURL })
-            if (progress < 0) return console.error('Error uploading file')
+            // console.log({ progress, downloadURL })
             setProgress(progress)
+            if (progress < 0) return console.error('Error uploading file')
             if (downloadURL) setValue(downloadURL)
           })
         })
@@ -51,7 +51,8 @@ export default function InputImagePicker({
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {progress && <Text>{progress}%</Text>}
+      {progress === -1 && <Text>Error al subir archivo</Text>}
+      {progress > 0 && <Text>{progress}%</Text>}
       <Pressable
         onPress={pickImage}
         style={{

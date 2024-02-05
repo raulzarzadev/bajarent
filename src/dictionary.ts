@@ -52,7 +52,7 @@ const labels = {
   canViewMyOrders: 'Ver mis Ordenes',
   REPAIR: 'Reparación',
   REPAIRING: 'Reparando',
-  REPAIRED: 'Reparación Finalizada',
+  REPAIRED: 'Reparada',
   RENT: 'Renta',
   SALE: 'Venta',
 

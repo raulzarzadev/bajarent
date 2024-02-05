@@ -9,10 +9,7 @@ import { dateFormat, fromNow } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
-import H1 from './H1'
 import dictionary from '../dictionary'
-import { useStore } from '../contexts/storeContext'
-import OrderAssignedTo from './OrderAssignedTo'
 import Chip from './Chip'
 import OrderStatus from './OrderStatus'
 import useAssignOrder from '../hooks/useAssignOrder'
@@ -20,7 +17,6 @@ import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
-  const { storeSections } = useStore()
   return (
     <View>
       <View
@@ -116,9 +112,12 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />
       </ErrorBoundary>
-
-      <OrderActions order={order} />
-      <OrderComments orderId={order.id} />
+      <ErrorBoundary componentName="OrderActions">
+        <OrderActions order={order} />
+      </ErrorBoundary>
+      <ErrorBoundary componentName="OrderComments">
+        <OrderComments orderId={order.id} />
+      </ErrorBoundary>
     </View>
   )
 }

@@ -26,6 +26,11 @@ type OrderBase = {
 
   deliveredAt: Date
   deliveredBy: string
+  deliveredByStaff: string
+
+  pickedUpAt?: Date
+  pickedUpBy?: string
+  pickedUpByStaff?: string
 
   items: RentItem[]
   item: RentItem
@@ -55,6 +60,7 @@ type OrderBase = {
 
   repairedAt?: Date
   repairedBy?: string
+  repairedByStaff?: string
 
   repairTotal?: number
   repairInfo?: string

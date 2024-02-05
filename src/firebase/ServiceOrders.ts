@@ -88,14 +88,21 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     {
       total = 0,
       info = '',
-      repairedBy = '' //* should be a staffId
-    }: { total: number; info: string; repairedBy: string }
+      repairedBy = '', //* should be a userId
+      repairedByStaff = '' //* should be a staffId
+    }: {
+      total: number
+      info: string
+      repairedBy: string
+      repairedByStaff: string
+    }
   ) {
     return await this.update(orderId, {
       status: order_status.REPAIRED,
       repairedAt: new Date(),
       repairTotal: total,
       repairInfo: info,
+      repairedByStaff,
       repairedBy
     })
     // Implementa tu método personalizado
