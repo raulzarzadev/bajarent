@@ -2,11 +2,20 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenNewOrder from './ScreenNewOrder'
 import ScreenMyOrders from './ScreenMyOrders'
+import MyStaffLabel from './MyStaffLabel'
 
 const Stack = createStackNavigator()
 function StackMyOrders() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => {
+        return {
+          headerRight(props) {
+            return <MyStaffLabel />
+          }
+        }
+      }}
+    >
       <Stack.Screen
         name="MyOrders"
         options={{

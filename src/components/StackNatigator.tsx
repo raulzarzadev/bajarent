@@ -2,13 +2,22 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import OrdersScreen from './ScreenOrders'
 import OrderDetailScreen from './ScreenOrderDetail'
 import NewOrderScreen from './ScreenNewOrder'
+import MyStaffLabel from './MyStaffLabel'
 
 const Stack = createNativeStackNavigator()
 
 export default function StackNavigator({ children }) {
   return (
     <>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={() => {
+          return {
+            headerRight(props) {
+              return <MyStaffLabel />
+            }
+          }
+        }}
+      >
         {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
         <Stack.Screen name="Orders" component={OrdersScreen} />
         <Stack.Screen

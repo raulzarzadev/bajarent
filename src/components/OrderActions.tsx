@@ -49,10 +49,13 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
 
   const canDelete = staffPermissions.canDeleteOrder || staffPermissions.isAdmin
 
-  const canRepair = areIn([order_status.AUTHORIZED]) && staffPermissions.isAdmin
+  const canRepair =
+    areIn([order_status.AUTHORIZED]) &&
+    (staffPermissions.isAdmin || staffPermissions.canRepairOrder)
 
   const canFinishRepair =
-    areIn([order_status.REPAIRING]) && staffPermissions.isAdmin
+    areIn([order_status.REPAIRING]) &&
+    (staffPermissions.isAdmin || staffPermissions.canRepairOrder)
 
   const canDeliveryRepair =
     areIn([order_status.REPAIRED]) && staffPermissions.isAdmin

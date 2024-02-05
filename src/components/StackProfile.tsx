@@ -2,11 +2,20 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ScreenCreateStore from './ScreenStoreCreate'
 import ScreenProfile from './ScreenProfile'
 import ScreenProfileEdit from './ScreenProfileEdit'
+import MyStaffLabel from './MyStaffLabel'
 
 const Stack = createStackNavigator()
 function StackProfile() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => {
+        return {
+          headerRight(props) {
+            return <MyStaffLabel />
+          }
+        }
+      }}
+    >
       <Stack.Screen
         name="Profile"
         options={{

@@ -1,4 +1,10 @@
-import { ActivityIndicator, Pressable, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View
+} from 'react-native'
 import React, { useEffect } from 'react'
 import FormStaff from './FormStaff'
 import { ServiceStaff } from '../firebase/ServiceStaff'
@@ -18,7 +24,7 @@ const ScreenStaffNew = () => {
   const { navigate } = useStoreNavigation()
   const [user, setUser] = React.useState<UserType>()
   return (
-    <View style={{ padding: 10 }}>
+    <ScrollView style={{ padding: 10 }}>
       <SearchStaff setUser={setUser} />
 
       {user && <CardUser user={user} />}
@@ -52,7 +58,7 @@ const ScreenStaffNew = () => {
           })
         }}
       /> */}
-    </View>
+    </ScrollView>
   )
 }
 

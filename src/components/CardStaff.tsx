@@ -6,7 +6,7 @@ import H1 from './H1'
 import Chip from './Chip'
 import dictionary from '../dictionary'
 import theme from '../theme'
-import { useStore } from '../contexts/storeContext'
+
 // import Chip from './Chip'
 // import dictionary from '../dictionary'
 

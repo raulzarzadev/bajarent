@@ -11,6 +11,7 @@ import ScreenStoreSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
+import MyStaffLabel from './MyStaffLabel'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -28,7 +29,15 @@ export const useStoreNavigation = () => {
 const Stack = createStackNavigator()
 function StackStore() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => {
+        return {
+          headerRight(props) {
+            return <MyStaffLabel />
+          }
+        }
+      }}
+    >
       <Stack.Screen
         name="Store"
         options={{

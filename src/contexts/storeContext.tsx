@@ -56,7 +56,7 @@ const StoreContextProvider = ({ children }) => {
   const [myOrders, setMyOrders] = useState<OrderType[]>([])
   const [myStaffId, setMyStaffId] = useState<string>('')
 
-  const [storeSections, setStoreSections] = useState([])
+  const [storeSections, setStoreSections] = useState<SectionType[]>([])
 
   useEffect(() => {
     if (storeId) ServiceSections.listenByStore(storeId, setStoreSections)
@@ -174,10 +174,21 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (myStaffId) {
+      const myCurrentPosition = staff?.find((s) => s.id === myStaffId)
+      const myCurrentSections = storeSections.filter((s) =>
+        s?.staff?.includes(myCurrentPosition?.id)
+      )
+      console.log({ myCurrentSections, myCurrentPosition })
       const orders =
         orderFormatted
-          //* filter orders are assigned to me
-          ?.filter((order) => order.assignTo === myStaffId)
+
+          ?.filter(
+            (order) =>
+              //* filter orders are assigned to my section
+              !!myCurrentSections.find((s) => s.id === order.assignToSection) ||
+              //* filter orders are assigned to me
+              order?.assignToStaff === myStaffId
+          )
           //* filter  orders with status PICKUP
           ?.filter(
             (o: OrderType) =>
@@ -185,12 +196,13 @@ const StoreContextProvider = ({ children }) => {
                 //* show orders EXPIRED, REPORTED, AUTHORIZED
                 order_status.AUTHORIZED,
                 order_status.EXPIRED,
-                order_status.REPORTED
+                order_status.REPORTED,
+                order_status.REPAIRING,
+                order_status.REPAIRED
               ].includes(o.status) ||
               //* show orders with reports
               o.hasNotSolvedReports
           ) || []
-
       setMyOrders(orders)
     }
   }, [myStaffId, orderFormatted])

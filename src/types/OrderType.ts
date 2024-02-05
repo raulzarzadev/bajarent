@@ -21,7 +21,6 @@ type OrderBase = {
   location: string
   indications: string
 
-  assignTo: string
   scheduledAt: Date
 
   deliveredAt: Date
@@ -54,6 +53,10 @@ type OrderBase = {
    * @deprecated use assignToStaff instead
    */
   assignToName?: string
+  /**
+   * @deprecated use assignToStaff instead
+   */
+  assignTo: string
 
   renewedAt: Date
   renewedFrom: string

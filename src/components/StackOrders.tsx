@@ -5,11 +5,20 @@ import ScreenNewOrder from './ScreenNewOrder'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenAssignOrder from './ScreenAssignOrder'
 import ScreenOrderRenew from './ScreenOrderRenew'
+import MyStaffLabel from './MyStaffLabel'
 
 const Stack = createStackNavigator()
 function StackOrders() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => {
+        return {
+          headerRight(props) {
+            return <MyStaffLabel />
+          }
+        }
+      }}
+    >
       <Stack.Screen
         name="ScreenOrders"
         options={{
