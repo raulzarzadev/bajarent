@@ -18,6 +18,8 @@ import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
 import CurrencyAmount from './CurrencyAmount'
 import theme from '../theme'
 import FormikCheckbox from './FormikCheckbox'
+import ModalAssignOrder from './OrderActions/ModalAssignOrder'
+import ErrorBoundary from './ErrorBoundary'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -32,7 +34,6 @@ const FormOrder = ({
   },
   defaultValues = initialValues
 }) => {
-  const { staff } = useStore()
   const [loading, setLoading] = React.useState(false)
 
   const disabledSave = loading
@@ -187,15 +188,18 @@ const FormOrder = ({
               )}
             </View>
             <View style={[styles.item, { justifyContent: 'center' }]}>
-              <InputRadiosFormik
-                name="assignTo"
-                options={staff.map((s) => ({ label: s.position, value: s.id }))}
-                label="Asignar a"
-              />
+              <ErrorBoundary>
+                <ModalAssignOrder
+                  assignToSection={(sectionId) => {
+                    setValues((values) => ({ ...values, assignTo: sectionId }))
+                  }}
+                  assignedToSection={values?.assignToSection}
+                />
+              </ErrorBoundary>
             </View>
             <View style={[styles.item]}>
               <Button
-                disabled={disabledSave || !values.firstName}
+                disabled={disabledSave || !values?.firstName}
                 onPress={handleSubmit}
                 label={'Guardar'}
               />

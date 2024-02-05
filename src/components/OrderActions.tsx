@@ -11,6 +11,7 @@ import { useAuth } from '../contexts/authContext'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ListSections from './ListSections'
+import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -107,7 +108,12 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       label: 'Asignar',
       show: canAssign,
       button: (
-        <ModalAssignOrder orderId={orderId} />
+        <ModalAssignOrder
+          assignedToSection={order.assignToSection}
+          assignToSection={(sectionId) => {
+            ServiceOrders.update(orderId, { assignToSection: sectionId })
+          }}
+        />
         // <Button
         //   onPress={() => {
         //     // @ts-ignore
@@ -338,41 +344,41 @@ const styles = StyleSheet.create({
   }
 })
 
-const ModalAssignOrder = ({ orderId }: { orderId: string }) => {
-  const modal = useModal({ title: 'Asignar a' })
-  const { storeSections } = useStore()
-  const { orders } = useStore()
-  const assignToName = orders.find((o) => o.id === orderId).assignToName
+// const ModalAssignOrder = ({ orderId }: { orderId: string }) => {
+//   const modal = useModal({ title: 'Asignar a' })
+//   const { storeSections } = useStore()
+//   const { orders } = useStore()
+//   const assignToName = orders.find((o) => o.id === orderId).assignToName
 
-  return (
-    <>
-      <Button onPress={modal.toggleOpen}>
-        {assignToName ? `Asignada a ${assignToName}` : 'Asignar'}
-      </Button>
-      <StyledModal {...modal}>
-        <ListSections
-          sections={storeSections}
-          onPress={(sectionId) => {
-            ServiceOrders.update(orderId, { assignToSection: sectionId })
-              .then(() => {
-                modal.toggleOpen()
-              })
-              .catch(console.error)
-          }}
-        ></ListSections>
-        {/* <ListStaff
-          staff={staff}
-          onPress={(staffId) => {
-            ServiceOrders.update(orderId, { assignTo: staffId })
-              .then(() => {
-                modal.toggleOpen()
-              })
-              .catch(console.error)
-          }}
-        ></ListStaff> */}
-      </StyledModal>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <Button onPress={modal.toggleOpen}>
+//         {assignToName ? `Asignada a ${assignToName}` : 'Asignar'}
+//       </Button>
+//       <StyledModal {...modal}>
+//         <ListSections
+//           sections={storeSections}
+//           onPress={(sectionId) => {
+//             ServiceOrders.update(orderId, { assignToSection: sectionId })
+//               .then(() => {
+//                 modal.toggleOpen()
+//               })
+//               .catch(console.error)
+//           }}
+//         ></ListSections>
+//         {/* <ListStaff
+//           staff={staff}
+//           onPress={(staffId) => {
+//             ServiceOrders.update(orderId, { assignTo: staffId })
+//               .then(() => {
+//                 modal.toggleOpen()
+//               })
+//               .catch(console.error)
+//           }}
+//         ></ListStaff> */}
+//       </StyledModal>
+//     </>
+//   )
+// }
 
 export default OrderActions
