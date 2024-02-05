@@ -13,7 +13,11 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocFromCache,
+  getDocFromServer,
   getDocs,
+  getDocsFromCache,
+  getDocsFromServer,
   onSnapshot,
   Query,
   query,
@@ -223,7 +227,15 @@ export class FirebaseCRUD {
    */
   async getItem(itemId: string) {
     const ref = doc(this.db, this.collectionName, itemId)
-    const docSnap = await getDoc(ref)
+    // const docSnap = await getDoc(ref)
+    let docSnap
+    try {
+      docSnap = await getDocFromCache(ref)
+      console.log('doc from cache')
+    } catch (error) {
+      console.log('doc from server')
+      docSnap = await getDocFromServer(ref)
+    }
     return this.normalizeItem(docSnap)
   }
 
@@ -235,7 +247,16 @@ export class FirebaseCRUD {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
-    const querySnapshot = await getDocs(q)
+    // const querySnapshot = await getDocs(q)
+    let querySnapshot
+    try {
+      querySnapshot = await getDocsFromCache(q)
+      console.log('docs from cache')
+    } catch (error) {
+      console.log('docs from server')
+      querySnapshot = await getDocsFromServer(q)
+    }
+
     const res: any[] = []
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
