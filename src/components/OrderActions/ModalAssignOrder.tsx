@@ -1,18 +1,25 @@
+import { Text } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
 import Button from '../Button'
 import ListSections from '../ListSections'
 import StyledModal from '../StyledModal'
+import { gStyles } from '../../styles'
+import ListStaff from '../ListStaff'
 
 const ModalAssignOrder = ({
   assignedToSection,
-  assignToSection
+  assignToSection,
+  assignToStaff,
+  assignedToStaff
 }: {
   assignedToSection: string
+  assignedToStaff?: string
   assignToSection: (sectionId: string) => void
+  assignToStaff?: (sectionId: string) => void
 }) => {
   const modal = useModal({ title: 'Asignar a' })
-  const { storeSections } = useStore()
+  const { storeSections, staff } = useStore()
   const sectionAssigned = storeSections.find(
     (o) => o?.id === assignedToSection
   )?.name
@@ -23,6 +30,7 @@ const ModalAssignOrder = ({
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>
       <StyledModal {...modal}>
+        <Text style={gStyles.h3}>Areas</Text>
         <ListSections
           sections={storeSections}
           onPress={(sectionId) => {
@@ -30,16 +38,15 @@ const ModalAssignOrder = ({
             modal.toggleOpen()
           }}
         ></ListSections>
-        {/* <ListStaff
+        <Text style={gStyles.h3}>Staff</Text>
+        <ListStaff
+          staffSelected={[assignedToStaff]}
           staff={staff}
           onPress={(staffId) => {
-            ServiceOrders.update(orderId, { assignTo: staffId })
-              .then(() => {
-                modal.toggleOpen()
-              })
-              .catch(console.error)
+            assignToStaff?.(staffId)
+            modal.toggleOpen()
           }}
-        ></ListStaff> */}
+        ></ListStaff>
       </StyledModal>
     </>
   )

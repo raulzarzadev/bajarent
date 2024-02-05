@@ -44,8 +44,15 @@ type OrderBase = {
   hasNotSolvedReports?: boolean
 
   assignToSection?: string
+  assignToStaff?: string
 
+  /**
+   * @deprecated use assignToStaff instead
+   */
   assignToPosition?: string
+  /**
+   * @deprecated use assignToStaff instead
+   */
   assignToName?: string
 
   renewedAt: Date

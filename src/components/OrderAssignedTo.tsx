@@ -1,38 +1,40 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useStore } from '../contexts/storeContext'
+import useAssignOrder from '../hooks/useAssignOrder'
+import Chip from './Chip'
+import theme from '../theme'
+import { View } from 'react-native'
 
 const OrderAssignedTo = ({ orderId }) => {
-  const { orders, storeSections, staff } = useStore()
-  const order = orders?.find((o) => o?.id === orderId)
-  const assignToSection =
-    order?.assignToSection &&
-    storeSections.find((s) => s.id === order.assignToSection)?.name
-  const assignToName =
-    order?.assignTo && staff.find((s) => s.id === order.assignTo)?.name
+  const { assignedToSection, assignedToStaff } = useAssignOrder({
+    orderId
+  })
+
   return (
-    <View style={styles.container}>
-      {assignToSection || assignToName ? (
-        <Text style={styles.item}>Asignado a:</Text>
-      ) : (
-        <Text>Sin asingar</Text>
+    <View
+      style={{
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {assignedToSection && (
+        <Chip
+          style={{ margin: 2 }}
+          title={assignedToSection?.toUpperCase()}
+          color={theme.info}
+          titleColor={theme.white}
+        ></Chip>
       )}
-      {assignToSection && (
-        <Text style={styles.item}>Area: {assignToSection}</Text>
+      {assignedToStaff && (
+        <Chip
+          style={{ margin: 2 }}
+          title={assignedToStaff?.toUpperCase()}
+          color={theme.base}
+          titleColor={theme.black}
+        ></Chip>
       )}
-      {assignToName && <Text style={styles.item}>Staff: {assignToName}</Text>}
     </View>
   )
 }
 
 export default OrderAssignedTo
-
-const styles = StyleSheet.create({
-  container: {},
-  item: {
-    width: '48%', // for 2 items in a row
-    marginVertical: '1%', // spacing between items
-    textAlign: 'center',
-    marginHorizontal: 'auto'
-  }
-})

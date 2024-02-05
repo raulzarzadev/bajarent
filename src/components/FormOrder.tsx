@@ -196,7 +196,14 @@ const FormOrder = ({
                       assignToSection: sectionId
                     }))
                   }}
+                  assignToStaff={(staffId) => {
+                    setValues((values) => ({
+                      ...values,
+                      assignToStaff: staffId
+                    }))
+                  }}
                   assignedToSection={values?.assignToSection}
+                  assignedToStaff={values?.assignToStaff}
                 />
               </ErrorBoundary>
             </View>

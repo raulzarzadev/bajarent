@@ -15,6 +15,7 @@ import OrderStatus from './OrderStatus'
 import useAssignOrder from '../hooks/useAssignOrder'
 import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
+import OrderAssignedTo from './OrderAssignedTo'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -179,10 +180,6 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
-  const { assignedToSection, assignedToStaff } = useAssignOrder({
-    orderId: order.id
-  })
-
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
       <Chip
@@ -191,20 +188,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         titleColor={theme.black}
       ></Chip>
       <OrderStatus orderId={order.id} style={{ width: '33%' }} />
-      {assignedToSection && (
-        <Chip
-          title={assignedToSection.toUpperCase()}
-          color={theme.info}
-          titleColor={theme.white}
-        ></Chip>
-      )}
-      {assignedToStaff && (
-        <Chip
-          title={assignedToStaff?.toUpperCase()}
-          color={theme.info}
-          titleColor={theme.white}
-        ></Chip>
-      )}
+      <OrderAssignedTo orderId={order.id} />
     </View>
   )
 }

@@ -4,8 +4,18 @@ import OrderType from '../types/OrderType'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
 import OrderStatus from './OrderStatus'
+import { useStore } from '../contexts/storeContext'
+import { gStyles } from '../styles'
+import OrderAssignedTo from './OrderAssignedTo'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
+  const { storeSections, staff } = useStore()
+  const assignToStaff = staff.find(
+    ({ id }) => order.assignToPosition === id
+  )?.name
+  const assignToSection = storeSections.find(
+    ({ id }) => order.assignToSection === id
+  )?.name
   return (
     <View style={[styles.container]}>
       <Text
@@ -21,9 +31,9 @@ const OrderRow = ({ order }: { order: OrderType }) => {
         {order.firstName} {order.lastName}
       </Text>
       {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
-      <Text style={[styles.text, { fontSize: 10 }]}>
-        {order?.assignToPosition || ''}
-      </Text>
+      <View style={[styles.text]}>
+        <OrderAssignedTo orderId={order.id} />
+      </View>
       <View style={[styles.text]}>
         <Text style={[{ textAlign: 'center' }]}>
           {dateFormat(order.scheduledAt, 'dd-MMM-yy')}

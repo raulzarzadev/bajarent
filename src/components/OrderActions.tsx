@@ -100,6 +100,10 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       button: (
         <ModalAssignOrder
           assignedToSection={order.assignToSection}
+          assignedToStaff={order.assignToStaff}
+          assignToStaff={(staffId) => {
+            ServiceOrders.update(orderId, { assignToStaff: staffId })
+          }}
           assignToSection={(sectionId) => {
             ServiceOrders.update(orderId, { assignToSection: sectionId })
           }}
