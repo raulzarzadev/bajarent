@@ -10,7 +10,7 @@ const StyledModal = ({ open, setOpen, children, title }) => {
         transparent={true}
         visible={open}
         onRequestClose={() => {
-          alert('Modal has been closed.')
+          // alert('Modal has been closed.')
           setOpen(!open)
         }}
       >

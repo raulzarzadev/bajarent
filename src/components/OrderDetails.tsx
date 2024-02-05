@@ -131,12 +131,14 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         backgroundColor: theme?.base
       }}
     >
-      <Text style={gStyles.h3}>Articulo</Text>
+      <Text style={[gStyles.h3, { marginBottom: 8 }]}>Artículo</Text>
       {order?.type === order_type.RENT && (
         <View>
           <View>
             <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
-            <Text style={[gStyles.p]}>{order?.item?.priceSelected?.title}</Text>
+            <Text style={[gStyles.p, gStyles.tCenter]}>
+              {order?.item?.priceSelected?.title}
+            </Text>
             <CurrencyAmount
               style={{
                 alignContent: 'center',

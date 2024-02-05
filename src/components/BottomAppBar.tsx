@@ -129,7 +129,7 @@ const UserAndStoreTabs = () => {
           headerShown: false
         }}
       />
-      {staffPermissions?.isAdmin && (
+      {(staffPermissions?.canViewOrders || staffPermissions?.isAdmin) && (
         <Tab.Screen
           name="Orders"
           component={StackOrders}

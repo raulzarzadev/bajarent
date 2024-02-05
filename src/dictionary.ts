@@ -50,9 +50,11 @@ const labels = {
   canDeleteOrder: 'Eliminar Orden',
   canPickupOrder: 'Recoger Orden',
   canViewMyOrders: 'Ver mis Ordenes',
+  canViewOrders: 'Ver Ordenes',
   REPAIR: 'Reparación',
   REPAIRING: 'Reparando',
   REPAIRED: 'Reparada',
+  REPAIR_DELIVERED: 'Entregada',
   RENT: 'Renta',
   SALE: 'Venta',
 

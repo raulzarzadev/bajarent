@@ -76,7 +76,8 @@ export enum order_status {
   EXPIRED = 'EXPIRED',
   RENEWED = 'RENEWED',
   REPAIRING = 'REPAIRING',
-  REPAIRED = 'REPAIRED'
+  REPAIRED = 'REPAIRED',
+  REPAIR_DELIVERED = 'REPAIR_DELIVERED'
 }
 
 export enum order_type {

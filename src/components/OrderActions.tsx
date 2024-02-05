@@ -38,7 +38,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     areIn([order_status.PENDING]) &&
     (staffPermissions.canAuthorizeOrder || staffPermissions.isAdmin)
   const canPickup =
-    areIn([order_status.DELIVERED]) &&
+    areIn([order_status.DELIVERED, order_status.EXPIRED]) &&
     (staffPermissions.canPickupOrder || staffPermissions.isAdmin)
 
   const canReturn = areIn([order_status.PICKUP]) && staffPermissions.isAdmin
@@ -167,9 +167,10 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     {
       label: 'Entregar',
       show: canDeliveryRepair,
-      button: <ButtonDelivery orderId={orderId} />
+      button: <ButtonDeliveryRepair orderId={orderId} />
     }
   ]
+  console.log({ order })
 
   return (
     <View style={{ padding: 4 }}>
@@ -373,6 +374,37 @@ const ButtonCancelDelivery = ({ orderId }: { orderId: string }) => {
   )
 }
 
+const ButtonDeliveryRepair = ({ orderId }: { orderId: string }) => {
+  const { storeId, myStaffId } = useStore()
+  const { user } = useAuth()
+  const handleDelivery = () => {
+    ServiceOrders.update(orderId, {
+      status: order_status.REPAIR_DELIVERED,
+      deliveredAt: new Date(),
+      deliveredBy: user?.id,
+      deliveredByStaff: myStaffId
+    })
+      .then(console.log)
+      .catch(console.error)
+    ServiceOrders.addComment({
+      storeId,
+      orderId,
+      type: 'comment',
+      content: 'Reparación entregada'
+    })
+      .then(console.log)
+      .catch(console.error)
+  }
+  return (
+    <Button
+      color="success"
+      label={'Entregar'}
+      onPress={() => {
+        handleDelivery()
+      }}
+    />
+  )
+}
 const ButtonDelivery = ({ orderId }: { orderId: string }) => {
   const { storeId, myStaffId } = useStore()
   const { user } = useAuth()
@@ -424,7 +456,7 @@ const ButtonRepair = ({ orderId }: { orderId: string }) => {
     // @ts-ignore
     // navigate('RepairOrder', { orderId })
   }
-  return <Button label="En reparación" onPress={handleRepair} />
+  return <Button label="En reparación" onPress={handleRepair} color="success" />
 }
 
 const ButtonRepaired = ({ orderId }: { orderId: string }) => {
@@ -446,7 +478,7 @@ const ButtonRepaired = ({ orderId }: { orderId: string }) => {
       storeId,
       orderId,
       type: 'comment',
-      content: 'Orden en reparación'
+      content: 'Reparación terminada'
     })
       .then(console.log)
       .catch(console.error)
@@ -455,7 +487,7 @@ const ButtonRepaired = ({ orderId }: { orderId: string }) => {
   }
   return (
     <>
-      <Button label="Reparada" onPress={modal.toggleOpen} />
+      <Button label="Reparada" onPress={modal.toggleOpen} color="success" />
       <StyledModal {...modal}>
         <View style={styles.repairItemForm}>
           <InputTextStyled

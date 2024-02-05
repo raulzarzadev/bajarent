@@ -4,11 +4,15 @@ import asDate from './utils-date'
 import expireDate from './expireDate'
 
 const orderStatus = (order: Partial<OrderType>): OrderStatus => {
+  if (order.status === order_status.PICKUP) return order.status
+
   let status: OrderStatus = order?.status || order_status.PENDING
+
   const expireAt = expireDate(
     order?.item?.priceSelected?.time,
     order?.deliveredAt
   )
+
   if (
     isBefore(asDate(expireAt), new Date()) &&
     !(status === order_status.RENEWED)
