@@ -1,11 +1,12 @@
 import { where } from 'firebase/firestore'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
 import ShortUniqueId from 'short-unique-id'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
+import { auth } from './auth'
 
 const uid = new ShortUniqueId()
 
@@ -74,6 +75,30 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return await ServiceComments.update(commentId, updates)
       .then(console.log)
       .catch(console.error)
+  }
+
+  /**
+   *
+   * @param orderId
+   * @param {total: number, info: string, repairedBy: should be a staffId}
+   * @returns
+   */
+  async repaired(
+    orderId: string,
+    {
+      total = 0,
+      info = '',
+      repairedBy = '' //* should be a staffId
+    }: { total: number; info: string; repairedBy: string }
+  ) {
+    return await this.update(orderId, {
+      status: order_status.REPAIRED,
+      repairedAt: new Date(),
+      repairTotal: total,
+      repairInfo: info,
+      repairedBy
+    })
+    // Implementa tu método personalizado
   }
 
   // Agrega tus métodos aquí

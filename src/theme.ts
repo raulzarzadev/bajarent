@@ -56,7 +56,9 @@ export const STATUS_COLOR: Record<order_status, string> = {
   RENEWED: theme.primary,
 
   REPORTED: theme.error,
-  EXPIRED: theme.error
+  EXPIRED: theme.error,
+  [order_status.REPAIRING]: theme.success,
+  [order_status.REPAIRED]: theme.warning
 }
 
 export const FONT_SIZE = 10

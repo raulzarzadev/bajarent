@@ -1,17 +1,18 @@
-import { SectionList, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
+import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
-import ListSections from './ListSections'
-import ModalAssignOrder from './OrderActions/ModalAssignOrder'
+import InputTextStyled from './InputTextStyled'
+import { useState } from 'react'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -47,21 +48,21 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
 
   const canDelete = staffPermissions.canDeleteOrder || staffPermissions.isAdmin
 
-  const buttons = [
+  const canRepair = areIn([order_status.AUTHORIZED]) && staffPermissions.isAdmin
+
+  const canFinishRepair =
+    areIn([order_status.REPAIRING]) && staffPermissions.isAdmin
+
+  const COMMON_BUTTONS = [
     {
-      label: 'Entregar',
-      show: canDelivery,
-      button: <ButtonDelivery orderId={orderId} />
-    },
-    {
-      label: 'Recoger',
-      show: canPickup,
-      button: <ButtonDelivery orderId={orderId} isDelivered />
-    },
-    {
-      label: 'Regresar',
-      show: canReturn,
-      button: <ButtonDelivery orderId={orderId} cancelPickup />
+      label: 'Autorizar',
+      show: canAuthorize,
+      button: (
+        <ButtonAuthorize
+          orderId={orderId}
+          isAuthorized={status === order_status.AUTHORIZED}
+        />
+      )
     },
     {
       label: 'Cancelar',
@@ -70,21 +71,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
         <ButtonCancel
           orderId={orderId}
           isCancelled={status === order_status.CANCELLED}
-        />
-      )
-    },
-    {
-      label: 'Renovar',
-      show: canRenew,
-      button: <ButtonRenew orderId={orderId} />
-    },
-    {
-      label: 'Autorizar',
-      show: canAuthorize,
-      button: (
-        <ButtonAuthorize
-          orderId={orderId}
-          isAuthorized={status === order_status.AUTHORIZED}
         />
       )
     },
@@ -114,20 +100,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
             ServiceOrders.update(orderId, { assignToSection: sectionId })
           }}
         />
-        // <Button
-        //   onPress={() => {
-        //     // @ts-ignore
-        //     navigation.navigate('Orders', {
-        //       params: { orderId },
-        //       screen: 'AssignOrder'
-        //     })
-        //   }}
-        //   label={`${
-        //     order.assignToPosition
-        //       ? `Asignado a: ${order.assignToPosition}`
-        //       : 'Asignar'
-        //   }`}
-        // />
       )
     },
     {
@@ -149,6 +121,46 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       )
     }
   ]
+  const RENT_BUTTONS = [
+    {
+      label: 'Entregar',
+      show: canDelivery,
+      button: <ButtonDelivery orderId={orderId} />
+    },
+    {
+      label: 'Recoger',
+      show: canPickup,
+      button: <ButtonDelivery orderId={orderId} isDelivered />
+    },
+
+    {
+      label: 'Regresar',
+      show: canReturn,
+      button: <ButtonDelivery orderId={orderId} cancelPickup />
+    },
+    {
+      label: 'Renovar',
+      show: canRenew,
+      button: <ButtonRenew orderId={orderId} />
+    }
+  ]
+
+  const REPAIR_BUTTONS = [
+    //* REPAIRING
+    {
+      label: 'En reparacón',
+      show: canRepair,
+      button: <ButtonRepair orderId={orderId} />
+    },
+    //* REPAIRED
+    {
+      label: 'Terminar reparación',
+      show: canFinishRepair,
+      button: <ButtonRepaired orderId={orderId} />
+    }
+
+    //* SHOULD_DELIVER
+  ]
 
   return (
     <View style={{ padding: 4 }}>
@@ -166,7 +178,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <P bold>Acciones de orden</P>
       <View style={styles.container}>
-        {buttons.map(
+        {COMMON_BUTTONS.map(
           ({ button, label, show }) =>
             show && (
               <View style={styles.item} key={label}>
@@ -174,6 +186,24 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
               </View>
             )
         )}
+        {order.type === order_type.RENT &&
+          RENT_BUTTONS.map(
+            ({ button, label, show }) =>
+              show && (
+                <View style={styles.item} key={label}>
+                  {button}
+                </View>
+              )
+          )}
+        {order.type === order_type.REPAIR &&
+          REPAIR_BUTTONS.map(
+            ({ button, label, show }) =>
+              show && (
+                <View style={styles.item} key={label}>
+                  {button}
+                </View>
+              )
+          )}
       </View>
     </View>
   )
@@ -332,6 +362,69 @@ const ButtonDelivery = ({
     />
   )
 }
+
+const ButtonRepair = ({ orderId }: { orderId: string }) => {
+  // const { navigate } = useNavigation()
+  const handleRepair = () => {
+    ServiceOrders.update(orderId, {
+      status: order_status.REPAIRING
+    })
+      .then(console.log)
+      .catch(console.error)
+    // @ts-ignore
+    // navigate('RepairOrder', { orderId })
+  }
+  return <Button label="En reparación" onPress={handleRepair} />
+}
+
+const ButtonRepaired = ({ orderId }: { orderId: string }) => {
+  // const { navigate } = useNavigation()
+  const { myStaffId } = useStore()
+  const modal = useModal({ title: 'Detalles de reparación' })
+  const [info, setInfo] = useState('')
+  const [total, setTotal] = useState(0)
+  const handleRepairFinished = async () => {
+    await ServiceOrders.repaired(orderId, {
+      info,
+      total,
+      repairedBy: myStaffId
+    })
+      .then(console.log)
+      .catch(console.error)
+    // @ts-ignore
+    // navigate('RepairOrder', { orderId })
+  }
+  return (
+    <>
+      <Button label="Reparada" onPress={modal.toggleOpen} />
+      <StyledModal {...modal}>
+        <View style={styles.repairItemForm}>
+          <InputTextStyled
+            placeholder="Descripción de reparación"
+            numberOfLines={3}
+            multiline
+            onChangeText={setInfo}
+          ></InputTextStyled>
+        </View>
+        <View style={styles.repairItemForm}>
+          <InputTextStyled
+            keyboardType="numeric"
+            placeholder="Total $ "
+            onChangeText={(value) => {
+              setTotal(parseFloat(value) || 0)
+            }}
+          ></InputTextStyled>
+        </View>
+        <View style={styles.repairItemForm}>
+          <Button onPress={handleRepairFinished} color="success">
+            Entregar
+          </Button>
+        </View>
+      </StyledModal>
+    </>
+  )
+}
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -341,44 +434,10 @@ const styles = StyleSheet.create({
   item: {
     width: '48%', // for 2 items in a row
     marginVertical: '1%' // spacing between items
+  },
+  repairItemForm: {
+    marginVertical: 4
   }
 })
-
-// const ModalAssignOrder = ({ orderId }: { orderId: string }) => {
-//   const modal = useModal({ title: 'Asignar a' })
-//   const { storeSections } = useStore()
-//   const { orders } = useStore()
-//   const assignToName = orders.find((o) => o.id === orderId).assignToName
-
-//   return (
-//     <>
-//       <Button onPress={modal.toggleOpen}>
-//         {assignToName ? `Asignada a ${assignToName}` : 'Asignar'}
-//       </Button>
-//       <StyledModal {...modal}>
-//         <ListSections
-//           sections={storeSections}
-//           onPress={(sectionId) => {
-//             ServiceOrders.update(orderId, { assignToSection: sectionId })
-//               .then(() => {
-//                 modal.toggleOpen()
-//               })
-//               .catch(console.error)
-//           }}
-//         ></ListSections>
-//         {/* <ListStaff
-//           staff={staff}
-//           onPress={(staffId) => {
-//             ServiceOrders.update(orderId, { assignTo: staffId })
-//               .then(() => {
-//                 modal.toggleOpen()
-//               })
-//               .catch(console.error)
-//           }}
-//         ></ListStaff> */}
-//       </StyledModal>
-//     </>
-//   )
-// }
 
 export default OrderActions

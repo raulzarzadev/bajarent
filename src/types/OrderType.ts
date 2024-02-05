@@ -46,12 +46,18 @@ type OrderBase = {
   renewedAt: Date
   renewedFrom: string
 
-  hasDelivered: boolean
+  hasDelivered?: boolean
 
   //* to repair orders
-  description: string
-  itemBrand: string
-  itemSerial: string
+  description?: string
+  itemBrand?: string
+  itemSerial?: string
+
+  repairedAt?: Date
+  repairedBy?: string
+
+  repairTotal?: number
+  repairInfo?: string
 }
 
 export enum order_status {
@@ -62,7 +68,9 @@ export enum order_status {
   REPORTED = 'REPORTED',
   PICKUP = 'PICKUP',
   EXPIRED = 'EXPIRED',
-  RENEWED = 'RENEWED'
+  RENEWED = 'RENEWED',
+  REPAIRING = 'REPAIRING',
+  REPAIRED = 'REPAIRED'
 }
 
 export enum order_type {
