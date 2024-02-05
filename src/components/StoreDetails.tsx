@@ -45,12 +45,12 @@ export const ChangeStore = ({ label = '' }) => {
   const {
     handleSetStoreId,
     storeId,
-    userStores,
-    userPositions,
-    handleSetMyStaffId,
-    myStaffId
+    userStores
+    // userPositions,
+    // handleSetMyStaffId,
+    // myStaffId
   } = useStore()
-  console.log({ userStores, userPositions })
+  // console.log({ userStores, userPositions })
   // console.log({ handleSetMyStaffId, myStaffId })
   return (
     <View>
@@ -98,7 +98,7 @@ export const ChangeStore = ({ label = '' }) => {
               </View>
             </Pressable>
           ))}
-          {!!userPositions.length && <P bold>Posiciones</P>}
+          {/* {!!userPositions.length && <P bold>Posiciones</P>}
           {userPositions.map((position) => (
             <Pressable
               key={position.id}
@@ -123,7 +123,7 @@ export const ChangeStore = ({ label = '' }) => {
                 <Text>{position?.position}</Text>
               </View>
             </Pressable>
-          ))}
+          ))} */}
           {!!storeId && (
             <Pressable
               style={{

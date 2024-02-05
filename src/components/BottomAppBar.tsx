@@ -104,6 +104,7 @@ const NotUserTabs = () => {
 
 const UserAndStoreTabs = () => {
   const { staffPermissions } = useStore()
+  console.log({ staffPermissions })
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {

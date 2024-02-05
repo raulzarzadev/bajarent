@@ -8,7 +8,10 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import orderStatus from '../libs/orderStatus'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
-import StaffType, { StaffPermissionType } from '../types/StaffType'
+import StaffType, {
+  StaffPermissionType,
+  staff_permissions
+} from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
 import expireDate from '../libs/expireDate'
@@ -60,23 +63,31 @@ const StoreContextProvider = ({ children }) => {
   }, [storeId])
 
   useEffect(() => {
-    if (user?.id) {
-      //* get stores where user is  owner
+    //* get stores where user is  owner
+    if (user?.id)
       ServiceStores.getStoresByUserId(user?.id)
         .then((res) => {
           setUserStores(res)
         })
         .catch(console.error)
+  }, [user?.id])
 
+  useEffect(() => {
+    if (user?.id) {
       //* get stores where user is staff
-
       ServiceStaff.getStaffPositions(user?.id)
         .then(async (positions) => {
           const positionsWithStoreDataPromises = positions.map(
-            async (position) => ({
-              ...position,
-              store: await ServiceStores.get(position.storeId)
-            })
+            async (position) => {
+              const store = userStores?.find((s) => s?.id === position?.storeId)
+              return {
+                ...position,
+                store: {
+                  name: store?.name,
+                  id: store?.id
+                }
+              }
+            }
           )
           const positionsWithStore = await Promise.all(
             positionsWithStoreDataPromises
@@ -85,7 +96,7 @@ const StoreContextProvider = ({ children }) => {
         })
         .catch(console.error)
     }
-  }, [user])
+  }, [user, userStores])
 
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
@@ -194,18 +205,11 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     const staffData = staff.find((s) => s.id === myStaffId)
     if (staffData) {
-      setStaffPermissions({
-        isAdmin: !!staffData?.isAdmin,
-        canEditOrder: !!staffData?.canEditOrder,
-        canCancelOrder: !!staffData?.canCancelOrder,
-        canAuthorizeOrder: !!staffData?.canAuthorizeOrder,
-        canAssignOrder: !!staffData?.canAssignOrder,
-        canRenewOrder: !!staffData?.canRenewOrder,
-        canDeliveryOrder: !!staffData?.canDeliveryOrder,
-        canCreateOrder: !!staffData?.canCreateOrder,
-        canDeleteOrder: !!staffData?.canDeleteOrder,
-        canPickupOrder: !!staffData?.canPickupOrder
+      const permissions = {}
+      Object.keys(staff_permissions).forEach((key) => {
+        permissions[key] = !!staffData[key]
       })
+      setStaffPermissions(permissions)
     } else {
       setStaffPermissions(null)
     }

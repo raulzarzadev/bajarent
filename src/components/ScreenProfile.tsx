@@ -13,18 +13,22 @@ import { logout } from '../firebase/auth'
 import CardUser from './CardUser'
 import useLocation from '../hooks/useLocation'
 import { Icon } from 'react-native-elements'
+import { useStore } from '../contexts/storeContext'
+import ChangeStaffPosition from './ChangeStaffPosition'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
-  const { locationEnabled, askLocation } = useLocation()
+  const { userPositions } = useStore()
+  const { locationEnabled } = useLocation()
   if (user === undefined) return <ActivityIndicator />
   if (user === null) return <PhoneLogin />
+
   return (
     <View style={{ padding: 2 }}>
       <Pressable
-        onPress={async () => {
-          const position = await askLocation()
-        }}
+      // onPress={async () => {
+      //   //const location = await askLocation()
+      // }}
       >
         {locationEnabled ? (
           <Icon name="location-on" />
@@ -36,6 +40,8 @@ const ScreenProfile = ({ navigation }) => {
         Ubicación:{locationEnabled ? 'Habilitada' : 'No habilitada'}
       </Text> */}
       <CardUser user={user} />
+
+      <ChangeStaffPosition />
 
       {user?.canCreateStore && (
         <View style={styles.buttons}>
