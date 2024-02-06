@@ -3,6 +3,7 @@ import React from 'react'
 
 import FormStore from './FormStore'
 import { ServiceStores } from '../firebase/ServiceStore'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenCreateStore = ({ navigation }) => {
   return (
@@ -21,7 +22,13 @@ const ScreenCreateStore = ({ navigation }) => {
   )
 }
 
-export default ScreenCreateStore
+export default function (props) {
+  return (
+    <ErrorBoundary componentName="ScreenCreateStore" {...props}>
+      <ScreenCreateStore {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   form: {

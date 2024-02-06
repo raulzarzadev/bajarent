@@ -75,7 +75,13 @@ const ScreenProfile = ({ navigation }) => {
   )
 }
 
-export default ScreenProfile
+export default function (props) {
+  return (
+    <ErrorBoundary componentName="ScreenProfile" {...props}>
+      <ScreenProfile {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   store: {

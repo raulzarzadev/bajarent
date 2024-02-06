@@ -1,8 +1,9 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import React from 'react'
 import FormUser from './FormUser'
 import { useAuth } from '../contexts/authContext'
 import { ServiceUsers } from '../firebase/ServiceUser'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenProfileEdit = ({ navigation }) => {
   const { user } = useAuth()
@@ -24,4 +25,10 @@ const ScreenProfileEdit = ({ navigation }) => {
   )
 }
 
-export default ScreenProfileEdit
+export default function (props) {
+  return (
+    <ErrorBoundary componentName="ScreenProfileEdit" {...props}>
+      <ScreenProfileEdit {...props} />
+    </ErrorBoundary>
+  )
+}

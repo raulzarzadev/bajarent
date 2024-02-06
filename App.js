@@ -17,7 +17,6 @@ export default function App() {
     const restoreState = async () => {
       try {
         const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY)
-
         const state = savedStateString
           ? JSON.parse(savedStateString)
           : undefined

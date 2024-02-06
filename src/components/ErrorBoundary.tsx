@@ -1,10 +1,12 @@
 import { Component, ReactNode } from 'react'
 import { ServiceAppErrors } from '../firebase/ServiceAppErrors'
+import { NavigationProp } from '@react-navigation/native'
 
 interface Props {
   fallback?: ReactNode
   children?: ReactNode
   componentName?: string
+  navigation?: NavigationProp<any>
 }
 
 type State = {
@@ -82,9 +84,9 @@ class ErrorBoundary extends Component<Props, State> {
             <div>
               <button
                 style={{ margin: 4, width: 100 }}
-                onClick={() => window.location.replace('/')}
+                onClick={() => this.props.navigation.goBack()}
               >
-                Recargar
+                Regresar
               </button>
               {this.state.errorSent ? (
                 <p>Error enviado</p>
