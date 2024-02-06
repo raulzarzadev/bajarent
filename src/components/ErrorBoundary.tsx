@@ -12,6 +12,7 @@ type State = {
   error: any
   info: any
   componentName: string | null
+  errorSent: boolean
 }
 
 export type AppError = {
@@ -29,7 +30,8 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       info: null,
-      componentName: null
+      componentName: null,
+      errorSent: false
     }
   }
 
@@ -76,7 +78,7 @@ class ErrorBoundary extends Component<Props, State> {
           >
             <p>¡Ups! Hubo un problema.</p>
             <p>{this?.state?.componentName}</p>
-            <p>{this?.state?.error?.message}</p>
+            {/* <p>{this?.state?.error?.message}</p> */}
             <div>
               <button
                 style={{ margin: 4, width: 100 }}
@@ -84,17 +86,22 @@ class ErrorBoundary extends Component<Props, State> {
               >
                 Recargar
               </button>
-              <button
-                style={{ margin: 4, width: 100 }}
-                onClick={async () => {
-                  this.logErrorToMyService().then((res) => {
-                    console.log({ res })
-                    // window.location.reload()
-                  })
-                }}
-              >
-                Enviar error
-              </button>
+              {this.state.errorSent ? (
+                <p>Error enviado</p>
+              ) : (
+                <button
+                  style={{ margin: 4, width: 100 }}
+                  onClick={async () => {
+                    this.setState({ errorSent: true })
+                    this.logErrorToMyService().then((res) => {
+                      console.log({ res })
+                      // window.location.reload()
+                    })
+                  }}
+                >
+                  Enviar error
+                </button>
+              )}
             </div>
           </div>
         )

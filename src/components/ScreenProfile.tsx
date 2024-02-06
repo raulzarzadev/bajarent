@@ -14,13 +14,13 @@ import CardUser from './CardUser'
 import useLocation from '../hooks/useLocation'
 import { Icon } from 'react-native-elements'
 import ChangeStaffPosition from './ChangeStaffPosition'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
   const { locationEnabled } = useLocation()
   if (user === undefined) return <ActivityIndicator />
   if (user === null) return <PhoneLogin />
-
   return (
     <View style={{ padding: 2 }}>
       <Pressable>
@@ -30,10 +30,13 @@ const ScreenProfile = ({ navigation }) => {
           <Icon name="location-off" />
         )}
       </Pressable>
+      <ErrorBoundary componentName="CardUser">
+        <CardUser user={user} />
+      </ErrorBoundary>
 
-      <CardUser user={user} />
-
-      <ChangeStaffPosition />
+      <ErrorBoundary componentName="ChangeStaffPosition">
+        <ChangeStaffPosition />
+      </ErrorBoundary>
 
       {user?.canCreateStore && (
         <View style={styles.buttons}>

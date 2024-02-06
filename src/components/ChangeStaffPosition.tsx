@@ -10,20 +10,20 @@ const ChangeStaffPosition = () => {
   return (
     <View>
       <View style={styles.row}>
-        {userPositions.map((position, i) => (
+        {userPositions?.map((position, i) => (
           <Pressable
-            key={position.id}
+            key={position?.id}
             onPress={() => {
-              handleSetStoreId(position.storeId)
-              handleSetMyStaffId(position.id)
+              handleSetStoreId(position?.storeId)
+              handleSetMyStaffId(position?.id)
             }}
             style={[
               styles.store,
               {
                 borderColor:
-                  myStaffId === position.id ? theme.secondary : theme.white,
+                  myStaffId === position?.id ? theme.secondary : theme.white,
                 backgroundColor:
-                  myStaffId === position.id ? theme.primary : theme.white
+                  myStaffId === position?.id ? theme.primary : theme.white
               }
             ]}
           >

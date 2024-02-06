@@ -90,14 +90,16 @@ const NotUserTabs = () => {
         }
       }}
     >
-      <Tab.Screen
-        name="Profile"
-        component={StackProfile}
-        options={{
-          title: 'Perfil',
-          headerShown: false
-        }}
-      />
+      <ErrorBoundary componentName="StackStore">
+        <Tab.Screen
+          name="Profile"
+          component={StackProfile}
+          options={{
+            title: 'Perfil',
+            headerShown: false
+          }}
+        />
+      </ErrorBoundary>
     </Tab.Navigator>
   )
 }
