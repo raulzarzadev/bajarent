@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View, Text, ViewStyle } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { View, ViewStyle } from 'react-native'
 import RNPhoneInput, { ICountry } from 'react-native-international-phone-number'
 
 type PhoneInputProps = {
@@ -12,7 +12,7 @@ export default function InputPhone({
   defaultNumber = '+52',
   stylesContainer,
   onChange = (phoneNumber: string) => console.log(phoneNumber)
-}: //stylesInput
+}: // stylesInput
 PhoneInputProps) {
   const [selectedCountry, setSelectedCountry] = useState<null | ICountry>(null)
   const [inputValue, setInputValue] = useState<string>('')

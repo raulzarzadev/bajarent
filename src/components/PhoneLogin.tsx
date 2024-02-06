@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import StyledTextInput from './InputTextStyled'
 import Button from './Button'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'

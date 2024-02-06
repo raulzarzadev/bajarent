@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView, Text, StyleSheet, View } from 'react-native'
 
 import {
@@ -13,15 +13,19 @@ const DEFAULT_CELL_COUNT = 6
 
 const InputCode = ({ value, setValue, cellCount = DEFAULT_CELL_COUNT }) => {
   // const [value, setValue] = useState('');
-  const ref = useBlurOnFulfill({ value, cellCount: cellCount })
+  const ref = useBlurOnFulfill({ value, cellCount })
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue
   })
 
+  useEffect(() => {
+    ref.current.focus()
+  }, [])
+
   return (
     <SafeAreaView style={styles.root}>
-      <Text style={styles.title}>Verification</Text>
+      <Text style={styles.title}>Codigo de verificación</Text>
       <CodeField
         ref={ref}
         {...props}
