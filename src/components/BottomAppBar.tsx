@@ -8,6 +8,7 @@ import { Icon } from 'react-native-elements'
 import StackMyOrders from './StackMyOrders'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
+import ScreenComponents from './ScreenComponents'
 
 const Tab = createBottomTabNavigator()
 
@@ -156,6 +157,15 @@ const UserAndStoreTabs = () => {
         component={StackProfile}
         options={{
           title: 'Perfil',
+          headerShown: false
+        }}
+      />
+
+      <Tab.Screen
+        name="Components"
+        component={ScreenComponents}
+        options={{
+          title: 'Componentes',
           headerShown: false
         }}
       />

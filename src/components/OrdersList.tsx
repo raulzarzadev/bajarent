@@ -1,21 +1,13 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-
 import OrderRow from './OrderRow'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType from '../types/OrderType'
 import useSort from '../hooks/useSort'
 import { Icon } from 'react-native-elements'
-import ButtonIcon from './ButtonIcon'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import P from './P'
-import H1 from './H1'
-import { useStore } from '../contexts/storeContext'
-import dictionary from '../dictionary'
-import Chip from './Chip'
-import theme, { STATUS_COLOR } from '../theme'
-import Button from './Button'
+
 import useFilter from '../hooks/useFilter'
 import InputTextStyled from './InputTextStyled'
+import ModalFilterOrders from './ModalFilterOrders'
+import { useState } from 'react'
 
 function OrdersList({
   orders,
@@ -24,14 +16,13 @@ function OrdersList({
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
 }) {
-  const { staff } = useStore()
-  const { filterBy, cleanFilter, filteredData, filteredBy, search } = useFilter(
-    {
-      data: orders
-    }
-  )
-  const { sortBy, order, sortedBy, sortedData } = useSort({
+  const [filteredData, setFilteredData] = useState([])
+
+  const { filteredData: fromSearchData, search } = useFilter({
     data: filteredData
+  })
+  const { sortBy, order, sortedBy, sortedData } = useSort({
+    data: fromSearchData
   })
 
   const sortFields = [
@@ -43,8 +34,6 @@ function OrdersList({
     { key: 'scheduledAt', label: 'Programada' },
     { key: 'status', label: 'Estado' }
   ]
-
-  const filterModal = useModal({ title: 'Filtrar por' })
 
   let timerId = null
   const handleDebounceSearch = (e: string) => {
@@ -73,95 +62,7 @@ function OrdersList({
               handleDebounceSearch(e)
             }}
           />
-          <View style={{ marginLeft: 8 }}>
-            <ButtonIcon
-              variant={!filteredBy ? 'ghost' : 'filled'}
-              color={!filteredBy ? 'black' : 'primary'}
-              icon="filter-list"
-              onPress={() => {
-                filterModal.toggleOpen()
-              }}
-            />
-          </View>
-
-          <StyledModal {...filterModal}>
-            <H1>Filtrar</H1>
-            <View>
-              <Text style={{ textAlign: 'center' }}>
-                {filteredData.length} ordenes
-              </Text>
-            </View>
-            <Button
-              buttonStyles={{ marginTop: 16 }}
-              variant="outline"
-              onPress={cleanFilter}
-            >
-              Todas
-            </Button>
-            <P bold>Por tipo</P>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {[order_type.RENT, order_type.REPAIR].map((item, index) => (
-                <Chip
-                  key={index}
-                  style={{
-                    margin: 4,
-                    borderWidth: 4,
-                    borderColor:
-                      filteredBy === item ? theme.black : 'transparent'
-                  }}
-                  title={dictionary(item as order_type).toUpperCase() || ''}
-                  color={STATUS_COLOR[item]}
-                  titleColor={theme.accent}
-                  onPress={() => {
-                    return filterBy('type', item)
-                  }}
-                />
-              ))}
-            </View>
-            <P bold>Por status</P>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {Object.keys(order_status).map((item, index) => (
-                <Chip
-                  key={index}
-                  style={{
-                    margin: 4,
-                    borderWidth: 4,
-                    borderColor:
-                      filteredBy === item ? theme.black : 'transparent'
-                  }}
-                  title={dictionary(item as order_status).toUpperCase() || ''}
-                  color={STATUS_COLOR[item]}
-                  titleColor={theme.accent}
-                  onPress={() => {
-                    if (item === 'REPORTED')
-                      return filterBy('hasNotSolvedReports', true)
-                    filterBy('status', item)
-                  }}
-                />
-              ))}
-            </View>
-
-            <P bold>Asignada a</P>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {staff.map((item, index) => (
-                <Chip
-                  key={index}
-                  style={{
-                    margin: 4,
-                    borderWidth: 4,
-                    borderColor:
-                      filteredBy === item.position ? theme.black : 'transparent'
-                  }}
-                  title={item?.position?.toUpperCase() || ''}
-                  color={theme.primary}
-                  titleColor={theme.accent}
-                  onPress={() => {
-                    filterBy('assignToPosition', item.position)
-                  }}
-                />
-              ))}
-            </View>
-          </StyledModal>
+          <ModalFilterOrders orders={orders} setOrders={setFilteredData} />
         </View>
         <View>
           <Text style={{ textAlign: 'center' }}>

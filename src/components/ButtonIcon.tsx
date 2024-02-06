@@ -6,7 +6,10 @@ import theme from '../theme'
 export type IconButtonProps = {
   icon: string
   iconColor?: ButtonProps['color']
+  type?: 'material' | 'ionicon' | 'font-awesome' | 'material-community'
 }
+// ** https://oblador.github.io/react-native-vector-icons/
+
 const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
   const sizes = {
     small: 20,
@@ -26,6 +29,7 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
       }}
     >
       <Icon
+        type={props.type || 'material'}
         name={props.icon}
         size={sizes[props.size || 'medium']}
         color={theme[props.color || 'primary']}

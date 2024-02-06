@@ -1,20 +1,67 @@
 import { useEffect, useState } from 'react'
 
-export default function useFilter({ data } = { data: [] }) {
+export default function useFilter({ data = [] }: { data: any[] }) {
   useEffect(() => {
     setFilteredData(data)
   }, [data])
   const [filteredData, setFilteredData] = useState([])
-  const [filteredBy, setFilteredBy] = useState<string | boolean>('status')
+  const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
+    'status'
+  )
+  const [filtersBy, setFiltersBy] = useState<
+    { field: string; value: string | number | boolean }[]
+  >([])
   const cleanFilter = () => {
     setFilteredBy('')
     setFilteredData(data)
+    setFiltersBy([])
   }
-  const filterBy = (field = 'status', value: string | boolean) => {
-    const res = [...data].filter((a) => {
-      return a[field] === value
+
+  const filterBy = (field = 'status', value: string | boolean | number) => {
+    let filters = [...filtersBy]
+    const sameExist = filters.some(
+      (a) => a.field === field && a.value === value
+    )
+    const similarExist = filters.some((a) => a.field === field)
+
+    //* If the same filter exist, remove it
+    if (sameExist) {
+      const cleanFilter = [...filters].filter(
+        (a) => !(a.field === field && a.value === value)
+      )
+      filters = cleanFilter
+      setFiltersBy(filters)
+      const res = [...data].filter((order) => {
+        return filters.every((filter) => {
+          return order[filter.field] === filter.value
+        })
+      })
+      setFilteredData(res)
+      return
+    }
+
+    //* If a similar filter exist, replace it
+    if (similarExist) {
+      const cleanFilter = [...filters].filter((a) => !(a.field === field))
+      filters = [...cleanFilter, { field, value }]
+      setFiltersBy(filters)
+      const res = [...data].filter((order) => {
+        return filters.every((filter) => {
+          return order[filter.field] === filter.value
+        })
+      })
+      setFilteredData(res)
+      return
+    }
+
+    //* if similar or same fails add it
+    filters = [...filtersBy, { field, value }]
+    setFiltersBy(filters)
+    const res = [...data].filter((order) => {
+      return filters.every((filter) => {
+        return order[filter.field] === filter.value
+      })
     })
-    setFilteredBy(value)
     setFilteredData(res)
   }
 
@@ -30,5 +77,5 @@ export default function useFilter({ data } = { data: [] }) {
     setFilteredData(res)
   }
 
-  return { filteredData, filteredBy, cleanFilter, filterBy, search }
+  return { filteredData, filteredBy, cleanFilter, filterBy, search, filtersBy }
 }

@@ -1,6 +1,15 @@
-import { Pressable, StyleSheet, Text, View, Modal } from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  ScrollView,
+  Dimensions
+} from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons' // Asegúrate de instalar @expo/vector-icons
+const windowHeight = Dimensions.get('window').height
 
 const StyledModal = ({ open, setOpen, children, title }) => {
   return (
@@ -22,7 +31,7 @@ const StyledModal = ({ open, setOpen, children, title }) => {
                 <Ionicons name="close" size={24} color="black" />
               </Pressable>
             </View>
-            {children}
+            <ScrollView>{children}</ScrollView>
           </View>
         </View>
       </Modal>
@@ -39,6 +48,7 @@ const styles = StyleSheet.create({
     // marginTop: 22
   },
   modalView: {
+    height: windowHeight - 100,
     maxWidth: '100%',
     margin: 20,
     backgroundColor: 'white',
