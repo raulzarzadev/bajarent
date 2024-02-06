@@ -19,26 +19,7 @@ import OrderAssignedTo from './OrderAssignedTo'
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center'
-        }}
-      >
-        <P size="sm">
-          {` ${dateFormat(order?.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
-            order?.createdAt
-          )} `}
-        </P>
-        <Text style={{ textAlign: 'center' }}>
-          <P bold size="lg">
-            Folio:{' '}
-          </P>
-          <P size="lg">{order?.folio}</P>
-        </Text>
-        <P size="sm"> {order?.id}</P>
-      </View>
+      <OrderMetadata order={order} />
 
       <OrderDirectives order={order} />
       <View
@@ -185,7 +166,14 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap'
+      }}
+    >
       <Chip
         title={dictionary(order.type)?.toUpperCase()}
         color={theme.primary}
@@ -193,6 +181,36 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
       ></Chip>
       <OrderStatus orderId={order.id} style={{ width: '33%' }} />
       <OrderAssignedTo orderId={order.id} />
+    </View>
+  )
+}
+
+const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        marginBottom: 8
+      }}
+    >
+      <View>
+        <Text style={gStyles.helper}>
+          {` ${dateFormat(order?.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
+            order?.createdAt
+          )} `}
+        </Text>
+        <Text style={gStyles.helper}> {order?.id}</Text>
+      </View>
+      <Text style={{ textAlign: 'center' }}>
+        <P bold size="lg">
+          Folio:{' '}
+        </P>
+        <P size="lg">{order?.folio}</P>
+      </Text>
     </View>
   )
 }

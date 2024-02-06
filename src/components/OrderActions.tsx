@@ -155,11 +155,8 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
 
             navigation.goBack()
           }}
-        >
-          <Text style={{ marginVertical: 16 }}>
-            Se eliminara esta orden y todos sus comentarios !
-          </Text>
-        </ButtonConfirm>
+          text=" Se eliminara esta orden y todos sus comentarios !"
+        ></ButtonConfirm>
       )
     }
   ]

@@ -83,7 +83,7 @@ export const StaffRow = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           marginVertical: 5,
-          backgroundColor: theme.primary,
+          backgroundColor: theme.info,
           padding: 8,
           borderRadius: 6
         },

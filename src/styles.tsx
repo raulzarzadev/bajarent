@@ -35,6 +35,9 @@ export const gStyles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 4
   },
+  helper: {
+    fontSize: 10
+  },
   tCenter: {
     textAlign: 'center'
   },

@@ -9,7 +9,8 @@ const ButtonConfirm = ({
   openLabel,
   modalTitle = 'Confirmar',
   confirmLabel = 'Aceptar',
-  children = <Text style={{ marginVertical: 18 }}> Confirmar</Text>,
+  text = '',
+  children = null,
   handleConfirm = async () => console.log('confirm'),
   justIcon,
   icon,
@@ -29,6 +30,7 @@ const ButtonConfirm = ({
   openColor?: ButtonProps['color']
   confirmVariant?: ButtonProps['variant']
   confirmColor?: ButtonProps['color']
+  text: string
 }) => {
   const modal = useModal({ title: modalTitle })
   const [sending, setSending] = React.useState(false)
@@ -51,6 +53,11 @@ const ButtonConfirm = ({
         </Button>
       )}
       <StyledModal {...modal}>
+        {text && (
+          <Text style={{ textAlign: 'center', marginVertical: 18 }}>
+            {text}
+          </Text>
+        )}
         {children}
         <View style={styles.buttons}>
           <Button buttonStyles={{}} onPress={modal.toggleOpen}>

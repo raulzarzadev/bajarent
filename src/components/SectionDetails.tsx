@@ -51,6 +51,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
               console.log(e)
             )
           }}
+          text={`¿Desea eliminar esta area?`}
         />
 
         <Text style={[styles.title]}>{section.name} </Text>
