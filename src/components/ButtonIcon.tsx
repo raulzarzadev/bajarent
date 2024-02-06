@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements'
 import theme from '../theme'
 export type IconButtonProps = {
   icon: string
+  iconColor?: ButtonProps['color']
 }
 const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
   const sizes = {

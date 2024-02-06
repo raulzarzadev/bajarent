@@ -9,7 +9,7 @@ const ButtonConfirm = ({
   openLabel,
   modalTitle = 'Confirmar',
   confirmLabel = 'Aceptar',
-  children = <Text> Confirmar</Text>,
+  children = <Text style={{ marginVertical: 18 }}> Confirmar</Text>,
   handleConfirm = async () => console.log('confirm'),
   justIcon,
   icon,
@@ -36,9 +36,9 @@ const ButtonConfirm = ({
     <View>
       {justIcon ? (
         <ButtonIcon
+          icon={icon}
           color={openColor}
           variant={openVariant}
-          icon={icon}
           onPress={modal.toggleOpen}
         ></ButtonIcon>
       ) : (

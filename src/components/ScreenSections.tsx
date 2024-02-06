@@ -1,15 +1,21 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gSpace, gStyles } from '../styles'
-import ButtonIcon from './ButtonIcon'
 
 const ScreenStoreSections = ({ navigation }) => {
   const { storeSections, staff } = useStore()
   return (
-    <View>
+    <ScrollView>
       <Button
         buttonStyles={{
           margin: 'auto',
@@ -52,7 +58,7 @@ const ScreenStoreSections = ({ navigation }) => {
           )}
         ></FlatList>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

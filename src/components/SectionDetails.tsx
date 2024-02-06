@@ -8,6 +8,7 @@ import { ServiceSections } from '../firebase/ServiceSections'
 import ListStaff from './ListStaff'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
+import ButtonConfirm from './ButtonConfirm'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
@@ -29,16 +30,40 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
 
   return (
     <View>
-      <Text style={styles.title}>
-        {section.name}{' '}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          margin: 'auto'
+        }}
+      >
+        <ButtonConfirm
+          justIcon
+          icon="delete"
+          openVariant="ghost"
+          openColor="error"
+          // openLabel='Eliminar'
+          confirmColor="error"
+          confirmLabel="Eliminar"
+          modalTitle="Eliminar Area"
+          handleConfirm={async () => {
+            return await ServiceSections.delete(section.id).catch((e) =>
+              console.log(e)
+            )
+          }}
+        />
+
+        <Text style={[styles.title]}>{section.name} </Text>
         <ButtonIcon
+          variant="ghost"
           icon="edit"
+          color="secondary"
           onPress={() => {
             // @ts-ignore
             navigation.navigate('EditSection', { sectionId: section.id })
           }}
         ></ButtonIcon>
-      </Text>
+      </View>
       <Text style={styles.subtitle}>Staff </Text>
       <ListStaff
         staff={section?.staff?.map((id) => staff.find((s) => s.id === id))}
