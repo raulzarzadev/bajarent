@@ -12,7 +12,7 @@ const ScreenProfileEdit = ({ navigation }) => {
       <FormUser
         defaultValues={user}
         onSubmit={async (values) => {
-          ServiceUsers.update(user.id, { ...values })
+          ServiceUsers.update(user?.id, { ...values })
             .then((res) => {
               console.log(res)
               navigation.goBack()
@@ -25,5 +25,3 @@ const ScreenProfileEdit = ({ navigation }) => {
 }
 
 export default ScreenProfileEdit
-
-const styles = StyleSheet.create({})

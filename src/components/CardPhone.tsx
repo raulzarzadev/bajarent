@@ -6,7 +6,7 @@ import theme from '../theme'
 const CardPhone = ({ phone }) => {
   const formatPhoneNumber = (phone: string): string => {
     // Remove any non-digit characters from the phone number
-    const cleanedPhoneNumber = phone.replace(/\D/g, '')
+    const cleanedPhoneNumber = phone?.replace(/\D/g, '')
 
     // Format the phone number with dashes
     const formattedPhoneNumber = cleanedPhoneNumber.replace(

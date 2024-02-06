@@ -85,7 +85,7 @@ const NotUserTabs = () => {
               Components: 'apps-outline',
               MyOrders: 'fastfood'
             }
-            return <Icon name={icons[route.name]} size={size} color={color} />
+            return <Icon name={icons[route?.name]} size={size} color={color} />
           }
         }
       }}

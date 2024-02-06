@@ -12,12 +12,9 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocFromCache,
   getDocFromServer,
   getDocs,
-  getDocsFromCache,
-  getDocsFromServer,
   onSnapshot,
   Query,
   query,
@@ -152,7 +149,7 @@ export class FirebaseCRUD {
   createItemMetadata() {
     const currentUser = getAuth().currentUser
     return {
-      createdBy: currentUser?.uid,
+      createdBy: currentUser?.uid || 'no-user',
       createdAt: new Date()
     }
     // return {

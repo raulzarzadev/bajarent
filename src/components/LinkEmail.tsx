@@ -16,4 +16,3 @@ const LinkEmail = ({ email }) => {
 }
 
 export default LinkEmail
-LinkEmail

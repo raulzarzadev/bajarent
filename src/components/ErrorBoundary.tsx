@@ -11,6 +11,7 @@ type State = {
   hasError: boolean
   error: any
   info: any
+  componentName: string | null
 }
 
 export type AppError = {
@@ -24,7 +25,12 @@ export type AppError = {
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { hasError: false, error: null, info: null }
+    this.state = {
+      hasError: false,
+      error: null,
+      info: null,
+      componentName: null
+    }
   }
 
   static getDerivedStateFromError(error: any) {
@@ -32,7 +38,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: any, info: any) {
-    this.setState({ error, info })
+    this.setState({ error, info, componentName: this.props.componentName })
   }
 
   logErrorToMyService = async () => {
@@ -40,8 +46,8 @@ class ErrorBoundary extends Component<Props, State> {
     const { componentName } = this.props
     const newError = {
       code: 'ERROR_BOUNDARY',
-      message: error.message,
-      componentName
+      message: error.message || '',
+      componentName: componentName || ''
     }
     console.log('error sent', { newError })
     await ServiceAppErrors.create({
@@ -69,6 +75,8 @@ class ErrorBoundary extends Component<Props, State> {
             }}
           >
             <p>¡Ups! Hubo un problema.</p>
+            <p>{this?.state?.componentName}</p>
+            <p>{this?.state?.error?.message}</p>
             <div>
               <button
                 style={{ margin: 4, width: 100 }}
@@ -79,9 +87,10 @@ class ErrorBoundary extends Component<Props, State> {
               <button
                 style={{ margin: 4, width: 100 }}
                 onClick={async () => {
-                  await this.logErrorToMyService()
-
-                  window.location.reload()
+                  this.logErrorToMyService().then((res) => {
+                    console.log({ res })
+                    // window.location.reload()
+                  })
                 }}
               >
                 Enviar error

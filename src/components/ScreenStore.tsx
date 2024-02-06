@@ -13,8 +13,8 @@ const ScreenStore = ({ navigation }) => {
   const { user } = useAuth()
   const orderByStatus = (status) => {
     if (status === order_status.REPORTED)
-      return orders.filter((o) => o.hasNotSolvedReports).length
-    return orders.filter((o) => o.status === status).length
+      return orders?.filter((o) => o?.hasNotSolvedReports)?.length
+    return orders?.filter((o) => o?.status === status)?.length
   }
   const isOwner = store?.createdBy === user?.id
   return (
@@ -78,7 +78,7 @@ const ScreenStore = ({ navigation }) => {
                   <H1>Ordenes</H1>
                   <View style={{ justifyContent: 'center', margin: 'auto' }}>
                     <Text style={styles.label}>Folio actual </Text>
-                    <Text style={styles.num}>{store.currentFolio || 0}</Text>
+                    <Text style={styles.num}>{store?.currentFolio || 0}</Text>
                   </View>
                   <Text style={styles.item}>
                     <Text style={styles.label}>Todas</Text>:
