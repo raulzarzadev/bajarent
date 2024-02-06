@@ -161,14 +161,16 @@ const UserAndStoreTabs = () => {
         }}
       />
 
-      <Tab.Screen
-        name="Components"
-        component={ScreenComponents}
-        options={{
-          title: 'Componentes',
-          headerShown: false
-        }}
-      />
+      {__DEV__ && (
+        <Tab.Screen
+          name="Components"
+          component={ScreenComponents}
+          options={{
+            title: 'Componentes',
+            headerShown: false
+          }}
+        />
+      )}
     </Tab.Navigator>
   )
 }
