@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
@@ -9,8 +9,10 @@ const ChangeStaffPosition = () => {
     useStore()
   return (
     <View>
-      <View style={styles.row}>
-        {userPositions?.map((position, i) => (
+      <FlatList
+        horizontal
+        data={userPositions}
+        renderItem={({ item: position }) => (
           <Pressable
             key={position?.id}
             onPress={() => {
@@ -32,8 +34,8 @@ const ChangeStaffPosition = () => {
               {position?.store?.name}
             </Text>
           </Pressable>
-        ))}
-      </View>
+        )}
+      />
     </View>
   )
 }
