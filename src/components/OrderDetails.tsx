@@ -166,13 +166,18 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       )}
       {order.type === order_type.REPAIR && (
         <View>
-          <Text style={gStyles.h3}>Detalles de reparacion </Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
             {order?.item?.categoryName}
           </Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{order?.description}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemBrand}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemSerial}</Text>
+
+          <Text style={gStyles.h3}>Detalles de reparación </Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.repairInfo}</Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>
+            <CurrencyAmount style={gStyles.tBold} amount={order?.repairTotal} />
+          </Text>
         </View>
       )}
     </View>

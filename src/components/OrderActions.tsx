@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -14,6 +14,8 @@ import StyledModal from './StyledModal'
 import InputTextStyled from './InputTextStyled'
 import { useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+import ButtonConfirm from './ButtonConfirm'
+import { ServiceComments } from '../firebase/ServiceComments'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -27,8 +29,12 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     (staffPermissions.canDeliveryOrder || staffPermissions.isAdmin)
 
   const canCancel =
-    areIn([order_status.PENDING, order_status.AUTHORIZED]) &&
-    staffPermissions.isAdmin
+    areIn([
+      order_status.PENDING,
+      order_status.AUTHORIZED,
+      order_status.CANCELLED
+    ]) &&
+    (staffPermissions.isAdmin || staffPermissions.canCancelOrder)
 
   const canRenew =
     areIn([order_status.DELIVERED]) &&
@@ -72,6 +78,22 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       )
     },
     {
+      label: 'Asignar',
+      show: canAssign,
+      button: (
+        <ModalAssignOrder
+          assignedToSection={order.assignToSection}
+          assignedToStaff={order.assignToStaff}
+          assignToStaff={(staffId) => {
+            ServiceOrders.update(orderId, { assignToStaff: staffId })
+          }}
+          assignToSection={(sectionId) => {
+            ServiceOrders.update(orderId, { assignToSection: sectionId })
+          }}
+        />
+      )
+    },
+    {
       label: 'Cancelar',
       show: canCancel,
       button: (
@@ -97,38 +119,47 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
         />
       )
     },
-    {
-      label: 'Asignar',
-      show: canAssign,
-      button: (
-        <ModalAssignOrder
-          assignedToSection={order.assignToSection}
-          assignedToStaff={order.assignToStaff}
-          assignToStaff={(staffId) => {
-            ServiceOrders.update(orderId, { assignToStaff: staffId })
-          }}
-          assignToSection={(sectionId) => {
-            ServiceOrders.update(orderId, { assignToSection: sectionId })
-          }}
-        />
-      )
-    },
+
     {
       label: 'Eliminar',
       show: canDelete,
       button: (
-        <Button
-          color="error"
-          variant="outline"
-          // disabled={disabledAssignButton}
-          onPress={() => {
-            ServiceOrders.delete(orderId).then((res) => {
-              console.log('deleted', res)
-              navigation.goBack()
-            })
+        // <Button
+        //   color="error"
+        //   variant="outline"
+        //   // disabled={disabledAssignButton}
+        //   onPress={() => {
+        //     ServiceOrders.delete(orderId).then((res) => {
+        //       console.log('deleted', res)
+        //       navigation.goBack()
+        //     })
+        //   }}
+        //   label="Eliminar orden"
+        // />
+        <ButtonConfirm
+          openLabel="Eliminar"
+          openColor="error"
+          openVariant="outline"
+          confirmColor="error"
+          confirmVariant="filled"
+          confirmLabel="Eliminar "
+          modalTitle="Eliminar orden"
+          handleConfirm={async () => {
+            ServiceOrders.delete(orderId)
+              // .then((r) => console.log(r))
+              .catch((e) => console.log(e))
+
+            await ServiceComments.deleteOrderComments(orderId)
+              // .then((r) => console.log(r))
+              .catch((e) => console.log(e))
+
+            navigation.goBack()
           }}
-          label="Eliminar orden"
-        />
+        >
+          <Text style={{ marginVertical: 16 }}>
+            Se eliminara esta orden y todos sus comentarios !
+          </Text>
+        </ButtonConfirm>
       )
     }
   ]
@@ -177,7 +208,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       button: <ButtonDeliveryRepair orderId={orderId} />
     }
   ]
-  console.log({ order })
 
   return (
     <View style={{ padding: 4 }}>
@@ -196,14 +226,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       <P bold>Acciones de orden</P>
       <ErrorBoundary componentName="OrderActionsButtons">
         <View style={styles.container}>
-          {COMMON_BUTTONS.map(
-            ({ button, label, show }) =>
-              show && (
-                <View style={styles.item} key={label}>
-                  {button}
-                </View>
-              )
-          )}
           {order.type === order_type.RENT &&
             RENT_BUTTONS.map(
               ({ button, label, show }) =>
@@ -222,6 +244,16 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
                   </View>
                 )
             )}
+        </View>
+        <View style={styles.container}>
+          {COMMON_BUTTONS.map(
+            ({ button, label, show }) =>
+              show && (
+                <View style={styles.item} key={label}>
+                  {button}
+                </View>
+              )
+          )}
         </View>
       </ErrorBoundary>
     </View>

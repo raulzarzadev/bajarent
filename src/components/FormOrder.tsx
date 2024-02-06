@@ -51,7 +51,7 @@ const FormOrder = ({
           setLoading(true)
           await onSubmit(values)
             .then((res) => {
-              console.log(res)
+              // console.log(res)
             })
             .catch(console.error)
             .finally(() => {

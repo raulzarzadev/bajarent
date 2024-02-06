@@ -116,7 +116,7 @@ function StackStore() {
       <Stack.Screen
         name="EditSection"
         options={{
-          title: 'Editar  area'
+          title: 'Editar area'
         }}
         component={ScreenSectionsEdit}
       />

@@ -274,6 +274,32 @@ export class FirebaseCRUD {
       .catch((err) => console.error(err))
   }
 
+  async deleteItems(filters: QueryConstraint[] = []): Promise<
+    {
+      type: string
+      ok: boolean
+      res: {
+        id: string
+      }
+    }[]
+  > {
+    this.validateFilters(filters, this.collectionName)
+    const q: Query = query(collection(this.db, this.collectionName), ...filters)
+
+    const querySnapshot = await getDocs(q)
+    const res: any[] = []
+    querySnapshot.forEach((doc) => {
+      res.push(
+        deleteDoc(doc.ref)
+          .then((res) =>
+            this.formatResponse(true, `${this.collectionName}_DELETED`, res)
+          )
+          .catch((err) => console.error(err))
+      )
+    })
+    return res
+  }
+
   /**
    * * get all documents in a collection implementing filters
    * @param filters: QueryConstraint  where(itemField,'==','value')

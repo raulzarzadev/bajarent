@@ -54,4 +54,8 @@ export class FirebaseGenericService<T extends Identifiable> {
   async findMany(filters: QueryConstraint[] = []) {
     return await this.itemCRUD.getItems(filters)
   }
+
+  async deleteMany(filters: QueryConstraint[] = []) {
+    return await this.itemCRUD.deleteItems(filters)
+  }
 }

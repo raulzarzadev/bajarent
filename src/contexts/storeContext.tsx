@@ -178,7 +178,6 @@ const StoreContextProvider = ({ children }) => {
       const myCurrentSections = storeSections.filter((s) =>
         s?.staff?.includes(myCurrentPosition?.id)
       )
-      console.log({ myCurrentSections, myCurrentPosition })
       const orders =
         orderFormatted
 
