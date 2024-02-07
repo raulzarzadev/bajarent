@@ -43,7 +43,7 @@ const ModalAssignOrder = ({
             }
           }}
         ></ListSections>
-        <Text style={gStyles.h3}>Staff</Text>
+        {/* <Text style={gStyles.h3}>Staff</Text>
         <ListStaff
           staffSelected={[assignedToStaff]}
           staff={staff}
@@ -55,7 +55,7 @@ const ModalAssignOrder = ({
               modal.toggleOpen()
             }
           }}
-        ></ListStaff>
+        ></ListStaff> */}
       </StyledModal>
     </>
   )
