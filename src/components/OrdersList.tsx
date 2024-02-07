@@ -28,11 +28,13 @@ function OrdersList({
   const sortFields = [
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
+    { key: 'type', label: 'Tipo' },
+    { key: 'status', label: 'Estado' },
     // { key: 'lastName', label: 'Apellido' },
-    { key: 'assignToPosition', label: 'Asignada' },
+    { key: 'assignToSection', label: 'Por area' },
+    { key: 'assignToStaff', label: 'Por staff' },
     { key: 'createdAt', label: 'Creada' },
-    { key: 'scheduledAt', label: 'Programada' },
-    { key: 'status', label: 'Estado' }
+    { key: 'scheduledAt', label: 'Programada' }
   ]
 
   let timerId = null
@@ -71,11 +73,12 @@ function OrdersList({
         </View>
         <View
           style={{
-            padding: 16,
+            padding: 4,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             width: '100%',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexWrap: 'wrap'
           }}
         >
           {sortFields.map((field) => (
@@ -86,7 +89,9 @@ function OrdersList({
                 }}
                 style={{
                   flexDirection: 'row',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  margin: 4,
+                  width: 100
                 }}
               >
                 <Text

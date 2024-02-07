@@ -12,7 +12,7 @@ const Chip = ({
 }: ChipProps & {
   title: string
   color: string
-  titleColor: string
+  titleColor?: string
   size?: 'sm' | 'md' | 'lg'
   style?: ViewStyle
 }) => {
@@ -32,7 +32,7 @@ const Chip = ({
   }
   return (
     <RNEChip
-      title={title}
+      title={title.toUpperCase()}
       buttonStyle={[
         {
           padding: sizes[size].padding,

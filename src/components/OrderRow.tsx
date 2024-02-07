@@ -3,38 +3,20 @@ import React from 'react'
 import OrderType from '../types/OrderType'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
-import OrderStatus from './OrderStatus'
-import { useStore } from '../contexts/storeContext'
-import { gStyles } from '../styles'
-import OrderAssignedTo from './OrderAssignedTo'
+import { OrderDirectives } from './OrderDetails'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
-  const { storeSections, staff } = useStore()
-  const assignToStaff = staff.find(
-    ({ id }) => order.assignToPosition === id
-  )?.name
-  const assignToSection = storeSections.find(
-    ({ id }) => order.assignToSection === id
-  )?.name
   return (
     <View style={[styles.container]}>
-      <Text
-        style={[
-          styles.folio,
-          { textAlign: 'left', fontWeight: 'bold', width: 60 }
-        ]}
-        numberOfLines={1}
-      >
-        {order.folio}
-      </Text>
-      <Text style={[styles.text, { textAlign: 'left' }]} numberOfLines={2}>
-        {order.firstName} {order.lastName}
-      </Text>
-      {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
-      <View style={[styles.text]}>
-        <OrderAssignedTo orderId={order.id} />
+      <View style={{ alignSelf: 'center', width: '25%' }}>
+        <Text style={{ textAlign: 'center' }} numberOfLines={1}>
+          {order.folio}
+        </Text>
+        <Text style={{ textAlign: 'center' }} numberOfLines={2}>
+          {order.firstName} {order.lastName}
+        </Text>
       </View>
-      <View style={[styles.text]}>
+      <View style={{ width: 85, alignSelf: 'center' }}>
         <Text style={[{ textAlign: 'center' }]}>
           {dateFormat(order.scheduledAt, 'dd-MMM-yy')}
         </Text>
@@ -42,9 +24,25 @@ const OrderRow = ({ order }: { order: OrderType }) => {
           {fromNow(order.scheduledAt)}
         </Text>
       </View>
-      <Text style={styles.text}>
+      <View style={{ width: '60%', justifyContent: 'flex-start' }}>
+        <OrderDirectives order={order} />
+      </View>
+      {/* <Text style={styles.text}>{fromNow(order.createdAt)}</Text> */}
+
+      {/* <View>
+        <OrderAssignedTo orderId={order.id} />
+      </View>
+      <View style={{}}>
+        <Text style={[{ textAlign: 'center' }]}>
+          {dateFormat(order.scheduledAt, 'dd-MMM-yy')}
+        </Text>
+        <Text style={[{ textAlign: 'center' }]}>
+          {fromNow(order.scheduledAt)}
+        </Text>
+      </View>
+      <Text>
         <OrderStatus orderId={order.id} />
-      </Text>
+      </Text> */}
     </View>
   )
 }
@@ -52,11 +50,7 @@ const OrderRow = ({ order }: { order: OrderType }) => {
 export default OrderRow
 
 const styles = StyleSheet.create({
-  folio: {
-    width: '5%',
-    textAlign: 'center',
-    alignSelf: 'center'
-  },
+  //
   text: {
     width: '33%',
     textAlign: 'center',

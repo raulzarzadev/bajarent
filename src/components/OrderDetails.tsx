@@ -164,28 +164,29 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
+export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View
       style={{
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         flexWrap: 'wrap'
       }}
     >
       <Chip
+        style={{ width: 95 }}
         title={dictionary(order.type)?.toUpperCase()}
-        color={theme.primary}
+        color={theme.info}
         titleColor={theme.black}
       ></Chip>
-      <OrderStatus orderId={order.id} style={{ width: '33%' }} />
+      <OrderStatus orderId={order.id} />
       <OrderAssignedTo orderId={order.id} />
     </View>
   )
 }
 
-const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
+export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View
       style={{
