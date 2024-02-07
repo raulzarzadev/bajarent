@@ -9,7 +9,7 @@ import StackMyOrders from './StackMyOrders'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
-import ScreenNewOrder from './ScreenNewOrder'
+import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
 
 const Tab = createBottomTabNavigator()

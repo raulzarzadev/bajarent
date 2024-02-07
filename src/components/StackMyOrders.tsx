@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenOrderDetail from './ScreenOrderDetail'
-import ScreenNewOrder from './ScreenNewOrder'
+import ScreenNewOrder from './ScreenOrderNew'
 import ScreenMyOrders from './ScreenMyOrders'
 import MyStaffLabel from './MyStaffLabel'
 

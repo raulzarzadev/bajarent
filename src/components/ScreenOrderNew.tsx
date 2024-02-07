@@ -5,7 +5,7 @@ import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 
-const ScreenNewOrder = ({ navigation }) => {
+const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
   const { user } = useAuth()
   const handleSubmit = async (values: OrderType) => {
@@ -23,7 +23,11 @@ const ScreenNewOrder = ({ navigation }) => {
       .then((res) => {
         const orderId = res?.res?.id
         //  console.log({ res })
-        navigation.push('OrderDetails', { orderId })
+        console.log({ res })
+        navigation.navigate('Orders', {
+          screen: 'OrderDetails',
+          params: { orderId }
+        })
         // alert('Orden creada')
       })
       .catch(console.error)
@@ -31,4 +35,4 @@ const ScreenNewOrder = ({ navigation }) => {
   return <FormOrder onSubmit={handleSubmit} />
 }
 
-export default ScreenNewOrder
+export default ScreenOrderNew
