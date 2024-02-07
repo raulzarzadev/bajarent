@@ -9,6 +9,7 @@ import StackMyOrders from './StackMyOrders'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
+import ScreenNewOrder from './ScreenNewOrder'
 
 const Tab = createBottomTabNavigator()
 
@@ -115,7 +116,8 @@ const UserAndStoreTabs = () => {
               Orders: 'list',
               Profile: 'person',
               Components: 'apps-outline',
-              MyOrders: 'fastfood'
+              MyOrders: 'fastfood',
+              NewOrder: 'add'
             }
             return <Icon name={icons[route.name]} size={size} color={color} />
           }
@@ -137,6 +139,16 @@ const UserAndStoreTabs = () => {
           options={{
             title: 'Ordenes',
             headerShown: false
+          }}
+        />
+      )}
+
+      {(staffPermissions?.canCreateOrder || staffPermissions?.isAdmin) && (
+        <Tab.Screen
+          name="NewOrder"
+          component={ScreenNewOrder}
+          options={{
+            title: 'Orden'
           }}
         />
       )}
