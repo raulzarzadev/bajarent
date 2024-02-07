@@ -8,15 +8,20 @@ import {
   MdSave,
   MdLocationPin,
   MdOutlineStorefront,
-  MdListAlt
+  MdListAlt,
+  MdFilterList
 } from 'react-icons/md'
 import { IoPersonOutline } from 'react-icons/io5'
 import { LuComponent } from 'react-icons/lu'
 import { PiUserList } from 'react-icons/pi'
+import { FaRegWindowRestore } from 'react-icons/fa6'
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 
 import { IoMdAdd } from 'react-icons/io'
 
 const icons = {
+  up: FaChevronUp,
+  down: FaChevronDown,
   close: MdClose,
   store: MdOutlineStorefront,
   orders: MdListAlt,
@@ -27,7 +32,9 @@ const icons = {
   edit: MdEdit,
   money: MdAttachMoney,
   save: MdSave,
-  location: MdLocationPin
+  location: MdLocationPin,
+  filter: MdFilterList,
+  windows: FaRegWindowRestore
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,
@@ -61,9 +68,17 @@ const icons = {
 } as const
 
 export type IconName = keyof typeof icons
-const Icon = ({ icon, ...props }: { icon: IconName; color: string }) => {
+const Icon = ({
+  icon,
+  size = 30,
+  ...props
+}: {
+  icon: IconName
+  color?: string
+  size?: number
+}) => {
   const Component = icons[icon]
   if (!Component) return <>Icon</>
-  return <Component size={30} {...props} />
+  return <Component size={size} {...props} />
 }
 export default Icon

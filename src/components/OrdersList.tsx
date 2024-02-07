@@ -2,12 +2,12 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import OrderRow from './OrderRow'
 import OrderType from '../types/OrderType'
 import useSort from '../hooks/useSort'
-import { Icon } from 'react-native-elements'
 
 import useFilter from '../hooks/useFilter'
 import InputTextStyled from './InputTextStyled'
 import ModalFilterOrders from './ModalFilterOrders'
 import { useState } from 'react'
+import Icon from './Icon'
 
 function OrdersList({
   orders,
@@ -102,12 +102,7 @@ function OrdersList({
                   {field.label}
                 </Text>
                 {sortedBy === field.key && (
-                  <Icon
-                    name={order === 'asc' ? 'chevron-up' : 'chevron-down'}
-                    type="font-awesome"
-                    size={12}
-                    color="black"
-                  />
+                  <Icon icon={order === 'asc' ? 'up' : 'down'} size={12} />
                 )}
               </Pressable>
             </View>
