@@ -42,7 +42,7 @@ const ScreenProfile = ({ navigation }) => {
         <View style={styles.buttons}>
           <Button
             onPress={() => {
-              navigation.navigate('CreateStore')
+              navigation?.navigate('CreateStore')
             }}
             variant="outline"
           >
@@ -53,7 +53,7 @@ const ScreenProfile = ({ navigation }) => {
       <View style={styles.buttons}>
         <Button
           onPress={() => {
-            navigation.navigate('EditProfile')
+            navigation?.navigate('EditProfile')
           }}
           variant="outline"
         >

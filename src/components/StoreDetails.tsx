@@ -63,7 +63,7 @@ export const ChangeStore = ({ label = '' }) => {
       >
         {!!label && <Text>{label}</Text>}
         <ButtonIcon
-          icon={storeId ? 'autorenew' : 'storefront'}
+          icon={storeId ? 'swap' : 'store'}
           variant="ghost"
           color="secondary"
           buttonStyles={{ marginLeft: 10, width: 40, height: 40 }}

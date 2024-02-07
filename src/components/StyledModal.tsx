@@ -8,7 +8,6 @@ import {
   Dimensions
 } from 'react-native'
 import React from 'react'
-import { Ionicons } from '@expo/vector-icons' // Asegúrate de instalar @expo/vector-icons
 import Icon from './Icon'
 const windowHeight = Dimensions.get('window').height
 

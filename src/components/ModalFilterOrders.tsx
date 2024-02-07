@@ -39,7 +39,7 @@ const ModalFilterOrders = ({
         <ButtonIcon
           variant={!filtersBy?.length ? 'ghost' : 'filled'}
           color={!filtersBy?.length ? 'black' : 'primary'}
-          icon="filter-list"
+          icon="filter"
           onPress={() => {
             filterModal.toggleOpen()
           }}
@@ -91,7 +91,7 @@ const ModalFilterOrders = ({
                   ? theme.black
                   : 'transparent'
               }}
-              title={dictionary(item as order_type).toUpperCase() || ''}
+              title={dictionary(item as order_type)?.toUpperCase() || ''}
               color={ORDER_TYPE_COLOR[item]}
               titleColor={theme.accent}
               onPress={() => {
@@ -113,7 +113,7 @@ const ModalFilterOrders = ({
                   ? theme.black
                   : 'transparent'
               }}
-              title={dictionary(item as order_status).toUpperCase() || ''}
+              title={dictionary(item as order_status)?.toUpperCase() || ''}
               color={STATUS_COLOR[item]}
               titleColor={theme.accent}
               disabled={item === 'REPORTED'}

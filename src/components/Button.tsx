@@ -83,7 +83,7 @@ const Button: React.FC<ButtonProps> = ({
             disabled && { color: 'black' }
           ]}
         >
-          {children.toUpperCase()}
+          {children?.toUpperCase()}
         </Text>
       ) : (
         children

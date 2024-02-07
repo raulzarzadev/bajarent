@@ -447,7 +447,7 @@ export class FirebaseCRUD {
     if (!ok) {
       console.error(type, { type, res })
     }
-    const formattedType = type.toUpperCase()
+    const formattedType = type?.toUpperCase()
     return { type: formattedType, ok, res }
   }
 }

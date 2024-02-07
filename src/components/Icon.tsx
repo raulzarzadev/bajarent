@@ -9,15 +9,17 @@ import {
   MdLocationPin,
   MdOutlineStorefront,
   MdListAlt,
-  MdFilterList
+  MdFilterList,
+  MdDeleteOutline
 } from 'react-icons/md'
 import { IoPersonOutline } from 'react-icons/io5'
 import { LuComponent } from 'react-icons/lu'
 import { PiUserList } from 'react-icons/pi'
 import { FaRegWindowRestore } from 'react-icons/fa6'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
+import { IoMdSwap, IoMdAdd } from 'react-icons/io'
 
-import { IoMdAdd } from 'react-icons/io'
+import { LiaBroomSolid } from 'react-icons/lia'
 
 const icons = {
   up: FaChevronUp,
@@ -34,7 +36,10 @@ const icons = {
   save: MdSave,
   location: MdLocationPin,
   filter: MdFilterList,
-  windows: FaRegWindowRestore
+  windows: FaRegWindowRestore,
+  broom: LiaBroomSolid,
+  swap: IoMdSwap,
+  delete: MdDeleteOutline
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,
