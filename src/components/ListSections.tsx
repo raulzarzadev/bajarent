@@ -7,10 +7,12 @@ import StaffType from '../types/StaffType'
 import { SectionType } from '../types/SectionType'
 
 const ListSections = ({
+  sectionsSelected = [],
   sections = [],
   onPress = (id: string) => console.log(id),
   showStaff = false
 }: {
+  sectionsSelected?: string[]
   sections: SectionType[]
   onPress: (id: string) => void
   showStaff?: boolean
@@ -18,6 +20,12 @@ const ListSections = ({
   const { staff } = useStore()
   return (
     <FlatList
+      style={{
+        padding: 6,
+        maxWidth: 400,
+        width: '100%',
+        marginHorizontal: 'auto'
+      }}
       data={sections}
       renderItem={({ item }) => (
         <Pressable
@@ -25,7 +33,12 @@ const ListSections = ({
             onPress(item.id)
             // navigation.navigate('SectionDetails', { sectionId: item.id })
           }}
-          style={styles.item}
+          style={[
+            styles.item,
+            sectionsSelected?.includes(item?.id) && {
+              borderColor: theme.secondary
+            }
+          ]}
         >
           <Text>{item.name}</Text>
           <Text>{item.description}</Text>
@@ -57,7 +70,9 @@ const styles = StyleSheet.create({
     padding: gSpace(3),
     backgroundColor: theme.info,
     marginVertical: gSpace(2),
-    borderRadius: gSpace(2)
+    borderRadius: gSpace(2),
+    borderWidth: 2,
+    borderColor: 'transparent'
   },
   staff: {
     maxWidth: 350,

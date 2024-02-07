@@ -32,10 +32,15 @@ const ModalAssignOrder = ({
       <StyledModal {...modal}>
         <Text style={gStyles.h3}>Areas</Text>
         <ListSections
+          sectionsSelected={[assignedToSection]}
           sections={storeSections}
           onPress={(sectionId) => {
-            assignToSection(sectionId)
-            modal.toggleOpen()
+            if (assignedToSection === sectionId) {
+              assignToSection('')
+            } else {
+              modal.toggleOpen()
+              assignToSection(sectionId)
+            }
           }}
         ></ListSections>
         <Text style={gStyles.h3}>Staff</Text>
@@ -43,8 +48,12 @@ const ModalAssignOrder = ({
           staffSelected={[assignedToStaff]}
           staff={staff}
           onPress={(staffId) => {
-            assignToStaff?.(staffId)
-            modal.toggleOpen()
+            if (assignedToStaff === staffId) {
+              assignToStaff?.('')
+            } else {
+              assignToStaff?.(staffId)
+              modal.toggleOpen()
+            }
           }}
         ></ListStaff>
       </StyledModal>
