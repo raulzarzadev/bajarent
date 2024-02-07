@@ -31,8 +31,8 @@ function OrdersList({
     { key: 'type', label: 'Tipo' },
     { key: 'status', label: 'Estado' },
     // { key: 'lastName', label: 'Apellido' },
-    { key: 'assignToSection', label: 'Por area' },
-    { key: 'assignToStaff', label: 'Por staff' },
+    { key: 'assignToSection', label: 'Area' },
+    { key: 'assignToStaff', label: 'Staff' },
     { key: 'createdAt', label: 'Creada' },
     { key: 'scheduledAt', label: 'Programada' }
   ]
