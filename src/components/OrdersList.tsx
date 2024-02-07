@@ -22,7 +22,8 @@ function OrdersList({
     data: filteredData
   })
   const { sortBy, order, sortedBy, sortedData } = useSort({
-    data: fromSearchData
+    data: fromSearchData,
+    defaultSortBy: 'folio'
   })
 
   const sortFields = [
