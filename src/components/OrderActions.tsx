@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
 import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -16,6 +16,7 @@ import { useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import ButtonConfirm from './ButtonConfirm'
 import { ServiceComments } from '../firebase/ServiceComments'
+import Chip from './Chip'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -222,6 +223,51 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <P bold>Acciones de orden</P>
       <ErrorBoundary componentName="OrderActionsButtons">
+        {order.type === order_type.REPAIR && (
+          <>
+            <Text>{`Reparación `}</Text>
+            <FlatList
+              horizontal
+              data={[
+                {
+                  label: 'Autorizar',
+                  show: canAuthorize,
+                  onPress: () => console.log('autorizar')
+                },
+                {
+                  label: 'En reparacón',
+                  show: canRepair,
+                  onPress: () => console.log('Reparar')
+                },
+                {
+                  label: 'Terminar reparación',
+                  show: canFinishRepair,
+                  onPress: () => console.log('Terminar reparación')
+                },
+                {
+                  label: 'Entregar',
+                  show: canDeliveryRepair,
+                  onPress: () => console.log('Entregar')
+                }
+              ]}
+              renderItem={({ item }) => (
+                <Chip
+                  onPress={item.onPress}
+                  title={item.label}
+                  disabled={!item.show}
+                  color="primary"
+                />
+              )}
+            ></FlatList>
+            <View style={{ flexDirection: 'row' }}></View>
+          </>
+        )}
+        {order.type === order_type.RENT && (
+          <>
+            <Text>{`Renta `}</Text>
+            <Text>{`Autorizar > Entregar > Renovar > Recoger  `}</Text>
+          </>
+        )}
         <View style={styles.container}>
           {order.type === order_type.RENT &&
             RENT_BUTTONS.map(
