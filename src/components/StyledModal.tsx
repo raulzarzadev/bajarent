@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons' // Asegúrate de instalar @expo/vector-icons
+import Icon from './Icon'
 const windowHeight = Dimensions.get('window').height
 
 const StyledModal = ({ open, setOpen, children, title }) => {
@@ -28,7 +29,8 @@ const StyledModal = ({ open, setOpen, children, title }) => {
             <View style={styles.topBar}>
               <Text style={styles.title}>{title}</Text>
               <Pressable onPress={() => setOpen(!open)}>
-                <Ionicons name="close" size={24} color="black" />
+                <Icon icon="close" />
+                {/* <Ionicons name="close" size={24} color="black" /> */}
               </Pressable>
             </View>
             <ScrollView style={{ width: '100%' }}>{children}</ScrollView>

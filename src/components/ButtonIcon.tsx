@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native'
 import React from 'react'
 import Button, { ButtonProps } from './Button'
 import { Icon } from 'react-native-elements'
+
 import theme from '../theme'
 export type IconButtonProps = {
   icon: string
