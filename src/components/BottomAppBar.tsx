@@ -4,12 +4,13 @@ import { useAuth } from '../contexts/authContext'
 import StackOrders from './StackOrders'
 import StackProfile from './StackProfile'
 import StackStore from './StackStore'
-import { Icon } from 'react-native-elements'
+// import { Icon } from 'react-native-elements'
 import StackMyOrders from './StackMyOrders'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import ScreenNewOrder from './ScreenNewOrder'
+import Icon, { IconName } from './Icon'
 
 const Tab = createBottomTabNavigator()
 
@@ -42,14 +43,20 @@ const NotStoreTabs = () => {
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
-            const icons = {
-              Store: 'storefront',
-              Orders: 'list',
-              Profile: 'person',
-              Components: 'apps-outline',
-              MyOrders: 'fastfood'
+            const icons: Record<string, IconName> = {
+              Store: 'store',
+              Orders: 'orders',
+              Profile: 'profile',
+              Components: 'components',
+              MyOrders: 'myOrders'
             }
-            return <Icon name={icons[route.name]} size={size} color={color} />
+            return (
+              <Icon
+                icon={icons[route.name]}
+                // size={size}
+                // color={color}
+              />
+            )
           }
         }
       }}
@@ -80,14 +87,20 @@ const NotUserTabs = () => {
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
-            const icons = {
-              Store: 'storefront',
-              Orders: 'list',
-              Profile: 'person',
-              Components: 'apps-outline',
-              MyOrders: 'fastfood'
+            const icons: Record<string, IconName> = {
+              Store: 'store',
+              Orders: 'orders',
+              Profile: 'profile',
+              Components: 'components',
+              MyOrders: 'myOrders'
             }
-            return <Icon name={icons[route?.name]} size={size} color={color} />
+            return (
+              <Icon
+                icon={icons[route.name]}
+                // size={size}
+                // color={color}
+              />
+            )
           }
         }
       }}
@@ -111,15 +124,21 @@ const UserAndStoreTabs = () => {
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
-            const icons = {
-              Store: 'storefront',
-              Orders: 'list',
-              Profile: 'person',
-              Components: 'apps-outline',
-              MyOrders: 'fastfood',
-              NewOrder: 'add'
+            const icons: Record<string, IconName> = {
+              Store: 'store',
+              Orders: 'orders',
+              Profile: 'profile',
+              NewOrder: 'add',
+              Components: 'components',
+              MyOrders: 'myOrders'
             }
-            return <Icon name={icons[route.name]} size={size} color={color} />
+            return (
+              <Icon
+                icon={icons[route.name]}
+                // size={size}
+                color={color}
+              />
+            )
           }
         }
       }}

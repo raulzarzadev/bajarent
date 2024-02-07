@@ -6,19 +6,28 @@ import {
   MdClose,
   MdAttachMoney,
   MdSave,
-  MdLocationPin
+  MdLocationPin,
+  MdOutlineStorefront,
+  MdListAlt
 } from 'react-icons/md'
+import { IoPersonOutline } from 'react-icons/io5'
+import { LuComponent } from 'react-icons/lu'
+import { PiUserList } from 'react-icons/pi'
+
 import { IoMdAdd } from 'react-icons/io'
 
 const icons = {
-  close: MdClose
-  // myOrder: MdAssignmentInd,
-  // add: IoMdAdd,
-  // edit: MdEdit,
-  // money: MdAttachMoney,
-  // save: MdSave,
-  // location: MdLocationPin,
-  // profile: MdAssignmentInd
+  close: MdClose,
+  store: MdOutlineStorefront,
+  orders: MdListAlt,
+  profile: IoPersonOutline,
+  components: LuComponent,
+  myOrders: PiUserList,
+  add: IoMdAdd,
+  edit: MdEdit,
+  money: MdAttachMoney,
+  save: MdSave,
+  location: MdLocationPin
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,
@@ -52,7 +61,7 @@ const icons = {
 } as const
 
 export type IconName = keyof typeof icons
-const Icon = ({ icon, ...props }: { icon: IconName }) => {
+const Icon = ({ icon, ...props }: { icon: IconName; color: string }) => {
   const Component = icons[icon]
   if (!Component) return <>Icon</>
   return <Component size={30} {...props} />
