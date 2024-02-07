@@ -10,7 +10,6 @@ import Chip from './Chip'
 import theme, { ORDER_TYPE_COLOR, STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
 import { gStyles } from '../styles'
-import Button from './Button'
 
 const ModalFilterOrders = ({
   orders,
@@ -27,7 +26,6 @@ const ModalFilterOrders = ({
   })
 
   useEffect(() => {
-    console.log('orders')
     setOrders(filteredData)
   }, [filteredData])
 
