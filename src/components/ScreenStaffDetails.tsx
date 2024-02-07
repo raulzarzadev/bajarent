@@ -4,6 +4,7 @@ import { useStore } from '../contexts/storeContext'
 import ButtonIcon from './ButtonIcon'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import CardStaff from './CardStaff'
+import ButtonConfirm from './ButtonConfirm'
 
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
@@ -19,19 +20,26 @@ const ScreenStaffDetails = ({ route, navigation }) => {
         }}
       >
         <View style={{ margin: 'auto', flexDirection: 'row' }}>
-          <ButtonIcon
+          <ButtonConfirm
+            text="¿Desea eliminar este empleado?"
+            justIcon
             icon="delete"
-            variant="ghost"
-            color="error"
-            onPress={() => {
-              ServiceStaff.removeStaffFromStore(employee.storeId, staffId)
-                .then((res) => {
-                  console.log(res)
+            openVariant="ghost"
+            openColor="error"
+            confirmColor="error"
+            confirmLabel="Eliminar"
+            modalTitle="Eliminar Empleado"
+            handleConfirm={async () => {
+              return await ServiceStaff.removeStaffFromStore(
+                employee.storeId,
+                staffId
+              )
+                .then(() => {
                   navigation.goBack()
                 })
-                .catch(console.error)
+                .catch((e) => console.log(e))
             }}
-          ></ButtonIcon>
+          ></ButtonConfirm>
           <ButtonIcon
             icon="edit"
             variant="ghost"

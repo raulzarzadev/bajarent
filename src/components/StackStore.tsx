@@ -79,7 +79,7 @@ function StackStore() {
       <Stack.Screen
         name="StaffDetails"
         options={{
-          title: 'Staff Info'
+          title: 'Detalles de Staff '
         }}
         component={ScreenStaffDetails}
       />
