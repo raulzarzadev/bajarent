@@ -31,9 +31,7 @@ const StyledModal = ({ open, setOpen, children, title }) => {
                 <Ionicons name="close" size={24} color="black" />
               </Pressable>
             </View>
-            <ScrollView style={{ width: '100%', height: 'auto' }}>
-              {children}
-            </ScrollView>
+            <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
           </View>
         </View>
       </Modal>
@@ -54,7 +52,6 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     maxHeight: windowHeight,
     width: '90%',
-
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
