@@ -17,6 +17,8 @@ import { useAuth } from './authContext'
 import expireDate from '../libs/expireDate'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { SectionType } from '../types/SectionType'
+import { CategoryType } from '../types/RentItem'
+import { ServiceCategories } from '../firebase/ServiceCategories'
 export type StaffPermissions = StaffPermissionType
 export type StoreContextType = {
   store?: null | StoreType
@@ -33,6 +35,8 @@ export type StoreContextType = {
   handleSetMyStaffId?: (staffId: string) => any
   staffPermissions?: Partial<StaffPermissions>
   storeSections?: SectionType[]
+  categories?: Partial<CategoryType>[]
+  getCategories?: () => void
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -57,6 +61,8 @@ const StoreContextProvider = ({ children }) => {
   const [myStaffId, setMyStaffId] = useState<string>('')
 
   const [storeSections, setStoreSections] = useState<SectionType[]>([])
+
+  const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
 
   useEffect(() => {
     if (storeId) ServiceSections.listenByStore(storeId, setStoreSections)
@@ -115,6 +121,7 @@ const StoreContextProvider = ({ children }) => {
           ServiceOrders.storeOrders(storeId, setOrders)
           ServiceComments.storeComments(storeId, setComments)
           ServiceStaff.storeStaff(storeId, setStaff)
+          getCategories()
         }
       })
     } else {
@@ -213,6 +220,7 @@ const StoreContextProvider = ({ children }) => {
 
   const [staffPermissions, setStaffPermissions] =
     useState<Partial<StaffPermissions>>(null)
+
   useEffect(() => {
     const staffData = staff.find((s) => s.id === myStaffId)
     if (staffData) {
@@ -225,6 +233,11 @@ const StoreContextProvider = ({ children }) => {
       setStaffPermissions(null)
     }
   }, [user, staff, storeId, myStaffId])
+
+  //* * Fetching functions  */
+  const getCategories = () => {
+    ServiceCategories.getByStore(storeId).then(setCategories)
+  }
   return (
     <StoreContext.Provider
       value={{
@@ -241,7 +254,9 @@ const StoreContextProvider = ({ children }) => {
         userPositions,
         handleSetMyStaffId,
         staffPermissions,
-        storeSections
+        storeSections,
+        categories,
+        getCategories
       }}
     >
       {children}

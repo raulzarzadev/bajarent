@@ -12,6 +12,9 @@ import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
 import MyStaffLabel from './MyStaffLabel'
+import ScreenItems from './ScreenItems'
+import ScreenCategoryEdit from './ScreenCategoryEdit'
+import ScreenCategoryNew from './ScreenCategoryNew'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -119,6 +122,31 @@ function StackStore() {
           title: 'Editar area'
         }}
         component={ScreenSectionsEdit}
+      />
+
+      {/* ITEMS */}
+      <Stack.Screen
+        name="Items"
+        options={{
+          title: 'Artículos'
+        }}
+        component={ScreenItems}
+      />
+      {/* CATEGORIES */}
+
+      <Stack.Screen
+        name="CreateCategory"
+        options={{
+          title: 'Crear categoría'
+        }}
+        component={ScreenCategoryNew}
+      />
+      <Stack.Screen
+        name="EditCategory"
+        options={{
+          title: 'Editar categoría'
+        }}
+        component={ScreenCategoryEdit}
       />
     </Stack.Navigator>
   )

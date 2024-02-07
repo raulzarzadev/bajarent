@@ -2,24 +2,26 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useMemo } from 'react'
 import RadioGroup from 'react-native-radio-buttons-group'
 
-export type InputRadioOption = {
+export type InputRadioOption<T = string> = {
   label: string
-  value: string
+  value: T
 }
 
-const InputRadios = ({
+type InputRadiosProps<T = string> = {
+  options: InputRadioOption<T>[]
+  value: T
+  setValue: (value: T) => void
+  label?: string
+  layout?: 'row' | 'column'
+}
+
+const InputRadios = <T extends string = string>({
   options = [],
   setValue,
   value,
   label,
   layout
-}: {
-  options: InputRadioOption[]
-  value: string
-  setValue: (value: string) => void
-  label?: string
-  layout?: 'row' | 'column'
-}) => {
+}: InputRadiosProps<T>) => {
   const radioButtons = useMemo(
     () => options.map((option) => ({ ...option, id: option.value })),
     [options]

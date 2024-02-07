@@ -72,6 +72,18 @@ const ScreenStore = ({ navigation }) => {
                 >
                   Areas
                 </Button>
+                <Button
+                  buttonStyles={{
+                    width: 100,
+                    margin: 'auto',
+                    marginVertical: 16
+                  }}
+                  onPress={() => {
+                    navigation.navigate('Items')
+                  }}
+                >
+                  Artículos
+                </Button>
               </View>
               <View>
                 <View>

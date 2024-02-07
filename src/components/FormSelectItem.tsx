@@ -55,7 +55,7 @@ const FormSelectItem = ({
           }))}
           setValue={(item) => {
             setCategoryId(item)
-            setValue({ categoryName: item, priceSelectedId: null })
+            setValue({ categoryName: item as string, priceSelectedId: null })
           }}
           value={categoryId}
           label={label}

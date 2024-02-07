@@ -1,11 +1,21 @@
 import BaseType from './BaseType'
+import { CategoryType } from './RentItem'
+export type ItemStatus =
+  | 'available'
+  | 'rented'
+  | 'maintenance'
+  | 'sold'
+  | 'stock'
 
-type ItemBase = {
-  name: string
-  description: string
-  image: string
-  category: string
-  serialNumber: string
+export type ItemBase = {
+  number: string
+  serial: string
+  brand: string
+  status: ItemStatus
+  /**
+   * @description category id
+   */
+  category: CategoryType['id']
 }
 
 type ItemType = BaseType & ItemBase

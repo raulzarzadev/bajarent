@@ -1,6 +1,32 @@
-import { Category } from '../types/RentItem'
+import ItemType, { ItemBase, ItemStatus } from '../types/ItemType'
+import { CategoryType } from '../types/RentItem'
 
-const CATEGORIES_ITEMS: { categories: Category[] } = {
+const WASHER_CATEGORY_ID = 'washer'
+const DRYER_CATEGORY_ID = 'dryer'
+
+// Crear 5 lavadoras
+const washers: ItemBase[] = Array(5)
+  .fill(null)
+  .map((_, index) => ({
+    number: `Washer${index + 1}`,
+    serial: `W${index + 1}SERIAL`,
+    brand: 'BrandName',
+    status: 'available' as ItemStatus,
+    category: WASHER_CATEGORY_ID
+  }))
+
+// Crear 5 secadoras
+const dryers: ItemBase[] = Array(5)
+  .fill(null)
+  .map((_, index) => ({
+    number: `Dryer${index + 1}`,
+    serial: `D${index + 1}SERIAL`,
+    brand: 'BrandName',
+    status: 'available' as ItemStatus,
+    category: DRYER_CATEGORY_ID
+  }))
+
+const CATEGORIES_ITEMS: { categories: CategoryType[]; items: ItemBase[] } = {
   categories: [
     {
       name: 'Lavadora',
@@ -62,7 +88,8 @@ const CATEGORIES_ITEMS: { categories: Category[] } = {
         }
       ]
     }
-  ]
+  ],
+  items: [...washers, ...dryers]
 }
 
 export default CATEGORIES_ITEMS
