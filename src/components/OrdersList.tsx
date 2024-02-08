@@ -30,12 +30,13 @@ function OrdersList({
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
     { key: 'type', label: 'Tipo' },
-    { key: 'status', label: 'Estado' },
+    { key: 'status', label: 'Status' },
     // { key: 'lastName', label: 'Apellido' },
     { key: 'assignToSection', label: 'Area' },
     { key: 'assignToStaff', label: 'Staff' },
     { key: 'createdAt', label: 'Creada' },
-    { key: 'scheduledAt', label: 'Programada' }
+    { key: 'scheduledAt', label: 'Programada' },
+    { key: 'neighborhood', label: 'Colonia' }
   ]
 
   let timerId = null

@@ -569,7 +569,7 @@ const ButtonRepaired = ({ orderId }: { orderId: string }) => {
   }
   return (
     <>
-      <Button label="Reparada" onPress={modal.toggleOpen} color="success" />
+      <Button label="Terminar" onPress={modal.toggleOpen} color="success" />
       <StyledModal {...modal}>
         <View style={styles.repairItemForm}>
           <InputTextStyled
@@ -590,7 +590,7 @@ const ButtonRepaired = ({ orderId }: { orderId: string }) => {
         </View>
         <View style={styles.repairItemForm}>
           <Button onPress={handleRepairFinished} color="success">
-            Entregar
+            Terminar
           </Button>
         </View>
       </StyledModal>

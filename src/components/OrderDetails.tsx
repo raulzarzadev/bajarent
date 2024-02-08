@@ -15,6 +15,8 @@ import OrderStatus from './OrderStatus'
 import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import OrderAssignedTo from './OrderAssignedTo'
+import ClientName from './ClientName'
+import ButtonSearchLocation from './ButtonSearchLocation'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -27,10 +29,9 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           padding: 4
         }}
       >
-        <P size="lg" bold styles={{ textAlign: 'center' }}>
-          {order?.firstName} {order?.lastName}
-        </P>
+        <ClientName order={order} style={gStyles.h1} />
       </View>
+      <CardPhone phone={order?.phone} />
       <View>
         {order?.imageID && (
           <Image
@@ -45,7 +46,6 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           />
         )}
       </View>
-      <CardPhone phone={order?.phone} />
 
       <View style={{ alignItems: 'center' }}>
         {order?.scheduledAt && (
@@ -62,34 +62,10 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           </P>
         )}
       </View>
-      <View>
-        {order?.location && (
-          <Pressable
-            style={{ flexDirection: 'row', justifyContent: 'center' }}
-            onPress={() => {
-              const isUrl = /^https?:\/\/\S+$/.test(order?.location)
-              if (isUrl) return Linking.openURL(order?.location)
 
-              const [lat, lon] = order?.location?.split(',') ?? []
-              const areCoordinates = !isNaN(Number(lat)) && !isNaN(Number(lon))
-              if (areCoordinates)
-                Linking.openURL(
-                  `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
-                )
-
-              alert('No se puede abrir la ubicación')
-            }}
-          >
-            <P>{`Ubicación`} </P>
-            <Ionicons name="location" size={24} color={theme?.secondary} />
-          </Pressable>
-        )}
-      </View>
-      <View>
-        <Text style={{ textAlign: 'center' }}>{order?.street}</Text>
-        <Text style={{ textAlign: 'center' }}>{order?.betweenStreets}</Text>
-        <Text style={{ textAlign: 'center' }}>{order?.neighborhood}</Text>
-      </View>
+      <ErrorBoundary componentName="OrderAddress">
+        <OrderAddress order={order} />
+      </ErrorBoundary>
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />
       </ErrorBoundary>
@@ -99,6 +75,41 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderComments">
         <OrderComments orderId={order.id} />
       </ErrorBoundary>
+    </View>
+  )
+}
+
+const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
+  const neighborhood = order?.neighborhood || ''
+  const street = order?.street || ''
+  const betweenStreets = order?.betweenStreets || ''
+  const address = order?.address || ''
+
+  const location = order?.location || ''
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <View style={{ marginRight: 8 }}>
+        <Text style={[gStyles.tCenter, gStyles.tBold]}>{neighborhood}</Text>
+        <Text style={[gStyles.tCenter]}>{street}</Text>
+        <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>
+        <Text style={[gStyles.tCenter]}>{address}</Text>
+      </View>
+      {!!neighborhood ||
+      !!street ||
+      !!betweenStreets ||
+      !!address ||
+      !!address ? (
+        <ButtonSearchLocation location={location} />
+      ) : (
+        <Text>Sin dirección</Text>
+      )}
     </View>
   )
 }
