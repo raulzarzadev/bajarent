@@ -22,6 +22,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import { IoMdSwap, IoMdAdd } from 'react-icons/io'
 
 import { LiaBroomSolid } from 'react-icons/lia'
+import { TbMapSearch } from 'react-icons/tb'
 
 const icons = {
   up: FaChevronUp,
@@ -42,7 +43,8 @@ const icons = {
   broom: LiaBroomSolid,
   swap: IoMdSwap,
   delete: MdDeleteOutline,
-  search: MdOutlineSearch
+  search: MdOutlineSearch,
+  map: TbMapSearch
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,

@@ -1,6 +1,8 @@
-import { View, Text, Pressable, Linking } from 'react-native'
+import { View, Linking } from 'react-native'
 import React from 'react'
 import Icon from './Icon'
+import theme from '../theme'
+import Button from './Button'
 
 export type Coordinates = `${number},${number},${number}`
 
@@ -23,25 +25,25 @@ const ButtonSearchLocation = ({
   const urlCoordinates = `${urlMaps}?api=1&query=${lat},${lent}`
   const urlAddress = `${urlMaps}?api=1&query=${encodeURIComponent(location)}`
   return (
-    <View>
-      <Pressable
-        // style={[styles.icon, disabledCurrentLocation && { opacity: 0.5 }]}
-        disabled={disabledCurrentLocation}
-        onPress={() => {
-          if (isUrl) return Linking.openURL(location)
-          if (areCoordinates) return Linking.openURL(urlCoordinates)
+    <Button
+      variant="ghost"
+      // style={[styles.icon, disabledCurrentLocation && { opacity: 0.5 }]}
+      disabled={disabledCurrentLocation}
+      onPress={() => {
+        if (isUrl) return Linking.openURL(location)
+        if (areCoordinates) return Linking.openURL(urlCoordinates)
 
-          return Linking.openURL(urlAddress)
-        }}
-      >
-        <Icon
-          // disabled={true}
-          icon={'search'}
-          // color={disabledCurrentLocation ? 'gray' : theme.secondary}
-          //  size={30}
-        />
-      </Pressable>
-    </View>
+        return Linking.openURL(urlAddress)
+      }}
+    >
+      <Icon
+        // disabled={true}
+        icon={'map'}
+        color={theme.secondary}
+        // color={disabledCurrentLocation ? 'gray' : theme.secondary}
+        //  size={30}
+      />
+    </Button>
   )
 }
 

@@ -62,7 +62,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           </P>
         )}
       </View>
-      <View>
+      {/* <View>
         {order?.location && (
           <Pressable
             style={{ flexDirection: 'row', justifyContent: 'center' }}
@@ -84,7 +84,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
             <Ionicons name="location" size={24} color={theme?.secondary} />
           </Pressable>
         )}
-      </View>
+      </View> */}
       <View>
         <OrderAddress order={order} />
       </View>
@@ -102,7 +102,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
-  const neighborhood = order?.neighborhood || ('' && `${order?.neighborhood}`)
+  const neighborhood = order?.neighborhood || ''
   const street = order?.street || ''
   const betweenStreets = order?.betweenStreets || ''
   const address = order.address || ''
@@ -123,7 +123,15 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>
         <Text style={[gStyles.tCenter]}>{address}</Text>
       </View>
-      <ButtonSearchLocation location={location} />
+      {!!neighborhood ||
+      !!street ||
+      !!betweenStreets ||
+      !!address ||
+      !!address ? (
+        <ButtonSearchLocation location={location} />
+      ) : (
+        <Text>Sin dirección</Text>
+      )}
     </View>
   )
 }
