@@ -544,7 +544,7 @@ const ButtonRepaired = ({ orderId }: { orderId: string }) => {
         </View>
         <View style={styles.repairItemForm}>
           <Button onPress={handleRepairFinished} color="success">
-            Entregar
+            Terminar
           </Button>
         </View>
       </StyledModal>
