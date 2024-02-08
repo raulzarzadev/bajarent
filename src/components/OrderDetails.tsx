@@ -15,6 +15,7 @@ import OrderStatus from './OrderStatus'
 import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import OrderAssignedTo from './OrderAssignedTo'
+import ClientName from './ClientName'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -27,10 +28,9 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           padding: 4
         }}
       >
-        <P size="lg" bold styles={{ textAlign: 'center' }}>
-          {order?.firstName} {order?.lastName}
-        </P>
+        <ClientName order={order} style={gStyles.h1} />
       </View>
+      <CardPhone phone={order?.phone} />
       <View>
         {order?.imageID && (
           <Image
@@ -45,7 +45,6 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           />
         )}
       </View>
-      <CardPhone phone={order?.phone} />
 
       <View style={{ alignItems: 'center' }}>
         {order?.scheduledAt && (
@@ -89,6 +88,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={{ textAlign: 'center' }}>{order?.street}</Text>
         <Text style={{ textAlign: 'center' }}>{order?.betweenStreets}</Text>
         <Text style={{ textAlign: 'center' }}>{order?.neighborhood}</Text>
+        <Text style={{ textAlign: 'center' }}>{order?.address}</Text>
       </View>
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />

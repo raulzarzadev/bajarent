@@ -18,7 +18,7 @@ const InputTextStyled = ({
   helperTextColor?: 'error' | 'primary' | 'black' | 'white'
 }): JSX.Element => {
   return (
-    <View>
+    <>
       <TextInput
         {...props}
         editable={!disabled}
@@ -33,7 +33,7 @@ const InputTextStyled = ({
           {helperText}
         </Text>
       )}
-    </View>
+    </>
   )
 }
 

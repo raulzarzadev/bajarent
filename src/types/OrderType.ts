@@ -9,17 +9,20 @@ type OrderBase = {
 
   firstName: string
   lastName: string
+  fullName: string
+
   email: string
   phone: string
 
   imageID: string
   imageHouse: string
 
-  street: string
-  betweenStreets: string
-  neighborhood: string
-  location: string
-  indications: string
+  street?: string
+  betweenStreets?: string
+  neighborhood?: string
+  location?: string
+  indications?: string
+  address?: string
 
   scheduledAt: Date
 

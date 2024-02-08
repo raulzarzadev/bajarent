@@ -9,6 +9,7 @@ const InputLocationFormik = ({ name, ...props }) => {
     <InputLocation
       value={field.value}
       setValue={helpers.setValue}
+
       // {...props}
     />
   )
