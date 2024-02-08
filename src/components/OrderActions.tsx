@@ -19,7 +19,7 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import Chip from './Chip'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
-  const { staffPermissions } = useStore()
+  const { staffPermissions, myStaffId, storeId } = useStore()
   const navigation = useNavigation()
   const status = orderStatus(order)
   const areIn = (statuses: order_status[]) => statuses.includes(status)
@@ -223,7 +223,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <P bold>Acciones de orden</P>
       <ErrorBoundary componentName="OrderActionsButtons">
-        {order.type === order_type.REPAIR && (
+        {/* {order.type === order_type.REPAIR && (
           <>
             <Text>{`Reparación `}</Text>
             <FlatList
@@ -267,7 +267,13 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
             <Text>{`Renta `}</Text>
             <Text>{`Autorizar > Entregar > Renovar > Recoger  `}</Text>
           </>
-        )}
+        )} */}
+        <RentFlow
+          orderId={orderId}
+          staffId={myStaffId}
+          storeId={storeId}
+          orderStatus={order.status}
+        />
         <View style={styles.container}>
           {order.type === order_type.RENT &&
             RENT_BUTTONS.map(
@@ -299,6 +305,127 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           )}
         </View>
       </ErrorBoundary>
+    </View>
+  )
+}
+
+const RentFlow = ({
+  orderId,
+  storeId,
+  staffId,
+  orderStatus
+}: {
+  orderStatus: OrderType['status']
+  orderId: string
+  storeId: string
+  staffId: string
+}) => {
+  const { navigate } = useNavigation()
+  // autorizar > entregar > renovar > recoger
+  type Steps =
+    | null
+    | order_status.PENDING
+    | order_status.AUTHORIZED
+    | order_status.DELIVERED
+    | order_status.RENEWED
+    | order_status.PICKUP
+
+  type Actions = {
+    key: Steps
+    should: Steps
+    label: string
+    undoLabel: string
+    onPress: () => void
+    disabled?: boolean
+    // undo: () => void
+  }
+
+  const [step, setStep] = useState<OrderType['status']>(orderStatus)
+
+  const steps: Actions[] = [
+    {
+      key: order_status.AUTHORIZED,
+      should: order_status.PENDING,
+      label: 'Autorizar',
+      undoLabel: 'Autorizada',
+      onPress: () => {
+        if (step === order_status.AUTHORIZED) {
+          setStep(order_status.PENDING)
+          onAuthorize({ orderId, storeId, staffId, undo: true })
+        } else {
+          setStep(order_status.AUTHORIZED)
+          onAuthorize({ orderId, storeId, staffId, undo: false })
+        }
+      }
+    },
+    {
+      key: order_status.DELIVERED,
+      should: order_status.AUTHORIZED,
+      label: 'Entregar',
+      undoLabel: 'Entregada',
+      onPress: () => {
+        if (step === order_status.DELIVERED) {
+          // * Undo it
+          setStep(order_status.AUTHORIZED)
+          onDelivery({ orderId, storeId, staffId, undo: true })
+        } else {
+          //* Do it
+          setStep(order_status.DELIVERED)
+          onDelivery({ orderId, storeId, staffId, undo: false })
+        }
+      }
+    },
+
+    {
+      key: order_status.PICKUP,
+      should: order_status.DELIVERED,
+      label: 'Recoger',
+      undoLabel: 'Recogida',
+      onPress: () => {
+        if (step === order_status.PICKUP) {
+          setStep(order_status.DELIVERED)
+          onPickup({ orderId, storeId, staffId, undo: true })
+        } else {
+          setStep(order_status.PICKUP)
+          onPickup({ orderId, storeId, staffId, undo: false })
+        }
+      }
+    },
+    {
+      key: order_status.RENEWED,
+      should: order_status.DELIVERED,
+      label: 'Renovar',
+      undoLabel: 'Renovada',
+      disabled: step === order_status.RENEWED,
+      onPress: () => {
+        if (!(step === order_status.RENEWED)) {
+          // @ts-ignore
+          navigate('RenewOrder', { orderId })
+        }
+      }
+    }
+  ]
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      {steps.map(
+        ({ label, onPress, should, undoLabel, key, disabled = false }, i) => {
+          const enable = step === should || step === key
+          return (
+            <Button
+              key={label}
+              label={
+                steps.findIndex((s) => s.key === step) < i ? label : undoLabel
+              }
+              disabled={!enable || disabled}
+              size="xs"
+              variant="ghost"
+              onPress={() => {
+                onPress()
+              }}
+            />
+          )
+        }
+      )}
     </View>
   )
 }
@@ -396,6 +523,78 @@ const ButtonRenew = ({
       }}
     />
   )
+}
+
+const onAuthorize = ({ orderId, storeId, undo, staffId }) => {
+  ServiceOrders.update(orderId, {
+    status: undo ? order_status.PENDING : order_status.AUTHORIZED
+  })
+    .then(console.log)
+    .catch(console.error)
+
+  ServiceOrders.addComment({
+    content: undo ? 'Orden no autorizada' : 'Orden autorizada',
+    type: 'comment',
+    orderId,
+    storeId
+  })
+    .then(console.log)
+    .catch(console.error)
+}
+
+const onDelivery = ({ orderId, storeId, undo, staffId }) => {
+  ServiceOrders.update(orderId, {
+    status: undo ? order_status.AUTHORIZED : order_status.DELIVERED,
+    deliveredAt: new Date(),
+    deliveredByStaff: staffId
+  })
+    .then(console.log)
+    .catch(console.error)
+  ServiceOrders.addComment({
+    storeId,
+    orderId,
+    type: 'comment',
+    content: undo ? 'Orden no entregada' : 'Orden entregada'
+  })
+    .then(console.log)
+    .catch(console.error)
+}
+
+const onPickup = ({ orderId, storeId, undo, staffId }) => {
+  ServiceOrders.update(orderId, {
+    status: undo ? order_status.DELIVERED : order_status.PICKUP,
+    pickedUpAt: new Date(),
+    pickedUpByStaff: staffId
+  })
+    .then(console.log)
+    .catch(console.error)
+  ServiceOrders.addComment({
+    storeId,
+    orderId,
+    type: 'comment',
+    content: undo ? 'Orden regresada' : 'Orden recogida'
+  })
+    .then(console.log)
+    .catch(console.error)
+}
+
+const onRenew = ({ orderId, storeId, undo, staffId }) => {
+  //* should just redirect to renew order, onace the order is renewed, the status will be updated
+  // ServiceOrders.update(orderId, {
+  //   status: undo ? order_status.DELIVERED : order_status.RENEWED,
+  //   pickedUpAt: new Date(),
+  //   pickedUpByStaff: staffId
+  // })
+  //   .then(console.log)
+  //   .catch(console.error)
+  // ServiceOrders.addComment({
+  //   storeId,
+  //   orderId,
+  //   type: 'comment',
+  //   content: undo ? 'Orden entregada' : 'Orden renovada'
+  // })
+  //   .then(console.log)
+  //   .catch(console.error)
 }
 
 const ButtonPickup = ({ orderId }: { orderId: string }) => {

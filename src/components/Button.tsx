@@ -23,7 +23,8 @@ const Button: React.FC<ButtonProps> = ({
   buttonStyles,
   textStyles,
   variant = 'filled',
-  color = 'primary'
+  color = 'primary',
+  size = 'medium'
 }) => {
   const { theme } = useTheme()
   const buttonColor = {
@@ -49,6 +50,13 @@ const Button: React.FC<ButtonProps> = ({
     color: variant === 'filled' ? theme.white : theme[color]
   }
 
+  const sizes = {
+    xs: { padding: 5 },
+    small: { padding: 10 },
+    medium: { padding: 15 },
+    large: { padding: 20 }
+  }
+
   return (
     <Pressable
       style={({ pressed }) => [
@@ -57,6 +65,7 @@ const Button: React.FC<ButtonProps> = ({
         buttonVariant,
         disabled && baseStyles.disabled,
         pressed && { opacity: 0.5 },
+        sizes[size],
         buttonStyles
       ]}
       onPress={onPress}

@@ -5,6 +5,9 @@ import { CommentType } from './CommentType'
 
 type OrderBase = {
   folio: number
+  status: OrderStatus
+  type: TypeOfOrderType
+
   storeId: StoreType['id']
 
   firstName: string
@@ -38,11 +41,8 @@ type OrderBase = {
   item: RentItem
   expireAt?: Date | null
 
-  status: OrderStatus
-
   comments: CommentType[]
 
-  type: TypeOfOrderType
   hasNotSolvedReports?: boolean
 
   assignToSection?: string

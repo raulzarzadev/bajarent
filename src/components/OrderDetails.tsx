@@ -33,13 +33,13 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <CardPhone phone={order?.phone} />
       <View>
-        {order?.imageID && (
+        {!!order?.imageID && (
           <Image
             source={{ uri: order?.imageID }}
             style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
           />
         )}
-        {order?.imageID && (
+        {!!order?.imageID && (
           <Image
             source={{ uri: order?.imageHouse }}
             style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
@@ -48,7 +48,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       </View>
 
       <View style={{ alignItems: 'center' }}>
-        {order?.scheduledAt && (
+        {!!order?.scheduledAt && (
           <P size="lg" styles={{ textAlign: 'center' }}>
             {`  ${dateFormat(order?.scheduledAt, 'dd/MMM/yy')} ${fromNow(
               order?.scheduledAt

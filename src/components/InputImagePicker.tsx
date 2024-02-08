@@ -63,7 +63,7 @@ export default function InputImagePicker({
         }}
       >
         <Text style={{ textAlign: 'center' }}>{label}</Text>
-        {image && (
+        {!!image && (
           <Image
             source={{ uri: image }}
             style={{ width: '100%', minHeight: 200 }}

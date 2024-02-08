@@ -17,6 +17,7 @@ import CurrencyAmount from './CurrencyAmount'
 import FormikCheckbox from './FormikCheckbox'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
+import { gStyles } from '../styles'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -28,6 +29,7 @@ const initialValues: Partial<OrderType> = {
 }
 
 const FormOrder = ({
+  renew = false,
   onSubmit = async (values) => {
     console.log(values)
   },
@@ -43,9 +45,14 @@ const FormOrder = ({
         </P>
         <P size="xl">{defaultValues?.folio}</P>
       </Text>
+      {renew && <Text style={gStyles.h3}>Renovación de orden</Text>}
       <Formik
         initialValues={{
           ...defaultValues,
+          phone:
+            defaultValues?.phone === 'undefined' || !defaultValues.phone
+              ? ''
+              : defaultValues?.phone,
           fullName:
             defaultValues?.fullName ||
             `${defaultValues?.firstName || ''}${defaultValues?.lastName || ''}`,
