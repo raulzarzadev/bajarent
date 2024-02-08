@@ -4,6 +4,7 @@ import OrderType from '../types/OrderType'
 // import { dateFormat, fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
 import { OrderDirectives } from './OrderDetails'
+import ClientName from './ClientName'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
   const fields: {
@@ -20,7 +21,7 @@ const OrderRow = ({ order }: { order: OrderType }) => {
             {order.folio}
           </Text>
           <Text style={{ textAlign: 'center' }} numberOfLines={2}>
-            {order.firstName} {order.lastName}
+            <ClientName order={order} />
           </Text>
         </View>
       )

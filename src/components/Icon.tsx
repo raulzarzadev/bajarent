@@ -10,7 +10,9 @@ import {
   MdOutlineStorefront,
   MdListAlt,
   MdFilterList,
-  MdDeleteOutline
+  MdDeleteOutline,
+  MdSearch,
+  MdOutlineSearch
 } from 'react-icons/md'
 import { IoPersonOutline } from 'react-icons/io5'
 import { LuComponent } from 'react-icons/lu'
@@ -39,7 +41,8 @@ const icons = {
   windows: FaRegWindowRestore,
   broom: LiaBroomSolid,
   swap: IoMdSwap,
-  delete: MdDeleteOutline
+  delete: MdDeleteOutline,
+  search: MdOutlineSearch
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,

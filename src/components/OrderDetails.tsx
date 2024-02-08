@@ -16,6 +16,7 @@ import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import OrderAssignedTo from './OrderAssignedTo'
 import ClientName from './ClientName'
+import ButtonSearchLocation from './ButtonSearchLocation'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -85,10 +86,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         )}
       </View>
       <View>
-        <Text style={{ textAlign: 'center' }}>{order?.street}</Text>
-        <Text style={{ textAlign: 'center' }}>{order?.betweenStreets}</Text>
-        <Text style={{ textAlign: 'center' }}>{order?.neighborhood}</Text>
-        <Text style={{ textAlign: 'center' }}>{order?.address}</Text>
+        <OrderAddress order={order} />
       </View>
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />
@@ -99,6 +97,33 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderComments">
         <OrderComments orderId={order.id} />
       </ErrorBoundary>
+    </View>
+  )
+}
+
+const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
+  const neighborhood = order?.neighborhood || ('' && `${order?.neighborhood}`)
+  const street = order?.street || ''
+  const betweenStreets = order?.betweenStreets || ''
+  const address = order.address || ''
+
+  const location = order?.location || ''
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <View style={{ marginRight: 8 }}>
+        <Text style={[gStyles.tCenter, gStyles.tBold]}>{neighborhood}</Text>
+        <Text style={[gStyles.tCenter]}>{street}</Text>
+        <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>
+        <Text style={[gStyles.tCenter]}>{address}</Text>
+      </View>
+      <ButtonSearchLocation location={location} />
     </View>
   )
 }

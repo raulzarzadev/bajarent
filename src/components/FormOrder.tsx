@@ -4,7 +4,6 @@ import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
 import OrderType, { order_type } from '../types/OrderType'
 import Button from './Button'
-
 import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
 import asDate from '../libs/utils-date'
@@ -35,7 +34,7 @@ const FormOrder = ({
   defaultValues = initialValues
 }) => {
   const [loading, setLoading] = React.useState(false)
-  const disabledSave = loading
+
   return (
     <ScrollView>
       <Text style={{ textAlign: 'center', marginTop: 12 }}>
@@ -232,7 +231,7 @@ const FormOrder = ({
             </View>
             <View style={[styles.item]}>
               <Button
-                disabled={disabledSave || !values?.firstName}
+                disabled={loading || !values?.fullName}
                 onPress={handleSubmit}
                 label={'Guardar'}
               />
