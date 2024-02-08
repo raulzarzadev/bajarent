@@ -62,32 +62,10 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           </P>
         )}
       </View>
-      {/* <View>
-        {order?.location && (
-          <Pressable
-            style={{ flexDirection: 'row', justifyContent: 'center' }}
-            onPress={() => {
-              const isUrl = /^https?:\/\/\S+$/.test(order?.location)
-              if (isUrl) return Linking.openURL(order?.location)
 
-              const [lat, lon] = order?.location?.split(',') ?? []
-              const areCoordinates = !isNaN(Number(lat)) && !isNaN(Number(lon))
-              if (areCoordinates)
-                Linking.openURL(
-                  `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
-                )
-
-              alert('No se puede abrir la ubicación')
-            }}
-          >
-            <P>{`Ubicación`} </P>
-            <Ionicons name="location" size={24} color={theme?.secondary} />
-          </Pressable>
-        )}
-      </View> */}
-      <View>
+      <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />
-      </View>
+      </ErrorBoundary>
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />
       </ErrorBoundary>
@@ -105,7 +83,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const neighborhood = order?.neighborhood || ''
   const street = order?.street || ''
   const betweenStreets = order?.betweenStreets || ''
-  const address = order.address || ''
+  const address = order?.address || ''
 
   const location = order?.location || ''
 
