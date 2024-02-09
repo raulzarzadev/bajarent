@@ -4,7 +4,7 @@ import FormSection from './FormSection'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { useStore } from '../contexts/storeContext'
 
-const ScreenSectionsEdit = ({ navigator, route }) => {
+const ScreenSectionsEdit = ({ navigation, route }) => {
   const sectionId = route.params.sectionId
   const section = useStore().storeSections.find((s) => s.id === sectionId)
 
@@ -16,7 +16,7 @@ const ScreenSectionsEdit = ({ navigator, route }) => {
           return await ServiceSections.update(sectionId, value)
             .then((res) => {
               console.log(res)
-              navigator.goBack()
+              navigation.goBack()
             })
             .catch((err) => {
               console.log({ err })

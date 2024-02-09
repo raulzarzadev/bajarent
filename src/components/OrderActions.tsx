@@ -1,33 +1,26 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
-import P from './P'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import OrderStatus from './OrderStatus'
 import orderStatus from '../libs/orderStatus'
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
-import { useAuth } from '../contexts/authContext'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import InputTextStyled from './InputTextStyled'
-import { useState } from 'react'
+
 import ErrorBoundary from './ErrorBoundary'
 import ButtonConfirm from './ButtonConfirm'
 import { ServiceComments } from '../firebase/ServiceComments'
-import Chip from './Chip'
+import OrderActionsRentFlow from './OrderActionsRentFlow'
+import OrderActionsRepairFlow from './OrderActionsRepairFlow'
+import { gStyles } from '../styles'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
-  const { staffPermissions, myStaffId, storeId } = useStore()
+  const { staffPermissions } = useStore()
   const navigation = useNavigation()
   const status = orderStatus(order)
   const areIn = (statuses: order_status[]) => statuses.includes(status)
   const orderId = order?.id || ''
-
-  const canDelivery =
-    areIn([order_status.AUTHORIZED]) &&
-    (staffPermissions.canDeliveryOrder || staffPermissions.isAdmin)
 
   const canCancel =
     areIn([
@@ -37,35 +30,15 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     ]) &&
     (staffPermissions.isAdmin || staffPermissions.canCancelOrder)
 
-  const canRenew =
-    areIn([order_status.DELIVERED]) &&
-    (staffPermissions.canRenewOrder || staffPermissions.isAdmin)
-
   const canAuthorize =
     areIn([order_status.PENDING]) &&
     (staffPermissions.canAuthorizeOrder || staffPermissions.isAdmin)
-  const canPickup =
-    areIn([order_status.DELIVERED, order_status.EXPIRED]) &&
-    (staffPermissions.canPickupOrder || staffPermissions.isAdmin)
-
-  const canReturn = areIn([order_status.PICKUP]) && staffPermissions.isAdmin
 
   const canAssign = staffPermissions.canAssignOrder || staffPermissions.isAdmin
 
   const canEdit = staffPermissions.canEditOrder || staffPermissions.isAdmin
 
   const canDelete = staffPermissions.canDeleteOrder || staffPermissions.isAdmin
-
-  const canRepair =
-    areIn([order_status.AUTHORIZED]) &&
-    (staffPermissions.isAdmin || staffPermissions.canRepairOrder)
-
-  const canFinishRepair =
-    areIn([order_status.REPAIRING]) &&
-    (staffPermissions.isAdmin || staffPermissions.canRepairOrder)
-
-  const canDeliveryRepair =
-    areIn([order_status.REPAIRED]) && staffPermissions.isAdmin
 
   const COMMON_BUTTONS = [
     {
@@ -161,51 +134,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       )
     }
   ]
-  const RENT_BUTTONS = [
-    {
-      label: 'Entregar',
-      show: canDelivery,
-      button: <ButtonDelivery orderId={orderId} />
-    },
-    {
-      label: 'Recoger',
-      show: canPickup,
-      button: <ButtonPickup orderId={orderId} />
-    },
-    {
-      label: 'Regresar',
-      show: canReturn,
-      button: <ButtonCancelDelivery orderId={orderId} />
-    },
-    {
-      label: 'Renovar',
-      show: canRenew,
-      button: <ButtonRenew orderId={orderId} />
-    }
-  ]
-
-  const REPAIR_BUTTONS = [
-    //* REPAIRING
-    {
-      label: 'En reparacón',
-      show: canRepair,
-      button: <ButtonRepair orderId={orderId} />
-    },
-    //* REPAIRED
-    {
-      label: 'Terminar reparación',
-      show: canFinishRepair,
-      button: <ButtonRepaired orderId={orderId} />
-    },
-
-    //* SHOULD_DELIVER
-
-    {
-      label: 'Entregar',
-      show: canDeliveryRepair,
-      button: <ButtonDeliveryRepair orderId={orderId} />
-    }
-  ]
 
   return (
     <View style={{ padding: 4 }}>
@@ -221,79 +149,23 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       >
         <OrderStatus orderId={orderId} />
       </View>
-      <P bold>Acciones de orden</P>
-      <ErrorBoundary componentName="OrderActionsButtons">
-        {/* {order.type === order_type.REPAIR && (
-          <>
-            <Text>{`Reparación `}</Text>
-            <FlatList
-              horizontal
-              data={[
-                {
-                  label: 'Autorizar',
-                  show: canAuthorize,
-                  onPress: () => console.log('autorizar')
-                },
-                {
-                  label: 'En reparacón',
-                  show: canRepair,
-                  onPress: () => console.log('Reparar')
-                },
-                {
-                  label: 'Terminar reparación',
-                  show: canFinishRepair,
-                  onPress: () => console.log('Terminar reparación')
-                },
-                {
-                  label: 'Entregar',
-                  show: canDeliveryRepair,
-                  onPress: () => console.log('Entregar')
-                }
-              ]}
-              renderItem={({ item }) => (
-                <Chip
-                  onPress={item.onPress}
-                  title={item.label}
-                  disabled={!item.show}
-                  color="primary"
-                />
-              )}
-            ></FlatList>
-            <View style={{ flexDirection: 'row' }}></View>
-          </>
-        )}
-        {order.type === order_type.RENT && (
-          <>
-            <Text>{`Renta `}</Text>
-            <Text>{`Autorizar > Entregar > Renovar > Recoger  `}</Text>
-          </>
-        )} */}
-        <RentFlow
-          orderId={orderId}
-          staffId={myStaffId}
-          storeId={storeId}
-          orderStatus={order.status}
-        />
-        <View style={styles.container}>
-          {order.type === order_type.RENT &&
-            RENT_BUTTONS.map(
-              ({ button, label, show }) =>
-                show && (
-                  <View style={styles.item} key={label}>
-                    {button}
-                  </View>
-                )
-            )}
-          {order.type === order_type.REPAIR &&
-            REPAIR_BUTTONS.map(
-              ({ button, label, show }) =>
-                show && (
-                  <View style={styles.item} key={label}>
-                    {button}
-                  </View>
-                )
-            )}
-        </View>
+      <Text style={[gStyles.h2, { marginVertical: 8, marginTop: 16 }]}>
+        Acciones de orden
+      </Text>
+      {order.type === order_type.RENT && (
+        <ErrorBoundary componentName="OrderActionsRentFlow">
+          <OrderActionsRentFlow orderId={orderId} orderStatus={order.status} />
+        </ErrorBoundary>
+      )}
+      {order.type === order_type.REPAIR && (
+        <ErrorBoundary componentName="OrderActionsRepairFlow">
+          <OrderActionsRepairFlow
+            orderId={orderId}
+            orderStatus={order.status}
+          />
+        </ErrorBoundary>
+      )}
+      <ErrorBoundary componentName="OrderActionsCommonButtons">
         <View style={styles.container}>
           {COMMON_BUTTONS.map(
             ({ button, label, show }) =>
@@ -309,126 +181,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const RentFlow = ({
-  orderId,
-  storeId,
-  staffId,
-  orderStatus
-}: {
-  orderStatus: OrderType['status']
-  orderId: string
-  storeId: string
-  staffId: string
-}) => {
-  const { navigate } = useNavigation()
-  // autorizar > entregar > renovar > recoger
-  type Steps =
-    | null
-    | order_status.PENDING
-    | order_status.AUTHORIZED
-    | order_status.DELIVERED
-    | order_status.RENEWED
-    | order_status.PICKUP
-
-  type Actions = {
-    key: Steps
-    should: Steps
-    label: string
-    undoLabel: string
-    onPress: () => void
-    disabled?: boolean
-    // undo: () => void
-  }
-
-  const [step, setStep] = useState<OrderType['status']>(orderStatus)
-
-  const steps: Actions[] = [
-    {
-      key: order_status.AUTHORIZED,
-      should: order_status.PENDING,
-      label: 'Autorizar',
-      undoLabel: 'Autorizada',
-      onPress: () => {
-        if (step === order_status.AUTHORIZED) {
-          setStep(order_status.PENDING)
-          onAuthorize({ orderId, storeId, staffId, undo: true })
-        } else {
-          setStep(order_status.AUTHORIZED)
-          onAuthorize({ orderId, storeId, staffId, undo: false })
-        }
-      }
-    },
-    {
-      key: order_status.DELIVERED,
-      should: order_status.AUTHORIZED,
-      label: 'Entregar',
-      undoLabel: 'Entregada',
-      onPress: () => {
-        if (step === order_status.DELIVERED) {
-          // * Undo it
-          setStep(order_status.AUTHORIZED)
-          onDelivery({ orderId, storeId, staffId, undo: true })
-        } else {
-          //* Do it
-          setStep(order_status.DELIVERED)
-          onDelivery({ orderId, storeId, staffId, undo: false })
-        }
-      }
-    },
-
-    {
-      key: order_status.PICKUP,
-      should: order_status.DELIVERED,
-      label: 'Recoger',
-      undoLabel: 'Recogida',
-      onPress: () => {
-        if (step === order_status.PICKUP) {
-          setStep(order_status.DELIVERED)
-          onPickup({ orderId, storeId, staffId, undo: true })
-        } else {
-          setStep(order_status.PICKUP)
-          onPickup({ orderId, storeId, staffId, undo: false })
-        }
-      }
-    },
-    {
-      key: order_status.RENEWED,
-      should: order_status.DELIVERED,
-      label: 'Renovar',
-      undoLabel: 'Renovada',
-      disabled: step === order_status.RENEWED,
-      onPress: () => {
-        if (!(step === order_status.RENEWED)) {
-          // @ts-ignore
-          navigate('RenewOrder', { orderId })
-        }
-      }
-    }
-  ]
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      {steps.map(
-        ({ label, onPress, should, undoLabel, key, disabled = false }, i) => {
-          const enable = step === should || step === key
-          return (
-            <Button
-              key={label}
-              label={
-                steps.findIndex((s) => s.key === step) < i ? label : undoLabel
-              }
-              disabled={!enable || disabled}
-              size="xs"
-              variant={key === step ? 'outline' : 'ghost'}
-              onPress={() => {
-                onPress()
-              }}
-            />
-          )
-        }
-      )}
-    </View>
-  )
-}
 const ButtonCancel = ({
   orderId,
   isCancelled,
@@ -499,301 +251,6 @@ const ButtonAuthorize = ({
         handleAuthorize()
       }}
     />
-  )
-}
-
-const ButtonRenew = ({
-  orderId,
-  disabled
-}: {
-  orderId: string
-  disabled?: boolean
-}) => {
-  const { navigate } = useNavigation()
-  const handleRenew = async () => {
-    // @ts-ignore
-    navigate('RenewOrder', { orderId })
-  }
-  return (
-    <Button
-      disabled={disabled}
-      label={'Renovar'}
-      onPress={() => {
-        handleRenew()
-      }}
-    />
-  )
-}
-
-const onAuthorize = ({ orderId, storeId, undo, staffId }) => {
-  ServiceOrders.update(orderId, {
-    status: undo ? order_status.PENDING : order_status.AUTHORIZED
-  })
-    .then(console.log)
-    .catch(console.error)
-
-  ServiceOrders.addComment({
-    content: undo ? 'Orden no autorizada' : 'Orden autorizada',
-    type: 'comment',
-    orderId,
-    storeId
-  })
-    .then(console.log)
-    .catch(console.error)
-}
-
-const onDelivery = ({ orderId, storeId, undo, staffId }) => {
-  ServiceOrders.update(orderId, {
-    status: undo ? order_status.AUTHORIZED : order_status.DELIVERED,
-    deliveredAt: new Date(),
-    deliveredByStaff: staffId
-  })
-    .then(console.log)
-    .catch(console.error)
-  ServiceOrders.addComment({
-    storeId,
-    orderId,
-    type: 'comment',
-    content: undo ? 'Orden no entregada' : 'Orden entregada'
-  })
-    .then(console.log)
-    .catch(console.error)
-}
-
-const onPickup = ({ orderId, storeId, undo, staffId }) => {
-  ServiceOrders.update(orderId, {
-    status: undo ? order_status.DELIVERED : order_status.PICKUP,
-    pickedUpAt: new Date(),
-    pickedUpByStaff: staffId
-  })
-    .then(console.log)
-    .catch(console.error)
-  ServiceOrders.addComment({
-    storeId,
-    orderId,
-    type: 'comment',
-    content: undo ? 'Orden regresada' : 'Orden recogida'
-  })
-    .then(console.log)
-    .catch(console.error)
-}
-
-const onRenew = ({ orderId, storeId, undo, staffId }) => {
-  //* should just redirect to renew order, onace the order is renewed, the status will be updated
-  // ServiceOrders.update(orderId, {
-  //   status: undo ? order_status.DELIVERED : order_status.RENEWED,
-  //   pickedUpAt: new Date(),
-  //   pickedUpByStaff: staffId
-  // })
-  //   .then(console.log)
-  //   .catch(console.error)
-  // ServiceOrders.addComment({
-  //   storeId,
-  //   orderId,
-  //   type: 'comment',
-  //   content: undo ? 'Orden entregada' : 'Orden renovada'
-  // })
-  //   .then(console.log)
-  //   .catch(console.error)
-}
-
-const ButtonPickup = ({ orderId }: { orderId: string }) => {
-  const { storeId, myStaffId } = useStore()
-  const handlePickup = () => {
-    ServiceOrders.update(orderId, {
-      status: order_status.PICKUP,
-      pickedUpAt: new Date(),
-      pickedUpBy: myStaffId
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Orden recogida'
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
-  return (
-    <Button
-      color="success"
-      label={'Recoger'}
-      onPress={() => {
-        handlePickup()
-      }}
-    />
-  )
-}
-
-const ButtonCancelDelivery = ({ orderId }: { orderId: string }) => {
-  const { storeId } = useStore()
-  const handleDelivery = () => {
-    ServiceOrders.update(orderId, {
-      status: order_status.DELIVERED
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Orden regresada'
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
-  return (
-    <Button
-      variant="outline"
-      label={'Regresar'}
-      onPress={() => {
-        handleDelivery()
-      }}
-    />
-  )
-}
-
-const ButtonDeliveryRepair = ({ orderId }: { orderId: string }) => {
-  const { storeId, myStaffId } = useStore()
-  const { user } = useAuth()
-  const handleDelivery = () => {
-    ServiceOrders.update(orderId, {
-      status: order_status.REPAIR_DELIVERED,
-      deliveredAt: new Date(),
-      deliveredBy: user?.id,
-      deliveredByStaff: myStaffId
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Reparación entregada'
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
-  return (
-    <Button
-      color="success"
-      label={'Entregar'}
-      onPress={() => {
-        handleDelivery()
-      }}
-    />
-  )
-}
-const ButtonDelivery = ({ orderId }: { orderId: string }) => {
-  const { storeId, myStaffId } = useStore()
-  const { user } = useAuth()
-  const handleDelivery = () => {
-    ServiceOrders.update(orderId, {
-      status: order_status.DELIVERED,
-      deliveredAt: new Date(),
-      deliveredBy: user?.id,
-      deliveredByStaff: myStaffId
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Orden entregada'
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
-  return (
-    <Button
-      color="success"
-      label={'Entregar'}
-      onPress={() => {
-        handleDelivery()
-      }}
-    />
-  )
-}
-
-const ButtonRepair = ({ orderId }: { orderId: string }) => {
-  const { storeId } = useStore()
-  const handleRepair = () => {
-    ServiceOrders.update(orderId, {
-      status: order_status.REPAIRING
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Orden en reparación'
-    })
-      .then(console.log)
-      .catch(console.error)
-    // @ts-ignore
-    // navigate('RepairOrder', { orderId })
-  }
-  return <Button label="En reparación" onPress={handleRepair} color="success" />
-}
-
-const ButtonRepaired = ({ orderId }: { orderId: string }) => {
-  const { user } = useAuth()
-  const { myStaffId, storeId } = useStore()
-  const modal = useModal({ title: 'Detalles de reparación' })
-  const [info, setInfo] = useState('')
-  const [total, setTotal] = useState(0)
-  const handleRepairFinished = async () => {
-    await ServiceOrders.repaired(orderId, {
-      info,
-      total,
-      repairedBy: user.id,
-      repairedByStaff: myStaffId
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Reparación terminada'
-    })
-      .then(console.log)
-      .catch(console.error)
-    // @ts-ignore
-    // navigate('RepairOrder', { orderId })
-  }
-  return (
-    <>
-      <Button label="Terminar" onPress={modal.toggleOpen} color="success" />
-      <StyledModal {...modal}>
-        <View style={styles.repairItemForm}>
-          <InputTextStyled
-            placeholder="Descripción de reparación"
-            numberOfLines={3}
-            multiline
-            onChangeText={setInfo}
-          ></InputTextStyled>
-        </View>
-        <View style={styles.repairItemForm}>
-          <InputTextStyled
-            keyboardType="numeric"
-            placeholder="Total $ "
-            onChangeText={(value) => {
-              setTotal(parseFloat(value) || 0)
-            }}
-          ></InputTextStyled>
-        </View>
-        <View style={styles.repairItemForm}>
-          <Button onPress={handleRepairFinished} color="success">
-            Terminar
-          </Button>
-        </View>
-      </StyledModal>
-    </>
   )
 }
 
