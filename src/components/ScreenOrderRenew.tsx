@@ -9,40 +9,40 @@ const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
   const { navigate } = useNavigation()
   const { orders } = useStore()
-  const order = orders.find((o) => o.id === orderId)
+  const originalOrder = orders.find((o) => o.id === orderId)
 
   const newOrder: Partial<OrderType> = {
-    storeId: order?.storeId || '',
-    assignToSection: order?.assignToSection || '',
-    assignToStaff: order?.assignToStaff || '',
-    neighborhood: order?.neighborhood || '',
-    phone: order?.phone,
+    storeId: originalOrder?.storeId || '',
+    assignToSection: originalOrder?.assignToSection || '',
+    assignToStaff: originalOrder?.assignToStaff || '',
+    neighborhood: originalOrder?.neighborhood || '',
+    phone: originalOrder?.phone,
     status: order_status.DELIVERED,
-    type: order?.type,
-    firstName: order?.firstName || '',
-    lastName: order?.lastName || '',
-    fullName: order?.fullName || '',
-    address: order?.address || '',
-    betweenStreets: order?.betweenStreets || '',
-    location: order?.location || '',
-    email: order?.email || '',
-    description: order?.description || '',
-    imageHouse: order?.imageHouse || '',
-    imageID: order?.imageID || '',
-    indications: order?.indications || '',
-    items: order?.items || [],
-    item: order?.item || null,
-    itemBrand: order?.itemBrand || '',
-    itemSerial: order?.itemSerial || '',
-    street: order?.street || '',
-    expireAt: order.expireAt || null
+    type: originalOrder?.type,
+    firstName: originalOrder?.firstName || '',
+    lastName: originalOrder?.lastName || '',
+    fullName: originalOrder?.fullName || '',
+    address: originalOrder?.address || '',
+    betweenStreets: originalOrder?.betweenStreets || '',
+    location: originalOrder?.location || '',
+    email: originalOrder?.email || '',
+    description: originalOrder?.description || '',
+    imageHouse: originalOrder?.imageHouse || '',
+    imageID: originalOrder?.imageID || '',
+    indications: originalOrder?.indications || '',
+    items: originalOrder?.items || [],
+    item: originalOrder?.item || null,
+    itemBrand: originalOrder?.itemBrand || '',
+    itemSerial: originalOrder?.itemSerial || '',
+    street: originalOrder?.street || '',
+    expireAt: originalOrder.expireAt || null
   }
 
-  if (!order) return <ActivityIndicator />
+  if (!originalOrder) return <ActivityIndicator />
 
   return (
     <FormOrder
-      renew
+      renew={originalOrder.folio}
       defaultValues={newOrder}
       onSubmit={async (order) => {
         //   .then(console.log)
@@ -54,18 +54,32 @@ const ScreenOrderRenew = ({ route }) => {
           renewedAt: new Date(),
           renewedFrom: orderId
         }
-
+        // @ts-ignore
         await ServiceOrders.create(renewedOrder)
           .then((res) => {
             if (res.ok)
               ServiceOrders.update(orderId, {
                 status: order_status.RENEWED
               })
+
+            // * Add comment to the new order
+            ServiceOrders.addComment({
+              storeId: order.storeId,
+              orderId: res.res.id || '',
+              type: 'comment',
+              content: `Renovación de ordern No. ${originalOrder.folio} `
+            })
+              .then(() => {
+                // @ts-ignore
+                navigate('OrderDetails', { orderId: res.res.id || '' })
+              })
+              .catch(console.error)
+            // * Add comment to the original order
             ServiceOrders.addComment({
               storeId: order.storeId,
               orderId,
               type: 'comment',
-              content: 'Orden renovada '
+              content: `Orden renovada `
             })
               .then(() => {
                 // @ts-ignore

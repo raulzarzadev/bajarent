@@ -2,15 +2,12 @@ import { where } from 'firebase/firestore'
 import OrderType, { order_status } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
-import ShortUniqueId from 'short-unique-id'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { auth } from './auth'
-
-const uid = new ShortUniqueId()
 
 type Type = OrderType
+
 class ServiceOrdersClass extends FirebaseGenericService<Type> {
   constructor() {
     super('orders')

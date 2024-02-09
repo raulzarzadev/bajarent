@@ -418,7 +418,7 @@ const RentFlow = ({
               }
               disabled={!enable || disabled}
               size="xs"
-              variant="ghost"
+              variant={key === step ? 'outline' : 'ghost'}
               onPress={() => {
                 onPress()
               }}

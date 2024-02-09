@@ -29,11 +29,15 @@ const initialValues: Partial<OrderType> = {
 }
 
 const FormOrder = ({
-  renew = false,
+  renew = '', // number of order to renew
   onSubmit = async (values) => {
     console.log(values)
   },
   defaultValues = initialValues
+}: {
+  renew?: string | number
+  onSubmit?: (values: Partial<OrderType>) => Promise<any>
+  defaultValues?: Partial<OrderType>
 }) => {
   const [loading, setLoading] = React.useState(false)
 
@@ -45,7 +49,7 @@ const FormOrder = ({
         </P>
         <P size="xl">{defaultValues?.folio}</P>
       </Text>
-      {renew && <Text style={gStyles.h3}>Renovación de orden</Text>}
+      {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
       <Formik
         initialValues={{
           ...defaultValues,
