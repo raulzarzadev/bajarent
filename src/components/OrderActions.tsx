@@ -41,16 +41,16 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const canDelete = staffPermissions.canDeleteOrder || staffPermissions.isAdmin
 
   const COMMON_BUTTONS = [
-    {
-      label: 'Autorizar',
-      show: canAuthorize,
-      button: (
-        <ButtonAuthorize
-          orderId={orderId}
-          isAuthorized={status === order_status.AUTHORIZED}
-        />
-      )
-    },
+    // {
+    //   label: 'Autorizar',
+    //   show: canAuthorize,
+    //   button: (
+    //     <ButtonAuthorize
+    //       orderId={orderId}
+    //       isAuthorized={status === order_status.AUTHORIZED}
+    //     />
+    //   )
+    // },
     {
       label: 'Asignar',
       show: canAssign,
