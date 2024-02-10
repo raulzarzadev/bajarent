@@ -84,9 +84,9 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const street = order?.street || ''
   const betweenStreets = order?.betweenStreets || ''
   const address = order?.address || ''
+  const references = order?.references || ''
 
   const location = order?.location || ''
-
   return (
     <View
       style={{
@@ -100,12 +100,15 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={[gStyles.tCenter]}>{street}</Text>
         <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>
         <Text style={[gStyles.tCenter]}>{address}</Text>
+        <Text style={[gStyles.tCenter]}>{address}</Text>
+        <Text style={[gStyles.tCenter]}>{references}</Text>
       </View>
       {!!neighborhood ||
       !!street ||
       !!betweenStreets ||
       !!address ||
-      !!address ? (
+      !!address ||
+      !!references ? (
         <ButtonSearchLocation location={location} />
       ) : (
         <Text>Sin dirección</Text>
