@@ -29,14 +29,14 @@ function OrdersList({
   const sortFields = [
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
-    { key: 'type', label: 'Tipo' },
+    // { key: 'type', label: 'Tipo' },
+    { key: 'neighborhood', label: 'Colonia' },
     { key: 'status', label: 'Status' },
+    { key: 'assignToSection', label: 'Area' }
     // { key: 'lastName', label: 'Apellido' },
-    { key: 'assignToSection', label: 'Area' },
-    { key: 'assignToStaff', label: 'Staff' },
-    { key: 'createdAt', label: 'Creada' },
-    { key: 'scheduledAt', label: 'Programada' },
-    { key: 'neighborhood', label: 'Colonia' }
+    // { key: 'assignToStaff', label: 'Staff' },
+    // { key: 'createdAt', label: 'Creada' },
+    // { key: 'scheduledAt', label: 'Programada' },
   ]
 
   let timerId = null
