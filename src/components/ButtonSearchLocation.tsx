@@ -35,6 +35,7 @@ const ButtonSearchLocation = ({
 
         return Linking.openURL(urlAddress)
       }}
+      size="xs"
     >
       <Icon
         // disabled={true}

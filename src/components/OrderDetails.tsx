@@ -1,4 +1,4 @@
-import { Text, View, Image, Linking, Pressable } from 'react-native'
+import { Text, View, Image } from 'react-native'
 import React from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import { Ionicons } from '@expo/vector-icons'
@@ -17,6 +17,7 @@ import ErrorBoundary from './ErrorBoundary'
 import OrderAssignedTo from './OrderAssignedTo'
 import ClientName from './ClientName'
 import ButtonSearchLocation from './ButtonSearchLocation'
+import Icon from './Icon'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -47,19 +48,27 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         )}
       </View>
 
-      <View style={{ alignItems: 'center' }}>
+      <View
+        style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center'
+        }}
+      >
         {!!order?.scheduledAt && (
-          <P size="lg" styles={{ textAlign: 'center' }}>
-            {`  ${dateFormat(order?.scheduledAt, 'dd/MMM/yy')} ${fromNow(
-              order?.scheduledAt
-            )} `}
-            <Ionicons
-              style={{ marginLeft: 6, opacity: 0.5 }}
-              name="calendar"
-              size={24}
+          <>
+            <P size="lg" styles={{ textAlign: 'center' }}>
+              {`  ${dateFormat(order?.scheduledAt, 'dd/MMM/yy')} ${fromNow(
+                order?.scheduledAt
+              )} `}
+            </P>
+            <Icon
+              // style={{ marginLeft: 6, opacity: 0.5 }}
+              icon="calendar"
+              // size={24}
               color="gray"
             />
-          </P>
+          </>
         )}
       </View>
 
@@ -95,7 +104,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
         justifyContent: 'center'
       }}
     >
-      <View style={{ marginRight: 8 }}>
+      <View style={{ marginRight: 2 }}>
         <Text style={[gStyles.tCenter, gStyles.tBold]}>{neighborhood}</Text>
         <Text style={[gStyles.tCenter]}>{street}</Text>
         <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>

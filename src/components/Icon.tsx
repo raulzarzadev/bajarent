@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native'
+import { IoMdCalendar, IoMdSwap, IoMdAdd } from 'react-icons/io'
+
 import React from 'react'
 import {
   MdAssignmentInd,
@@ -19,11 +21,10 @@ import { LuComponent } from 'react-icons/lu'
 import { PiUserList } from 'react-icons/pi'
 import { FaRegWindowRestore } from 'react-icons/fa6'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
-import { IoMdSwap, IoMdAdd } from 'react-icons/io'
-
 import { LiaBroomSolid } from 'react-icons/lia'
 import { TbMapSearch } from 'react-icons/tb'
 
+// https://react-icons.github.io/react-icons/
 const icons = {
   up: FaChevronUp,
   down: FaChevronDown,
@@ -44,7 +45,8 @@ const icons = {
   swap: IoMdSwap,
   delete: MdDeleteOutline,
   search: MdOutlineSearch,
-  map: TbMapSearch
+  map: TbMapSearch,
+  calendar: IoMdCalendar
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,
