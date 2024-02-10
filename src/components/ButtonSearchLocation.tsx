@@ -1,4 +1,4 @@
-import { View, Linking } from 'react-native'
+import { Linking } from 'react-native'
 import React from 'react'
 import Icon from './Icon'
 import theme from '../theme'

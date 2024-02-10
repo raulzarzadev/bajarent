@@ -1,7 +1,6 @@
 import { Text, View, Image } from 'react-native'
 import React from 'react'
 import OrderType, { order_type } from '../types/OrderType'
-import { Ionicons } from '@expo/vector-icons'
 import P from './P'
 import CardPhone from './CardPhone'
 import theme from '../theme'
