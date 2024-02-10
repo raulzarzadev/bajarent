@@ -12,7 +12,7 @@
     "commit": "git status && npm run type-check &&  git add . &&  git commit",
     "merge:main": "git switch main && git merge dev && git switch dev",
     "push:main": "git push origin main",
-    "fast-push": "npm run commit && npm run push:main"
+    "fast-push": "npm run merge:main && npm run push:main"
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
