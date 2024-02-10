@@ -1,10 +1,13 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Button, { ButtonProps } from './Button'
+import { IconName } from './Icon'
 type ButtonType = {
   variant: ButtonProps['variant']
   color: ButtonProps['color']
   title: string
+  icon?: IconName
+  justIcon?: boolean
 }
 const buttons: ButtonType[] = [
   { variant: 'filled', color: 'primary', title: 'Filled primary' },
@@ -24,7 +27,42 @@ const buttons: ButtonType[] = [
   { variant: 'ghost', color: 'success', title: 'Ghost success' },
   { variant: 'ghost', color: 'error', title: 'Ghost danger' },
   { variant: 'ghost', color: 'warning', title: 'Ghost warning' },
-  { variant: 'ghost', color: 'info', title: 'Ghost info' }
+  { variant: 'ghost', color: 'info', title: 'Ghost info' },
+  { variant: 'filled', color: 'black', title: 'Filled black', icon: 'filter' },
+  {
+    variant: 'outline',
+    color: 'success',
+    title: 'Outlined success icon',
+    icon: 'filter'
+  },
+  {
+    variant: 'filled',
+    color: 'black',
+    title: 'Filled black',
+    icon: 'filter',
+    justIcon: true
+  },
+  {
+    variant: 'ghost',
+    color: 'primary',
+    title: 'Ghost primary just icon',
+    icon: 'filter',
+    justIcon: true
+  },
+  {
+    variant: 'outline',
+    color: 'error',
+    title: ' Outline danger just icon',
+    icon: 'filter',
+    justIcon: true
+  },
+  {
+    variant: 'outline',
+    color: 'warning',
+    title: ' Outline warning just icon',
+    icon: 'filter',
+    justIcon: true
+  }
   // Agrega aquí más botones si es necesario
 ]
 
@@ -34,7 +72,13 @@ const Buttons = () => {
       data={buttons}
       renderItem={({ item }) => (
         <View style={styles.buttonContainer}>
-          <Button onPress={() => {}} variant={item.variant} color={item.color}>
+          <Button
+            onPress={() => {}}
+            variant={item.variant}
+            color={item.color}
+            icon={item.icon}
+            justIcon={item.justIcon}
+          >
             {item.title}
           </Button>
         </View>

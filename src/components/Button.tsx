@@ -1,7 +1,15 @@
 import React from 'react'
-import { Text, Pressable, StyleSheet, ViewStyle, TextStyle } from 'react-native'
+import {
+  Text,
+  Pressable,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+  View
+} from 'react-native'
 import useTheme from '../hooks/useTheme'
 import { Colors } from '../theme'
+import Icon, { IconName } from './Icon'
 
 export type ButtonProps = {
   onPress: () => void
@@ -13,6 +21,8 @@ export type ButtonProps = {
   children?: string | React.ReactNode
   buttonStyles?: ViewStyle
   textStyles?: TextStyle
+  icon?: IconName
+  justIcon?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -24,7 +34,9 @@ const Button: React.FC<ButtonProps> = ({
   textStyles,
   variant = 'filled',
   color = 'primary',
-  size = 'medium'
+  size = 'medium',
+  icon,
+  justIcon
 }) => {
   const { theme } = useTheme()
   const buttonColor = {
@@ -50,11 +62,24 @@ const Button: React.FC<ButtonProps> = ({
     color: variant === 'filled' ? theme.white : theme[color]
   }
 
+  const justIconStyles = {
+    padding: 5,
+    borderRadius: 9999,
+    width: 30,
+    height: 30,
+    margin: 'auto'
+  }
+
   const sizes = {
     xs: { padding: 5 },
     small: { padding: 10 },
     medium: { padding: 15 },
     large: { padding: 20 }
+  }
+
+  if (justIcon) {
+    label = ''
+    children = null
   }
 
   return (
@@ -66,12 +91,13 @@ const Button: React.FC<ButtonProps> = ({
         disabled && baseStyles.disabled,
         pressed && { opacity: 0.5 },
         sizes[size],
-        buttonStyles
+        buttonStyles,
+        justIcon && justIconStyles
       ]}
       onPress={onPress}
       disabled={disabled}
     >
-      {!children && (
+      {!justIcon && !children && (
         <Text
           style={[
             baseStyles.text,
@@ -83,7 +109,7 @@ const Button: React.FC<ButtonProps> = ({
           {label}
         </Text>
       )}
-      {typeof children === 'string' && !label ? (
+      {!justIcon && typeof children === 'string' && !label ? (
         <Text
           style={[
             baseStyles.text,
@@ -96,6 +122,11 @@ const Button: React.FC<ButtonProps> = ({
         </Text>
       ) : (
         children
+      )}
+      {!!icon && (
+        <View style={{ marginLeft: label || children ? 8 : 0 }}>
+          <Icon icon={icon} color={textColor.color} size={26} />
+        </View>
       )}
     </Pressable>
   )

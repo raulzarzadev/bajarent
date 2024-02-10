@@ -3,8 +3,7 @@ import React from 'react'
 import Button, { ButtonProps } from './Button'
 // import { Icon } from 'react-native-elements'
 
-import theme from '../theme'
-import Icon, { IconName } from './Icon'
+import { IconName } from './Icon'
 export type IconButtonProps = {
   icon: IconName
   iconColor?: ButtonProps['color']
@@ -30,11 +29,11 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
         width: sizes[props.size || 'medium'] * 1.4
       }}
     >
-      <Icon
+      {/* <Icon
         icon={props.icon}
         size={sizes[props.size || 'medium']}
         color={theme[props.color || 'primary']}
-      />
+      /> */}
       {/* <Icon
         type={props.type || 'material'}
         name={props.icon}

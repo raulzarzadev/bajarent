@@ -1,9 +1,7 @@
-import { StyleSheet } from 'react-native'
 import { IoMdCalendar, IoMdSwap, IoMdAdd } from 'react-icons/io'
 
 import React from 'react'
 import {
-  MdAssignmentInd,
   MdEdit,
   MdClose,
   MdAttachMoney,
@@ -13,7 +11,6 @@ import {
   MdListAlt,
   MdFilterList,
   MdDeleteOutline,
-  MdSearch,
   MdOutlineSearch
 } from 'react-icons/md'
 import { IoPersonOutline } from 'react-icons/io5'

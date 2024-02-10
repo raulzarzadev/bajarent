@@ -8,6 +8,7 @@ import InputTextStyled from './InputTextStyled'
 import ModalFilterOrders from './ModalFilterOrders'
 import { useState } from 'react'
 import Icon from './Icon'
+import Button from './Button'
 
 function OrdersList({
   orders,
@@ -57,10 +58,19 @@ function OrdersList({
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: 500
           }}
         >
+          <Button
+            label="Nueva"
+            icon="add"
+            onPress={() => {}}
+            size="small"
+          ></Button>
           <InputTextStyled
+            style={{ width: '100%' }}
             placeholder="Buscar..."
             onChangeText={(e) => {
               handleDebounceSearch(e)
