@@ -8,7 +8,7 @@ const ChangeStaffPosition = () => {
   const { userPositions, myStaffId, handleSetMyStaffId, handleSetStoreId } =
     useStore()
   return (
-    <View>
+    <View style={{ margin: 'auto' }}>
       <FlatList
         horizontal
         data={userPositions}
