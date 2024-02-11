@@ -77,7 +77,6 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
     if (debouncedSearchTerm) {
       ServiceUsers.searchUser(debouncedSearchTerm)
         .then((res) => {
-          console.log({ res })
           if (!res.length)
             setError(
               'Usuario no encontrado, asegurate que esta registrado, y su nombre, telefono o email es correcto'
