@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, TextInputProps, View, Text } from 'react-native'
+import { StyleSheet, TextInput, TextInputProps, Text } from 'react-native'
 import theme, { BORDER_RADIUS, PADDING } from '../theme'
 
 /**
@@ -11,22 +11,35 @@ const InputTextStyled = ({
   disabled,
   helperText,
   helperTextColor,
+  type = 'text',
+  value,
   ...props
-}: TextInputProps & {
+}: Omit<TextInputProps, 'value'> & {
+  value?: string | number
   disabled?: boolean
   helperText?: string
   helperTextColor?: 'error' | 'primary' | 'black' | 'white'
+  type?: 'number' | 'text'
 }): JSX.Element => {
   return (
     <>
       <TextInput
         {...props}
+        value={String(value)}
         editable={!disabled}
         style={[
           baseStyle.inputStyle,
           disabled && { opacity: 0.5 },
           props.style
         ]}
+        onChangeText={(text) => {
+          if (type === 'number') {
+            const numericText = text.replace(/[^0-9]/g, '')
+            if (props.onChangeText) props.onChangeText(numericText)
+          } else {
+            if (props.onChangeText) props.onChangeText(text)
+          }
+        }}
       />
       {!!helperText && (
         <Text style={[baseStyle.helperText, { color: helperTextColor }]}>

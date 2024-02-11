@@ -1,14 +1,10 @@
 import { FlatList, StyleSheet, View } from 'react-native'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { useState } from 'react'
 import OrderType, { order_status } from '../types/OrderType'
-import { useNavigation } from '@react-navigation/native'
+
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
-import useModal from '../hooks/useModal'
-import { useAuth } from '../contexts/authContext'
-import StyledModal from './StyledModal'
-import InputTextStyled from './InputTextStyled'
 
 const OrderActionsRepairFlow = ({
   orderId,
@@ -248,95 +244,3 @@ const onRepairStartRepair = ({ orderId, storeId, undo, staffId }) => {
     .then(console.log)
     .catch(console.error)
 }
-
-const ModalFinishRepair = ({
-  orderId,
-  open,
-  setOpen,
-  title,
-  toggleOpen,
-  handleOrderUpdate
-}: {
-  orderId: string
-  open: boolean
-  setOpen: Dispatch<SetStateAction<boolean>>
-  title: string
-  toggleOpen: () => any
-  handleOrderUpdate: () => any
-}) => {
-  const { user } = useAuth()
-  const { myStaffId, storeId } = useStore()
-  const [info, setInfo] = useState('')
-  const [total, setTotal] = useState(0)
-  const [saving, setSaving] = useState(false)
-  const handleRepairFinished = async () => {
-    setSaving(true)
-    await ServiceOrders.repaired(orderId, {
-      info,
-      total,
-      repairedBy: user.id,
-      repairedByStaff: myStaffId
-    })
-      .then(console.log)
-      .catch(console.error)
-    await ServiceOrders.addComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: 'Reparación terminada'
-    })
-      .then(console.log)
-      .catch(console.error)
-
-    await handleOrderUpdate()
-    setSaving(false)
-    setOpen(false)
-  }
-  return (
-    <>
-      <StyledModal open={open} setOpen={setOpen} title={title}>
-        <View style={styles.repairItemForm}>
-          <InputTextStyled
-            placeholder="Descripción de reparación"
-            numberOfLines={3}
-            multiline
-            onChangeText={setInfo}
-          ></InputTextStyled>
-        </View>
-        <View style={styles.repairItemForm}>
-          <InputTextStyled
-            keyboardType="numeric"
-            placeholder="Total $ "
-            onChangeText={(value) => {
-              setTotal(parseFloat(value) || 0)
-            }}
-          ></InputTextStyled>
-        </View>
-        <View style={styles.repairItemForm}>
-          <Button
-            disabled={saving}
-            onPress={handleRepairFinished}
-            color="success"
-          >
-            Terminar
-          </Button>
-        </View>
-      </StyledModal>
-    </>
-  )
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between'
-  },
-  item: {
-    width: '48%', // for 2 items in a row
-    marginVertical: '1%' // spacing between items
-  },
-  repairItemForm: {
-    marginVertical: 4
-  }
-})

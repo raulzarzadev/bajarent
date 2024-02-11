@@ -17,6 +17,7 @@ import OrderAssignedTo from './OrderAssignedTo'
 import ClientName from './ClientName'
 import ButtonSearchLocation from './ButtonSearchLocation'
 import Icon from './Icon'
+import ModalRepairQuote from './ModalRepairQuote'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -77,6 +78,27 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />
       </ErrorBoundary>
+
+      {order.type === order_type.REPAIR && (
+        <ErrorBoundary>
+          <View
+            style={{
+              maxWidth: 230,
+              marginHorizontal: 'auto',
+              marginVertical: 16
+            }}
+          >
+            <ModalRepairQuote
+              orderId={order.id}
+              quote={{
+                info: order?.repairInfo,
+                total: order?.repairTotal
+              }}
+            />
+          </View>
+        </ErrorBoundary>
+      )}
+
       <ErrorBoundary componentName="OrderActions">
         <OrderActions order={order} />
       </ErrorBoundary>
@@ -174,7 +196,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemBrand}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemSerial}</Text>
 
-          <Text style={gStyles.h3}>Detalles de reparación </Text>
+          <Text style={gStyles.h3}>Detalles de cotización </Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{order?.repairInfo}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
             <CurrencyAmount style={gStyles.tBold} amount={order?.repairTotal} />

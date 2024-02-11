@@ -81,6 +81,7 @@ type OrderBase = {
 
   repairTotal?: number
   repairInfo?: string
+  quoteBy?: string
 }
 
 export enum order_status {
