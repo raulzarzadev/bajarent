@@ -124,7 +124,7 @@ const Button: React.FC<ButtonProps> = ({
         children
       )}
       {!!icon && (
-        <View style={{ marginLeft: label || children ? 8 : 0 }}>
+        <View style={{ marginLeft: label || children ? 4 : 0 }}>
           <Icon icon={icon} color={textColor.color} size={26} />
         </View>
       )}

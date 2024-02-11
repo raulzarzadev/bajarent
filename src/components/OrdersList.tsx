@@ -60,17 +60,18 @@ function OrdersList({
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            maxWidth: 500
+            maxWidth: 500,
+            padding: 4
           }}
         >
           <Button
             label="Nueva"
             icon="add"
             onPress={() => {}}
-            size="small"
+            size="xs"
           ></Button>
           <InputTextStyled
-            style={{ width: '100%' }}
+            style={{ width: '100%', marginLeft: 4 }}
             placeholder="Buscar..."
             onChangeText={(e) => {
               handleDebounceSearch(e)
@@ -93,32 +94,37 @@ function OrdersList({
             flexWrap: 'wrap'
           }}
         >
-          {sortFields.map((field) => (
-            <View key={field.key}>
-              <Pressable
-                onPress={() => {
-                  sortBy(field.key)
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  margin: 4,
-                  width: 100
-                }}
-              >
-                <Text
+          <FlatList
+            horizontal
+            data={sortFields}
+            renderItem={({ item: field }) => (
+              <View key={field.key}>
+                <Pressable
+                  onPress={() => {
+                    sortBy(field.key)
+                  }}
                   style={{
-                    fontWeight: sortedBy === field.key ? 'bold' : 'normal'
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    margin: 4,
+                    width: 65
                   }}
                 >
-                  {field.label}
-                </Text>
-                {sortedBy === field.key && (
-                  <Icon icon={order === 'asc' ? 'up' : 'down'} size={12} />
-                )}
-              </Pressable>
-            </View>
-          ))}
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontWeight: sortedBy === field.key ? 'bold' : 'normal'
+                    }}
+                  >
+                    {field.label}
+                  </Text>
+                  {sortedBy === field.key && (
+                    <Icon icon={order === 'asc' ? 'up' : 'down'} size={12} />
+                  )}
+                </Pressable>
+              </View>
+            )}
+          />
         </View>
         <FlatList
           style={styles.orderList}
