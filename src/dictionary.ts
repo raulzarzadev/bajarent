@@ -54,7 +54,7 @@ const labels = {
   canRepairOrder: 'Reparar Orden',
   REPAIR: 'Reparación',
   REPAIRING: 'Reparando',
-  REPAIRED: 'Reparada',
+  REPAIRED: 'Terminada',
   REPAIR_DELIVERED: 'Entregada',
   RENT: 'Renta',
   SALE: 'Venta',

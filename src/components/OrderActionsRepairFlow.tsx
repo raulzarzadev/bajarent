@@ -58,7 +58,6 @@ const RentFlow = ({
     undoLabel: string
     onPress: () => void
     disabled?: boolean
-    // undo: () => void
   }
 
   const [step, setStep] = useState<OrderType['status']>(orderStatus)
@@ -68,7 +67,6 @@ const RentFlow = ({
   const enableFinishRepair = isAdmin || canRepairOrder
   const enableDeliveryRepair =
     !(step === order_status.RENEWED) || canDeliveryOrder
-  const modalFinishRepair = useModal({ title: 'Detalles de reparación' })
   const steps: Actions[] = [
     {
       key: order_status.AUTHORIZED,
@@ -116,9 +114,13 @@ const RentFlow = ({
           setStep(order_status.REPAIRING)
           onFinishRepair({ orderId, storeId, staffId, undo: true })
         } else {
-          console.log('open modal')
-
-          modalFinishRepair.toggleOpen()
+          setStep(order_status.REPAIRED)
+          onFinishRepair({
+            orderId,
+            storeId,
+            staffId,
+            undo: false
+          })
 
           // setStep(order_status.REPAIRED)
           // onFinishRepair({ orderId, storeId, staffId, undo: false })
@@ -168,20 +170,6 @@ const RentFlow = ({
               }}
             />
           )
-        }}
-      />
-      <ModalFinishRepair
-        {...modalFinishRepair}
-        orderId={orderId}
-        handleOrderUpdate={async () => {
-          console.log('finished')
-          setStep(order_status.REPAIRED)
-          return await onFinishRepair({
-            orderId,
-            storeId,
-            staffId,
-            undo: false
-          })
         }}
       />
     </View>
