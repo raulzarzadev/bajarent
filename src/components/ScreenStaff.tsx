@@ -13,6 +13,7 @@ import theme from '../theme'
 import StaffType from '../types/StaffType'
 import { dateFormat } from '../libs/utils-date'
 import ListStaff from './ListStaff'
+import { gStyles } from '../styles'
 
 const ScreenStaff = ({ navigation }) => {
   const { staff } = useStore()
@@ -20,30 +21,29 @@ const ScreenStaff = ({ navigation }) => {
   return (
     <ScrollView
       style={{
-        padding: 6,
-        maxWidth: 400,
-        width: '100%',
-        marginHorizontal: 'auto'
+        width: '100%'
       }}
     >
-      <Button
-        onPress={() => {
-          navigation.navigate('StaffNew')
-        }}
-        buttonStyles={{
-          width: 140,
-          margin: 'auto',
-          marginVertical: 10
-        }}
-      >
-        Agregar
-      </Button>
-      <ListStaff
-        onPress={(staffId) => {
-          navigation.navigate('StaffDetails', { staffId })
-        }}
-        staff={staff}
-      />
+      <View style={gStyles.container}>
+        <Button
+          onPress={() => {
+            navigation.navigate('StaffNew')
+          }}
+          buttonStyles={{
+            width: 140,
+            margin: 'auto',
+            marginVertical: 10
+          }}
+        >
+          Agregar
+        </Button>
+        <ListStaff
+          onPress={(staffId) => {
+            navigation.navigate('StaffDetails', { staffId })
+          }}
+          staff={staff}
+        />
+      </View>
     </ScrollView>
   )
 }

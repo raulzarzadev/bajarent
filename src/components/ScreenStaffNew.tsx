@@ -18,36 +18,41 @@ import P from './P'
 import CardUser from './CardUser'
 import { useStoreNavigation } from './StackStore'
 import { CreateStaffType } from '../types/StaffType'
+import { gStyles } from '../styles'
 
 const ScreenStaffNew = () => {
   const { store } = useStore()
   const { navigate } = useStoreNavigation()
   const [user, setUser] = React.useState<UserType>()
   return (
-    <ScrollView style={{ padding: 10 }}>
-      <SearchStaff setUser={setUser} />
+    <ScrollView style={{ width: '100%' }}>
+      <View style={gStyles.container}>
+        <SearchStaff setUser={setUser} />
+        {user && <CardUser user={user} />}
+        {user && (
+          <FormStaff
+            defaultValues={{
+              userId: user.id,
+              position: '',
+              name: user.name || ''
+            }}
+            onSubmit={async (values) => {
+              const newStaff: CreateStaffType = {
+                // name: user.name || '',
 
-      {user && <CardUser user={user} />}
-      {user && (
-        <FormStaff
-          defaultValues={{
-            userId: user.id,
-            position: ''
-          }}
-          onSubmit={async (values) => {
-            const newStaff: CreateStaffType = {
-              // name: user.name || '',
+                ...values,
+                position: values.position || '',
+                storeId: store.id,
+                userId: user.id || ''
+              }
+              ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
+                navigate('Staff')
+              })
+            }}
+          />
+        )}
+      </View>
 
-              position: values.position || '',
-              storeId: store.id,
-              userId: user.id || ''
-            }
-            ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
-              navigate('Staff')
-            })
-          }}
-        />
-      )}
       {/* <FormStaff
         onSubmit={async (values) => {
           console.log('onSubmit', values)
