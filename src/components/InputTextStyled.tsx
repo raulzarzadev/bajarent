@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput, TextInputProps, Text } from 'react-native'
 import theme, { BORDER_RADIUS, PADDING } from '../theme'
+import { useState } from 'react'
 
 /**
  * Componente de entrada de texto estilizado.
@@ -12,7 +13,7 @@ const InputTextStyled = ({
   helperText,
   helperTextColor,
   type = 'text',
-  value,
+  value: defValue,
   ...props
 }: Omit<TextInputProps, 'value'> & {
   value?: string | number
@@ -21,6 +22,7 @@ const InputTextStyled = ({
   helperTextColor?: 'error' | 'primary' | 'black' | 'white'
   type?: 'number' | 'text'
 }): JSX.Element => {
+  const [value, setValue] = useState(defValue || '')
   return (
     <>
       <TextInput
@@ -35,9 +37,11 @@ const InputTextStyled = ({
         onChangeText={(text) => {
           if (type === 'number') {
             const numericText = text.replace(/[^0-9]/g, '')
-            if (props.onChangeText) props.onChangeText(numericText)
+            setValue(numericText) // Actualiza el estado aquí
+            return props?.onChangeText?.(numericText)
           } else {
-            if (props.onChangeText) props.onChangeText(text)
+            setValue(text) // Actualiza el estado aquí
+            return props?.onChangeText?.(text)
           }
         }}
       />
