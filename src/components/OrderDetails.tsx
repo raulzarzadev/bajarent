@@ -108,7 +108,6 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={[gStyles.tCenter]}>{street}</Text>
         <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>
         <Text style={[gStyles.tCenter]}>{address}</Text>
-        <Text style={[gStyles.tCenter]}>{address}</Text>
         <Text style={[gStyles.tCenter]}>{references}</Text>
       </View>
       {!!neighborhood ||
