@@ -17,12 +17,12 @@ function OrdersList({
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
 }) {
-  const [filteredData, setFilteredData] = useState([])
+  const [filteredData, setFilteredData] = useState<OrderType[]>([])
 
   const { filteredData: fromSearchData, search } = useFilter({
     data: filteredData
   })
-  const { sortBy, order, sortedBy, sortedData } = useSort({
+  const { sortBy, order, sortedBy, sortedData } = useSort<OrderType>({
     data: fromSearchData,
     defaultSortBy: 'folio'
   })

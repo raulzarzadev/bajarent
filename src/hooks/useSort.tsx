@@ -1,16 +1,16 @@
 import { Timestamp } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
-export default function useSort({
+export default function useSort<T>({
   data,
   defaultSortBy = '',
   defaultOrder = 'asc'
 }: {
-  data: any[]
+  data: T[]
   defaultSortBy: string
   defaultOrder?: 'asc' | 'des'
 }) {
-  const [sortedData, setSortedData] = useState([])
+  const [sortedData, setSortedData] = useState<T[]>([])
   const [sortedBy, setSortedBy] = useState(defaultSortBy)
   const [order, setOrder] = useState<'asc' | 'des'>(defaultOrder)
 
