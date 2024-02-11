@@ -12,6 +12,7 @@ import dictionary from '../dictionary'
 import { gStyles } from '../styles'
 import StoreType from '../types/StoreType'
 import ErrorBoundary from './ErrorBoundary'
+import InputTextStyled from './InputTextStyled'
 
 const ModalFilterOrders = ({
   orders,
@@ -23,7 +24,7 @@ const ModalFilterOrders = ({
   const { staff, storeSections } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
 
-  const { filterBy, cleanFilter, filteredData, filtersBy } = useFilter({
+  const { filterBy, cleanFilter, filteredData, filtersBy, search } = useFilter({
     data: orders
   })
 
@@ -64,7 +65,6 @@ const ModalFilterOrders = ({
       },
       {}
     )
-    console.log({ groupedSections })
     setFilterSections(
       Object.keys(groupedSections).map((storeId) =>
         storeSections.find((a) => a.id === storeId)
@@ -72,23 +72,42 @@ const ModalFilterOrders = ({
     )
   }, [filteredData])
 
-  console.log({ filterSections, filterStatus, storeSections })
-
   const isFilterSelected = (field, value) => {
     return filtersBy.some((a) => a.field === field && a.value === value)
   }
 
+  let timerId = null
+
+  const handleDebounceSearch = (e: string) => {
+    if (timerId) {
+      clearTimeout(timerId)
+    }
+
+    timerId = setTimeout(() => {
+      search(e)
+    }, 300)
+  }
+
   return (
     <View>
-      <View style={{ marginLeft: 8 }}>
-        <ButtonIcon
-          variant={!filtersBy?.length ? 'ghost' : 'filled'}
-          color={!filtersBy?.length ? 'black' : 'primary'}
-          icon="filter"
-          onPress={() => {
-            filterModal.toggleOpen()
+      <View style={{ flexDirection: 'row' }}>
+        <InputTextStyled
+          style={{ width: '100%', marginLeft: 4 }}
+          placeholder="Buscar..."
+          onChangeText={(e) => {
+            handleDebounceSearch(e)
           }}
         />
+        <View style={{ marginLeft: 8 }}>
+          <ButtonIcon
+            variant={!filtersBy?.length ? 'ghost' : 'filled'}
+            color={!filtersBy?.length ? 'black' : 'primary'}
+            icon="filter"
+            onPress={() => {
+              filterModal.toggleOpen()
+            }}
+          />
+        </View>
       </View>
 
       <StyledModal {...filterModal}>

@@ -3,7 +3,6 @@ import OrderRow from './OrderRow'
 import OrderType from '../types/OrderType'
 import useSort from '../hooks/useSort'
 
-import useFilter from '../hooks/useFilter'
 import InputTextStyled from './InputTextStyled'
 import ModalFilterOrders from './ModalFilterOrders'
 import { useState } from 'react'
@@ -19,11 +18,8 @@ function OrdersList({
 }) {
   const [filteredData, setFilteredData] = useState<OrderType[]>([])
 
-  const { filteredData: fromSearchData, search } = useFilter({
-    data: filteredData
-  })
   const { sortBy, order, sortedBy, sortedData } = useSort<OrderType>({
-    data: fromSearchData,
+    data: filteredData,
     defaultSortBy: 'folio'
   })
 
@@ -39,17 +35,6 @@ function OrdersList({
     // { key: 'createdAt', label: 'Creada' },
     // { key: 'scheduledAt', label: 'Programada' },
   ]
-
-  let timerId = null
-  const handleDebounceSearch = (e: string) => {
-    if (timerId) {
-      clearTimeout(timerId)
-    }
-
-    timerId = setTimeout(() => {
-      search(e)
-    }, 300)
-  }
 
   return (
     <>
@@ -70,13 +55,7 @@ function OrdersList({
             onPress={() => {}}
             size="xs"
           ></Button>
-          <InputTextStyled
-            style={{ width: '100%', marginLeft: 4 }}
-            placeholder="Buscar..."
-            onChangeText={(e) => {
-              handleDebounceSearch(e)
-            }}
-          />
+
           <ModalFilterOrders orders={orders} setOrders={setFilteredData} />
         </View>
         <View>

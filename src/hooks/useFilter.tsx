@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 export default function useFilter<T>({ data = [] }: { data: T[] }) {
   useEffect(() => {
     setFilteredData(data)
-  }, [data])
+  }, [])
   const [filteredData, setFilteredData] = useState<T[]>([])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
