@@ -3,7 +3,7 @@ import BottomAppBar from './src/components/BottomAppBar'
 import { AuthContextProvider } from './src/contexts/authContext'
 import { StoreContextProvider } from './src/contexts/storeContext'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ThemeProvider } from './src/contexts/themeContext'
 

@@ -3,11 +3,12 @@ import OrderRow from './OrderRow'
 import OrderType from '../types/OrderType'
 import useSort from '../hooks/useSort'
 
-import InputTextStyled from './InputTextStyled'
 import ModalFilterOrders from './ModalFilterOrders'
 import { useState } from 'react'
 import Icon from './Icon'
 import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
 
 function OrdersList({
   orders,
@@ -16,6 +17,9 @@ function OrdersList({
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
 }) {
+  const { staffPermissions } = useStore()
+  const navigation = useNavigation()
+
   const [filteredData, setFilteredData] = useState<OrderType[]>([])
 
   const { sortBy, order, sortedBy, sortedData } = useSort<OrderType>({
@@ -49,12 +53,17 @@ function OrdersList({
             padding: 4
           }}
         >
-          <Button
-            label="Nueva"
-            icon="add"
-            onPress={() => {}}
-            size="xs"
-          ></Button>
+          {(staffPermissions?.canCreateOrder || staffPermissions.isAdmin) && (
+            <Button
+              label="Nueva"
+              icon="add"
+              onPress={() => {
+                // @ts-ignore
+                navigation.navigate('Orders', { screen: 'NewOrder' })
+              }}
+              size="xs"
+            ></Button>
+          )}
 
           <ModalFilterOrders orders={orders} setOrders={setFilteredData} />
         </View>
