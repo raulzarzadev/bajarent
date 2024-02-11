@@ -11,6 +11,8 @@ import React from 'react'
 import theme from '../theme'
 import StaffType from '../types/StaffType'
 import { dateFormat } from '../libs/utils-date'
+import ButtonConfirm from './ButtonConfirm'
+import { gStyles } from '../styles'
 
 const ListStaff = ({
   staffSelected = [],
@@ -33,25 +35,23 @@ const ListStaff = ({
     >
       <FlatList
         data={staff || []}
-        renderItem={({ item }) =>
-          !!item && (
-            <StaffRow
-              style={{
-                borderColor: staffSelected?.includes(item?.id)
-                  ? theme.secondary
-                  : 'transparent',
-                borderWidth: 2
-              }}
-              key={item?.id}
-              staff={item}
-              fields={['name', 'position']}
-              onPress={
-                () => onPress(item?.id)
-                // navigation.navigate('StaffDetails', { staffId: item.id })
-              }
-            />
-          )
-        }
+        renderItem={({ item }) => (
+          <StaffRow
+            style={{
+              borderColor: staffSelected?.includes(item?.id)
+                ? theme.secondary
+                : 'transparent',
+              borderWidth: 2
+            }}
+            key={item?.id}
+            staff={item}
+            fields={['name', 'position']}
+            onPress={
+              () => onPress(item?.id)
+              // navigation.navigate('StaffDetails', { staffId: item.id })
+            }
+          />
+        )}
       />
     </ScrollView>
   )
@@ -74,6 +74,7 @@ export const StaffRow = ({
       return dateFormat(field)
     }
   }
+  if (!staff) return null // <MissStaff />
   return (
     <Pressable
       onPress={() => {
@@ -110,6 +111,41 @@ export const StaffRow = ({
         ))}
       </View>
     </Pressable>
+  )
+}
+
+const MissStaff = () => {
+  return (
+    <View
+      style={[
+        {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginVertical: 5,
+          backgroundColor: theme.info,
+          padding: 8,
+          borderRadius: 6
+        }
+      ]}
+    >
+      <Text style={gStyles.helper}>
+        Staff no encontrado. Probablemente fue eliminado de la empresa
+      </Text>
+      <ButtonConfirm
+        text="Eliminar"
+        justIcon
+        icon="delete"
+        openColor="error"
+        confirmColor="error"
+        openVariant="ghost"
+        handleConfirm={async () => {
+          console.log('Eliminar')
+        }}
+        confirmLabel="Eliminar"
+        modalTitle="Eliminar Staff no encontrado"
+      ></ButtonConfirm>
+    </View>
   )
 }
 
