@@ -33,23 +33,25 @@ const ListStaff = ({
     >
       <FlatList
         data={staff || []}
-        renderItem={({ item }) => (
-          <StaffRow
-            style={{
-              borderColor: staffSelected?.includes(item?.id)
-                ? theme.secondary
-                : 'transparent',
-              borderWidth: 2
-            }}
-            key={item?.id}
-            staff={item}
-            fields={['name', 'position']}
-            onPress={
-              () => onPress(item?.id)
-              // navigation.navigate('StaffDetails', { staffId: item.id })
-            }
-          />
-        )}
+        renderItem={({ item }) =>
+          !!item && (
+            <StaffRow
+              style={{
+                borderColor: staffSelected?.includes(item?.id)
+                  ? theme.secondary
+                  : 'transparent',
+                borderWidth: 2
+              }}
+              key={item?.id}
+              staff={item}
+              fields={['name', 'position']}
+              onPress={
+                () => onPress(item?.id)
+                // navigation.navigate('StaffDetails', { staffId: item.id })
+              }
+            />
+          )
+        }
       />
     </ScrollView>
   )
