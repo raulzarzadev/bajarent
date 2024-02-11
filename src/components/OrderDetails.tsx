@@ -80,10 +80,18 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <ItemDetails order={order} />
       </ErrorBoundary>
 
-      <ModalPayment orderId={order.id} storeId={order.storeId} />
+      <View
+        style={{
+          maxWidth: 190,
+          marginHorizontal: 'auto',
+          marginVertical: 16
+        }}
+      >
+        <ModalPayment orderId={order.id} storeId={order.storeId} />
+      </View>
 
       {order.type === order_type.REPAIR && (
-        <ErrorBoundary>
+        <ErrorBoundary componentName="ModalRepairQuote">
           <View
             style={{
               maxWidth: 230,

@@ -8,16 +8,18 @@ import PaymentType, { PaymentBase, PaymentMethods } from '../types/PaymentType'
 import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
+import { set } from 'date-fns'
 
+export type ModalPaymentProps = {
+  orderId: string
+  paymentId?: string
+  storeId: string
+}
 export const ModalPayment = ({
   orderId,
   paymentId,
   storeId
-}: {
-  orderId: string
-  paymentId?: string
-  storeId: string
-}) => {
+}: ModalPaymentProps) => {
   const payment: PaymentBase = {
     amount: 0,
     date: new Date(),
@@ -25,7 +27,7 @@ export const ModalPayment = ({
     storeId,
     orderId
   }
-  const label = 'Agregar Pago'
+  const label = 'Pagar'
 
   const modal = useModal({ title: label })
 
@@ -39,6 +41,14 @@ export const ModalPayment = ({
   const handleSavePayment = async () => {
     setSaving(true)
     console.log({ amount, method })
+    resetForm()
+  }
+
+  const resetForm = () => {
+    modal.toggleOpen()
+    setSaving(false)
+    setAmount(0)
+    setMethod('cash')
   }
 
   const methods = Object.values(PaymentMethods).map((method) => ({
@@ -88,7 +98,7 @@ export const ModalPayment = ({
   )
 }
 
-export default (props) => {
+export default (props: ModalPaymentProps) => {
   return (
     <ErrorBoundary componentName="ModalPayment">
       <ModalPayment {...props} />
