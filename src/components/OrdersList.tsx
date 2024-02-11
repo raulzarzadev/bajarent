@@ -9,6 +9,7 @@ import Icon from './Icon'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
+import { gSpace } from '../styles'
 
 function OrdersList({
   orders,
@@ -75,11 +76,8 @@ function OrdersList({
         <View
           style={{
             padding: 4,
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            width: '100%',
-            alignItems: 'center',
-            flexWrap: 'wrap'
+            justifyContent: 'center',
+            marginTop: gSpace(2)
           }}
         >
           <FlatList
