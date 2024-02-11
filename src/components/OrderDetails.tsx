@@ -18,6 +18,7 @@ import ClientName from './ClientName'
 import ButtonSearchLocation from './ButtonSearchLocation'
 import Icon from './Icon'
 import ModalRepairQuote from './ModalRepairQuote'
+import ModalPayment from './ModalPayment'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -78,6 +79,8 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="ItemDetails">
         <ItemDetails order={order} />
       </ErrorBoundary>
+
+      <ModalPayment orderId={order.id} storeId={order.storeId} />
 
       {order.type === order_type.REPAIR && (
         <ErrorBoundary>

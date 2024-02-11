@@ -58,6 +58,8 @@ const labels = {
   REPAIR_DELIVERED: 'Entregada',
   RENT: 'Renta',
   SALE: 'Venta',
+  cash: 'Efectivo',
+  transfer: 'Transferencia',
 
   '': ''
 } as const

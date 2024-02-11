@@ -36,7 +36,20 @@ const InputTextStyled = ({
         ]}
         onChangeText={(text) => {
           if (type === 'number') {
-            const numericText = text.replace(/[^0-9]/g, '')
+            let numericText = text.replace(/[^0-9.]/g, '')
+            const decimalPointIndex = numericText.indexOf('.')
+            if (decimalPointIndex !== -1) {
+              const beforeDecimalPoint = numericText.slice(
+                0,
+                decimalPointIndex + 1
+              )
+              const afterDecimalPoint = numericText.slice(decimalPointIndex + 1)
+              const sanitizedAfterDecimalPoint = afterDecimalPoint.replace(
+                /\./g,
+                ''
+              )
+              numericText = beforeDecimalPoint + sanitizedAfterDecimalPoint
+            }
             setValue(numericText) // Actualiza el estado aquí
             return props?.onChangeText?.(numericText)
           } else {
