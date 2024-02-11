@@ -149,7 +149,7 @@ const ModalFilterOrders = ({
           ))}
         </View>
         {/* ******** FILTER BY ASSIGNED STAFF */}
-        <Text style={[gStyles.h3]}>Asignada (Staff)</Text>
+        {/* <Text style={[gStyles.h3]}>Asignada (Staff)</Text>
         <View style={styles.filters}>
           {staff.map((item, index) => (
             <Chip
@@ -170,7 +170,7 @@ const ModalFilterOrders = ({
               }}
             />
           ))}
-        </View>
+        </View> */}
       </StyledModal>
     </View>
   )
