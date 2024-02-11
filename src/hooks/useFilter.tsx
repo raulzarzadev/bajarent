@@ -66,11 +66,15 @@ export default function useFilter<T>({ data = [] }: { data: T[] }) {
   }
 
   const search = (value: string) => {
-    const res = [...data].filter((a) => {
-      return Object.values(a).some((b) => {
-        if (typeof b === 'string') {
-          return b.toLowerCase().includes(value.toLowerCase())
+    const res = [...data].filter((order) => {
+      return Object.values(order).some((val) => {
+        if (typeof val === 'string') {
+          return val.toLowerCase().includes(value.toLowerCase())
         }
+        if (typeof val === 'number' && !isNaN(Number(value))) {
+          return val === parseFloat(value)
+        }
+
         return false
       })
     })

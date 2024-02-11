@@ -21,7 +21,7 @@ const ModalFilterOrders = ({
   orders: OrderType[]
   setOrders: (orders: OrderType[]) => void
 }) => {
-  const { staff, storeSections } = useStore()
+  const { storeSections } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
 
   const { filterBy, cleanFilter, filteredData, filtersBy, search } = useFilter({
