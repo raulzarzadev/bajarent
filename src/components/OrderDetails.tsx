@@ -80,17 +80,30 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <ItemDetails order={order} />
       </ErrorBoundary>
 
-      <ErrorBoundary componentName="ModalPayment">
-        <View
-          style={{
-            maxWidth: 190,
-            marginHorizontal: 'auto',
-            marginVertical: 16
-          }}
-        >
-          <Text>Pagos</Text>
-        </View>
-      </ErrorBoundary>
+      {order?.payments?.length > 0 && (
+        <ErrorBoundary componentName="ModalPayment">
+          <View
+            style={{
+              maxWidth: 190,
+              marginHorizontal: 'auto',
+              marginVertical: 16
+            }}
+          >
+            <Text style={gStyles.h3}>Pagos</Text>
+            {order.payments?.map((payment) => (
+              <View
+                key={payment.id}
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+              >
+                <Text style={{ marginRight: 8 }}>
+                  {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
+                </Text>
+                <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
+              </View>
+            ))}
+          </View>
+        </ErrorBoundary>
+      )}
 
       <View
         style={{

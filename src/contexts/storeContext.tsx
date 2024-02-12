@@ -17,6 +17,8 @@ import { useAuth } from './authContext'
 import expireDate from '../libs/expireDate'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { SectionType } from '../types/SectionType'
+import { ServicePayments } from '../firebase/ServicePayments'
+import PaymentType from '../types/PaymentType'
 export type StaffPermissions = StaffPermissionType
 export type StoreContextType = {
   store?: null | StoreType
@@ -33,6 +35,8 @@ export type StoreContextType = {
   handleSetMyStaffId?: (staffId: string) => any
   staffPermissions?: Partial<StaffPermissions>
   storeSections?: SectionType[]
+  payments?: PaymentType[]
+  getPayments?: () => void
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -57,6 +61,7 @@ const StoreContextProvider = ({ children }) => {
   const [myStaffId, setMyStaffId] = useState<string>('')
 
   const [storeSections, setStoreSections] = useState<SectionType[]>([])
+  const [payments, setPayments] = useState([])
 
   useEffect(() => {
     if (storeId) ServiceSections.listenByStore(storeId, setStoreSections)
@@ -137,15 +142,17 @@ const StoreContextProvider = ({ children }) => {
         ),
         comments: orderComments,
         status: orderStatus(order),
+
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
         assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position,
         expireAt:
           expireDate(order?.item?.priceSelected?.time, order?.deliveredAt) ||
-          null
+          null,
+        payments: payments.filter((p) => p.orderId === order.id) || []
       }
     })
     setOrderFormatted(orderFormatted)
-  }, [orders, comments, staff, storeId])
+  }, [orders, comments, staff, storeId, payments, payments])
 
   useEffect(() => {
     const getStaffDetails = async () => {
@@ -225,6 +232,22 @@ const StoreContextProvider = ({ children }) => {
       setStaffPermissions(null)
     }
   }, [user, staff, storeId, myStaffId])
+
+  useEffect(() => {
+    getPayments()
+  }, [storeId])
+
+  // useEffect(() => {
+  //   const ordersWithPayments = order.map((o) => ({
+  //     ...o,
+  //     payments: payments.filter((p) => p.orderId === o.id) || []
+  //   }))
+  //   setOrderFormatted(ordersWithPayments)
+  // }, [payments, orders])
+  const getPayments = () => {
+    if (storeId)
+      ServicePayments.getByStore(storeId).then(setPayments).catch(console.error)
+  }
   return (
     <StoreContext.Provider
       value={{
@@ -241,7 +264,9 @@ const StoreContextProvider = ({ children }) => {
         userPositions,
         handleSetMyStaffId,
         staffPermissions,
-        storeSections
+        storeSections,
+        payments,
+        getPayments
       }}
     >
       {children}

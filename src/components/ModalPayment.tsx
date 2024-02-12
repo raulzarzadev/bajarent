@@ -8,6 +8,8 @@ import PaymentType, { PaymentBase, PaymentMethods } from '../types/PaymentType'
 import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
+import { ServicePayments } from '../firebase/ServicePayments'
+import { useStore } from '../contexts/storeContext'
 
 export type ModalPaymentProps = {
   orderId: string
@@ -29,7 +31,7 @@ export const ModalPayment = ({
   const label = 'Pagar'
 
   const modal = useModal({ title: label })
-
+  const { getPayments } = useStore()
   const [method, setMethod] = useState<PaymentType['method']>(
     payment?.method || 'cash'
   )
@@ -38,9 +40,17 @@ export const ModalPayment = ({
   const [saving, setSaving] = useState(false)
 
   const handleSavePayment = async () => {
-    setSaving(true)
-    console.log({ amount, method })
-    resetForm()
+    await ServicePayments.create({
+      amount,
+      method,
+      storeId,
+      orderId,
+      date: new Date()
+    }).then((res) => {
+      setSaving(true)
+      getPayments()
+      resetForm()
+    })
   }
 
   const resetForm = () => {

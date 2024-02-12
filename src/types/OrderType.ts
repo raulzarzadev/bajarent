@@ -2,6 +2,7 @@ import BaseType from './BaseType'
 import { RentItem } from './RentItem'
 import StoreType from './StoreType'
 import { CommentType } from './CommentType'
+import PaymentType from './PaymentType'
 
 type OrderBase = {
   folio: number
@@ -82,6 +83,8 @@ type OrderBase = {
   repairTotal?: number
   repairInfo?: string
   quoteBy?: string
+
+  payments: PaymentType[]
 }
 
 export enum order_status {
