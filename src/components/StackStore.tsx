@@ -7,7 +7,7 @@ import ScreenStaffNew from './ScreenStaffNew'
 import ScreenStaffDetails from './ScreenStaffDetails'
 import ScreenStaffEdit from './ScreenStaffEdit'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import ScreenStoreSections from './ScreenSections'
+import ScreenSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
@@ -97,7 +97,7 @@ function StackStore() {
         options={{
           title: 'Areas'
         }}
-        component={ScreenStoreSections}
+        component={ScreenSections}
       />
       <Stack.Screen
         name="CreateSection"

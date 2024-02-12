@@ -1,10 +1,10 @@
 import { ActivityIndicator, FlatList, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
-import { StaffRow } from './ScreenStaff'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import H1 from './H1'
 import theme from '../theme'
+import StaffRow from './StaffRow'
 
 const ScreenAssignOrder = ({ route, navigation }) => {
   const { orderId } = route.params
@@ -40,10 +40,11 @@ const ScreenAssignOrder = ({ route, navigation }) => {
               borderColor:
                 assignTo === item.id ? theme.secondary : 'transparent'
             }}
-            staff={item}
-            onPress={() => {
-              handleAssignOrder(item.id)
-            }}
+            staffId={item.id}
+            //staff={item}
+            // onPress={() => {
+            //   handleAssignOrder(item.id)
+            // }}
             fields={['name', 'position', 'phone']}
           />
         )}

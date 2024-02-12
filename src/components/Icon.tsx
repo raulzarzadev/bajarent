@@ -20,6 +20,7 @@ import { FaRegWindowRestore } from 'react-icons/fa6'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import { LiaBroomSolid } from 'react-icons/lia'
 import { TbMapSearch } from 'react-icons/tb'
+import { HiDotsVertical } from 'react-icons/hi'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -43,7 +44,8 @@ const icons = {
   delete: MdDeleteOutline,
   search: MdOutlineSearch,
   map: TbMapSearch,
-  calendar: IoMdCalendar
+  calendar: IoMdCalendar,
+  verticalDots: HiDotsVertical
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,

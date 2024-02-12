@@ -69,7 +69,10 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
       </View>
       <Text style={styles.subtitle}>Staff </Text>
       <ListStaff
-        staff={section?.staff?.map((id) => staff.find((s) => s?.id === id))}
+        staff={section?.staff?.map(
+          (id) => staff.find((s) => s?.id === id) || { id, missing: true }
+        )}
+        sectionId={section?.id}
         onPress={handleSelectStaff}
       />
       <ModalSelectStaff

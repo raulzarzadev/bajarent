@@ -2,27 +2,27 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
-  ScrollView,
-  Text,
-  View,
-  ViewStyle
+  ScrollView
 } from 'react-native'
 import React from 'react'
-import theme from '../theme'
 import StaffType from '../types/StaffType'
-import { dateFormat } from '../libs/utils-date'
-import ButtonConfirm from './ButtonConfirm'
-import { gStyles } from '../styles'
+import ErrorBoundary from './ErrorBoundary'
+import StaffRow from './StaffRow'
 
+export type ListStaffProps = {
+  staffSelected?: string[]
+  onPress?: (staffId: string) => void
+  staff?: (StaffType | { id: string; missing: boolean })[]
+  sectionId?: string
+  hideActions?: boolean
+}
 const ListStaff = ({
   staffSelected = [],
   onPress,
-  staff = []
-}: {
-  staffSelected?: string[]
-  onPress: (staffId: string) => void
-  staff: StaffType[]
-}) => {
+  staff = [],
+  sectionId = '',
+  hideActions
+}: ListStaffProps) => {
   if (!staff) return <ActivityIndicator />
   return (
     <ScrollView
@@ -36,117 +36,27 @@ const ListStaff = ({
       <FlatList
         data={staff || []}
         renderItem={({ item }) => (
-          <StaffRow
-            style={{
-              borderColor: staffSelected?.includes(item?.id)
-                ? theme.secondary
-                : 'transparent',
-              borderWidth: 2
-            }}
-            key={item?.id}
-            staff={item}
-            fields={['name', 'position']}
-            onPress={
-              () => onPress(item?.id)
-              // navigation.navigate('StaffDetails', { staffId: item.id })
-            }
-          />
+          <ErrorBoundary key={item?.id} componentName={`StaffRow ${item?.id}`}>
+            <Pressable onPress={() => onPress(item?.id)}>
+              <StaffRow
+                selected={staffSelected.includes(item?.id)}
+                sectionId={sectionId}
+                staffId={item?.id}
+                fields={['name', 'position']}
+                hideActions={hideActions}
+              />
+            </Pressable>
+          </ErrorBoundary>
         )}
       />
     </ScrollView>
   )
 }
 
-export const StaffRow = ({
-  staff,
-  onPress,
-  fields = ['name', 'position'],
-  style
-}: {
-  staff: StaffType
-  onPress: () => void
-  fields?: (keyof StaffType)[]
-  style?: ViewStyle
-}) => {
-  const text = (field?: string | Date): string => {
-    if (typeof field === 'string') return field
-    if (field instanceof Date) {
-      return dateFormat(field)
-    }
-  }
-  if (!staff) return null // <MissStaff />
+export default (props: ListStaffProps) => {
   return (
-    <Pressable
-      onPress={() => {
-        onPress()
-      }}
-      style={[
-        {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginVertical: 5,
-          backgroundColor: theme.info,
-          padding: 8,
-          borderRadius: 6
-        },
-        style
-      ]}
-    >
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'space-between',
-          flexDirection: 'row'
-        }}
-      >
-        {fields?.map((field) => (
-          <Text
-            key={field}
-            style={{ marginHorizontal: 4, width: `${100 / fields.length}%` }}
-            numberOfLines={1}
-          >
-            {text(staff?.[field] as string)}
-          </Text>
-        ))}
-      </View>
-    </Pressable>
+    <ErrorBoundary componentName="ListStaff">
+      <ListStaff {...props} />
+    </ErrorBoundary>
   )
 }
-
-const MissStaff = () => {
-  return (
-    <View
-      style={[
-        {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginVertical: 5,
-          backgroundColor: theme.info,
-          padding: 8,
-          borderRadius: 6
-        }
-      ]}
-    >
-      <Text style={gStyles.helper}>
-        Staff no encontrado. Probablemente fue eliminado de la empresa
-      </Text>
-      <ButtonConfirm
-        text="Eliminar"
-        justIcon
-        icon="delete"
-        openColor="error"
-        confirmColor="error"
-        openVariant="ghost"
-        handleConfirm={async () => {
-          console.log('Eliminar')
-        }}
-        confirmLabel="Eliminar"
-        modalTitle="Eliminar Staff no encontrado"
-      ></ButtonConfirm>
-    </View>
-  )
-}
-
-export default ListStaff

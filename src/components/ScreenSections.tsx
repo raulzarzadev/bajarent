@@ -11,9 +11,10 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gSpace, gStyles } from '../styles'
+import StaffRow from './StaffRow'
 
-const ScreenStoreSections = ({ navigation }) => {
-  const { storeSections, staff } = useStore()
+const ScreenSections = ({ navigation }) => {
+  const { storeSections } = useStore()
   return (
     <ScrollView>
       <Button
@@ -31,30 +32,12 @@ const ScreenStoreSections = ({ navigation }) => {
         <FlatList
           data={storeSections}
           renderItem={({ item }) => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate('SectionDetails', { sectionId: item.id })
+            <SectionRow
+              section={item}
+              onPress={(sectionId) => {
+                navigation.navigate('SectionDetails', { sectionId })
               }}
-              style={styles.item}
-            >
-              <Text>{item.name}</Text>
-              <Text>{item.description}</Text>
-              <View style={styles.staff}>
-                <Text style={[gStyles.h3, { textAlign: 'center' }]}>
-                  Staff:{' '}
-                </Text>
-                <Text style={{ textAlign: 'center' }}>
-                  ({item?.staff?.length || 0})
-                </Text>
-                {item?.staff
-                  ?.map((staffId) => staff.find((s) => s.id === staffId))
-                  ?.map((staff, i) => (
-                    <Text key={i}>
-                      {staff?.position} {staff?.name}
-                    </Text>
-                  ))}
-              </View>
-            </Pressable>
+            />
           )}
         ></FlatList>
       </View>
@@ -62,7 +45,44 @@ const ScreenStoreSections = ({ navigation }) => {
   )
 }
 
-export default ScreenStoreSections
+export const SectionRow = ({
+  section,
+  onPress
+}: {
+  section
+  onPress: (sectionId: string) => void
+}) => {
+  return (
+    <View
+      // onPress={() => {
+      //   onPress(section.id)
+      // }}
+      style={styles.item}
+    >
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ width: '100%' }}>{section?.name}</Text>
+        <Button
+          icon="verticalDots"
+          justIcon
+          label="Ver"
+          onPress={() => onPress(section.id)}
+        ></Button>
+      </View>
+      <Text>{section?.description}</Text>
+      <View style={styles.staff}>
+        <Text style={[gStyles.h3, { textAlign: 'center' }]}>Staff: </Text>
+        <Text style={{ textAlign: 'center' }}>
+          ({section?.staff?.length || 0})
+        </Text>
+        {section?.staff?.map((staffId) => (
+          <StaffRow key={staffId} staffId={staffId} sectionId={section.id} />
+        ))}
+      </View>
+    </View>
+  )
+}
+
+export default ScreenSections
 
 const styles = StyleSheet.create({
   item: {
