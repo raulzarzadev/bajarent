@@ -80,6 +80,18 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <ItemDetails order={order} />
       </ErrorBoundary>
 
+      <ErrorBoundary componentName="ModalPayment">
+        <View
+          style={{
+            maxWidth: 190,
+            marginHorizontal: 'auto',
+            marginVertical: 16
+          }}
+        >
+          <Text>Pagos</Text>
+        </View>
+      </ErrorBoundary>
+
       <View
         style={{
           maxWidth: 190,

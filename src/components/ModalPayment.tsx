@@ -8,7 +8,6 @@ import PaymentType, { PaymentBase, PaymentMethods } from '../types/PaymentType'
 import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
-import { set } from 'date-fns'
 
 export type ModalPaymentProps = {
   orderId: string
