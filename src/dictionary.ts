@@ -60,12 +60,12 @@ const labels = {
   SALE: 'Venta',
   cash: 'Efectivo',
   transfer: 'Transferencia',
-
+  ' ': '',
   '': ''
 } as const
 export type Labels = keyof typeof labels
 const dictionary = (value: Labels) => {
-  if (!labels[value]) return value
+  if (!labels[value] || value === ' ') return value
   return labels[value]
 }
 

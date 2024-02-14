@@ -12,6 +12,9 @@ import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
 import MyStaffLabel from './MyStaffLabel'
+import ScreenCashbox from './ScreenCashbox'
+import ScreenPayments from './ScreenPayments'
+import ScreenPaymentsDetails from './ScreenPaymentsDetails'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -119,6 +122,29 @@ function StackStore() {
           title: 'Editar area'
         }}
         component={ScreenSectionsEdit}
+      />
+
+      {/* CASHBOX  */}
+      <Stack.Screen
+        name="Cashbox"
+        options={{
+          title: 'Caja'
+        }}
+        component={ScreenCashbox}
+      />
+      <Stack.Screen
+        name="Payments"
+        options={{
+          title: 'Pagos'
+        }}
+        component={ScreenPayments}
+      />
+      <Stack.Screen
+        name="PaymentsDetails"
+        options={{
+          title: 'Detalle de pago'
+        }}
+        component={ScreenPaymentsDetails}
       />
     </Stack.Navigator>
   )
