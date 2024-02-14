@@ -17,6 +17,7 @@ const ScreenStore = ({ navigation }) => {
     return orders?.filter((o) => o?.status === status)?.length
   }
   const isOwner = store?.createdBy === user?.id
+
   return (
     <ScrollView>
       {!store && <ChangeStore label="Entrar " />}
