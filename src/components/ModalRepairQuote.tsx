@@ -48,6 +48,7 @@ export const ModalRepairQuote = ({
         icon="money"
         size="small"
         color="success"
+        variant="ghost"
       >
         {label}
       </Button>

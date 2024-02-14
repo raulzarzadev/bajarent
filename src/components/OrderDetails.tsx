@@ -80,20 +80,46 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <ItemDetails order={order} />
       </ErrorBoundary>
 
+      {order.type === order_type.REPAIR && (
+        <ErrorBoundary componentName="ModalRepairQuote">
+          <View
+            style={{
+              maxWidth: 230,
+              marginHorizontal: 'auto',
+              marginTop: 4,
+              marginBottom: 8
+            }}
+          >
+            <ModalRepairQuote
+              orderId={order.id}
+              quote={{
+                info: order?.repairInfo,
+                total: order?.repairTotal
+              }}
+            />
+          </View>
+        </ErrorBoundary>
+      )}
+
       {order?.payments?.length > 0 && (
         <ErrorBoundary componentName="ModalPayment">
           <View
             style={{
               maxWidth: 190,
               marginHorizontal: 'auto',
-              marginVertical: 16
+              marginVertical: 16,
+              marginTop: 8
             }}
           >
             <Text style={gStyles.h3}>Pagos</Text>
             {order.payments?.map((payment) => (
               <View
                 key={payment.id}
-                style={{ flexDirection: 'row', alignItems: 'center' }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 6
+                }}
               >
                 <Text style={{ marginRight: 8 }}>
                   {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
@@ -109,31 +135,11 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         style={{
           maxWidth: 190,
           marginHorizontal: 'auto',
-          marginVertical: 16
+          marginBottom: 16
         }}
       >
         <ModalPayment orderId={order.id} storeId={order.storeId} />
       </View>
-
-      {order.type === order_type.REPAIR && (
-        <ErrorBoundary componentName="ModalRepairQuote">
-          <View
-            style={{
-              maxWidth: 230,
-              marginHorizontal: 'auto',
-              marginVertical: 16
-            }}
-          >
-            <ModalRepairQuote
-              orderId={order.id}
-              quote={{
-                info: order?.repairInfo,
-                total: order?.repairTotal
-              }}
-            />
-          </View>
-        </ErrorBoundary>
-      )}
 
       <ErrorBoundary componentName="OrderActions">
         <OrderActions order={order} />
