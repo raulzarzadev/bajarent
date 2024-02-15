@@ -162,28 +162,30 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View
       style={{
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center'
       }}
     >
-      <View style={{ marginRight: 2 }}>
+      <View>
         <Text style={[gStyles.tCenter, gStyles.tBold]}>{neighborhood}</Text>
         <Text style={[gStyles.tCenter]}>{street}</Text>
         <Text style={[gStyles.tCenter]}>{betweenStreets}</Text>
         <Text style={[gStyles.tCenter]}>{address}</Text>
         <Text style={[gStyles.tCenter]}>{references}</Text>
       </View>
-      {!!neighborhood ||
-      !!street ||
-      !!betweenStreets ||
-      !!address ||
-      !!address ||
-      !!references ? (
-        <ButtonSearchLocation location={location} />
-      ) : (
-        <Text>Sin dirección</Text>
-      )}
+      <View>
+        {!!neighborhood ||
+        !!street ||
+        !!betweenStreets ||
+        !!address ||
+        !!address ||
+        !!references ? (
+          <ButtonSearchLocation location={location} />
+        ) : (
+          <Text>Sin dirección</Text>
+        )}
+      </View>
     </View>
   )
 }
@@ -194,7 +196,8 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       style={{
         marginVertical: 16,
         paddingVertical: 16,
-        backgroundColor: theme?.base
+        backgroundColor: theme?.base,
+        margin: 4
       }}
     >
       <Text style={[gStyles.h3, { marginBottom: 8 }]}>Artículo</Text>
