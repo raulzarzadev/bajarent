@@ -135,7 +135,10 @@ const styles = StyleSheet.create({
     // padding: 12,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    maxWidth: 800,
+    margin: 'auto',
+    width: '100%'
   },
   orderList: {
     width: '100%',

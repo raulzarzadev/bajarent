@@ -29,7 +29,8 @@ export const gStyles = StyleSheet.create({
     maxWidth: 500,
     margin: 'auto',
     width: '100%',
-    padding: 8
+    padding: 8,
+    maxHeight: '100%'
   },
   p: {
     fontSize: 16,
