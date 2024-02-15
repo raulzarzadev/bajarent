@@ -105,7 +105,6 @@ function List<T extends { id: string }>({
               }}
             >
               <ComponentRow item={item} />
-              {/* <OrderRow order={item} /> */}
             </Pressable>
           )}
         ></FlatList>
@@ -116,15 +115,12 @@ function List<T extends { id: string }>({
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 12,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%'
+    justifyContent: 'center'
   },
   orderList: {
     width: '100%',
-    // paddingVertical: 40,
     paddingHorizontal: 4
   }
 })
