@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 
 export default function useFilter<T>({ data = [] }: { data: T[] }) {
-  useEffect(() => {
-    setFilteredData(data)
-  }, [data])
   const [filteredData, setFilteredData] = useState<T[]>([])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
@@ -16,6 +13,8 @@ export default function useFilter<T>({ data = [] }: { data: T[] }) {
     setFilteredData(data)
     setFiltersBy([])
   }
+
+  console.log({ filteredBy, filteredData, filtersBy })
 
   const filterBy = (field = 'status', value: string | boolean | number) => {
     let filters = [...filtersBy]
@@ -80,6 +79,16 @@ export default function useFilter<T>({ data = [] }: { data: T[] }) {
     })
     setFilteredData(res)
   }
+
+  useEffect(() => {
+    // setFilteredData(data)
+    const res = [...data].filter((order) => {
+      return filtersBy.every((filter) => {
+        return order[filter.field] === filter.value
+      })
+    })
+    setFilteredData(res)
+  }, [data])
 
   return { filteredData, filteredBy, cleanFilter, filterBy, search, filtersBy }
 }
