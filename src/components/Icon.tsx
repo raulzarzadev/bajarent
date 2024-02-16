@@ -21,6 +21,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import { LiaBroomSolid } from 'react-icons/lia'
 import { TbMapSearch } from 'react-icons/tb'
 import { HiDotsVertical } from 'react-icons/hi'
+import { GrFormSubtract } from 'react-icons/gr'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -45,7 +46,8 @@ const icons = {
   search: MdOutlineSearch,
   map: TbMapSearch,
   calendar: IoMdCalendar,
-  verticalDots: HiDotsVertical
+  verticalDots: HiDotsVertical,
+  sub: GrFormSubtract
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,

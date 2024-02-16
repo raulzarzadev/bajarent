@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
@@ -14,6 +14,8 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import OrderActionsRentFlow from './OrderActionsRentFlow'
 import OrderActionsRepairFlow from './OrderActionsRepairFlow'
 import { gStyles } from '../styles'
+import { useEffect, useState } from 'react'
+import useDebounce from '../hooks/useDebunce'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -152,6 +154,9 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       <Text style={[gStyles.h2, { marginVertical: 8, marginTop: 16 }]}>
         Acciones de orden
       </Text>
+
+      <PriorityOrder orderId={orderId} />
+
       {order.type === order_type.RENT && (
         <ErrorBoundary componentName="OrderActionsRentFlow">
           <OrderActionsRentFlow orderId={orderId} orderStatus={order.status} />
@@ -177,6 +182,72 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           )}
         </View>
       </ErrorBoundary>
+    </View>
+  )
+}
+
+const PriorityOrder = ({ orderId }) => {
+  const { orders } = useStore()
+  const order = orders.find((o) => o.id === orderId)
+  const orderPriority = order?.priority
+  const [priority, setPriority] = useState(orderPriority || 0)
+  const [disabled, setDisabled] = useState(false)
+  // useEffect(() => {
+  //   ServiceOrders.update(orderId, { priority: value as number })
+  //     .then((r) => console.log(r))
+  //     .catch((e) => console.error(e))
+  // }, [value])
+
+  const handleSetPriority = async (amount: number) => {
+    setDisabled(true)
+    setPriority(priority + amount)
+    await updatePriority(orderId, priority + amount)
+    setTimeout(() => {
+      setDisabled(false)
+    }, 600)
+  }
+
+  const updatePriority = async (orderId: string, value: number) => {
+    await ServiceOrders.update(orderId, { priority: value })
+      .then((r) => console.log(r))
+      .catch((e) => console.error(e))
+  }
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Text style={gStyles.h2}>Prioridad:</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {!!priority && (
+          <Button
+            disabled={disabled}
+            variant="ghost"
+            icon="sub"
+            justIcon
+            onPress={() => handleSetPriority(-1)}
+          ></Button>
+        )}
+        {!priority && <Text style={{ marginLeft: 8 }}>Sin prioridad </Text>}
+        {!!priority && <Text style={gStyles.h2}>{priority}</Text>}
+        <Button
+          disabled={disabled}
+          variant="ghost"
+          icon="add"
+          justIcon
+          onPress={() => handleSetPriority(1)}
+        ></Button>
+      </View>
     </View>
   )
 }
@@ -212,43 +283,6 @@ const ButtonCancel = ({
       label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
       onPress={() => {
         handleCancel()
-      }}
-    />
-  )
-}
-const ButtonAuthorize = ({
-  orderId,
-  isAuthorized,
-  disabled
-}: {
-  orderId: string
-  isAuthorized: boolean
-  disabled?: boolean
-}) => {
-  const { storeId } = useStore()
-  const handleAuthorize = () => {
-    ServiceOrders.update(orderId, {
-      status: isAuthorized ? order_status.PENDING : order_status.AUTHORIZED
-    })
-      .then(console.log)
-      .catch(console.error)
-
-    ServiceOrders.addComment({
-      content: isAuthorized ? 'Orden no autorizada' : 'Orden autorizada',
-      type: 'comment',
-      orderId,
-      storeId
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
-  return (
-    <Button
-      variant="outline"
-      disabled={disabled}
-      label={isAuthorized ? 'No autorizar' : 'Autorizar'}
-      onPress={() => {
-        handleAuthorize()
       }}
     />
   )

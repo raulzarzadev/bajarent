@@ -85,6 +85,8 @@ type OrderBase = {
   quoteBy?: string
 
   payments: PaymentType[]
+
+  priority?: number
 }
 
 export enum order_status {
