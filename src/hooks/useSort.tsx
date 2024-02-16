@@ -1,5 +1,6 @@
 import { Timestamp } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
+import { order_status } from '../types/OrderType'
 
 export default function useSort<T>({
   data,
@@ -20,8 +21,23 @@ export default function useSort<T>({
 
   const sortBy = (field = defaultSortBy) => {
     const res = [...data].sort((a, b) => {
-      // @ts-ignore
-      if (a.priority && b.priority) {
+      const statusIsNotIn = (statuses: string[]) => {
+        // @ts-ignore
+        return !statuses.includes(a?.status) || !statuses.includes(b?.status)
+      }
+      if (
+        // @ts-ignore
+        a.priority &&
+        // @ts-ignore
+        b.priority &&
+        statusIsNotIn([
+          order_status.CANCELLED,
+          order_status.DELIVERED,
+          order_status.PICKUP,
+          order_status.REPAIR_DELIVERED,
+          order_status.RENEWED
+        ])
+      ) {
         // @ts-ignore
         if (a.priority < b.priority) return -1
         // @ts-ignore
