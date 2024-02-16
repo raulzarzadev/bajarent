@@ -1,12 +1,8 @@
 import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
-import { ServiceStores } from '../firebase/ServiceStore'
 import StoreType from '../types/StoreType'
 import OrderType, { order_status } from '../types/OrderType'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
-import { ServiceComments } from '../firebase/ServiceComments'
 import orderStatus from '../libs/orderStatus'
-import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType, {
   StaffPermissionType,
@@ -15,10 +11,10 @@ import StaffType, {
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
 import expireDate from '../libs/expireDate'
-import { ServiceSections } from '../firebase/ServiceSections'
 import { SectionType } from '../types/SectionType'
-import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
+import useStoreDataListen from '../hooks/useStoreDataListen'
+import useUserStores from '../hooks/useUserStores'
 export type StaffPermissions = StaffPermissionType
 export type StoreContextType = {
   store?: null | StoreType
@@ -45,63 +41,22 @@ const StoreContextProvider = ({ children }) => {
 
   const [storeId, setStoreId] = useState<StoreContextType['store']['id']>(null)
 
-  const [store, setStore] = useState<StoreContextType['store']>(null)
+  const {
+    comments,
+    orders,
+    payments,
+    sections: storeSections,
+    staff,
+    store
+  } = useStoreDataListen({ storeId })
 
-  const [orders, setOrders] = useState<StoreContextType['orders']>([])
-  const [comments, setComments] = useState<StoreContextType['comments']>([])
-  const [staff, setStaff] = useState<StoreContextType['staff']>([])
+  const { userPositions, userStores } = useUserStores()
 
   const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
   const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
 
-  const [userStores, setUserStores] = useState([])
-  const [userPositions, setUserPositions] = useState<StaffType[]>([])
-
   const [myOrders, setMyOrders] = useState<OrderType[]>([])
   const [myStaffId, setMyStaffId] = useState<string>('')
-
-  const [storeSections, setStoreSections] = useState<SectionType[]>([])
-  const [payments, setPayments] = useState([])
-
-  useEffect(() => {
-    if (storeId) ServiceSections.listenByStore(storeId, setStoreSections)
-  }, [storeId])
-
-  useEffect(() => {
-    //* get stores where user is  owner
-    if (user?.id)
-      ServiceStores.getStoresByUserId(user?.id)
-        .then((res) => {
-          setUserStores(res)
-        })
-        .catch(console.error)
-  }, [user?.id])
-
-  useEffect(() => {
-    if (user?.id) {
-      //* get stores where user is staff
-      ServiceStaff.getStaffPositions(user?.id)
-        .then(async (positions) => {
-          const positionsWithStoreDataPromises = positions.map(
-            async (position) => {
-              const store = userStores?.find((s) => s?.id === position?.storeId)
-              return {
-                ...position,
-                store: {
-                  name: store?.name,
-                  id: store?.id
-                }
-              }
-            }
-          )
-          const positionsWithStore = await Promise.all(
-            positionsWithStoreDataPromises
-          )
-          setUserPositions(positionsWithStore)
-        })
-        .catch(console.error)
-    }
-  }, [user, userStores])
 
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
@@ -109,26 +64,12 @@ const StoreContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    getItem('storeId').then(setStoreId)
+    getItem('myStaffId').then(setMyStaffId)
   }, [])
 
   useEffect(() => {
-    if (storeId) {
-      ServiceStores.get(storeId).then((store) => {
-        if (store) {
-          setStore(store)
-          ServiceOrders.storeOrders(storeId, setOrders)
-          ServiceComments.storeComments(storeId, setComments)
-          ServiceStaff.storeStaff(storeId, setStaff)
-        }
-      })
-    } else {
-      setStore(null)
-      setOrders([])
-      setComments([])
-      setStaff([])
-    }
-  }, [storeId])
+    getItem('storeId').then(setStoreId)
+  }, [])
 
   useEffect(() => {
     const orderFormatted = orders.map((order) => {
@@ -174,12 +115,6 @@ const StoreContextProvider = ({ children }) => {
   }, [staff])
 
   useEffect(() => {
-    // const staffId = staff?.find((s) => s?.userId === user?.id)?.id || ''
-    // setMyStaffId(staffId)
-    getItem('myStaffId').then(setMyStaffId)
-  }, [])
-
-  useEffect(() => {
     if (myStaffId) {
       const myCurrentPosition = staff?.find((s) => s.id === myStaffId)
       const myCurrentSections = storeSections.filter((s) =>
@@ -213,11 +148,6 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [myStaffId, orderFormatted])
 
-  const handleSetMyStaffId = async (staffId: string) => {
-    setMyStaffId(staffId)
-    setItem('myStaffId', staffId)
-  }
-
   const [staffPermissions, setStaffPermissions] =
     useState<Partial<StaffPermissions>>(null)
   useEffect(() => {
@@ -233,26 +163,15 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [user, staff, storeId, myStaffId])
 
-  useEffect(() => {
-    getPayments()
-  }, [storeId])
-
-  // useEffect(() => {
-  //   const ordersWithPayments = order.map((o) => ({
-  //     ...o,
-  //     payments: payments.filter((p) => p.orderId === o.id) || []
-  //   }))
-  //   setOrderFormatted(ordersWithPayments)
-  // }, [payments, orders])
-  const getPayments = () => {
-    if (storeId)
-      ServicePayments.getByStore(storeId).then(setPayments).catch(console.error)
+  const handleSetMyStaffId = async (staffId: string) => {
+    setMyStaffId(staffId)
+    setItem('myStaffId', staffId)
   }
+
   return (
     <StoreContext.Provider
       value={{
         store,
-        setStore,
         storeId,
         handleSetStoreId,
         orders: orderFormatted,
@@ -265,8 +184,7 @@ const StoreContextProvider = ({ children }) => {
         handleSetMyStaffId,
         staffPermissions,
         storeSections,
-        payments,
-        getPayments
+        payments
       }}
     >
       {children}

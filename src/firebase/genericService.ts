@@ -1,4 +1,4 @@
-import { QueryConstraint } from 'firebase/firestore'
+import { QueryConstraint, where } from 'firebase/firestore'
 import { storage } from './auth'
 import { FirebaseCRUD } from './firebase.CRUD'
 import { db } from './main'
@@ -57,5 +57,9 @@ export class FirebaseGenericService<T extends Identifiable> {
 
   async deleteMany(filters: QueryConstraint[] = []) {
     return await this.itemCRUD.deleteItems(filters)
+  }
+
+  listenByStore(storeId: string, cb: CallableFunction) {
+    return this.listenMany([where('storeId', '==', storeId)], cb)
   }
 }

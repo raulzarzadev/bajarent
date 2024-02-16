@@ -105,6 +105,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     // Implementa tu método personalizado
   }
 
+  async getByStore(storeId: string) {
+    return await this.findMany([where('storeId', '==', storeId)])
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
