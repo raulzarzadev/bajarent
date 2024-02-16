@@ -25,10 +25,12 @@ function OrdersList({
 
   const { sortBy, order, sortedBy, sortedData } = useSort<OrderType>({
     data: filteredData,
-    defaultSortBy: 'folio'
+    defaultSortBy: 'priority',
+    defaultOrder: 'des'
   })
 
   const sortFields = [
+    { key: 'priority', label: 'Prioridad' },
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
     // { key: 'type', label: 'Tipo' },

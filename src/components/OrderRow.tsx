@@ -5,6 +5,7 @@ import OrderType from '../types/OrderType'
 import theme, { STATUS_COLOR } from '../theme'
 import { OrderDirectives } from './OrderDetails'
 import ClientName from './ClientName'
+import { gStyles } from '../styles'
 
 const OrderRow = ({ order }: { order: OrderType }) => {
   const fields: {
@@ -18,6 +19,9 @@ const OrderRow = ({ order }: { order: OrderType }) => {
       component: (
         <View>
           <Text style={{ textAlign: 'center' }} numberOfLines={1}>
+            <Text style={gStyles.tBold}>{`${
+              order?.priority ? `(${order.priority})` : ''
+            }`}</Text>{' '}
             {order.folio}
           </Text>
           <Text style={{ textAlign: 'center' }} numberOfLines={2}>

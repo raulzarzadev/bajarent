@@ -20,12 +20,23 @@ export default function useSort<T>({
 
   const sortBy = (field = defaultSortBy) => {
     const res = [...data].sort((a, b) => {
+      // @ts-ignore
+      if (a.priority && b.priority) {
+        // @ts-ignore
+        if (a.priority < b.priority) return -1
+        // @ts-ignore
+        if (a.priority > b.priority) return 1
+        return 0
+      }
       let aField = a[field] || ''
       let bField = b[field] || ''
+
+      // if field is a Date or Timestamp, convert it to a number
       if (aField instanceof Date && aField instanceof Timestamp) {
         aField = aField.toDate().getTime()
         bField = bField.toDate().getTime()
       }
+
       const isAscending = order === 'asc'
       if (aField < bField) return isAscending ? -1 : 1
       if (aField > bField) return isAscending ? 1 : -1
