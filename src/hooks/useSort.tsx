@@ -27,9 +27,9 @@ export default function useSort<T>({
       }
       if (
         // @ts-ignore
-        a.priority &&
+        a?.priority &&
         // @ts-ignore
-        b.priority &&
+        b?.priority &&
         statusIsNotIn([
           order_status.CANCELLED,
           order_status.DELIVERED,
@@ -39,9 +39,9 @@ export default function useSort<T>({
         ])
       ) {
         // @ts-ignore
-        if (a.priority < b.priority) return -1
+        if (a?.priority < b?.priority) return -1
         // @ts-ignore
-        if (a.priority > b.priority) return 1
+        if (a?.priority > b?.priority) return 1
         return 0
       }
       let aField = a[field] || ''
