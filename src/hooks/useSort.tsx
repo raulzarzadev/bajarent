@@ -21,31 +21,35 @@ export default function useSort<T>({
 
   const sortBy = (field = defaultSortBy) => {
     const res = [...data].sort((a, b) => {
-      const statusIsNotIn = (statuses: string[]) => {
-        // @ts-ignore
-        return !statuses.includes(a?.status) || !statuses.includes(b?.status)
-      }
-      if (
-        // @ts-ignore
-        a?.priority &&
-        // @ts-ignore
-        b?.priority &&
-        statusIsNotIn([
-          order_status.CANCELLED,
-          order_status.DELIVERED,
-          order_status.PICKUP,
-          order_status.REPAIR_DELIVERED,
-          order_status.RENEWED
-        ])
-      ) {
-        // @ts-ignore
-        if (a?.priority < b?.priority) return -1
-        // @ts-ignore
-        if (a?.priority > b?.priority) return 1
-        return 0
-      }
       let aField = a[field] || ''
       let bField = b[field] || ''
+
+      const statusAreIn = () => {
+        const omitSortPriorityStatus = [
+          order_status.RENEWED,
+          order_status.DELIVERED,
+          order_status.REPAIR_DELIVERED,
+          order_status.CANCELLED,
+          order_status.PICKUP
+        ]
+        return (
+          // @ts-ignore
+          omitSortPriorityStatus.includes(a?.status) &&
+          // @ts-ignore
+          omitSortPriorityStatus.includes(b?.status)
+        )
+      }
+
+      // if field is "priority" and omit if status of the order renewed, canceled, delivered, repair delivered
+      if (field === 'priority' && !statusAreIn()) {
+        //* add a default value to put the orders without priority at the end
+        aField = parseInt(`${aField}` || '9999')
+        bField = parseInt(`${bField}` || '9999')
+        //* orders
+        if (aField < bField) return order === 'asc' ? -1 : 1
+        if (aField > bField) return order === 'asc' ? 1 : -1
+        return 0
+      }
 
       // if field is a Date or Timestamp, convert it to a number
       if (aField instanceof Date && aField instanceof Timestamp) {
