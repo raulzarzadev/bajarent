@@ -46,6 +46,8 @@ function OrdersList({
   return (
     <>
       <View style={styles.container}>
+        {/* *** FILTERS FIELDS */}
+
         <View
           style={{
             flexDirection: 'row',
@@ -79,9 +81,11 @@ function OrdersList({
           style={{
             padding: 4,
             justifyContent: 'center',
-            marginTop: gSpace(2)
+            marginTop: gSpace(2),
+            maxWidth: '100%'
           }}
         >
+          {/* *** SORT FIELDS */}
           <FlatList
             horizontal
             data={sortFields}
@@ -114,6 +118,8 @@ function OrdersList({
             )}
           />
         </View>
+        {/* *** ROWS */}
+
         <FlatList
           style={styles.orderList}
           data={sortedData}
