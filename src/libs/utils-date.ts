@@ -1,8 +1,12 @@
 import { Timestamp } from 'firebase/firestore'
 import {
   FormatDistanceToken,
+  endOfWeek,
   format as fnsFormat,
-  formatDistanceToNowStrict
+  formatDistanceToNowStrict,
+  isWithinInterval,
+  startOfWeek,
+  subWeeks
 } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -96,3 +100,12 @@ export const asDate = (
   return null
 }
 export default asDate
+
+export function isLastWeek(date) {
+  const lastWeek = {
+    start: startOfWeek(subWeeks(new Date(), 1)),
+    end: endOfWeek(subWeeks(new Date(), 1))
+  }
+
+  return isWithinInterval(date, lastWeek)
+}

@@ -34,7 +34,7 @@ function List<T extends { id: string }>({
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container, { maxWidth: 1024 }]}>
         <View
           style={{
             flexDirection: 'row',

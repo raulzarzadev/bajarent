@@ -136,7 +136,6 @@ function ModalFilterList<T>({
                   title={dictionary(value as Labels)?.toUpperCase() || ''}
                   key={value}
                   onPress={() => {
-                    console.log({ value, field })
                     filterBy(field as string, value)
                   }}
                   style={{

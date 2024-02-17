@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
@@ -14,8 +14,7 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import OrderActionsRentFlow from './OrderActionsRentFlow'
 import OrderActionsRepairFlow from './OrderActionsRepairFlow'
 import { gStyles } from '../styles'
-import { useEffect, useState } from 'react'
-import useDebounce from '../hooks/useDebunce'
+import { useState } from 'react'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions } = useStore()
@@ -192,11 +191,6 @@ const PriorityOrder = ({ orderId }) => {
   const orderPriority = order?.priority
   const [priority, setPriority] = useState(orderPriority || 0)
   const [disabled, setDisabled] = useState(false)
-  // useEffect(() => {
-  //   ServiceOrders.update(orderId, { priority: value as number })
-  //     .then((r) => console.log(r))
-  //     .catch((e) => console.error(e))
-  // }, [value])
 
   const handleSetPriority = async (amount: number) => {
     setDisabled(true)
