@@ -36,6 +36,7 @@ const InputRadios = ({
         radioButtons={radioButtons}
         onPress={setValue}
         selectedId={value}
+        labelStyle={{ textTransform: 'capitalize' }}
       />
     </View>
   )
