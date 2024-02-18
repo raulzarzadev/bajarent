@@ -6,6 +6,7 @@ export type PaymentBase = {
   method: 'cash' | 'card' | 'transfer'
   storeId: string
   orderId: string
+  reference?: string
 }
 
 type PaymentType = PaymentBase & BaseType

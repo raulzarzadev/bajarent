@@ -32,7 +32,6 @@ export type StoreContextType = {
   staffPermissions?: Partial<StaffPermissions>
   storeSections?: SectionType[]
   payments?: PaymentType[]
-  getPayments?: () => void
 }
 const StoreContext = createContext<StoreContextType>({})
 

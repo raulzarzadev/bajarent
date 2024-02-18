@@ -23,6 +23,7 @@ export const ModalPayment = ({
 }: ModalPaymentProps) => {
   const payment: PaymentBase = {
     amount: 0,
+    reference: '',
     date: new Date(),
     method: 'cash',
     storeId,
@@ -31,26 +32,31 @@ export const ModalPayment = ({
   const label = 'Pagar'
 
   const modal = useModal({ title: label })
-  const { getPayments } = useStore()
+  // const { updatePayments } = useStore()
   const [method, setMethod] = useState<PaymentType['method']>(
     payment?.method || 'cash'
   )
+  const [reference, setReference] = useState(payment?.reference || '')
 
   const [amount, setAmount] = useState(payment?.amount || 0)
   const [saving, setSaving] = useState(false)
 
   const handleSavePayment = async () => {
+    setSaving(true)
     await ServicePayments.create({
       amount,
       method,
       storeId,
       orderId,
       date: new Date()
-    }).then((res) => {
-      setSaving(true)
-      getPayments()
-      resetForm()
     })
+      .then((res) => {
+        // updatePayments()
+        resetForm()
+      })
+      .finally(() => {
+        setSaving(false)
+      })
   }
 
   const resetForm = () => {
@@ -86,6 +92,7 @@ export const ModalPayment = ({
             }}
           />
         </View>
+
         <View style={styles.repairItemForm}>
           <InputTextStyled
             type="number"
@@ -97,6 +104,17 @@ export const ModalPayment = ({
             }}
           ></InputTextStyled>
         </View>
+        {method === 'transfer' && (
+          <View style={styles.repairItemForm}>
+            <InputTextStyled
+              value={reference}
+              placeholder="Referencia "
+              onChangeText={(value) => {
+                setReference(value)
+              }}
+            ></InputTextStyled>
+          </View>
+        )}
         <View style={styles.repairItemForm}>
           <Button disabled={saving} onPress={handleSavePayment} color="success">
             {payment ? 'Guardar' : 'Editar'}
