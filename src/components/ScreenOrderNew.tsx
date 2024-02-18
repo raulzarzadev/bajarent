@@ -24,10 +24,10 @@ const ScreenOrderNew = ({ navigation }) => {
         const orderId = res?.res?.id
         //  console.log({ res })
         console.log({ res })
-        navigation.navigate('Orders', {
-          screen: 'OrderDetails',
-          params: { orderId }
-        })
+
+        navigation.navigate('Orders')
+        navigation.navigate('OrderDetails', { orderId })
+
         // alert('Orden creada')
       })
       .catch(console.error)

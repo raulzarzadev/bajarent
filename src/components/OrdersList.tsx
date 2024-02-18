@@ -64,6 +64,7 @@ function OrdersList({
               icon="add"
               onPress={() => {
                 // @ts-ignore
+
                 navigation.navigate('Orders', { screen: 'NewOrder' })
               }}
               size="xs"

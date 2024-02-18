@@ -264,12 +264,12 @@ export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
     >
       <Chip
         style={{ width: 95 }}
-        title={dictionary(order.type)?.toUpperCase()}
-        color={theme.info}
+        title={dictionary(order?.type)?.toUpperCase()}
+        color={theme?.info}
         titleColor={theme.black}
       ></Chip>
-      <OrderStatus orderId={order.id} />
-      <OrderAssignedTo orderId={order.id} />
+      <OrderStatus orderId={order?.id} />
+      <OrderAssignedTo orderId={order?.id} />
     </View>
   )
 }
