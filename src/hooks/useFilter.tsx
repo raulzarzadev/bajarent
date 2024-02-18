@@ -14,8 +14,6 @@ export default function useFilter<T>({ data = [] }: { data: T[] }) {
     setFiltersBy([])
   }
 
-  console.log({ filteredBy, filteredData, filtersBy })
-
   const filterBy = (field = 'status', value: string | boolean | number) => {
     let filters = [...filtersBy]
     const sameExist = filters.some(

@@ -167,7 +167,7 @@ const UserAndStoreTabs = () => {
           name="NewOrder"
           component={ScreenNewOrder}
           options={{
-            title: 'Orden'
+            title: 'Nueva orden'
           }}
         />
       )}

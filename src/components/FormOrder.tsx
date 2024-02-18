@@ -43,12 +43,14 @@ const FormOrder = ({
 
   return (
     <ScrollView>
-      <Text style={{ textAlign: 'center', marginTop: 12 }}>
-        <P bold size="xl">
-          Folio:{' '}
-        </P>
-        <P size="xl">{defaultValues?.folio}</P>
-      </Text>
+      {defaultValues?.folio && (
+        <Text style={{ textAlign: 'center', marginTop: 12 }}>
+          <P bold size="xl">
+            Folio:{' '}
+          </P>
+          <P size="xl">{defaultValues?.folio}</P>
+        </Text>
+      )}
       {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
       <Formik
         initialValues={{
@@ -80,28 +82,6 @@ const FormOrder = ({
       >
         {({ handleSubmit, setValues, values }) => (
           <View style={styles.form}>
-            <View style={[styles.item]}>
-              <InputDate
-                label="Fecha programada"
-                value={asDate(values.scheduledAt) || new Date()}
-                setValue={(value) =>
-                  setValues(
-                    (values) => ({ ...values, scheduledAt: value }),
-                    false
-                  )
-                }
-              />
-            </View>
-
-            <View
-              style={[styles.item, { justifyContent: 'center', width: '100%' }]}
-            >
-              <FormikCheckbox
-                name="hasDelivered"
-                label="Entregada en la fecha programada"
-              />
-            </View>
-
             <View style={[styles.item]}>
               <InputValueFormik
                 name={'fullName'}
@@ -239,6 +219,27 @@ const FormOrder = ({
                   assignedToStaff={values?.assignToStaff}
                 />
               </ErrorBoundary>
+            </View>
+            <View style={[styles.item]}>
+              <InputDate
+                label="Fecha programada"
+                value={asDate(values.scheduledAt) || new Date()}
+                setValue={(value) =>
+                  setValues(
+                    (values) => ({ ...values, scheduledAt: value }),
+                    false
+                  )
+                }
+              />
+            </View>
+
+            <View
+              style={[styles.item, { justifyContent: 'center', width: '100%' }]}
+            >
+              <FormikCheckbox
+                name="hasDelivered"
+                label="Entregada en la fecha programada"
+              />
             </View>
             <View style={[styles.item]}>
               <Button
