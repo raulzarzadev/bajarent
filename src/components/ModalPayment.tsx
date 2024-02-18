@@ -9,7 +9,6 @@ import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
 import { ServicePayments } from '../firebase/ServicePayments'
-import { useStore } from '../contexts/storeContext'
 
 export type ModalPaymentProps = {
   orderId: string
@@ -63,6 +62,7 @@ export const ModalPayment = ({
     modal.toggleOpen()
     setSaving(false)
     setAmount(0)
+    setReference('')
     setMethod('cash')
   }
 
