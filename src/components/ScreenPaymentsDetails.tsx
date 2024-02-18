@@ -1,37 +1,32 @@
-import {
-  ActivityIndicator,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import dictionary from '../dictionary'
-import OrderStatus from './OrderStatus'
 import ErrorBoundary from './ErrorBoundary'
 import { OrderDirectives } from './OrderDetails'
 import Button from './Button'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
-  const { payments, orders } = useStore()
+  const { payments, orders, staff } = useStore()
   const payment = payments.find((p) => p.id === id)
   const order = orders.find((o) => o.id === payment.orderId)
-
+  const userName =
+    staff.find((s) => s.userId === payment.createdBy)?.name || 'sin nombre'
   return (
     <View style={gStyles.container}>
-      {/* {order?.status && (
-        <Text style={{ textAlign: 'center', textTransform:'uppercase' }}>{dictionary(order?.status)}</Text>
-      )} */}
-
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
       {payment?.method && (
-        <Text style={{ textAlign: 'center', marginVertical: 8 }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            marginVertical: 8,
+            textTransform: 'capitalize'
+          }}
+        >
           {dictionary(payment?.method)}
         </Text>
       )}
@@ -42,11 +37,22 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           {payment?.reference}
         </Text>
       )}
-      {payment?.date && (
-        <Text style={{ textAlign: 'center', marginVertical: 16 }}>
-          <DateCell date={payment?.date} />
+
+      {payment?.createdAt && (
+        <Text style={{ textAlign: 'center', marginTop: 16 }}>
+          <DateCell date={payment?.createdAt} />
         </Text>
       )}
+      {payment?.createdBy && (
+        <View style={{ justifyContent: 'center' }}>
+          <Text
+            style={[gStyles.helper, { textAlign: 'center', marginBottom: 16 }]}
+          >
+            Cobrado por: <Text>{userName}</Text>
+          </Text>
+        </View>
+      )}
+
       <View style={{ justifyContent: 'center', margin: 'auto' }}>
         {order ? <OrderDirectives order={order} /> : <ActivityIndicator />}
         <Button
@@ -69,5 +75,3 @@ export default function (props) {
     </ErrorBoundary>
   )
 }
-
-const styles = StyleSheet.create({})
