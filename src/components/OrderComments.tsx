@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import OrderType from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme from '../theme'
@@ -14,18 +14,19 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
-  const { orders } = useStore()
-  const orderComments = orders
-    .find((order) => order.id === orderId)
-    ?.comments.sort(
-      (a, b) => asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
-    )
+  const [orderComments, setOrderComments] = useState<OrderType['comments']>([])
+  useEffect(() => {
+    ServiceComments.getByOrder(orderId).then(setOrderComments)
+  }, [])
+
+  const sortByDate = (a, b) =>
+    asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>
       <InputComment orderId={orderId} />
       <View style={{ padding: 6 }}>
-        {orderComments?.map((comment, i) => (
+        {orderComments?.sort(sortByDate)?.map((comment, i) => (
           <OrderComment key={i} comment={comment} />
         ))}
       </View>

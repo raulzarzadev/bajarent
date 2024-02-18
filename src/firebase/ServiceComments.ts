@@ -31,6 +31,25 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return await this.findMany([where('storeId', '==', storeId)])
   }
 
+  listenStoreReports(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('type', '==', 'report')
+        // where('solved', '==', false)
+      ],
+      cb
+    )
+  }
+
+  async getByOrder(orderId: string) {
+    return await this.findMany([where('orderId', '==', orderId)])
+  }
+
+  listenByOrder(orderId: string, cb: CallableFunction) {
+    return this.listenMany([where('orderId', '==', orderId)], cb)
+  }
+
   // TODO: Implementar para solo obtener unos pocos comentarios
   // listenByStore(storeId: string, cb: CallableFunction) {
   //   const oneDay = 1000 * 60 * 60 * 24

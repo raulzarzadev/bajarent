@@ -20,6 +20,7 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
 
+  console.log({ comments })
   useEffect(() => {
     if (storeId) {
       ServiceStores.listen(storeId, setStore)
@@ -34,7 +35,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
       ServiceOrders.listenByStore(store.id, setOrders)
       ServiceStaff.listenByStore(store.id, setStaff)
       ServiceSections.listenByStore(store.id, setSections)
-      ServiceComments.listenByStore(store.id, setComments)
+      // ServiceComments.listenByStore(store.id, setComments)
+      ServiceComments.listenStoreReports(store.id, setComments)
     }
   }, [store])
 
