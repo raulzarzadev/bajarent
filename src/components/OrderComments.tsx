@@ -16,15 +16,19 @@ import { useStore } from '../contexts/storeContext'
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const [orderComments, setOrderComments] = useState<OrderType['comments']>([])
   useEffect(() => {
-    ServiceComments.getByOrder(orderId).then(setOrderComments)
+    getComments()
   }, [])
+
+  const getComments = () => {
+    ServiceComments.getByOrder(orderId).then(setOrderComments)
+  }
 
   const sortByDate = (a, b) =>
     asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>
-      <InputComment orderId={orderId} />
+      <InputComment orderId={orderId} updateComments={getComments} />
       <View style={{ padding: 6 }}>
         {orderComments?.sort(sortByDate)?.map((comment, i) => (
           <OrderComment key={i} comment={comment} />
@@ -34,9 +38,16 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
   )
 }
 
-const InputComment = ({ orderId }: { orderId: string }) => {
+const InputComment = ({
+  orderId,
+  updateComments
+}: {
+  orderId: string
+  updateComments?: () => void
+}) => {
   const [content, setContent] = useState('')
   const [isReport, setIsReport] = useState(false)
+  const [saving, setSaving] = useState(false)
   const { storeId } = useStore()
   const handleToggleIsReport = () => setIsReport(!isReport)
 
@@ -45,14 +56,19 @@ const InputComment = ({ orderId }: { orderId: string }) => {
     setIsReport(false)
   }
   const handleAddComment = async () => {
+    setSaving(true)
     await ServiceComments.create({
       orderId,
       storeId,
       content,
       type: isReport ? 'report' : 'comment'
     })
-      .then((res) => reset())
+      .then((res) => {
+        reset()
+        updateComments()
+      })
       .catch((res) => console.error(res))
+      .finally(() => setSaving(false))
   }
   return (
     <View>
@@ -82,7 +98,7 @@ const InputComment = ({ orderId }: { orderId: string }) => {
         />
         <Button
           buttonStyles={{ alignSelf: 'center' }}
-          disabled={!content.length}
+          disabled={!content.length || saving}
           onPress={handleAddComment}
         >
           Comentar
