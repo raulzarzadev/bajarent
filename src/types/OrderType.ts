@@ -113,4 +113,16 @@ export type OrderStatus = order_status
 
 type OrderType = OrderBase & BaseType
 
+export const ORDER_STATUS_SOLVED = [
+  order_status.CANCELLED,
+  order_status.REPAIR_DELIVERED,
+  order_status.DELIVERED,
+  order_status.PICKUP,
+  order_status.RENEWED
+]
+
+export const ORDER_STATUS_UNSOLVED = Object.keys(order_status).filter(
+  (status) => !ORDER_STATUS_SOLVED.includes(status as any)
+)
+
 export default OrderType

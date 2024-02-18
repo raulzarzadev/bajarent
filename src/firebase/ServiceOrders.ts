@@ -1,5 +1,9 @@
 import { where } from 'firebase/firestore'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, {
+  ORDER_STATUS_SOLVED,
+  ORDER_STATUS_UNSOLVED,
+  order_status
+} from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
 import { ServiceComments } from './ServiceComments'
@@ -107,6 +111,30 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 
   async getByStore(storeId: string) {
     return await this.findMany([where('storeId', '==', storeId)])
+  }
+
+  listenUnsolved(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('status', 'in', ORDER_STATUS_UNSOLVED)
+      ],
+      cb
+    )
+  }
+
+  getSolved(storeId: string) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('status', 'in', ORDER_STATUS_SOLVED)
+    ])
+  }
+
+  getUnsolved(storeId: string) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('status', 'in', ORDER_STATUS_UNSOLVED)
+    ])
   }
 
   // Agrega tus métodos aquí

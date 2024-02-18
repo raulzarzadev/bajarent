@@ -30,7 +30,7 @@ const InputTextStyled = ({
     <>
       <TextInput
         {...props}
-        value={String(value)}
+        value={String(value || '')}
         editable={!disabled}
         style={[
           baseStyle.inputStyle,
