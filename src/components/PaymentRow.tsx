@@ -9,9 +9,12 @@ const PaymentRow = ({ item }: { item: PaymentType }) => {
   return (
     <View style={styles.row}>
       <DateCell date={item?.date} />
-      <Text style={{ textTransform: 'capitalize' }}>
-        {dictionary(item?.method)}
-      </Text>
+      <View>
+        <Text style={{ textTransform: 'capitalize' }}>
+          {dictionary(item?.method)}
+        </Text>
+        {item?.reference && <Text>{item?.reference}</Text>}
+      </View>
       <CurrencyAmount amount={item?.amount} />
     </View>
   )

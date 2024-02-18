@@ -47,6 +47,7 @@ export const ModalPayment = ({
       method,
       storeId,
       orderId,
+      reference,
       date: new Date()
     })
       .then((res) => {

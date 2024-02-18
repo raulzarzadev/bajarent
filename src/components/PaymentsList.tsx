@@ -12,7 +12,8 @@ function PaymentsList({
   const sortFields = [
     { key: 'date', label: 'Fecha' },
     { key: 'amount', label: 'Cantidad' },
-    { key: 'method', label: 'Método' }
+    { key: 'method', label: 'Método' },
+    { key: 'reference', label: 'Referencia' }
   ]
 
   return (
