@@ -4,18 +4,31 @@ import PaymentType from '../types/PaymentType'
 import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import DateCell from './DateCell'
+import { gStyles } from '../styles'
 
 const PaymentRow = ({ item }: { item: PaymentType }) => {
   return (
     <View style={styles.row}>
+      <View style={{ width: 80 }}>
+        <Text numberOfLines={3}>{item.clientName}</Text>
+      </View>
       <DateCell date={item?.date} />
-      <View>
-        <Text style={{ textTransform: 'capitalize' }}>
+      <View style={{ width: 80 }}>
+        <Text
+          numberOfLines={1}
+          style={{ textTransform: 'capitalize', textAlign: 'center' }}
+        >
           {dictionary(item?.method)}
         </Text>
-        {item?.reference && <Text>{item?.reference}</Text>}
+        {item?.reference && (
+          <Text numberOfLines={1} style={[gStyles.tCenter, gStyles.helper]}>
+            {item?.reference}
+          </Text>
+        )}
       </View>
-      <CurrencyAmount amount={item?.amount} />
+      <View style={{ width: 80 }}>
+        <CurrencyAmount amount={item?.amount} />
+      </View>
     </View>
   )
 }

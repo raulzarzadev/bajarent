@@ -57,9 +57,19 @@ const StoreContextProvider = ({ children }) => {
   const [myOrders, setMyOrders] = useState<OrderType[]>([])
   const [myStaffId, setMyStaffId] = useState<string>('')
 
+  const [paymentsFormatted, setPaymentsFormatted] = useState<PaymentType[]>([])
+
+  const [staffPermissions, setStaffPermissions] =
+    useState<Partial<StaffPermissions>>(null)
+
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
     setItem('storeId', storeId)
+  }
+
+  const handleSetMyStaffId = async (staffId: string) => {
+    setMyStaffId(staffId)
+    setItem('myStaffId', staffId)
   }
 
   useEffect(() => {
@@ -71,6 +81,7 @@ const StoreContextProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
+    //* ** FORMAT ORDERS  */
     const orderFormatted = orders.map((order) => {
       const orderComments = comments?.filter(
         (comment) => comment.orderId === order.id
@@ -147,8 +158,6 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [myStaffId, orderFormatted])
 
-  const [staffPermissions, setStaffPermissions] =
-    useState<Partial<StaffPermissions>>(null)
   useEffect(() => {
     const staffData = staff.find((s) => s.id === myStaffId)
     if (staffData) {
@@ -162,10 +171,17 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [user, staff, storeId, myStaffId])
 
-  const handleSetMyStaffId = async (staffId: string) => {
-    setMyStaffId(staffId)
-    setItem('myStaffId', staffId)
-  }
+  useEffect(() => {
+    //* ** FORMAT PAYMENTS WITH THE CLIENT NAME */
+    setPaymentsFormatted(
+      payments.map((p) => ({
+        ...p,
+        clientName:
+          orders.find((o) => o.id === p.orderId)?.fullName ||
+          orders.find((o) => o.id === p.orderId)?.firstName
+      }))
+    )
+  }, [payments, orders])
 
   return (
     <StoreContext.Provider
@@ -183,7 +199,7 @@ const StoreContextProvider = ({ children }) => {
         handleSetMyStaffId,
         staffPermissions,
         storeSections,
-        payments
+        payments: paymentsFormatted
       }}
     >
       {children}
