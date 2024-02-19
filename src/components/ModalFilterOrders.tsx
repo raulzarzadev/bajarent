@@ -16,8 +16,10 @@ import InputTextStyled from './InputTextStyled'
 
 const ModalFilterOrders = ({
   orders,
-  setOrders
+  setOrders,
+  defaultOrders
 }: {
+  defaultOrders: string[]
   orders: OrderType[]
   setOrders: (orders: OrderType[]) => void
 }) => {
@@ -37,6 +39,12 @@ const ModalFilterOrders = ({
   useEffect(() => {
     setOrders(filteredData)
   }, [filteredData])
+
+  useEffect(() => {
+    if (defaultOrders.length) {
+      filterBy('customIds', defaultOrders)
+    }
+  }, [defaultOrders])
 
   useEffect(() => {
     //* Remove status filters that are not used
@@ -142,6 +150,10 @@ const ModalFilterOrders = ({
           )}
         </View>
 
+        {/* ******** IF A LIST OF ORDERS_IDS WAS PROVIDED */}
+        {filtersBy.find((a) => a.field === 'customIds') && (
+          <Text style={gStyles.h2}>Filtro predefinido</Text>
+        )}
         {/* ******** FILTER BY ORDER TYPE */}
         <Text style={[gStyles.h3]}>Por tipo</Text>
         <View style={styles.filters}>

@@ -60,6 +60,10 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           onPress={() => {
             navigation.navigate('Orders')
             navigation.navigate('OrderDetails', { orderId: order?.id })
+            // navigation.navigate('Orders', {
+            //   screen: 'OrderDetails',
+            //   params: { orderId: order?.id }
+            // })
           }}
           label="Ver orden"
         ></Button>

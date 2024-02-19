@@ -8,6 +8,7 @@ export type PaymentBase = {
   orderId: string
   reference?: string
   clientName?: string
+  orderFolio?: number
 }
 
 type PaymentType = PaymentBase & BaseType

@@ -13,10 +13,12 @@ import { gSpace } from '../styles'
 
 function OrdersList({
   orders,
-  onPressRow
+  onPressRow,
+  defaultOrders
 }: {
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
+  defaultOrders?: string[]
 }) {
   const { staffPermissions } = useStore()
   const navigation = useNavigation()
@@ -71,7 +73,11 @@ function OrdersList({
             ></Button>
           )}
 
-          <ModalFilterOrders orders={orders} setOrders={setFilteredData} />
+          <ModalFilterOrders
+            defaultOrders={defaultOrders}
+            orders={orders}
+            setOrders={setFilteredData}
+          />
         </View>
         <View>
           <Text style={{ textAlign: 'center' }}>
@@ -88,7 +94,6 @@ function OrdersList({
         >
           {/* *** SORT FIELDS */}
           <FlatList
-            style={{ flexDirection: 'row' }}
             horizontal
             data={sortFields}
             renderItem={({ item: field }) => (

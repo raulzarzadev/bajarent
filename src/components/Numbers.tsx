@@ -16,6 +16,7 @@ import asDate, { isLastWeek } from '../libs/utils-date'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import OrdersList from './OrdersList'
+import { useNavigation } from '@react-navigation/native'
 
 type SquareItem = { title: string; value: number; orders: OrderType[] }
 
@@ -181,10 +182,19 @@ const Numbers = () => {
 }
 
 const NumberSquare = ({ item }: { item: SquareItem }) => {
-  const modal = useModal({ title: item.title })
+  const { navigate } = useNavigation()
+
   return (
     <>
-      <Pressable onPress={modal.toggleOpen}>
+      <Pressable
+        onPress={() => {
+          // @ts-ignore
+          navigate('Orders', {
+            screen: 'ScreenOrders',
+            params: { orders: item.orders.map((o) => o.id) }
+          })
+        }}
+      >
         <View style={styles.numberSquare}>
           <Text style={gStyles.h2}>{item.title}</Text>
           <Text style={[gStyles.h1, { textAlign: 'center' }]}>
@@ -192,13 +202,6 @@ const NumberSquare = ({ item }: { item: SquareItem }) => {
           </Text>
         </View>
       </Pressable>
-      {modal.open && (
-        <StyledModal {...modal} size="full">
-          <View style={{}}>
-            <OrdersList orders={item.orders || []} />
-          </View>
-        </StyledModal>
-      )}
     </>
   )
 }

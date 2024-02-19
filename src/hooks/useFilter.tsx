@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 
-export default function useFilter<T>({ data = [] }: { data: T[] }) {
+export default function useFilter<T extends { id?: string }>({
+  data = []
+}: {
+  data: T[]
+}) {
   const [filteredData, setFilteredData] = useState<T[]>([])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
@@ -14,8 +18,26 @@ export default function useFilter<T>({ data = [] }: { data: T[] }) {
     setFiltersBy([])
   }
 
-  const filterBy = (field = 'status', value: string | boolean | number) => {
+  const filterBy = (
+    field = 'status',
+    value: string | boolean | number | string[]
+  ) => {
     let filters = [...filtersBy]
+
+    //* CUSTOM FILTERS SHOULD PROVIDE AN ARRAY OF STRINGS (IDS )
+    if (field === 'customIds' && Array.isArray(value)) {
+      filters = filters.filter((a) => a.field !== field)
+      setFiltersBy([{ field: 'customIds', value: 'Custom Filter' }])
+      const res = [...data].filter((order) => {
+        return value.includes(order?.id)
+      })
+      setFilteredData(res)
+      return
+    }
+
+    //* OMIT IF VALUE IS AN ARRAY
+    if (Array.isArray(value)) return
+
     const sameExist = filters.some(
       (a) => a.field === field && a.value === value
     )

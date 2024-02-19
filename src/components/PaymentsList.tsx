@@ -10,6 +10,7 @@ function PaymentsList({
   onPressRow?: (paymentId: string) => void
 }) {
   const sortFields = [
+    { key: 'orderFolio', label: 'Folio' },
     { key: 'date', label: 'Fecha' },
     { key: 'amount', label: 'Cantidad' },
     { key: 'method', label: 'Método' },

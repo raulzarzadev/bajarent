@@ -31,7 +31,6 @@ const InputTextStyled = ({
       <TextInput
         {...props}
         value={String(value || '')}
-        editable={!disabled}
         style={[
           baseStyle.inputStyle,
           disabled && { opacity: 0.5 },

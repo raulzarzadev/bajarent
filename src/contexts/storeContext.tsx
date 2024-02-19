@@ -174,12 +174,14 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     //* ** FORMAT PAYMENTS WITH THE CLIENT NAME */
     setPaymentsFormatted(
-      payments.map((p) => ({
-        ...p,
-        clientName:
-          orders.find((o) => o.id === p.orderId)?.fullName ||
-          orders.find((o) => o.id === p.orderId)?.firstName
-      }))
+      payments.map((p) => {
+        const order = orders.find((o) => o.id === p.orderId)
+        return {
+          ...p,
+          clientName: order.fullName || order.firstName || '',
+          orderFolio: order?.folio || 0
+        }
+      })
     )
   }, [payments, orders])
 

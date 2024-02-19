@@ -10,7 +10,8 @@ const PaymentRow = ({ item }: { item: PaymentType }) => {
   return (
     <View style={styles.row}>
       <View style={{ width: 80 }}>
-        <Text numberOfLines={3}>{item.clientName}</Text>
+        <Text>{item.orderFolio}</Text>
+        <Text numberOfLines={2}>{item.clientName}</Text>
       </View>
       <DateCell date={item?.date} />
       <View style={{ width: 80 }}>
