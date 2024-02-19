@@ -31,7 +31,11 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
       <InputComment orderId={orderId} updateComments={getComments} />
       <View style={{ padding: 6 }}>
         {orderComments?.sort(sortByDate)?.map((comment, i) => (
-          <OrderComment key={i} comment={comment} />
+          <OrderComment
+            key={i}
+            comment={comment}
+            updateComments={getComments}
+          />
         ))}
       </View>
     </View>
@@ -109,10 +113,12 @@ const InputComment = ({
 }
 
 const OrderComment = ({
-  comment
+  comment,
+  updateComments
 }: // orderId
 {
   comment: OrderType['comments'][number]
+  updateComments: () => void
   // orderId: string
 }) => {
   const { staff } = useStore()
@@ -120,7 +126,10 @@ const OrderComment = ({
     await ServiceComments.update(commentId, {
       solved: !solved
     })
-      .then((res) => console.log(res))
+      .then((res) => {
+        updateComments()
+        console.log(res)
+      })
       .catch((res) => console.error(res))
   }
   return (
