@@ -1,4 +1,11 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
@@ -6,6 +13,11 @@ import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import { isThisWeek, isToday } from 'date-fns'
 import asDate, { isLastWeek } from '../libs/utils-date'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import OrdersList from './OrdersList'
+
+type SquareItem = { title: string; value: number; orders: OrderType[] }
 
 const Numbers = () => {
   const { orders, storeSections } = useStore()
@@ -86,23 +98,29 @@ const Numbers = () => {
   ])
 
   const numbersOrders = squaresToCreate.map((square) => {
+    const res = filteredOrdersBy(orders, square.filters)
     return {
       title: square.title,
-      value: filteredOrdersBy(orders, square.filters).length
+      value: res.length,
+      orders: res
     }
   })
 
-  const repairNumbers = squaresToCreate.map((square) => {
+  const repairNumbers: SquareItem[] = squaresToCreate.map((square) => {
+    const orders = filteredOrdersBy(repairOrders, square.filters)
     return {
       title: square.title,
-      value: filteredOrdersBy(repairOrders, square.filters).length
+      value: orders.length,
+      orders
     }
   })
 
-  const rentNumbers = squaresToCreate.map((square) => {
+  const rentNumbers: SquareItem[] = squaresToCreate.map((square) => {
+    const orders = filteredOrdersBy(rentOrders, square.filters)
     return {
       title: square.title,
-      value: filteredOrdersBy(rentOrders, square.filters).length
+      value: orders.length,
+      orders
     }
   })
 
@@ -112,9 +130,11 @@ const Numbers = () => {
     ])
 
     return squaresToCreate.map((square) => {
+      const orders = filteredOrdersBy(sectionOrders, square.filters)
       return {
         title: square.title,
-        value: filteredOrdersBy(sectionOrders, square.filters).length
+        value: orders.length,
+        orders
       }
     })
   }
@@ -160,12 +180,26 @@ const Numbers = () => {
   )
 }
 
-const NumberSquare = ({ item }: { item: { title: string; value: number } }) => {
+const NumberSquare = ({ item }: { item: SquareItem }) => {
+  const modal = useModal({ title: item.title })
   return (
-    <View style={styles.numberSquare}>
-      <Text style={gStyles.h2}>{item.title}</Text>
-      <Text style={[gStyles.h1, { textAlign: 'center' }]}>{item.value}</Text>
-    </View>
+    <>
+      <Pressable onPress={modal.toggleOpen}>
+        <View style={styles.numberSquare}>
+          <Text style={gStyles.h2}>{item.title}</Text>
+          <Text style={[gStyles.h1, { textAlign: 'center' }]}>
+            {item.value}
+          </Text>
+        </View>
+      </Pressable>
+      {modal.open && (
+        <StyledModal {...modal} size="full">
+          <View style={{}}>
+            <OrdersList orders={item.orders || []} />
+          </View>
+        </StyledModal>
+      )}
+    </>
   )
 }
 

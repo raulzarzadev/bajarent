@@ -88,6 +88,7 @@ function OrdersList({
         >
           {/* *** SORT FIELDS */}
           <FlatList
+            style={{ flexDirection: 'row' }}
             horizontal
             data={sortFields}
             renderItem={({ item: field }) => (
