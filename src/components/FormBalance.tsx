@@ -10,16 +10,18 @@ import StyledModal from './StyledModal'
 import theme from '../theme'
 import InputRadios from './InputRadios'
 import { BalanceType } from '../types/BalanceType'
+import ErrorBoundary from './ErrorBoundary'
 
-const FormBalance = ({
+export type FormBalanceProps = {
+  defaultValues?: Partial<BalanceType>
+  onSubmit?: (values: Partial<BalanceType>) => Promise<any>
+}
+const FormBalanceE = ({
   defaultValues,
   onSubmit = async (values) => {
     console.log(values)
   }
-}: {
-  defaultValues?: Partial<BalanceType>
-  onSubmit?: (values: Partial<BalanceType>) => Promise<any>
-}) => {
+}: FormBalanceProps) => {
   const [submitting, setSubmitting] = React.useState(false)
   const handleSubmit = async (values: Partial<BalanceType>) => {
     setSubmitting(true)
@@ -183,9 +185,9 @@ const SelectBalanceType = ({
         }}
       >
         <InputRadios
-          label="Tipo de balance"
+          label="Tipo de corte"
           options={[
-            { label: 'Total', value: 'full' },
+            { label: 'Completo', value: 'full' },
             { label: 'Partial', value: 'partial' }
           ]}
           layout="row"
@@ -237,7 +239,13 @@ const SelectBalanceType = ({
   )
 }
 
-export default FormBalance
+export default function FormBalance(props: FormBalanceProps) {
+  return (
+    <ErrorBoundary componentName="FormBalance">
+      <FormBalanceE {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   input: {

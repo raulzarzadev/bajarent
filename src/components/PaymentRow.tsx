@@ -21,7 +21,7 @@ const PaymentRow = ({ item }: { item: PaymentType }) => {
         >
           {dictionary(item?.method)}
         </Text>
-        {item?.reference && (
+        {!!item?.reference && (
           <Text numberOfLines={1} style={[gStyles.tCenter, gStyles.helper]}>
             {item?.reference}
           </Text>

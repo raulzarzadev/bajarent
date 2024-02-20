@@ -159,14 +159,14 @@ function StackStore() {
       <Stack.Screen
         name="BalancesDetails"
         options={{
-          title: 'Detalle de balance'
+          title: 'Detalle de corte'
         }}
         component={ScreenBalancesDetails}
       />
       <Stack.Screen
         name="BalancesNew"
         options={{
-          title: 'Nuevo balance'
+          title: 'Nuevo corte'
         }}
         component={ScreenBalancesNew}
       />

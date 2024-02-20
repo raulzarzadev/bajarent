@@ -20,7 +20,7 @@ const ScreenCashbox = ({ navigation }) => {
           </View>
           <View style={{ marginVertical: gSpace(2) }}>
             <Button
-              label="Balances"
+              label="Cortes de caja"
               onPress={() => {
                 navigation.navigate('Balances')
               }}

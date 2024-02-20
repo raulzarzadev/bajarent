@@ -51,7 +51,7 @@ const RowBalance = () => {
   // ]
   return (
     <View style={[styles.container]}>
-      Hola
+      <Text style={styles.text}>Folio</Text>
       {/* {fields.map(({ field, component, width }) => (
         <View key={field} style={{ width }}>
           {component}

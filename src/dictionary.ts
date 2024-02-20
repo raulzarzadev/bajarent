@@ -60,6 +60,8 @@ const labels = {
   SALE: 'Venta',
   cash: 'Efectivo',
   transfer: 'Transferencia',
+  full: 'Completa',
+  partial: 'Parcial',
   ' ': '',
   '': ''
 } as const

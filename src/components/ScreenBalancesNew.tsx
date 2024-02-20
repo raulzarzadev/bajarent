@@ -1,13 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType } from '../types/BalanceType'
 import asDate from '../libs/utils-date'
+import BalanceInfo from './BalanceInfo'
+import ErrorBoundary from './ErrorBoundary'
+import Button from './Button'
 
 const ScreenBalancesNew = () => {
   const { payments } = useStore()
-  const calculateBalance = async (values: BalanceType) => {
+  const [balance, setBalance] = React.useState<BalanceType>()
+  // const [balancePayments, setBalancePayments] = React.useState<
+  //   BalanceType['payments']
+  // >([])
+  const getBalancePayments = async (values: BalanceType) => {
     const paymentsCount = values.userId
       ? payments.filter((p) => p.createdBy === values.userId)
       : payments
@@ -17,16 +24,29 @@ const ScreenBalancesNew = () => {
         asDate(p.createdAt).getTime() >= asDate(values.fromDate).getTime() &&
         asDate(p.createdAt).getTime() <= asDate(values.toDate).getTime()
     )
-    console.log({ paymentsInDateRange })
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    return paymentsInDateRange
   }
   const handleSetBalance = async (values: BalanceType) => {
-    await calculateBalance(values)
+    const payments = await getBalancePayments(values)
+    setBalance({
+      ...values,
+      payments
+    })
+  }
+
+  const handleSaveBalance = () => {
+    console.log('save balance')
   }
   return (
-    <View>
+    <ScrollView>
       <FormBalance onSubmit={handleSetBalance} />
-    </View>
+      {!!balance && <BalanceInfo balance={balance} />}
+      {!!balance && (
+        <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
+          <Button disabled label="Guardar" onPress={handleSaveBalance}></Button>
+        </View>
+      )}
+    </ScrollView>
   )
 }
 
