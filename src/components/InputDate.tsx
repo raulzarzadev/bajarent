@@ -4,6 +4,9 @@ import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Button from './Button'
 import { dateFormat } from '../libs/utils-date'
+import { set } from 'date-fns'
+
+type PickerTime = { hours: number; minutes: number }
 
 export default function InputDate({
   label = 'Fecha',
@@ -18,21 +21,35 @@ export default function InputDate({
   format?: string
   withTime?: boolean
 }) {
+  const nowDate = new Date()
   const [date, setDate] = React.useState(value)
   const [open, setOpen] = React.useState(false)
-
+  const [time, setTime] = React.useState<PickerTime>({
+    hours: nowDate.getHours(),
+    minutes: nowDate.getMinutes()
+  })
   const onDismissSingle = React.useCallback(() => {
     setOpen(false)
   }, [setOpen])
 
-  const onConfirmSingle = React.useCallback(
-    (params) => {
-      setDate(params.date)
-      setOpen(false)
-      setValue(params.date)
-    },
-    [setOpen, setDate]
-  )
+  const handleSetDate = ({ date }) => {
+    let newDate
+    if (withTime) {
+      newDate = new Date(date.setHours(time.hours, time.minutes, 0, 0))
+    } else {
+      newDate = new Date(date)
+    }
+    setDate(newDate)
+    setValue(newDate)
+    setOpen(false)
+  }
+
+  const handleSetTime = (time: PickerTime) => {
+    const newDate = new Date(date.setHours(time.hours, time.minutes, 0, 0))
+    setTime(time)
+    setDate(newDate)
+    setValue(newDate)
+  }
 
   const hours = date.getHours()
   const minutes = date.getMinutes()
@@ -51,13 +68,9 @@ export default function InputDate({
       </Button>
       {withTime && (
         <TimePicker
-          time={{ hours, minutes }}
+          time={time || { hours, minutes }}
           setTime={(time) => {
-            const newDate = new Date(
-              date.setHours(time.hours, time.minutes, 0, 0)
-            )
-            setDate(newDate)
-            setValue(newDate)
+            handleSetTime(time)
           }}
         />
       )}
@@ -72,7 +85,7 @@ export default function InputDate({
             visible={open}
             onDismiss={onDismissSingle}
             date={date}
-            onConfirm={onConfirmSingle}
+            onConfirm={handleSetDate}
             saveLabel="Guardar" // optional
             label="Seleccionar fecha" // optional
           />
@@ -82,7 +95,6 @@ export default function InputDate({
   )
 }
 
-type PickerTime = { hours: number; minutes: number }
 const TimePicker = ({
   time,
   setTime
