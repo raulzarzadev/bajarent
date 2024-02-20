@@ -11,7 +11,7 @@ const useModal = (props?: Modal & StyledModalProps) => {
     open,
     toggleOpen,
     setOpen,
-    title: props.title
+    title: props?.title
   }
 }
 

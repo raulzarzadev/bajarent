@@ -15,6 +15,9 @@ import MyStaffLabel from './MyStaffLabel'
 import ScreenCashbox from './ScreenCashbox'
 import ScreenPayments from './ScreenPayments'
 import ScreenPaymentsDetails from './ScreenPaymentsDetails'
+import ScreenBalances from './ScreenBalances'
+import ScreenBalancesDetails from './ScreenBalancesDetails'
+import ScreenBalancesNew from './ScreenBalancesNew'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -145,6 +148,27 @@ function StackStore() {
           title: 'Detalle de pago'
         }}
         component={ScreenPaymentsDetails}
+      />
+      <Stack.Screen
+        name="Balances"
+        options={{
+          title: 'Balances'
+        }}
+        component={ScreenBalances}
+      />
+      <Stack.Screen
+        name="BalancesDetails"
+        options={{
+          title: 'Detalle de balance'
+        }}
+        component={ScreenBalancesDetails}
+      />
+      <Stack.Screen
+        name="BalancesNew"
+        options={{
+          title: 'Nuevo balance'
+        }}
+        component={ScreenBalancesNew}
       />
     </Stack.Navigator>
   )

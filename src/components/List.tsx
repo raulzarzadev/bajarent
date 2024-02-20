@@ -6,6 +6,8 @@ import Icon from './Icon'
 import { gSpace } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import ModalFilterList, { FilterListType } from './ModalFilterList'
+import Button from './Button'
+
 export type ListPops<T extends { id: string }> = {
   data: T[]
   onPressRow?: (orderId: string) => void
@@ -14,15 +16,18 @@ export type ListPops<T extends { id: string }> = {
   defaultSortBy?: keyof T
   filters: FilterListType<T>[]
   defaultOrder?: 'asc' | 'des'
+  onPressNew?: () => void
 }
-function List<T extends { id: string }>({
+
+function MyList<T extends { id: string }>({
   data,
   onPressRow,
   sortFields,
   ComponentRow,
   defaultSortBy,
   defaultOrder = 'asc',
-  filters
+  filters,
+  onPressNew
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([])
 
@@ -45,6 +50,9 @@ function List<T extends { id: string }>({
             padding: 4
           }}
         >
+          {onPressNew && (
+            <Button icon="add" label="" onPress={onPressNew} size="xs"></Button>
+          )}
           <ModalFilterList
             data={data}
             setData={setFilteredData}
@@ -125,10 +133,10 @@ const styles = StyleSheet.create({
   }
 })
 
-export default function <T extends { id: string }>(props: ListPops<T>) {
+export default function List<T extends { id: string }>(props: ListPops<T>) {
   return (
     <ErrorBoundary>
-      <List {...props}></List>
+      <MyList {...props}></MyList>
     </ErrorBoundary>
   )
 }

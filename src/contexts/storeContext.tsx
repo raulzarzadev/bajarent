@@ -178,7 +178,7 @@ const StoreContextProvider = ({ children }) => {
         const order = orders.find((o) => o.id === p.orderId)
         return {
           ...p,
-          clientName: order.fullName || order.firstName || '',
+          clientName: order?.fullName || order?.firstName || '',
           orderFolio: order?.folio || 0
         }
       })
