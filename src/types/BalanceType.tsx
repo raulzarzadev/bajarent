@@ -2,6 +2,8 @@ import BaseType from './BaseType'
 import PaymentType from './PaymentType'
 
 export type BalanceBase = {
+  type: 'partial' | 'full'
+  userId?: string
   fromDate: Date
   toDate: Date
   payments: PaymentType[]
@@ -9,6 +11,7 @@ export type BalanceBase = {
   totalCash: number
   totalCard: number
   totalTransfer: number
-} & ({ type: 'partial'; userId: string } | { type: 'full' })
+}
+// & ({ type: 'partial'; userId: string } | { type: 'full' })
 
 export type BalanceType = BalanceBase & BaseType

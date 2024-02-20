@@ -11,6 +11,7 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
     <View>
       <List
         onPressNew={() => {
+          // @ts-ignore
           navigate('BalancesNew')
         }}
         data={balances}
