@@ -152,7 +152,7 @@ function StackStore() {
       <Stack.Screen
         name="Balances"
         options={{
-          title: 'Balances'
+          title: 'Cortes de caja'
         }}
         component={ScreenBalances}
       />

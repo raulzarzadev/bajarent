@@ -1,15 +1,15 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType } from '../types/BalanceType'
 import asDate from '../libs/utils-date'
 import BalanceInfo from './BalanceInfo'
-import ErrorBoundary from './ErrorBoundary'
 import Button from './Button'
+import { ServiceBalances } from '../firebase/ServiceBalances'
 
 const ScreenBalancesNew = () => {
-  const { payments } = useStore()
+  const { payments, storeId } = useStore()
   const [balance, setBalance] = React.useState<BalanceType>()
   // const [balancePayments, setBalancePayments] = React.useState<
   //   BalanceType['payments']
@@ -34,16 +34,25 @@ const ScreenBalancesNew = () => {
     })
   }
 
-  const handleSaveBalance = () => {
-    console.log('save balance')
+  const [saving, setSaving] = React.useState(false)
+
+  const handleSaveBalance = async () => {
+    setSaving(true)
+    balance.storeId = storeId
+    await ServiceBalances.create(balance)
+    setSaving(false)
   }
   return (
     <ScrollView>
       <FormBalance onSubmit={handleSetBalance} />
-      {!!balance && <BalanceInfo balance={balance} />}
+      {!!balance && <BalanceInfo balance={balance} hideMetadata />}
       {!!balance && (
         <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
-          <Button disabled label="Guardar" onPress={handleSaveBalance}></Button>
+          <Button
+            disabled={saving}
+            label="Guardar"
+            onPress={handleSaveBalance}
+          ></Button>
         </View>
       )}
     </ScrollView>

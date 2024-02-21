@@ -10,15 +10,20 @@ import StyledModal from './StyledModal'
 import Button from './Button'
 import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
-export type BalanceInfoProps = { balance: BalanceType }
-const BalanceInfoE = ({ balance }: BalanceInfoProps) => {
+import SpanUser from './SpanUser'
+import SpanMetadata from './SpanMetadata'
+export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
+const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const modalOrders = useModal({ title: 'Ordenes' })
 
   return (
     <View style={{ justifyContent: 'center' }}>
-      <Text style={{ textAlign: 'center' }}>Balance</Text>
-      <Text style={gStyles.h2}>{dictionary(balance.type)} </Text>
-      {balance.type === 'partial' && <Text>{balance.userId}</Text>}
+      <SpanMetadata {...balance} hidden={hideMetadata} />
+      <Text style={{ textAlign: 'center' }}>Corte</Text>
+      <Text style={gStyles.h2}>{dictionary(balance?.type)} </Text>
+      <Text style={gStyles.tCenter}>
+        {balance?.type === 'partial' && <SpanUser userId={balance.userId} />}
+      </Text>
       <View
         style={{
           alignItems: 'center',
@@ -27,25 +32,25 @@ const BalanceInfoE = ({ balance }: BalanceInfoProps) => {
           marginVertical: 8
         }}
       >
-        <DateCell label="Desde" date={balance.fromDate} />
+        <DateCell label="Desde" date={balance?.fromDate} />
         <Text> - </Text>
-        <DateCell label="Hasta" date={balance.toDate} />
+        <DateCell label="Hasta" date={balance?.toDate} />
       </View>
       <View>
         <Button
-          label={`Pagos ${balance.payments.length || 0}`}
+          label={`Pagos ${balance?.payments.length || 0}`}
           variant="ghost"
           onPress={modalOrders.toggleOpen}
         ></Button>
         <StyledModal {...modalOrders}>
-          <PaymentsList payments={balance.payments} />
+          <PaymentsList payments={balance?.payments} />
         </StyledModal>
       </View>
       <View>
         <Text style={gStyles.h3}>Total</Text>
         <CurrencyAmount
           style={gStyles.h1}
-          amount={balance.payments.reduce((acc, p) => acc + p.amount, 0)}
+          amount={balance?.payments?.reduce((acc, p) => acc + p.amount, 0)}
         />
       </View>
     </View>

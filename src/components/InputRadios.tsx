@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
   container: { justifyContent: 'center', alignSelf: 'center' },
   label: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    textTransform: 'capitalize'
+    fontWeight: 'bold'
   }
 })
