@@ -41,7 +41,7 @@ const ModalFilterOrders = ({
   }, [filteredData])
 
   useEffect(() => {
-    if (defaultOrders.length) {
+    if (defaultOrders?.length) {
       filterBy('customIds', defaultOrders)
     }
   }, [defaultOrders])
@@ -127,7 +127,7 @@ const ModalFilterOrders = ({
           }}
         >
           <Text style={{ textAlign: 'center' }}>
-            {filteredData.length} ordenes
+            {filteredData?.length} ordenes
           </Text>
           {filtersBy?.length > 0 && (
             <View
