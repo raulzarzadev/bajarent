@@ -10,13 +10,42 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
   return (
     <View>
       <List
+        onPressRow={(id) => {
+          // @ts-ignore
+          navigate('BalancesDetails', { id })
+        }}
         onPressNew={() => {
           // @ts-ignore
           navigate('BalancesNew')
         }}
+        sortFields={[
+          {
+            key: 'createdAt',
+            label: 'Fecha'
+          },
+          {
+            key: 'fromDate',
+            label: 'Desde'
+          },
+          {
+            key: 'toDate',
+            label: 'Hasta'
+          },
+          {
+            key: 'type',
+            label: 'Tipo'
+          },
+          {
+            key: 'userId',
+            label: 'Usuario'
+          }
+        ]}
         data={balances}
         ComponentRow={RowBalance}
-        filters={[]}
+        filters={[
+          { field: 'type', label: 'Tipo' },
+          { field: 'userId', label: 'Usuario' }
+        ]}
       />
     </View>
   )
