@@ -3,8 +3,20 @@ import React from 'react'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 import SpanUser from './SpanUser'
+import { Timestamp } from 'firebase/firestore'
 
-const SpanMetadata = ({ createdAt, createdBy, id }) => {
+const SpanMetadata = ({
+  createdAt,
+  createdBy,
+  id,
+  hidden
+}: {
+  createdAt: Date | Timestamp
+  createdBy: string
+  id: string
+  hidden?: boolean
+}) => {
+  if (hidden) return null
   return (
     <View
       style={{

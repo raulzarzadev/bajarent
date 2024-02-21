@@ -12,13 +12,13 @@ import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
-export type BalanceInfoProps = { balance: BalanceType }
-const BalanceInfoE = ({ balance }: BalanceInfoProps) => {
+export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
+const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const modalOrders = useModal({ title: 'Ordenes' })
 
   return (
     <View style={{ justifyContent: 'center' }}>
-      <SpanMetadata {...balance} />
+      <SpanMetadata {...balance} hidden={hideMetadata} />
       <Text style={{ textAlign: 'center' }}>Corte</Text>
       <Text style={gStyles.h2}>{dictionary(balance?.type)} </Text>
       <Text style={gStyles.tCenter}>

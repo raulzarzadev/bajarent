@@ -26,7 +26,6 @@ function PaymentsList({
       defaultOrder="asc"
       onPressRow={(id) => {
         onPressRow?.(id)
-        console.log({ id })
       }}
       filters={[
         // {

@@ -45,7 +45,7 @@ const ScreenBalancesNew = () => {
   return (
     <ScrollView>
       <FormBalance onSubmit={handleSetBalance} />
-      {!!balance && <BalanceInfo balance={balance} />}
+      {!!balance && <BalanceInfo balance={balance} hideMetadata />}
       {!!balance && (
         <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
           <Button
