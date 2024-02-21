@@ -1,11 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType } from '../types/BalanceType'
 import asDate from '../libs/utils-date'
 import BalanceInfo from './BalanceInfo'
-import ErrorBoundary from './ErrorBoundary'
 import Button from './Button'
 
 const ScreenBalancesNew = () => {

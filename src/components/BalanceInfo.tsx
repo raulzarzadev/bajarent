@@ -16,7 +16,7 @@ const BalanceInfoE = ({ balance }: BalanceInfoProps) => {
 
   return (
     <View style={{ justifyContent: 'center' }}>
-      <Text style={{ textAlign: 'center' }}>Balance</Text>
+      <Text style={{ textAlign: 'center' }}>Corte</Text>
       <Text style={gStyles.h2}>{dictionary(balance.type)} </Text>
       {balance.type === 'partial' && <Text>{balance.userId}</Text>}
       <View
