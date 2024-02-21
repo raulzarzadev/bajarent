@@ -11,6 +11,7 @@ import theme from '../theme'
 import InputRadios from './InputRadios'
 import { BalanceType } from '../types/BalanceType'
 import ErrorBoundary from './ErrorBoundary'
+import groupBy from '../libs/groupBy'
 
 export type FormBalanceProps = {
   defaultValues?: Partial<BalanceType>
@@ -143,8 +144,8 @@ const SelectBalanceType = ({
   }, [balanceType])
 
   const modal = useModal({ title: 'Seleccionar usuario' })
-  // @ts-ignore
-  const users = Object.groupBy(staff, (user) => user.userId)
+  const users = groupBy(staff, (user) => user.userId)
+
   const usersData = Object.keys(users).map((userId) => {
     const userData = staff.find((user) => user.userId === userId)
     return {

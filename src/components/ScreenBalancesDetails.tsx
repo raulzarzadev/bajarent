@@ -10,14 +10,12 @@ import BalanceInfo from './BalanceInfo'
 const ScreenBalancesDetails = ({ route }) => {
   const [balance, setBalance] = React.useState<BalanceType>(null)
   useEffect(() => {
-    console.log(route.params.id)
     const fetchBalance = async () => {
       const balance = await ServiceBalances.get(route?.params?.id)
       setBalance(balance)
     }
     fetchBalance()
   }, [])
-  console.log({ balance })
   return (
     <View style={{ marginTop: 16 }}>
       <BalanceInfo balance={balance} />

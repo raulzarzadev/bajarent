@@ -12,10 +12,11 @@ import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
+import { balanceTotals } from '../libs/balance'
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const modalOrders = useModal({ title: 'Ordenes' })
-
+  const { card, cash, total, transfers } = balanceTotals(balance)
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
@@ -46,12 +47,32 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           <PaymentsList payments={balance?.payments} />
         </StyledModal>
       </View>
+      <View style={{ justifyContent: 'flex-end', flex: 1, margin: 'auto' }}>
+        <Text>
+          Efectivo:{' '}
+          <CurrencyAmount
+            style={{ width: 100, textAlign: 'right' }}
+            amount={cash}
+          />
+        </Text>
+        <Text>
+          Transferencia:{' '}
+          <CurrencyAmount
+            style={{ width: 100, textAlign: 'right' }}
+            amount={transfers}
+          />
+        </Text>
+        <Text>
+          Tarjeta:{' '}
+          <CurrencyAmount
+            style={{ width: 100, textAlign: 'right' }}
+            amount={card}
+          />
+        </Text>
+      </View>
       <View>
         <Text style={gStyles.h3}>Total</Text>
-        <CurrencyAmount
-          style={gStyles.h1}
-          amount={balance?.payments?.reduce((acc, p) => acc + p.amount, 0)}
-        />
+        <CurrencyAmount style={gStyles.h1} amount={total} />
       </View>
     </View>
   )
