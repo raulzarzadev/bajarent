@@ -16,8 +16,10 @@ import groupBy from '../libs/groupBy'
 export type FormBalanceProps = {
   defaultValues?: Partial<BalanceType>
   onSubmit?: (values: Partial<BalanceType>) => Promise<any>
+  handleClear?: () => void
 }
 const FormBalanceE = ({
+  handleClear,
   defaultValues,
   onSubmit = async (values) => {
     console.log(values)
@@ -110,7 +112,10 @@ const FormBalanceE = ({
           >
             <Button
               variant="ghost"
-              onPress={() => setValues({ ...defaultBalanceValues })}
+              onPress={() => {
+                setValues({ ...defaultBalanceValues })
+                handleClear?.()
+              }}
               label={'Limpiar'}
             />
             <Button

@@ -8,7 +8,7 @@ import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
 
-const ScreenBalancesNew = () => {
+const ScreenBalancesNew = ({ navigation }) => {
   const { payments, storeId } = useStore()
   const [balance, setBalance] = React.useState<BalanceType>()
   // const [balancePayments, setBalancePayments] = React.useState<
@@ -39,12 +39,16 @@ const ScreenBalancesNew = () => {
   const handleSaveBalance = async () => {
     setSaving(true)
     balance.storeId = storeId
-    await ServiceBalances.create(balance)
+    const res = await ServiceBalances.create(balance)
     setSaving(false)
+    navigation.navigate('BalancesDetails', { id: res?.res?.id })
+  }
+  const handleClear = () => {
+    setBalance(undefined)
   }
   return (
     <ScrollView>
-      <FormBalance onSubmit={handleSetBalance} />
+      <FormBalance onSubmit={handleSetBalance} handleClear={handleClear} />
       {!!balance && <BalanceInfo balance={balance} hideMetadata />}
       {!!balance && (
         <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
