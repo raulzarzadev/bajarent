@@ -4,7 +4,6 @@ import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
 import OrderType, { order_type } from '../types/OrderType'
 import Button from './Button'
-
 import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
 import asDate from '../libs/utils-date'
@@ -15,37 +14,60 @@ import P from './P'
 import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
 import CurrencyAmount from './CurrencyAmount'
-import theme from '../theme'
 import FormikCheckbox from './FormikCheckbox'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
+import { gStyles } from '../styles'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
+  fullName: '',
   phone: '',
   scheduledAt: new Date(),
-  type: order_type.RENT
+  type: order_type.RENT,
+  address: ''
 }
 
 const FormOrder = ({
+  renew = '', // number of order to renew
   onSubmit = async (values) => {
     console.log(values)
   },
   defaultValues = initialValues
+}: {
+  renew?: string | number
+  onSubmit?: (values: Partial<OrderType>) => Promise<any>
+  defaultValues?: Partial<OrderType>
 }) => {
   const [loading, setLoading] = React.useState(false)
 
-  const disabledSave = loading
   return (
     <ScrollView>
-      <Text style={{ textAlign: 'center', marginTop: 12 }}>
-        <P bold size="xl">
-          Folio:{' '}
-        </P>
-        <P size="xl">{defaultValues?.folio}</P>
-      </Text>
+      {defaultValues?.folio && (
+        <Text style={{ textAlign: 'center', marginTop: 12 }}>
+          <P bold size="xl">
+            Folio:{' '}
+          </P>
+          <P size="xl">{defaultValues?.folio}</P>
+        </Text>
+      )}
+      {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
       <Formik
-        initialValues={defaultValues}
+        initialValues={{
+          ...defaultValues,
+          phone:
+            defaultValues?.phone === 'undefined' || !defaultValues.phone
+              ? ''
+              : defaultValues?.phone,
+          fullName:
+            defaultValues?.fullName ||
+            `${defaultValues?.firstName || ''}${defaultValues?.lastName || ''}`,
+          address:
+            defaultValues?.address ||
+            `${defaultValues?.street || ''}${
+              defaultValues?.betweenStreets || ''
+            }`
+        }}
         onSubmit={async (values) => {
           setLoading(true)
           await onSubmit(values)
@@ -61,28 +83,14 @@ const FormOrder = ({
         {({ handleSubmit, setValues, values }) => (
           <View style={styles.form}>
             <View style={[styles.item]}>
-              <InputDate
-                label="Fecha programada"
-                value={asDate(values.scheduledAt) || new Date()}
-                setValue={(value) =>
-                  setValues(
-                    (values) => ({ ...values, scheduledAt: value }),
-                    false
-                  )
-                }
+              <InputValueFormik
+                name={'fullName'}
+                placeholder="Nombre completo"
+                helperText={!values.fullName && 'Nombre es requerido'}
               />
             </View>
 
-            <View
-              style={[styles.item, { justifyContent: 'center', width: '100%' }]}
-            >
-              <FormikCheckbox
-                name="hasDelivered"
-                label="Entregada en la fecha programada"
-              />
-            </View>
-
-            <View style={[styles.item]}>
+            {/* <View style={[styles.item]}>
               <InputValueFormik
                 name={'firstName'}
                 placeholder="Nombre (s)"
@@ -92,7 +100,7 @@ const FormOrder = ({
             </View>
             <View style={[styles.item]}>
               <InputValueFormik name={'lastName'} placeholder="Apellido (s)" />
-            </View>
+            </View> */}
             <View style={[styles.item]}>
               <FormikInputPhone name={'phone'} />
             </View>
@@ -103,6 +111,12 @@ const FormOrder = ({
               <InputValueFormik name={'neighborhood'} placeholder="Colonia" />
             </View>
             <View style={[styles.item]}>
+              <InputValueFormik
+                name={'address'}
+                placeholder="Dirección completa ( calle, numero, entre calles)"
+              />
+            </View>
+            {/* <View style={[styles.item]}>
               <InputValueFormik name={'street'} placeholder="Calle y numero" />
             </View>
             <View style={[styles.item]}>
@@ -110,7 +124,7 @@ const FormOrder = ({
                 name={'betweenStreets'}
                 placeholder="Entre calles"
               />
-            </View>
+            </View> */}
 
             <View style={[styles.item]}>
               <InputValueFormik
@@ -207,8 +221,29 @@ const FormOrder = ({
               </ErrorBoundary>
             </View>
             <View style={[styles.item]}>
+              <InputDate
+                label="Fecha programada"
+                value={asDate(values.scheduledAt) || new Date()}
+                setValue={(value) =>
+                  setValues(
+                    (values) => ({ ...values, scheduledAt: value }),
+                    false
+                  )
+                }
+              />
+            </View>
+
+            <View
+              style={[styles.item, { justifyContent: 'center', width: '100%' }]}
+            >
+              <FormikCheckbox
+                name="hasDelivered"
+                label="Entregada en la fecha programada"
+              />
+            </View>
+            <View style={[styles.item]}>
               <Button
-                disabled={disabledSave || !values?.firstName}
+                disabled={loading || !values?.fullName}
                 onPress={handleSubmit}
                 label={'Guardar'}
               />

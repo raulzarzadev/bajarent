@@ -28,10 +28,8 @@ const InputRadios = <T extends string = string>({
   )
 
   return (
-    <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
-      {label && (
-        <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{label}</Text>
-      )}
+    <View style={styles.container}>
+      {label && <Text style={styles.label}>{label}</Text>}
       <RadioGroup
         accessibilityLabel={label}
         layout={
@@ -40,6 +38,7 @@ const InputRadios = <T extends string = string>({
         radioButtons={radioButtons}
         onPress={setValue}
         selectedId={value}
+        labelStyle={{ textTransform: 'capitalize' }}
       />
     </View>
   )
@@ -47,4 +46,10 @@ const InputRadios = <T extends string = string>({
 
 export default InputRadios
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: { justifyContent: 'center', alignSelf: 'center' },
+  label: {
+    textAlign: 'center',
+    fontWeight: 'bold'
+  }
+})

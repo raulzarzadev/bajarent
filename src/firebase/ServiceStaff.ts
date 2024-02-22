@@ -20,6 +20,12 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
     return super.listenMany([where('storeId', '==', storeId)], cb)
   }
 
+  async getByStore(storeId: string) {
+    // get all staff that has storeId
+    const staff = await this.findMany([where('storeId', '==', storeId)])
+    return staff
+  }
+
   async getStaffPositions(userId: string) {
     // get all staff position that has userId have
     const positions = await this.getItems([where('userId', '==', userId)])

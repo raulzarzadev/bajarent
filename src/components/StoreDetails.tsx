@@ -9,10 +9,13 @@ import useModal from '../hooks/useModal'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { useStoreNavigation } from './StackStore'
+import { useAuth } from '../contexts/authContext'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useStoreNavigation()
-
+  const { staffPermissions } = useStore()
+  const { user } = useAuth()
+  const isOwner = store?.createdBy === user.id
   return (
     <View>
       <View
@@ -24,16 +27,18 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       >
         <ChangeStore />
         <H1>{store?.name}</H1>
-        <ButtonIcon
-          icon="edit"
-          variant="ghost"
-          color="secondary"
-          buttonStyles={{ marginLeft: 10 }}
-          size="medium"
-          onPress={() => {
-            navigate('EditStore')
-          }}
-        ></ButtonIcon>
+        {(staffPermissions?.isAdmin || isOwner) && (
+          <ButtonIcon
+            icon="edit"
+            variant="ghost"
+            color="secondary"
+            buttonStyles={{ marginLeft: 10 }}
+            size="medium"
+            onPress={() => {
+              navigate('EditStore')
+            }}
+          ></ButtonIcon>
+        )}
       </View>
       <P>{store.description}</P>
     </View>
@@ -42,14 +47,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
 
 export const ChangeStore = ({ label = '' }) => {
   const storesModal = useModal({ title: 'Seleccionar tienda' })
-  const {
-    handleSetStoreId,
-    storeId,
-    userStores
-    // userPositions,
-    // handleSetMyStaffId,
-    // myStaffId
-  } = useStore()
+  const { handleSetStoreId, storeId, userStores } = useStore()
   // console.log({ userStores, userPositions })
   // console.log({ handleSetMyStaffId, myStaffId })
   return (
@@ -63,7 +61,7 @@ export const ChangeStore = ({ label = '' }) => {
       >
         {!!label && <Text>{label}</Text>}
         <ButtonIcon
-          icon={storeId ? 'autorenew' : 'storefront'}
+          icon={storeId ? 'swap' : 'store'}
           variant="ghost"
           color="secondary"
           buttonStyles={{ marginLeft: 10, width: 40, height: 40 }}

@@ -26,6 +26,7 @@ export type Category = { name: string; id: string; prices?: PriceType[] }
 export type CategoryBase = {
   name: string
   description: string
+  storeId: string
 }
 
 export type CategoryType = CategoryBase & BaseType

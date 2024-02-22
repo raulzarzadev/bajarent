@@ -11,7 +11,8 @@
     "type-check": "tsc --noEmit ",
     "commit": "git status && npm run type-check &&  git add . &&  git commit",
     "merge:main": "git switch main && git merge dev && git switch dev",
-    "push:main": "git push origin main"
+    "push:main": "git push origin main",
+    "fast-push": "npm run merge:main && npm run push:main"
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
@@ -33,6 +34,7 @@
     "formik": "^2.4.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^5.0.1",
     "react-native": "0.72.6",
     "react-native-bouncy-checkbox": "^3.0.7",
     "react-native-confirmation-code-field": "^7.3.2",
@@ -44,7 +46,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-web": "~0.19.6",
     "short-unique-id": "^5.0.3",
-    "typescript": "^5.1.3"
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

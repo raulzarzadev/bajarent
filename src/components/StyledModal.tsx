@@ -7,11 +7,23 @@ import {
   ScrollView,
   Dimensions
 } from 'react-native'
-import React from 'react'
-import { Ionicons } from '@expo/vector-icons' // Asegúrate de instalar @expo/vector-icons
+import React, { ReactNode } from 'react'
+import Icon from './Icon'
 const windowHeight = Dimensions.get('window').height
-
-const StyledModal = ({ open, setOpen, children, title }) => {
+export type StyledModalProps = {
+  open?: boolean
+  setOpen?: (open: boolean) => void
+  children?: ReactNode
+  title?: string
+  size?: 'md' | 'full'
+}
+const StyledModal = ({
+  open,
+  setOpen,
+  children,
+  title = '',
+  size = 'md'
+}: StyledModalProps) => {
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -24,16 +36,21 @@ const StyledModal = ({ open, setOpen, children, title }) => {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <View
+            style={[
+              styles.modalView,
+              size === 'full' && styles.fullSizeModal,
+              size === 'md' && styles.mdSizeModal
+            ]}
+          >
             <View style={styles.topBar}>
               <Text style={styles.title}>{title}</Text>
               <Pressable onPress={() => setOpen(!open)}>
-                <Ionicons name="close" size={24} color="black" />
+                <Icon icon="close" />
+                {/* <Ionicons name="close" size={24} color="black" /> */}
               </Pressable>
             </View>
-            <ScrollView style={{ width: '100%', height: 'auto' }}>
-              {children}
-            </ScrollView>
+            <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
           </View>
         </View>
       </Modal>
@@ -51,15 +68,7 @@ const styles = StyleSheet.create({
     // marginTop: 22
   },
   modalView: {
-    maxWidth: 500,
-    maxHeight: windowHeight,
-    width: '90%',
-
-    margin: 20,
     backgroundColor: 'white',
-    borderRadius: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 12,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -70,11 +79,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  mdSizeModal: {
+    margin: 20,
+    maxWidth: 500,
+    maxHeight: windowHeight,
+    width: '90%',
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 12
+  },
+  fullSizeModal: {
+    margin: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    height: windowHeight,
+    width: '100%',
+    maxWidth: 'auto'
+  },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 20
+    marginBottom: 12
   },
   title: {
     fontSize: 20,

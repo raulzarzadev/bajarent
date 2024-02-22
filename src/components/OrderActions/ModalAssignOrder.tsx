@@ -5,7 +5,6 @@ import Button from '../Button'
 import ListSections from '../ListSections'
 import StyledModal from '../StyledModal'
 import { gStyles } from '../../styles'
-import ListStaff from '../ListStaff'
 
 const ModalAssignOrder = ({
   assignedToSection,
@@ -19,7 +18,7 @@ const ModalAssignOrder = ({
   assignToStaff?: (sectionId: string) => void
 }) => {
   const modal = useModal({ title: 'Asignar a' })
-  const { storeSections, staff } = useStore()
+  const { storeSections } = useStore()
   const sectionAssigned = storeSections.find(
     (o) => o?.id === assignedToSection
   )?.name
@@ -43,7 +42,7 @@ const ModalAssignOrder = ({
             }
           }}
         ></ListSections>
-        <Text style={gStyles.h3}>Staff</Text>
+        {/* <Text style={gStyles.h3}>Staff</Text>
         <ListStaff
           staffSelected={[assignedToStaff]}
           staff={staff}
@@ -55,7 +54,7 @@ const ModalAssignOrder = ({
               modal.toggleOpen()
             }
           }}
-        ></ListStaff>
+        ></ListStaff> */}
       </StyledModal>
     </>
   )

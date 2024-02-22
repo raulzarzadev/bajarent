@@ -1,4 +1,4 @@
-import { orderBy, where } from 'firebase/firestore'
+import { Timestamp, orderBy, where } from 'firebase/firestore'
 import { CommentType } from '../types/CommentType'
 import { FirebaseGenericService } from './genericService'
 
@@ -26,6 +26,46 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   deleteOrderComments(orderId: string) {
     return super.deleteMany([where('orderId', '==', orderId)])
   }
+
+  async getByStore(storeId: string) {
+    return await this.findMany([where('storeId', '==', storeId)])
+  }
+
+  listenStoreReports(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('type', '==', 'report')
+        // where('solved', '==', false)
+      ],
+      cb
+    )
+  }
+
+  async getByOrder(orderId: string) {
+    return await this.findMany([where('orderId', '==', orderId)])
+  }
+
+  listenByOrder(orderId: string, cb: CallableFunction) {
+    return this.listenMany([where('orderId', '==', orderId)], cb)
+  }
+
+  // TODO: Implementar para solo obtener unos pocos comentarios
+  // listenByStore(storeId: string, cb: CallableFunction) {
+  //   const oneDay = 1000 * 60 * 60 * 24
+  //   const oneWeek = oneDay * 7
+  //   // const twoHoursAgo = 1000 * 60 * 60 * 2
+  //   // const tenMinutesAgo = 1000 * 60 * 10
+  //   const msFromNow = Timestamp.now().toDate().getTime() - oneWeek
+  //   const secondsFromNow = msFromNow / 1000
+  //   return this.listenMany(
+  //     [
+  //       where('storeId', '==', storeId),
+  //       where('createdAt', '>', new Timestamp(secondsFromNow, 0))
+  //     ],
+  //     cb
+  //   )
+  // }
 }
 
 export const ServiceComments = new ServiceOrdersClass()

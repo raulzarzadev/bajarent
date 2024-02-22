@@ -54,16 +54,20 @@ const labels = {
   canRepairOrder: 'Reparar Orden',
   REPAIR: 'Reparación',
   REPAIRING: 'Reparando',
-  REPAIRED: 'Reparada',
+  REPAIRED: 'Terminada',
   REPAIR_DELIVERED: 'Entregada',
   RENT: 'Renta',
   SALE: 'Venta',
-
+  cash: 'Efectivo',
+  transfer: 'Transferencia',
+  full: 'Completa',
+  partial: 'Parcial',
+  ' ': '',
   '': ''
 } as const
 export type Labels = keyof typeof labels
 const dictionary = (value: Labels) => {
-  if (!labels[value]) return value
+  if (!labels[value] || value === ' ') return value
   return labels[value]
 }
 

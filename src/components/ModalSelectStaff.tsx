@@ -21,17 +21,17 @@ const ModalSelectStaff = ({
       <Button
         onPress={modal.toggleOpen}
         buttonStyles={{ paddingHorizontal: 8 }}
-      >
-        <Text>Agregar staff</Text>
-      </Button>
+        label="Agregar staff"
+      ></Button>
       <StyledModal {...modal}>
         <Text>Seleccionar aun colaborador</Text>
         <ListStaff
+          hideActions
           staffSelected={staffSelected}
           staff={staff}
           onPress={(staffId) => {
             onPress(staffId)
-            modal.toggleOpen()
+            // modal.toggleOpen()
           }}
         />
       </StyledModal>

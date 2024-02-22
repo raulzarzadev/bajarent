@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { StyledModalProps } from '../components/StyledModal'
 export type Modal = {
   title?: string
 }
-const useModal = (props?: Modal) => {
+const useModal = (props?: Modal & StyledModalProps) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = () => setOpen(!open)
 
@@ -10,7 +11,7 @@ const useModal = (props?: Modal) => {
     open,
     toggleOpen,
     setOpen,
-    title: props.title
+    title: props?.title
   }
 }
 

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import React from 'react'
 import Buttons from './Buttons'
 
@@ -11,5 +11,3 @@ const ScreenComponents = () => {
 }
 
 export default ScreenComponents
-
-const styles = StyleSheet.create({})

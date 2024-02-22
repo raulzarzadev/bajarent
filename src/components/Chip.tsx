@@ -1,9 +1,9 @@
-import { StyleSheet, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 import React from 'react'
 import { ChipProps, Chip as RNEChip } from 'react-native-elements'
 
 const Chip = ({
-  title,
+  title = '',
   color,
   titleColor,
   size = 'md',
@@ -32,7 +32,7 @@ const Chip = ({
   }
   return (
     <RNEChip
-      title={title.toUpperCase()}
+      title={title?.toUpperCase()}
       buttonStyle={[
         {
           padding: sizes[size].padding,

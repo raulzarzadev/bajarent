@@ -17,7 +17,7 @@ const CardPhone = ({ phone }) => {
     return formattedPhoneNumber
   }
 
-  if (!phone) return null
+  if (!phone || phone === 'undefined') return null
 
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>

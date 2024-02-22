@@ -2,69 +2,82 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import OrderRow from './OrderRow'
 import OrderType from '../types/OrderType'
 import useSort from '../hooks/useSort'
-import { Icon } from 'react-native-elements'
 
-import useFilter from '../hooks/useFilter'
-import InputTextStyled from './InputTextStyled'
 import ModalFilterOrders from './ModalFilterOrders'
 import { useState } from 'react'
+import Icon from './Icon'
+import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
+import { gSpace } from '../styles'
 
 function OrdersList({
   orders,
-  onPressRow
+  onPressRow,
+  defaultOrders
 }: {
   orders: OrderType[]
   onPressRow?: (orderId: string) => void
+  defaultOrders?: string[]
 }) {
-  const [filteredData, setFilteredData] = useState([])
+  const { staffPermissions } = useStore()
+  const navigation = useNavigation()
 
-  const { filteredData: fromSearchData, search } = useFilter({
-    data: filteredData
-  })
-  const { sortBy, order, sortedBy, sortedData } = useSort({
-    data: fromSearchData
+  const [filteredData, setFilteredData] = useState<OrderType[]>([])
+
+  const { sortBy, order, sortedBy, sortedData } = useSort<OrderType>({
+    data: filteredData,
+    defaultSortBy: 'priority',
+    defaultOrder: 'des'
   })
 
   const sortFields = [
+    { key: 'priority', label: 'Prioridad' },
     { key: 'folio', label: 'Folio' },
     { key: 'firstName', label: 'Nombre' },
-    { key: 'type', label: 'Tipo' },
-    { key: 'status', label: 'Estado' },
+    // { key: 'type', label: 'Tipo' },
+    { key: 'neighborhood', label: 'Colonia' },
+    { key: 'status', label: 'Status' },
+    { key: 'assignToSection', label: 'Area' }
     // { key: 'lastName', label: 'Apellido' },
-    { key: 'assignToSection', label: 'Area' },
-    { key: 'assignToStaff', label: 'Staff' },
-    { key: 'createdAt', label: 'Creada' },
-    { key: 'scheduledAt', label: 'Programada' }
+    // { key: 'assignToStaff', label: 'Staff' },
+    // { key: 'createdAt', label: 'Creada' },
+    // { key: 'scheduledAt', label: 'Programada' },
   ]
-
-  let timerId = null
-  const handleDebounceSearch = (e: string) => {
-    if (timerId) {
-      clearTimeout(timerId)
-    }
-
-    timerId = setTimeout(() => {
-      search(e)
-    }, 300)
-  }
 
   return (
     <>
       <View style={styles.container}>
+        {/* *** FILTERS FIELDS */}
+
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: 500,
+            padding: 4
           }}
         >
-          <InputTextStyled
-            placeholder="Buscar..."
-            onChangeText={(e) => {
-              handleDebounceSearch(e)
-            }}
+          {(staffPermissions?.canCreateOrder || staffPermissions.isAdmin) && (
+            <Button
+              label="Nueva"
+              icon="add"
+              onPress={() => {
+                // @ts-ignore
+
+                navigation.navigate('Orders', { screen: 'NewOrder' })
+              }}
+              size="xs"
+            ></Button>
+          )}
+
+          <ModalFilterOrders
+            defaultOrders={defaultOrders}
+            orders={orders}
+            setOrders={setFilteredData}
           />
-          <ModalFilterOrders orders={orders} setOrders={setFilteredData} />
         </View>
         <View>
           <Text style={{ textAlign: 'center' }}>
@@ -74,45 +87,46 @@ function OrdersList({
         <View
           style={{
             padding: 4,
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            width: '100%',
-            alignItems: 'center',
-            flexWrap: 'wrap'
+            justifyContent: 'center',
+            marginTop: gSpace(2),
+            maxWidth: '100%'
           }}
         >
-          {sortFields.map((field) => (
-            <View key={field.key}>
-              <Pressable
-                onPress={() => {
-                  sortBy(field.key)
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  margin: 4,
-                  width: 100
-                }}
-              >
-                <Text
+          {/* *** SORT FIELDS */}
+          <FlatList
+            horizontal
+            data={sortFields}
+            renderItem={({ item: field }) => (
+              <View key={field.key}>
+                <Pressable
+                  onPress={() => {
+                    sortBy(field.key)
+                  }}
                   style={{
-                    fontWeight: sortedBy === field.key ? 'bold' : 'normal'
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    margin: 4,
+                    width: 65
                   }}
                 >
-                  {field.label}
-                </Text>
-                {sortedBy === field.key && (
-                  <Icon
-                    name={order === 'asc' ? 'chevron-up' : 'chevron-down'}
-                    type="font-awesome"
-                    size={12}
-                    color="black"
-                  />
-                )}
-              </Pressable>
-            </View>
-          ))}
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontWeight: sortedBy === field.key ? 'bold' : 'normal'
+                    }}
+                  >
+                    {field.label}
+                  </Text>
+                  {sortedBy === field.key && (
+                    <Icon icon={order === 'asc' ? 'up' : 'down'} size={12} />
+                  )}
+                </Pressable>
+              </View>
+            )}
+          />
         </View>
+        {/* *** ROWS */}
+
         <FlatList
           style={styles.orderList}
           data={sortedData}
@@ -136,7 +150,10 @@ const styles = StyleSheet.create({
     // padding: 12,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    maxWidth: 800,
+    margin: 'auto',
+    width: '100%'
   },
   orderList: {
     width: '100%',

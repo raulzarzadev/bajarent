@@ -14,10 +14,10 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
   const navigation = useNavigation()
   const handleAddStaff = (staffId: string) => {
-    ServiceSections.addStaff(section.id, staffId)
+    ServiceSections.addStaff(section?.id, staffId)
   }
   const handleRemoveStaff = (staffId: string) => {
-    ServiceSections.removeStaff(section.id, staffId)
+    ServiceSections.removeStaff(section?.id, staffId)
   }
 
   const handleSelectStaff = (staffId: string) => {
@@ -47,27 +47,32 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
           confirmLabel="Eliminar"
           modalTitle="Eliminar Area"
           handleConfirm={async () => {
-            return await ServiceSections.delete(section.id).catch((e) =>
-              console.log(e)
-            )
+            return await ServiceSections.delete(section.id)
+              .then(() => {
+                navigation.goBack()
+              })
+              .catch((e) => console.log(e))
           }}
           text={`¿Desea eliminar esta area?`}
         />
 
-        <Text style={[styles.title]}>{section.name} </Text>
+        <Text style={[styles?.title]}>{section?.name} </Text>
         <ButtonIcon
           variant="ghost"
           icon="edit"
           color="secondary"
           onPress={() => {
             // @ts-ignore
-            navigation.navigate('EditSection', { sectionId: section.id })
+            navigation.navigate('EditSection', { sectionId: section?.id })
           }}
         ></ButtonIcon>
       </View>
       <Text style={styles.subtitle}>Staff </Text>
       <ListStaff
-        staff={section?.staff?.map((id) => staff.find((s) => s.id === id))}
+        staff={section?.staff?.map(
+          (id) => staff.find((s) => s?.id === id) || { id, missing: true }
+        )}
+        sectionId={section?.id}
         onPress={handleSelectStaff}
       />
       <ModalSelectStaff

@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import Button, { ButtonProps } from './Button'
-import { Icon } from 'react-native-elements'
-import theme from '../theme'
+// import { Icon } from 'react-native-elements'
+
+import { IconName } from './Icon'
 export type IconButtonProps = {
-  icon: string
+  icon: IconName
   iconColor?: ButtonProps['color']
   type?: 'material' | 'ionicon' | 'font-awesome' | 'material-community'
 }
@@ -28,12 +29,17 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
         width: sizes[props.size || 'medium'] * 1.4
       }}
     >
-      <Icon
+      {/* <Icon
+        icon={props.icon}
+        size={sizes[props.size || 'medium']}
+        color={theme[props.color || 'primary']}
+      /> */}
+      {/* <Icon
         type={props.type || 'material'}
         name={props.icon}
         size={sizes[props.size || 'medium']}
         color={theme[props.color || 'primary']}
-      />
+      /> */}
     </Button>
   )
 }

@@ -1,36 +1,18 @@
-import { View } from 'react-native'
-import Button from './Button'
-
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
 
-function ScreenOrders({ navigation }) {
-  const { orders, staffPermissions } = useStore()
-  const canCreateOrder =
-    staffPermissions?.canCreateOrder || staffPermissions.isAdmin
+function ScreenOrders({ navigation, route }) {
+  const { orders } = useStore()
+  const filter = route?.params?.orders || []
+  const filtered = orders.filter((o) => filter.includes(o.id)).map((o) => o.id)
   return (
-    <>
-      <View
-        style={{
-          padding: 4,
-          width: 150,
-          justifyContent: 'center',
-          margin: 'auto'
-        }}
-      >
-        {!!canCreateOrder && (
-          <Button onPress={() => navigation.push('NewOrder')}>
-            Nueva orden
-          </Button>
-        )}
-      </View>
-      <OrdersList
-        orders={orders}
-        onPressRow={(itemId) => {
-          navigation.navigate('OrderDetails', { orderId: itemId })
-        }}
-      />
-    </>
+    <OrdersList
+      defaultOrders={filtered}
+      orders={orders}
+      onPressRow={(itemId) => {
+        navigation.navigate('OrderDetails', { orderId: itemId })
+      }}
+    />
   )
 }
 

@@ -7,7 +7,7 @@ import ScreenStaffNew from './ScreenStaffNew'
 import ScreenStaffDetails from './ScreenStaffDetails'
 import ScreenStaffEdit from './ScreenStaffEdit'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import ScreenStoreSections from './ScreenSections'
+import ScreenSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
@@ -15,6 +15,12 @@ import MyStaffLabel from './MyStaffLabel'
 import ScreenItems from './ScreenItems'
 import ScreenCategoryEdit from './ScreenCategoryEdit'
 import ScreenCategoryNew from './ScreenCategoryNew'
+import ScreenCashbox from './ScreenCashbox'
+import ScreenPayments from './ScreenPayments'
+import ScreenPaymentsDetails from './ScreenPaymentsDetails'
+import ScreenBalances from './ScreenBalances'
+import ScreenBalancesDetails from './ScreenBalancesDetails'
+import ScreenBalancesNew from './ScreenBalancesNew'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -82,7 +88,7 @@ function StackStore() {
       <Stack.Screen
         name="StaffDetails"
         options={{
-          title: 'Staff Info'
+          title: 'Detalles de Staff '
         }}
         component={ScreenStaffDetails}
       />
@@ -100,7 +106,7 @@ function StackStore() {
         options={{
           title: 'Areas'
         }}
-        component={ScreenStoreSections}
+        component={ScreenSections}
       />
       <Stack.Screen
         name="CreateSection"
@@ -147,6 +153,49 @@ function StackStore() {
           title: 'Editar categoría'
         }}
         component={ScreenCategoryEdit}
+      />
+      {/* CASHBOX  */}
+      <Stack.Screen
+        name="Cashbox"
+        options={{
+          title: 'Caja'
+        }}
+        component={ScreenCashbox}
+      />
+      <Stack.Screen
+        name="Payments"
+        options={{
+          title: 'Pagos'
+        }}
+        component={ScreenPayments}
+      />
+      <Stack.Screen
+        name="PaymentsDetails"
+        options={{
+          title: 'Detalle de pago'
+        }}
+        component={ScreenPaymentsDetails}
+      />
+      <Stack.Screen
+        name="Balances"
+        options={{
+          title: 'Cortes de caja'
+        }}
+        component={ScreenBalances}
+      />
+      <Stack.Screen
+        name="BalancesDetails"
+        options={{
+          title: 'Detalle de corte'
+        }}
+        component={ScreenBalancesDetails}
+      />
+      <Stack.Screen
+        name="BalancesNew"
+        options={{
+          title: 'Nuevo corte'
+        }}
+        component={ScreenBalancesNew}
       />
     </Stack.Navigator>
   )

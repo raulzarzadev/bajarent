@@ -10,13 +10,6 @@ class ServiceSectionsClass extends FirebaseGenericService<SectionType> {
     return this.getItems([where('storeId', '==', storeId)])
   }
 
-  async listenByStore(
-    storeId: string,
-    callback: (sections: SectionType[]) => void
-  ) {
-    return this.listenMany([where('storeId', '==', storeId)], callback)
-  }
-
   async addStaff(sectionId: string, staffId: string) {
     // @ts-ignore
     return this.update(sectionId, { staff: arrayUnion(staffId) })

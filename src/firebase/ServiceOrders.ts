@@ -1,16 +1,17 @@
 import { where } from 'firebase/firestore'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, {
+  ORDER_STATUS_SOLVED,
+  ORDER_STATUS_UNSOLVED,
+  order_status
+} from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
-import ShortUniqueId from 'short-unique-id'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { auth } from './auth'
-
-const uid = new ShortUniqueId()
 
 type Type = OrderType
+
 class ServiceOrdersClass extends FirebaseGenericService<Type> {
   constructor() {
     super('orders')
@@ -106,6 +107,34 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       repairedBy
     })
     // Implementa tu método personalizado
+  }
+
+  async getByStore(storeId: string) {
+    return await this.findMany([where('storeId', '==', storeId)])
+  }
+
+  listenUnsolved(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('status', 'in', ORDER_STATUS_UNSOLVED)
+      ],
+      cb
+    )
+  }
+
+  getSolved(storeId: string) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('status', 'in', ORDER_STATUS_SOLVED)
+    ])
+  }
+
+  getUnsolved(storeId: string) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('status', 'in', ORDER_STATUS_UNSOLVED)
+    ])
   }
 
   // Agrega tus métodos aquí

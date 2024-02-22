@@ -2,24 +2,35 @@ import BaseType from './BaseType'
 import { RentItem } from './RentItem'
 import StoreType from './StoreType'
 import { CommentType } from './CommentType'
+import PaymentType from './PaymentType'
 
 type OrderBase = {
   folio: number
+  status: OrderStatus
+  type: TypeOfOrderType
+
   storeId: StoreType['id']
 
   firstName: string
   lastName: string
+  fullName: string
+
   email: string
   phone: string
 
   imageID: string
   imageHouse: string
 
-  street: string
-  betweenStreets: string
-  neighborhood: string
-  location: string
-  indications: string
+  street?: string
+  betweenStreets?: string
+  neighborhood?: string
+  location?: string
+  /**
+   * @deprecated use references instead
+   */
+  indications?: string
+  references?: string
+  address?: string
 
   scheduledAt: Date
 
@@ -35,11 +46,8 @@ type OrderBase = {
   item: RentItem
   expireAt?: Date | null
 
-  status: OrderStatus
-
   comments: CommentType[]
 
-  type: TypeOfOrderType
   hasNotSolvedReports?: boolean
 
   assignToSection?: string
@@ -74,6 +82,11 @@ type OrderBase = {
 
   repairTotal?: number
   repairInfo?: string
+  quoteBy?: string
+
+  payments: PaymentType[]
+
+  priority?: number
 }
 
 export enum order_status {
@@ -99,5 +112,17 @@ export type TypeOfOrderType = order_type
 export type OrderStatus = order_status
 
 type OrderType = OrderBase & BaseType
+
+export const ORDER_STATUS_SOLVED = [
+  order_status.CANCELLED,
+  order_status.REPAIR_DELIVERED,
+  order_status.DELIVERED,
+  order_status.PICKUP,
+  order_status.RENEWED
+]
+
+export const ORDER_STATUS_UNSOLVED = Object.keys(order_status).filter(
+  (status) => !ORDER_STATUS_SOLVED.includes(status as any)
+)
 
 export default OrderType
