@@ -11,7 +11,8 @@ import InputRadios from './InputRadios'
 import theme from '../theme'
 import CurrencyAmount from './CurrencyAmount'
 import P from './P'
-import { CategoryType, PriceType } from '../types/RentItem'
+import { CategoryType } from '../types/RentItem'
+import { PriceType } from '../types/PriceType'
 
 export type ItemSelected = {
   categoryName?: string
@@ -81,7 +82,7 @@ const FormSelectPrice = ({
   value,
   setValue
 }: {
-  prices: PriceType[]
+  prices: Partial<PriceType>[]
   value: PriceType['id'] | null
   setValue: (value: PriceType['id']) => void
 }) => {
@@ -106,11 +107,10 @@ const FormSelectPrice = ({
             >
               <CardPrice
                 price={item}
+                selected={value === item.id}
                 style={{
                   marginRight: 8,
-                  marginVertical: 8,
-                  borderColor:
-                    value === item.id ? theme.secondary : 'transparent'
+                  marginVertical: 8
                 }}
               />
             </Pressable>
@@ -123,15 +123,23 @@ const FormSelectPrice = ({
   )
 }
 
-const CardPrice = ({
+export const CardPrice = ({
   price,
-  style
+  style,
+  selected
 }: {
-  price: PriceType
-  style: ViewStyle
+  price: Partial<PriceType>
+  style?: ViewStyle
+  selected?: boolean
 }) => {
   return (
-    <View style={[styles.price, style]}>
+    <View
+      style={[
+        styles.price,
+        style,
+        { borderColor: selected ? theme.secondary : 'transparent' }
+      ]}
+    >
       <Text style={{ textAlign: 'center', marginBottom: 4 }}>
         {price.title}
       </Text>

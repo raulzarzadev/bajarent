@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore'
-import { TimePriceType } from '../types/RentItem'
 import asDate from './utils-date'
+import { TimePriceType } from '../types/PriceType'
 /**
  *
  * @param time its a string with the time and the unit of time

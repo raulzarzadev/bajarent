@@ -1,16 +1,30 @@
-import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
+import usePrices from '../hooks/usePrices'
+import { gStyles } from '../styles'
+import ModalFormPrice from './ModalFormPrice'
+import { PriceType } from '../types/PriceType'
+import { useStore } from '../contexts/storeContext'
+import { CardPrice } from './FormSelectItem'
 
-const FormSection = ({
+const FormCategory = ({
   defaultValues = {},
   onSubmit = async (values) => {
     console.log(values)
   }
 }) => {
+  // @ts-ignore
+  const categoryId = defaultValues?.id
   const [sending, setSending] = React.useState(false)
+  const { createPrice } = usePrices()
+  const { prices, storeId } = useStore()
+  const categoryPrices = prices.filter(
+    (price: PriceType) => price.categoryId === categoryId
+  )
+
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -31,6 +45,32 @@ const FormSection = ({
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
 
+          <View
+            style={[
+              styles.input,
+              { flexDirection: 'row', alignItems: 'center' }
+            ]}
+          >
+            <Text style={[gStyles.h3, { marginRight: 8 }]}>Precios</Text>
+            <ModalFormPrice
+              handleSubmit={async (price) => {
+                return await createPrice(price, storeId, categoryId)
+              }}
+            />
+          </View>
+          <View style={styles.input}>
+            <FlatList
+              horizontal
+              data={categoryPrices}
+              renderItem={({ item }) => (
+                <CardPrice
+                  style={{ marginVertical: 8, marginRight: 8 }}
+                  price={item}
+                />
+              )}
+            ></FlatList>
+          </View>
+
           <View style={styles.input}>
             <Button
               onPress={handleSubmit}
@@ -44,7 +84,7 @@ const FormSection = ({
   )
 }
 
-export default FormSection
+export default FormCategory
 const styles = StyleSheet.create({
   form: {
     padding: 0

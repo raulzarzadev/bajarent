@@ -1,20 +1,7 @@
 import BaseType from './BaseType'
 import ItemType from './ItemType'
+import { PriceType } from './PriceType'
 
-export type TimePriceType = `${number} ${
-  | 'day'
-  | 'month'
-  | 'year'
-  | 'week'
-  | 'hour'
-  | 'minute'}`
-
-export type PriceType = {
-  title: string
-  amount: number
-  id: string
-  time?: TimePriceType
-}
 export type RentItem = {
   categoryName: string
   priceSelectedId: string
@@ -24,7 +11,8 @@ export type RentItem = {
 export type CategoryBase = {
   name: string
   description: string
-  prices: PriceType[]
+  prices: Partial<PriceType>[]
+  storeId: string
 }
 
 export type CategoryType = CategoryBase & BaseType

@@ -16,7 +16,9 @@ import { CategoryType } from '../types/RentItem'
 import PaymentType from '../types/PaymentType'
 import useStoreDataListen from '../hooks/useStoreDataListen'
 import useUserStores from '../hooks/useUserStores'
+import { PriceType } from '../types/PriceType'
 export type StaffPermissions = StaffPermissionType
+
 export type StoreContextType = {
   store?: null | StoreType
   setStore?: Dispatch<any>
@@ -35,6 +37,7 @@ export type StoreContextType = {
   categories?: Partial<CategoryType>[]
   getCategories?: () => void
   payments?: PaymentType[]
+  prices?: PriceType[]
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -49,7 +52,8 @@ const StoreContextProvider = ({ children }) => {
     payments,
     sections: storeSections,
     staff,
-    store
+    store,
+    prices
   } = useStoreDataListen({ storeId })
 
   const { userPositions, userStores } = useUserStores()
@@ -204,7 +208,8 @@ const StoreContextProvider = ({ children }) => {
         handleSetMyStaffId,
         staffPermissions,
         storeSections,
-        payments: paymentsFormatted
+        payments: paymentsFormatted,
+        prices
       }}
     >
       {children}

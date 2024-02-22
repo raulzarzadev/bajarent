@@ -37,28 +37,35 @@ const CATEGORIES_ITEMS: {
       description: 'Lavadoras de ropa',
       prices: [
         {
-          id: '1',
           title: '1 semana',
           amount: 300,
-          time: '1 week'
+          time: '1 week',
+          storeId: '1',
+          categoryId: 'lavadora'
         },
         {
           id: '2',
           title: '2 semanas',
           amount: 450,
-          time: '2 week'
+          time: '2 week',
+          storeId: '1',
+          categoryId: 'lavadora'
         },
         {
           id: '3',
           title: '1 mes',
           amount: 600,
-          time: '1 month'
+          time: '1 month',
+          storeId: '1',
+          categoryId: 'lavadora'
         },
         {
           id: '4',
           title: '1 mes*',
           amount: 700,
-          time: '1 month'
+          time: '1 month',
+          storeId: '1',
+          categoryId: 'lavadora'
         }
       ]
     },

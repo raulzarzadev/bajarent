@@ -11,6 +11,8 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceSections } from '../firebase/ServiceSections'
+import { PriceType } from '../types/PriceType'
+import { ServicePrices } from '../firebase/ServicePrices'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
   const [store, setStore] = useState<StoreType>(null)
@@ -19,6 +21,14 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   const [staff, setStaff] = useState<StaffType[]>([])
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
+  const [prices, setPrices] = useState<PriceType[]>([])
+  useEffect(() => {
+    if (storeId) {
+      ServicePrices.getByStore(storeId).then(setPrices)
+    } else {
+      setStore(null)
+    }
+  }, [storeId])
 
   useEffect(() => {
     if (storeId) {
@@ -45,7 +55,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     staff,
     orders,
     payments,
-    sections
+    sections,
+    prices
   }
 }
 

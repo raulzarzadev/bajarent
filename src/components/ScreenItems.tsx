@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
 import { CategoryType } from '../types/RentItem'
-import ItemType from '../types/ItemType'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import useCategories from '../hooks/useCategories'
+import { CardPrice } from './FormSelectItem'
+import { PriceType } from '../types/PriceType'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenItems = () => {
   return (
@@ -20,8 +22,18 @@ const ScreenItems = () => {
 const StoreCategories = () => {
   const [selected, setSelected] = useState<string | null>(null)
   const { navigate } = useNavigation()
+  const { prices } = useStore()
   const { categories, deleteCategory } = useCategories()
-
+  const [categoryPrices, setCategoryPrices] = useState<PriceType[]>([])
+  useEffect(() => {
+    if (selected) {
+      setCategoryPrices(
+        prices.filter((price: PriceType) => price.categoryId === selected)
+      )
+    } else {
+      setCategoryPrices([])
+    }
+  }, [selected])
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -82,27 +94,25 @@ const StoreCategories = () => {
         ></FlatList>
       </View>
       <View>
-        {/* <FlatList
-          data={CATEGORIES_ITEMS.items}
-          renderItem={({ item }) => {
-            return (
-              <Pressable>
-                <ItemSquare item={item} />
-              </Pressable>
-            )
-          }}
-        ></FlatList> */}
+        {!!categoryPrices.length && (
+          <>
+            <Text style={[gStyles.h2, { textAlign: 'left', marginTop: 12 }]}>
+              Prices:
+            </Text>
+            <FlatList
+              horizontal
+              data={categoryPrices}
+              renderItem={({ item }) => (
+                <CardPrice style={{ marginRight: 8 }} price={item} />
+              )}
+            ></FlatList>
+          </>
+        )}
       </View>
     </View>
   )
 }
-const ItemSquare = ({ item }: { item: Partial<ItemType> }) => {
-  return (
-    <View style={styles.row}>
-      <Text style={gStyles.h3}>{item.number}</Text>
-    </View>
-  )
-}
+
 const CategorySquare = ({
   item,
   selected
