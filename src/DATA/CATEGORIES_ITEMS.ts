@@ -1,4 +1,4 @@
-import ItemType, { ItemBase, ItemStatus } from '../types/ItemType'
+import { ItemBase, ItemStatus } from '../types/ItemType'
 import { CategoryType } from '../types/RentItem'
 
 const WASHER_CATEGORY_ID = 'washer'

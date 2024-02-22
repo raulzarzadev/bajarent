@@ -1,20 +1,33 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
 
 const FormPrice = ({
+  defaultPrice,
   handleSubmit
 }: {
+  defaultPrice: Partial<PriceType>
   handleSubmit: ({ amount, title, time }: Partial<PriceType>) => Promise<any>
 }) => {
   const [units, setUnits] = useState<TimeType>('minute')
   const [price, setPrice] = useState(0)
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (defaultPrice) {
+      const [qty, unit] = defaultPrice.time.split(' ')
+      setUnits(unit as TimeType)
+      setQuantity(parseFloat(qty))
+      setPrice(defaultPrice.amount)
+      setTitle(defaultPrice.title)
+    }
+  }, [defaultPrice])
+
   const handleSetUnits = (value) => {
     setUnits(value)
   }
@@ -36,10 +49,15 @@ const FormPrice = ({
   return (
     <View>
       <View style={styles.input}>
-        <InputTextStyled onChangeText={setTitle} placeholder="Título" />
+        <InputTextStyled
+          value={title}
+          onChangeText={setTitle}
+          placeholder="Título"
+        />
       </View>
       <View style={styles.input}>
         <InputTextStyled
+          value={quantity.toString()}
           onChangeText={(qty) => {
             setQuantity(Number(qty))
           }}
@@ -57,6 +75,7 @@ const FormPrice = ({
       </View>
       <View style={styles.input}>
         <InputTextStyled
+          value={price.toString()}
           onChangeText={(price) => {
             setPrice(Number(price))
           }}

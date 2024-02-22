@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'

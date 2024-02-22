@@ -10,6 +10,8 @@ import useCategories from '../hooks/useCategories'
 import { CardPrice } from './FormSelectItem'
 import { PriceType } from '../types/PriceType'
 import { useStore } from '../contexts/storeContext'
+import usePrices from '../hooks/usePrices'
+import ModalFormPrice from './ModalFormPrice'
 
 const ScreenItems = () => {
   return (
@@ -24,6 +26,7 @@ const StoreCategories = () => {
   const { navigate } = useNavigation()
   const { prices } = useStore()
   const { categories, deleteCategory } = useCategories()
+  const { deletePrice, updatePrice } = usePrices()
   const [categoryPrices, setCategoryPrices] = useState<PriceType[]>([])
   useEffect(() => {
     if (selected) {
@@ -33,7 +36,18 @@ const StoreCategories = () => {
     } else {
       setCategoryPrices([])
     }
-  }, [selected])
+  }, [selected, prices])
+
+  const [priceSelected, setPriceSelected] = useState<string | null>(null)
+  const handleSelectPrice = (id: string) => {
+    setPriceSelected(id)
+  }
+  const handleDeletePrice = async (id: string) => {
+    deletePrice(id).then((res) => console.log({ res }))
+  }
+  const handleEditPrice = async (id: string, values: Partial<PriceType>) => {
+    updatePrice(id, values).then((res) => console.log({ res }))
+  }
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -103,7 +117,39 @@ const StoreCategories = () => {
               horizontal
               data={categoryPrices}
               renderItem={({ item }) => (
-                <CardPrice style={{ marginRight: 8 }} price={item} />
+                <View style={{ flexDirection: 'column' }}>
+                  <Pressable onPress={() => handleSelectPrice(item.id)}>
+                    <CardPrice
+                      style={{ marginRight: 8 }}
+                      price={item}
+                      selected={priceSelected === item.id}
+                    />
+                  </Pressable>
+                  {priceSelected === item.id && (
+                    <View
+                      style={{ alignSelf: 'flex-end', flexDirection: 'row' }}
+                    >
+                      <ButtonConfirm
+                        confirmColor="error"
+                        openColor="error"
+                        openVariant="ghost"
+                        icon="delete"
+                        handleConfirm={() => handleDeletePrice(item.id)}
+                        justIcon
+                        text="Eliminar precio"
+                      />
+
+                      <ModalFormPrice
+                        icon="edit"
+                        variant="ghost"
+                        values={item}
+                        handleSubmit={async (values) => {
+                          await handleEditPrice(item.id, values)
+                        }}
+                      />
+                    </View>
+                  )}
+                </View>
               )}
             ></FlatList>
           </>
