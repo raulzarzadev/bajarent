@@ -13,7 +13,7 @@ export type PriceType = {
   title: string
   amount: number
   id: string
-  time: TimePriceType
+  time?: TimePriceType
 }
 export type RentItem = {
   categoryName: string
@@ -21,14 +21,13 @@ export type RentItem = {
   priceSelected: PriceType
 }
 
-export type Category = { name: string; id: string; prices?: PriceType[] }
-
 export type CategoryBase = {
   name: string
   description: string
-  storeId: string
+  prices: PriceType[]
 }
 
 export type CategoryType = CategoryBase & BaseType
+export type Category = CategoryType
 
 export type RentItemType = ItemType & RentItem & BaseType

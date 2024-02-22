@@ -26,11 +26,15 @@ const dryers: ItemBase[] = Array(5)
     category: DRYER_CATEGORY_ID
   }))
 
-const CATEGORIES_ITEMS: { categories: CategoryType[]; items: ItemBase[] } = {
+const CATEGORIES_ITEMS: {
+  categories: Partial<CategoryType>[]
+  items: ItemBase[]
+} = {
   categories: [
     {
       name: 'Lavadora',
       id: 'lavadora',
+      description: 'Lavadoras de ropa',
       prices: [
         {
           id: '1',

@@ -2,23 +2,15 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormCategory from './FormCategory'
 import { gStyles } from '../styles'
-import { ServiceCategories } from '../firebase/ServiceCategories'
-import { useStore } from '../contexts/storeContext'
+import useCategories from '../hooks/useCategories'
 
 const ScreenCategoryNew = ({ navigation }) => {
-  const { store, getCategories } = useStore()
+  const { createCategory } = useCategories()
   return (
     <View style={gStyles.container}>
       <FormCategory
         onSubmit={async (values) => {
-          values.storeId = store.id
-          await ServiceCategories.create(values)
-            .then((r) => {
-              console.log(r)
-              getCategories()
-            })
-            .catch((e) => console.error(e))
-
+          await createCategory(values)
           navigation.goBack()
         }}
       />

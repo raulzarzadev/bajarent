@@ -11,7 +11,7 @@ import InputRadios from './InputRadios'
 import theme from '../theme'
 import CurrencyAmount from './CurrencyAmount'
 import P from './P'
-import { Category, PriceType } from '../types/RentItem'
+import { CategoryType, PriceType } from '../types/RentItem'
 
 export type ItemSelected = {
   categoryName?: string
@@ -27,7 +27,7 @@ const FormSelectItem = ({
   label = 'Categorias',
   selectPrice = false
 }: {
-  categories: Category[]
+  categories: Partial<CategoryType>[]
   setValue: (value: ItemSelected) => void
   value: ItemSelected
   label?: string

@@ -11,7 +11,7 @@ const FormikSelectCategoryItem = ({
 }: {
   name: string
   label?: string
-  categories: Category[]
+  categories: Partial<Category>[]
   selectPrice?: boolean
 }) => {
   const [field, meta, helpers] = useField(name)

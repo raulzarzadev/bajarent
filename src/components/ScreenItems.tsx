@@ -1,31 +1,17 @@
 import React, { useState } from 'react'
-import InputRadios from './InputRadios'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { gSpace, gStyles } from '../styles'
-import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
 import theme from '../theme'
-import { Category, CategoryType } from '../types/RentItem'
+import { CategoryType } from '../types/RentItem'
 import ItemType from '../types/ItemType'
-import Button from './Button'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
-import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
-import { ServiceCategories } from '../firebase/ServiceCategories'
+import useCategories from '../hooks/useCategories'
 
 const ScreenItems = () => {
-  const [type, setType] = useState<'rent' | 'repair' | 'sale'>('rent')
   return (
     <View style={gStyles.container}>
-      {/* <InputRadios
-        options={[
-          { label: 'Renta', value: 'rent' },
-          { label: 'Reparación', value: 'repair' },
-          { label: 'Venta', value: 'sale' }
-        ]}
-        setValue={setType}
-        value={type}
-      /> */}
       <StoreCategories />
     </View>
   )
@@ -34,7 +20,7 @@ const ScreenItems = () => {
 const StoreCategories = () => {
   const [selected, setSelected] = useState<string | null>(null)
   const { navigate } = useNavigation()
-  const { categories, getCategories } = useStore()
+  const { categories, deleteCategory } = useCategories()
 
   return (
     <View>
@@ -66,12 +52,7 @@ const StoreCategories = () => {
               openColor="error"
               confirmColor="error"
               handleConfirm={async () => {
-                ServiceCategories.delete(selected)
-                  .then((r) => {
-                    getCategories()
-                    console.log(r)
-                  })
-                  .catch((e) => console.log(e))
+                deleteCategory(selected)
               }}
               text="¿Estás seguro de eliminar esta categoría?"
             />
@@ -81,7 +62,7 @@ const StoreCategories = () => {
               color="secondary"
               onPress={() => {
                 // @ts-ignore
-                navigate('EditCategory', { categoryId: selected })
+                navigate('EditCategory', { id: selected })
               }}
             ></ButtonIcon>
           </>

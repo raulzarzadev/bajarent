@@ -2,25 +2,19 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormCategory from './FormCategory'
 import { gStyles } from '../styles'
-import { ServiceCategories } from '../firebase/ServiceCategories'
-import { useStore } from '../contexts/storeContext'
+import useCategories from '../hooks/useCategories'
 
 const ScreenCategoryEdit = ({ navigation, route }) => {
-  const { categories, getCategories } = useStore()
-  const { categoryId } = route.params
-  const category = categories?.find((c) => c.id === categoryId)
+  const categoryId = route.params.id
+  const { getCategory, updateCategory } = useCategories()
+  const category = getCategory(categoryId)
+  if (!category) return null
   return (
     <View style={gStyles.container}>
       <FormCategory
         defaultValues={category}
         onSubmit={async (values) => {
-          await ServiceCategories.update(categoryId, values)
-            .then((r) => {
-              getCategories()
-              console.log(r)
-            })
-            .catch((e) => console.error(e))
-
+          await updateCategory(categoryId, values)
           navigation.goBack()
         }}
       />

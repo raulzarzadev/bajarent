@@ -9,30 +9,35 @@ function useCategories() {
 
   useEffect(() => {
     if (storeId) {
-      fetchCategories(storeId)
+      fetchCategories()
     }
   }, [storeId])
 
-  const fetchCategories = async (storeId: string) => {
+  const getCategory = (categoryId: string) => {
+    return categories.find((c) => c.id === categoryId)
+  }
+
+  const fetchCategories = async () => {
     const categories = await ServiceCategories.getByStore(storeId).catch((e) =>
       console.log(e)
     )
+    console.log('update cat')
     setCategories(categories || [])
   }
   const createCategory = async (values: CategoryType) => {
     values.storeId = storeId
     await ServiceCategories.create(values).catch((e) => console.log(e))
-    fetchCategories(storeId)
+    fetchCategories()
   }
   const updateCategory = async (categoryId: string, values: CategoryType) => {
     await ServiceCategories.update(categoryId, values).catch((e) =>
       console.log(e)
     )
-    fetchCategories(storeId)
+    fetchCategories()
   }
   const deleteCategory = async (categoryId: string) => {
     await ServiceCategories.delete(categoryId).catch((e) => console.log(e))
-    fetchCategories(storeId)
+    fetchCategories()
   }
 
   return {
@@ -40,7 +45,8 @@ function useCategories() {
     createCategory,
     updateCategory,
     deleteCategory,
-    fetchCategories
+    fetchCategories,
+    getCategory
   }
 }
 
