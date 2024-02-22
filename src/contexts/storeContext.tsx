@@ -38,6 +38,7 @@ export type StoreContextType = {
   getCategories?: () => void
   payments?: PaymentType[]
   prices?: PriceType[]
+  updatePrices?: () => void
 }
 const StoreContext = createContext<StoreContextType>({})
 
@@ -53,7 +54,8 @@ const StoreContextProvider = ({ children }) => {
     sections: storeSections,
     staff,
     store,
-    prices
+    prices,
+    updatePrices
   } = useStoreDataListen({ storeId })
 
   const { userPositions, userStores } = useUserStores()
@@ -209,7 +211,8 @@ const StoreContextProvider = ({ children }) => {
         staffPermissions,
         storeSections,
         payments: paymentsFormatted,
-        prices
+        prices,
+        updatePrices
       }}
     >
       {children}

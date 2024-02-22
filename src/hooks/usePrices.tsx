@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
+import { useStore } from '../contexts/storeContext'
 
 function usePrices() {
+  const { updatePrices } = useStore()
   const [storePrices, setStorePrices] = useState<PriceType[]>([])
   const [categoryPrices, setCategoryPrices] = useState<PriceType[]>([])
 
@@ -23,18 +25,19 @@ function usePrices() {
   ) => {
     price.storeId = storeId
     price.categoryId = categoryId
-    return await ServicePrices.create(price).catch((e) => console.log(e))
+    await ServicePrices.create(price).catch((e) => console.log(e))
+    updatePrices()
   }
   const updatePrice = async (
     priceId: PriceType['id'],
     price: Partial<PriceType>
   ) => {
-    return await ServicePrices.update(priceId, price).catch((e) =>
-      console.log(e)
-    )
+    await ServicePrices.update(priceId, price).catch((e) => console.log(e))
+    updatePrices()
   }
   const deletePrice = async (priceId: PriceType['id']) => {
-    return await ServicePrices.delete(priceId).catch((e) => console.log(e))
+    await ServicePrices.delete(priceId).catch((e) => console.log(e))
+    updatePrices()
   }
 
   return {

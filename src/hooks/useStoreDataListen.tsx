@@ -24,9 +24,9 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   const [prices, setPrices] = useState<PriceType[]>([])
   useEffect(() => {
     if (storeId) {
-      ServicePrices.getByStore(storeId).then(setPrices)
+      updatePrices()
     } else {
-      setStore(null)
+      setPrices([])
     }
   }, [storeId])
 
@@ -49,6 +49,10 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     }
   }, [store])
 
+  const updatePrices = async () => {
+    ServicePrices.getByStore(storeId).then(setPrices)
+  }
+
   return {
     store,
     comments,
@@ -56,7 +60,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     orders,
     payments,
     sections,
-    prices
+    prices,
+    updatePrices
   }
 }
 
