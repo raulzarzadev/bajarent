@@ -53,9 +53,19 @@ const ModalFilterOrders = ({
       if (!result[status]) {
         result[status] = []
       }
+
+      //* Create report filters if there are any reports that are not solved
+      if (order.comments.find((a) => a.type === 'report' && !a.solved)) {
+        if (!result[order_status.REPORTED]) {
+          result[order_status.REPORTED] = [order]
+        } else {
+          result[order_status.REPORTED].push(order)
+        }
+      }
       result[status].push(order)
       return result
     }, {})
+
     const newStatusFilter = Object.keys(groupedStatus)
     setFilterStatus(newStatusFilter)
   }, [filteredData])
@@ -187,17 +197,26 @@ const ModalFilterOrders = ({
                   style={{
                     margin: 4,
                     borderWidth: 4,
-                    borderColor: isFilterSelected('status', item)
-                      ? theme.black
-                      : 'transparent'
+                    borderColor:
+                      isFilterSelected('status', item) ||
+                      (item === 'REPORTED' &&
+                        //* this is a special case, we need to check if there are any reports that are not solved
+                        filtersBy.some(
+                          (a) => a.field === 'hasNotSolvedReports' && a.value
+                        ))
+                        ? theme.black
+                        : 'transparent'
                   }}
                   title={dictionary(item as order_status)?.toUpperCase() || ''}
                   color={STATUS_COLOR[item]}
                   titleColor={theme.accent}
                   // disabled={item === 'REPORTED'}
                   onPress={() => {
-                    if (item === 'REPORTED')
-                      return filterBy('hasNotSolvedReports', true)
+                    console.log({ item })
+                    if (item === 'REPORTED') {
+                      filterBy('hasNotSolvedReports', true)
+                      return
+                    }
                     filterBy('status', item)
                   }}
                 />
