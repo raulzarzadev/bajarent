@@ -12,12 +12,12 @@ import InputRadiosFormik from './InputRadiosFormik'
 import FormikInputImage from './FormikInputImage'
 import P from './P'
 import FormikSelectCategoryItem from './FormikSelectCategoryItem'
-import CATEGORIES_ITEMS from '../DATA/CATEGORIES_ITEMS'
 import CurrencyAmount from './CurrencyAmount'
 import FormikCheckbox from './FormikCheckbox'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
+import { useStore } from '../contexts/storeContext'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -40,7 +40,7 @@ const FormOrder = ({
   defaultValues?: Partial<OrderType>
 }) => {
   const [loading, setLoading] = React.useState(false)
-
+  const { categories, prices } = useStore()
   return (
     <ScrollView>
       {defaultValues?.folio && (
@@ -89,18 +89,6 @@ const FormOrder = ({
                 helperText={!values.fullName && 'Nombre es requerido'}
               />
             </View>
-
-            {/* <View style={[styles.item]}>
-              <InputValueFormik
-                name={'firstName'}
-                placeholder="Nombre (s)"
-                helperText={!values.firstName && 'Nombre es requerido'}
-                helperTextColor={theme.error}
-              />
-            </View>
-            <View style={[styles.item]}>
-              <InputValueFormik name={'lastName'} placeholder="Apellido (s)" />
-            </View> */}
             <View style={[styles.item]}>
               <FormikInputPhone name={'phone'} />
             </View>
@@ -116,23 +104,12 @@ const FormOrder = ({
                 placeholder="Dirección completa ( calle, numero, entre calles)"
               />
             </View>
-            {/* <View style={[styles.item]}>
-              <InputValueFormik name={'street'} placeholder="Calle y numero" />
-            </View>
-            <View style={[styles.item]}>
-              <InputValueFormik
-                name={'betweenStreets'}
-                placeholder="Entre calles"
-              />
-            </View> */}
-
             <View style={[styles.item]}>
               <InputValueFormik
                 name={'references'}
                 placeholder="Referencias de la casa"
               />
             </View>
-
             <View style={[styles.item, { justifyContent: 'center' }]}>
               <InputRadiosFormik
                 name="type"
@@ -143,14 +120,13 @@ const FormOrder = ({
                 label="Tipo de orden"
               />
             </View>
-
             <View style={[styles.item]}>
               {values.type === order_type.REPAIR && (
                 <View>
                   <FormikSelectCategoryItem
                     name="item"
                     label="Selecciona un artículo"
-                    categories={CATEGORIES_ITEMS.categories}
+                    categories={categories}
                   />
                   <Text style={{ marginVertical: 4 }}>
                     Costo por visita{' '}
@@ -181,7 +157,10 @@ const FormOrder = ({
                   <FormikSelectCategoryItem
                     name="item"
                     label="Selecciona un artículo"
-                    categories={CATEGORIES_ITEMS.categories}
+                    categories={categories.map((cat) => ({
+                      ...cat,
+                      prices: prices.filter((p) => p.categoryId === cat.id)
+                    }))}
                     selectPrice
                   />
 

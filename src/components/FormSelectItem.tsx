@@ -60,6 +60,7 @@ const FormSelectItem = ({
           }}
           value={categoryId}
           label={label}
+          containerStyle={{ flexWrap: 'wrap', justifyContent: 'center' }}
         />
       </View>
       {selectPrice && (

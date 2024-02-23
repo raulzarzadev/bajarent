@@ -13,6 +13,8 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
+import { CategoryType } from '../types/RentItem'
+import { ServiceCategories } from '../firebase/ServiceCategories'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
   const [store, setStore] = useState<StoreType>(null)
@@ -22,11 +24,15 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
   const [prices, setPrices] = useState<PriceType[]>([])
+  const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
+
   useEffect(() => {
     if (storeId) {
       updatePrices()
+      updateCategories()
     } else {
       setPrices([])
+      setCategories([])
     }
   }, [storeId])
 
@@ -53,6 +59,10 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     ServicePrices.getByStore(storeId).then(setPrices)
   }
 
+  const updateCategories = async () => {
+    ServiceCategories.getByStore(storeId).then(setCategories)
+  }
+
   return {
     store,
     comments,
@@ -61,7 +71,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     payments,
     sections,
     prices,
-    updatePrices
+    updatePrices,
+    categories
   }
 }
 

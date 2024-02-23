@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { useMemo } from 'react'
 import RadioGroup from 'react-native-radio-buttons-group'
 
@@ -13,6 +13,7 @@ type InputRadiosProps<T = string> = {
   setValue: (value: T) => void
   label?: string
   layout?: 'row' | 'column'
+  containerStyle?: ViewStyle
 }
 
 const InputRadios = <T extends string = string>({
@@ -20,7 +21,8 @@ const InputRadios = <T extends string = string>({
   setValue,
   value,
   label,
-  layout
+  layout,
+  containerStyle
 }: InputRadiosProps<T>) => {
   const radioButtons = useMemo(
     () => options.map((option) => ({ ...option, id: option.value })),
@@ -39,6 +41,7 @@ const InputRadios = <T extends string = string>({
         onPress={setValue}
         selectedId={value}
         labelStyle={{ textTransform: 'capitalize' }}
+        containerStyle={containerStyle}
       />
     </View>
   )

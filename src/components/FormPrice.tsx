@@ -63,6 +63,7 @@ const FormPrice = ({
           }}
           placeholder="Cantidad "
           type="number"
+          helperText='Cantidad de "Minutos, Horas, Días, Semanas, Meses"'
         />
       </View>
       <View style={styles.input}>
@@ -81,6 +82,7 @@ const FormPrice = ({
           }}
           placeholder=" $ Precio"
           type="number"
+          helperText="$ Precio por totalidad del tiempo"
         />
       </View>
 
