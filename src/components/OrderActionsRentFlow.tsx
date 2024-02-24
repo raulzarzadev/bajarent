@@ -58,7 +58,7 @@ const RentFlow = ({
     disabled?: boolean
     // undo: () => void
   }
-
+  // ? Should change order status to DELIVERED and add a extra prop called isExpired instead change the status
   const [step, setStep] = useState<OrderType['status']>(orderStatus)
 
   const enableRenew = !(step === order_status.RENEWED) || canRenewOrder
@@ -143,7 +143,15 @@ const RentFlow = ({
           item: { label, onPress, should, undoLabel, key, disabled = false },
           index: i
         }) => {
-          const enable = step === should || step === key
+          let enable
+          // * This fix the issue with the expired status cant pick up or renew. But should be better if we add a isExpired prop
+          if (step === order_status.EXPIRED) {
+            if (key === order_status.PICKUP || key === order_status.RENEWED) {
+              enable = true
+            }
+          } else {
+            enable = step === should || step === key
+          }
           return (
             <Button
               key={label}
