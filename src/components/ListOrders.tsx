@@ -16,6 +16,7 @@ const ListOrders = ({ orders }: { orders: OrderType[] }) => {
           // @ts-ignore
           // navigate('OrdersDetails', { orderId: id })
           navigate('Orders')
+          // @ts-ignore
           navigate('OrderDetails', { orderId: id })
         }}
         onPressNew={() => {
