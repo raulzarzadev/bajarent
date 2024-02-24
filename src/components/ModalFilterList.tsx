@@ -27,7 +27,7 @@ function ModalFilterList<T>({
   setData = (data) => console.log(data),
   filters
 }: ModalFilterOrdersProps<T>) {
-  const { storeSections } = useStore()
+  const { storeSections, staff } = useStore()
   console.log({ storeSections })
   const filterModal = useModal({ title: 'Filtrar por' })
 
@@ -76,21 +76,30 @@ function ModalFilterList<T>({
   }
 
   const chipColor = (field: string, value: string) => {
+    //* this is useful for orders table to find status color
     if (field === 'status') {
-      return STATUS_COLOR[value as keyof typeof STATUS_COLOR]
+      return STATUS_COLOR[value as keyof typeof STATUS_COLOR] || theme.base
     }
+    //* this is useful for orders table to find type color
     if (field === 'type') {
-      return ORDER_TYPE_COLOR[value as keyof typeof ORDER_TYPE_COLOR]
+      return (
+        ORDER_TYPE_COLOR[value as keyof typeof ORDER_TYPE_COLOR] || theme.base
+      )
     }
 
     return theme.base
   }
 
   const chipLabel = (field: string, value: string) => {
-    console.log({ field, value, storeSections })
+    //* this is useful for orders table to find section name
     if (field === 'assignToSection') {
       const res = storeSections.find((a) => a.id === value)?.name || ''
       return dictionary(res as Labels).toUpperCase()
+    }
+    //* this is useful for payments table to find staff name
+    if (field === 'userId') {
+      const staffFound = staff?.find((a) => a.userId === value)
+      return staffFound?.name || ''
     }
 
     return dictionary(value as Labels).toUpperCase()
@@ -152,7 +161,7 @@ function ModalFilterList<T>({
 
         {filters?.map(({ field, label }, i) => (
           <View key={i}>
-            <Text style={[gStyles.h3]}>Por {label}</Text>
+            <Text style={[gStyles.h3]}>{label}</Text>
             <View style={styles.filters}>
               {Object.keys(fieldOps(field as string)).map((value) => {
                 if (!value) return null
