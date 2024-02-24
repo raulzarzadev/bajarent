@@ -15,6 +15,7 @@ import StaffRow from './StaffRow'
 
 const ScreenSections = ({ navigation }) => {
   const { storeSections } = useStore()
+
   return (
     <ScrollView>
       <Button

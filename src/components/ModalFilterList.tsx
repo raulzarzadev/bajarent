@@ -28,6 +28,7 @@ function ModalFilterList<T>({
   filters
 }: ModalFilterOrdersProps<T>) {
   const { storeSections } = useStore()
+  console.log({ storeSections })
   const filterModal = useModal({ title: 'Filtrar por' })
 
   const { filterBy, cleanFilter, filteredData, filtersBy, search } =
@@ -87,16 +88,12 @@ function ModalFilterList<T>({
 
   const chipLabel = (field: string, value: string) => {
     console.log({ field, value, storeSections })
-    let res
     if (field === 'assignToSection') {
-      res = storeSections.find((a) => a.id === value)?.name || ''
-
-      console.log({ res })
-      // Object.keys(groupedSections).map((storeId) =>
-      // storeSections.find((a) => a.id === storeId)
+      const res = storeSections.find((a) => a.id === value)?.name || ''
+      return dictionary(res as Labels).toUpperCase()
     }
-    res = value
-    return dictionary(res as Labels).toUpperCase()
+
+    return dictionary(value as Labels).toUpperCase()
   }
 
   return (
@@ -157,24 +154,29 @@ function ModalFilterList<T>({
           <View key={i}>
             <Text style={[gStyles.h3]}>Por {label}</Text>
             <View style={styles.filters}>
-              {Object.keys(fieldOps(field as string)).map((value) => (
-                <Chip
-                  color={chipColor(field as string, value)}
-                  title={chipLabel(field, value as Labels)}
-                  key={value}
-                  onPress={() => {
-                    filterBy(field as string, value)
-                  }}
-                  style={{
-                    margin: 4,
-                    borderWidth: 4,
-                    borderColor: isFilterSelected(field, value)
-                      ? theme.black
-                      : 'transparent'
-                    // backgroundColor:
-                  }}
-                />
-              ))}
+              {Object.keys(fieldOps(field as string)).map((value) => {
+                if (!value) return null
+                if (value === 'undefined') return null
+
+                return (
+                  <Chip
+                    color={chipColor(field as string, value)}
+                    title={chipLabel(field as string, value)}
+                    key={value}
+                    onPress={() => {
+                      filterBy(field as string, value)
+                    }}
+                    style={{
+                      margin: 4,
+                      borderWidth: 4,
+                      borderColor: isFilterSelected(field, value)
+                        ? theme.black
+                        : 'transparent'
+                      // backgroundColor:
+                    }}
+                  />
+                )
+              })}
             </View>
           </View>
         ))}
