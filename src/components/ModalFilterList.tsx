@@ -28,7 +28,6 @@ function ModalFilterList<T>({
   filters
 }: ModalFilterOrdersProps<T>) {
   const { storeSections, staff } = useStore()
-  console.log({ storeSections })
   const filterModal = useModal({ title: 'Filtrar por' })
 
   const { filterBy, cleanFilter, filteredData, filtersBy, search } =

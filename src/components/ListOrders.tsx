@@ -10,14 +10,17 @@ const ListOrders = ({ orders }: { orders: OrderType[] }) => {
   return (
     <View>
       <List
-        defaultSortBy="createdAt"
+        defaultSortBy="folio"
+        defaultOrder="des"
         onPressRow={(id) => {
           // @ts-ignore
-          // navigate('BalancesDetails', { id })
+          // navigate('OrdersDetails', { orderId: id })
+          navigate('Orders')
+          navigate('OrderDetails', { orderId: id })
         }}
         onPressNew={() => {
           // @ts-ignore
-          // navigate('BalancesNew')
+          navigate('NewOrder')
         }}
         sortFields={[
           { key: 'priority', label: 'Prioridad' },

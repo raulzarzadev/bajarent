@@ -64,10 +64,13 @@ export default function useSort<T>({
     })
 
     // Cambiar el orden para la próxima vez que se llame a la función
-    setOrder(order === 'asc' ? 'des' : 'asc')
+    // setOrder(order === 'asc' ? 'des' : 'asc')
     setSortedBy(field)
     setSortedData(res)
   }
+  const changeOrder = () => {
+    setOrder(order === 'asc' ? 'des' : 'asc')
+  }
 
-  return { sortedData, sortedBy, order, sortBy }
+  return { sortedData, sortedBy, order, sortBy, changeOrder }
 }

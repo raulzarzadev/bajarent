@@ -1,28 +1,12 @@
-import { View } from 'react-native'
-import Button from './Button'
-
 import { useStore } from '../contexts/storeContext'
-import OrdersList from './OrdersList'
+import ListOrders from './ListOrders'
 
 function ScreenMyOrders({ navigation }) {
   const { myOrders } = useStore()
 
   return (
     <>
-      <View
-        style={{
-          padding: 4,
-          width: 150,
-          justifyContent: 'center',
-          margin: 'auto'
-        }}
-      ></View>
-      <OrdersList
-        orders={myOrders}
-        onPressRow={(itemId) => {
-          navigation.navigate('OrderDetails', { orderId: itemId })
-        }}
-      />
+      <ListOrders orders={myOrders} />
     </>
   )
 }

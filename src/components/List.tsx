@@ -41,7 +41,7 @@ function MyList<T extends { id: string }>({
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([])
 
-  const { sortBy, order, sortedBy, sortedData } = useSort<T>({
+  const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
     data: filteredData,
     defaultSortBy: defaultSortBy as string,
     defaultOrder
@@ -89,7 +89,9 @@ function MyList<T extends { id: string }>({
             <View key={field.key}>
               <Pressable
                 onPress={() => {
+                  // sortBy(field.key)
                   sortBy(field.key)
+                  changeOrder()
                 }}
                 style={{
                   flexDirection: 'row',
