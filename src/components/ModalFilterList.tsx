@@ -5,13 +5,14 @@ import useFilter from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import Chip from './Chip'
-import theme from '../theme'
+import theme, { ORDER_TYPE_COLOR, STATUS_COLOR } from '../theme'
 import dictionary, { Labels } from '../dictionary'
 import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import InputTextStyled from './InputTextStyled'
 import { formatDate } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
+import { useStore } from '../contexts/storeContext'
 
 export type FilterListType<T> = { field: keyof T; label: string }
 
@@ -26,6 +27,7 @@ function ModalFilterList<T>({
   setData = (data) => console.log(data),
   filters
 }: ModalFilterOrdersProps<T>) {
+  const { storeSections } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
 
   const { filterBy, cleanFilter, filteredData, filtersBy, search } =
@@ -70,6 +72,31 @@ function ModalFilterList<T>({
     }, {})
 
     return groupedByField
+  }
+
+  const chipColor = (field: string, value: string) => {
+    if (field === 'status') {
+      return STATUS_COLOR[value as keyof typeof STATUS_COLOR]
+    }
+    if (field === 'type') {
+      return ORDER_TYPE_COLOR[value as keyof typeof ORDER_TYPE_COLOR]
+    }
+
+    return theme.base
+  }
+
+  const chipLabel = (field: string, value: string) => {
+    console.log({ field, value, storeSections })
+    let res
+    if (field === 'assignToSection') {
+      res = storeSections.find((a) => a.id === value)?.name || ''
+
+      console.log({ res })
+      // Object.keys(groupedSections).map((storeId) =>
+      // storeSections.find((a) => a.id === storeId)
+    }
+    res = value
+    return dictionary(res as Labels).toUpperCase()
   }
 
   return (
@@ -132,8 +159,8 @@ function ModalFilterList<T>({
             <View style={styles.filters}>
               {Object.keys(fieldOps(field as string)).map((value) => (
                 <Chip
-                  color={theme.base}
-                  title={dictionary(value as Labels)?.toUpperCase() || ''}
+                  color={chipColor(field as string, value)}
+                  title={chipLabel(field, value as Labels)}
                   key={value}
                   onPress={() => {
                     filterBy(field as string, value)
