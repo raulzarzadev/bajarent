@@ -41,7 +41,6 @@ function ModalFilterList<T>({
   }, [filteredData])
 
   const isFilterSelected = (field, value) => {
-    console.log({ filtersBy })
     if (field === 'status' && value === 'REPORTED') {
       return filtersBy.some((a) => a.field === 'hasNotSolvedReports' && a.value)
     }
@@ -61,7 +60,6 @@ function ModalFilterList<T>({
   }
 
   const createFieldFilters = (field: string): Record<string, T[]> => {
-    console.log({ field })
     const groupedByField = filteredData.reduce((acc, curr) => {
       let currField = curr[field]
 
@@ -92,8 +90,6 @@ function ModalFilterList<T>({
       }
       return acc
     }, {})
-
-    console.log({ groupedByField })
 
     return groupedByField
   }
