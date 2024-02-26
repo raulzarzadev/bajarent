@@ -13,6 +13,7 @@ import InputTextStyled from './InputTextStyled'
 import { formatDate } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
+import { order_status } from '../types/OrderType'
 
 export type FilterListType<T> = { field: keyof T; label: string }
 
@@ -40,6 +41,10 @@ function ModalFilterList<T>({
   }, [filteredData])
 
   const isFilterSelected = (field, value) => {
+    console.log({ filtersBy })
+    if (field === 'status' && value === 'REPORTED') {
+      return filtersBy.some((a) => a.field === 'hasNotSolvedReports' && a.value)
+    }
     return filtersBy.some((a) => a.field === field && a.value === value)
   }
 
@@ -55,9 +60,26 @@ function ModalFilterList<T>({
     }, 300)
   }
 
-  const fieldOps = (field: string): Record<string, T[]> => {
+  const createFieldFilters = (field: string): Record<string, T[]> => {
+    console.log({ field })
     const groupedByField = filteredData.reduce((acc, curr) => {
       let currField = curr[field]
+
+      //* Avoid invalid fields
+      if (!currField || currField === 'undefined') return acc
+
+      //* create a custom filter for orders with comment reports that are not solved
+      // @ts-ignore
+      const hasUnsolvedComments = curr?.comments?.find(
+        (a) => a.type === 'report' && !a.solved
+      )
+      if (field === 'status' && hasUnsolvedComments) {
+        if (!acc[order_status.REPORTED]) {
+          acc[order_status.REPORTED] = [curr]
+        } else {
+          acc[order_status.REPORTED].push(curr)
+        }
+      }
 
       if (currField instanceof Timestamp) {
         currField = formatDate(currField.toDate(), 'dd/MM/yy')
@@ -70,6 +92,8 @@ function ModalFilterList<T>({
       }
       return acc
     }, {})
+
+    console.log({ groupedByField })
 
     return groupedByField
   }
@@ -162,7 +186,7 @@ function ModalFilterList<T>({
           <View key={i}>
             <Text style={[gStyles.h3]}>{label}</Text>
             <View style={styles.filters}>
-              {Object.keys(fieldOps(field as string)).map((value) => {
+              {Object.keys(createFieldFilters(field as string)).map((value) => {
                 if (!value) return null
                 if (value === 'undefined') return null
 
@@ -172,6 +196,10 @@ function ModalFilterList<T>({
                     title={chipLabel(field as string, value)}
                     key={value}
                     onPress={() => {
+                      if (value === 'REPORTED') {
+                        filterBy('hasNotSolvedReports', true)
+                        return
+                      }
                       filterBy(field as string, value)
                     }}
                     style={{

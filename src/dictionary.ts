@@ -62,6 +62,7 @@ const labels = {
   transfer: 'Transferencia',
   full: 'Completa',
   partial: 'Parcial',
+  hasNotSolvedReports: 'Reportes no resueltos',
   ' ': '',
   '': ''
 } as const
