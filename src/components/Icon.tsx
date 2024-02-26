@@ -11,7 +11,8 @@ import {
   MdListAlt,
   MdFilterList,
   MdDeleteOutline,
-  MdOutlineSearch
+  MdOutlineSearch,
+  MdLocationOff
 } from 'react-icons/md'
 import { IoPersonOutline } from 'react-icons/io5'
 import { LuComponent } from 'react-icons/lu'
@@ -38,6 +39,7 @@ const icons = {
   money: MdAttachMoney,
   save: MdSave,
   location: MdLocationPin,
+  locationOff: MdLocationOff,
   filter: MdFilterList,
   windows: FaRegWindowRestore,
   broom: LiaBroomSolid,

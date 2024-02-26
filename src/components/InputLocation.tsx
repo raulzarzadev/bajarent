@@ -1,13 +1,15 @@
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Linking, StyleSheet, View } from 'react-native'
+import React, { useEffect } from 'react'
 import InputTextStyled from './InputTextStyled'
-import Ionicons from '@expo/vector-icons/Ionicons'
+import Button from './Button'
+import useLocation from '../hooks/useLocation'
 import theme from '../theme'
 
 const InputLocation = ({ value, setValue }) => {
   const disabledCurrentLocation = false
   const disabledSearchLocation = false
-
+  const { locationEnabled, askLocation } = useLocation()
+  console.log({ locationEnabled })
   return (
     <View style={styles.group}>
       <InputTextStyled
@@ -15,7 +17,35 @@ const InputLocation = ({ value, setValue }) => {
         value={value}
         onChangeText={setValue}
       />
-      <Pressable
+      <Button
+        justIcon
+        icon="search"
+        variant="ghost"
+        onPress={() => {
+          Linking.openURL('https://www.google.com/maps')
+        }}
+      />
+      <Button
+        justIcon
+        icon={locationEnabled ? 'location' : 'locationOff'}
+        color={locationEnabled ? 'primary' : 'neutral'}
+        variant="ghost"
+        onPress={() => {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setValue(
+                `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
+              )
+              // console.log(position)
+            },
+            (error) => {
+              console.error(error)
+            },
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+          )
+        }}
+      ></Button>
+      {/* <Pressable
         style={[styles.icon, disabledSearchLocation && { opacity: 0.5 }]}
         disabled={disabledSearchLocation}
         onPress={() => {
@@ -52,7 +82,7 @@ const InputLocation = ({ value, setValue }) => {
           color={disabledCurrentLocation ? 'gray' : theme.secondary}
           size={30}
         />
-      </Pressable>
+      </Pressable> */}
     </View>
   )
 }
