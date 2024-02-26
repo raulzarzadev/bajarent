@@ -137,7 +137,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    margin: 'auto',
+    width: '100%'
   },
   orderList: {
     width: '100%',
