@@ -55,7 +55,7 @@ const StoreContextProvider = ({ children }) => {
     staff,
     store,
     prices,
-    updatePrices,
+    // updatePrices,
     categories
   } = useStoreDataListen({ storeId })
 
@@ -71,7 +71,9 @@ const StoreContextProvider = ({ children }) => {
 
   const [staffPermissions, setStaffPermissions] =
     useState<Partial<StaffPermissions>>(null)
-
+  const [formatCategories, setFormatCategories] = useState<
+    Partial<CategoryType>[]
+  >([])
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
     setItem('storeId', storeId)
@@ -89,6 +91,17 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     getItem('storeId').then(setStoreId)
   }, [])
+
+  useEffect(() => {
+    const catsWithPrices = categories.map((cat) => {
+      const catPrices = prices.filter((price) => price.categoryId === cat.id)
+      return {
+        ...cat,
+        prices: catPrices
+      }
+    })
+    setFormatCategories(catsWithPrices)
+  }, [categories, prices])
 
   useEffect(() => {
     //* ** FORMAT ORDERS  */
@@ -213,8 +226,8 @@ const StoreContextProvider = ({ children }) => {
         storeSections,
         payments: paymentsFormatted,
         prices,
-        updatePrices,
-        categories
+        // updatePrices,
+        categories: formatCategories
       }}
     >
       {children}

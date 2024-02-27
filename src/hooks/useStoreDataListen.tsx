@@ -15,6 +15,7 @@ import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
 import { CategoryType } from '../types/RentItem'
 import { ServiceCategories } from '../firebase/ServiceCategories'
+import useCategories from './useCategories'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
   const [store, setStore] = useState<StoreType>(null)
@@ -25,16 +26,6 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   const [sections, setSections] = useState<SectionType[]>([])
   const [prices, setPrices] = useState<PriceType[]>([])
   const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
-
-  useEffect(() => {
-    if (storeId) {
-      updatePrices()
-      updateCategories()
-    } else {
-      setPrices([])
-      setCategories([])
-    }
-  }, [storeId])
 
   useEffect(() => {
     if (storeId) {
@@ -52,6 +43,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
       ServiceSections.listenByStore(store.id, setSections)
       // ServiceComments.listenByStore(store.id, setComments)
       ServiceComments.listenStoreReports(store.id, setComments)
+      ServicePrices.getByStore(store.id).then(setPrices)
+      ServiceCategories.getByStore(store.id).then(setCategories)
     }
   }, [store])
 
@@ -59,9 +52,9 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     ServicePrices.getByStore(storeId).then(setPrices)
   }
 
-  const updateCategories = async () => {
-    ServiceCategories.getByStore(storeId).then(setCategories)
-  }
+  // const updateCategories = async () => {
+  //   ServiceCategories.getByStore(storeId).then()
+  // }
 
   return {
     store,

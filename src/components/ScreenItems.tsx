@@ -24,19 +24,23 @@ const ScreenItems = () => {
 const StoreCategories = () => {
   const [selected, setSelected] = useState<string | null>(null)
   const { navigate } = useNavigation()
-  const { prices } = useStore()
-  const { categories, deleteCategory } = useCategories()
+  const { categories } = useStore()
+  const { deleteCategory } = useCategories()
+
   const { deletePrice, updatePrice } = usePrices()
-  const [categoryPrices, setCategoryPrices] = useState<PriceType[]>([])
-  useEffect(() => {
-    if (selected) {
-      setCategoryPrices(
-        prices.filter((price: PriceType) => price.categoryId === selected)
-      )
-    } else {
-      setCategoryPrices([])
-    }
-  }, [selected, prices])
+  // const [categoryPrices, setCategoryPrices] = useState<PriceType[]>([])
+
+  // console.log({ categories })
+
+  // useEffect(() => {
+  //   if (selected) {
+  //     setCategoryPrices(
+  //       prices.filter((price: PriceType) => price.categoryId === selected)
+  //     )
+  //   } else {
+  //     setCategoryPrices([])
+  //   }
+  // }, [selected, prices])
 
   const [priceSelected, setPriceSelected] = useState<string | null>(null)
   const handleSelectPrice = (id: string) => {
@@ -48,6 +52,14 @@ const StoreCategories = () => {
   const handleEditPrice = async (id: string, values: Partial<PriceType>) => {
     updatePrice(id, values).then((res) => console.log({ res }))
   }
+  const handleDeleteCategory = async (id: string) => {
+    console.log('delete category', id)
+    deleteCategory(id).then((res) => console.log({ res }))
+  }
+  const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
+  useEffect(() => {
+    setCategoryPrices(categories.find((c) => c.id === selected)?.prices || [])
+  }, [selected])
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -78,7 +90,7 @@ const StoreCategories = () => {
               openColor="error"
               confirmColor="error"
               handleConfirm={async () => {
-                deleteCategory(selected)
+                handleDeleteCategory(selected)
               }}
               text="¿Estás seguro de eliminar esta categoría?"
             />
