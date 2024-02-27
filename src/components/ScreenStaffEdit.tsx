@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormStaff from './FormStaff'
 import { useStore } from '../contexts/storeContext'
@@ -11,20 +11,22 @@ const ScreenStaffEdit = ({ route, navigation }) => {
   const staffId = route.params.staffId
   const employee = staff.find(({ id }) => id === staffId)
   return (
-    <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
-      <CardUser userId={employee.userId} />
-      <FormStaff
-        defaultValues={employee}
-        onSubmit={async (values) => {
-          ServiceStaff.update(staffId, values)
-            .then((res) => {
-              console.log(res)
-              navigation.goBack()
-            })
-            .catch(console.error)
-        }}
-      />
-    </View>
+    <ScrollView>
+      <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
+        <CardUser userId={employee.userId} />
+        <FormStaff
+          defaultValues={employee}
+          onSubmit={async (values) => {
+            ServiceStaff.update(staffId, values)
+              .then((res) => {
+                console.log(res)
+                navigation.goBack()
+              })
+              .catch(console.error)
+          }}
+        />
+      </View>
+    </ScrollView>
   )
 }
 

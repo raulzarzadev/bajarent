@@ -1,13 +1,7 @@
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { useAuth } from '../contexts/authContext'
-import PhoneLogin from './PhoneLogin'
+import PhoneLogin from './LoginPhone'
 import Button from './Button'
 import { logout } from '../firebase/auth'
 import CardUser from './CardUser'
@@ -15,12 +9,19 @@ import useLocation from '../hooks/useLocation'
 import { Icon } from 'react-native-elements'
 import ChangeStaffPosition from './ChangeStaffPosition'
 import ErrorBoundary from './ErrorBoundary'
+import LoginEmail from './LoginEmail'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
   const { locationEnabled } = useLocation()
   if (user === undefined) return <ActivityIndicator />
-  if (user === null) return <PhoneLogin />
+  if (user === null)
+    return (
+      <>
+        <PhoneLogin />
+        {__DEV__ && <LoginEmail />}
+      </>
+    )
   return (
     <View style={{ padding: 2 }}>
       <Pressable>

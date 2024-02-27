@@ -13,9 +13,11 @@ import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
 import { balanceTotals } from '../libs/balance'
+import { useNavigation } from '@react-navigation/native'
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
-  const modalOrders = useModal({ title: 'Ordenes' })
+  const { navigate } = useNavigation()
+  const modalOrders = useModal({ title: 'Pagos' })
   const { card, cash, total, transfers } = balanceTotals(balance)
   return (
     <View style={{ justifyContent: 'center' }}>
@@ -44,7 +46,14 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           onPress={modalOrders.toggleOpen}
         ></Button>
         <StyledModal {...modalOrders}>
-          <PaymentsList payments={balance?.payments} />
+          <PaymentsList
+            payments={balance?.payments}
+            onPressRow={(paymentId) => {
+              modalOrders.toggleOpen()
+              // @ts-ignore
+              navigate('PaymentsDetails', { id: paymentId })
+            }}
+          />
         </StyledModal>
       </View>
       <View style={{ justifyContent: 'flex-end', flex: 1, margin: 'auto' }}>

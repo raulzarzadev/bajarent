@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native'
+import { Dimensions, Pressable, Text, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
@@ -9,8 +9,9 @@ import { useAuth } from '../contexts/authContext'
 const MyStaffLabel = () => {
   const { user } = useAuth()
   const { myStaffId, staff, store } = useStore()
-  const label = staff?.find((s) => s.id === myStaffId)?.position
+  const label = staff?.find((s) => s.id === myStaffId)?.position || user?.name
   const navigation = useNavigation()
+  const maxWidth = Dimensions.get('window').width
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <Pressable
@@ -22,11 +23,22 @@ const MyStaffLabel = () => {
           navigation.navigate('Store')
         }}
       >
-        <Text style={[gStyles.h1, { marginRight: 16 }]}>{store?.name}</Text>
+        {maxWidth < 400 ? (
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            {store && (
+              <>
+                <Icon icon="store" />
+                <Text style={gStyles.helper}>{store?.name}</Text>
+              </>
+            )}
+          </View>
+        ) : (
+          <Text style={[gStyles.h2, { marginRight: 16 }]}>{store?.name}</Text>
+        )}
       </Pressable>
       <Pressable
         style={{
-          minWidth: 100,
+          minWidth: 60,
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center'
@@ -38,7 +50,9 @@ const MyStaffLabel = () => {
       >
         {user && <Icon icon={label ? `profileFill` : 'profile'} />}
         {user === null && <Icon icon="profileAdd" />}
-        <Text style={[gStyles.helper, { marginRight: 8 }]}>{label}</Text>
+        <Text numberOfLines={1} style={[gStyles.helper, { maxWidth: 80 }]}>
+          {label}
+        </Text>
       </Pressable>
     </View>
   )

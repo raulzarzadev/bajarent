@@ -11,12 +11,14 @@ import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
+import MyStaffLabel from './MyStaffLabel'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { user } = useAuth()
-  const { store } = useStore()
+  const { store, staff, userStores } = useStore()
+  const anyStoreOption = !!store || !!staff?.length || !!userStores?.length
   if (!user)
     return (
       <ErrorBoundary componentName="NotUserTabs">
@@ -24,7 +26,7 @@ const BottomAppBar = () => {
       </ErrorBoundary>
     )
 
-  if (!store)
+  if (!anyStoreOption)
     return (
       <ErrorBoundary componentName="NotStoreTabs">
         <NotStoreTabs />
@@ -69,14 +71,14 @@ const NotStoreTabs = () => {
           headerShown: false
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Store"
         component={StackStore}
         options={{
           title: 'Tienda ',
           headerShown: false
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }
@@ -167,7 +169,10 @@ const UserAndStoreTabs = () => {
           name="NewOrder"
           component={ScreenNewOrder}
           options={{
-            title: 'Nueva orden'
+            title: 'Nueva orden',
+            headerRight(props) {
+              return <MyStaffLabel />
+            }
           }}
         />
       )}

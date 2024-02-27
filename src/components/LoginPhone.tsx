@@ -1,13 +1,11 @@
 import { Platform, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useRef } from 'react'
-import StyledTextInput from './InputTextStyled'
+import React, { useEffect } from 'react'
 import Button from './Button'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { auth } from '../firebase/auth'
 import PhoneInput from './InputPhone'
 import InputCode from './InputCode'
 import theme from '../theme'
-import { set } from 'date-fns'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
@@ -23,7 +21,6 @@ const PhoneLogin = () => {
       .confirm(code)
       .then((result) => {
         // User signed in successfully.
-        const user = result.user
         console.log(result)
         // console.log({ user })
         // ...
@@ -112,6 +109,7 @@ const PhoneLogin = () => {
           </View>
         </>
       )}
+
       {msmSent && (
         <>
           <Text style={styles.title}>
