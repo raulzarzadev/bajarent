@@ -9,12 +9,16 @@ import ModalFormPrice from './ModalFormPrice'
 import { PriceType } from '../types/PriceType'
 import { useStore } from '../contexts/storeContext'
 import { CardPrice } from './FormSelectItem'
+import { CategoryType } from '../types/RentItem'
 
 const FormCategory = ({
   defaultValues = {},
   onSubmit = async (values) => {
     console.log(values)
   }
+}: {
+  defaultValues?: Partial<CategoryType>
+  onSubmit?: (values: Partial<CategoryType>) => Promise<any>
 }) => {
   // @ts-ignore
   const categoryId = defaultValues?.id
@@ -30,7 +34,7 @@ const FormCategory = ({
       initialValues={{ name: '', ...defaultValues }}
       onSubmit={async (values) => {
         setSending(true)
-        await onSubmit(values).then(console.log).catch(console.error)
+        await onSubmit?.(values).then(console.log).catch(console.error)
         setTimeout(() => {
           setSending(false)
         }, 1000)
@@ -44,7 +48,6 @@ const FormCategory = ({
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
-
           {defaultValues?.id && (
             <View
               style={[

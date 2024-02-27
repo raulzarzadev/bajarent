@@ -24,12 +24,15 @@ function useCategories() {
     console.log('update cat')
     setCategories(categories || [])
   }
-  const createCategory = async (values: CategoryType) => {
+  const createCategory = async (values: Partial<CategoryType>) => {
     values.storeId = storeId
     await ServiceCategories.create(values).catch((e) => console.log(e))
     fetchCategories()
   }
-  const updateCategory = async (categoryId: string, values: CategoryType) => {
+  const updateCategory = async (
+    categoryId: string,
+    values: Partial<CategoryType>
+  ) => {
     await ServiceCategories.update(categoryId, values).catch((e) =>
       console.log(e)
     )
