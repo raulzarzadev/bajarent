@@ -1,15 +1,11 @@
 import { Linking, StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
-import theme from '../theme'
 
 const InputLocation = ({ value, setValue }) => {
-  const disabledCurrentLocation = false
-  const disabledSearchLocation = false
-  const { locationEnabled, askLocation } = useLocation()
-  console.log({ locationEnabled })
+  const { locationEnabled } = useLocation()
   return (
     <View style={styles.group}>
       <InputTextStyled
@@ -45,44 +41,6 @@ const InputLocation = ({ value, setValue }) => {
           )
         }}
       ></Button>
-      {/* <Pressable
-        style={[styles.icon, disabledSearchLocation && { opacity: 0.5 }]}
-        disabled={disabledSearchLocation}
-        onPress={() => {
-          Linking.openURL('https://www.google.com/maps')
-        }}
-      >
-        <Ionicons
-          name={'locate'}
-          color={disabledSearchLocation ? 'gray' : theme.secondary}
-          size={30}
-        />
-      </Pressable>
-      <Pressable
-        style={[styles.icon, disabledCurrentLocation && { opacity: 0.5 }]}
-        disabled={disabledCurrentLocation}
-        onPress={() => {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              setValue(
-                `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
-              )
-              // console.log(position)
-            },
-            (error) => {
-              console.error(error)
-            },
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-          )
-        }}
-      >
-        <Ionicons
-          disabled={true}
-          name={'location'}
-          color={disabledCurrentLocation ? 'gray' : theme.secondary}
-          size={30}
-        />
-      </Pressable> */}
     </View>
   )
 }

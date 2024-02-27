@@ -11,11 +11,6 @@ import ErrorBoundary from './ErrorBoundary'
 const ScreenStore = ({ navigation }) => {
   const { store, staffPermissions } = useStore()
   const { user } = useAuth()
-  // const orderByStatus = (status) => {
-  //   if (status === order_status.REPORTED)
-  //     return orders?.filter((o) => o?.hasNotSolvedReports)?.length
-  //   return orders?.filter((o) => o?.status === status)?.length
-  // }
   const isOwner = store?.createdBy === user?.id
 
   return (
@@ -99,11 +94,14 @@ const ScreenStore = ({ navigation }) => {
 export default ScreenStore
 
 const styles = StyleSheet.create({
-  button: {},
+  button: {
+    marginVertical: 8
+  },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 8
+    marginVertical: 8,
+    flexWrap: 'wrap'
   },
   item: {
     width: '50%',

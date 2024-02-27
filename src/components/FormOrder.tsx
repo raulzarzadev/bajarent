@@ -40,7 +40,7 @@ const FormOrder = ({
   defaultValues?: Partial<OrderType>
 }) => {
   const [loading, setLoading] = React.useState(false)
-  const { categories, prices } = useStore()
+  const { categories } = useStore()
   return (
     <ScrollView>
       {defaultValues?.folio && (
@@ -158,8 +158,7 @@ const FormOrder = ({
                     name="item"
                     label="Selecciona un artículo"
                     categories={categories.map((cat) => ({
-                      ...cat,
-                      prices: prices.filter((p) => p.categoryId === cat.id)
+                      ...cat
                     }))}
                     selectPrice
                   />

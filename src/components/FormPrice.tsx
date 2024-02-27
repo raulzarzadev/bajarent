@@ -68,6 +68,7 @@ const FormPrice = ({
       </View>
       <View style={styles.input}>
         <InputRadios
+          containerStyle={{ flexWrap: 'wrap' }}
           layout="row"
           setValue={handleSetUnits}
           value={units}

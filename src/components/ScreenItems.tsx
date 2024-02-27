@@ -6,12 +6,12 @@ import { CategoryType } from '../types/RentItem'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
-import useCategories from '../hooks/useCategories'
 import { CardPrice } from './FormSelectItem'
 import { PriceType } from '../types/PriceType'
 import { useStore } from '../contexts/storeContext'
-import usePrices from '../hooks/usePrices'
 import ModalFormPrice from './ModalFormPrice'
+import useCategories from '../hooks/useCategories'
+import usePrices from '../hooks/usePrices'
 
 const ScreenItems = () => {
   return (
@@ -24,42 +24,34 @@ const ScreenItems = () => {
 const StoreCategories = () => {
   const [selected, setSelected] = useState<string | null>(null)
   const { navigate } = useNavigation()
-  const { categories } = useStore()
-  const { deleteCategory } = useCategories()
+  const { categories, storeId, updateCategories } = useStore()
 
-  const { deletePrice, updatePrice } = usePrices()
-  // const [categoryPrices, setCategoryPrices] = useState<PriceType[]>([])
-
-  // console.log({ categories })
-
-  // useEffect(() => {
-  //   if (selected) {
-  //     setCategoryPrices(
-  //       prices.filter((price: PriceType) => price.categoryId === selected)
-  //     )
-  //   } else {
-  //     setCategoryPrices([])
-  //   }
-  // }, [selected, prices])
+  const { deleteCategory, createPrice, deletePrice, updatePrice } =
+    useCategories()
 
   const [priceSelected, setPriceSelected] = useState<string | null>(null)
+
   const handleSelectPrice = (id: string) => {
     setPriceSelected(id)
   }
   const handleDeletePrice = async (id: string) => {
-    deletePrice(id).then((res) => console.log({ res }))
+    await deletePrice(id)
+    updateCategories()
   }
   const handleEditPrice = async (id: string, values: Partial<PriceType>) => {
-    updatePrice(id, values).then((res) => console.log({ res }))
+    await updatePrice(id, values)
+    updateCategories()
   }
   const handleDeleteCategory = async (id: string) => {
-    console.log('delete category', id)
-    deleteCategory(id).then((res) => console.log({ res }))
+    await deleteCategory(id)
+    updateCategories()
   }
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
+
   useEffect(() => {
     setCategoryPrices(categories.find((c) => c.id === selected)?.prices || [])
-  }, [selected])
+  }, [selected, categories])
+
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -122,9 +114,51 @@ const StoreCategories = () => {
       <View>
         {!!categoryPrices.length && (
           <>
-            <Text style={[gStyles.h2, { textAlign: 'left', marginTop: 12 }]}>
-              Prices:
-            </Text>
+            {/* {defaultValues?.id && (
+            <View
+              style={[
+                styles.input,
+                { flexDirection: 'row', alignItems: 'center' }
+              ]}
+            >
+              <Text style={[gStyles.h3, { marginRight: 8 }]}>Precios</Text>
+              <ModalFormPrice
+                handleSubmit={async (price) => {
+                  return await createPrice(price, storeId, categoryId)
+                }}
+              />
+            </View>
+          )}
+          <View style={styles.input}>
+            <FlatList
+              horizontal
+              data={categoryPrices}
+              renderItem={({ item }) => (
+                <CardPrice
+                  style={{ marginVertical: 8, marginRight: 8 }}
+                  price={item}
+                />
+              )}
+            ></FlatList>
+          </View> */}
+            <View
+              style={[
+                // styles.input,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 4
+                }
+              ]}
+            >
+              <Text style={[gStyles.h3, { marginRight: 8 }]}>Precios</Text>
+              <ModalFormPrice
+                variant="ghost"
+                handleSubmit={async (price) => {
+                  return await createPrice(price, storeId, selected)
+                }}
+              />
+            </View>
             <FlatList
               horizontal
               data={categoryPrices}

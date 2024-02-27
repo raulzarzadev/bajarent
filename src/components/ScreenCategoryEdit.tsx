@@ -2,12 +2,15 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormCategory from './FormCategory'
 import { gStyles } from '../styles'
+import { useStore } from '../contexts/storeContext'
 import useCategories from '../hooks/useCategories'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenCategoryEdit = ({ navigation, route }) => {
   const categoryId = route.params.id
-  const { getCategory, updateCategory } = useCategories()
-  const category = getCategory(categoryId)
+  const { categories, updateCategories } = useStore()
+  const { updateCategory } = useCategories()
+  const category = categories?.find((c) => c.id === categoryId)
   if (!category) return null
   return (
     <View style={gStyles.container}>
@@ -15,6 +18,7 @@ const ScreenCategoryEdit = ({ navigation, route }) => {
         defaultValues={category}
         onSubmit={async (values) => {
           await updateCategory(categoryId, values)
+          updateCategories()
           navigation.goBack()
         }}
       />
@@ -22,6 +26,12 @@ const ScreenCategoryEdit = ({ navigation, route }) => {
   )
 }
 
-export default ScreenCategoryEdit
+export default function ({ ...props }: { navigation: any; route: any }) {
+  return (
+    <ErrorBoundary componentName="ScreenCategoryEdit">
+      <ScreenCategoryEdit {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({})

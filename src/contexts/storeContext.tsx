@@ -16,7 +16,6 @@ import { CategoryType } from '../types/RentItem'
 import PaymentType from '../types/PaymentType'
 import useStoreDataListen from '../hooks/useStoreDataListen'
 import useUserStores from '../hooks/useUserStores'
-import { PriceType } from '../types/PriceType'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -34,13 +33,15 @@ export type StoreContextType = {
   handleSetMyStaffId?: (staffId: string) => any
   staffPermissions?: Partial<StaffPermissions>
   storeSections?: SectionType[]
-  categories?: Partial<CategoryType>[]
-  getCategories?: () => void
   payments?: PaymentType[]
-  prices?: PriceType[]
-  updatePrices?: () => void
+  categories?: Partial<CategoryType>[]
 }
-const StoreContext = createContext<StoreContextType>({})
+
+type UseStoreDataListenType = Partial<ReturnType<typeof useStoreDataListen>>
+
+const StoreContext = createContext<StoreContextType & UseStoreDataListenType>(
+  {}
+)
 
 const StoreContextProvider = ({ children }) => {
   const { user } = useAuth()
@@ -54,9 +55,8 @@ const StoreContextProvider = ({ children }) => {
     sections: storeSections,
     staff,
     store,
-    prices,
-    // updatePrices,
-    categories
+    categories,
+    updateCategories
   } = useStoreDataListen({ storeId })
 
   const { userPositions, userStores } = useUserStores()
@@ -71,9 +71,7 @@ const StoreContextProvider = ({ children }) => {
 
   const [staffPermissions, setStaffPermissions] =
     useState<Partial<StaffPermissions>>(null)
-  const [formatCategories, setFormatCategories] = useState<
-    Partial<CategoryType>[]
-  >([])
+
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
     setItem('storeId', storeId)
@@ -91,17 +89,6 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     getItem('storeId').then(setStoreId)
   }, [])
-
-  useEffect(() => {
-    const catsWithPrices = categories.map((cat) => {
-      const catPrices = prices.filter((price) => price.categoryId === cat.id)
-      return {
-        ...cat,
-        prices: catPrices
-      }
-    })
-    setFormatCategories(catsWithPrices)
-  }, [categories, prices])
 
   useEffect(() => {
     //* ** FORMAT ORDERS  */
@@ -225,9 +212,8 @@ const StoreContextProvider = ({ children }) => {
         staffPermissions,
         storeSections,
         payments: paymentsFormatted,
-        prices,
-        // updatePrices,
-        categories: formatCategories
+        updateCategories,
+        categories
       }}
     >
       {children}

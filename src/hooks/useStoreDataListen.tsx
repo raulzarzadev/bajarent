@@ -15,7 +15,6 @@ import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
 import { CategoryType } from '../types/RentItem'
 import { ServiceCategories } from '../firebase/ServiceCategories'
-import useCategories from './useCategories'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
   const [store, setStore] = useState<StoreType>(null)
@@ -37,24 +36,41 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
 
   useEffect(() => {
     if (store) {
-      ServicePayments.listenByStore(store.id, setPayments)
-      ServiceOrders.listenByStore(store.id, setOrders)
+      //* LISTENERS
+
       ServiceStaff.listenByStore(store.id, setStaff)
       ServiceSections.listenByStore(store.id, setSections)
+
+      ServicePayments.listenByStore(store.id, setPayments)
+      ServiceOrders.listenByStore(store.id, setOrders)
       // ServiceComments.listenByStore(store.id, setComments)
       ServiceComments.listenStoreReports(store.id, setComments)
-      ServicePrices.getByStore(store.id).then(setPrices)
-      ServiceCategories.getByStore(store.id).then(setCategories)
+
+      //* GETS
+      updateCategories()
     }
   }, [store])
 
-  const updatePrices = async () => {
-    ServicePrices.getByStore(storeId).then(setPrices)
+  const updateCategories = async () => {
+    await ServicePrices.getByStore(storeId).then(setPrices)
+    await ServiceCategories.getByStore(storeId).then(setCategories)
   }
 
-  // const updateCategories = async () => {
-  //   ServiceCategories.getByStore(storeId).then()
-  // }
+  const [formatCategories, setFormatCategories] = useState<
+    Partial<CategoryType>[]
+  >([])
+
+  useEffect(() => {
+    console.log('prices or categories changed')
+    const catsWithPrices = categories?.map((cat) => {
+      const catPrices = prices?.filter((price) => price.categoryId === cat.id)
+      return {
+        ...cat,
+        prices: catPrices
+      }
+    })
+    setFormatCategories(catsWithPrices)
+  }, [categories, prices])
 
   return {
     store,
@@ -64,8 +80,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     payments,
     sections,
     prices,
-    updatePrices,
-    categories
+    updateCategories,
+    categories: formatCategories
   }
 }
 

@@ -14,7 +14,11 @@ import {
   MdOutlineSearch,
   MdLocationOff
 } from 'react-icons/md'
-import { IoPersonOutline } from 'react-icons/io5'
+import {
+  IoPersonOutline,
+  IoPersonSharp,
+  IoPersonAddOutline
+} from 'react-icons/io5'
 import { LuComponent } from 'react-icons/lu'
 import { PiUserList } from 'react-icons/pi'
 import { FaRegWindowRestore } from 'react-icons/fa6'
@@ -32,6 +36,8 @@ const icons = {
   store: MdOutlineStorefront,
   orders: MdListAlt,
   profile: IoPersonOutline,
+  profileFill: IoPersonSharp,
+  profileAdd: IoPersonAddOutline,
   components: LuComponent,
   myOrders: PiUserList,
   add: IoMdAdd,

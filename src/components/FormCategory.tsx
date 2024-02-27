@@ -1,14 +1,9 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
-import usePrices from '../hooks/usePrices'
-import { gStyles } from '../styles'
-import ModalFormPrice from './ModalFormPrice'
-import { PriceType } from '../types/PriceType'
-import { useStore } from '../contexts/storeContext'
-import { CardPrice } from './FormSelectItem'
+
 import { CategoryType } from '../types/RentItem'
 
 const FormCategory = ({
@@ -21,13 +16,8 @@ const FormCategory = ({
   onSubmit?: (values: Partial<CategoryType>) => Promise<any>
 }) => {
   // @ts-ignore
-  const categoryId = defaultValues?.id
+
   const [sending, setSending] = React.useState(false)
-  const { createPrice } = usePrices()
-  const { prices, storeId } = useStore()
-  const categoryPrices = prices.filter(
-    (price: PriceType) => price.categoryId === categoryId
-  )
 
   return (
     <Formik
@@ -47,33 +37,6 @@ const FormCategory = ({
           </View>
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
-          </View>
-          {defaultValues?.id && (
-            <View
-              style={[
-                styles.input,
-                { flexDirection: 'row', alignItems: 'center' }
-              ]}
-            >
-              <Text style={[gStyles.h3, { marginRight: 8 }]}>Precios</Text>
-              <ModalFormPrice
-                handleSubmit={async (price) => {
-                  return await createPrice(price, storeId, categoryId)
-                }}
-              />
-            </View>
-          )}
-          <View style={styles.input}>
-            <FlatList
-              horizontal
-              data={categoryPrices}
-              renderItem={({ item }) => (
-                <CardPrice
-                  style={{ marginVertical: 8, marginRight: 8 }}
-                  price={item}
-                />
-              )}
-            ></FlatList>
           </View>
 
           <View style={styles.input}>

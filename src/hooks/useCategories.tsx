@@ -1,55 +1,50 @@
-import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import { ServiceCategories } from '../firebase/ServiceCategories'
 import { CategoryType } from '../types/RentItem'
+import usePrices from './usePrices'
 
 function useCategories() {
   const { storeId } = useStore()
-  const [categories, setCategories] = useState<CategoryType[]>([])
-
-  useEffect(() => {
-    if (storeId) {
-      fetchCategories()
-    }
-  }, [storeId])
-
-  const getCategory = (categoryId: string) => {
-    return categories.find((c) => c.id === categoryId)
-  }
-
-  const fetchCategories = async () => {
-    const categories = await ServiceCategories.getByStore(storeId).catch((e) =>
-      console.log(e)
-    )
-    console.log('update cat')
-    setCategories(categories || [])
-  }
+  const { createPrice, updatePrice, deletePrice } = usePrices()
   const createCategory = async (values: Partial<CategoryType>) => {
     values.storeId = storeId
-    await ServiceCategories.create(values).catch((e) => console.log(e))
-    fetchCategories()
+    await ServiceCategories.create(values)
+      .then((r) => {
+        console.log({ r })
+      })
+      .catch((e) => {
+        console.log({ e })
+      })
   }
   const updateCategory = async (
     categoryId: string,
     values: Partial<CategoryType>
   ) => {
-    await ServiceCategories.update(categoryId, values).catch((e) =>
-      console.log(e)
-    )
-    fetchCategories()
+    await ServiceCategories.update(categoryId, values)
+      .then((r) => {
+        console.log({ r })
+      })
+      .catch((e) => {
+        console.log({ e })
+      })
   }
   const deleteCategory = async (categoryId: string) => {
-    await ServiceCategories.delete(categoryId).catch((e) => console.log(e))
-    fetchCategories()
+    await ServiceCategories.delete(categoryId)
+      .then((r) => {
+        console.log({ r })
+      })
+      .catch((e) => {
+        console.log({ e })
+      })
   }
 
   return {
-    categories,
     createCategory,
     updateCategory,
     deleteCategory,
-    fetchCategories,
-    getCategory
+    createPrice,
+    updatePrice,
+    deletePrice
   }
 }
 
