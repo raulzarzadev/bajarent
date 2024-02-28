@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView, Text, StyleSheet, View } from 'react-native'
 
 import {
@@ -8,10 +8,20 @@ import {
   useClearByFocusCell
 } from 'react-native-confirmation-code-field'
 import theme from '../theme'
+import ErrorBoundary from './ErrorBoundary'
 
+export type InputCodeProps = {
+  value: string
+  setValue: (value: string) => void
+  cellCount?: number
+}
 const DEFAULT_CELL_COUNT = 6
 
-const InputCode = ({ value, setValue, cellCount = DEFAULT_CELL_COUNT }) => {
+const InputCodeX = ({
+  value,
+  setValue,
+  cellCount = DEFAULT_CELL_COUNT
+}: InputCodeProps) => {
   // const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount })
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -50,7 +60,13 @@ const InputCode = ({ value, setValue, cellCount = DEFAULT_CELL_COUNT }) => {
   )
 }
 
-export default InputCode
+export default function InputCode(props: InputCodeProps) {
+  return (
+    <ErrorBoundary componentName="InputCode">
+      <InputCodeX {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   root: { padding: 20, minHeight: 300 },

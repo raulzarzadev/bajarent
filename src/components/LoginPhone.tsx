@@ -86,7 +86,7 @@ const PhoneLogin = () => {
     <View style={{ padding: 4 }}>
       {!msmSent && (
         <>
-          <Text style={styles.title}>Registrate con tu telefono celular</Text>
+          <Text style={styles.title}>Registrate con tu teléfono celular</Text>
           {/* <StyledTextInput onChangeText={setPhone}></StyledTextInput> */}
           <View style={styles.form}>
             <View style={styles.item}>
@@ -110,7 +110,7 @@ const PhoneLogin = () => {
         </>
       )}
 
-      {msmSent && (
+      {!!msmSent && (
         <>
           <Text style={styles.title}>
             Ingresa el codigo que te enviamos por SMS
@@ -127,9 +127,11 @@ const PhoneLogin = () => {
               </View>
             )}
             <View style={styles.item}>
-              <Button onPress={onSendCode} disabled={sending}>
-                Enviar
-              </Button>
+              <Button
+                onPress={onSendCode}
+                disabled={sending}
+                label="Envíar"
+              ></Button>
             </View>
           </View>
         </>
