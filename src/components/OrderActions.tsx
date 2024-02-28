@@ -29,7 +29,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       order_status.AUTHORIZED,
       order_status.CANCELLED
     ]) &&
-    (staffPermissions.isAdmin || staffPermissions.canCancelOrder)
+    (staffPermissions?.isAdmin || staffPermissions?.canCancelOrder)
 
   // const canAuthorize =
   //   areIn([order_status.PENDING]) &&
@@ -158,7 +158,8 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
 
       <PriorityOrder orderId={orderId} />
 
-      {order.type === order_type.RENT && (
+      {(order.type === order_type.RENT ||
+        order.type === order_type.STORE_RENT) && (
         <ErrorBoundary componentName="OrderActionsRentFlow">
           <OrderActionsRentFlow orderId={orderId} orderStatus={order.status} />
         </ErrorBoundary>

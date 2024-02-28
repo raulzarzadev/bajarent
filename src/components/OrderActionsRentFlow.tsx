@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 
 const OrderActionsRentFlow = ({
   orderId,
@@ -28,17 +29,14 @@ const RentFlow = ({
   orderStatus: OrderType['status']
 }) => {
   const { navigate } = useNavigation()
-  const {
-    storeId,
-    myStaffId: staffId,
-    staffPermissions: {
-      isAdmin,
-      canAuthorizeOrder,
-      canPickupOrder,
-      canRenewOrder,
-      canDeliveryOrder
-    }
-  } = useStore()
+  const { storeId, myStaffId: staffId, staffPermissions, store } = useStore()
+  const { user } = useAuth()
+  const isOwner = store?.createdBy === user?.id
+  const isAdmin = staffPermissions?.isAdmin || isOwner
+  const canAuthorizeOrder = staffPermissions?.canAuthorizeOrder
+  const canPickupOrder = staffPermissions?.canPickupOrder
+  const canRenewOrder = staffPermissions?.canRenewOrder
+  const canDeliveryOrder = staffPermissions?.canDeliveryOrder
 
   // autorizar > entregar > renovar > recoger
   type Steps =
@@ -61,7 +59,8 @@ const RentFlow = ({
   // ? Should change order status to DELIVERED and add a extra prop called isExpired instead change the status
   const [step, setStep] = useState<OrderType['status']>(orderStatus)
 
-  const enableRenew = !(step === order_status.RENEWED) || canRenewOrder
+  // const enableRenew = !(step === order_status.RENEWED) || canRenewOrder
+  const enableRenew = isAdmin || canRenewOrder
   const enablePickup = isAdmin || canPickupOrder
   const enableDelivery = isAdmin || canDeliveryOrder
   const enableAuthorize = isAdmin || canAuthorizeOrder

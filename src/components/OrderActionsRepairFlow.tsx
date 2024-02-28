@@ -5,6 +5,7 @@ import OrderType, { order_status } from '../types/OrderType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 
 const OrderActionsRepairFlow = ({
   orderId,
@@ -27,17 +28,13 @@ const RentFlow = ({
   orderId: string
   orderStatus: OrderType['status']
 }) => {
-  const {
-    storeId,
-    myStaffId: staffId,
-    staffPermissions: {
-      isAdmin,
-      canAuthorizeOrder,
-      canDeliveryOrder,
-      canRepairOrder
-    }
-  } = useStore()
-
+  const { storeId, myStaffId: staffId, staffPermissions, store } = useStore()
+  const { user } = useAuth()
+  const isOwner = store?.createdBy === user?.id
+  const isAdmin = staffPermissions?.isAdmin || isOwner
+  const canAuthorizeOrder = staffPermissions?.canAuthorizeOrder
+  const canDeliveryOrder = staffPermissions?.canDeliveryOrder
+  const canRepairOrder = staffPermissions?.canRepairOrder
   // en reparación > reparada > entregar
   type Steps =
     | null
@@ -63,6 +60,7 @@ const RentFlow = ({
   const enableFinishRepair = isAdmin || canRepairOrder
   const enableDeliveryRepair =
     !(step === order_status.RENEWED) || canDeliveryOrder
+
   const steps: Actions[] = [
     {
       key: order_status.AUTHORIZED,
