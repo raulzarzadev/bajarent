@@ -4,7 +4,7 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Button from './Button'
 import InputTextStyled from './InputTextStyled'
-import PaymentType, { PaymentBase, PaymentMethods } from '../types/PaymentType'
+import PaymentType, { PaymentBase, payment_methods } from '../types/PaymentType'
 import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
@@ -67,7 +67,7 @@ export const ModalPayment = ({
     setMethod('cash')
   }
 
-  const methods = Object.values(PaymentMethods).map((method) => ({
+  const methods = Object.values(payment_methods).map((method) => ({
     label: dictionary(method),
     value: method
   }))

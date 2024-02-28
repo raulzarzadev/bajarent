@@ -56,28 +56,19 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           />
         </StyledModal>
       </View>
-      <View style={{ justifyContent: 'flex-end', flex: 1, margin: 'auto' }}>
-        <Text>
-          Efectivo:{' '}
-          <CurrencyAmount
-            style={{ width: 100, textAlign: 'right' }}
-            amount={cash}
-          />
-        </Text>
-        <Text>
-          Transferencia:{' '}
-          <CurrencyAmount
-            style={{ width: 100, textAlign: 'right' }}
-            amount={transfers}
-          />
-        </Text>
-        <Text>
-          Tarjeta:{' '}
-          <CurrencyAmount
-            style={{ width: 100, textAlign: 'right' }}
-            amount={card}
-          />
-        </Text>
+      <View style={styles.totals}>
+        <View style={styles.row}>
+          <Text style={styles.label}>Efectivo: </Text>
+          <CurrencyAmount style={styles.amount} amount={cash} />
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Transferencia: </Text>
+          <CurrencyAmount style={styles.amount} amount={transfers} />
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Tarjeta: </Text>
+          <CurrencyAmount style={styles.amount} amount={card} />
+        </View>
       </View>
       <View>
         <Text style={gStyles.h3}>Total</Text>
@@ -95,4 +86,23 @@ export default function BalanceInfo(props: BalanceInfoProps) {
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  totals: {
+    justifyContent: 'flex-end',
+    flex: 1,
+    margin: 'auto',
+    marginBottom: 8
+  },
+  row: {
+    flexDirection: 'row',
+    marginVertical: 2
+  },
+  label: {
+    width: 100,
+    textAlign: 'right'
+  },
+  amount: {
+    textAlign: 'right',
+    width: 70
+  }
+})

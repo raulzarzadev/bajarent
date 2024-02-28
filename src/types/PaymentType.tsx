@@ -13,7 +13,7 @@ export type PaymentBase = {
 
 type PaymentType = PaymentBase & BaseType
 
-export enum PaymentMethods {
+export enum payment_methods {
   CASH = 'cash',
   CARD = 'card',
   TRANSFER = 'transfer'
