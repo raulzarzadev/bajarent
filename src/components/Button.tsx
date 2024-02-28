@@ -10,6 +10,7 @@ import {
 import useTheme from '../hooks/useTheme'
 import { Colors } from '../theme'
 import Icon, { IconName } from './Icon'
+import ErrorBoundary from './ErrorBoundary'
 
 export type ButtonProps = {
   onPress: () => void
@@ -25,7 +26,7 @@ export type ButtonProps = {
   justIcon?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({
+const ButtonX: React.FC<ButtonProps> = ({
   onPress,
   label,
   disabled = false,
@@ -39,11 +40,11 @@ const Button: React.FC<ButtonProps> = ({
   justIcon
 }) => {
   const { theme } = useTheme()
-  const buttonColor = {
+  const buttonXColor = {
     backgroundColor: theme[color],
     borderColor: 'transparent'
   }
-  const buttonVariants = {
+  const buttonXVariants = {
     filled: {
       backgroundColor: theme[color],
       borderColor: 'transparent'
@@ -57,7 +58,7 @@ const Button: React.FC<ButtonProps> = ({
       borderColor: 'transparent'
     }
   }
-  const buttonVariant = buttonVariants[variant]
+  const buttonXVariant = buttonXVariants[variant]
   const textColor = {
     color: variant === 'filled' ? theme.white : theme[color]
   }
@@ -85,9 +86,9 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <Pressable
       style={({ pressed }) => [
-        baseStyles.button,
-        buttonColor,
-        buttonVariant,
+        baseStyles.buttonX,
+        buttonXColor,
+        buttonXVariant,
         disabled && baseStyles.disabled,
         pressed && { opacity: 0.5 },
         sizes[size],
@@ -134,7 +135,7 @@ const Button: React.FC<ButtonProps> = ({
 }
 
 const baseStyles = StyleSheet.create({
-  button: {
+  buttonX: {
     padding: 10,
     borderRadius: 5,
     justifyContent: 'center',
@@ -154,4 +155,10 @@ const baseStyles = StyleSheet.create({
   }
 })
 
-export default Button
+export default function Button(props: ButtonProps) {
+  return (
+    <ErrorBoundary componentName={`Button-${props.label}`}>
+      <ButtonX {...props} />
+    </ErrorBoundary>
+  )
+}

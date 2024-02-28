@@ -39,7 +39,7 @@ const ScreenProfile = ({ navigation }) => {
         <ChangeStaffPosition />
       </ErrorBoundary>
 
-      {user?.canCreateStore && (
+      {!!user?.canCreateStore && (
         <View style={styles.buttons}>
           <Button
             onPress={() => {
@@ -57,9 +57,8 @@ const ScreenProfile = ({ navigation }) => {
             navigation?.navigate('EditProfile')
           }}
           variant="outline"
-        >
-          Editar información
-        </Button>
+          label="Editar información"
+        ></Button>
       </View>
       <View style={styles.buttons}>
         <Button
@@ -68,9 +67,8 @@ const ScreenProfile = ({ navigation }) => {
           }}
           variant="outline"
           color="error"
-        >
-          Cerrar sesión
-        </Button>
+          label="Cerrar sesión"
+        ></Button>
       </View>
     </View>
   )
