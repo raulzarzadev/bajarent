@@ -203,7 +203,7 @@ const UserAndStoreTabs = () => {
         }}
       />
 
-      {__DEV__ && (
+      {!!__DEV__ && (
         <Tab.Screen
           name="Components"
           component={ScreenComponents}

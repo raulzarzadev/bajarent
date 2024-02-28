@@ -17,10 +17,10 @@ const ScreenProfile = ({ navigation }) => {
   if (user === undefined) return <ActivityIndicator />
   if (user === null)
     return (
-      <>
+      <ErrorBoundary componentName="FormLogin">
         <PhoneLogin />
-        {__DEV__ && <LoginEmail />}
-      </>
+        {!!__DEV__ && <LoginEmail />}
+      </ErrorBoundary>
     )
   return (
     <View style={{ padding: 2 }}>
