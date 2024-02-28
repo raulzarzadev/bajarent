@@ -52,6 +52,8 @@ const StoreCategories = () => {
     setCategoryPrices(categories.find((c) => c.id === selected)?.prices || [])
   }, [selected, categories])
 
+  console.log({ selected })
+
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -112,7 +114,7 @@ const StoreCategories = () => {
         ></FlatList>
       </View>
       <View>
-        {!!categoryPrices.length && (
+        {selected && (
           <>
             {/* {defaultValues?.id && (
             <View

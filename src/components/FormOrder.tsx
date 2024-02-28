@@ -18,6 +18,7 @@ import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
+import dictionary from '../dictionary'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -92,30 +93,47 @@ const FormOrder = ({
             <View style={[styles.item]}>
               <FormikInputPhone name={'phone'} />
             </View>
-            <View style={[styles.item]}>
-              <InputLocationFormik name={'location'} />
-            </View>
-            <View style={[styles.item]}>
-              <InputValueFormik name={'neighborhood'} placeholder="Colonia" />
-            </View>
-            <View style={[styles.item]}>
-              <InputValueFormik
-                name={'address'}
-                placeholder="Dirección completa ( calle, numero, entre calles)"
-              />
-            </View>
-            <View style={[styles.item]}>
-              <InputValueFormik
-                name={'references'}
-                placeholder="Referencias de la casa"
-              />
-            </View>
+            {values.type !== order_type.STORE_RENT && (
+              <>
+                <View style={[styles.item]}>
+                  <InputLocationFormik name={'location'} />
+                </View>
+                <View style={[styles.item]}>
+                  <InputValueFormik
+                    name={'neighborhood'}
+                    placeholder="Colonia"
+                  />
+                </View>
+                <View style={[styles.item]}>
+                  <InputValueFormik
+                    name={'address'}
+                    placeholder="Dirección completa ( calle, numero, entre calles)"
+                  />
+                </View>
+                <View style={[styles.item]}>
+                  <InputValueFormik
+                    name={'references'}
+                    placeholder="Referencias de la casa"
+                  />
+                </View>
+              </>
+            )}
             <View style={[styles.item, { justifyContent: 'center' }]}>
               <InputRadiosFormik
                 name="type"
                 options={[
-                  { label: 'Renta', value: order_type.RENT },
-                  { label: 'Reparación', value: order_type.REPAIR }
+                  {
+                    label: dictionary(order_type.RENT),
+                    value: order_type.RENT
+                  },
+                  {
+                    label: dictionary(order_type.REPAIR),
+                    value: order_type.REPAIR
+                  },
+                  {
+                    label: dictionary(order_type.STORE_RENT),
+                    value: order_type.STORE_RENT
+                  }
                 ]}
                 label="Tipo de orden"
               />
@@ -152,6 +170,25 @@ const FormOrder = ({
                   />
                 </View>
               )}
+              {values.type === order_type.STORE_RENT && (
+                <>
+                  <FormikSelectCategoryItem
+                    name="item"
+                    label="Selecciona un artículo"
+                    categories={categories.map((cat) => ({
+                      ...cat
+                    }))}
+                    selectPrice
+                  />
+
+                  <View style={[styles.item]}>
+                    <FormikInputImage
+                      name="imageID"
+                      label="Subir identificación"
+                    />
+                  </View>
+                </>
+              )}
               {values.type === order_type.RENT && (
                 <>
                   <FormikSelectCategoryItem
@@ -178,47 +215,55 @@ const FormOrder = ({
                 </>
               )}
             </View>
-            <View style={[styles.item, { justifyContent: 'center' }]}>
-              <ErrorBoundary>
-                <ModalAssignOrder
-                  assignToSection={(sectionId) => {
-                    setValues((values) => ({
-                      ...values,
-                      assignToSection: sectionId
-                    }))
-                  }}
-                  assignToStaff={(staffId) => {
-                    setValues((values) => ({
-                      ...values,
-                      assignToStaff: staffId
-                    }))
-                  }}
-                  assignedToSection={values?.assignToSection}
-                  assignedToStaff={values?.assignToStaff}
-                />
-              </ErrorBoundary>
-            </View>
-            <View style={[styles.item]}>
-              <InputDate
-                label="Fecha programada"
-                value={asDate(values.scheduledAt) || new Date()}
-                setValue={(value) =>
-                  setValues(
-                    (values) => ({ ...values, scheduledAt: value }),
-                    false
-                  )
-                }
-              />
-            </View>
+            {values.type !== order_type.STORE_RENT && (
+              <>
+                <View style={[styles.item, { justifyContent: 'center' }]}>
+                  <ErrorBoundary>
+                    <ModalAssignOrder
+                      assignToSection={(sectionId) => {
+                        setValues((values) => ({
+                          ...values,
+                          assignToSection: sectionId
+                        }))
+                      }}
+                      assignToStaff={(staffId) => {
+                        setValues((values) => ({
+                          ...values,
+                          assignToStaff: staffId
+                        }))
+                      }}
+                      assignedToSection={values?.assignToSection}
+                      assignedToStaff={values?.assignToStaff}
+                    />
+                  </ErrorBoundary>
+                </View>
+                <View style={[styles.item]}>
+                  <InputDate
+                    label="Fecha programada"
+                    value={asDate(values.scheduledAt) || new Date()}
+                    setValue={(value) =>
+                      setValues(
+                        (values) => ({ ...values, scheduledAt: value }),
+                        false
+                      )
+                    }
+                  />
+                </View>
 
-            <View
-              style={[styles.item, { justifyContent: 'center', width: '100%' }]}
-            >
-              <FormikCheckbox
-                name="hasDelivered"
-                label="Entregada en la fecha programada"
-              />
-            </View>
+                <View
+                  style={[
+                    styles.item,
+                    { justifyContent: 'center', width: '100%' }
+                  ]}
+                >
+                  <FormikCheckbox
+                    name="hasDelivered"
+                    label="Entregada en la fecha programada"
+                  />
+                </View>
+              </>
+            )}
+
             <View style={[styles.item]}>
               <Button
                 disabled={loading || !values?.fullName}
