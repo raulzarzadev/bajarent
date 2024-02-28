@@ -51,6 +51,7 @@ const ScreenProfile = ({ navigation }) => {
           </Button>
         </View>
       )}
+
       <View style={styles.buttons}>
         <Button
           onPress={() => {
@@ -60,6 +61,7 @@ const ScreenProfile = ({ navigation }) => {
           label="Editar información"
         ></Button>
       </View>
+
       <View style={styles.buttons}>
         <Button
           onPress={() => {
