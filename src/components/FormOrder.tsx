@@ -43,7 +43,7 @@ const FormOrder = ({
   const [loading, setLoading] = React.useState(false)
   const { categories, store } = useStore()
   console.log({ store })
-  const ordersTypesAllowed = Object.entries(store.orderTypes)
+  const ordersTypesAllowed = Object.entries(store.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
       return { label: dictionary(value[0] as order_type), value: value[0] }
