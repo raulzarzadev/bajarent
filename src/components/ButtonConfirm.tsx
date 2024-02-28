@@ -4,6 +4,7 @@ import Button, { ButtonProps } from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ButtonIcon, { IconButtonProps } from './ButtonIcon'
+import Icon from './Icon'
 
 const ButtonConfirm = ({
   openLabel,
@@ -48,9 +49,9 @@ const ButtonConfirm = ({
           color={openColor}
           variant={openVariant}
           onPress={modal.toggleOpen}
-        >
-          {openLabel}
-        </Button>
+          label={openLabel}
+          icon={icon}
+        ></Button>
       )}
       <StyledModal {...modal}>
         {text && (

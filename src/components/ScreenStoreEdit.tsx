@@ -7,6 +7,7 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import { Icon } from 'react-native-elements'
 import theme from '../theme'
+import ButtonConfirm from './ButtonConfirm'
 
 const ScreenStoreEdit = ({ navigation }) => {
   const { store } = useStore()
@@ -24,19 +25,21 @@ const ScreenStoreEdit = ({ navigation }) => {
             .catch(console.error)
         }}
       />
-      <View>
-        <Button
-          color="error"
-          onPress={() => {
+      <View style={{ marginTop: 36 }}>
+        <ButtonConfirm
+          icon="delete"
+          text="Eliminar tienda de forma permanente"
+          openColor="error"
+          openLabel="Eliminar"
+          confirmColor="error"
+          confirmLabel="Eliminar"
+          handleConfirm={async () => {
             ServiceStores.delete(store.id)
               .then(console.log)
               .catch(console.error)
             navigation.goBack()
           }}
-        >
-          <Text style={{ color: theme.white }}>Eliminar</Text>
-          <Icon color={theme.error} name="delete" />
-        </Button>
+        />
       </View>
     </View>
   )

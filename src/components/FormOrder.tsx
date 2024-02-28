@@ -41,7 +41,15 @@ const FormOrder = ({
   defaultValues?: Partial<OrderType>
 }) => {
   const [loading, setLoading] = React.useState(false)
-  const { categories } = useStore()
+  const { categories, store } = useStore()
+  console.log({ store })
+  const ordersTypesAllowed = Object.entries(store.orderTypes)
+    .filter(([key, value]) => value)
+    .map((value) => {
+      return { label: dictionary(value[0] as order_type), value: value[0] }
+    })
+
+  console.log({ ordersTypesAllowed })
   return (
     <ScrollView>
       {defaultValues?.folio && (
@@ -121,20 +129,7 @@ const FormOrder = ({
             <View style={[styles.item, { justifyContent: 'center' }]}>
               <InputRadiosFormik
                 name="type"
-                options={[
-                  {
-                    label: dictionary(order_type.RENT),
-                    value: order_type.RENT
-                  },
-                  {
-                    label: dictionary(order_type.REPAIR),
-                    value: order_type.REPAIR
-                  },
-                  {
-                    label: dictionary(order_type.STORE_RENT),
-                    value: order_type.STORE_RENT
-                  }
-                ]}
+                options={ordersTypesAllowed}
                 label="Tipo de orden"
               />
             </View>

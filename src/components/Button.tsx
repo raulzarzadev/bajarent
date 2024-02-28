@@ -103,7 +103,8 @@ const Button: React.FC<ButtonProps> = ({
             baseStyles.text,
             textColor,
             textStyles,
-            disabled && { color: 'black' }
+            disabled && { color: 'black' },
+            { textTransform: 'uppercase' }
           ]}
         >
           {label}

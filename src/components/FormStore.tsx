@@ -4,6 +4,10 @@ import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 import StoreType from '../types/StoreType'
+import { order_type } from '../types/OrderType'
+import InputRadios from './InputRadios'
+import dictionary from '../dictionary'
+import FormikCheckbox from './FormikCheckbox'
 
 const FormStore = ({
   defaultValues,
@@ -23,7 +27,7 @@ const FormStore = ({
         setSubmitting(false)
       })
   }
-  console.log({ submitting })
+  const ordersTypes = Object.keys(order_type)
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -39,6 +43,17 @@ const FormStore = ({
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
+          <View style={[styles.input, styles.type]}>
+            {ordersTypes.map((type) => (
+              <View key={type} style={[styles.type]}>
+                <FormikCheckbox
+                  name={'orderTypes.' + type}
+                  label={dictionary(type as order_type)}
+                />
+              </View>
+            ))}
+          </View>
+
           <View style={styles.input}>
             <Button
               disabled={submitting}
@@ -57,5 +72,11 @@ export default FormStore
 const styles = StyleSheet.create({
   input: {
     marginVertical: 10
+  },
+  type: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    margin: 4
   }
 })
