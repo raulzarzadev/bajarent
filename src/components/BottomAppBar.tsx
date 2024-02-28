@@ -120,7 +120,9 @@ const NotUserTabs = () => {
 }
 
 const UserAndStoreTabs = () => {
-  const { staffPermissions } = useStore()
+  const { staffPermissions, store } = useStore()
+  const { user } = useAuth()
+  const isOwner = store?.createdBy === user?.id
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -153,7 +155,9 @@ const UserAndStoreTabs = () => {
           headerShown: false
         }}
       />
-      {(staffPermissions?.canViewOrders || staffPermissions?.isAdmin) && (
+      {(staffPermissions?.canViewOrders ||
+        staffPermissions?.isAdmin ||
+        isOwner) && (
         <Tab.Screen
           name="Orders"
           component={StackOrders}
@@ -164,7 +168,9 @@ const UserAndStoreTabs = () => {
         />
       )}
 
-      {(staffPermissions?.canCreateOrder || staffPermissions?.isAdmin) && (
+      {(staffPermissions?.canCreateOrder ||
+        staffPermissions?.isAdmin ||
+        isOwner) && (
         <Tab.Screen
           name="NewOrder"
           component={ScreenNewOrder}
