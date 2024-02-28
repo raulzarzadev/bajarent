@@ -20,6 +20,7 @@ const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
 
 export type ListPops<T extends { id: string }> = {
   data: T[]
+  preFilteredIds?: string[]
   onPressRow?: (orderId: string) => void
   sortFields?: { key: string; label: string }[]
   ComponentRow: FC<{ item: T }>
@@ -37,7 +38,8 @@ function MyList<T extends { id: string }>({
   defaultSortBy,
   defaultOrder = 'asc',
   filters,
-  onPressNew
+  onPressNew,
+  preFilteredIds
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([])
 
@@ -63,6 +65,7 @@ function MyList<T extends { id: string }>({
           <Button icon="add" label="" onPress={onPressNew} size="xs"></Button>
         )}
         <ModalFilterList
+          preFilteredIds={preFilteredIds}
           data={data}
           setData={setFilteredData}
           filters={filters}

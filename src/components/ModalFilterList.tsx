@@ -21,12 +21,14 @@ export type ModalFilterOrdersProps<T> = {
   data: T[]
   setData: (orders: T[]) => void
   filters?: FilterListType<T>[]
+  preFilteredIds: string[]
 }
 
 function ModalFilterList<T>({
   data,
+  filters,
   setData = (data) => console.log(data),
-  filters
+  preFilteredIds
 }: ModalFilterOrdersProps<T>) {
   const { storeSections, staff } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
@@ -39,6 +41,12 @@ function ModalFilterList<T>({
   useEffect(() => {
     setData?.(filteredData)
   }, [filteredData])
+
+  useEffect(() => {
+    if (preFilteredIds?.length) {
+      filterBy('customIds', preFilteredIds)
+    }
+  }, [preFilteredIds])
 
   const isFilterSelected = (field, value) => {
     if (field === 'status' && value === 'REPORTED') {
@@ -177,7 +185,9 @@ function ModalFilterList<T>({
             </View>
           )}
         </View>
-
+        {filtersBy.find((a) => a.field === 'customIds') && (
+          <Text style={gStyles.h2}>Filtro predefinido</Text>
+        )}
         {filters?.map(({ field, label }, i) => (
           <View key={i}>
             <Text style={[gStyles.h3]}>{label}</Text>

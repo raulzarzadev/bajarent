@@ -31,15 +31,17 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     ]) &&
     (staffPermissions.isAdmin || staffPermissions.canCancelOrder)
 
-  const canAuthorize =
-    areIn([order_status.PENDING]) &&
-    (staffPermissions.canAuthorizeOrder || staffPermissions.isAdmin)
+  // const canAuthorize =
+  //   areIn([order_status.PENDING]) &&
+  //   (staffPermissions?.canAuthorizeOrder || staffPermissions?.isAdmin)
 
-  const canAssign = staffPermissions.canAssignOrder || staffPermissions.isAdmin
+  const canAssign =
+    staffPermissions?.canAssignOrder || staffPermissions?.isAdmin
 
-  const canEdit = staffPermissions.canEditOrder || staffPermissions.isAdmin
+  const canEdit = staffPermissions?.canEditOrder || staffPermissions?.isAdmin
 
-  const canDelete = staffPermissions.canDeleteOrder || staffPermissions.isAdmin
+  const canDelete =
+    staffPermissions?.canDeleteOrder || staffPermissions?.isAdmin
 
   const COMMON_BUTTONS = [
     // {

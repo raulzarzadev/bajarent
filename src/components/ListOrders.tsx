@@ -5,11 +5,18 @@ import { useNavigation } from '@react-navigation/native'
 import RowOrder from './RowOrder'
 import OrderType from '../types/OrderType'
 
-const ListOrders = ({ orders }: { orders: OrderType[] }) => {
+const ListOrders = ({
+  orders,
+  defaultOrdersIds
+}: {
+  orders: OrderType[]
+  defaultOrdersIds?: string[]
+}) => {
   const { navigate } = useNavigation()
   return (
     <View>
       <List
+        preFilteredIds={defaultOrdersIds}
         defaultSortBy="folio"
         defaultOrder="des"
         onPressRow={(id) => {
