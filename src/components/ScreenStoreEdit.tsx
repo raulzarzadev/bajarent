@@ -1,19 +1,16 @@
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import React from 'react'
-
 import FormStore from './FormStore'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { useStore } from '../contexts/storeContext'
-import Button from './Button'
-import { Icon } from 'react-native-elements'
-import theme from '../theme'
 import ButtonConfirm from './ButtonConfirm'
+import { gStyles } from '../styles'
 
 const ScreenStoreEdit = ({ navigation }) => {
-  const { store } = useStore()
+  const { store, updateUserStores } = useStore()
   if (!store) return <ActivityIndicator />
   return (
-    <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
+    <ScrollView style={gStyles.container}>
       <FormStore
         defaultValues={store}
         onSubmit={async (values) => {
@@ -37,11 +34,14 @@ const ScreenStoreEdit = ({ navigation }) => {
             ServiceStores.delete(store.id)
               .then(console.log)
               .catch(console.error)
+              .finally(() => {
+                updateUserStores()
+              })
             navigation.goBack()
           }}
         />
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

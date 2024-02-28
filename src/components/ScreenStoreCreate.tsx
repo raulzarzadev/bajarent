@@ -1,24 +1,28 @@
-import { StyleSheet, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import React from 'react'
 
 import FormStore from './FormStore'
 import { ServiceStores } from '../firebase/ServiceStore'
 import ErrorBoundary from './ErrorBoundary'
+import { gStyles } from '../styles'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenCreateStore = ({ navigation }) => {
+  const { updateUserStores } = useStore()
   return (
-    <View style={[styles.form]}>
+    <ScrollView style={[gStyles.container]}>
       <FormStore
         onSubmit={async (values) => {
           return await ServiceStores.create(values)
             .then(console.log)
             .catch(console.error)
             .finally(() => {
+              updateUserStores()
               navigation.goBack()
             })
         }}
       />
-    </View>
+    </ScrollView>
   )
 }
 
@@ -29,11 +33,3 @@ export default function (props) {
     </ErrorBoundary>
   )
 }
-
-const styles = StyleSheet.create({
-  form: {
-    maxWidth: 500,
-    width: '100%',
-    marginHorizontal: 'auto'
-  }
-})

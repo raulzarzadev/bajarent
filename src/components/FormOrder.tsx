@@ -25,7 +25,7 @@ const initialValues: Partial<OrderType> = {
   fullName: '',
   phone: '',
   scheduledAt: new Date(),
-  type: order_type.RENT,
+  // type: order_type.RENT,
   address: ''
 }
 
@@ -49,6 +49,8 @@ const FormOrder = ({
       return { label: dictionary(value[0] as order_type), value: value[0] }
     })
 
+  const defaultType = ordersTypesAllowed[0]?.value as order_type
+
   return (
     <ScrollView>
       {defaultValues?.folio && (
@@ -63,6 +65,8 @@ const FormOrder = ({
       <Formik
         initialValues={{
           ...defaultValues,
+          type: defaultType,
+
           phone:
             defaultValues?.phone === 'undefined' || !defaultValues.phone
               ? ''

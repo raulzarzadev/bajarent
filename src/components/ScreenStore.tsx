@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import StoreDetails, { ChangeStore } from './StoreDetails'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'

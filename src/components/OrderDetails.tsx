@@ -201,7 +201,8 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       }}
     >
       <Text style={[gStyles.h3, { marginBottom: 8 }]}>Artículo</Text>
-      {order?.type === order_type.RENT && (
+      {(order?.type === order_type.RENT ||
+        order.type === order_type.STORE_RENT) && (
         <View>
           <View>
             <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>

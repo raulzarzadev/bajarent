@@ -21,11 +21,13 @@ function useUserStores() {
   }, [user, userStores])
 
   const updateUserStores = () => {
+    console.log('updating stores')
     ServiceStores.getStoresByUserId(user?.id)
       .then((res) => {
         setUserStores(res)
       })
       .catch(console.error)
+    updatePositions()
   }
 
   const updatePositions = () => {
@@ -54,7 +56,9 @@ function useUserStores() {
   return {
     stores: [...userStores, ...userPositions],
     userStores,
-    userPositions
+    userPositions,
+    updateUserStores,
+    updatePositions
   }
 }
 

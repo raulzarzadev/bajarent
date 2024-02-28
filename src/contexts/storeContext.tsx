@@ -35,6 +35,7 @@ export type StoreContextType = {
   storeSections?: SectionType[]
   payments?: PaymentType[]
   categories?: Partial<CategoryType>[]
+  updateUserStores?: () => any
 }
 
 type UseStoreDataListenType = Partial<ReturnType<typeof useStoreDataListen>>
@@ -59,7 +60,7 @@ const StoreContextProvider = ({ children }) => {
     updateCategories
   } = useStoreDataListen({ storeId })
 
-  const { userPositions, userStores } = useUserStores()
+  const { userPositions, userStores, updateUserStores } = useUserStores()
 
   const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
   const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
@@ -213,6 +214,7 @@ const StoreContextProvider = ({ children }) => {
         storeSections,
         payments: paymentsFormatted,
         updateCategories,
+        updateUserStores,
         categories
       }}
     >
