@@ -34,14 +34,19 @@ const InputRadios = <T extends string = string>({
       {label && <Text style={styles.label}>{label}</Text>}
       <RadioGroup
         accessibilityLabel={label}
-        layout={
-          layout || Dimensions.get('window').width > 600 ? 'row' : 'column'
-        }
+        // layout={'row'}
         radioButtons={radioButtons}
         onPress={setValue}
         selectedId={value}
         labelStyle={{ textTransform: 'capitalize' }}
-        containerStyle={containerStyle}
+        containerStyle={[
+          containerStyle,
+          {
+            flexDirection: layout === 'row' ? 'row' : 'column',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }
+        ]}
       />
     </View>
   )

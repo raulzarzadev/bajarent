@@ -1,13 +1,13 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 import StoreType from '../types/StoreType'
 import { order_type } from '../types/OrderType'
-import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import FormikCheckbox from './FormikCheckbox'
+import { gStyles } from '../styles'
 
 const FormStore = ({
   defaultValues,
@@ -43,6 +43,8 @@ const FormStore = ({
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
+
+          <Text style={gStyles.h3}>Tipo de ordenes</Text>
           <View style={[styles.input, styles.type]}>
             {ordersTypes.map((type) => (
               <View key={type} style={[styles.type]}>

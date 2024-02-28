@@ -20,6 +20,7 @@ const InputRadiosFormik = ({
       setValue={helpers.setValue}
       options={options}
       label={label}
+      layout="row"
     />
   )
 }

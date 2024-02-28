@@ -42,14 +42,13 @@ const FormOrder = ({
 }) => {
   const [loading, setLoading] = React.useState(false)
   const { categories, store } = useStore()
-  console.log({ store })
-  const ordersTypesAllowed = Object.entries(store.orderTypes || {})
+
+  const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
       return { label: dictionary(value[0] as order_type), value: value[0] }
     })
 
-  console.log({ ordersTypesAllowed })
   return (
     <ScrollView>
       {defaultValues?.folio && (
@@ -91,6 +90,13 @@ const FormOrder = ({
       >
         {({ handleSubmit, setValues, values }) => (
           <View style={styles.form}>
+            <View style={[styles.item, { justifyContent: 'center' }]}>
+              <InputRadiosFormik
+                name="type"
+                options={ordersTypesAllowed}
+                label="Tipo de orden"
+              />
+            </View>
             <View style={[styles.item]}>
               <InputValueFormik
                 name={'fullName'}
@@ -126,13 +132,7 @@ const FormOrder = ({
                 </View>
               </>
             )}
-            <View style={[styles.item, { justifyContent: 'center' }]}>
-              <InputRadiosFormik
-                name="type"
-                options={ordersTypesAllowed}
-                label="Tipo de orden"
-              />
-            </View>
+
             <View style={[styles.item]}>
               {values.type === order_type.REPAIR && (
                 <View>
