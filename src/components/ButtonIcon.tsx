@@ -1,7 +1,5 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
 import Button, { ButtonProps } from './Button'
-// import { Icon } from 'react-native-elements'
 
 import { IconName } from './Icon'
 export type IconButtonProps = {
@@ -28,22 +26,8 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
         alignItems: 'center',
         width: sizes[props.size || 'medium'] * 1.4
       }}
-    >
-      {/* <Icon
-        icon={props.icon}
-        size={sizes[props.size || 'medium']}
-        color={theme[props.color || 'primary']}
-      /> */}
-      {/* <Icon
-        type={props.type || 'material'}
-        name={props.icon}
-        size={sizes[props.size || 'medium']}
-        color={theme[props.color || 'primary']}
-      /> */}
-    </Button>
+    ></Button>
   )
 }
 
 export default ButtonIcon
-
-const styles = StyleSheet.create({})

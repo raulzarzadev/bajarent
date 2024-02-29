@@ -1,17 +1,17 @@
-import { StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import OrderType from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme from '../theme'
 import P from './P'
 import asDate, { fromNow } from '../libs/utils-date'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { ServiceComments } from '../firebase/ServiceComments'
 import Chip from './Chip'
 import StyledTextInput from './InputTextStyled'
 import { CheckBox } from 'react-native-elements'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
+import Icon from './Icon'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const [orderComments, setOrderComments] = useState<OrderType['comments']>([])
@@ -148,14 +148,15 @@ const OrderComment = ({
               size="sm"
             />
           )}
-
-          <Ionicons
-            name="checkmark-done-circle"
-            color={comment.solved ? theme.success : theme.accent}
-            style={{ alignItems: 'baseline' }}
+          <Pressable
             onPress={() => handleToggleSolveReport(comment.id, comment.solved)}
-            size={30}
-          />
+          >
+            <Icon
+              icon="done"
+              color={comment.solved ? theme.success : theme.accent}
+              size={30}
+            />
+          </Pressable>
         </View>
       </View>
       <P

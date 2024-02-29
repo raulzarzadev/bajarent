@@ -9,7 +9,9 @@ import {
 } from 'react-native'
 import React, { ReactNode } from 'react'
 import Icon from './Icon'
+
 const windowHeight = Dimensions.get('window').height
+
 export type StyledModalProps = {
   open?: boolean
   setOpen?: (open: boolean) => void
@@ -47,7 +49,6 @@ const StyledModal = ({
               <Text style={styles.title}>{title}</Text>
               <Pressable onPress={() => setOpen(!open)}>
                 <Icon icon="close" />
-                {/* <Ionicons name="close" size={24} color="black" /> */}
               </Pressable>
             </View>
             <ScrollView style={{ width: '100%' }}>{children}</ScrollView>

@@ -1,8 +1,6 @@
-import { Linking, Pressable, View } from 'react-native'
+import { Linking, View } from 'react-native'
 import P from './P'
-import Ionicons from '@expo/vector-icons/Ionicons'
-
-import theme from '../theme'
+import Button from './Button'
 const CardPhone = ({ phone }) => {
   const formatPhoneNumber = (phone: string): string => {
     // Remove any non-digit characters from the phone number
@@ -20,26 +18,36 @@ const CardPhone = ({ phone }) => {
   if (!phone || phone === 'undefined') return null
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginHorizontal: 'auto'
+      }}
+    >
       <P size="lg">{formatPhoneNumber(phone)}</P>
       {phone && (
         <>
-          <Pressable
-            style={{ marginHorizontal: 16 }}
+          <Button
+            buttonStyles={{ marginHorizontal: 4 }}
+            justIcon
+            icon="phone"
+            variant="ghost"
+            color={'secondary'}
             onPress={() => {
               Linking.openURL(`tel:${phone}`)
             }}
-          >
-            <Ionicons name="call" size={24} color={theme.secondary} />
-          </Pressable>
-          <Pressable
-            style={{ marginHorizontal: 16 }}
+          />
+          <Button
+            buttonStyles={{ marginHorizontal: 4 }}
+            justIcon
+            icon="whatsapp"
+            variant="ghost"
+            color={'success'}
             onPress={() => {
               Linking.openURL(`https://wa.me/${phone.replace('+', '')}`)
             }}
-          >
-            <Ionicons name="logo-whatsapp" size={24} color={theme.success} />
-          </Pressable>
+          />
         </>
       )}
     </View>

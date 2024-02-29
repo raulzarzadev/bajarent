@@ -12,8 +12,10 @@ import {
   MdFilterList,
   MdDeleteOutline,
   MdOutlineSearch,
-  MdLocationOff
+  MdLocationOff,
+  MdOutlineDone
 } from 'react-icons/md'
+
 import {
   IoPersonOutline,
   IoPersonSharp,
@@ -27,6 +29,8 @@ import { LiaBroomSolid } from 'react-icons/lia'
 import { TbMapSearch } from 'react-icons/tb'
 import { HiDotsVertical } from 'react-icons/hi'
 import { GrFormSubtract } from 'react-icons/gr'
+import { TiPhone } from 'react-icons/ti'
+import { BsWhatsapp } from 'react-icons/bs'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -55,7 +59,10 @@ const icons = {
   map: TbMapSearch,
   calendar: IoMdCalendar,
   verticalDots: HiDotsVertical,
-  sub: GrFormSubtract
+  sub: GrFormSubtract,
+  phone: TiPhone,
+  whatsapp: BsWhatsapp,
+  done: MdOutlineDone
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,
