@@ -44,16 +44,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
     staffPermissions?.canDeleteOrder || staffPermissions?.isAdmin
 
   const COMMON_BUTTONS = [
-    // {
-    //   label: 'Autorizar',
-    //   show: canAuthorize,
-    //   button: (
-    //     <ButtonAuthorize
-    //       orderId={orderId}
-    //       isAuthorized={status === order_status.AUTHORIZED}
-    //     />
-    //   )
-    // },
     {
       label: 'Asignar',
       show: canAssign,
@@ -101,18 +91,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       label: 'Eliminar',
       show: canDelete,
       button: (
-        // <Button
-        //   color="error"
-        //   variant="outline"
-        //   // disabled={disabledAssignButton}
-        //   onPress={() => {
-        //     ServiceOrders.delete(orderId).then((res) => {
-        //       console.log('deleted', res)
-        //       navigation.goBack()
-        //     })
-        //   }}
-        //   label="Eliminar orden"
-        // />
         <ButtonConfirm
           openLabel="Eliminar"
           openColor="error"
