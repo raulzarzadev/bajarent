@@ -14,6 +14,21 @@ const PhoneLogin = () => {
   const [error, setError] = React.useState<string | null>(null)
   const [sending, setSending] = React.useState(false)
 
+  useEffect(() => {
+    // @ts-ignore
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
+      size: 'invisible',
+      callback: (response) => {
+        console.log({ response })
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        // console.log(response)
+        // onSignInSubmit()
+      }
+    })
+
+    // const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId)
+  }, [])
+
   const onSendCode = () => {
     setSending(true)
     // @ts-ignore
@@ -65,22 +80,6 @@ const PhoneLogin = () => {
         })
     }
   }
-  useEffect(() => {
-    // @ts-ignore
-    if (Platform.OS === 'web') {
-      // @ts-ignore
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
-        size: 'invisible',
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          // console.log(response)
-          // onSignInSubmit()
-        }
-      })
-    }
-
-    // const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId)
-  }, [])
 
   return (
     <View style={{ padding: 4 }}>
@@ -105,7 +104,7 @@ const PhoneLogin = () => {
               </Button>
             </View>
 
-            <View id="sign-in-button"></View>
+            <View style={{ position: 'relative' }} id="sign-in-button"></View>
           </View>
         </>
       )}
