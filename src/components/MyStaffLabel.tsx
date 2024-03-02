@@ -11,31 +11,9 @@ const MyStaffLabel = () => {
   const { myStaffId, staff, store } = useStore()
   const label = staff?.find((s) => s.id === myStaffId)?.position || user?.name
   const navigation = useNavigation()
-  const maxWidth = Dimensions.get('window').width
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Pressable
-        style={{
-          flexDirection: 'row'
-        }}
-        onPress={() => {
-          // @ts-ignore
-          navigation.navigate('Store')
-        }}
-      >
-        {maxWidth < 400 ? (
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            {store && (
-              <>
-                <Icon icon="store" />
-                <Text style={gStyles.helper}>{store?.name}</Text>
-              </>
-            )}
-          </View>
-        ) : (
-          <Text style={[gStyles.h2, { marginRight: 16 }]}>{store?.name}</Text>
-        )}
-      </Pressable>
+      {!!store && !!label && <StoreTopButton />}
       <Pressable
         style={{
           minWidth: 60,
@@ -55,6 +33,36 @@ const MyStaffLabel = () => {
         </Text>
       </Pressable>
     </View>
+  )
+}
+
+const StoreTopButton = () => {
+  const maxWidth = Dimensions.get('window').width
+  const navigation = useNavigation()
+  const { store } = useStore()
+  return (
+    <Pressable
+      style={{
+        flexDirection: 'row'
+      }}
+      onPress={() => {
+        // @ts-ignore
+        navigation.navigate('Store')
+      }}
+    >
+      {maxWidth < 400 ? (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          {store && (
+            <>
+              <Icon icon="store" />
+              <Text style={gStyles.helper}>{store?.name}</Text>
+            </>
+          )}
+        </View>
+      ) : (
+        <Text style={[gStyles.h2, { marginRight: 16 }]}>{store?.name}</Text>
+      )}
+    </Pressable>
   )
 }
 
