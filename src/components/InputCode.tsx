@@ -15,6 +15,7 @@ export type InputCodeProps = {
   setValue: (value: string) => void
   cellCount?: number
 }
+
 const DEFAULT_CELL_COUNT = 6
 
 const InputCodeX = ({
@@ -22,16 +23,15 @@ const InputCodeX = ({
   setValue,
   cellCount = DEFAULT_CELL_COUNT
 }: InputCodeProps) => {
-  // const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount })
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue
   })
 
-  useEffect(() => {
-    ref.current.focus()
-  }, [])
+  // useEffect(() => {
+  //   ref.current.focus()
+  // }, [])
 
   return (
     <SafeAreaView style={styles.root}>
