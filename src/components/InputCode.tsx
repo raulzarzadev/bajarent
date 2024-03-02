@@ -29,8 +29,15 @@ const InputCodeX = ({
     setValue
   })
 
+  // FIXME: looks like this make an error in some android
   // useEffect(() => {
   //   ref.current.focus()
+  // }, [])
+
+  // useEffect(() => {
+  //   if (ref.current) {
+  //     ref.current.focus()
+  //   }
   // }, [])
 
   return (
