@@ -63,7 +63,7 @@ const labels = {
   full: 'Completa',
   partial: 'Parcial',
   hasNotSolvedReports: 'Reportes no resueltos',
-  STORE_RENT: 'Renta en tienda',
+  STORE_RENT: 'Renta local',
   ' ': '',
   '': ''
 } as const

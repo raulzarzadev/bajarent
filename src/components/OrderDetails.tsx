@@ -1,4 +1,4 @@
-import { Text, View, Image } from 'react-native'
+import { Text, View, Image, StyleSheet } from 'react-native'
 import React from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
@@ -264,16 +264,23 @@ export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
       }}
     >
       <Chip
-        style={{ width: 95 }}
+        style={styles.chip}
         title={dictionary(order?.type)?.toUpperCase()}
         color={theme?.info}
         titleColor={theme.black}
       ></Chip>
-      <OrderStatus orderId={order?.id} />
-      <OrderAssignedTo orderId={order?.id} />
+      <OrderStatus orderId={order?.id} chipStyles={styles.chip} />
+      <OrderAssignedTo orderId={order?.id} chipStyles={styles.chip} />
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  chip: {
+    margin: 2,
+    maxWidth: 105
+  }
+})
 
 export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
   return (
