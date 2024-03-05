@@ -6,6 +6,7 @@ import { auth } from '../firebase/auth'
 import PhoneInput from './InputPhone'
 import InputCode from './InputCode'
 import theme from '../theme'
+import { fbErrorToCode } from '../firebase/errors'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
@@ -41,8 +42,10 @@ const PhoneLogin = () => {
         // ...
       })
       .catch((error) => {
-        setError('Error al enviar el codigo')
-        console.error(error)
+        setError(
+          `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code}`
+        )
+
         // User couldn't sign in (bad verification code?)
         // ...
       })
@@ -72,8 +75,9 @@ const PhoneLogin = () => {
         .catch((error) => {
           // Error; SMS not sent
           // ...
-          setError('Error al enviar el teléfono')
-          console.error(error)
+          setError(
+            `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code}`
+          )
         })
         .finally(() => {
           setSending(false)
