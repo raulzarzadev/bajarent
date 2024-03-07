@@ -8,7 +8,7 @@ function useUserStores() {
   const { user } = useAuth()
 
   const [userStores, setUserStores] = useState([])
-  const [userPositions, setUserPositions] = useState<StaffType[]>([])
+  const [userPositions, setUserPositions] = useState<(StaffType | null)[]>(null)
 
   useEffect(() => {
     //* *************** GET USER STORES AS OWNER *****************//
@@ -21,7 +21,6 @@ function useUserStores() {
   }, [user, userStores])
 
   const updateUserStores = () => {
-    console.log('updating stores')
     ServiceStores.getStoresByUserId(user?.id)
       .then((res) => {
         setUserStores(res)
@@ -41,6 +40,8 @@ function useUserStores() {
                 return null
               }
             )
+            //* Return null if store don´t exist
+            if (!store) return null
             // const store = userStores?.find((s) => s?.id === position?.storeId)
             return {
               ...position,
@@ -59,10 +60,8 @@ function useUserStores() {
       .catch(console.error)
   }
 
-  console.log({ userPositions })
-
   return {
-    stores: [...userStores, ...userPositions],
+    stores: [...userStores],
     userStores,
     userPositions,
     updateUserStores,
