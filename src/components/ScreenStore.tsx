@@ -1,4 +1,11 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  Linking,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import StoreDetails from './StoreDetails'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
@@ -6,14 +13,36 @@ import { useAuth } from '../contexts/authContext'
 import theme from '../theme'
 import Numbers from './Numbers'
 import ErrorBoundary from './ErrorBoundary'
+import { gStyles } from '../styles'
+import { useNavigation } from '@react-navigation/native'
 
 const ScreenStore = ({ navigation }) => {
+  const { navigate } = useNavigation()
   const { store, staffPermissions } = useStore()
   const { user } = useAuth()
   const isOwner = store?.createdBy === user?.id
 
   return (
     <ScrollView>
+      {!store && (
+        <Text style={[gStyles.h3, { marginVertical: 16 }]}>
+          Selecciona o crea una tienda en tu{' '}
+          <Pressable
+            onPress={() => {
+              // @ts-ignore
+              navigate('Profile')
+            }}
+          >
+            <Text
+              style={{
+                color: theme.secondary
+              }}
+            >
+              Perfil
+            </Text>
+          </Pressable>
+        </Text>
+      )}
       {isOwner && (
         <View
           style={{
