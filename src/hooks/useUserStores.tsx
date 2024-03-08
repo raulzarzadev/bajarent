@@ -38,8 +38,7 @@ function useUserStores() {
       []
     )
     setUserStores(uniqueStores)
-    // setUserStores()
-
+    // update positions each time userStores change
     updatePositions()
   }
 
