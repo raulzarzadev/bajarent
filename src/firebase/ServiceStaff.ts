@@ -1,6 +1,7 @@
 import { where } from 'firebase/firestore'
 import StaffType from '../types/StaffType'
 import { FirebaseGenericService } from './genericService'
+import { ServiceStores } from './ServiceStore'
 
 type Type = StaffType
 class ServiceStaffClass extends FirebaseGenericService<Type> {
@@ -30,6 +31,20 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
     // get all staff position that has userId have
     const positions = await this.getItems([where('userId', '==', userId)])
     return positions
+  }
+
+  async getStaffStores(userId: string) {
+    // get all staff position that has userId have
+    const positions = await this.getItems([where('userId', '==', userId)])
+    // get all storeIds
+    const storeIds = positions.map((position) => position.storeId)
+    // remove duplicates storeIds
+    const uniqueStoreIds = Array.from(new Set(storeIds))
+    // get all stores
+    const stores = await Promise.all(
+      uniqueStoreIds.map((storeId) => ServiceStores.get(storeId))
+    )
+    return stores
   }
 }
 

@@ -20,12 +20,26 @@ function useUserStores() {
     if (user?.id) updatePositions()
   }, [user, userStores])
 
-  const updateUserStores = () => {
-    ServiceStores.getStoresByUserId(user?.id)
-      .then((res) => {
-        setUserStores(res)
-      })
-      .catch(console.error)
+  const updateUserStores = async () => {
+    const staffStores = await ServiceStaff.getStaffStores(user?.id)
+
+    const userStores = await ServiceStores.getStoresByUserId(user?.id)
+
+    // remove empty stores
+    const validUserStores = userStores?.filter((store) => !!store)
+    const validStaffStores = staffStores?.filter((store) => !!store)
+
+    // remove duplicates stores
+    const uniqueStores = [...validUserStores, ...validStaffStores].reduce(
+      (acc, store) => {
+        if (acc.find((s) => s?.id === store?.id)) return acc
+        return [...acc, store]
+      },
+      []
+    )
+    setUserStores(uniqueStores)
+    // setUserStores()
+
     updatePositions()
   }
 
