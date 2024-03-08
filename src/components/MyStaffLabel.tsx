@@ -5,6 +5,7 @@ import { gStyles } from '../styles'
 import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
+import LocationStatus from './LocationStatus'
 
 const MyStaffLabel = () => {
   const { user } = useAuth()
@@ -13,6 +14,7 @@ const MyStaffLabel = () => {
   const navigation = useNavigation()
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      {user && <LocationStatus />}
       {!!store && !!label && <StoreTopButton />}
       <Pressable
         style={{
@@ -28,9 +30,11 @@ const MyStaffLabel = () => {
       >
         {user && <Icon icon={label ? `profileFill` : 'profile'} />}
         {user === null && <Icon icon="profileAdd" />}
-        <Text numberOfLines={1} style={[gStyles.helper, { maxWidth: 80 }]}>
-          {label}
-        </Text>
+        <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+          <Text numberOfLines={1} style={[gStyles.helper, { maxWidth: 80 }]}>
+            {label}
+          </Text>
+        </View>
       </Pressable>
     </View>
   )
@@ -60,7 +64,15 @@ const StoreTopButton = () => {
           )}
         </View>
       ) : (
-        <Text style={[gStyles.h2, { marginRight: 16 }]}>{store?.name}</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignContent: 'center'
+          }}
+        >
+          <Icon icon="store" />
+          <Text style={[gStyles.helper]}>{store?.name}</Text>
+        </View>
       )}
     </Pressable>
   )

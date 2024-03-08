@@ -5,15 +5,12 @@ import PhoneLogin from './LoginPhone'
 import Button from './Button'
 import { logout } from '../firebase/auth'
 import CardUser from './CardUser'
-import useLocation from '../hooks/useLocation'
-import { Icon } from 'react-native-elements'
-import ChangeStaffPosition from './ChangeStaffPosition'
 import ErrorBoundary from './ErrorBoundary'
 import LoginEmail from './LoginEmail'
+import ChooseProfile from './ChooseProfile'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
-  const { locationEnabled } = useLocation()
   if (user === undefined) return <ActivityIndicator />
   if (user === null)
     return (
@@ -24,19 +21,12 @@ const ScreenProfile = ({ navigation }) => {
     )
   return (
     <View style={{ padding: 2 }}>
-      <Pressable>
-        {locationEnabled ? (
-          <Icon name="location-on" />
-        ) : (
-          <Icon name="location-off" />
-        )}
-      </Pressable>
-      <ErrorBoundary componentName="CardUser">
-        <CardUser user={user} />
+      <ErrorBoundary componentName="ChooseProfile">
+        <ChooseProfile />
       </ErrorBoundary>
 
-      <ErrorBoundary componentName="ChangeStaffPosition">
-        <ChangeStaffPosition />
+      <ErrorBoundary componentName="CardUser">
+        <CardUser user={user} />
       </ErrorBoundary>
 
       {!!user?.canCreateStore && (

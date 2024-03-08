@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
-import StoreDetails, { ChangeStore } from './StoreDetails'
+import StoreDetails from './StoreDetails'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import { useAuth } from '../contexts/authContext'
@@ -15,7 +14,6 @@ const ScreenStore = ({ navigation }) => {
 
   return (
     <ScrollView>
-      {!store && <ChangeStore label="Entrar " />}
       {isOwner && (
         <View
           style={{
