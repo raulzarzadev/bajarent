@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
 import OrderType, { order_type } from '../types/OrderType'
@@ -30,8 +30,10 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'location',
   'neighborhood',
   'references',
-  'item',
-  'description',
+  // 'item',
+  'selectItemRepair',
+  'selectItemRent',
+  'repairDescription', // Field name is 'description' in the form
   'itemBrand',
   'itemSerial',
   'imageID',
@@ -74,7 +76,16 @@ const FormOrder = ({
       return { label: dictionary(value[0] as order_type), value: value[0] }
     })
 
-  const defaultType = ordersTypesAllowed[0]?.value as order_type
+  const [defaultType, setDefaultType] = useState<order_type>(
+    ordersTypesAllowed[0]?.value as order_type
+  )
+
+  useEffect(() => {
+    console.log({ ordersTypesAllowed })
+    setDefaultType(ordersTypesAllowed[0]?.value as order_type)
+  }, [ordersTypesAllowed])
+
+  // => const defaultType =  ordersTypesAllowed[0]?.value as order_type
 
   return (
     <ScrollView>
@@ -124,27 +135,7 @@ const FormOrder = ({
               options={ordersTypesAllowed}
               label="Tipo de orden"
             />
-            {/* {values.type === order_type.RENT && (
-                <FormFields
-                  fields={['fullName', 'phone', 'imageID']}
-                  values={values}
-                  setValues={setValues}
-                />
-              )}
-            {values.type === order_type.STORE_RENT && (
-              <FormFields
-                fields={['fullName', 'phone', 'imageID']}
-                values={values}
-                setValues={setValues}
-              />
-            )}
-            {values.type === order_type.SALE && (
-              <FormFields
-                fields={['fullName', 'phone', 'imageID']}
-                values={values}
-                setValues={setValues}
-              />
-            )} */}
+
             {values.type === order_type.REPAIR && (
               <FormFields
                 fields={[
@@ -154,10 +145,50 @@ const FormOrder = ({
                   'neighborhood',
                   'address',
                   'references',
-                  'item',
+                  'selectItemRepair',
+                  'repairDescription',
+                  'itemBrand',
+                  'itemSerial',
                   'assignedToSection',
-                  'scheduledAt',
-                  'hasDelivered'
+                  'scheduledAt'
+                  // 'hasDelivered'
+                ]}
+                values={values}
+                setValues={setValues}
+              />
+            )}
+            {values.type === order_type.RENT && (
+              <FormFields
+                fields={[
+                  'fullName',
+                  'phone',
+                  'location',
+                  'neighborhood',
+                  'address',
+                  'references',
+                  'selectItemRent',
+                  // 'selectItemRepair',
+                  // 'repairDescription',
+                  // 'itemBrand',
+                  // 'itemSerial',
+                  'assignedToSection',
+                  'scheduledAt'
+                ]}
+                values={values}
+                setValues={setValues}
+              />
+            )}
+            {values.type === order_type.STORE_RENT && (
+              <FormFields
+                fields={[
+                  'fullName',
+                  'phone',
+                  'selectItemRent',
+                  // 'selectItemRepair',
+                  // 'repairDescription',
+                  // 'itemBrand',
+                  // 'itemSerial',
+                  'assignedToSection'
                 ]}
                 values={values}
                 setValues={setValues}
@@ -186,6 +217,7 @@ const FormFields = ({
   values: Partial<OrderType>
   setValues: (values: Partial<OrderType>, shouldValidate?: boolean) => void
 }) => {
+  console.log({ values })
   const { categories, store } = useStore()
 
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -210,6 +242,12 @@ const FormFields = ({
       />
     ),
     phone: <FormikInputPhone name={'phone'} />,
+    address: (
+      <InputValueFormik
+        name={'address'}
+        placeholder="Dirección completa (calle, numero y entre calles)"
+      />
+    ),
     imageID: <FormikInputImage name="imageID" label="Subir identificación" />,
     imageHouse: <FormikInputImage name="imageHouse" label="Subir fachada " />,
     neighborhood: (
@@ -222,12 +260,7 @@ const FormFields = ({
         placeholder="Referencias de la casa"
       />
     ),
-    address: (
-      <InputValueFormik
-        name={'address'}
-        placeholder="Dirección completa (calle, numero y entre calles)"
-      />
-    ),
+
     scheduledAt: (
       <InputDate
         label="Fecha programada"
@@ -237,7 +270,16 @@ const FormFields = ({
         }
       />
     ),
-    item: (
+    selectItemRepair: (
+      <FormikSelectCategoryItem
+        name="item"
+        label="Selecciona un artículo"
+        categories={categories.map((cat) => ({
+          ...cat
+        }))}
+      />
+    ),
+    selectItemRent: (
       <FormikSelectCategoryItem
         name="item"
         label="Selecciona un artículo"
@@ -253,7 +295,7 @@ const FormFields = ({
         label="Entregada en la fecha programada"
       />
     ),
-    description: (
+    repairDescription: (
       <InputValueFormik
         name={'description'}
         placeholder="Describe la falla"
@@ -302,7 +344,9 @@ const FormFields = ({
   return (
     <View style={gStyles.container}>
       {fields.map((field) => (
-        <View style={[styles.item]}>{inputFields[field]}</View>
+        <View key={field} style={[styles.item]}>
+          {inputFields[field]}
+        </View>
       ))}
     </View>
   )
