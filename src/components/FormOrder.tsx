@@ -89,121 +89,129 @@ const FormOrder = ({
 
   return (
     <ScrollView>
-      {defaultValues?.folio && (
-        <Text style={{ textAlign: 'center', marginTop: 12 }}>
-          <P bold size="xl">
-            Folio:{' '}
-          </P>
-          <P size="xl">{defaultValues?.folio}</P>
-        </Text>
-      )}
-      {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
-      <Formik
-        initialValues={{
-          ...defaultValues,
-          type: defaultType,
-
-          phone:
-            defaultValues?.phone === 'undefined' || !defaultValues.phone
-              ? ''
-              : defaultValues?.phone,
-          fullName:
-            defaultValues?.fullName ||
-            `${defaultValues?.firstName || ''}${defaultValues?.lastName || ''}`,
-          address:
-            defaultValues?.address ||
-            `${defaultValues?.street || ''}${
-              defaultValues?.betweenStreets || ''
-            }`
-        }}
-        onSubmit={async (values) => {
-          setLoading(true)
-          await onSubmit(values)
-            .then((res) => {
-              // console.log(res)
-            })
-            .catch(console.error)
-            .finally(() => {
-              setLoading(false)
-            })
-        }}
-      >
-        {({ handleSubmit, setValues, values }) => (
-          <>
-            <InputRadiosFormik
-              name="type"
-              options={ordersTypesAllowed}
-              label="Tipo de orden"
-            />
-
-            {values.type === order_type.REPAIR && (
-              <FormFields
-                fields={[
-                  'fullName',
-                  'phone',
-                  'location',
-                  'neighborhood',
-                  'address',
-                  'references',
-                  'selectItemRepair',
-                  'repairDescription',
-                  'itemBrand',
-                  'itemSerial',
-                  'assignedToSection',
-                  'scheduledAt'
-                  // 'hasDelivered'
-                ]}
-                values={values}
-                setValues={setValues}
-              />
-            )}
-            {values.type === order_type.RENT && (
-              <FormFields
-                fields={[
-                  'fullName',
-                  'phone',
-                  'location',
-                  'neighborhood',
-                  'address',
-                  'references',
-                  'selectItemRent',
-                  // 'selectItemRepair',
-                  // 'repairDescription',
-                  // 'itemBrand',
-                  // 'itemSerial',
-                  'assignedToSection',
-                  'scheduledAt'
-                ]}
-                values={values}
-                setValues={setValues}
-              />
-            )}
-            {values.type === order_type.STORE_RENT && (
-              <FormFields
-                fields={[
-                  'fullName',
-                  'phone',
-                  'selectItemRent',
-                  // 'selectItemRepair',
-                  // 'repairDescription',
-                  // 'itemBrand',
-                  // 'itemSerial',
-                  'assignedToSection'
-                ]}
-                values={values}
-                setValues={setValues}
-              />
-            )}
-            <View style={[styles.item]}>
-              <Button
-                disabled={loading || !values?.fullName}
-                onPress={handleSubmit}
-                label={'Guardar'}
-              />
-            </View>
-          </>
+      <View style={gStyles.container}>
+        {defaultValues?.folio && (
+          <Text style={{ textAlign: 'center', marginTop: 12 }}>
+            <P bold size="xl">
+              Folio:{' '}
+            </P>
+            <P size="xl">{defaultValues?.folio}</P>
+          </Text>
         )}
-      </Formik>
+        {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
+        <Formik
+          initialValues={{
+            ...defaultValues,
+            type: defaultType,
+
+            phone:
+              defaultValues?.phone === 'undefined' || !defaultValues.phone
+                ? ''
+                : defaultValues?.phone,
+            fullName:
+              defaultValues?.fullName ||
+              `${defaultValues?.firstName || ''}${
+                defaultValues?.lastName || ''
+              }`,
+            address:
+              defaultValues?.address ||
+              `${defaultValues?.street || ''}${
+                defaultValues?.betweenStreets || ''
+              }`
+          }}
+          onSubmit={async (values) => {
+            setLoading(true)
+            await onSubmit(values)
+              .then((res) => {
+                // console.log(res)
+              })
+              .catch(console.error)
+              .finally(() => {
+                setLoading(false)
+              })
+          }}
+        >
+          {({ handleSubmit, setValues, values }) => (
+            <>
+              <InputRadiosFormik
+                name="type"
+                options={ordersTypesAllowed}
+                label="Tipo de orden"
+              />
+
+              {values.type === order_type.REPAIR && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'location',
+                    'neighborhood',
+                    'address',
+                    'references',
+                    'selectItemRepair',
+                    'repairDescription',
+                    'itemBrand',
+                    'itemSerial',
+                    'assignedToSection',
+                    'scheduledAt'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.RENT && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'location',
+                    'neighborhood',
+                    'address',
+                    'references',
+                    'selectItemRent',
+                    'assignedToSection',
+                    'scheduledAt'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.STORE_RENT && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'selectItemRent',
+                    'assignedToSection'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.SALE && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'selectItemRepair',
+                    'itemBrand',
+                    'itemSerial'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              <View style={[styles.item]}>
+                <Button
+                  disabled={loading || !values?.fullName}
+                  onPress={handleSubmit}
+                  label={'Guardar'}
+                />
+              </View>
+            </>
+          )}
+        </Formik>
+      </View>
     </ScrollView>
   )
 }
@@ -217,7 +225,6 @@ const FormFields = ({
   values: Partial<OrderType>
   setValues: (values: Partial<OrderType>, shouldValidate?: boolean) => void
 }) => {
-  console.log({ values })
   const { categories, store } = useStore()
 
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -342,7 +349,7 @@ const FormFields = ({
   }
 
   return (
-    <View style={gStyles.container}>
+    <View>
       {fields.map((field) => (
         <View key={field} style={[styles.item]}>
           {inputFields[field]}
@@ -363,6 +370,6 @@ const styles = StyleSheet.create({
     // padding: theme.padding.md
   },
   item: {
-    marginVertical: 10
+    marginVertical: 8
   }
 })
