@@ -181,7 +181,8 @@ const FormOrder = ({
                     'fullName',
                     'phone',
                     'selectItemRent',
-                    'assignedToSection'
+                    'imageID'
+                    // 'assignedToSection'
                   ]}
                   values={values}
                   setValues={setValues}
