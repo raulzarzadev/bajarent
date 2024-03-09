@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
 import OrderType, { order_type } from '../types/OrderType'
@@ -30,7 +30,6 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'location',
   'neighborhood',
   'references',
-  // 'item',
   'selectItemRepair',
   'selectItemRent',
   'repairDescription', // Field name is 'description' in the form
@@ -223,7 +222,10 @@ const FormFields = ({
 }: {
   fields: FormOrderFields[]
   values: Partial<OrderType>
-  setValues: (values: Partial<OrderType>, shouldValidate?: boolean) => void
+  setValues: (
+    values: SetStateAction<Partial<OrderType>>,
+    shouldValidate?: boolean | undefined
+  ) => void
 }) => {
   const { categories, store } = useStore()
 
@@ -273,7 +275,7 @@ const FormFields = ({
         label="Fecha programada"
         value={asDate(values.scheduledAt) || new Date()}
         setValue={(value) =>
-          setValues((values) => ({ ...values, scheduledAt: value }), false)
+          setValues({ ...values, scheduledAt: value }, false)
         }
       />
     ),
