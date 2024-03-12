@@ -59,21 +59,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       )} al ${dateFormat(order.expireAt, 'dd/MM/yy')}`
     }
 
-    const orderPayments = () => {
-      let res = ''
-      if (order.payments.length > 0) {
-        res += `Pagos: \n`
-        order.payments.forEach((p) => {
-          res += `${new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN'
-          }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
-            p.createdAt
-          )} \n`
-        })
-      }
-      return res
-    }
     console.log({ order })
     if (order.type === order_type.REPAIR) {
       return `
@@ -88,10 +73,24 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       $${order.repairTotal || 0}
       `
           : ''
-      }
-      
-      ${orderPayments()}
-      `
+      }`
+    }
+    return res
+  }
+  const orderPayments = () => {
+    let res = ''
+    if (order.payments.length > 0) {
+      res += `
+      *Pagos:* \n`
+      order.payments.forEach((p) => {
+        res += `${new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN'
+        }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
+          p.createdAt,
+          'dd/MMM/yy HH:mm'
+        )} \n`
+      })
     }
     return res
   }
@@ -102,6 +101,7 @@ Tipo: ${dictionary(order.type)}
 Status: ${dictionary(status)}
 Reportes activos: ${order.hasNotSolvedReports ? '*Si*' : 'No'}
 ${orderPeriod(order)}
+${orderPayments()}
  `
   const COMMON_BUTTONS = [
     {
