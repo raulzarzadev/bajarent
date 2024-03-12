@@ -20,10 +20,10 @@ export default function useSort<T>({
   }, [])
 
   useEffect(() => {
-    setSortedData(sortData(defaultSortBy, data))
-  }, [data, order])
+    setSortedData(sortData(defaultSortBy, data, defaultOrder))
+  }, [data])
 
-  const sortData = (field, data) => {
+  const sortData = (field: string, data: T[], order?: 'asc' | 'des') => {
     const res = [...data].sort((a, b) => {
       let aField = a[field] || ''
       let bField = b[field] || ''
@@ -70,7 +70,7 @@ export default function useSort<T>({
   }
 
   const sortBy = (field = defaultSortBy) => {
-    const res = sortData(field, data)
+    const res = sortData(field, data, order)
     setSortedBy(field)
     setSortedData(res)
   }
