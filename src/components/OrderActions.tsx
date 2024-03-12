@@ -58,6 +58,22 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
         'dd/MM/yy'
       )} al ${dateFormat(order.expireAt, 'dd/MM/yy')}`
     }
+
+    const orderPayments = () => {
+      let res = ''
+      if (order.payments.length > 0) {
+        res += `Pagos: \n`
+        order.payments.forEach((p) => {
+          res += `${new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN'
+          }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
+            p.createdAt
+          )} \n`
+        })
+      }
+      return res
+    }
     console.log({ order })
     if (order.type === order_type.REPAIR) {
       return `
@@ -72,7 +88,10 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       $${order.repairTotal || 0}
       `
           : ''
-      }`
+      }
+      
+      ${orderPayments()}
+      `
     }
     return res
   }
