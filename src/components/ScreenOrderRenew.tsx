@@ -35,7 +35,7 @@ const ScreenOrderRenew = ({ route }) => {
     itemBrand: originalOrder?.itemBrand || '',
     itemSerial: originalOrder?.itemSerial || '',
     street: originalOrder?.street || '',
-    expireAt: originalOrder.expireAt || null
+    expireAt: originalOrder?.expireAt || null
   }
 
   if (!originalOrder) return <ActivityIndicator />

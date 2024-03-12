@@ -12,7 +12,6 @@ import InputRadiosFormik from './InputRadiosFormik'
 import FormikInputImage from './FormikInputImage'
 import P from './P'
 import FormikSelectCategoryItem from './FormikSelectCategoryItem'
-import CurrencyAmount from './CurrencyAmount'
 import FormikCheckbox from './FormikCheckbox'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
@@ -54,18 +53,18 @@ const initialValues: Partial<OrderType> = {
   // type: order_type.RENT,
   address: ''
 }
-
-const FormOrder = ({
+export type FormOrderProps = {
+  renew?: string | number
+  onSubmit?: (values: Partial<OrderType>) => Promise<any>
+  defaultValues?: Partial<OrderType>
+}
+const FormOrderA = ({
   renew = '', // number of order to renew
   onSubmit = async (values) => {
     console.log(values)
   },
   defaultValues = initialValues
-}: {
-  renew?: string | number
-  onSubmit?: (values: Partial<OrderType>) => Promise<any>
-  defaultValues?: Partial<OrderType>
-}) => {
+}: FormOrderProps) => {
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
 
@@ -76,14 +75,17 @@ const FormOrder = ({
     })
 
   const [defaultType, setDefaultType] = useState<order_type>(
-    ordersTypesAllowed[0]?.value as order_type
+    defaultValues?.type
   )
+  // ordersTypesAllowed[0]?.value as order_type
 
   useEffect(() => {
-    console.log({ ordersTypesAllowed })
-    setDefaultType(ordersTypesAllowed[0]?.value as order_type)
-  }, [ordersTypesAllowed])
-
+    if (defaultValues.type) {
+      setDefaultType(defaultValues.type)
+    } else {
+      setDefaultType(ordersTypesAllowed[0]?.value as order_type)
+    }
+  }, [ordersTypesAllowed, defaultValues])
   // => const defaultType =  ordersTypesAllowed[0]?.value as order_type
 
   return (
@@ -362,7 +364,14 @@ const FormFields = ({
   )
 }
 
-export default FormOrder
+// export default FormOrderA
+export default function FormOrder(props: FormOrderProps) {
+  return (
+    <ErrorBoundary>
+      <FormOrderA {...props}></FormOrderA>
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   form: {
