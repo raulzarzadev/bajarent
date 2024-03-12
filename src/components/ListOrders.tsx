@@ -33,11 +33,11 @@ const ListOrders = ({
         sortFields={[
           { key: 'priority', label: 'Prioridad' },
           { key: 'folio', label: 'Folio' },
-          { key: 'firstName', label: 'Nombre' },
-          // { key: 'type', label: 'Tipo' },
+          { key: 'fullName', label: 'Nombre' },
           { key: 'neighborhood', label: 'Colonia' },
           { key: 'status', label: 'Status' },
-          { key: 'assignToSection', label: 'Area' }
+          { key: 'assignToSection', label: 'Area' },
+          { key: 'type', label: 'Tipo' }
           // {
           //   key: 'createdAt',
           //   label: 'Fecha'
@@ -51,9 +51,7 @@ const ListOrders = ({
           //   label: 'Hasta'
           // },
           // {
-          //   key: 'type',
-          //   label: 'Tipo'
-          // },
+
           // {
           //   key: 'userId',
           //   label: 'Usuario'
