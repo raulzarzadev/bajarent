@@ -16,16 +16,14 @@ export default function useSort<T>({
   const [order, setOrder] = useState<'asc' | 'des'>(defaultOrder)
 
   useEffect(() => {
-    setSortedData(data)
+    setSortedData(sortData(defaultSortBy, data))
   }, [data])
 
   useEffect(() => {
     sortBy(defaultSortBy)
   }, [])
 
-  console.log({ defaultSortBy })
-
-  const sortBy = (field = defaultSortBy) => {
+  const sortData = (field, data) => {
     const res = [...data].sort((a, b) => {
       let aField = a[field] || ''
       let bField = b[field] || ''
@@ -68,6 +66,11 @@ export default function useSort<T>({
       if (aField > bField) return isAscending ? 1 : -1
       return 0
     })
+    return res
+  }
+
+  const sortBy = (field = defaultSortBy) => {
+    const res = sortData(field, data)
 
     // Cambiar el orden para la próxima vez que se llame a la función
     // setOrder(order === 'asc' ? 'des' : 'asc')
