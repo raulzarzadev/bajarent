@@ -16,12 +16,12 @@ export default function useSort<T>({
   const [order, setOrder] = useState<'asc' | 'des'>(defaultOrder)
 
   useEffect(() => {
-    setSortedData(sortData(defaultSortBy, data))
-  }, [data])
-
-  useEffect(() => {
     sortBy(defaultSortBy)
   }, [])
+
+  useEffect(() => {
+    setSortedData(sortData(defaultSortBy, data))
+  }, [data, order])
 
   const sortData = (field, data) => {
     const res = [...data].sort((a, b) => {
@@ -71,9 +71,6 @@ export default function useSort<T>({
 
   const sortBy = (field = defaultSortBy) => {
     const res = sortData(field, data)
-
-    // Cambiar el orden para la próxima vez que se llame a la función
-    // setOrder(order === 'asc' ? 'des' : 'asc')
     setSortedBy(field)
     setSortedData(res)
   }
