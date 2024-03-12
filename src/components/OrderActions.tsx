@@ -59,7 +59,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       )} al ${dateFormat(order.expireAt, 'dd/MM/yy')}`
     }
 
-    console.log({ order })
     if (order.type === order_type.REPAIR) {
       return `
       Marca: ${order.itemBrand || ''}
