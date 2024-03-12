@@ -15,9 +15,12 @@ import OrderActionsRentFlow from './OrderActionsRentFlow'
 import OrderActionsRepairFlow from './OrderActionsRepairFlow'
 import { gStyles } from '../styles'
 import { useState } from 'react'
+import ModalSendWhatsapp from './ModalSendWhatsapp'
+import dictionary from '../dictionary'
+import { dateFormat } from '../libs/utils-date'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
-  const { staffPermissions } = useStore()
+  const { staffPermissions, store } = useStore()
   const navigation = useNavigation()
   const status = orderStatus(order)
   const areIn = (statuses: order_status[]) => statuses.includes(status)
@@ -43,6 +46,44 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const canDelete =
     staffPermissions?.canDeleteOrder || staffPermissions?.isAdmin
 
+  const orderPeriod = (order: Partial<OrderType>): string => {
+    const res = ''
+    //* if is rent should return the period
+    if (
+      order.type === order_type.RENT ||
+      order.type === order_type.STORE_RENT
+    ) {
+      return `Periodo:  ${dateFormat(
+        order.deliveredAt,
+        'dd/MM/yy'
+      )} al ${dateFormat(order.expireAt, 'dd/MM/yy')}`
+    }
+    console.log({ order })
+    if (order.type === order_type.REPAIR) {
+      return `
+      Marca: ${order.itemBrand || ''}
+      Serie: ${order.itemSerial || ''}
+      Problema: ${order.description || ''}
+
+      ${
+        order.repairInfo
+          ? `
+      ${order.repairInfo || ''}
+      $${order.repairTotal || 0}
+      `
+          : ''
+      }`
+    }
+    return res
+  }
+  const orderStatusMessage = `
+Tienda: *${store.name}*
+Order: *${order.folio}*
+Tipo: ${dictionary(order.type)}
+Status: ${dictionary(status)}
+Reportes activos: ${order.hasNotSolvedReports ? '*Si*' : 'No'}
+${orderPeriod(order)}
+ `
   const COMMON_BUTTONS = [
     {
       label: 'Asignar',
@@ -86,7 +127,6 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
         />
       )
     },
-
     {
       label: 'Eliminar',
       show: canDelete,
@@ -113,6 +153,11 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           text=" Se eliminara esta orden y todos sus comentarios !"
         ></ButtonConfirm>
       )
+    },
+    {
+      label: 'Enviar Whatsapp',
+      show: true,
+      button: <ModalSendWhatsapp message={orderStatusMessage} />
     }
   ]
 
