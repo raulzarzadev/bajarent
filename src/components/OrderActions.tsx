@@ -176,7 +176,9 @@ ${orderPeriod(order)}
     {
       label: 'Enviar Whatsapp',
       show: true,
-      button: <ModalSendWhatsapp message={orderStatusMessage} />
+      button: (
+        <ModalSendWhatsapp to={order?.phone} message={orderStatusMessage} />
+      )
     }
   ]
 
