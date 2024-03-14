@@ -24,7 +24,7 @@ const ModalAssignOrder = ({
 
   return (
     <>
-      <WeekTimeline />
+      <WeekTimeline numberOfDays={4} />
       <Button onPress={modal.toggleOpen}>
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>

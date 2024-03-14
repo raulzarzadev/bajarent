@@ -2,19 +2,17 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Button from '../Button'
 import theme from '../../theme'
-import { getWeek, isSameDay, isToday } from 'date-fns'
+import { isSameDay, isToday } from 'date-fns'
 
-const WeekTimeline = () => {
+const WeekTimeline = ({ numberOfDays = 7 }) => {
   const [date, setDate] = useState(new Date())
-  const [week, setWeek] = useState(getWeek(date))
   const month = months[date.getMonth()]
   const year = date.getFullYear()
-  const handleSetWeek = (week) => {
-    setWeek(week)
-    const newDate = new Date()
-    newDate.setDate(newDate.getDate() + week * 7)
+  const handleSetWeek = (page) => {
+    const newDate = new Date(date.setDate(date.getDate() + page * numberOfDays))
     setDate(newDate)
   }
+
   return (
     <View>
       <Text style={{ textAlign: 'center' }}>
@@ -35,7 +33,7 @@ const WeekTimeline = () => {
         <Button
           size="xs"
           onPress={() => {
-            handleSetWeek(week - 1)
+            handleSetWeek(-1)
           }}
           justIcon
           variant="ghost"
@@ -43,16 +41,17 @@ const WeekTimeline = () => {
         ></Button>
         {/* WEEK VIEW */}
         <WeekView
+          numberOfDays={numberOfDays}
           date={date}
           onChangeDate={(date) => {
             setDate(date)
           }}
         />
-        {/* next week */}
+        {/* EVENTS LIST VIEW */}
         <Button
           size="xs"
           onPress={() => {
-            handleSetWeek(week + 1)
+            handleSetWeek(+1)
           }}
           justIcon
           variant="ghost"
@@ -63,12 +62,12 @@ const WeekTimeline = () => {
   )
 }
 
-const WeekView = ({ date, onChangeDate }) => {
+const WeekView = ({ date, onChangeDate, numberOfDays }) => {
   const [daysOfWeek, setDaysOfWeek] = useState([])
 
   useEffect(() => {
     setDaysOfWeek(
-      Array.from({ length: 7 }, (_, i) => {
+      Array.from({ length: numberOfDays }, (_, i) => {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + i)
       })
     )
