@@ -1,10 +1,8 @@
-import { Text } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
 import Button from '../Button'
-import ListSections from '../ListSections'
+import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
-import { gStyles } from '../../styles'
 
 const ModalAssignOrder = ({
   assignedToSection,
@@ -29,19 +27,16 @@ const ModalAssignOrder = ({
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>
       <StyledModal {...modal}>
-        <Text style={gStyles.h3}>Areas</Text>
-        <ListSections
-          sectionsSelected={[assignedToSection]}
-          sections={storeSections}
-          onPress={(sectionId) => {
-            if (assignedToSection === sectionId) {
-              assignToSection('')
-            } else {
-              modal.toggleOpen()
-              assignToSection(sectionId)
-            }
+        <InputSelect
+          onChangeValue={(sectionId) => {
+            assignToSection(sectionId)
           }}
-        ></ListSections>
+          options={storeSections.map(({ name, id }) => ({
+            label: name,
+            value: id
+          }))}
+        />
+
         {/* <Text style={gStyles.h3}>Staff</Text>
         <ListStaff
           staffSelected={[assignedToStaff]}

@@ -75,7 +75,7 @@ const FormOrderA = ({
     })
 
   const [defaultType, setDefaultType] = useState<order_type>(
-    defaultValues?.type
+    defaultValues?.type || (ordersTypesAllowed[0]?.value as order_type)
   )
   // ordersTypesAllowed[0]?.value as order_type
 
