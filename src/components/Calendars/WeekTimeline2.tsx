@@ -3,31 +3,44 @@ import React, { useEffect, useState } from 'react'
 import Button from '../Button'
 import theme from '../../theme'
 import { isSameDay, isToday } from 'date-fns'
+import { gSpace } from '../../styles'
 
 const WeekTimeline = ({ numberOfDays = 7 }) => {
   const [date, setDate] = useState(new Date())
+  const [weekStart, setWeekStart] = useState(new Date())
   const month = months[date.getMonth()]
   const year = date.getFullYear()
+
   const handleSetWeek = (page) => {
     const newDate = new Date(date.setDate(date.getDate() + page * numberOfDays))
-    setDate(newDate)
+    setWeekStart(newDate)
   }
 
   return (
-    <View>
-      <Text style={{ textAlign: 'center' }}>
-        {month} {year}
-      </Text>
-      {!isToday(date) && (
-        <Button
-          label="hoy"
-          onPress={() => {
-            setDate(new Date())
-          }}
-          size="xs"
-          variant="ghost"
-        ></Button>
-      )}
+    <View style={{ marginVertical: gSpace(4) }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 40
+        }}
+      >
+        <Text style={{ textAlign: 'center' }}>
+          {month} {year}
+        </Text>
+        {!isToday(date) && (
+          <Button
+            label="hoy"
+            onPress={() => {
+              setDate(new Date())
+              setWeekStart(new Date())
+            }}
+            size="xs"
+            variant="ghost"
+          ></Button>
+        )}
+      </View>
       <View style={{ flexDirection: 'row' }}>
         {/* back week  */}
         <Button
@@ -41,6 +54,7 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
         ></Button>
         {/* WEEK VIEW */}
         <WeekView
+          weekStart={weekStart}
           numberOfDays={numberOfDays}
           date={date}
           onChangeDate={(date) => {
@@ -62,16 +76,20 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
   )
 }
 
-const WeekView = ({ date, onChangeDate, numberOfDays }) => {
+const WeekView = ({ weekStart, date, onChangeDate, numberOfDays }) => {
   const [daysOfWeek, setDaysOfWeek] = useState([])
 
   useEffect(() => {
     setDaysOfWeek(
       Array.from({ length: numberOfDays }, (_, i) => {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + i)
+        return new Date(
+          weekStart.getFullYear(),
+          weekStart.getMonth(),
+          weekStart.getDate() + i
+        )
       })
     )
-  }, [date])
+  }, [weekStart])
 
   return (
     <View
