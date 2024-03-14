@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Button from '../Button'
 import theme from '../../theme'
 import { isSameDay, isToday } from 'date-fns'
-import { gSpace } from '../../styles'
+import { gSpace, gStyles } from '../../styles'
 
 const WeekTimeline = ({ numberOfDays = 7 }) => {
   const [date, setDate] = useState(new Date())
@@ -14,6 +14,10 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
   const handleSetWeek = (page) => {
     const newDate = new Date(date.setDate(date.getDate() + page * numberOfDays))
     setWeekStart(newDate)
+  }
+
+  const onPressSlot = (date, hour) => {
+    console.log({ date, hour })
   }
 
   return (
@@ -61,7 +65,8 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
             setDate(date)
           }}
         />
-        {/* EVENTS LIST VIEW */}
+
+        {/* next week */}
         <Button
           size="xs"
           onPress={() => {
@@ -72,7 +77,84 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
           icon="rowRight"
         ></Button>
       </View>
+      {/* EVENTS LIST VIEW */}
+      <EventsView
+        weekStart={weekStart}
+        numberOfDays={numberOfDays}
+        onPressSlot={onPressSlot}
+      />
     </View>
+  )
+}
+
+const EventsView = ({ weekStart, numberOfDays, onPressSlot }) => {
+  const [daysOfWeek, setDaysOfWeek] = useState([])
+  const [width, setWidth] = useState(0)
+
+  const onLayout = (event) => {
+    const { width } = event.nativeEvent.layout
+    setWidth(width)
+  }
+  const hours = ['09:00', '11:00', '13:00', '15:00']
+
+  useEffect(() => {
+    setDaysOfWeek(
+      Array.from({ length: numberOfDays }, (_, i) => {
+        return new Date(
+          weekStart.getFullYear(),
+          weekStart.getMonth(),
+          weekStart.getDate() + i
+        )
+      })
+    )
+  }, [weekStart])
+
+  return (
+    <View
+      onLayout={onLayout}
+      style={{ justifyContent: 'space-evenly', flexDirection: 'row', flex: 1 }}
+    >
+      {daysOfWeek.map((_date, i) => {
+        return (
+          <View key={i} style={{ marginVertical: gSpace(1) }}>
+            {Array.from({ length: hours.length }, (_, i) => {
+              return {
+                name: 'event',
+                start: new Date(),
+                end: new Date()
+              }
+            }).map((event, i) => {
+              return (
+                <SlotCell
+                  onPress={() => {
+                    onPressSlot(_date, hours[i])
+                  }}
+                  width={width / numberOfDays - 10}
+                  label={hours[i]}
+                />
+              )
+            })}
+          </View>
+        )
+      })}
+    </View>
+  )
+}
+
+const SlotCell = ({ width, label, onPress }) => {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        height: 50,
+        width,
+        justifyContent: 'flex-end',
+        borderBottomColor: 'black',
+        borderBottomWidth: 0.3
+      }}
+    >
+      <Text style={gStyles.helper}>{label}</Text>
+    </Pressable>
   )
 }
 
