@@ -1,6 +1,7 @@
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
 import Button from '../Button'
+import WeekTimeline from '../Calendars/WeekTimeline2'
 import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
 
@@ -23,6 +24,7 @@ const ModalAssignOrder = ({
 
   return (
     <>
+      <WeekTimeline />
       <Button onPress={modal.toggleOpen}>
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>
