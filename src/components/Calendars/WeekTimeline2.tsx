@@ -4,8 +4,22 @@ import Button from '../Button'
 import theme from '../../theme'
 import { isSameDay, isToday } from 'date-fns'
 import { gSpace, gStyles } from '../../styles'
-
-const WeekTimeline = ({ numberOfDays = 7 }) => {
+export type EventTime = `${string}:${string}`
+export type Event = {
+  id: string
+  title: string
+  date: Date
+  time?: EventTime
+}
+const WeekTimeline = ({
+  numberOfDays = 7,
+  onSelectDate,
+  dateSelected
+}: {
+  numberOfDays?: number
+  onSelectDate?: (date: Date) => void
+  dateSelected?: Date
+}) => {
   const [date, setDate] = useState(new Date())
   const [weekStart, setWeekStart] = useState(new Date())
   const month = months[date.getMonth()]
@@ -15,10 +29,50 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
     const newDate = new Date(date.setDate(date.getDate() + page * numberOfDays))
     setWeekStart(newDate)
   }
+  const [_selectedDate, setSelectedDate] = useState<Date | null>(dateSelected)
 
   const onPressSlot = (date, hour) => {
-    console.log({ date, hour })
+    onSelectDate?.(date)
+    setSelectedDate(date)
   }
+
+  const [events] = useState<Event[]>([
+    {
+      id: '1',
+      title: 'Event 1',
+      date: new Date(2024, 2, 14, 9)
+    },
+    {
+      id: '2',
+      title: 'Event 2',
+      date: new Date(2024, 2, 15, 13)
+    },
+    {
+      id: '3',
+      title: 'Event 3',
+      date: new Date(2024, 2, 15, 15)
+    },
+    {
+      id: '4',
+      title: 'Event 4',
+      date: new Date(2024, 2, 16, 13)
+    },
+    {
+      id: '5',
+      title: 'Event 5',
+      date: new Date(2024, 2, 16, 13)
+    },
+    {
+      id: '6',
+      title: 'Event 8',
+      date: new Date(2024, 2, 16, 13)
+    },
+    {
+      id: '7',
+      title: 'Event 7',
+      date: new Date(2024, 2, 13, 9)
+    }
+  ])
 
   return (
     <View style={{ marginVertical: gSpace(4) }}>
@@ -79,6 +133,8 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
       </View>
       {/* EVENTS LIST VIEW */}
       <EventsView
+        dateSelected={_selectedDate}
+        events={events}
         weekStart={weekStart}
         numberOfDays={numberOfDays}
         onPressSlot={onPressSlot}
@@ -87,7 +143,13 @@ const WeekTimeline = ({ numberOfDays = 7 }) => {
   )
 }
 
-const EventsView = ({ weekStart, numberOfDays, onPressSlot }) => {
+const EventsView = ({
+  events,
+  weekStart,
+  numberOfDays,
+  onPressSlot,
+  dateSelected
+}) => {
   const [daysOfWeek, setDaysOfWeek] = useState([])
   const [width, setWidth] = useState(0)
 
@@ -109,12 +171,34 @@ const EventsView = ({ weekStart, numberOfDays, onPressSlot }) => {
     )
   }, [weekStart])
 
+  const slotEvents = (date: Date, hour: string, events: Event[]) => {
+    const slotHour = parseInt(hour.split(':')[0])
+
+    return events.filter((e) => {
+      return (
+        e.date.getDate() === date.getDate() &&
+        e.date.getMonth() === date.getMonth() &&
+        e.date.getHours() === slotHour
+      )
+    })
+  }
+
+  const slotSelected = (date: Date, hour: string, dateSelected: Date) => {
+    const slotHour = parseInt(hour.split(':')[0])
+
+    return (
+      dateSelected?.getDate() === date.getDate() &&
+      dateSelected?.getMonth() === date.getMonth() &&
+      dateSelected?.getHours() === slotHour
+    )
+  }
+
   return (
     <View
       onLayout={onLayout}
       style={{ justifyContent: 'space-evenly', flexDirection: 'row', flex: 1 }}
     >
-      {daysOfWeek.map((_date, i) => {
+      {daysOfWeek.map((_date: Date, i) => {
         return (
           <View key={i} style={{ marginVertical: gSpace(1) }}>
             {Array.from({ length: hours.length }, (_, i) => {
@@ -126,11 +210,22 @@ const EventsView = ({ weekStart, numberOfDays, onPressSlot }) => {
             }).map((event, i) => {
               return (
                 <SlotCell
-                  onPress={() => {
-                    onPressSlot(_date, hours[i])
+                  key={i}
+                  onPressSlot={() => {
+                    onPressSlot(
+                      new Date(
+                        _date.setHours(parseInt(hours[i].split(':')[0]))
+                      ),
+                      hours[i]
+                    )
+                  }}
+                  onPressEvent={(eventId) => {
+                    console.log({ eventId })
                   }}
                   width={width / numberOfDays - 10}
-                  label={hours[i]}
+                  timeLabel={hours[i]}
+                  events={slotEvents(_date, hours[i], events)}
+                  slotSelected={slotSelected(_date, hours[i], dateSelected)}
                 />
               )
             })}
@@ -141,19 +236,48 @@ const EventsView = ({ weekStart, numberOfDays, onPressSlot }) => {
   )
 }
 
-const SlotCell = ({ width, label, onPress }) => {
+const SlotCell = ({
+  width,
+  timeLabel,
+  onPressSlot,
+  onPressEvent,
+  events,
+  slotSelected
+}: {
+  width: number
+  timeLabel: string
+  onPressSlot: () => void
+  onPressEvent: (eventId: string) => void
+  events: Event[]
+  slotSelected?: boolean
+}) => {
   return (
     <Pressable
-      onPress={onPress}
-      style={{
-        height: 50,
-        width,
-        justifyContent: 'flex-end',
-        borderBottomColor: 'black',
-        borderBottomWidth: 0.3
-      }}
+      onPress={onPressSlot}
+      style={[
+        {
+          minHeight: 50,
+          width,
+          justifyContent: 'flex-end',
+          borderBottomColor: 'black',
+          borderBottomWidth: 0.3
+        }
+      ]}
     >
-      <Text style={gStyles.helper}>{label}</Text>
+      <View>
+        {slotSelected && <Text style={styles.event}>Seleccionado</Text>}
+        {events?.map((e) => (
+          <Pressable
+            style={styles.event}
+            key={e.id}
+            onPress={() => onPressEvent(e.id)}
+          >
+            <Text style={{ textAlign: 'center' }}>{e.title}</Text>
+          </Pressable>
+        ))}
+      </View>
+
+      <Text style={gStyles.helper}>{timeLabel}</Text>
     </Pressable>
   )
 }
@@ -232,6 +356,12 @@ const styles = StyleSheet.create({
   },
   daySelected: {
     borderColor: theme.secondary
+  },
+  event: {
+    borderColor: 'black',
+    borderWidth: 0.3,
+    borderRadius: 4,
+    marginVertical: 1
   }
 })
 

@@ -341,6 +341,13 @@ const FormFields = ({
           }}
           assignedToSection={values?.assignToSection}
           assignedToStaff={values?.assignToStaff}
+          assignToDate={(date) => {
+            setValues((values) => ({
+              ...values,
+              scheduledAt: date
+            }))
+          }}
+          assignedToDate={asDate(values?.scheduledAt)}
         />
       </ErrorBoundary>
     ),

@@ -9,12 +9,16 @@ const ModalAssignOrder = ({
   assignedToSection,
   assignToSection,
   assignToStaff,
-  assignedToStaff
+  assignedToStaff,
+  assignToDate,
+  assignedToDate
 }: {
   assignedToSection: string
   assignedToStaff?: string
   assignToSection: (sectionId: string) => void
   assignToStaff?: (sectionId: string) => void
+  assignToDate?: (date: Date) => void
+  assignedToDate?: Date
 }) => {
   const modal = useModal({ title: 'Asignar a' })
   const { storeSections } = useStore()
@@ -24,7 +28,6 @@ const ModalAssignOrder = ({
 
   return (
     <>
-      <WeekTimeline numberOfDays={4} />
       <Button onPress={modal.toggleOpen}>
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>
@@ -38,7 +41,13 @@ const ModalAssignOrder = ({
             value: id
           }))}
         />
-
+        <WeekTimeline
+          numberOfDays={4}
+          dateSelected={assignedToDate}
+          onSelectDate={(date) => {
+            assignToDate?.(date)
+          }}
+        />
         {/* <Text style={gStyles.h3}>Staff</Text>
         <ListStaff
           staffSelected={[assignedToStaff]}
