@@ -5,20 +5,24 @@ import theme from '../../theme'
 import { isSameDay, isToday } from 'date-fns'
 import { gSpace, gStyles } from '../../styles'
 export type EventTime = `${string}:${string}`
+
 export type Event = {
   id: string
   title: string
   date: Date
   time?: EventTime
 }
+
 const WeekTimeline = ({
   numberOfDays = 7,
   onSelectDate,
-  dateSelected
+  dateSelected,
+  events = []
 }: {
   numberOfDays?: number
   onSelectDate?: (date: Date) => void
   dateSelected?: Date
+  events: Event[]
 }) => {
   const [date, setDate] = useState(new Date())
   const [weekStart, setWeekStart] = useState(new Date())
@@ -29,6 +33,7 @@ const WeekTimeline = ({
     const newDate = new Date(date.setDate(date.getDate() + page * numberOfDays))
     setWeekStart(newDate)
   }
+
   const [_selectedDate, setSelectedDate] = useState<Date | null>(dateSelected)
 
   const onPressSlot = (date, hour) => {
@@ -36,43 +41,43 @@ const WeekTimeline = ({
     setSelectedDate(date)
   }
 
-  const [events] = useState<Event[]>([
-    {
-      id: '1',
-      title: 'Event 1',
-      date: new Date(2024, 2, 14, 9)
-    },
-    {
-      id: '2',
-      title: 'Event 2',
-      date: new Date(2024, 2, 15, 13)
-    },
-    {
-      id: '3',
-      title: 'Event 3',
-      date: new Date(2024, 2, 15, 15)
-    },
-    {
-      id: '4',
-      title: 'Event 4',
-      date: new Date(2024, 2, 16, 13)
-    },
-    {
-      id: '5',
-      title: 'Event 5',
-      date: new Date(2024, 2, 16, 13)
-    },
-    {
-      id: '6',
-      title: 'Event 8',
-      date: new Date(2024, 2, 16, 13)
-    },
-    {
-      id: '7',
-      title: 'Event 7',
-      date: new Date(2024, 2, 13, 9)
-    }
-  ])
+  // const [events] = useState<Event[]>([
+  //   {
+  //     id: '1',
+  //     title: 'Event 1',
+  //     date: new Date(2024, 2, 14, 9)
+  //   },
+  //   {
+  //     id: '2',
+  //     title: 'Event 2',
+  //     date: new Date(2024, 2, 15, 13)
+  //   },
+  //   {
+  //     id: '3',
+  //     title: 'Event 3',
+  //     date: new Date(2024, 2, 15, 15)
+  //   },
+  //   {
+  //     id: '4',
+  //     title: 'Event 4',
+  //     date: new Date(2024, 2, 16, 13)
+  //   },
+  //   {
+  //     id: '5',
+  //     title: 'Event 5',
+  //     date: new Date(2024, 2, 16, 13)
+  //   },
+  //   {
+  //     id: '6',
+  //     title: 'Event 8',
+  //     date: new Date(2024, 2, 16, 13)
+  //   },
+  //   {
+  //     id: '7',
+  //     title: 'Event 7',
+  //     date: new Date(2024, 2, 13, 9)
+  //   }
+  // ])
 
   return (
     <View style={{ marginVertical: gSpace(4) }}>
@@ -202,12 +207,8 @@ const EventsView = ({
         return (
           <View key={i} style={{ marginVertical: gSpace(1) }}>
             {Array.from({ length: hours.length }, (_, i) => {
-              return {
-                name: 'event',
-                start: new Date(),
-                end: new Date()
-              }
-            }).map((event, i) => {
+              return { i }
+            }).map((_, i) => {
               return (
                 <SlotCell
                   key={i}
@@ -265,7 +266,14 @@ const SlotCell = ({
       ]}
     >
       <View>
-        {slotSelected && <Text style={styles.event}>Seleccionado</Text>}
+        {slotSelected && (
+          <Text
+            numberOfLines={1}
+            style={[styles.event, { backgroundColor: theme.info }]}
+          >
+            Seleccionado
+          </Text>
+        )}
         {events?.map((e) => (
           <Pressable
             style={styles.event}

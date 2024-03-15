@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
+import asDate from '../../libs/utils-date'
 import Button from '../Button'
-import WeekTimeline from '../Calendars/WeekTimeline2'
+import WeekTimeline, { Event } from '../Calendars/WeekTimeline2'
 import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
 
@@ -14,11 +16,11 @@ const ModalAssignOrder = ({
   assignedToDate
 }: {
   assignedToSection: string
-  assignedToStaff?: string
   assignToSection: (sectionId: string) => void
+  assignedToStaff?: string
   assignToStaff?: (sectionId: string) => void
-  assignToDate?: (date: Date) => void
   assignedToDate?: Date
+  assignToDate?: (date: Date) => void
 }) => {
   const modal = useModal({ title: 'Asignar a' })
   const { storeSections } = useStore()
@@ -26,6 +28,10 @@ const ModalAssignOrder = ({
     (o) => o?.id === assignedToSection
   )?.name
 
+  const [sectionEvents, setSectionEvents] = useState<Event[]>([])
+
+  // useEffect(() => {}, [])
+  // console.log({ assignedToSection })
   return (
     <>
       <Button onPress={modal.toggleOpen}>
@@ -33,6 +39,7 @@ const ModalAssignOrder = ({
       </Button>
       <StyledModal {...modal}>
         <InputSelect
+          selectedValue={assignedToSection}
           onChangeValue={(sectionId) => {
             assignToSection(sectionId)
           }}
@@ -42,25 +49,13 @@ const ModalAssignOrder = ({
           }))}
         />
         <WeekTimeline
+          events={sectionEvents}
           numberOfDays={4}
-          dateSelected={assignedToDate}
+          dateSelected={asDate(assignedToDate)}
           onSelectDate={(date) => {
             assignToDate?.(date)
           }}
         />
-        {/* <Text style={gStyles.h3}>Staff</Text>
-        <ListStaff
-          staffSelected={[assignedToStaff]}
-          staff={staff}
-          onPress={(staffId) => {
-            if (assignedToStaff === staffId) {
-              assignToStaff?.('')
-            } else {
-              assignToStaff?.(staffId)
-              modal.toggleOpen()
-            }
-          }}
-        ></ListStaff> */}
       </StyledModal>
     </>
   )
