@@ -1,21 +1,26 @@
-import { Text } from 'react-native'
+import { useEffect, useState } from 'react'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
+import asDate from '../../libs/utils-date'
 import Button from '../Button'
-import ListSections from '../ListSections'
+import WeekTimeline, { Event } from '../Calendars/WeekTimeline2'
+import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
-import { gStyles } from '../../styles'
 
 const ModalAssignOrder = ({
   assignedToSection,
   assignToSection,
   assignToStaff,
-  assignedToStaff
+  assignedToStaff,
+  assignToDate,
+  assignedToDate
 }: {
   assignedToSection: string
-  assignedToStaff?: string
   assignToSection: (sectionId: string) => void
+  assignedToStaff?: string
   assignToStaff?: (sectionId: string) => void
+  assignedToDate?: Date
+  assignToDate?: (date: Date) => void
 }) => {
   const modal = useModal({ title: 'Asignar a' })
   const { storeSections } = useStore()
@@ -23,38 +28,34 @@ const ModalAssignOrder = ({
     (o) => o?.id === assignedToSection
   )?.name
 
+  const [sectionEvents, setSectionEvents] = useState<Event[]>([])
+
+  // useEffect(() => {}, [])
+  // console.log({ assignedToSection })
   return (
     <>
       <Button onPress={modal.toggleOpen}>
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>
       <StyledModal {...modal}>
-        <Text style={gStyles.h3}>Areas</Text>
-        <ListSections
-          sectionsSelected={[assignedToSection]}
-          sections={storeSections}
-          onPress={(sectionId) => {
-            if (assignedToSection === sectionId) {
-              assignToSection('')
-            } else {
-              modal.toggleOpen()
-              assignToSection(sectionId)
-            }
+        <InputSelect
+          selectedValue={assignedToSection}
+          onChangeValue={(sectionId) => {
+            assignToSection(sectionId)
           }}
-        ></ListSections>
-        {/* <Text style={gStyles.h3}>Staff</Text>
-        <ListStaff
-          staffSelected={[assignedToStaff]}
-          staff={staff}
-          onPress={(staffId) => {
-            if (assignedToStaff === staffId) {
-              assignToStaff?.('')
-            } else {
-              assignToStaff?.(staffId)
-              modal.toggleOpen()
-            }
+          options={storeSections.map(({ name, id }) => ({
+            label: name,
+            value: id
+          }))}
+        />
+        <WeekTimeline
+          events={sectionEvents}
+          numberOfDays={4}
+          dateSelected={asDate(assignedToDate)}
+          onSelectDate={(date) => {
+            assignToDate?.(date)
           }}
-        ></ListStaff> */}
+        />
       </StyledModal>
     </>
   )

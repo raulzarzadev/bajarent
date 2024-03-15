@@ -108,6 +108,10 @@ ${orderPayments()}
       show: canAssign,
       button: (
         <ModalAssignOrder
+          assignToDate={(date) => {
+            ServiceOrders.update(orderId, { scheduledAt: date })
+          }}
+          assignedToDate={order.scheduledAt}
           assignedToSection={order.assignToSection}
           assignedToStaff={order.assignToStaff}
           assignToStaff={(staffId) => {

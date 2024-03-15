@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native'
+import theme, { BORDER_RADIUS, PADDING } from './theme'
 
 // global styles
 export const gSpace = (space = 1) => space * 4
+const placeholderOpacity = 'ee'
 
 export const gStyles = StyleSheet.create({
   h1: {
@@ -44,5 +46,13 @@ export const gStyles = StyleSheet.create({
   },
   tBold: {
     fontWeight: 'bold'
+  },
+  inputStyle: {
+    borderWidth: 1,
+    borderColor: theme.neutral,
+    borderRadius: BORDER_RADIUS * 1.8,
+    padding: PADDING * 3,
+    width: '100%',
+    placeholderTextColor: 'lightgrey' + placeholderOpacity // Set placeholder text color to transparent
   }
 })
