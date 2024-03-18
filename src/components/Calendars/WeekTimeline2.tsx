@@ -265,7 +265,7 @@ const SlotCell = ({
             key={e.id}
             onPress={() => onPressEvent(e.id)}
           >
-            <Text style={{ textAlign: 'center' }}>{e.title}</Text>
+            <Text style={{ textAlign: 'center' }}>{e.title || 'Orden'}</Text>
           </Pressable>
         ))}
       </View>
