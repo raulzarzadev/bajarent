@@ -87,7 +87,21 @@ const FormOrderA = ({
     }
   }, [ordersTypesAllowed, defaultValues])
   // => const defaultType =  ordersTypesAllowed[0]?.value as order_type
+  const initialValues = {
+    ...defaultValues,
+    type: defaultType,
 
+    phone:
+      defaultValues?.phone === 'undefined' || !defaultValues.phone
+        ? ''
+        : defaultValues?.phone,
+    fullName:
+      defaultValues?.fullName ||
+      `${defaultValues?.firstName || ''}${defaultValues?.lastName || ''}`,
+    address:
+      defaultValues?.address ||
+      `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`
+  }
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -101,30 +115,13 @@ const FormOrderA = ({
         )}
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
         <Formik
-          initialValues={{
-            ...defaultValues,
-            type: defaultType,
-
-            phone:
-              defaultValues?.phone === 'undefined' || !defaultValues.phone
-                ? ''
-                : defaultValues?.phone,
-            fullName:
-              defaultValues?.fullName ||
-              `${defaultValues?.firstName || ''}${
-                defaultValues?.lastName || ''
-              }`,
-            address:
-              defaultValues?.address ||
-              `${defaultValues?.street || ''}${
-                defaultValues?.betweenStreets || ''
-              }`
-          }}
+          initialValues={initialValues}
           onSubmit={async (values) => {
             setLoading(true)
             await onSubmit(values)
               .then((res) => {
                 // console.log(res)
+                console.log('done, bororar ')
               })
               .catch(console.error)
               .finally(() => {
@@ -206,7 +203,11 @@ const FormOrderA = ({
               <View style={[styles.item]}>
                 <Button
                   disabled={loading || !values?.fullName}
-                  onPress={handleSubmit}
+                  onPress={async () => {
+                    await handleSubmit()
+
+                    setValues(initialValues)
+                  }}
                   label={'Guardar'}
                 />
               </View>
@@ -230,6 +231,7 @@ const FormFields = ({
     shouldValidate?: boolean | undefined
   ) => void
 }) => {
+  console.log({ values })
   const { categories, store } = useStore()
 
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -327,27 +329,13 @@ const FormFields = ({
     assignedToSection: (
       <ErrorBoundary>
         <ModalAssignOrder
-          assignToSection={(sectionId) => {
-            setValues((values) => ({
-              ...values,
-              assignToSection: sectionId
-            }))
+          orderId={values.id}
+          section={values.assignToSection}
+          date={values.scheduledAt}
+          assignSection={(sectionId) => {
+            setValues({ ...values, assignToSection: sectionId })
           }}
-          assignToStaff={(staffId) => {
-            setValues((values) => ({
-              ...values,
-              assignToStaff: staffId
-            }))
-          }}
-          assignedToSection={values?.assignToSection}
-          assignedToStaff={values?.assignToStaff}
-          assignToDate={(date) => {
-            setValues((values) => ({
-              ...values,
-              scheduledAt: date
-            }))
-          }}
-          assignedToDate={asDate(values?.scheduledAt)}
+          assignDate={(date) => setValues({ ...values, scheduledAt: date })}
         />
       </ErrorBoundary>
     ),

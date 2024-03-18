@@ -218,22 +218,7 @@ const FormOrder = ({
               <>
                 <View style={[styles.item, { justifyContent: 'center' }]}>
                   <ErrorBoundary>
-                    <ModalAssignOrder
-                      assignToSection={(sectionId) => {
-                        setValues((values) => ({
-                          ...values,
-                          assignToSection: sectionId
-                        }))
-                      }}
-                      assignToStaff={(staffId) => {
-                        setValues((values) => ({
-                          ...values,
-                          assignToStaff: staffId
-                        }))
-                      }}
-                      assignedToSection={values?.assignToSection}
-                      assignedToStaff={values?.assignToStaff}
-                    />
+                    <ModalAssignOrder orderId={values.id} />
                   </ErrorBoundary>
                 </View>
                 <View style={[styles.item]}>

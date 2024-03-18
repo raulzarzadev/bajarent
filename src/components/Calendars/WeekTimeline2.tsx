@@ -4,6 +4,7 @@ import Button from '../Button'
 import theme from '../../theme'
 import { isSameDay, isToday } from 'date-fns'
 import { gSpace, gStyles } from '../../styles'
+import asDate from '../../libs/utils-date'
 export type EventTime = `${string}:${string}`
 
 export type Event = {
@@ -14,11 +15,13 @@ export type Event = {
 }
 
 const WeekTimeline = ({
+  currentEventId,
   numberOfDays = 7,
   onSelectDate,
   dateSelected,
   events = []
 }: {
+  currentEventId: string
   numberOfDays?: number
   onSelectDate?: (date: Date) => void
   dateSelected?: Date
@@ -40,44 +43,6 @@ const WeekTimeline = ({
     onSelectDate?.(date)
     setSelectedDate(date)
   }
-
-  // const [events] = useState<Event[]>([
-  //   {
-  //     id: '1',
-  //     title: 'Event 1',
-  //     date: new Date(2024, 2, 14, 9)
-  //   },
-  //   {
-  //     id: '2',
-  //     title: 'Event 2',
-  //     date: new Date(2024, 2, 15, 13)
-  //   },
-  //   {
-  //     id: '3',
-  //     title: 'Event 3',
-  //     date: new Date(2024, 2, 15, 15)
-  //   },
-  //   {
-  //     id: '4',
-  //     title: 'Event 4',
-  //     date: new Date(2024, 2, 16, 13)
-  //   },
-  //   {
-  //     id: '5',
-  //     title: 'Event 5',
-  //     date: new Date(2024, 2, 16, 13)
-  //   },
-  //   {
-  //     id: '6',
-  //     title: 'Event 8',
-  //     date: new Date(2024, 2, 16, 13)
-  //   },
-  //   {
-  //     id: '7',
-  //     title: 'Event 7',
-  //     date: new Date(2024, 2, 13, 9)
-  //   }
-  // ])
 
   return (
     <View style={{ marginVertical: gSpace(4) }}>
@@ -138,6 +103,7 @@ const WeekTimeline = ({
       </View>
       {/* EVENTS LIST VIEW */}
       <EventsView
+        currentEventId={currentEventId}
         dateSelected={_selectedDate}
         events={events}
         weekStart={weekStart}
@@ -153,7 +119,8 @@ const EventsView = ({
   weekStart,
   numberOfDays,
   onPressSlot,
-  dateSelected
+  dateSelected,
+  currentEventId
 }) => {
   const [daysOfWeek, setDaysOfWeek] = useState([])
   const [width, setWidth] = useState(0)
@@ -178,12 +145,12 @@ const EventsView = ({
 
   const slotEvents = (date: Date, hour: string, events: Event[]) => {
     const slotHour = parseInt(hour.split(':')[0])
-
     return events.filter((e) => {
+      const eventDate = asDate(e?.date)
       return (
-        e.date.getDate() === date.getDate() &&
-        e.date.getMonth() === date.getMonth() &&
-        e.date.getHours() === slotHour
+        eventDate?.getDate() === date?.getDate() &&
+        eventDate?.getMonth() === date?.getMonth() &&
+        eventDate?.getHours() === slotHour
       )
     })
   }
@@ -226,7 +193,11 @@ const EventsView = ({
                   width={width / numberOfDays - 10}
                   timeLabel={hours[i]}
                   events={slotEvents(_date, hours[i], events)}
-                  slotSelected={slotSelected(_date, hours[i], dateSelected)}
+                  currentEventId={currentEventId}
+                  slotSelected={
+                    currentEventId === null &&
+                    slotSelected(_date, hours[i], dateSelected)
+                  }
                 />
               )
             })}
@@ -243,7 +214,8 @@ const SlotCell = ({
   onPressSlot,
   onPressEvent,
   events,
-  slotSelected
+  slotSelected,
+  currentEventId
 }: {
   width: number
   timeLabel: string
@@ -251,6 +223,7 @@ const SlotCell = ({
   onPressEvent: (eventId: string) => void
   events: Event[]
   slotSelected?: boolean
+  currentEventId: string
 }) => {
   return (
     <Pressable
@@ -276,7 +249,10 @@ const SlotCell = ({
         )}
         {events?.map((e) => (
           <Pressable
-            style={styles.event}
+            style={[
+              styles.event,
+              currentEventId === e.id && { backgroundColor: theme.info }
+            ]}
             key={e.id}
             onPress={() => onPressEvent(e.id)}
           >

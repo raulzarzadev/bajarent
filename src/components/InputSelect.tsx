@@ -1,6 +1,5 @@
 import RNPickerSelect from 'react-native-picker-select'
 import { gStyles } from '../styles'
-import { useEffect, useState } from 'react'
 
 export type SelectOptions = {
   label: string
@@ -10,20 +9,15 @@ export type SelectOptions = {
 const InputSelect = ({
   options = [],
   onChangeValue,
-  selectedValue
+  value
 }: {
   options?: SelectOptions
   onChangeValue?: (value) => void
-  selectedValue?: string
+  value?: string
 }) => {
-  const [defaultValue, setDefaultValue] = useState<string | null>()
-  useEffect(() => {
-    if (selectedValue) setDefaultValue(selectedValue)
-  }, [])
   return (
     <RNPickerSelect
-      // value={selectedValue}
-      value={defaultValue}
+      value={value}
       style={{
         inputWeb: gStyles.inputStyle
       }}
