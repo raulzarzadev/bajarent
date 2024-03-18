@@ -205,9 +205,7 @@ const FormOrderA = ({
                 <Button
                   disabled={loading || !values?.fullName}
                   onPress={async () => {
-                    await handleSubmit()
-
-                    setValues(initialValues)
+                    handleSubmit()
                   }}
                   label={'Guardar'}
                 />
