@@ -106,18 +106,7 @@ ${orderPayments()}
     {
       label: 'Asignar',
       show: canAssign,
-      button: (
-        <ModalAssignOrder
-          assignedToSection={order.assignToSection}
-          assignedToStaff={order.assignToStaff}
-          assignToStaff={(staffId) => {
-            ServiceOrders.update(orderId, { assignToStaff: staffId })
-          }}
-          assignToSection={(sectionId) => {
-            ServiceOrders.update(orderId, { assignToSection: sectionId })
-          }}
-        />
-      )
+      button: <ModalAssignOrder orderId={orderId} />
     },
     {
       label: 'Cancelar',

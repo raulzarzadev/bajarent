@@ -13,7 +13,9 @@ import {
   MdDeleteOutline,
   MdOutlineSearch,
   MdLocationOff,
-  MdOutlineDone
+  MdOutlineDone,
+  MdChevronLeft,
+  MdChevronRight
 } from 'react-icons/md'
 
 import {
@@ -62,7 +64,7 @@ const icons = {
   sub: GrFormSubtract,
   phone: TiPhone,
   whatsapp: BsWhatsapp,
-  done: MdOutlineDone
+  done: MdOutlineDone,
   // print: PrintIcon,
   // medicalInfo: MedicalInformationIcon,
   // restore: RestoreIcon,
@@ -93,6 +95,8 @@ const icons = {
   // order: ReceiptLongIcon,
   // change: ChangeCircleIcon,
   // google: GoogleIcon
+  rowLeft: MdChevronLeft,
+  rowRight: MdChevronRight
 } as const
 
 export type IconName = keyof typeof icons

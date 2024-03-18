@@ -1,27 +1,61 @@
-import { Text } from 'react-native'
+import { useEffect, useState } from 'react'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
+import asDate from '../../libs/utils-date'
 import Button from '../Button'
-import ListSections from '../ListSections'
+import WeekTimeline, { Event } from '../Calendars/WeekTimeline2'
+import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
-import { gStyles } from '../../styles'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ModalAssignOrder = ({
-  assignedToSection,
-  assignToSection,
-  assignToStaff,
-  assignedToStaff
+  orderId = null,
+  assignDate,
+  assignSection,
+  section,
+  date
 }: {
-  assignedToSection: string
-  assignedToStaff?: string
-  assignToSection: (sectionId: string) => void
-  assignToStaff?: (sectionId: string) => void
+  orderId: string | null
+  assignDate?: (value: Date | null) => void
+  assignSection?: (value: string | null) => void
+  section?: string
+  date?: Date
 }) => {
+  const { storeSections, orders } = useStore()
+  const order = orders.find((o) => o.id === orderId)
+  const assignedToSection = order?.assignToSection || section
+  const assignedDate = order?.scheduledAt || date
   const modal = useModal({ title: 'Asignar a' })
-  const { storeSections } = useStore()
   const sectionAssigned = storeSections.find(
     (o) => o?.id === assignedToSection
   )?.name
+
+  const [sectionEvents, setSectionEvents] = useState<Event[]>([])
+
+  const handleChangeAssignSection = (sectionId: string) => {
+    assignSection?.(sectionId)
+    if (orderId) ServiceOrders.update(orderId, { assignToSection: sectionId })
+  }
+
+  const handleChangeAssignDate = (date: Date) => {
+    assignDate?.(date)
+    if (orderId) ServiceOrders.update(orderId, { scheduledAt: date })
+  }
+
+  useEffect(() => {
+    if (assignedToSection) {
+      const sectionOrders = orders.filter(
+        (o) => o.assignToSection === assignedToSection
+      )
+      setSectionEvents(
+        sectionOrders.map((o) => ({
+          date: o.scheduledAt,
+          title: o.fullName,
+          id: o.id
+        }))
+      )
+    }
+  }, [assignedToSection, orders])
 
   return (
     <>
@@ -29,32 +63,26 @@ const ModalAssignOrder = ({
         {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
       </Button>
       <StyledModal {...modal}>
-        <Text style={gStyles.h3}>Areas</Text>
-        <ListSections
-          sectionsSelected={[assignedToSection]}
-          sections={storeSections}
-          onPress={(sectionId) => {
-            if (assignedToSection === sectionId) {
-              assignToSection('')
-            } else {
-              modal.toggleOpen()
-              assignToSection(sectionId)
-            }
+        <InputSelect
+          value={assignedToSection}
+          onChangeValue={(sectionId) => {
+            if (sectionId !== assignedToSection)
+              handleChangeAssignSection(sectionId)
           }}
-        ></ListSections>
-        {/* <Text style={gStyles.h3}>Staff</Text>
-        <ListStaff
-          staffSelected={[assignedToStaff]}
-          staff={staff}
-          onPress={(staffId) => {
-            if (assignedToStaff === staffId) {
-              assignToStaff?.('')
-            } else {
-              assignToStaff?.(staffId)
-              modal.toggleOpen()
-            }
+          options={storeSections.map(({ name, id }) => ({
+            label: name,
+            value: id
+          }))}
+        />
+        <WeekTimeline
+          currentEventId={orderId}
+          events={sectionEvents}
+          numberOfDays={4}
+          dateSelected={asDate(assignedDate)}
+          onSelectDate={(date) => {
+            handleChangeAssignDate?.(date)
           }}
-        ></ListStaff> */}
+        />
       </StyledModal>
     </>
   )

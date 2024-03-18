@@ -28,6 +28,7 @@ const ScreenOrderNew = ({ navigation }) => {
       values.deliveredAt = new Date()
       values.deliveredBy = user.id
     }
+
     return await ServiceOrders.create(values)
       .then((res) => {
         const orderId = res?.res?.id
