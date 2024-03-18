@@ -93,7 +93,8 @@ const ButtonX: React.FC<ButtonProps> = ({
         pressed && { opacity: 0.5 },
         sizes[size],
         buttonStyles,
-        justIcon && justIconStyles
+        justIcon && justIconStyles,
+        disabled && variant === 'ghost' && { backgroundColor: 'transparent' }
       ]}
       onPress={onPress}
       disabled={disabled}

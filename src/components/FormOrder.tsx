@@ -36,10 +36,8 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'itemSerial',
   'imageID',
   'imageHouse',
-  'scheduledAt',
-  'assignedToSection',
-  'assignedToStaff',
-  'hasDelivered'
+  'hasDelivered',
+  'assignIt'
   // 'folio'
 ] as const
 
@@ -49,7 +47,7 @@ const initialValues: Partial<OrderType> = {
   firstName: '',
   fullName: '',
   phone: '',
-  scheduledAt: new Date(),
+  // scheduledAt: new Date(),
   // type: order_type.RENT,
   address: ''
 }
@@ -102,6 +100,7 @@ const FormOrderA = ({
       defaultValues?.address ||
       `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`
   }
+
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -150,8 +149,9 @@ const FormOrderA = ({
                     'repairDescription',
                     'itemBrand',
                     'itemSerial',
-                    'assignedToSection',
-                    'scheduledAt'
+                    'assignIt'
+                    // 'assignedToSection'
+                    // 'scheduledAt' //
                   ]}
                   values={values}
                   setValues={setValues}
@@ -167,8 +167,9 @@ const FormOrderA = ({
                     'address',
                     'references',
                     'selectItemRent',
-                    'assignedToSection',
-                    'scheduledAt'
+                    // 'assignedToSection'
+                    // 'scheduledAt'
+                    'assignIt'
                   ]}
                   values={values}
                   setValues={setValues}
@@ -231,7 +232,6 @@ const FormFields = ({
     shouldValidate?: boolean | undefined
   ) => void
 }) => {
-  console.log({ values })
   const { categories, store } = useStore()
 
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -326,7 +326,8 @@ const FormFields = ({
     itemSerial: (
       <InputValueFormik name={'itemSerial'} placeholder="No. de serie" />
     ),
-    assignedToSection: (
+
+    assignIt: (
       <ErrorBoundary>
         <ModalAssignOrder
           orderId={values.id}
@@ -338,13 +339,6 @@ const FormFields = ({
           assignDate={(date) => setValues({ ...values, scheduledAt: date })}
         />
       </ErrorBoundary>
-    ),
-    assignedToStaff: (
-      <InputValueFormik
-        name={'itemBrand'}
-        placeholder="Marca"
-        helperText="Ejemplo: Mytag"
-      />
     )
   }
 

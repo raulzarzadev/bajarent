@@ -25,7 +25,7 @@ const ModalAssignOrder = ({
   const order = orders.find((o) => o.id === orderId)
   const assignedToSection = order?.assignToSection || section
   const assignedDate = order?.scheduledAt || date
-  const modal = useModal({ title: 'Asignar si' })
+  const modal = useModal({ title: 'Asignar a' })
   const sectionAssigned = storeSections.find(
     (o) => o?.id === assignedToSection
   )?.name
@@ -33,13 +33,13 @@ const ModalAssignOrder = ({
   const [sectionEvents, setSectionEvents] = useState<Event[]>([])
 
   const handleChangeAssignSection = (sectionId: string) => {
-    ServiceOrders.update(orderId, { assignToSection: sectionId })
     assignSection?.(sectionId)
+    if (orderId) ServiceOrders.update(orderId, { assignToSection: sectionId })
   }
 
   const handleChangeAssignDate = (date: Date) => {
-    ServiceOrders.update(orderId, { scheduledAt: date })
     assignDate?.(date)
+    if (orderId) ServiceOrders.update(orderId, { scheduledAt: date })
   }
 
   useEffect(() => {

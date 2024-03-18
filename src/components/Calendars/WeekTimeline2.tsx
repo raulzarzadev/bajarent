@@ -39,7 +39,7 @@ const WeekTimeline = ({
 
   const [_selectedDate, setSelectedDate] = useState<Date | null>(dateSelected)
 
-  const onPressSlot = (date, hour) => {
+  const onPressSlot = (date: Date | null) => {
     onSelectDate?.(date)
     setSelectedDate(date)
   }
@@ -54,20 +54,28 @@ const WeekTimeline = ({
           height: 40
         }}
       >
+        <Button
+          disabled={isToday(date)}
+          label="hoy"
+          onPress={() => {
+            setDate(new Date())
+            setWeekStart(new Date())
+          }}
+          size="xs"
+          variant="ghost"
+        ></Button>
         <Text style={{ textAlign: 'center' }}>
           {month} {year}
         </Text>
-        {!isToday(date) && (
-          <Button
-            label="hoy"
-            onPress={() => {
-              setDate(new Date())
-              setWeekStart(new Date())
-            }}
-            size="xs"
-            variant="ghost"
-          ></Button>
-        )}
+        <Button
+          label="Sin Fecha"
+          variant="ghost"
+          size="xs"
+          disabled={!_selectedDate}
+          onPress={() => {
+            onPressSlot(null)
+          }}
+        ></Button>
       </View>
       <View style={{ flexDirection: 'row' }}>
         {/* back week  */}
@@ -122,6 +130,7 @@ const EventsView = ({
   dateSelected,
   currentEventId
 }) => {
+  console.log({ dateSelected })
   const [daysOfWeek, setDaysOfWeek] = useState([])
   const [width, setWidth] = useState(0)
 
