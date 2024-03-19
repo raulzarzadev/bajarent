@@ -12,6 +12,16 @@ export type Event = {
   title: string
   date: Date
   time?: EventTime
+  color?: string
+  description?: string
+}
+export type WeekTimeLineProps = {
+  currentEventId: string
+  numberOfDays?: number
+  onSelectDate?: (date: Date) => void
+  dateSelected?: Date
+  events: Event[]
+  onPressEvent?: (eventId: string) => void
 }
 
 const WeekTimeline = ({
@@ -19,14 +29,9 @@ const WeekTimeline = ({
   numberOfDays = 7,
   onSelectDate,
   dateSelected,
-  events = []
-}: {
-  currentEventId: string
-  numberOfDays?: number
-  onSelectDate?: (date: Date) => void
-  dateSelected?: Date
-  events: Event[]
-}) => {
+  events = [],
+  onPressEvent
+}: WeekTimeLineProps) => {
   const [date, setDate] = useState(new Date())
   const [weekStart, setWeekStart] = useState(new Date())
   const month = months[date.getMonth()]
@@ -67,15 +72,17 @@ const WeekTimeline = ({
         <Text style={{ textAlign: 'center' }}>
           {month} {year}
         </Text>
-        <Button
-          label="Sin Fecha"
-          variant="ghost"
-          size="xs"
-          disabled={!_selectedDate}
-          onPress={() => {
-            onPressSlot(null)
-          }}
-        ></Button>
+        {onSelectDate && (
+          <Button
+            label="Sin Fecha"
+            variant="ghost"
+            size="xs"
+            disabled={!_selectedDate}
+            onPress={() => {
+              onPressSlot(null)
+            }}
+          ></Button>
+        )}
       </View>
       <View style={{ flexDirection: 'row' }}>
         {/* back week  */}
@@ -117,6 +124,7 @@ const WeekTimeline = ({
         weekStart={weekStart}
         numberOfDays={numberOfDays}
         onPressSlot={onPressSlot}
+        onPressEvent={onPressEvent}
       />
     </View>
   )
@@ -128,7 +136,8 @@ const EventsView = ({
   numberOfDays,
   onPressSlot,
   dateSelected,
-  currentEventId
+  currentEventId = null,
+  onPressEvent
 }) => {
   const [daysOfWeek, setDaysOfWeek] = useState([])
   const [width, setWidth] = useState(0)
@@ -196,7 +205,7 @@ const EventsView = ({
                     )
                   }}
                   onPressEvent={(eventId) => {
-                    console.log({ eventId })
+                    onPressEvent?.(eventId)
                   }}
                   width={width / numberOfDays - 10}
                   timeLabel={hours[i]}
@@ -259,12 +268,18 @@ const SlotCell = ({
           <Pressable
             style={[
               styles.event,
-              currentEventId === e.id && { backgroundColor: theme.info }
+              currentEventId === e.id && { backgroundColor: theme.info },
+              e?.color && { backgroundColor: e?.color }
             ]}
             key={e.id}
             onPress={() => onPressEvent(e.id)}
           >
             <Text style={{ textAlign: 'center' }}>{e.title || 'Orden'}</Text>
+            {e?.description && (
+              <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+                {e?.description}
+              </Text>
+            )}
           </Pressable>
         ))}
       </View>

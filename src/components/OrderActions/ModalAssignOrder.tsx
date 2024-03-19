@@ -7,6 +7,8 @@ import WeekTimeline, { Event } from '../Calendars/WeekTimeline2'
 import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
+import WeekOrdersTimeLine from '../WeekOrdersTimeLine'
+import OrderType from '../../types/OrderType'
 
 const ModalAssignOrder = ({
   orderId = null,
@@ -37,6 +39,8 @@ const ModalAssignOrder = ({
     if (orderId) ServiceOrders.update(orderId, { assignToSection: sectionId })
   }
 
+  const [sectionOrders, setSectionOrders] = useState<OrderType[]>([])
+
   const handleChangeAssignDate = (date: Date) => {
     assignDate?.(date)
     if (orderId) ServiceOrders.update(orderId, { scheduledAt: date })
@@ -47,6 +51,7 @@ const ModalAssignOrder = ({
       const sectionOrders = orders.filter(
         (o) => o.assignToSection === assignedToSection
       )
+      setSectionOrders(sectionOrders)
       setSectionEvents(
         sectionOrders.map((o) => ({
           date: o.scheduledAt,
@@ -74,15 +79,21 @@ const ModalAssignOrder = ({
             value: id
           }))}
         />
-        <WeekTimeline
-          currentEventId={orderId}
-          events={sectionEvents}
-          numberOfDays={4}
-          dateSelected={asDate(assignedDate)}
+        <WeekOrdersTimeLine
+          orders={sectionOrders}
+          assignedDate={assignedDate}
           onSelectDate={(date) => {
             handleChangeAssignDate?.(date)
           }}
         />
+        {/* <WeekTimeline
+          currentEventId={orderId}
+          events={sectionEvents}
+          dateSelected={asDate(assignedDate)}
+          onSelectDate={(date) => {
+            handleChangeAssignDate?.(date)
+          }}
+        /> */}
       </StyledModal>
     </>
   )
