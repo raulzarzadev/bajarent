@@ -46,6 +46,7 @@ const icons = {
   profileAdd: IoPersonAddOutline,
   components: LuComponent,
   myOrders: PiUserList,
+  list: MdListAlt,
   add: IoMdAdd,
   edit: MdEdit,
   money: MdAttachMoney,
