@@ -130,7 +130,6 @@ const EventsView = ({
   dateSelected,
   currentEventId
 }) => {
-  console.log({ dateSelected })
   const [daysOfWeek, setDaysOfWeek] = useState([])
   const [width, setWidth] = useState(0)
 
