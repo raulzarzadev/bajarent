@@ -26,7 +26,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
         <Text style={gStyles.h1}>{store?.name}</Text>
         {(staffPermissions?.isAdmin || isOwner) && (
           <ButtonIcon
-            icon="edit"
+            icon="settings"
             variant="ghost"
             color="secondary"
             buttonStyles={{ marginLeft: 10 }}

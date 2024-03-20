@@ -15,7 +15,8 @@ import {
   MdLocationOff,
   MdOutlineDone,
   MdChevronLeft,
-  MdChevronRight
+  MdChevronRight,
+  MdSettings
 } from 'react-icons/md'
 
 import {
@@ -97,7 +98,8 @@ const icons = {
   // change: ChangeCircleIcon,
   // google: GoogleIcon
   rowLeft: MdChevronLeft,
-  rowRight: MdChevronRight
+  rowRight: MdChevronRight,
+  settings: MdSettings
 } as const
 
 export type IconName = keyof typeof icons

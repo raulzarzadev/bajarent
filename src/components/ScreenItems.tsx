@@ -11,7 +11,6 @@ import { PriceType } from '../types/PriceType'
 import { useStore } from '../contexts/storeContext'
 import ModalFormPrice from './ModalFormPrice'
 import useCategories from '../hooks/useCategories'
-import usePrices from '../hooks/usePrices'
 
 const ScreenItems = () => {
   return (
@@ -51,8 +50,6 @@ const StoreCategories = () => {
   useEffect(() => {
     setCategoryPrices(categories.find((c) => c.id === selected)?.prices || [])
   }, [selected, categories])
-
-  console.log({ selected })
 
   return (
     <View>

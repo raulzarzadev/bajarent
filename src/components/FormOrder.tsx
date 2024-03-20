@@ -115,12 +115,11 @@ const FormOrderA = ({
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
         <Formik
           initialValues={initialValues}
-          onSubmit={async (values) => {
+          onSubmit={async (values, { resetForm }) => {
             setLoading(true)
             await onSubmit(values)
               .then((res) => {
-                // console.log(res)
-                console.log('done, bororar ')
+                resetForm()
               })
               .catch(console.error)
               .finally(() => {
@@ -157,7 +156,7 @@ const FormOrderA = ({
                   setValues={setValues}
                 />
               )}
-              {values.type === order_type.RENT && (
+              {values.type === order_type.DELIVERY_RENT && (
                 <FormFields
                   fields={[
                     'fullName',
@@ -175,7 +174,7 @@ const FormOrderA = ({
                   setValues={setValues}
                 />
               )}
-              {values.type === order_type.STORE_RENT && (
+              {values.type === order_type.RENT && (
                 <FormFields
                   fields={[
                     'fullName',
@@ -183,6 +182,19 @@ const FormOrderA = ({
                     'selectItemRent',
                     'imageID'
                     // 'assignedToSection'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.STORE_RENT && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'selectItemRent',
+                    'imageID',
+                    'assignIt'
                   ]}
                   values={values}
                   setValues={setValues}

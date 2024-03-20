@@ -74,20 +74,11 @@ const ScreenStore = ({ navigation }) => {
                 <Button
                   buttonStyles={styles.button}
                   onPress={() => {
-                    navigation.navigate('Staff')
+                    navigation.navigate('Items')
                   }}
                 >
-                  Staff
+                  Artículos
                 </Button>
-                <Button
-                  buttonStyles={styles.button}
-                  onPress={() => {
-                    navigation.navigate('Areas')
-                  }}
-                >
-                  Areas
-                </Button>
-
                 <Button
                   buttonStyles={styles.button}
                   onPress={() => {
@@ -96,14 +87,27 @@ const ScreenStore = ({ navigation }) => {
                 >
                   Caja
                 </Button>
-                <Button
-                  buttonStyles={styles.button}
-                  onPress={() => {
-                    navigation.navigate('Items')
-                  }}
-                >
-                  Artículos
-                </Button>
+                {store.allowSections && (
+                  <Button
+                    buttonStyles={styles.button}
+                    onPress={() => {
+                      navigation.navigate('Areas')
+                    }}
+                  >
+                    Areas
+                  </Button>
+                )}
+
+                {store.allowStaff && (
+                  <Button
+                    buttonStyles={styles.button}
+                    onPress={() => {
+                      navigation.navigate('Staff')
+                    }}
+                  >
+                    Staff
+                  </Button>
+                )}
               </View>
               <View>
                 <ErrorBoundary componentName="Numbers">

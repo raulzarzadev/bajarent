@@ -10,6 +10,8 @@ export type BaseStoreType = {
   currentFolio?: number
   sections?: SectionType[]
   orderTypes?: keyof order_type[]
+  allowSections?: boolean
+  allowStaff?: boolean
 }
 
 type StoreType = BaseType & BaseStoreType
