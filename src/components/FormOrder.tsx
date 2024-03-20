@@ -168,7 +168,8 @@ const FormOrderA = ({
                     'selectItemRent',
                     // 'assignedToSection'
                     // 'scheduledAt'
-                    'assignIt'
+                    'assignIt',
+                    'hasDelivered'
                   ]}
                   values={values}
                   setValues={setValues}

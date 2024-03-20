@@ -201,38 +201,36 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       }}
     >
       <Text style={[gStyles.h3, { marginBottom: 8 }]}>Artículo</Text>
-      {(order?.type === order_type.RENT ||
-        order.type === order_type.STORE_RENT) && (
+
+      <View>
         <View>
-          <View>
-            <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
-            <Text style={[gStyles.p, gStyles.tCenter]}>
-              {order?.item?.priceSelected?.title}
-            </Text>
-            <CurrencyAmount
-              style={{
-                alignContent: 'center',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}
-              amount={order?.item?.priceSelected?.amount}
-            />
-            {order?.expireAt && (
-              <View style={{ marginTop: 12 }}>
-                <Text style={[gStyles.p, gStyles.tCenter, gStyles.tBold]}>
-                  Expira
-                </Text>
-                <Text style={[gStyles.p, gStyles.tCenter]}>
-                  {dateFormat(order?.expireAt, 'dd/MM/yy HH:mm')}
-                </Text>
-                <Text style={[gStyles.p, gStyles.tCenter]}>
-                  {fromNow(order?.expireAt)}
-                </Text>
-              </View>
-            )}
-          </View>
+          <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>
+            {order?.item?.priceSelected?.title}
+          </Text>
+          <CurrencyAmount
+            style={{
+              alignContent: 'center',
+              fontWeight: 'bold',
+              textAlign: 'center'
+            }}
+            amount={order?.item?.priceSelected?.amount}
+          />
+          {order?.expireAt && (
+            <View style={{ marginTop: 12 }}>
+              <Text style={[gStyles.p, gStyles.tCenter, gStyles.tBold]}>
+                Expira
+              </Text>
+              <Text style={[gStyles.p, gStyles.tCenter]}>
+                {dateFormat(order?.expireAt, 'dd/MM/yy HH:mm')}
+              </Text>
+              <Text style={[gStyles.p, gStyles.tCenter]}>
+                {fromNow(order?.expireAt)}
+              </Text>
+            </View>
+          )}
         </View>
-      )}
+      </View>
       {order.type === order_type.REPAIR && (
         <View>
           <Text style={[gStyles.p, gStyles.tCenter]}>

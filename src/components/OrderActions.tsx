@@ -190,8 +190,11 @@ ${orderPayments()}
 
       <PriorityOrder orderId={orderId} />
 
-      {(order.type === order_type.RENT ||
-        order.type === order_type.STORE_RENT) && (
+      {[
+        order_type.RENT,
+        order_type.STORE_RENT,
+        order_type.DELIVERY_RENT
+      ].includes(order.type) && (
         <ErrorBoundary componentName="OrderActionsRentFlow">
           <OrderActionsRentFlow orderId={orderId} orderStatus={order.status} />
         </ErrorBoundary>
