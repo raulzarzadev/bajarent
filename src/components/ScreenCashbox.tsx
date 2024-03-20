@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { gSpace, gStyles } from '../styles'
@@ -8,6 +8,11 @@ const ScreenCashbox = ({ navigation }) => {
   const { staffPermissions } = useStore()
   return (
     <View style={gStyles.container}>
+      {!staffPermissions?.isAdmin && (
+        <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+          Permisios insuficientes
+        </Text>
+      )}
       {staffPermissions?.isAdmin && (
         <>
           <View style={{ marginVertical: gSpace(2) }}>
