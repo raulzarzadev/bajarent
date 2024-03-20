@@ -115,12 +115,11 @@ const FormOrderA = ({
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
         <Formik
           initialValues={initialValues}
-          onSubmit={async (values) => {
+          onSubmit={async (values, { resetForm }) => {
             setLoading(true)
             await onSubmit(values)
               .then((res) => {
-                // console.log(res)
-                console.log('done, bororar ')
+                resetForm()
               })
               .catch(console.error)
               .finally(() => {
