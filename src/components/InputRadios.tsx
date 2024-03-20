@@ -38,7 +38,7 @@ const InputRadios = <T extends string = string>({
         radioButtons={radioButtons}
         onPress={setValue}
         selectedId={value}
-        labelStyle={{ textTransform: 'capitalize' }}
+        // labelStyle={{ textTransform: 'capitalize' }}
         containerStyle={[
           containerStyle,
           {
