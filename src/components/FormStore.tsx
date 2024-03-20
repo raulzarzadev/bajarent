@@ -45,6 +45,10 @@ const FormStore = ({
           </View>
 
           <Text style={gStyles.h3}>Tipo de ordenes</Text>
+          <Text style={gStyles.helper}>
+            Te permitira crear diferentes tipo de ordenes segun las necesidades
+            de tu negocio
+          </Text>
           <View style={[styles.input, styles.type]}>
             {ordersTypes.map((type) => (
               <View key={type} style={[styles.type]}>
@@ -54,6 +58,15 @@ const FormStore = ({
                 />
               </View>
             ))}
+          </View>
+
+          <Text style={gStyles.h3}>Secciones</Text>
+          <Text style={gStyles.helper}>
+            Te dara acceso a herramientas para organizar mejor tu negocio.
+          </Text>
+          <View style={[styles.input, styles.type]}>
+            <FormikCheckbox name={'allowStaff'} label={'Staff'} />
+            <FormikCheckbox name={'allowSections'} label={'Areas'} />
           </View>
 
           <View style={styles.input}>
