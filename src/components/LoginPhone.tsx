@@ -4,9 +4,9 @@ import Button from './Button'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { auth } from '../firebase/auth'
 import PhoneInput from './InputPhone'
-import InputCode from './InputCode'
 import theme from '../theme'
 import { fbErrorToCode } from '../firebase/errors'
+import InputCode from './InputCode2'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
@@ -120,7 +120,7 @@ const PhoneLogin = () => {
           </Text>
           <View style={styles.form}>
             <View style={styles.item}>
-              <InputCode value={code} setValue={setCode} cellCount={6} />
+              <InputCode value={code} setValue={setCode} codeLength={6} />
             </View>
             {!!error && (
               <View>
