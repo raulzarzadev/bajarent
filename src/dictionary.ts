@@ -64,6 +64,7 @@ const labels = {
   partial: 'Parcial',
   hasNotSolvedReports: 'Reportes no resueltos',
   STORE_RENT: 'Renta local',
+  DELIVERY_RENT: 'Renta a domicilio',
   ' ': '',
   '': ''
 } as const

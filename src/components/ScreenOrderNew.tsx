@@ -22,8 +22,8 @@ const ScreenOrderNew = ({ navigation }) => {
       values.deliveredBy = user.id
     }
 
-    //* if type is store rent
-    if (values.type === order_type.STORE_RENT) {
+    //* if type is local rent
+    if (values.type === order_type.RENT) {
       values.status = order_status.DELIVERED
       values.deliveredAt = new Date()
       values.deliveredBy = user.id
