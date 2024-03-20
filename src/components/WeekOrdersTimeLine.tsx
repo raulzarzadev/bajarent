@@ -6,6 +6,7 @@ import asDate from '../libs/utils-date'
 import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
 import { gStyles } from '../styles'
+import { isAfter, isBefore } from 'date-fns'
 
 type WeekOrdersTimeLineProps = {
   orders: OrderType[]
@@ -31,11 +32,28 @@ const WeekOrdersTimeLine = ({
       : STATUS_COLOR[o.status],
     description: dictionary(o.status)
   }))
+
+  const expiredOrders = orders.filter((o) =>
+    isAfter(new Date(), asDate(o.expireAt))
+  )
+
+  const expiredEvents: Event[] = expiredOrders.map((o) => ({
+    date: o.expireAt,
+    title: o.fullName,
+    id: o.id,
+    color: o.hasNotSolvedReports
+      ? STATUS_COLOR.REPORTED
+      : STATUS_COLOR[o.status],
+    description: dictionary(o.status)
+  }))
+
+  console.log({ expiredEvents })
+
   return (
     <View style={gStyles.container}>
       <WeekTimeline
         currentEventId={orderId}
-        events={events}
+        events={[...events, ...expiredEvents]}
         numberOfDays={4}
         dateSelected={asDate(assignedDate)}
         onPressEvent={onPressOrder}
