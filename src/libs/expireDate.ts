@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore'
 import asDate from './utils-date'
-import { TimePriceType } from '../types/PriceType'
+import { PriceType, TimePriceType } from '../types/PriceType'
+import { addDays, addHours, addMinutes, addMonths, addWeeks } from 'date-fns'
 /**
  *
  * @param time its a string with the time and the unit of time
@@ -24,13 +25,44 @@ export function priceTimeInSeconds(time: TimePriceType): number {
 
 export default function expireDate(
   time: TimePriceType,
-  startedAt: Date | Timestamp
+  startedAt: Date | Timestamp,
+  price?: PriceType
 ): Date {
+  console.log({ price })
+  if (!price) return startedAt as Date
+  const startedAtDate = asDate(startedAt)
+  const [qty, unit] = price.time.split(' ')
+  const QTY = parseInt(qty)
+  if (unit === 'year') {
+    const expireDate = addMonths(startedAtDate, QTY * 12)
+    return expireDate
+  }
+  if (unit === 'hour') {
+    const expireDate = addHours(startedAtDate, QTY)
+    return expireDate
+  }
+  if (unit === 'minute') {
+    const expireDate = addMinutes(startedAtDate, QTY)
+
+    return expireDate
+  }
+  if (unit === 'month') {
+    const expireDate = addMonths(startedAtDate, QTY)
+    return expireDate
+  }
+  if (unit === 'week') {
+    const expireDate = addWeeks(startedAtDate, QTY)
+    return expireDate
+  }
+  if (unit === 'day') {
+    const expireDate = addDays(startedAtDate, QTY)
+    return expireDate
+  }
+  console.error('dont unit match')
   // if time does not exist return null
   if (!time || !startedAt) return null
   // if time does not have a number return null
 
-  const startedAtDate = asDate(startedAt)
   if (!startedAtDate) return null
   const timeInSeconds = priceTimeInSeconds(time)
 

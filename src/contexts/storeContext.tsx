@@ -108,8 +108,11 @@ const StoreContextProvider = ({ children }) => {
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
         assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position,
         expireAt:
-          expireDate(order?.item?.priceSelected?.time, order?.deliveredAt) ||
-          null,
+          expireDate(
+            order?.item?.priceSelected?.time,
+            order?.deliveredAt,
+            order?.item?.priceSelected
+          ) || null,
         payments: payments.filter((p) => p.orderId === order.id) || []
       }
     })
