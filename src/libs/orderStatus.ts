@@ -10,7 +10,8 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
 
   const expireAt = expireDate(
     order?.item?.priceSelected?.time,
-    order?.deliveredAt
+    order?.deliveredAt,
+    order?.item?.priceSelected
   )
 
   if (
