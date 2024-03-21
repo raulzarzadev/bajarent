@@ -257,26 +257,18 @@ const FormFields = ({
   const [sheetRow, setSheetRow] = useState<string | undefined>('')
 
   useEffect(() => {
-    console.log({ sheetRow })
+    if (!sheetRow) return
     const [name, phone, neighborhood, address, references, number, date, time] =
       sheetRow?.split('\t') || []
-    console.log({
-      name,
-      phone,
-      neighborhood,
-      address,
-      references,
-      number,
-      date: dateFormat(asDate(date)),
-      time
-    })
+
     const scheduledAt = date && new Date(asDate(date).setHours(9))
+
     setValues({
       ...values,
       fullName: name,
-      phone,
+      phone: `+52${phone}`,
       neighborhood,
-      address,
+      address: `${address} ${number}`,
       references,
       scheduledAt
     })
