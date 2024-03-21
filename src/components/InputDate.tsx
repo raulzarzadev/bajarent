@@ -4,7 +4,6 @@ import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Button from './Button'
 import { dateFormat } from '../libs/utils-date'
-import { set } from 'date-fns'
 
 type PickerTime = { hours: number; minutes: number }
 
@@ -35,7 +34,6 @@ export default function InputDate({
   }, [setOpen])
 
   useEffect(() => {
-    console.log({ date, time })
     setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
   }, [date, time])
 
@@ -113,11 +111,19 @@ const TimePicker = ({
     [setOpen, time]
   )
 
+  const numberToTime = (number: number) => {
+    return number < 10 ? `0${number}` : number
+  }
+
   return (
     <>
       <Button
         buttonStyles={{ marginTop: 6 }}
-        label={time ? `Hora ${time.hours}:${time.minutes}` : 'Seleccionar hora'}
+        label={
+          time
+            ? `Hora ${numberToTime(time.hours)}:${numberToTime(time.minutes)}`
+            : 'Seleccionar hora'
+        }
         variant="outline"
         onPress={() => {
           setOpen(true)
