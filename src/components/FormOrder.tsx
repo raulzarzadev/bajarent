@@ -6,7 +6,7 @@ import OrderType, { order_type } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
-import asDate from '../libs/utils-date'
+import asDate, { dateFormat } from '../libs/utils-date'
 import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './InputRadiosFormik'
 import FormikInputImage from './FormikInputImage'
@@ -18,6 +18,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
+import InputTextStyled from './InputTextStyled'
 
 const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -37,7 +38,8 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'imageID',
   'imageHouse',
   'hasDelivered',
-  'assignIt'
+  'assignIt',
+  'sheetRow'
   // 'folio'
 ] as const
 
@@ -159,6 +161,7 @@ const FormOrderA = ({
               {values.type === order_type.DELIVERY_RENT && (
                 <FormFields
                   fields={[
+                    'sheetRow',
                     'fullName',
                     'phone',
                     'location',
@@ -251,12 +254,49 @@ const FormFields = ({
       return { label: dictionary(value[0] as order_type), value: value[0] }
     })
 
+  const [sheetRow, setSheetRow] = useState<string | undefined>('')
+
+  useEffect(() => {
+    console.log({ sheetRow })
+    const [name, phone, neighborhood, address, references, number, date, time] =
+      sheetRow?.split('\t') || []
+    console.log({
+      name,
+      phone,
+      neighborhood,
+      address,
+      references,
+      number,
+      date: dateFormat(asDate(date)),
+      time
+    })
+    const scheduledAt = date && new Date(asDate(date).setHours(9))
+    setValues({
+      ...values,
+      fullName: name,
+      phone,
+      neighborhood,
+      address,
+      references,
+      scheduledAt
+    })
+  }, [sheetRow])
+
   const inputFields: Record<FormOrderFields, ReactNode> = {
     type: (
       <InputRadiosFormik
         name="type"
         options={ordersTypesAllowed}
         label="Tipo de orden"
+      />
+    ),
+    sheetRow: (
+      <InputTextStyled
+        onChangeText={(text) => setSheetRow(text)}
+        placeholder="Renglon de la hoja"
+        helperText={
+          'Una fila de una hoja de excel (nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
+        }
       />
     ),
     fullName: (
