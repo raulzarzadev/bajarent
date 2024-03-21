@@ -33,8 +33,8 @@ const WeekOrdersTimeLine = ({
     description: dictionary(o.status)
   }))
 
-  const expiredOrders = orders.filter((o) =>
-    isAfter(new Date(), asDate(o.expireAt))
+  const expiredOrders = orders.filter(
+    (o) => isAfter(new Date(), asDate(o.expireAt)) // ? this is ok? should be show to or more days before to expireAt
   )
 
   const expiredEvents: Event[] = expiredOrders.map((o) => ({

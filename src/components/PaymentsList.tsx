@@ -1,12 +1,14 @@
+import { useStore } from '../contexts/storeContext'
 import PaymentType from '../types/PaymentType'
 import List from './List'
 import PaymentRow from './PaymentRow'
 
+export type PaymentTypeList = PaymentType & { createdByName?: string }
 function PaymentsList({
   payments,
   onPressRow
 }: {
-  payments: PaymentType[]
+  payments: PaymentTypeList[]
   onPressRow?: (paymentId: string) => void
 }) {
   const sortFields = [
@@ -14,12 +16,18 @@ function PaymentsList({
     { key: 'date', label: 'Fecha' },
     { key: 'amount', label: 'Cantidad' },
     { key: 'method', label: 'Método' },
-    { key: 'reference', label: 'Referencia' }
+    { key: 'reference', label: 'Referencia' },
+    { key: 'createdByName', label: 'Creado por' }
   ]
-
+  const { staff } = useStore()
   return (
     <List
-      data={payments}
+      data={payments.map((payment) => {
+        payment.createdByName =
+          staff.find((s) => s.userId === payment.createdBy)?.name ||
+          'sin nombre'
+        return payment
+      })}
       ComponentRow={PaymentRow}
       sortFields={sortFields}
       defaultSortBy="date"
@@ -32,6 +40,10 @@ function PaymentsList({
         //   field: 'date',
         //   label: 'Fecha'
         // },
+        {
+          field: 'createdByName',
+          label: 'Creado por'
+        },
         {
           field: 'method',
           label: 'Método'

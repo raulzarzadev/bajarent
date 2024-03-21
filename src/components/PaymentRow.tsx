@@ -1,12 +1,12 @@
 import { Text, View, StyleSheet } from 'react-native'
 import React from 'react'
-import PaymentType from '../types/PaymentType'
 import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
+import { PaymentTypeList } from './PaymentsList'
 
-const PaymentRow = ({ item }: { item: PaymentType }) => {
+const PaymentRow = ({ item }: { item: PaymentTypeList }) => {
   return (
     <View style={styles.row}>
       <View style={{ width: 80 }}>
@@ -26,6 +26,9 @@ const PaymentRow = ({ item }: { item: PaymentType }) => {
             {item?.reference}
           </Text>
         )}
+      </View>
+      <View style={{ width: 80 }}>
+        <Text>{item?.createdByName}</Text>
       </View>
       <View style={{ width: 80 }}>
         <CurrencyAmount amount={item?.amount} />
