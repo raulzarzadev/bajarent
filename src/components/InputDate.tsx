@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -22,33 +22,31 @@ export default function InputDate({
   withTime?: boolean
 }) {
   const nowDate = new Date()
-  const [date, setDate] = React.useState(value)
   const [open, setOpen] = React.useState(false)
+
+  const [date, setDate] = React.useState(value)
   const [time, setTime] = React.useState<PickerTime>({
     hours: nowDate.getHours(),
     minutes: nowDate.getMinutes()
   })
+
   const onDismissSingle = React.useCallback(() => {
     setOpen(false)
   }, [setOpen])
 
+  useEffect(() => {
+    console.log({ date, time })
+    setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
+  }, [date, time])
+
   const handleSetDate = ({ date }) => {
-    let newDate
-    if (withTime) {
-      newDate = new Date(date.setHours(time.hours, time.minutes, 0, 0))
-    } else {
-      newDate = new Date(date)
-    }
-    setDate(newDate)
-    setValue(newDate)
+    setDate(date)
     setOpen(false)
   }
 
   const handleSetTime = (time: PickerTime) => {
-    const newDate = new Date(date.setHours(time.hours, time.minutes, 0, 0))
     setTime(time)
-    setDate(newDate)
-    setValue(newDate)
+    setOpen(false)
   }
 
   const hours = date.getHours()
