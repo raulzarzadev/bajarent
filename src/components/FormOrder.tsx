@@ -133,7 +133,7 @@ const FormOrderA = ({
             <>
               <InputRadiosFormik
                 name="type"
-                options={ordersTypesAllowed}
+                options={ordersTypesAllowed.sort()}
                 label="Tipo de orden"
               />
 
