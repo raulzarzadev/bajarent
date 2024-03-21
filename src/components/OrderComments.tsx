@@ -17,7 +17,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
   const [orderComments, setOrderComments] = useState<OrderType['comments']>([])
   useEffect(() => {
     getComments()
-  }, [])
+  }, [orderId])
 
   const getComments = () => {
     ServiceComments.getByOrder(orderId).then(setOrderComments)
