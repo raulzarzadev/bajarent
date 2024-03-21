@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
-import asDate from '../../libs/utils-date'
+import asDate, { dateFormat } from '../../libs/utils-date'
 import Button from '../Button'
-import WeekTimeline, { Event } from '../Calendars/WeekTimeline2'
+import { Event } from '../Calendars/WeekTimeline2'
 import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import WeekOrdersTimeLine from '../WeekOrdersTimeLine'
 import OrderType from '../../types/OrderType'
+import { Text, View } from 'react-native'
 
 const ModalAssignOrder = ({
   orderId = null,
@@ -32,7 +33,7 @@ const ModalAssignOrder = ({
     (o) => o?.id === assignedToSection
   )?.name
 
-  const [sectionEvents, setSectionEvents] = useState<Event[]>([])
+  // const [sectionEvents, setSectionEvents] = useState<Event[]>([])
 
   const handleChangeAssignSection = (sectionId: string) => {
     assignSection?.(sectionId)
@@ -52,21 +53,24 @@ const ModalAssignOrder = ({
         (o) => o.assignToSection === assignedToSection
       )
       setSectionOrders(sectionOrders)
-      setSectionEvents(
-        sectionOrders.map((o) => ({
-          date: o.scheduledAt,
-          title: o.fullName,
-          id: o.id
-        }))
-      )
+      // setSectionEvents(
+      //   sectionOrders.map((o) => ({
+      //     date: o.scheduledAt,
+      //     title: o.fullName,
+      //     id: o.id
+      //   }))
+      // )
     }
   }, [assignedToSection, orders])
-
   return (
     <>
-      <Button onPress={modal.toggleOpen}>
-        {sectionAssigned ? `Asignada a ${sectionAssigned}` : 'Asignar'}
-      </Button>
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        {sectionAssigned && <Text>Aarea: {sectionAssigned}</Text>}
+        {date && (
+          <Text>Fecha: {dateFormat(asDate(date), 'dd MMM yy HH:mm')}</Text>
+        )}
+      </View>
+      <Button onPress={modal.toggleOpen} label="Asignar"></Button>
       <StyledModal {...modal}>
         <InputSelect
           value={assignedToSection}
