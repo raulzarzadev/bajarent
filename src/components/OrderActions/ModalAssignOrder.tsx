@@ -10,6 +10,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import WeekOrdersTimeLine from '../WeekOrdersTimeLine'
 import OrderType from '../../types/OrderType'
 import { Text, View } from 'react-native'
+import { gStyles } from '../../styles'
 
 const ModalAssignOrder = ({
   orderId = null,
@@ -64,10 +65,20 @@ const ModalAssignOrder = ({
   }, [assignedToSection, orders])
   return (
     <>
-      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        {sectionAssigned && <Text>Aarea: {sectionAssigned}</Text>}
-        {date && (
-          <Text>Fecha: {dateFormat(asDate(date), 'dd MMM yy HH:mm')}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        {sectionAssigned && (
+          <View>
+            <Text style={gStyles.h3}>Area</Text>
+            <Text style={{ textAlign: 'center' }}>{sectionAssigned}</Text>
+          </View>
+        )}
+        {assignedDate && (
+          <View>
+            <Text style={gStyles.h3}>Fecha</Text>
+            <Text style={{ textAlign: 'center' }}>
+              {dateFormat(asDate(assignedDate), 'dd MMM yy HH:mm')}
+            </Text>
+          </View>
         )}
       </View>
       <Button onPress={modal.toggleOpen} label="Asignar"></Button>

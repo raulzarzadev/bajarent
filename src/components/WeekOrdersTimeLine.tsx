@@ -47,8 +47,6 @@ const WeekOrdersTimeLine = ({
     description: dictionary(o.status)
   }))
 
-  console.log({ expiredEvents })
-
   return (
     <View style={gStyles.container}>
       <WeekTimeline
