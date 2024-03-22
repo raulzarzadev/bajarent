@@ -243,19 +243,34 @@ const SlotCell = ({
   currentEventId: string
 }) => {
   return (
-    <Pressable
-      onPress={onPressSlot}
+    <View
+      // onPress={onPressSlot}
       style={[
         {
           minHeight: 50,
           width,
-          justifyContent: 'flex-end',
-          borderBottomColor: 'black',
-          borderBottomWidth: 0.3
+          justifyContent: 'flex-end'
         }
       ]}
     >
       <View>
+        <Pressable
+          onPress={onPressSlot}
+          style={{
+            padding: 2,
+            marginBottom: 2,
+            backgroundColor: theme.white,
+            borderTopColor: theme.info,
+            borderTopWidth: 0.3,
+            borderBottomStartRadius: 4,
+            borderBottomEndRadius: 4
+          }}
+        >
+          <Text style={[gStyles.helper, { textAlign: 'right' }]}>
+            {timeLabel}
+          </Text>
+        </Pressable>
+
         {slotSelected && (
           <Text
             numberOfLines={1}
@@ -264,6 +279,7 @@ const SlotCell = ({
             Seleccionado
           </Text>
         )}
+
         {events?.map((e) => (
           <Pressable
             style={[
@@ -283,9 +299,7 @@ const SlotCell = ({
           </Pressable>
         ))}
       </View>
-
-      <Text style={gStyles.helper}>{timeLabel}</Text>
-    </Pressable>
+    </View>
   )
 }
 
