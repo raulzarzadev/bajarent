@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
+import OrderType from '../types/OrderType'
 
 function ScreenOrders({ navigation, route }) {
   const { orders } = useStore()
   const [filtered, setFiltered] = useState<string[]>([])
   const filter = route?.params?.orders || []
+  const [fullOrders, setFullOrders] = useState<OrderType[]>([])
 
   useEffect(() => {
     if (filter.length > 0)
@@ -14,7 +16,27 @@ function ScreenOrders({ navigation, route }) {
       )
   }, [filter])
 
-  return <ListOrders orders={orders} defaultOrdersIds={filtered} />
+  useEffect(() => {
+    setFullOrders(orders)
+  }, [orders])
+
+  return (
+    <>
+      <ListOrders
+        orders={fullOrders}
+        defaultOrdersIds={filtered}
+        // sideButtons={[
+        //   {
+        //     icon: 'download',
+        //     label: '',
+        //     onPress: handleGetSolvedOrders,
+        //     visible: true,
+        //     disabled: solvedOrders.length > 0
+        //   }
+        // ]}
+      />
+    </>
+  )
 }
 
 export default ScreenOrders

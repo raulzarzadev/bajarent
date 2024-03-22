@@ -190,6 +190,7 @@ const EventsView = ({
       {daysOfWeek.map((_date: Date, i) => {
         return (
           <FlatList
+            key={i}
             style={{ maxHeight: 300 }}
             data={Array.from({ length: hours.length }, (_, i) => {
               return { i }

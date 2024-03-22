@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import useSort from '../hooks/useSort'
 import { FC, useState } from 'react'
-import Icon from './Icon'
+import Icon, { IconName } from './Icon'
 
 import { gSpace } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
@@ -18,6 +18,13 @@ import Button from './Button'
 const windowHeight = Dimensions.get('window').height
 const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
 
+export type ListSideButton = {
+  icon: IconName
+  label: string
+  onPress: () => void
+  visible?: boolean
+  disabled?: boolean
+}
 export type ListPops<T extends { id: string }> = {
   data: T[]
   preFilteredIds?: string[]
@@ -28,6 +35,7 @@ export type ListPops<T extends { id: string }> = {
   filters: FilterListType<T>[]
   defaultOrder?: 'asc' | 'des'
   onPressNew?: () => void
+  sideButtons?: ListSideButton[]
 }
 
 function MyList<T extends { id: string }>({
@@ -39,7 +47,8 @@ function MyList<T extends { id: string }>({
   defaultOrder = 'asc',
   filters,
   onPressNew,
-  preFilteredIds
+  preFilteredIds,
+  sideButtons = []
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([])
 
@@ -48,6 +57,13 @@ function MyList<T extends { id: string }>({
     defaultSortBy: defaultSortBy as string,
     defaultOrder
   })
+
+  if (onPressNew) {
+    sideButtons = [
+      ...sideButtons,
+      { icon: 'add', label: 'Nuevo', onPress: onPressNew, visible: true }
+    ]
+  }
 
   return (
     <View style={[styles.container, { maxWidth: 1024, maxHeight }]}>
@@ -61,9 +77,21 @@ function MyList<T extends { id: string }>({
           padding: 4
         }}
       >
-        {onPressNew && (
-          <Button icon="add" label="" onPress={onPressNew} size="xs"></Button>
+        {sideButtons?.map(
+          (button, index) =>
+            button.visible && (
+              <View key={index} style={{ marginHorizontal: 2 }}>
+                <Button
+                  icon={button?.icon}
+                  // label={button.label}
+                  onPress={button?.onPress}
+                  size="xs"
+                  disabled={button?.disabled}
+                ></Button>
+              </View>
+            )
         )}
+
         <ModalFilterList
           preFilteredIds={preFilteredIds}
           data={data}
@@ -150,7 +178,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default function List<T extends { id: string }>(props: ListPops<T>) {
+export default function <T extends { id: string }>(props: ListPops<T>) {
   return (
     <ErrorBoundary>
       <MyList {...props}></MyList>

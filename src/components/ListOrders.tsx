@@ -1,21 +1,24 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import List from './List'
+import List, { ListSideButton } from './List'
 import { useNavigation } from '@react-navigation/native'
 import RowOrder from './RowOrder'
 import OrderType from '../types/OrderType'
 
 const ListOrders = ({
   orders,
-  defaultOrdersIds
+  defaultOrdersIds,
+  sideButtons = []
 }: {
   orders: OrderType[]
   defaultOrdersIds?: string[]
+  sideButtons?: ListSideButton[]
 }) => {
   const { navigate } = useNavigation()
   return (
     <View>
       <List
+        sideButtons={sideButtons}
         preFilteredIds={defaultOrdersIds}
         defaultSortBy="folio"
         defaultOrder="des"
