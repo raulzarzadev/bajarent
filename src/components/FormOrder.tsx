@@ -234,18 +234,21 @@ const FormOrderA = ({
   )
 }
 
-const FormFields = ({
-  fields,
-  values,
-  setValues
-}: {
+type FormFieldsProps = {
   fields: FormOrderFields[]
   values: Partial<OrderType>
   setValues: (
     values: SetStateAction<Partial<OrderType>>,
     shouldValidate?: boolean | undefined
   ) => void
-}) => {
+}
+const FormFields = (props: FormFieldsProps) => (
+  <ErrorBoundary componentName="FormFieldsA">
+    <FormFieldsA {...props}></FormFieldsA>
+  </ErrorBoundary>
+)
+
+const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
   const { categories, store } = useStore()
 
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -285,7 +288,7 @@ const FormFields = ({
     sheetRow: (
       <InputTextStyled
         onChangeText={(text) => setSheetRow(text)}
-        placeholder="Renglon de la hoja"
+        placeholder="Fila de excel"
         helperText={
           'Una fila de una hoja de excel (nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
         }
@@ -371,7 +374,7 @@ const FormFields = ({
     ),
 
     assignIt: (
-      <ErrorBoundary>
+      <ErrorBoundary componentName="ModalAssignOrder">
         <ModalAssignOrder
           orderId={values.id}
           section={values.assignToSection}
@@ -399,7 +402,7 @@ const FormFields = ({
 // export default FormOrderA
 export default function FormOrder(props: FormOrderProps) {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary componentName="FormOrder">
       <FormOrderA {...props}></FormOrderA>
     </ErrorBoundary>
   )
