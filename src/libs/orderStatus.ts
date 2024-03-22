@@ -9,7 +9,15 @@ import expireDate from './expireDate'
 
 const orderStatus = (order: Partial<OrderType>): OrderStatus => {
   if (order.status === order_status.PICKUP) return order.status
-  if (order.type === order_type.REPAIR) return order.status
+
+  if (
+    ![
+      order_type.RENT,
+      order_type.DELIVERY_RENT,
+      order_type.STORE_RENT
+    ].includes(order.type)
+  )
+    return order.status
   let status: OrderStatus = order?.status || order_status.PENDING
 
   const expireAt = expireDate(
