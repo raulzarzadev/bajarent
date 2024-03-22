@@ -125,10 +125,7 @@ ${orderPayments()}
         <Button
           onPress={() => {
             // @ts-ignore
-            navigation.navigate('Orders', {
-              params: { orderId },
-              screen: 'EditOrder'
-            })
+            navigation.navigate('EditOrder', { orderId })
           }}
           label="Editar"
         />
