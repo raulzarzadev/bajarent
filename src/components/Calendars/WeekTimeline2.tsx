@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Button from '../Button'
 import theme from '../../theme'
@@ -189,10 +189,12 @@ const EventsView = ({
     >
       {daysOfWeek.map((_date: Date, i) => {
         return (
-          <View key={i} style={{ marginVertical: gSpace(1) }}>
-            {Array.from({ length: hours.length }, (_, i) => {
+          <FlatList
+            style={{ maxHeight: 300 }}
+            data={Array.from({ length: hours.length }, (_, i) => {
               return { i }
-            }).map((_, i) => {
+            })}
+            renderItem={({ item, index: i }) => {
               return (
                 <SlotCell
                   key={i}
@@ -207,7 +209,7 @@ const EventsView = ({
                   onPressEvent={(eventId) => {
                     onPressEvent?.(eventId)
                   }}
-                  width={width / numberOfDays - 10}
+                  width={width / numberOfDays}
                   timeLabel={hours[i]}
                   events={slotEvents(_date, hours[i], events)}
                   currentEventId={currentEventId}
@@ -217,8 +219,8 @@ const EventsView = ({
                   }
                 />
               )
-            })}
-          </View>
+            }}
+          />
         )
       })}
     </View>
@@ -247,9 +249,10 @@ const SlotCell = ({
       // onPress={onPressSlot}
       style={[
         {
-          minHeight: 50,
+          minHeight: 40,
           width,
-          justifyContent: 'flex-end'
+          maxHeight: 400,
+          padding: 4
         }
       ]}
     >
