@@ -251,7 +251,7 @@ const SlotCell = ({
         {
           minHeight: 40,
           width,
-          maxHeight: 400,
+          // maxHeight: 400,
           padding: 4
         }
       ]}
