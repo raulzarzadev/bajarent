@@ -264,7 +264,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     const [name, phone, neighborhood, address, references, number, date, time] =
       sheetRow?.split('\t') || []
 
-    const scheduledAt = date && new Date(asDate(date).setHours(9))
+    const scheduledAt = date && new Date(asDate(date)?.setHours(9))
 
     setValues({
       ...values,
