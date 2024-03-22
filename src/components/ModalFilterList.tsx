@@ -163,7 +163,7 @@ function ModalFilterList<T>({
           }}
         >
           <Text style={{ textAlign: 'center' }}>
-            {filteredData.length} conicidencias
+            {filteredData.length} coincidencias
           </Text>
           {filtersBy?.length > 0 && (
             <View

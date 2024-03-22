@@ -101,7 +101,7 @@ function MyList<T extends { id: string }>({
       </View>
       <View>
         <Text style={{ textAlign: 'center' }}>
-          {filteredData.length} conicidencias
+          {filteredData.length} coincidencias
         </Text>
       </View>
       <View
