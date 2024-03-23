@@ -300,12 +300,22 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
         </Text>
         <Text style={gStyles.helper}> {order?.id}</Text>
       </View>
-      <Text style={{ textAlign: 'center' }}>
-        <P bold size="lg">
-          Folio:{' '}
-        </P>
-        <P size="lg">{order?.folio}</P>
-      </Text>
+      <View>
+        <Text style={{ textAlign: 'center' }}>
+          <P bold size="lg">
+            Folio:{' '}
+          </P>
+          <P size="lg">{order?.folio}</P>
+        </Text>
+        {order?.note && (
+          <Text style={{ textAlign: 'center' }}>
+            <P bold size="lg">
+              Nota:{' '}
+            </P>
+            <P size="lg">{order?.note}</P>
+          </Text>
+        )}
+      </View>
     </View>
   )
 }
