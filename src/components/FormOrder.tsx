@@ -74,6 +74,11 @@ const FormOrderA = ({
     .map((value) => {
       return { label: dictionary(value[0] as order_type), value: value[0] }
     })
+    .sort((a, b) => {
+      // hard sort to put delivery rent first
+      if (a.value === order_type.DELIVERY_RENT) return -1
+      return a.label.localeCompare(b.label)
+    })
 
   const [defaultType, setDefaultType] = useState<order_type>(
     defaultValues?.type || (ordersTypesAllowed[0]?.value as order_type)
@@ -134,7 +139,7 @@ const FormOrderA = ({
             <>
               <InputRadiosFormik
                 name="type"
-                options={ordersTypesAllowed.sort()}
+                options={ordersTypesAllowed}
                 label="Tipo de orden"
               />
 
