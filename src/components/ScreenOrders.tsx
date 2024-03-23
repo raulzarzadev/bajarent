@@ -39,7 +39,7 @@ function ScreenOrders({ navigation, route }) {
             label: '',
             onPress: getSolvedOrders,
             visible: true,
-            disabled: disabledDownload
+            disabled: true
           }
         ]}
       />

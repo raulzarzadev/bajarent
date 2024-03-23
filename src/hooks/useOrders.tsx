@@ -12,7 +12,9 @@ export default function useOrders({ storeId }: { storeId: string }) {
   }
 
   useEffect(() => {
-    ServiceOrders.listenUnsolved(storeId, setOrders)
+    //* FIXME: This is generating problems because orders with reports or expired status are not getting
+    // ServiceOrders.listenUnsolved(storeId, setOrders)
+    ServiceOrders.listenByStore(storeId, setOrders)
   }, [storeId])
 
   return {
