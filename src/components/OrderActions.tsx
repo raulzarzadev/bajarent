@@ -17,7 +17,7 @@ import { gStyles } from '../styles'
 import { useState } from 'react'
 import ModalSendWhatsapp from './ModalSendWhatsapp'
 import dictionary from '../dictionary'
-import { dateFormat } from '../libs/utils-date'
+import asDate, { dateFormat } from '../libs/utils-date'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
   const { staffPermissions, store } = useStore()
@@ -54,9 +54,9 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       order.type === order_type.STORE_RENT
     ) {
       return `Periodo:  ${dateFormat(
-        order.deliveredAt,
+        asDate(order.deliveredAt),
         'dd/MM/yy'
-      )} al ${dateFormat(order.expireAt, 'dd/MM/yy')}`
+      )} al ${dateFormat(asDate(order.expireAt), 'dd/MM/yy')}`
     }
 
     if (order.type === order_type.REPAIR) {
@@ -86,7 +86,7 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
           style: 'currency',
           currency: 'MXN'
         }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
-          p.createdAt,
+          asDate(p.createdAt),
           'dd/MMM/yy HH:mm'
         )} \n`
       })

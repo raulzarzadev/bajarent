@@ -28,6 +28,7 @@ export default function expireDate(
   startedAt: Date | Timestamp,
   price?: PriceType
 ): Date {
+  console.log({ startedAt })
   if (!price) return startedAt as Date
   const startedAtDate = asDate(startedAt)
   const [qty, unit] = price.time.split(' ')

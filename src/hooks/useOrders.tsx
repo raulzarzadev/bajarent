@@ -17,6 +17,10 @@ export default function useOrders({ storeId }: { storeId: string }) {
     ServiceOrders.listenByStore(storeId, setOrders)
   }, [storeId])
 
+  useEffect(() => {
+    //* We should listen unsolved orders, expired and reported orders.
+  }, [orders])
+
   return {
     orders,
     handleGetSolvedOrders

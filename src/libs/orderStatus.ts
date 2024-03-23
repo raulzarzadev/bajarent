@@ -19,7 +19,6 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
   )
     return order.status
   let status: OrderStatus = order?.status || order_status.PENDING
-
   const expireAt = expireDate(
     order?.item?.priceSelected?.time,
     order?.deliveredAt,

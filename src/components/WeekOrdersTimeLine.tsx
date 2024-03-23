@@ -6,7 +6,7 @@ import asDate from '../libs/utils-date'
 import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
 import { gStyles } from '../styles'
-import { isAfter, isBefore } from 'date-fns'
+import { isAfter } from 'date-fns'
 
 type WeekOrdersTimeLineProps = {
   orders: OrderType[]

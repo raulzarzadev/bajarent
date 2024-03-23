@@ -87,7 +87,7 @@ export const asDate = (
   if (!date) return null
   if (date instanceof Date) {
     if (!isNaN(date.getTime())) return date
-    console.error('not a valid date')
+    console.error('not a valid date', { date })
     return null
   }
   if (date instanceof Timestamp) return date.toDate()

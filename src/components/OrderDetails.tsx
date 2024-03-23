@@ -4,7 +4,7 @@ import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
 import theme from '../theme'
-import { dateFormat, fromNow } from '../libs/utils-date'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
@@ -222,10 +222,10 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
                 Expira
               </Text>
               <Text style={[gStyles.p, gStyles.tCenter]}>
-                {dateFormat(order?.expireAt, 'dd/MM/yy HH:mm')}
+                {dateFormat(asDate(order?.expireAt), 'dd/MM/yy HH:mm')}
               </Text>
               <Text style={[gStyles.p, gStyles.tCenter]}>
-                {fromNow(order?.expireAt)}
+                {fromNow(asDate(order?.expireAt))}
               </Text>
             </View>
           )}
