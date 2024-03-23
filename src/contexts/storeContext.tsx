@@ -124,7 +124,6 @@ const StoreContextProvider = ({ children }) => {
     const getStaffDetails = async () => {
       const staffs: Promise<StaffType>[] = staff.map(async (employee) => {
         const user = await ServiceUsers.get(employee.userId)
-        console.log({ user, employee })
         return {
           // @ts-ignore // FIXME: fix this
           ...employee,
