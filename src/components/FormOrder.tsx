@@ -39,7 +39,8 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'imageHouse',
   'hasDelivered',
   'assignIt',
-  'sheetRow'
+  'sheetRow',
+  'note'
   // 'folio'
 ] as const
 
@@ -162,6 +163,7 @@ const FormOrderA = ({
                 <FormFields
                   fields={[
                     'sheetRow',
+                    'note',
                     'fullName',
                     'phone',
                     'location',
@@ -294,6 +296,14 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         }
       />
     ),
+    note: (
+      <InputValueFormik
+        name={'note'}
+        placeholder="Nota"
+        helperText={'Numero de nota o referencia externa'}
+      />
+    ),
+
     fullName: (
       <InputValueFormik
         name={'fullName'}
@@ -306,18 +316,24 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       <InputValueFormik
         name={'address'}
         placeholder="Dirección completa (calle, numero y entre calles)"
+        helperText={`Ejemplo: Calle 1 #123 entre Calle 2 y Calle 3`}
       />
     ),
     imageID: <FormikInputImage name="imageID" label="Subir identificación" />,
     imageHouse: <FormikInputImage name="imageHouse" label="Subir fachada " />,
     neighborhood: (
-      <InputValueFormik name={'neighborhood'} placeholder="Colonia" />
+      <InputValueFormik
+        name={'neighborhood'}
+        placeholder="Colonia"
+        helperText="Ejemplo: Centro, San Pedro, etc."
+      />
     ),
     location: <InputLocationFormik name={'location'} />,
     references: (
       <InputValueFormik
         name={'references'}
         placeholder="Referencias de la casa"
+        helperText="Ejemplo: Casa blanca con portón rojo"
       />
     ),
 
