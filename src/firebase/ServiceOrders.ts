@@ -131,6 +131,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 
   getUnsolved(storeId: string) {
+    // ? this means that order is not solved because is in use
+    //* **  An alternative it will be listen orders that are delivered but are  expired
+    // FIXME: Other problem can be that oreders with status REPORTED are not getting //* Can fixed if we get all orders and after that just listen status that really matters ????
+
     return this.findMany([
       where('storeId', '==', storeId),
       where('status', 'in', ORDER_STATUS_UNSOLVED)
