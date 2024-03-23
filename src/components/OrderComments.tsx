@@ -132,6 +132,7 @@ const OrderComment = ({
       })
       .catch((res) => console.error(res))
   }
+  console.log({ staff })
   return (
     <View style={{ width: '100%', marginHorizontal: 'auto' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

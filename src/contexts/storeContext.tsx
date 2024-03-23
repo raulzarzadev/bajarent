@@ -124,13 +124,14 @@ const StoreContextProvider = ({ children }) => {
     const getStaffDetails = async () => {
       const staffs: Promise<StaffType>[] = staff.map(async (employee) => {
         const user = await ServiceUsers.get(employee.userId)
+        console.log({ user, employee })
         return {
+          // @ts-ignore // FIXME: fix this
+          ...employee,
           staffId: employee.id,
           storeId,
           name: user.name,
-          email: user.email,
-          // @ts-ignore // FIXME: fix this
-          ...employee
+          email: user.email
         }
       })
 
