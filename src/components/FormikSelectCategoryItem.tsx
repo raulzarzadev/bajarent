@@ -16,7 +16,6 @@ const FormikSelectCategoryItem = ({
 }) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [field.value])
-
   return (
     <FormSelectItem
       selectPrice={selectPrice}

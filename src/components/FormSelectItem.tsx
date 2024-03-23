@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputRadios from './InputRadios'
 import theme from '../theme'
 import CurrencyAmount from './CurrencyAmount'
@@ -37,6 +37,10 @@ const FormSelectItem = ({
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
   >(value?.categoryName || null)
+
+  useEffect(() => {
+    setCategoryId(value?.categoryName)
+  }, [value?.categoryName])
 
   const [priceId, setPriceId] = useState<
     ItemSelected['priceSelectedId'] | null

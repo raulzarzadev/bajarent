@@ -263,19 +263,35 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
 
   useEffect(() => {
     if (!sheetRow) return
-    const [name, phone, neighborhood, address, references, number, date, time] =
-      sheetRow?.split('\t') || []
+    const [
+      note,
+      name,
+      phone,
+      neighborhood,
+      address,
+      references,
+      number,
+      date,
+      time
+    ] = sheetRow?.split('\t') || []
 
     const scheduledAt = date && new Date(asDate(date)?.setHours(9))
 
     setValues({
       ...values,
+      note,
       fullName: name,
       phone: `+52${phone}`,
       neighborhood,
       address: `${address} ${number}`,
       references,
-      scheduledAt
+      scheduledAt,
+
+      item: {
+        categoryName: 'Lavadora',
+        priceSelected: null,
+        priceSelectedId: null
+      }
     })
   }, [sheetRow])
 
@@ -292,7 +308,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         onChangeText={(text) => setSheetRow(text)}
         placeholder="Fila de excel"
         helperText={
-          'Una fila de una hoja de excel (nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
+          'Una fila de una hoja de excel (No.nota, nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
         }
       />
     ),

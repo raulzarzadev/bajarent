@@ -5,6 +5,8 @@ import { CommentType } from './CommentType'
 import PaymentType from './PaymentType'
 
 type OrderBase = {
+  note: string
+
   folio: number
   status: OrderStatus
   type: TypeOfOrderType
