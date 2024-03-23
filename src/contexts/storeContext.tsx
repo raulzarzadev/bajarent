@@ -57,7 +57,8 @@ const StoreContextProvider = ({ children }) => {
     staff,
     store,
     categories,
-    updateCategories
+    updateCategories,
+    handleGetSolvedOrders
   } = useStoreDataListen({ storeId })
 
   const { userPositions, userStores, updateUserStores } = useUserStores()
@@ -218,7 +219,8 @@ const StoreContextProvider = ({ children }) => {
         payments: paymentsFormatted,
         updateCategories,
         updateUserStores,
-        categories
+        categories,
+        handleGetSolvedOrders
       }}
     >
       {children}

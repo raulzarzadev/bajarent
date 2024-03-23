@@ -6,7 +6,7 @@ import StaffType from '../types/StaffType'
 import PaymentType from '../types/PaymentType'
 import { SectionType } from '../types/SectionType'
 import { ServiceStores } from '../firebase/ServiceStore'
-import { ServiceOrders } from '../firebase/ServiceOrders'
+
 import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServicePayments } from '../firebase/ServicePayments'
@@ -15,10 +15,13 @@ import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
 import { CategoryType } from '../types/RentItem'
 import { ServiceCategories } from '../firebase/ServiceCategories'
+import useOrders from './useOrders'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
+  const { orders, handleGetSolvedOrders } = useOrders({ storeId })
+
   const [store, setStore] = useState<StoreType>(null)
-  const [orders, setOrders] = useState<OrderType[]>([])
+
   const [comments, setComments] = useState<CommentType[]>([])
   const [staff, setStaff] = useState<StaffType[]>([])
   const [payments, setPayments] = useState<PaymentType[]>([])
@@ -42,7 +45,7 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
       ServiceSections.listenByStore(store.id, setSections)
 
       ServicePayments.listenByStore(store.id, setPayments)
-      ServiceOrders.listenByStore(store.id, setOrders)
+      // ServiceOrders.listenByStore(store.id, setOrders)
       // ServiceComments.listenByStore(store.id, setComments)
       ServiceComments.listenStoreReports(store.id, setComments)
 
@@ -81,7 +84,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     sections,
     prices,
     updateCategories,
-    categories: formatCategories
+    categories: formatCategories,
+    handleGetSolvedOrders
   }
 }
 

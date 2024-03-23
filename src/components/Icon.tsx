@@ -16,7 +16,8 @@ import {
   MdOutlineDone,
   MdChevronLeft,
   MdChevronRight,
-  MdSettings
+  MdSettings,
+  MdDownload
 } from 'react-icons/md'
 
 import {
@@ -99,7 +100,8 @@ const icons = {
   // google: GoogleIcon
   rowLeft: MdChevronLeft,
   rowRight: MdChevronRight,
-  settings: MdSettings
+  settings: MdSettings,
+  download: MdDownload
 } as const
 
 export type IconName = keyof typeof icons

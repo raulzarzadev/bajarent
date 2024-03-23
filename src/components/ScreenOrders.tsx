@@ -4,7 +4,7 @@ import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
 
 function ScreenOrders({ navigation, route }) {
-  const { orders } = useStore()
+  const { orders, handleGetSolvedOrders } = useStore()
   const [filtered, setFiltered] = useState<string[]>([])
   const filter = route?.params?.orders || []
   const [fullOrders, setFullOrders] = useState<OrderType[]>([])
@@ -20,20 +20,28 @@ function ScreenOrders({ navigation, route }) {
     setFullOrders(orders)
   }, [orders])
 
+  const [disabledDownload, setDisabledDownload] = useState(false)
+  const getSolvedOrders = () => {
+    handleGetSolvedOrders()
+    setDisabledDownload(true)
+    setTimeout(() => {
+      setDisabledDownload(false)
+    }, 5000)
+  }
   return (
     <>
       <ListOrders
         orders={fullOrders}
         defaultOrdersIds={filtered}
-        // sideButtons={[
-        //   {
-        //     icon: 'download',
-        //     label: '',
-        //     onPress: handleGetSolvedOrders,
-        //     visible: true,
-        //     disabled: solvedOrders.length > 0
-        //   }
-        // ]}
+        sideButtons={[
+          {
+            icon: 'download',
+            label: '',
+            onPress: getSolvedOrders,
+            visible: true,
+            disabled: disabledDownload
+          }
+        ]}
       />
     </>
   )
