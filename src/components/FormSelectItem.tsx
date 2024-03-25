@@ -48,6 +48,7 @@ const FormSelectItem = ({
 
   const prices =
     categories?.find((category) => category?.name === categoryId)?.prices || []
+  console.log({ value })
 
   return (
     <View>
