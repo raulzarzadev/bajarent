@@ -7,7 +7,6 @@ import OrderType, {
 import asDate from './utils-date'
 
 const orderStatus = (order: Partial<OrderType>): OrderStatus => {
-  console.log('expireAt', order.expireAt)
   if (order.status === order_status.PICKUP) return order.status
 
   if (
