@@ -15,6 +15,7 @@ import Numbers from './Numbers'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import { useNavigation } from '@react-navigation/native'
+import { ButtonAskLocation } from './LocationStatus'
 
 const ScreenStore = ({ navigation }) => {
   const { navigate } = useNavigation()
@@ -67,7 +68,9 @@ const ScreenStore = ({ navigation }) => {
       )}
       {store && (
         <>
+          <ButtonAskLocation />
           <StoreDetails store={store} />
+          <View style={{ justifyContent: 'center' }}></View>
           {(staffPermissions?.isAdmin || isOwner) && (
             <>
               <View style={styles.buttonsContainer}>
