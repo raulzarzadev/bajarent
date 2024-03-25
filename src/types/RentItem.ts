@@ -1,12 +1,9 @@
+import { ItemSelected } from '../components/FormSelectItem'
 import BaseType from './BaseType'
 import ItemType from './ItemType'
 import { PriceType } from './PriceType'
 
-export type RentItem = {
-  categoryName: string
-  priceSelectedId: string
-  priceSelected: PriceType
-}
+export type RentItem = ItemSelected & {}
 
 export type CategoryBase = {
   name: string

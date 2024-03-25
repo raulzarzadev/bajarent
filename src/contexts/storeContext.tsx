@@ -94,6 +94,7 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     //* ** FORMAT ORDERS  */
+
     const orderFormatted = orders.map((order) => {
       const orderComments = comments?.filter(
         (comment) => comment.orderId === order.id
@@ -112,7 +113,8 @@ const StoreContextProvider = ({ children }) => {
           expireDate(
             order?.item?.priceSelected?.time,
             order?.deliveredAt,
-            order?.item?.priceSelected
+            order?.item?.priceSelected,
+            order?.item?.priceQty
           ) || null,
         payments: payments.filter((p) => p.orderId === order.id) || []
       }

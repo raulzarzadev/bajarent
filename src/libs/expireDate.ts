@@ -26,12 +26,13 @@ export function priceTimeInSeconds(time: TimePriceType): number {
 export default function expireDate(
   time: TimePriceType,
   startedAt: Date | Timestamp,
-  price?: PriceType
+  price?: Partial<PriceType>,
+  priceQty?: number
 ): Date {
   if (!price) return startedAt as Date
   const startedAtDate = asDate(startedAt)
   const [qty, unit] = price.time.split(' ')
-  const QTY = parseInt(qty)
+  const QTY = parseInt(qty) * (priceQty || 1)
   if (unit === 'year') {
     const expireDate = addMonths(startedAtDate, QTY * 12)
     return expireDate
