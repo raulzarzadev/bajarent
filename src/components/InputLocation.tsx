@@ -21,26 +21,28 @@ const InputLocation = ({ value, setValue }) => {
           Linking.openURL('https://www.google.com/maps')
         }}
       />
-      <Button
-        justIcon
-        icon={locationEnabled ? 'location' : 'locationOff'}
-        color={locationEnabled ? 'primary' : 'neutral'}
-        variant="ghost"
-        onPress={() => {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              setValue(
-                `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
-              )
-              // console.log(position)
-            },
-            (error) => {
-              console.error(error)
-            },
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-          )
-        }}
-      ></Button>
+      {locationEnabled && (
+        <Button
+          justIcon
+          icon={locationEnabled ? 'location' : 'locationOff'}
+          color={locationEnabled ? 'primary' : 'neutral'}
+          variant="ghost"
+          onPress={() => {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                setValue(
+                  `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
+                )
+                // console.log(position)
+              },
+              (error) => {
+                console.error(error)
+              },
+              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+            )
+          }}
+        ></Button>
+      )}
     </View>
   )
 }

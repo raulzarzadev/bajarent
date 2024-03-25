@@ -6,6 +6,7 @@ import theme from '../theme'
 
 const LocationStatus = () => {
   const { locationEnabled } = useLocation()
+  if (!locationEnabled) return null
   return (
     <View style={{ marginRight: 8 }}>
       {locationEnabled ? (
