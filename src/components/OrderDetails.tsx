@@ -11,7 +11,7 @@ import OrderComments from './OrderComments'
 import dictionary from '../dictionary'
 import Chip from './Chip'
 import OrderStatus from './OrderStatus'
-import { gStyles } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import OrderAssignedTo from './OrderAssignedTo'
 import ClientName from './ClientName'
@@ -138,7 +138,13 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
           marginBottom: 16
         }}
       >
-        <ModalPayment orderId={order.id} storeId={order.storeId} />
+        <ModalPayment
+          orderId={order.id}
+          storeId={order.storeId}
+          defaultAmount={
+            order?.item?.priceSelected?.amount * order?.item?.priceQty
+          }
+        />
       </View>
 
       <ErrorBoundary componentName="OrderActions">
@@ -191,6 +197,22 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
+  console.log({ item: order?.item })
+  if (!order?.item)
+    return (
+      <View
+        style={{
+          marginVertical: 16,
+          paddingVertical: 16,
+          backgroundColor: theme?.base,
+          margin: 4
+        }}
+      >
+        <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
+          Sin artículos
+        </Text>
+      </View>
+    )
   return (
     <View
       style={{
@@ -204,14 +226,18 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
 
       <View>
         <View>
+          {}
           <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
-            <Text style={gStyles.helper}>{order?.item?.priceQty}x</Text>{' '}
+            <Text style={gStyles.helper}>{order?.item?.priceQty || 1}x</Text>{' '}
             {order?.item?.priceSelected?.title}
           </Text>
           <CurrencyAmount
             style={gStyles.h1}
-            amount={order?.item?.priceSelected?.amount * order?.item?.priceQty}
+            amount={
+              (order?.item?.priceSelected?.amount || 0) *
+              (order?.item?.priceQty || 1)
+            }
           />
           {order?.expireAt && (
             <View style={{ marginTop: 12 }}>

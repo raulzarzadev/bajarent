@@ -14,14 +14,16 @@ export type ModalPaymentProps = {
   orderId: string
   paymentId?: string
   storeId: string
+  defaultAmount?: number
 }
 export const ModalPayment = ({
   orderId,
   paymentId,
-  storeId
+  storeId,
+  defaultAmount = 0
 }: ModalPaymentProps) => {
   const payment: PaymentBase = {
-    amount: 0,
+    amount: defaultAmount,
     reference: '',
     date: new Date(),
     method: 'cash',
@@ -68,7 +70,8 @@ export const ModalPayment = ({
   }
 
   const methods = Object.values(payment_methods).map((method) => ({
-    label: dictionary(method),
+    label:
+      dictionary(method).charAt(0).toUpperCase() + dictionary(method).slice(1),
     value: method
   }))
 

@@ -58,7 +58,7 @@ const labels = {
   REPAIR_DELIVERED: 'Entregada',
   RENT: 'Renta',
   SALE: 'Venta',
-  cash: 'Efectivo',
+  cash: 'efectivo',
   transfer: 'Transferencia',
   full: 'Completa',
   partial: 'Parcial',
