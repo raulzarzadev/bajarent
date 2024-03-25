@@ -50,6 +50,15 @@ const FormSelectItem = ({
     categories?.find((category) => category?.name === categoryId)?.prices || []
   console.log({ value })
 
+  const handleSelectPrice = (priceId: string) => {
+    if (priceId === value.priceSelectedId) {
+      setPriceId(null)
+      setValue({ categoryName: categoryId, priceSelectedId: null })
+    } else {
+      setPriceId(priceId)
+      setValue({ categoryName: categoryId, priceSelectedId: priceId })
+    }
+  }
   return (
     <View>
       <View>
@@ -73,8 +82,7 @@ const FormSelectItem = ({
           <FormSelectPrice
             value={priceId || null}
             setValue={(priceId) => {
-              setPriceId(priceId)
-              setValue({ categoryName: categoryId, priceSelectedId: priceId })
+              handleSelectPrice(priceId)
             }}
             prices={prices}
           />
