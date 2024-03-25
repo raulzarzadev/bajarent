@@ -206,15 +206,12 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         <View>
           <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
+            <Text style={gStyles.helper}>{order?.item?.priceQty}x</Text>{' '}
             {order?.item?.priceSelected?.title}
           </Text>
           <CurrencyAmount
-            style={{
-              alignContent: 'center',
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}
-            amount={order?.item?.priceSelected?.amount}
+            style={gStyles.h1}
+            amount={order?.item?.priceSelected?.amount * order?.item?.priceQty}
           />
           {order?.expireAt && (
             <View style={{ marginTop: 12 }}>
