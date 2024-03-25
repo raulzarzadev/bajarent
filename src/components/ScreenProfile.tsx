@@ -29,8 +29,9 @@ const ScreenProfile = ({ navigation }) => {
       <ErrorBoundary componentName="CardUser">
         <CardUser user={user} />
       </ErrorBoundary>
-
-      <ButtonAskLocation />
+      <ErrorBoundary componentName="ButtonAskLocation">
+        <ButtonAskLocation />
+      </ErrorBoundary>
 
       {!!user?.canCreateStore && (
         <View style={styles.buttons}>
