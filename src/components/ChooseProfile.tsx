@@ -25,6 +25,23 @@ const ChooseProfile = () => {
     setStorePositions(storePositions)
   }, [storeSelected, userStores, userPositions])
 
+  const sortUserStore = (userStores, storeSelected) => {
+    const selectedStore = userStores?.find(
+      (store) => store?.id === storeSelected
+    )
+    const otherStores = userStores?.filter(
+      (store) => store?.id !== storeSelected
+    )
+    return [selectedStore, ...otherStores]
+  }
+
+  const [userStoresSorted, setUserStoresSorted] = React.useState(userStores)
+
+  useEffect(() => {
+    const sortedUserStores = sortUserStore(userStores, storeSelected)
+    setUserStoresSorted(sortedUserStores)
+  }, [userStores])
+
   return (
     <View style={{ margin: 'auto', maxWidth: 500, width: '100%' }}>
       {userStores.length > 0 && !storeSelected && (
@@ -34,7 +51,7 @@ const ChooseProfile = () => {
       )}
       <FlatList
         horizontal
-        data={userStores}
+        data={userStoresSorted}
         renderItem={({ item: store }) => <SquareStore store={store} />}
       />
       {storePositions?.length > 0 && !myStaffId && (
@@ -64,7 +81,7 @@ const SquareStore = ({ store }) => {
     <Pressable
       key={store?.id}
       onPress={() => {
-        if (store.id === storeSelected) {
+        if (store?.id === storeSelected) {
           handleSetStoreId('')
           handleSetMyStaffId('')
         } else {
@@ -77,13 +94,13 @@ const SquareStore = ({ store }) => {
           // borderColor: isStoreSelected(store.id)
           //   ? theme.secondary
           //   : 'transparent',
-          backgroundColor: isStoreSelected(store.id) ? theme.info : theme.white
+          backgroundColor: isStoreSelected(store?.id) ? theme.info : theme.white
         }
       ]}
     >
-      <Text style={[gStyles.h3]}>{store.name}</Text>
+      <Text style={[gStyles.h3]}>{store?.name}</Text>
       <Text style={[gStyles.p, gStyles.tCenter]}>
-        {isOwner(store.createdBy) ? 'Dueño' : 'staff'}
+        {isOwner(store?.createdBy) ? 'Dueño' : 'staff'}
       </Text>
     </Pressable>
   )
