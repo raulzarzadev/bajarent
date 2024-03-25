@@ -8,6 +8,7 @@ import CardUser from './CardUser'
 import ErrorBoundary from './ErrorBoundary'
 import LoginEmail from './LoginEmail'
 import ChooseProfile from './ChooseProfile'
+import { ButtonAskLocation } from './LocationStatus'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -28,6 +29,8 @@ const ScreenProfile = ({ navigation }) => {
       <ErrorBoundary componentName="CardUser">
         <CardUser user={user} />
       </ErrorBoundary>
+
+      <ButtonAskLocation />
 
       {!!user?.canCreateStore && (
         <View style={styles.buttons}>
