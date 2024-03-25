@@ -31,6 +31,14 @@
         "projectId": "70933298-2b4f-460b-a807-a8da32da8e7f"
       }
     },
-    "owner": "zarza"
+    "owner": "zarza",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "permissions": [
+      "LOCATION"
+    ]
   }
 }
