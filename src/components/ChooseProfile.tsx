@@ -132,7 +132,9 @@ const SquarePosition = ({ position }) => {
       ]}
     >
       <Text style={[gStyles.h3]}>{position?.position}</Text>
-      <Text style={[gStyles.p, gStyles.tCenter]}>{position?.store?.name}</Text>
+      <Text numberOfLines={2} style={[gStyles.p, gStyles.tCenter]}>
+        {position?.store?.name}
+      </Text>
     </Pressable>
   )
 }
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'transparent',
     width: 120,
-    // height: 80,
+    height: 80,
     margin: 8,
     aspectRatio: 4 / 2,
     padding: 8,
