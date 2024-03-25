@@ -48,19 +48,21 @@ const InputCount = ({
         <Button
           icon="sub"
           variant="ghost"
-          size="xs"
+          size="large"
           justIcon
           onPress={handleSub}
           disabled={disabled}
+          buttonStyles={{ padding: 4 }}
         />
         <Text style={[gStyles.h2, [disabled && { opacity: 0.5 }]]}>{qty}</Text>
         <Button
           icon="add"
           variant="ghost"
-          size="xs"
+          size="large"
           justIcon
           onPress={handleAdd}
           disabled={disabled}
+          buttonStyles={{ padding: 4 }}
         />
       </View>
     </View>

@@ -14,11 +14,13 @@ import P from './P'
 import { CategoryType } from '../types/RentItem'
 import { PriceType } from '../types/PriceType'
 import InputCount from './InputCount'
+import { gSpace, gStyles } from '../styles'
 
 export type ItemSelected = {
   categoryName?: string
   priceSelectedId?: string
   priceQty?: number
+  priceSelected?: Partial<PriceType>
   // priceId?: string
   // timestamp?: Date
 }
@@ -74,7 +76,12 @@ const FormSelectItem = ({
     setValue({ ...value, priceQty: qty })
   }
 
-  console.log({ value })
+  const [amount, setAmount] = useState<number | null>(null)
+  useEffect(() => {
+    const total = (value?.priceQty || 0) * (value?.priceSelected?.amount || 0)
+    setAmount(total)
+  }, [value])
+
   return (
     <View>
       <View>
@@ -103,11 +110,16 @@ const FormSelectItem = ({
           />
         </View>
       )}
-      <InputCount
-        value={value?.priceQty || 0}
-        setValue={handleSetQty}
-        label="Cantidad"
-      />
+      {!!value?.priceSelected && (
+        <View style={{ marginVertical: gSpace(2) }}>
+          <InputCount
+            value={value?.priceQty || 0}
+            setValue={handleSetQty}
+            label="Cantidad"
+          />
+        </View>
+      )}
+      {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
     </View>
   )
 }
