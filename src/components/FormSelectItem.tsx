@@ -15,6 +15,8 @@ import { CategoryType } from '../types/RentItem'
 import { PriceType } from '../types/PriceType'
 import InputCount from './InputCount'
 import { gSpace, gStyles } from '../styles'
+import DateCell from './DateCell'
+import expireDate from '../libs/expireDate'
 
 export type ItemSelected = {
   categoryName?: string
@@ -30,14 +32,17 @@ const FormSelectItem = ({
   setValue,
   value,
   label = 'Categorias',
-  selectPrice = false
+  selectPrice = false,
+  startAt
 }: {
   categories: Partial<CategoryType>[]
   setValue: (value: ItemSelected) => void
   value: ItemSelected
   label?: string
   selectPrice?: boolean
+  startAt?: Date
 }) => {
+  console.log({ startAt })
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
   >(value?.categoryName || null)
@@ -77,10 +82,22 @@ const FormSelectItem = ({
   }
 
   const [amount, setAmount] = useState<number | null>(null)
+
+  const [shouldExpireAt, setShouldExpireAt] = useState<Date | null>(null)
   useEffect(() => {
     const total = (value?.priceQty || 0) * (value?.priceSelected?.amount || 0)
     setAmount(total)
   }, [value])
+
+  useEffect(() => {
+    const expireAt = expireDate(
+      value?.priceSelected?.time,
+      startAt || new Date(),
+      value?.priceSelected,
+      value?.priceQty || 0
+    )
+    setShouldExpireAt(expireAt)
+  }, [amount, startAt])
 
   return (
     <View>
@@ -120,6 +137,12 @@ const FormSelectItem = ({
         </View>
       )}
       {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
+      {!!amount && shouldExpireAt && (
+        <View style={{ alignItems: 'center', alignContent: 'center' }}>
+          <Text>Expira:</Text>
+          <DateCell date={shouldExpireAt} />
+        </View>
+      )}
     </View>
   )
 }

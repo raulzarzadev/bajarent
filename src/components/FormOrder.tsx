@@ -385,6 +385,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
           ...cat
         }))}
         selectPrice
+        startAt={values.scheduledAt}
       />
     ),
     hasDelivered: (

@@ -7,12 +7,14 @@ const FormikSelectCategoryItem = ({
   name,
   label,
   categories,
-  selectPrice
+  selectPrice,
+  startAt
 }: {
   name: string
   label?: string
   categories: Partial<Category>[]
   selectPrice?: boolean
+  startAt?: Date
 }) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [field.value])
@@ -33,6 +35,7 @@ const FormikSelectCategoryItem = ({
       }}
       categories={categories}
       label={label}
+      startAt={startAt}
     />
   )
 }
