@@ -8,6 +8,7 @@ import asDate from './utils-date'
 import expireDate from './expireDate'
 
 const orderStatus = (order: Partial<OrderType>): OrderStatus => {
+  console.log('expireAt', order.expireAt)
   if (order.status === order_status.PICKUP) return order.status
 
   if (
@@ -19,11 +20,7 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
   )
     return order.status
   let status: OrderStatus = order?.status || order_status.PENDING
-  const expireAt = expireDate(
-    order?.item?.priceSelected?.time,
-    order?.deliveredAt,
-    order?.item?.priceSelected
-  )
+  const expireAt = asDate(order.expireAt)
 
   if (
     isBefore(asDate(expireAt), new Date()) &&

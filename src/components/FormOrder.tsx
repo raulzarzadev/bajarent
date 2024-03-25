@@ -205,7 +205,8 @@ const FormOrderA = ({
                     'phone',
                     'selectItemRent',
                     'imageID',
-                    'assignIt'
+                    'assignIt',
+                    'hasDelivered'
                   ]}
                   values={values}
                   setValues={setValues}
