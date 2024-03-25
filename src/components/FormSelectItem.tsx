@@ -17,6 +17,7 @@ import { PriceType } from '../types/PriceType'
 export type ItemSelected = {
   categoryName?: string
   priceSelectedId?: string
+  qty?: number
   // priceId?: string
   // timestamp?: Date
 }
@@ -59,6 +60,12 @@ const FormSelectItem = ({
       setValue({ categoryName: categoryId, priceSelectedId: priceId })
     }
   }
+
+  const handleSelectCategory = (item: string) => {
+    setCategoryId(item)
+    setValue({ categoryName: item as string, priceSelectedId: null })
+  }
+
   return (
     <View>
       <View>
@@ -69,8 +76,7 @@ const FormSelectItem = ({
             value: category?.name
           }))}
           setValue={(item) => {
-            setCategoryId(item)
-            setValue({ categoryName: item as string, priceSelectedId: null })
+            handleSelectCategory(item)
           }}
           value={categoryId}
           label={label}
