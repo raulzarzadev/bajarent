@@ -13,11 +13,12 @@ import CurrencyAmount from './CurrencyAmount'
 import P from './P'
 import { CategoryType } from '../types/RentItem'
 import { PriceType } from '../types/PriceType'
+import InputCount from './InputCount'
 
 export type ItemSelected = {
   categoryName?: string
   priceSelectedId?: string
-  qty?: number
+  priceQty?: number
   // priceId?: string
   // timestamp?: Date
 }
@@ -49,15 +50,18 @@ const FormSelectItem = ({
 
   const prices =
     categories?.find((category) => category?.name === categoryId)?.prices || []
-  console.log({ value })
 
   const handleSelectPrice = (priceId: string) => {
     if (priceId === value.priceSelectedId) {
       setPriceId(null)
-      setValue({ categoryName: categoryId, priceSelectedId: null })
+      setValue({ categoryName: categoryId, priceSelectedId: null, priceQty: 0 })
     } else {
       setPriceId(priceId)
-      setValue({ categoryName: categoryId, priceSelectedId: priceId })
+      setValue({
+        categoryName: categoryId,
+        priceSelectedId: priceId,
+        priceQty: 1
+      })
     }
   }
 
@@ -66,6 +70,11 @@ const FormSelectItem = ({
     setValue({ categoryName: item as string, priceSelectedId: null })
   }
 
+  const handleSetQty = (qty: number) => {
+    setValue({ ...value, priceQty: qty })
+  }
+
+  console.log({ value })
   return (
     <View>
       <View>
@@ -94,6 +103,11 @@ const FormSelectItem = ({
           />
         </View>
       )}
+      <InputCount
+        value={value?.priceQty || 0}
+        setValue={handleSetQty}
+        label="Cantidad"
+      />
     </View>
   )
 }
