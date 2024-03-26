@@ -31,7 +31,7 @@ export default function expireDate(
 ): Date {
   if (!price) return startedAt as Date
   const startedAtDate = asDate(startedAt)
-  const [qty, unit] = price.time.split(' ')
+  const [qty, unit] = price?.time?.split(' ')
   const QTY = parseInt(qty) * (priceQty || 1)
   if (unit === 'year') {
     const expireDate = addMonths(startedAtDate, QTY * 12)
