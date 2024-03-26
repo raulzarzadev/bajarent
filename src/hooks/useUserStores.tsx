@@ -21,13 +21,13 @@ function useUserStores() {
   }, [user, userStores])
 
   const updateUserStores = async () => {
-    const staffStores = await ServiceStaff.getStaffStores(user?.id)
+    const staffStores = (await ServiceStaff.getStaffStores(user?.id)) || []
 
-    const userStores = await ServiceStores.getStoresByUserId(user?.id)
+    const userStores = (await ServiceStores.getStoresByUserId(user?.id)) || []
 
     // remove empty stores
-    const validUserStores = userStores?.filter((store) => !!store)
-    const validStaffStores = staffStores?.filter((store) => !!store)
+    const validUserStores = userStores?.filter((store) => !!store) || []
+    const validStaffStores = staffStores?.filter((store) => !!store) || []
 
     // remove duplicates stores
     const uniqueStores = [...validUserStores, ...validStaffStores].reduce(

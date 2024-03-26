@@ -7,6 +7,7 @@ import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
 import { gStyles } from '../styles'
 import { isAfter } from 'date-fns'
+import ErrorBoundary from './ErrorBoundary'
 
 type WeekOrdersTimeLineProps = {
   orders: OrderType[]
@@ -23,29 +24,32 @@ const WeekOrdersTimeLine = ({
   onSelectDate,
   onPressOrder
 }: WeekOrdersTimeLineProps) => {
-  const events: Event[] = orders.map((o) => ({
-    date: o.scheduledAt,
-    title: o.fullName,
-    id: o.id,
-    color: o.hasNotSolvedReports
-      ? STATUS_COLOR.REPORTED
-      : STATUS_COLOR[o.status],
-    description: dictionary(o.status)
-  }))
+  const events: Event[] =
+    orders?.map((o) => ({
+      date: o.scheduledAt,
+      title: o.fullName,
+      id: o.id,
+      color: o.hasNotSolvedReports
+        ? STATUS_COLOR.REPORTED
+        : STATUS_COLOR[o.status],
+      description: dictionary(o.status)
+    })) || []
 
-  const expiredOrders = orders.filter(
-    (o) => isAfter(new Date(), asDate(o.expireAt)) // ? this is ok? should be show to or more days before to expireAt
-  )
+  const expiredOrders =
+    orders.filter(
+      (o) => isAfter(new Date(), asDate(o.expireAt)) // ? this is ok? should be show to or more days before to expireAt
+    ) || []
 
-  const expiredEvents: Event[] = expiredOrders.map((o) => ({
-    date: o.expireAt,
-    title: o.fullName,
-    id: o.id,
-    color: o.hasNotSolvedReports
-      ? STATUS_COLOR.REPORTED
-      : STATUS_COLOR[o.status],
-    description: dictionary(o.status)
-  }))
+  const expiredEvents: Event[] =
+    expiredOrders?.map((o) => ({
+      date: o.expireAt,
+      title: o.fullName,
+      id: o.id,
+      color: o.hasNotSolvedReports
+        ? STATUS_COLOR.REPORTED
+        : STATUS_COLOR[o.status],
+      description: dictionary(o.status)
+    })) || []
 
   return (
     <View style={gStyles.container}>
@@ -61,6 +65,12 @@ const WeekOrdersTimeLine = ({
   )
 }
 
-export default WeekOrdersTimeLine
+export default function (props: WeekOrdersTimeLineProps) {
+  return (
+    <ErrorBoundary>
+      <WeekOrdersTimeLine {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({})
