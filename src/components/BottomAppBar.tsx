@@ -151,14 +151,14 @@ const UserAndStoreTabs = () => {
         }
       }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Store"
         component={StackStore}
         options={{
           title: 'Tienda ',
           headerShown: false
         }}
-      />
+      /> */}
       {(staffPermissions?.canViewOrders ||
         staffPermissions?.isAdmin ||
         isOwner) && (
@@ -198,14 +198,14 @@ const UserAndStoreTabs = () => {
         />
       )}
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Profile"
         component={StackProfile}
         options={{
           title: 'Perfil',
           headerShown: false
         }}
-      />
+      /> */}
 
       {!!__DEV__ && (
         <Tab.Screen
