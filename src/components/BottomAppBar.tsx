@@ -143,6 +143,10 @@ const UserAndStoreTabs = () => {
                 color={color}
               />
             )
+          },
+          //* shows the staff label on the right side of the header specially for __DEV__ components
+          headerRight(props) {
+            return <MyStaffLabel />
           }
         }
       }}
@@ -208,8 +212,7 @@ const UserAndStoreTabs = () => {
           name="Components"
           component={ScreenComponents}
           options={{
-            title: 'Componentes',
-            headerShown: false
+            title: 'Componentes'
           }}
         />
       )}
