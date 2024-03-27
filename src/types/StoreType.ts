@@ -12,6 +12,8 @@ export type BaseStoreType = {
   orderTypes?: keyof order_type[]
   allowSections?: boolean
   allowStaff?: boolean
+  img?: string
+  marketVisible?: boolean
 }
 
 type StoreType = BaseType & BaseStoreType

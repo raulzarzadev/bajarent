@@ -8,6 +8,14 @@ import { useEffect, useState } from 'react'
  * @param {TextInputProps} props - Propiedades del componente TextInput.
  * @returns {JSX.Element} - Elemento JSX que representa el componente InputTextStyledText.
  */
+
+export type InputTextProps = Omit<TextInputProps, 'value'> & {
+  value?: string | number
+  disabled?: boolean
+  helperText?: string
+  helperTextColor?: 'error' | 'primary' | 'black' | 'white'
+  type?: 'number' | 'text'
+}
 const InputTextStyled = ({
   disabled,
   helperText,
@@ -15,13 +23,7 @@ const InputTextStyled = ({
   type = 'text',
   value: defValue,
   ...props
-}: Omit<TextInputProps, 'value'> & {
-  value?: string | number
-  disabled?: boolean
-  helperText?: string
-  helperTextColor?: 'error' | 'primary' | 'black' | 'white'
-  type?: 'number' | 'text'
-}): JSX.Element => {
+}: InputTextProps): JSX.Element => {
   const [value, setValue] = useState<string | number>()
   useEffect(() => {
     setValue(defValue)

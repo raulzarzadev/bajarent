@@ -8,6 +8,7 @@ import { order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
+import FormikInputImage from './FormikInputImage'
 
 const FormStore = ({
   defaultValues,
@@ -44,6 +45,16 @@ const FormStore = ({
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
 
+          <View style={styles.input}>
+            <FormikInputValue
+              name={'link'}
+              placeholder="Nombre unico"
+              helperText="No debe modificarse una vez creado, (agrega - para separar palabras)"
+            />
+          </View>
+
+          <FormikInputImage name="img" label="Portada " />
+
           <Text style={gStyles.h3}>Tipo de ordenes</Text>
           <Text style={gStyles.helper}>
             Te permitira crear diferentes tipo de ordenes segun las necesidades
@@ -67,6 +78,17 @@ const FormStore = ({
           <View style={[styles.input, styles.type]}>
             <FormikCheckbox name={'allowStaff'} label={'Staff'} />
             <FormikCheckbox name={'allowSections'} label={'Areas'} />
+          </View>
+
+          <Text style={gStyles.h3}>Visibilidad</Text>
+          <Text style={gStyles.helper}>
+            {`La tienda sera visible en el mercado. (nombre, descripción, imagen y  contacto)`}
+          </Text>
+          <View style={[styles.input, styles.type]}>
+            <FormikCheckbox
+              name={'marketVisible'}
+              label={'Mostrar en el mercado'}
+            />
           </View>
 
           <View style={styles.input}>

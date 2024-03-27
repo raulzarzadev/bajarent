@@ -1,10 +1,13 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 
 import { CategoryType } from '../types/RentItem'
+import FormikInputImage from './FormikInputImage'
+import FormikCheckbox from './FormikCheckbox'
+import { gStyles } from '../styles'
 
 const FormCategory = ({
   defaultValues = {},
@@ -37,6 +40,19 @@ const FormCategory = ({
           </View>
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
+          </View>
+          <View style={styles.input}>
+            <FormikInputImage name="img" label="Imagen " />
+          </View>
+
+          <View style={[styles.input]}>
+            <FormikCheckbox
+              name={'marketVisible'}
+              label={'Mostrar en el mercado'}
+            />
+            <Text
+              style={gStyles.helper}
+            >{`Si la tienda no es visible, este producto NO sera visible en el mercado`}</Text>
           </View>
 
           <View style={styles.input}>

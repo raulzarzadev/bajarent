@@ -225,7 +225,6 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
 
       <View>
         <View>
-          {}
           <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
             <Text style={gStyles.helper}>{order?.item?.priceQty || 1}x</Text>{' '}

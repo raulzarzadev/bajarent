@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
 import { CategoryType } from '../types/RentItem'
@@ -212,8 +219,27 @@ const CategorySquare = ({
   selected?: boolean
 }) => {
   return (
-    <View style={[styles.square, selected && { borderColor: theme.black }]}>
-      <Text style={gStyles.h3}>{item.name}</Text>
+    <View>
+      <View
+        style={[
+          styles.square,
+          !item.img && { backgroundColor: theme.info },
+          selected && {
+            borderColor: theme.black
+          },
+          { marginBottom: 0 }
+        ]}
+      >
+        <Image
+          source={{ uri: item.img }}
+          style={{ width: '100%', height: '100%', borderRadius: gSpace(1.2) }}
+        />
+      </View>
+      <Text
+        style={[gStyles.h3, { textAlign: 'left', marginBottom: gSpace(2) }]}
+      >
+        {item.name}
+      </Text>
     </View>
   )
 }
@@ -226,9 +252,9 @@ const styles = StyleSheet.create({
     width: 140,
     margin: gSpace(2),
     marginLeft: 0,
-    backgroundColor: theme.info,
+    // backgroundColor: theme.info,
     borderRadius: gSpace(2),
-    padding: gSpace(1),
+
     borderColor: 'transparent',
     borderWidth: gSpace(0.5)
   },
@@ -236,7 +262,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: gSpace(1),
+    // padding: gSpace(1),
     margin: gSpace(1),
     backgroundColor: theme.info,
     borderRadius: gSpace(2)

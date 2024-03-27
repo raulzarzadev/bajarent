@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import ProductImage from './ProductImage'
+import ProductImage from './ItemImage'
 
 const ProductCard = () => {
   return (
