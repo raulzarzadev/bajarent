@@ -151,14 +151,16 @@ const UserAndStoreTabs = () => {
         }
       }}
     >
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Store"
         component={StackStore}
         options={{
           title: 'Tienda ',
-          headerShown: false
+          headerShown: false,
+          //* hide the tab bar button on the store screen
+          tabBarButton: () => null
         }}
-      /> */}
+      />
       {(staffPermissions?.canViewOrders ||
         staffPermissions?.isAdmin ||
         isOwner) && (
@@ -198,14 +200,16 @@ const UserAndStoreTabs = () => {
         />
       )}
 
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Profile"
         component={StackProfile}
         options={{
           title: 'Perfil',
-          headerShown: false
+          headerShown: false,
+          //* hide the tab bar button on the profile screen
+          tabBarButton: () => null
         }}
-      /> */}
+      />
 
       {!!__DEV__ && (
         <Tab.Screen
