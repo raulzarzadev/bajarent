@@ -42,7 +42,6 @@ const FormSelectItem = ({
   selectPrice?: boolean
   startAt?: Date
 }) => {
-  console.log({ startAt })
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
   >(value?.categoryName || null)
