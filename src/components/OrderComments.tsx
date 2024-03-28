@@ -8,10 +8,11 @@ import asDate, { fromNow } from '../libs/utils-date'
 import { ServiceComments } from '../firebase/ServiceComments'
 import Chip from './Chip'
 import StyledTextInput from './InputTextStyled'
-import { CheckBox } from 'react-native-elements'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import Icon from './Icon'
+import InputCheckbox from './InputCheckbox'
+import { gSpace } from '../styles'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const [orderComments, setOrderComments] = useState<OrderType['comments']>([])
@@ -94,12 +95,27 @@ const InputComment = ({
           justifyContent: 'flex-end'
         }}
       >
-        <CheckBox
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: gSpace(2)
+          }}
+        >
+          <InputCheckbox
+            label="Reporte"
+            setValue={handleToggleIsReport}
+            value={isReport}
+            color={theme.error}
+            style={{ justifyContent: 'flex-end' }}
+          />
+        </View>
+        {/* <CheckBox
           title="Reporte"
           checked={isReport}
           onPress={() => handleToggleIsReport()}
           containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
-        />
+        /> */}
         <Button
           buttonStyles={{ alignSelf: 'center' }}
           disabled={!content.length || saving}

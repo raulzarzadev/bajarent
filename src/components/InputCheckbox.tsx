@@ -1,19 +1,24 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import React from 'react'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 
 const InputCheckbox = ({
   label,
   setValue,
-  value = false
+  value = false,
+  style,
+  color
 }: {
   label: string
   setValue: (value: boolean) => void
   value: boolean
+  style?: ViewStyle
+  color?: string
 }) => {
   return (
     <BouncyCheckbox
-      style={{ marginHorizontal: 'auto' }}
+      fillColor={color}
+      style={[style, { marginHorizontal: 'auto' }]}
       textStyle={{
         textDecorationLine: 'none'
       }}

@@ -14,17 +14,6 @@ const FormikCheckbox = ({ name, label }: { name: string; label?: string }) => {
       }}
       value={value}
     />
-    // <BouncyCheckbox
-    //   style={{ marginHorizontal: 'auto' }}
-    //   textStyle={{
-    //     textDecorationLine: 'none'
-    //   }}
-    //   isChecked={value}
-    //   onPress={(isChecked: boolean) => {
-    //     helpers.setValue(isChecked)
-    //   }}
-    //   text={label}
-    // />
   )
 }
 
