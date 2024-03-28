@@ -5,14 +5,12 @@ import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
 import InputCheckbox from './InputCheckbox'
-
-const FormPrice = ({
-  defaultPrice,
-  handleSubmit
-}: {
+import ErrorBoundary from './ErrorBoundary'
+export type FormPriceProps = {
   defaultPrice: Partial<PriceType>
   handleSubmit: ({ amount, title, time }: Partial<PriceType>) => Promise<any>
-}) => {
+}
+const FormPriceA = ({ defaultPrice, handleSubmit }: FormPriceProps) => {
   const [units, setUnits] = useState<TimeType>('minute')
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(1)
@@ -110,7 +108,13 @@ const FormPrice = ({
   )
 }
 
-export default FormPrice
+export default function FormPrice(props: FormPriceProps) {
+  return (
+    <ErrorBoundary componentName="FormPrice">
+      <FormPriceA {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   input: {
