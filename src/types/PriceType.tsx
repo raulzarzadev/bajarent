@@ -10,6 +10,8 @@ export type PriceBase = {
 
   categoryId: string
   storeId: string
+
+  marketVisible?: boolean
 }
 
 export type PriceType = PriceBase & BaseType

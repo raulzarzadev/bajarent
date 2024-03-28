@@ -18,7 +18,11 @@ const ModalFormPrice = ({
   values?: Partial<PriceType>
   handleSubmit: (values: Partial<PriceType>) => Promise<any>
 }) => {
-  const modal = useModal({ title: 'Agregar precio' })
+  const isEdit = !!values?.id
+  const modal = useModal({
+    title: isEdit ? 'Editar precio' : 'Agregar precio'
+  })
+  console.log({ values })
   return (
     <View>
       <Button
@@ -32,6 +36,7 @@ const ModalFormPrice = ({
           defaultPrice={values}
           handleSubmit={(price) => {
             modal.toggleOpen()
+            console.log({ price })
             return handleSubmit(price)
           }}
         />

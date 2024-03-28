@@ -4,6 +4,7 @@ import InputTextStyled from './InputTextStyled'
 import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
+import InputCheckbox from './InputCheckbox'
 
 const FormPrice = ({
   defaultPrice,
@@ -17,6 +18,9 @@ const FormPrice = ({
   const [quantity, setQuantity] = useState(1)
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false)
+  const [marketVisible, setMarketVisible] = useState(
+    defaultPrice.marketVisible || false
+  )
 
   useEffect(() => {
     if (defaultPrice) {
@@ -25,6 +29,7 @@ const FormPrice = ({
       setQuantity(parseFloat(qty))
       setPrice(defaultPrice.amount)
       setTitle(defaultPrice.title)
+      setMarketVisible(defaultPrice.marketVisible)
     }
   }, [defaultPrice])
 
@@ -34,7 +39,12 @@ const FormPrice = ({
 
   const onSubmit = async () => {
     setLoading(true)
-    await handleSubmit({ title, time: `${quantity} ${units}`, amount: price })
+    await handleSubmit({
+      title,
+      time: `${quantity} ${units}`,
+      amount: price,
+      marketVisible
+    })
     setLoading(false)
   }
 
@@ -87,7 +97,13 @@ const FormPrice = ({
         />
       </View>
       <View style={styles.input}>
-        <View></View>
+        <InputCheckbox
+          label="Visible en el mercado"
+          setValue={setMarketVisible}
+          value={marketVisible}
+        />
+      </View>
+      <View style={styles.input}>
         <Button disabled={loading} label="Agregar" onPress={onSubmit}></Button>
       </View>
     </View>
