@@ -4,6 +4,7 @@ import InputTextStyled from './InputTextStyled'
 import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
+import FormikCheckbox from './FormikCheckbox'
 
 const FormPrice = ({
   defaultPrice,
@@ -86,8 +87,8 @@ const FormPrice = ({
           helperText="$ Precio por totalidad del tiempo"
         />
       </View>
-
-      <View>
+      <View style={styles.input}>
+        <View></View>
         <Button disabled={loading} label="Agregar" onPress={onSubmit}></Button>
       </View>
     </View>
