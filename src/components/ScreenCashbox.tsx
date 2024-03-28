@@ -3,17 +3,21 @@ import React from 'react'
 import Button from './Button'
 import { gSpace, gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenCashbox = ({ navigation }) => {
-  const { staffPermissions } = useStore()
+  const { user } = useAuth()
+  const { staffPermissions, store } = useStore()
+  const isOwner = user.id === store.createdBy
+  const canViewCashbox = staffPermissions?.isAdmin || isOwner
   return (
     <View style={gStyles.container}>
-      {!staffPermissions?.isAdmin && (
+      {!canViewCashbox && (
         <Text style={[gStyles.helper, { textAlign: 'center' }]}>
           Permisios insuficientes
         </Text>
       )}
-      {staffPermissions?.isAdmin && (
+      {canViewCashbox && (
         <>
           <View style={{ marginVertical: gSpace(2) }}>
             <Button
