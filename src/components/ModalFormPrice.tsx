@@ -22,7 +22,6 @@ const ModalFormPrice = ({
   const modal = useModal({
     title: isEdit ? 'Editar precio' : 'Agregar precio'
   })
-  console.log({ values })
   return (
     <View>
       <Button
