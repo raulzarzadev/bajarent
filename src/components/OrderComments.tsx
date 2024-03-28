@@ -110,12 +110,7 @@ const InputComment = ({
             style={{ justifyContent: 'flex-end' }}
           />
         </View>
-        {/* <CheckBox
-          title="Reporte"
-          checked={isReport}
-          onPress={() => handleToggleIsReport()}
-          containerStyle={{ backgroundColor: 'transparent', borderWidth: 0 }}
-        /> */}
+
         <Button
           buttonStyles={{ alignSelf: 'center' }}
           disabled={!content.length || saving}

@@ -4,7 +4,6 @@ import InputTextStyled from './InputTextStyled'
 import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
-import FormikCheckbox from './FormikCheckbox'
 
 const FormPrice = ({
   defaultPrice,
