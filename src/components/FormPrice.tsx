@@ -19,7 +19,7 @@ const FormPrice = ({
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false)
   const [marketVisible, setMarketVisible] = useState(
-    defaultPrice.marketVisible || false
+    defaultPrice?.marketVisible || false
   )
 
   useEffect(() => {
@@ -27,9 +27,9 @@ const FormPrice = ({
       const [qty, unit] = defaultPrice?.time?.split(' ')
       setUnits(unit as TimeType)
       setQuantity(parseFloat(qty))
-      setPrice(defaultPrice.amount)
-      setTitle(defaultPrice.title)
-      setMarketVisible(defaultPrice.marketVisible)
+      setPrice(defaultPrice?.amount)
+      setTitle(defaultPrice?.title)
+      setMarketVisible(defaultPrice?.marketVisible)
     }
   }, [defaultPrice])
 
