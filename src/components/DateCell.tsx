@@ -6,17 +6,30 @@ import { gStyles } from '../styles'
 
 const DateCell = ({
   date,
-  label
+  label,
+  showTime,
+  labelBold
 }: {
   label?: string
   date: Date | Timestamp | number | string
+  showTime?: boolean
+  labelBold?: boolean
 }) => {
   return (
     <View>
-      {label && <Text style={[gStyles.tCenter]}>{label}</Text>}
+      {label && (
+        <Text style={[gStyles.tCenter, labelBold && gStyles.tBold]}>
+          {label}
+        </Text>
+      )}
       <Text style={[gStyles.tCenter]}>
         {dateFormat(asDate(date), 'dd-MMM-yy')}
       </Text>
+      {showTime && (
+        <Text style={[gStyles.tCenter, gStyles.helper]}>
+          {dateFormat(asDate(date), 'HH:mm')}
+        </Text>
+      )}
       <Text style={[gStyles.tCenter]}>{fromNow(asDate(date))}</Text>
     </View>
   )

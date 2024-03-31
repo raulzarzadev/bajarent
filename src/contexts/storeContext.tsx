@@ -10,7 +10,7 @@ import StaffType, {
 } from '../types/StaffType'
 import { getItem, setItem } from '../libs/storage'
 import { useAuth } from './authContext'
-import expireDate from '../libs/expireDate'
+import { expireDate2 } from '../libs/expireDate'
 import { SectionType } from '../types/SectionType'
 import { CategoryType } from '../types/RentItem'
 import PaymentType from '../types/PaymentType'
@@ -99,11 +99,11 @@ const StoreContextProvider = ({ children }) => {
       const orderComments = comments?.filter(
         (comment) => comment.orderId === order.id
       )
-      const orderExpires = [
-        order_type.RENT,
-        order_type.DELIVERY_RENT,
-        order_type.STORE_RENT
-      ].includes(order.type)
+      // const orderExpires = [
+      //   order_type.RENT,
+      //   order_type.DELIVERY_RENT,
+      //   order_type.STORE_RENT
+      // ].includes(order.type)
 
       return {
         ...order,
@@ -115,14 +115,17 @@ const StoreContextProvider = ({ children }) => {
 
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
         assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position,
-        expireAt: orderExpires
-          ? expireDate(
-              order?.item?.priceSelected?.time,
-              order?.deliveredAt,
-              order?.item?.priceSelected,
-              order?.item?.priceQty
-            )
-          : null,
+        expireAt: expireDate2(
+          {
+            startedAt: order.deliveredAt || order.scheduledAt,
+            price: order?.item?.priceSelected,
+            priceQty: order?.item?.priceQty
+          }
+          // order?.item?.priceSelected?.time,
+          // order?.deliveredAt,
+          // order?.item?.priceSelected,
+          // order?.item?.priceQty
+        ),
         payments: payments.filter((p) => p.orderId === order.id) || []
       }
     })
