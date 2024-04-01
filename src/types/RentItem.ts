@@ -12,6 +12,16 @@ export type CategoryBase = {
   storeId: string
   img?: string
   marketVisible?: boolean
+  marketForm?: {
+    price?: boolean
+    fullName?: boolean
+    phone?: boolean
+    neighborhood?: boolean
+    address?: boolean
+    references?: boolean
+    imageId?: boolean
+    scheduledAt?: boolean
+  }
 }
 
 export type CategoryType = CategoryBase & BaseType

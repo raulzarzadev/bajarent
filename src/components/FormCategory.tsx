@@ -18,6 +18,7 @@ const FormCategory = ({
   defaultValues?: Partial<CategoryType>
   onSubmit?: (values: Partial<CategoryType>) => Promise<any>
 }) => {
+  console.log({ defaultValues })
   // @ts-ignore
 
   const [sending, setSending] = React.useState(false)
@@ -53,6 +54,45 @@ const FormCategory = ({
             <Text
               style={gStyles.helper}
             >{`Si la tienda no es visible, este producto NO sera visible en el mercado`}</Text>
+          </View>
+
+          <View>
+            <Text style={gStyles.h2}>Campos del formulario web</Text>
+            <View style={[styles.input]}>
+              <FormikCheckbox name={'marketForm.price'} label={'Precio'} />
+            </View>
+            <View style={[styles.input]}>
+              <FormikCheckbox name={'marketForm.fullName'} label={'Nombre'} />
+            </View>
+            <View style={[styles.input]}>
+              <FormikCheckbox name={'marketForm.phone'} label={'Teléfono'} />
+            </View>
+            <View style={[styles.input]}>
+              <FormikCheckbox
+                name={'marketForm.neighborhood'}
+                label={'Colonia'}
+              />
+            </View>
+            <View style={[styles.input]}>
+              <FormikCheckbox name={'marketForm.address'} label={'Dirección'} />
+            </View>
+            <View style={[styles.input]}>
+              <FormikCheckbox
+                name={'marketForm.references'}
+                label={'Referencias'}
+              />
+            </View>
+
+            <View style={[styles.input]}>
+              <FormikCheckbox
+                name={'marketForm.imageId'}
+                label={'Imagen del ID'}
+              />
+            </View>
+
+            <View style={[styles.input]}>
+              <FormikCheckbox name={'marketForm.scheduledAt'} label={'Fecha'} />
+            </View>
           </View>
 
           <View style={styles.input}>

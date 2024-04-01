@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormCategory from './FormCategory'
 import { gStyles } from '../styles'
@@ -13,16 +13,18 @@ const ScreenCategoryEdit = ({ navigation, route }) => {
   const category = categories?.find((c) => c.id === categoryId)
   if (!category) return null
   return (
-    <View style={gStyles.container}>
-      <FormCategory
-        defaultValues={category}
-        onSubmit={async (values) => {
-          await updateCategory(categoryId, values)
-          updateCategories()
-          navigation.goBack()
-        }}
-      />
-    </View>
+    <ScrollView>
+      <View style={gStyles.container}>
+        <FormCategory
+          defaultValues={category}
+          onSubmit={async (values) => {
+            await updateCategory(categoryId, values)
+            updateCategories()
+            navigation.goBack()
+          }}
+        />
+      </View>
+    </ScrollView>
   )
 }
 
