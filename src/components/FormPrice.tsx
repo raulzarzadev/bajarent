@@ -108,7 +108,14 @@ const FormPriceA = ({ defaultPrice, handleSubmit }: FormPriceProps) => {
   )
 }
 
+<<<<<<< HEAD
 export default function FormPrice(props: FormPriceProps) {
+=======
+export default function FormPrice(props: {
+  defaultPrice: Partial<PriceType>
+  handleSubmit: ({ amount, title, time }: Partial<PriceType>) => Promise<any>
+}) {
+>>>>>>> dev
   return (
     <ErrorBoundary componentName="FormPrice">
       <FormPriceA {...props} />

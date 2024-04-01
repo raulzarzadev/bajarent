@@ -8,16 +8,17 @@ import { CategoryType } from '../types/RentItem'
 import FormikInputImage from './FormikInputImage'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
-
-const FormCategory = ({
+import ErrorBoundary from './ErrorBoundary'
+export type FormCategoryProps = {
+  defaultValues?: Partial<CategoryType>
+  onSubmit?: (values: Partial<CategoryType>) => Promise<any>
+}
+const FormCategoryA = ({
   defaultValues = {},
   onSubmit = async (values) => {
     console.log(values)
   }
-}: {
-  defaultValues?: Partial<CategoryType>
-  onSubmit?: (values: Partial<CategoryType>) => Promise<any>
-}) => {
+}: FormCategoryProps) => {
   console.log({ defaultValues })
   // @ts-ignore
 
@@ -51,13 +52,13 @@ const FormCategory = ({
               name={'marketVisible'}
               label={'Mostrar en el mercado'}
             />
-            {!values.marketVisible && (
+            {!values?.marketVisible && (
               <Text style={[gStyles.helper, { textAlign: 'center' }]}>
                 {`Si la tienda no es visible, este producto NO sera visible en el mercado`}
               </Text>
             )}
           </View>
-          {values.marketVisible && (
+          {values?.marketVisible && (
             <View>
               <Text style={gStyles.h2}>Campos del formulario web</Text>
               <View style={[styles.input]}>
@@ -117,7 +118,13 @@ const FormCategory = ({
   )
 }
 
-export default FormCategory
+export default function FormCategory(props: FormCategoryProps) {
+  return (
+    <ErrorBoundary componentName="FormCategory">
+      <FormCategoryA {...props} />
+    </ErrorBoundary>
+  )
+}
 const styles = StyleSheet.create({
   form: {
     padding: 0
