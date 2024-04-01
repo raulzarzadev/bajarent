@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
 import StoreType from '../types/StoreType'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { CommentType } from '../types/CommentType'
 import orderStatus from '../libs/orderStatus'
 import { ServiceUsers } from '../firebase/ServiceUser'

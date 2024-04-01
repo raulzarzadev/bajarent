@@ -19,6 +19,8 @@ import ButtonSearchLocation from './ButtonSearchLocation'
 import Icon from './Icon'
 import ModalRepairQuote from './ModalRepairQuote'
 import ModalPayment from './ModalPayment'
+import { Timestamp } from 'firebase/firestore'
+import DateCell from './DateCell'
 
 const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
   return (
@@ -46,30 +48,6 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
             source={{ uri: order?.imageHouse }}
             style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
           />
-        )}
-      </View>
-
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'center'
-        }}
-      >
-        {!!order?.scheduledAt && (
-          <>
-            <P size="lg" styles={{ textAlign: 'center' }}>
-              {`  ${dateFormat(order?.scheduledAt, 'dd/MMM/yy')} ${fromNow(
-                order?.scheduledAt
-              )} `}
-            </P>
-            <Icon
-              // style={{ marginLeft: 6, opacity: 0.5 }}
-              icon="calendar"
-              // size={24}
-              color="gray"
-            />
-          </>
         )}
       </View>
 
@@ -237,19 +215,13 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
               (order?.item?.priceQty || 1)
             }
           />
-          {order?.expireAt && (
-            <View style={{ marginTop: 12 }}>
-              <Text style={[gStyles.p, gStyles.tCenter, gStyles.tBold]}>
-                Expira
-              </Text>
-              <Text style={[gStyles.p, gStyles.tCenter]}>
-                {dateFormat(asDate(order?.expireAt), 'dd/MM/yy HH:mm')}
-              </Text>
-              <Text style={[gStyles.p, gStyles.tCenter]}>
-                {fromNow(asDate(order?.expireAt))}
-              </Text>
-            </View>
-          )}
+          <View style={{ marginTop: gSpace(3) }}>
+            <ItemDates
+              expireAt={order.expireAt}
+              scheduledAt={order.scheduledAt}
+              startedAt={order.deliveredAt}
+            />
+          </View>
         </View>
       </View>
       {order.type === order_type.REPAIR && (
@@ -271,7 +243,38 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
     </View>
   )
 }
-
+const ItemDates = ({
+  scheduledAt,
+  expireAt,
+  startedAt
+}: {
+  scheduledAt?: Date | Timestamp
+  expireAt?: Date | Timestamp
+  startedAt?: Date | Timestamp
+}) => {
+  return (
+    <>
+      <Text style={[gStyles.h3, { marginBottom: 8 }]}>Fechas</Text>
+      <View
+        style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-evenly'
+        }}
+      >
+        {!!scheduledAt && (
+          <DateCell label="Programada" date={scheduledAt} showTime labelBold />
+        )}
+        {!!startedAt && (
+          <DateCell label="Iniciado" date={startedAt} showTime labelBold />
+        )}
+        {!!expireAt && !!startedAt && (
+          <DateCell label="Expira" date={expireAt} showTime labelBold />
+        )}
+      </View>
+    </>
+  )
+}
 export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View
