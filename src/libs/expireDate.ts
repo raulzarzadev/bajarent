@@ -23,6 +23,12 @@ export function priceTimeInSeconds(time: TimePriceType): number {
   return timeNumber * units[timeUnit]
 }
 
+/**
+ *
+ * @param time its a string with the time and the unit of time
+ * @returns the time in seconds
+ * @deprecated
+ */
 export default function expireDate(
   time: TimePriceType,
   startedAt: Date | Timestamp,

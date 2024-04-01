@@ -243,7 +243,6 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
     </View>
   )
 }
-
 const ItemDates = ({
   scheduledAt,
   expireAt,
@@ -276,7 +275,6 @@ const ItemDates = ({
     </>
   )
 }
-
 export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View

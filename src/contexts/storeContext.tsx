@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
 import StoreType from '../types/StoreType'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { CommentType } from '../types/CommentType'
 import orderStatus from '../libs/orderStatus'
 import { ServiceUsers } from '../firebase/ServiceUser'
@@ -99,11 +99,6 @@ const StoreContextProvider = ({ children }) => {
       const orderComments = comments?.filter(
         (comment) => comment.orderId === order.id
       )
-      // const orderExpires = [
-      //   order_type.RENT,
-      //   order_type.DELIVERY_RENT,
-      //   order_type.STORE_RENT
-      // ].includes(order.type)
 
       return {
         ...order,
@@ -115,17 +110,11 @@ const StoreContextProvider = ({ children }) => {
 
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
         assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position,
-        expireAt: expireDate2(
-          {
-            startedAt: order.deliveredAt || order.scheduledAt,
-            price: order?.item?.priceSelected,
-            priceQty: order?.item?.priceQty
-          }
-          // order?.item?.priceSelected?.time,
-          // order?.deliveredAt,
-          // order?.item?.priceSelected,
-          // order?.item?.priceQty
-        ),
+        expireAt: expireDate2({
+          startedAt: order.deliveredAt || order.scheduledAt,
+          price: order?.item?.priceSelected,
+          priceQty: order?.item?.priceQty
+        }),
         payments: payments.filter((p) => p.orderId === order.id) || []
       }
     })
