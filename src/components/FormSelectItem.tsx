@@ -16,7 +16,7 @@ import { PriceType } from '../types/PriceType'
 import InputCount from './InputCount'
 import { gSpace, gStyles } from '../styles'
 import DateCell from './DateCell'
-import expireDate from '../libs/expireDate'
+import { expireDate2 } from '../libs/expireDate'
 
 export type ItemSelected = {
   categoryName?: string
@@ -89,11 +89,16 @@ const FormSelectItem = ({
   }, [value])
 
   useEffect(() => {
-    const expireAt = expireDate(
-      value?.priceSelected?.time,
-      startAt || new Date(),
-      value?.priceSelected,
-      value?.priceQty || 0
+    const expireAt = expireDate2(
+      {
+        startedAt: startAt || new Date(),
+        price: value?.priceSelected,
+        priceQty: value?.priceQty || 0
+      }
+      // value?.priceSelected?.time,
+      // startAt || new Date(),
+      // value?.priceSelected,
+      // value?.priceQty || 0
     )
     setShouldExpireAt(expireAt)
   }, [amount, startAt])

@@ -71,3 +71,45 @@ export default function expireDate(
   )
   return expireDate
 }
+
+export function expireDate2({
+  startedAt,
+  price,
+  priceQty
+}: {
+  startedAt: Date | Timestamp
+  price?: Partial<PriceType>
+  priceQty?: number
+}): Date | null {
+  if (!price) return null
+  if (!startedAt) return null
+  const startedAtDate = asDate(startedAt)
+  const [qty, unit] = price?.time?.split(' ') || ['', '']
+  const QTY = parseInt(qty) * (priceQty || 1)
+  if (unit === 'year') {
+    const expireDate = addMonths(startedAtDate, QTY * 12)
+    return expireDate
+  }
+  if (unit === 'hour') {
+    const expireDate = addHours(startedAtDate, QTY)
+    return expireDate
+  }
+  if (unit === 'minute') {
+    const expireDate = addMinutes(startedAtDate, QTY)
+
+    return expireDate
+  }
+  if (unit === 'month') {
+    const expireDate = addMonths(startedAtDate, QTY)
+    return expireDate
+  }
+  if (unit === 'week') {
+    const expireDate = addWeeks(startedAtDate, QTY)
+    return expireDate
+  }
+  if (unit === 'day') {
+    const expireDate = addDays(startedAtDate, QTY)
+    return expireDate
+  }
+  return null
+}
