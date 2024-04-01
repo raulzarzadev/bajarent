@@ -5,8 +5,9 @@ import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
 import InputCheckbox from './InputCheckbox'
+import ErrorBoundary from './ErrorBoundary'
 
-const FormPrice = ({
+const FormPriceA = ({
   defaultPrice,
   handleSubmit
 }: {
@@ -19,7 +20,7 @@ const FormPrice = ({
   const [title, setTitle] = useState('')
   const [loading, setLoading] = useState(false)
   const [marketVisible, setMarketVisible] = useState(
-    defaultPrice.marketVisible || false
+    defaultPrice?.marketVisible || false
   )
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const FormPrice = ({
       setQuantity(parseFloat(qty))
       setPrice(defaultPrice.amount)
       setTitle(defaultPrice.title)
-      setMarketVisible(defaultPrice.marketVisible)
+      setMarketVisible(defaultPrice?.marketVisible)
     }
   }, [defaultPrice])
 
@@ -110,7 +111,16 @@ const FormPrice = ({
   )
 }
 
-export default FormPrice
+export default function FormPrice(props: {
+  defaultPrice: Partial<PriceType>
+  handleSubmit: ({ amount, title, time }: Partial<PriceType>) => Promise<any>
+}) {
+  return (
+    <ErrorBoundary componentName="FormPrice">
+      <FormPriceA {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   input: {
