@@ -18,6 +18,7 @@ import { PriceType } from '../types/PriceType'
 import { useStore } from '../contexts/storeContext'
 import ModalFormPrice from './ModalFormPrice'
 import useCategories from '../hooks/useCategories'
+import { priceTimeInSeconds } from '../libs/expireDate'
 
 const ScreenItems = () => {
   return (
@@ -55,7 +56,11 @@ const StoreCategories = () => {
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
 
   useEffect(() => {
-    setCategoryPrices(categories.find((c) => c.id === selected)?.prices || [])
+    const prices = categories.find((c) => c.id === selected)?.prices || []
+    prices.sort((a, b) => {
+      return priceTimeInSeconds(a.time) - priceTimeInSeconds(b.time)
+    })
+    setCategoryPrices(prices)
   }, [selected, categories])
 
   return (
