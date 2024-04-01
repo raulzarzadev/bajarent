@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Image, View, Platform, Pressable, Text } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { uploadFile } from '../firebase/files'
+import Icon from './Icon'
+import theme from '../theme'
+import Button from './Button'
 
 export default function InputImagePicker({
   label,
@@ -50,26 +53,48 @@ export default function InputImagePicker({
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
       {progress === -1 && <Text>Error al subir archivo</Text>}
       {progress > 0 && <Text>{progress}%</Text>}
-      <Pressable
+      {/* <Pressable
         onPress={pickImage}
         style={{
           width: '100%',
           padding: 4,
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          borderRadius: 4,
+          backgroundColor: theme.primary,
+          
         }}
       >
-        <Text style={{ textAlign: 'center' }}>{label}</Text>
-        {!!image && (
-          <Image
-            source={{ uri: image }}
-            style={{ width: '100%', minHeight: 200 }}
-          />
-        )}
-      </Pressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ textAlign: 'center' }}>{label}</Text>
+          <Icon icon="addImage" />
+        </View>
+      </Pressable> */}
+      <View style={{ marginVertical: 4 }}>
+        <Button onPress={pickImage} label={label} icon="addImage" size="xs" />
+      </View>
+      {!!image && (
+        <Image
+          source={{ uri: image }}
+          style={{ width: '100%', minHeight: 200 }}
+        />
+      )}
     </View>
   )
 }

@@ -17,7 +17,8 @@ import {
   MdChevronLeft,
   MdChevronRight,
   MdSettings,
-  MdDownload
+  MdDownload,
+  MdOutlinePhotoCamera
 } from 'react-icons/md'
 
 import {
@@ -35,6 +36,7 @@ import { HiDotsVertical } from 'react-icons/hi'
 import { GrFormSubtract } from 'react-icons/gr'
 import { TiPhone } from 'react-icons/ti'
 import { BsWhatsapp } from 'react-icons/bs'
+import { RiImageAddLine } from 'react-icons/ri'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -101,7 +103,9 @@ const icons = {
   rowLeft: MdChevronLeft,
   rowRight: MdChevronRight,
   settings: MdSettings,
-  download: MdDownload
+  download: MdDownload,
+  camera: MdOutlinePhotoCamera,
+  addImage: RiImageAddLine
 } as const
 
 export type IconName = keyof typeof icons

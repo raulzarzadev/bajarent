@@ -34,7 +34,7 @@ const FormCategory = ({
         }, 1000)
       }}
     >
-      {({ handleSubmit }) => (
+      {({ handleSubmit, values }) => (
         <View style={styles.form}>
           <View style={styles.input}>
             <FormikInputValue name={'name'} placeholder="Nombre" />
@@ -51,49 +51,58 @@ const FormCategory = ({
               name={'marketVisible'}
               label={'Mostrar en el mercado'}
             />
-            <Text
-              style={gStyles.helper}
-            >{`Si la tienda no es visible, este producto NO sera visible en el mercado`}</Text>
+            {!values.marketVisible && (
+              <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+                {`Si la tienda no es visible, este producto NO sera visible en el mercado`}
+              </Text>
+            )}
           </View>
+          {values.marketVisible && (
+            <View>
+              <Text style={gStyles.h2}>Campos del formulario web</Text>
+              <View style={[styles.input]}>
+                <FormikCheckbox name={'marketForm.price'} label={'Precio'} />
+              </View>
+              <View style={[styles.input]}>
+                <FormikCheckbox name={'marketForm.fullName'} label={'Nombre'} />
+              </View>
+              <View style={[styles.input]}>
+                <FormikCheckbox name={'marketForm.phone'} label={'Teléfono'} />
+              </View>
+              <View style={[styles.input]}>
+                <FormikCheckbox
+                  name={'marketForm.neighborhood'}
+                  label={'Colonia'}
+                />
+              </View>
+              <View style={[styles.input]}>
+                <FormikCheckbox
+                  name={'marketForm.address'}
+                  label={'Dirección'}
+                />
+              </View>
+              <View style={[styles.input]}>
+                <FormikCheckbox
+                  name={'marketForm.references'}
+                  label={'Referencias'}
+                />
+              </View>
 
-          <View>
-            <Text style={gStyles.h2}>Campos del formulario web</Text>
-            <View style={[styles.input]}>
-              <FormikCheckbox name={'marketForm.price'} label={'Precio'} />
-            </View>
-            <View style={[styles.input]}>
-              <FormikCheckbox name={'marketForm.fullName'} label={'Nombre'} />
-            </View>
-            <View style={[styles.input]}>
-              <FormikCheckbox name={'marketForm.phone'} label={'Teléfono'} />
-            </View>
-            <View style={[styles.input]}>
-              <FormikCheckbox
-                name={'marketForm.neighborhood'}
-                label={'Colonia'}
-              />
-            </View>
-            <View style={[styles.input]}>
-              <FormikCheckbox name={'marketForm.address'} label={'Dirección'} />
-            </View>
-            <View style={[styles.input]}>
-              <FormikCheckbox
-                name={'marketForm.references'}
-                label={'Referencias'}
-              />
-            </View>
+              <View style={[styles.input]}>
+                <FormikCheckbox
+                  name={'marketForm.imageId'}
+                  label={'Imagen del ID'}
+                />
+              </View>
 
-            <View style={[styles.input]}>
-              <FormikCheckbox
-                name={'marketForm.imageId'}
-                label={'Imagen del ID'}
-              />
+              <View style={[styles.input]}>
+                <FormikCheckbox
+                  name={'marketForm.scheduledAt'}
+                  label={'Fecha'}
+                />
+              </View>
             </View>
-
-            <View style={[styles.input]}>
-              <FormikCheckbox name={'marketForm.scheduledAt'} label={'Fecha'} />
-            </View>
-          </View>
+          )}
 
           <View style={styles.input}>
             <Button
