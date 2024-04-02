@@ -9,6 +9,11 @@ import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import { useNavigation } from '@react-navigation/native'
 
+/**
+ * @deprecated
+ * @param param0
+ * @returns
+ */
 const ScreenStore = ({ navigation }) => {
   const { navigate } = useNavigation()
   const { store, staffPermissions } = useStore()
