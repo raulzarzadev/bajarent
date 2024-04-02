@@ -1,8 +1,7 @@
 import React from 'react'
 import { Dimensions, Text, View } from 'react-native'
 import { LineChart as RNChart } from 'react-native-chart-kit'
-
-export type ChartData = { labels: string[]; datasets: { data: number[] }[] }
+import { gStyles } from '../styles'
 
 export type LineChartProps = {
   title: string
@@ -13,7 +12,7 @@ export type LineChartProps = {
 const LineChart = ({ title, labels, datasets }: LineChartProps) => {
   return (
     <View>
-      <Text>{title}</Text>
+      <Text style={gStyles.h2}>{title}</Text>
       <RNChart
         data={{
           labels,
@@ -49,7 +48,8 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
           borderRadius: 16
         }}
         fromZero={true} // Para asegurar que el eje Y comience desde cero
-        formatYLabel={(value) => value.toString()} // Personaliza las etiquetas del eje Y
+        formatYLabel={(value) => value.toString()}
+        // Personaliza las etiquetas del eje Y
       />
     </View>
   )

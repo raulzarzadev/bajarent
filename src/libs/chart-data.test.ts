@@ -1,14 +1,21 @@
+// @ts-ignore
 import { expect, test } from 'bun:test'
 
-test('create data for chart', () => {
-  test('should return an object with labels and datasets', () => {
-    const result = {
-      labels: ['1/2021', '2/2021', '3/2021'],
-      datasets: [{ label: 'Órdenes creadas', data: [2, 3, 1], color: 'blue' }]
-    }
-    expect(result)({
-      labels: ['1/2021', '2/2021', '3/2021'],
-      datasets: [{ label: 'Órdenes creadas', data: [2, 3, 1], color: 'blue' }]
-    })
+import { orders } from '../DATA'
+import { groupDocsByMonth, groupDocsByType } from './chart-data'
+
+test('group orders by month', () => {
+  const result = groupDocsByMonth({ docs: orders })
+  Object.entries(result).forEach(([key, value]) => {
+    expect(key).toMatch(/\d{1,2}\/\d{2}/)
+    expect(value).toBeInstanceOf(Array)
+  })
+})
+
+test('group orders by type', () => {
+  const result = groupDocsByType({ docs: orders })
+  Object.entries(result).forEach(([key, value]) => {
+    expect(typeof key).toBe('string')
+    expect(value).toBeInstanceOf(Array)
   })
 })

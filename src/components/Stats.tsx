@@ -1,33 +1,63 @@
+import { ScrollView } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import { generateChartData } from '../libs/chart-data'
-import theme from '../theme'
+import {
+  createDataset,
+  groupDocsByMonth,
+  groupDocsByType
+} from '../libs/chart-data'
+import theme, { ORDER_TYPE_COLOR } from '../theme'
 import LineChart from './LineChart'
+import OrderType from '../types/OrderType'
 
 export default function Stats() {
-  const { orders } = useStore()
-  const data = generateChartData(orders)
-  console.log({ data })
+  const { orders, comments } = useStore()
+
+  const ordersByMonth = groupDocsByMonth({ docs: orders })
+  const ordersByType = groupDocsByType({ docs: orders })
+
+  const orderTypeDatasets = Object.entries(ordersByType).map(
+    ([type, orders]) => {
+      const ordersByMonth = groupDocsByMonth({ docs: orders })
+      return createDataset({
+        label: type,
+        color: ORDER_TYPE_COLOR[type],
+        docs: ordersByMonth,
+        labels: Object.keys(ordersByMonth)
+      })
+    }
+  )
+  const allOrders = createDataset<OrderType>({
+    label: 'Todas las ordenes',
+    color: theme.info,
+    docs: ordersByMonth,
+    labels: Object.keys(ordersByMonth)
+  })
+
+  const reports = createDataset({
+    label: 'Reportes',
+    color: theme.error,
+    docs: groupDocsByMonth({ docs: comments }),
+    labels: Object.keys(ordersByMonth)
+  })
+  const reportsSolved = createDataset({
+    label: 'Reportes',
+    color: theme.primary,
+    docs: groupDocsByMonth({ docs: comments.filter((c) => c.solved) }),
+    labels: Object.keys(ordersByMonth)
+  })
+
   return (
-    <LineChart
-      title="Ordenes"
-      labels={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio']}
-      datasets={[
-        {
-          label: 'Rentas',
-          data: [200, 230, 240, 290, 180, 170],
-          color: theme.info
-        },
-        {
-          label: 'Ventas',
-          data: [50, 20, 40, 90, 80, 70],
-          color: theme.neutral
-        },
-        {
-          label: 'Reparaciones',
-          data: [12, 16, 13, 18, 19, 14],
-          color: theme.secondary
-        }
-      ]}
-    />
+    <ScrollView>
+      <LineChart
+        title="Ordenes"
+        labels={Object.keys(ordersByMonth).sort()}
+        datasets={[allOrders, ...orderTypeDatasets]}
+      />
+      <LineChart
+        title="Reportes"
+        labels={Object.keys(reports).sort()}
+        datasets={[reports, reportsSolved]}
+      />
+    </ScrollView>
   )
 }
