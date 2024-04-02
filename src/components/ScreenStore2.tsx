@@ -6,6 +6,7 @@ import ScreenSections from './ScreenSections'
 import ScreenStoreDetails from './ScreenStoreDetails'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
+import Stats from './Stats'
 
 const ScreenStore = (props) => {
   const { store, staffPermissions } = useStore()
@@ -13,8 +14,13 @@ const ScreenStore = (props) => {
   const isOwner = store?.createdBy === user?.id
   return (
     <Tabs
-      defaultTab="Tienda"
+      defaultTab="Graficas"
       tabs={[
+        {
+          title: 'Graficas',
+          content: <Stats {...props} />,
+          show: true
+        },
         {
           title: 'Tienda',
           content: <ScreenStoreDetails {...props} />,
