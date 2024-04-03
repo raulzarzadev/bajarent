@@ -9,6 +9,7 @@ import { months } from '../libs/utils-date'
 import LineChart from './LineChart'
 import theme, { ORDER_TYPE_COLOR } from '../theme'
 import OrderType from '../types/OrderType'
+import dictionary from '../dictionary'
 
 export default function StatsOrders() {
   const { orders } = useStore()
@@ -17,11 +18,13 @@ export default function StatsOrders() {
   const ordersByMonth = groupDocsByMonth({ docs: orders })
   const ordersByType = groupDocsByType({ docs: orders })
   const ordersLabels = Object.keys(ordersByMonth).sort(sortMonths)
+
   const orderTypeDatasets = Object.entries(ordersByType).map(
     ([type, orders]) => {
       const ordersByMonth = groupDocsByMonth({ docs: orders })
+
       return createDataset({
-        label: type,
+        label: dictionary(type as OrderType['type']),
         color: ORDER_TYPE_COLOR[type],
         docs: ordersByMonth,
         labels: ordersLabels
