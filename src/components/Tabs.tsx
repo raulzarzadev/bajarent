@@ -17,8 +17,9 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
 
   const handleTabPress = (tab) => {
     setSelectedTab(tab)
-    const tabIndexSelected = tabs.findIndex(({ title }) => title === tab)
-    setScrollWidth((100 / tabs.length) * (tabIndexSelected + 1))
+    const visibleTabs = tabs.filter(({ show }) => show)
+    const tabIndexSelected = visibleTabs.findIndex(({ title }) => title === tab)
+    setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
   }
   const [scrollWidth, setScrollWidth] = useState(100 / tabs.length)
 
