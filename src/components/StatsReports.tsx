@@ -168,33 +168,3 @@ const WeekStats = ({ comments }: { comments: CommentType[] }) => {
     />
   )
 }
-
-// const WeekStats = ({ comments }) => {
-//   const commentsByWeeks = groupDocsByWeek({ docs: comments })
-//   const commentsSolvedByWeeks = groupDocsByWeek({
-//     docs: comments.filter((c) => c.solved)
-//   })
-
-//   const reportLabels = weekLabels(Object.keys(commentsByWeeks).map(Number))
-
-//   const reportsByWeeks = createDataset({
-//     label: 'Reportes',
-//     color: theme.error,
-//     docs: commentsByWeeks,
-//     labels: reportLabels
-//   })
-
-//   const reportsSolved = createDataset({
-//     label: 'Reportes resueltos',
-//     color: theme.primary,
-//     docs: commentsSolvedByWeeks,
-//     labels: reportLabels
-//   })
-//   return (
-//     <LineChart
-//       title="Reportes"
-//       labels={reportLabels}
-//       datasets={[reportsByWeeks, reportsSolved]}
-//     />
-//   )
-// }

@@ -2,7 +2,6 @@ import React, { ReactNode, useState } from 'react'
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
-import { set } from 'date-fns'
 
 export type Tab = {
   title: string

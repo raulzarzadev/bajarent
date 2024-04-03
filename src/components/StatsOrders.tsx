@@ -57,7 +57,6 @@ const Last7DaysStats = ({ orders }: { orders: OrderType[] }) => {
     docs: ordersByDays,
     labels: ordersLabels
   })
-  console.log({ orderByDayDataset })
   return (
     <>
       <LineChart
@@ -103,7 +102,6 @@ const Last30DaysStats = ({ orders }: { orders: OrderType[] }) => {
     docs: ordersByDays,
     labels: ordersLabels
   })
-  console.log({ orderByDayDataset })
   return (
     <>
       <LineChart
