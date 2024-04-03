@@ -11,7 +11,7 @@ export const groupDocsByMonth = <T extends { createdAt: Date | Timestamp }>({
 }) => {
   const groupedOrdersByMonth: { [key: string]: ChartDocType<T>[] } =
     docs.reduce((acc, doc) => {
-      const monthYear = dateFormat(asDate(doc.createdAt), 'M/yy')
+      const monthYear = dateFormat(asDate(doc.createdAt), 'MMMM')
       if (acc[monthYear]) {
         acc[monthYear].push(doc)
       } else {
@@ -32,6 +32,14 @@ export const groupDocsByType = <T extends { type: string }>({
   return groupedOrdersByType
 }
 
+/**
+ *
+ * @param label name of the row
+ * @param color color of the row
+ * @param labels order of the data
+ * @param docs data to be displayed
+ * @returns
+ */
 export const createDataset = <T>({
   label,
   color,
@@ -40,7 +48,7 @@ export const createDataset = <T>({
 }: {
   label: string
   color: string
-  labels: string[]
+  labels: string[] // here you define the order of how data will be displayed
   docs: Record<string, T[]>
 }): {
   label: string
