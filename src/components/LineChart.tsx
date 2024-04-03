@@ -21,7 +21,6 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
     setVisibleData(datasets.map(({ label }) => label))
   }, [datasets])
   const [visibleData, setVisibleData] = React.useState([])
-  console.log({ visibleData })
   return (
     <View>
       <Text style={gStyles.h2}>{title}</Text>
