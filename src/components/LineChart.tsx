@@ -99,7 +99,23 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
         fromZero={true} // Para asegurar que el eje Y comience desde cero
         formatYLabel={(value) => value.toString()}
         // Personaliza las etiquetas del eje Y
+        // hidePointsAtIndex={} // Oculta las etiquetas del eje X
+        verticalLabelRotation={-70}
+        xLabelsOffset={10}
       />
+      {/* 
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        {labels.map((label) => (
+          <Text
+            style={{
+              transform: [{ rotate: '-90deg' }],
+              textAlign: 'left'
+            }}
+          >
+            {label}
+          </Text>
+        ))}
+      </View> */}
     </View>
   )
 }
