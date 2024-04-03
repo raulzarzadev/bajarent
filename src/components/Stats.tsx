@@ -5,14 +5,14 @@ import { useState } from 'react'
 import InputSelect from './InputSelect'
 
 export default function Stats() {
-  const [view, setView] = useState('week')
+  const [view, setView] = useState('last7days')
   return (
     <ScrollView>
       <View
         style={{
           padding: 4,
           justifyContent: 'flex-end',
-          maxWidth: 140,
+          maxWidth: 160,
           alignSelf: 'flex-end'
         }}
       >
@@ -29,6 +29,14 @@ export default function Stats() {
             {
               label: 'Por semana',
               value: 'week'
+            },
+            {
+              label: 'Ultimos 30 días',
+              value: 'last30days'
+            },
+            {
+              label: 'Ultimos 7 días',
+              value: 'last7days'
             }
           ]}
         />

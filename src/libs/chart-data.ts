@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore'
 import asDate, { dateFormat } from './utils-date'
 import groupBy from './groupBy'
-import { endOfWeek, setWeek, startOfWeek } from 'date-fns'
+import { endOfWeek, getDayOfYear, setWeek, startOfWeek } from 'date-fns'
 
 export type ChartDocType<T> = T & { createdAt: Date | Timestamp }
 
@@ -31,14 +31,7 @@ export const groupDocsByWeek = <T extends { createdAt: Date | Timestamp }>({
   const groupedOrdersByWeek: { [key: string]: ChartDocType<T>[] } = docs.reduce(
     (acc, doc) => {
       const date = asDate(doc.createdAt)
-      // const weekStarts = startOfWeek(date, { weekStartsOn: 1 })
-      // const weekEnds = endOfWeek(date, { weekStartsOn: 1 })
-      // const week = `${dateFormat(weekStarts, 'd MMM')}-${dateFormat(
-      //   weekEnds,
-      //   'd MMM'
-      // )}`
       const week = dateFormat(date, 'w')
-      //  const week = dateFormat(asDate(doc.createdAt), 'WW')
       if (acc[week]) {
         acc[week].push(doc)
       } else {
@@ -49,6 +42,28 @@ export const groupDocsByWeek = <T extends { createdAt: Date | Timestamp }>({
     {}
   )
   return groupedOrdersByWeek
+}
+
+export const groupDocsByDay = <T extends { createdAt: Date | Timestamp }>({
+  docs
+}: {
+  docs: ChartDocType<T>[]
+}) => {
+  const groupedOrdersByDay: { [key: string]: ChartDocType<T>[] } = docs.reduce(
+    (acc, doc) => {
+      const date = asDate(doc.createdAt)
+      const day = getDayOfYear(date)
+      if (acc[day]) {
+        acc[day].push(doc)
+      } else {
+        acc[day] = [doc]
+      }
+      return acc
+    },
+    {}
+  )
+  console.log({ groupedOrdersByDay })
+  return groupedOrdersByDay
 }
 
 export const groupDocsByType = <T extends { type: string }>({
