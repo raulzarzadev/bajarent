@@ -16,6 +16,7 @@ const ScreenBalances = () => {
       fetchBalances()
     }
   }, [])
+  console.log({ balances })
   return (
     <View>
       <ListBalances balances={balances} />

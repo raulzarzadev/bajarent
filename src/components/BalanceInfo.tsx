@@ -3,7 +3,7 @@ import React from 'react'
 import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
 import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import PaymentsList from './PaymentsList'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -14,10 +14,13 @@ import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
 import { balanceTotals } from '../libs/balance'
 import { useNavigation } from '@react-navigation/native'
+import useOrders from '../hooks/useOrders'
+import { useStore } from '../contexts/storeContext'
+import OrdersList from './OrdersList'
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const { navigate } = useNavigation()
-  const modalOrders = useModal({ title: 'Pagos' })
+  const modalPayments = useModal({ title: 'Pagos' })
   const { card, cash, total, transfers } = balanceTotals(balance)
   return (
     <View style={{ justifyContent: 'center' }}>
@@ -39,23 +42,50 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         <Text> - </Text>
         <DateCell label="Hasta" date={balance?.toDate} showTime labelBold />
       </View>
-      <View>
+      <View
+        style={{
+          width: 180,
+          marginVertical: gSpace(2),
+          marginHorizontal: 'auto'
+        }}
+      >
         <Button
           label={`Pagos ${balance?.payments.length || 0}`}
-          variant="ghost"
-          onPress={modalOrders.toggleOpen}
+          // variant="ghost"
+          size="small"
+          onPress={modalPayments.toggleOpen}
         ></Button>
-        <StyledModal {...modalOrders}>
+        <StyledModal {...modalPayments}>
           <PaymentsList
             payments={balance?.payments}
             onPressRow={(paymentId) => {
-              modalOrders.toggleOpen()
+              modalPayments.toggleOpen()
               // @ts-ignore
               navigate('PaymentsDetails', { id: paymentId })
             }}
           />
         </StyledModal>
       </View>
+
+      <View>
+        <Text style={gStyles.h3}>Ordenes</Text>
+      </View>
+      <ModalOrders
+        ordersIds={balance.ordersCreated}
+        buttonLabel="Creadas"
+        modalTitle="Ordenes creadas"
+      />
+      <ModalOrders
+        ordersIds={balance.ordersDelivered}
+        buttonLabel="Entregadas"
+        modalTitle="Ordenes entregadas"
+      />
+      <ModalOrders
+        ordersIds={balance.ordersPickup}
+        buttonLabel="Recogidas"
+        modalTitle="Ordenes recogidas"
+      />
+
       <View style={styles.totals}>
         <View style={styles.row}>
           <Text style={styles.label}>Efectivo: </Text>
@@ -74,6 +104,43 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         <Text style={gStyles.h3}>Total</Text>
         <CurrencyAmount style={gStyles.h1} amount={total} />
       </View>
+    </View>
+  )
+}
+
+const ModalOrders = ({
+  ordersIds,
+  buttonLabel,
+  modalTitle
+}: {
+  ordersIds: string[]
+  buttonLabel: string
+  modalTitle: string
+}) => {
+  const modal = useModal({ title: modalTitle })
+  const { orders } = useStore()
+  const fullOrders = ordersIds.map((orderId) =>
+    orders.find((o) => o.id === orderId)
+  )
+  return (
+    <View>
+      <View
+        style={{
+          width: 180,
+          marginVertical: gSpace(2),
+          marginHorizontal: 'auto'
+        }}
+      >
+        <Button
+          size="small"
+          label={`${buttonLabel} ${fullOrders.length || 0}`}
+          // variant="ghost"
+          onPress={modal.toggleOpen}
+        ></Button>
+      </View>
+      <StyledModal {...modal} size="full">
+        <OrdersList orders={fullOrders} />
+      </StyledModal>
     </View>
   )
 }

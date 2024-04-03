@@ -1,6 +1,11 @@
 import BaseType from './BaseType'
 import PaymentType from './PaymentType'
 
+export type BalanceOrders = {
+  ordersCreated?: string[]
+  ordersPickup?: string[]
+  ordersDelivered?: string[]
+}
 export type BalanceBase = {
   storeId: string
   type: 'partial' | 'full'
@@ -12,7 +17,8 @@ export type BalanceBase = {
   totalCash: number
   totalCard: number
   totalTransfer: number
-}
+} & BalanceOrders
+
 // & ({ type: 'partial'; userId: string } | { type: 'full' })
 
 export type BalanceType = BalanceBase & BaseType
