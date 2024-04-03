@@ -1,5 +1,5 @@
-import React from 'react'
-import { Dimensions, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Dimensions, Pressable, Text, View } from 'react-native'
 import { LineChart as RNChart } from 'react-native-chart-kit'
 import { gStyles } from '../styles'
 
@@ -10,6 +10,18 @@ export type LineChartProps = {
 }
 
 const LineChart = ({ title, labels, datasets }: LineChartProps) => {
+  const handleHidden = (label: string) => {
+    setVisibleData((prev) =>
+      prev.includes(label)
+        ? prev.filter((item) => item !== label)
+        : [...prev, label]
+    )
+  }
+  useEffect(() => {
+    setVisibleData(datasets.map(({ label }) => label))
+  }, [datasets])
+  const [visibleData, setVisibleData] = React.useState([])
+  console.log({ visibleData })
   return (
     <View>
       <Text style={gStyles.h2}>{title}</Text>
@@ -23,7 +35,10 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
         }}
       >
         {datasets.map(({ label, color }) => (
-          <View
+          <Pressable
+            onPress={() => {
+              handleHidden(label)
+            }}
             key={label}
             style={{ flexDirection: 'row', alignItems: 'center' }}
           >
@@ -31,24 +46,32 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
               style={{
                 width: 20,
                 height: 20,
-                backgroundColor: color,
+                backgroundColor: visibleData.includes(label)
+                  ? color
+                  : 'transparent',
+                borderWidth: 1,
+                borderColor: visibleData.includes(label)
+                  ? 'transparent'
+                  : color,
                 borderRadius: 10,
                 marginRight: 10
               }}
             ></View>
             <Text style={{ marginRight: 4 }}>{label}</Text>
-          </View>
+          </Pressable>
         ))}
       </View>
       <RNChart
         data={{
           labels,
-          datasets: datasets.map(({ data, color }) => ({
-            data,
-            color: () => color,
-            withDots: false,
-            strokeWidth: 1
-          }))
+          datasets:
+            datasets.map(({ data, color, label }) => ({
+              data,
+              color: () =>
+                visibleData.includes(label) ? color : 'transparent',
+              withDots: false,
+              strokeWidth: 3
+            })) || []
         }}
         width={Dimensions.get('window').width}
         height={220}
