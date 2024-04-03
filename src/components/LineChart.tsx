@@ -13,6 +13,33 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
   return (
     <View>
       <Text style={gStyles.h2}>{title}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          margin: 'auto',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}
+      >
+        {datasets.map(({ label, color }) => (
+          <View
+            key={label}
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+          >
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                backgroundColor: color,
+                borderRadius: 10,
+                marginRight: 10
+              }}
+            ></View>
+            <Text style={{ marginRight: 4 }}>{label}</Text>
+          </View>
+        ))}
+      </View>
       <RNChart
         data={{
           labels,
