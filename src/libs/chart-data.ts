@@ -62,7 +62,6 @@ export const groupDocsByDay = <T extends { createdAt: Date | Timestamp }>({
     },
     {}
   )
-  console.log({ groupedOrdersByDay })
   return groupedOrdersByDay
 }
 
