@@ -13,10 +13,10 @@ export type TabsProps = { tabs: Tab[]; defaultTab?: string }
 
 const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
   const [selectedTab, setSelectedTab] = useState(defaultTab || tabs[0]?.title)
-
+  const visibleTabs = tabs.filter(({ show }) => show)
   const handleTabPress = (tab) => {
     setSelectedTab(tab)
-    const visibleTabs = tabs.filter(({ show }) => show)
+    // const visibleTabs = tabs.filter(({ show }) => show)
     const tabIndexSelected = visibleTabs.findIndex(({ title }) => title === tab)
     setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
   }
@@ -37,26 +37,23 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabBar}
         >
-          {tabs.map(
-            (tab) =>
-              tab?.show && (
-                <Pressable
-                  key={tab.title}
-                  style={({ pressed }) => [
-                    styles.tabButton,
-                    selectedTab === tab.title && styles.selectedTab,
-                    pressed && { backgroundColor: '#ddd' }
-                  ]}
-                  onPress={() => handleTabPress(tab.title)}
-                >
-                  <Text style={styles.tabButtonText}>{tab.title}</Text>
-                </Pressable>
-              )
-          )}
+          {visibleTabs.map((tab) => (
+            <Pressable
+              key={tab.title}
+              style={({ pressed }) => [
+                styles.tabButton,
+                selectedTab === tab.title && styles.selectedTab,
+                pressed && { backgroundColor: '#ddd' }
+              ]}
+              onPress={() => handleTabPress(tab.title)}
+            >
+              <Text style={styles.tabButtonText}>{tab.title}</Text>
+            </Pressable>
+          ))}
         </ScrollView>
       </View>
       <View style={styles.tabContent}>
-        {tabs.find((tab) => tab?.show && tab.title === selectedTab)?.content}
+        {visibleTabs.find((tab) => tab.title === selectedTab)?.content}
       </View>
     </View>
   )
