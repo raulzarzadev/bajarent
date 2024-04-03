@@ -35,9 +35,9 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           marginVertical: 8
         }}
       >
-        <DateCell label="Desde" date={balance?.fromDate} />
+        <DateCell label="Desde" date={balance?.fromDate} showTime labelBold />
         <Text> - </Text>
-        <DateCell label="Hasta" date={balance?.toDate} />
+        <DateCell label="Hasta" date={balance?.toDate} showTime labelBold />
       </View>
       <View>
         <Button
