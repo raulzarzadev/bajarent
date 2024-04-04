@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import React, { ReactNode } from 'react'
 import Icon from './Icon'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const windowHeight = Dimensions.get('window').height
 
@@ -37,23 +38,25 @@ const StyledModal = ({
           setOpen(!open)
         }}
       >
-        <View style={styles.centeredView}>
-          <View
-            style={[
-              styles.modalView,
-              size === 'full' && styles.fullSizeModal,
-              size === 'md' && styles.mdSizeModal
-            ]}
-          >
-            <View style={styles.topBar}>
-              <Text style={styles.title}>{title}</Text>
-              <Pressable onPress={() => setOpen(!open)}>
-                <Icon icon="close" />
-              </Pressable>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.centeredView}>
+            <View
+              style={[
+                styles.modalView,
+                size === 'full' && styles.fullSizeModal,
+                size === 'md' && styles.mdSizeModal
+              ]}
+            >
+              <View style={styles.topBar}>
+                <Text style={styles.title}>{title}</Text>
+                <Pressable onPress={() => setOpen(!open)}>
+                  <Icon icon="close" />
+                </Pressable>
+              </View>
+              <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
             </View>
-            <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
     </View>
   )
