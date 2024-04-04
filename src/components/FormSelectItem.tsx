@@ -138,6 +138,9 @@ const FormSelectItem = ({
             setValue={handleSetQty}
             label="Cantidad"
           />
+          <Text style={[gStyles.helper, gStyles.tCenter]}>
+            Agrega tiempo a este item
+          </Text>
         </View>
       )}
       {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
