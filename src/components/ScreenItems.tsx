@@ -22,7 +22,7 @@ import { priceTimeInSeconds } from '../libs/expireDate'
 
 const ScreenItems = () => {
   return (
-    <View style={gStyles.container}>
+    <View style={[gStyles.container, { height: '100%' }]}>
       <StoreCategories />
     </View>
   )

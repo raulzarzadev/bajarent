@@ -1,11 +1,4 @@
-import {
-  FlatList,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
@@ -17,30 +10,32 @@ const ScreenSections = ({ navigation }) => {
   const { storeSections } = useStore()
 
   return (
-    <ScrollView>
-      <Button
-        buttonStyles={{
-          margin: 'auto',
-          marginVertical: 16
-        }}
-        onPress={() => {
-          navigation.navigate('CreateSection')
-        }}
-      >
-        Agregar area
-      </Button>
+    <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
-        <FlatList
-          data={storeSections}
-          renderItem={({ item }) => (
-            <SectionRow
-              section={item}
-              onPress={(sectionId) => {
-                navigation.navigate('SectionDetails', { sectionId })
-              }}
-            />
-          )}
-        ></FlatList>
+        <Button
+          buttonStyles={{
+            margin: 'auto',
+            marginVertical: 16
+          }}
+          onPress={() => {
+            navigation.navigate('CreateSection')
+          }}
+        >
+          Agregar area
+        </Button>
+        <View>
+          <FlatList
+            data={storeSections}
+            renderItem={({ item }) => (
+              <SectionRow
+                section={item}
+                onPress={(sectionId) => {
+                  navigation.navigate('SectionDetails', { sectionId })
+                }}
+              />
+            )}
+          ></FlatList>
+        </View>
       </View>
     </ScrollView>
   )
