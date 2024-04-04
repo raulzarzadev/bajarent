@@ -4,7 +4,7 @@ import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
 import theme from '../theme'
-import asDate, { dateFormat, fromNow } from '../libs/utils-date'
+import { dateFormat, fromNow } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
@@ -16,13 +16,12 @@ import ErrorBoundary from './ErrorBoundary'
 import OrderAssignedTo from './OrderAssignedTo'
 import ClientName from './ClientName'
 import ButtonSearchLocation from './ButtonSearchLocation'
-import Icon from './Icon'
 import ModalRepairQuote from './ModalRepairQuote'
 import ModalPayment from './ModalPayment'
 import { Timestamp } from 'firebase/firestore'
 import DateCell from './DateCell'
 
-const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
+const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View>
       <OrderMetadata order={order} />
@@ -58,7 +57,7 @@ const OrderDetails = ({ order }: { order: Partial<OrderType> }) => {
         <ItemDetails order={order} />
       </ErrorBoundary>
 
-      {order.type === order_type.REPAIR && (
+      {order?.type === order_type.REPAIR && (
         <ErrorBoundary componentName="ModalRepairQuote">
           <View
             style={{
@@ -344,4 +343,10 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-export default OrderDetails
+export default function OrderDetails(props: { order: Partial<OrderType> }) {
+  return (
+    <ErrorBoundary componentName="OrderDetails">
+      <OrderDetailsA {...props} />
+    </ErrorBoundary>
+  )
+}

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
@@ -14,14 +14,17 @@ import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
 import { balanceTotals } from '../libs/balance'
 import { useNavigation } from '@react-navigation/native'
-import useOrders from '../hooks/useOrders'
+
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
+
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const { navigate } = useNavigation()
   const modalPayments = useModal({ title: 'Pagos' })
   const { card, cash, total, transfers } = balanceTotals(balance)
+  const paidOrdersIds = balance?.payments.map((p) => p.orderId)
+  const uniquePaidOrdersIds = [...new Set(paidOrdersIds)]
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
@@ -49,6 +52,9 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           marginHorizontal: 'auto'
         }}
       >
+        <View>
+          <Text style={gStyles.h3}>Pagos</Text>
+        </View>
         <Button
           label={`Pagos ${balance?.payments.length || 0}`}
           // variant="ghost"
@@ -67,21 +73,27 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         </StyledModal>
       </View>
 
+      <ModalOrders
+        ordersIds={uniquePaidOrdersIds}
+        buttonLabel="Ordenes pagadas"
+        modalTitle="Ordenes pagadas"
+      />
+
       <View>
         <Text style={gStyles.h3}>Ordenes</Text>
       </View>
       <ModalOrders
-        ordersIds={balance.ordersCreated}
+        ordersIds={balance?.ordersCreated}
         buttonLabel="Creadas"
         modalTitle="Ordenes creadas"
       />
       <ModalOrders
-        ordersIds={balance.ordersDelivered}
+        ordersIds={balance?.ordersDelivered}
         buttonLabel="Entregadas"
         modalTitle="Ordenes entregadas"
       />
       <ModalOrders
-        ordersIds={balance.ordersPickup}
+        ordersIds={balance?.ordersPickup}
         buttonLabel="Recogidas"
         modalTitle="Ordenes recogidas"
       />
@@ -109,7 +121,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
 }
 
 const ModalOrders = ({
-  ordersIds,
+  ordersIds = [],
   buttonLabel,
   modalTitle
 }: {
@@ -117,11 +129,13 @@ const ModalOrders = ({
   buttonLabel: string
   modalTitle: string
 }) => {
+  const { navigate } = useNavigation()
   const modal = useModal({ title: modalTitle })
   const { orders } = useStore()
-  const fullOrders = ordersIds.map((orderId) =>
+  const fullOrders = ordersIds?.map((orderId) =>
     orders.find((o) => o.id === orderId)
   )
+
   return (
     <View>
       <View
@@ -139,7 +153,14 @@ const ModalOrders = ({
         ></Button>
       </View>
       <StyledModal {...modal} size="full">
-        <OrdersList orders={fullOrders} />
+        <OrdersList
+          orders={fullOrders}
+          onPressRow={(orderId) => {
+            // @ts-ignore
+            navigate('OrderDetails', { orderId })
+            modal.toggleOpen()
+          }}
+        />
       </StyledModal>
     </View>
   )

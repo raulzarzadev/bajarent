@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     height: windowHeight,
     width: '100%',
-    maxWidth: 'auto'
+    maxWidth: 'auto',
+    paddingTop: 28
   },
   topBar: {
     flexDirection: 'row',
