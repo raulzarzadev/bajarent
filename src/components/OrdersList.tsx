@@ -60,7 +60,7 @@ function OrdersList({
             padding: 4
           }}
         >
-          {(staffPermissions?.canCreateOrder || staffPermissions.isAdmin) && (
+          {(staffPermissions?.canCreateOrder || staffPermissions?.isAdmin) && (
             <Button
               label="Nueva"
               icon="add"
