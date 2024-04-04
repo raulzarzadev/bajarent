@@ -70,20 +70,34 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    // justifyContent: 'space-around',// this make disappears some tabs
     alignItems: 'center',
     paddingVertical: 10,
-    maxWidth: '100%', // Esto establece el ancho máximo del ScrollView
-    width: '100%' // Esto establece el ancho del ScrollView
+    paddingBottom: 0,
+    // maxWidth: '100%', // Esto establece el ancho máximo del ScrollView
+    width: '100%', // Esto establece el ancho del ScrollView
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 0.2
   },
   tabButton: {
     paddingHorizontal: 10, // Reducir el padding horizontal
     paddingVertical: 5, // Reducir el padding vertical
-    borderRadius: 5,
-    width: 100 // Ajusta el ancho de cada botón
+    // borderRadius: 5,
+    borderTopEndRadius: 5,
+    borderTopStartRadius: 5,
+    width: 100, // Ajusta el ancho de cada botón
+    borderWidth: 0.2,
+    borderColor: '#cccb',
+    borderBottomWidth: 0,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: theme.base
   },
   selectedTab: {
-    backgroundColor: '#ccc'
+    backgroundColor: '#ccc',
+    shadowColor: theme.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.3
   },
   tabButtonText: {
     fontSize: 16,
