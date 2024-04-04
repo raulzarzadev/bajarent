@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     height: windowHeight,
     width: '100%',
     maxWidth: 'auto',
-    paddingTop: 16
+    paddingTop: 28
   },
   topBar: {
     flexDirection: 'row',
