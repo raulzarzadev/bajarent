@@ -22,6 +22,7 @@ import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
 import ScreenOrderDetail from './ScreenOrderDetail'
+import ScreenOrderRenew from './ScreenOrderRenew'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -204,6 +205,13 @@ function StackStore() {
           title: 'Detalle de  orden'
         }}
         component={ScreenOrderDetail}
+      />
+      <Stack.Screen
+        name="RenewOrder"
+        options={{
+          title: 'Renovar Orden'
+        }}
+        component={ScreenOrderRenew}
       />
     </Stack.Navigator>
   )

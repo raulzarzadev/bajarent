@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
@@ -14,16 +14,16 @@ import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
 import { balanceTotals } from '../libs/balance'
 import { useNavigation } from '@react-navigation/native'
-import useOrders from '../hooks/useOrders'
+
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
-import OrderType from '../types/OrderType'
-import OrderDetails from './OrderDetails'
+
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const { navigate } = useNavigation()
   const modalPayments = useModal({ title: 'Pagos' })
   const { card, cash, total, transfers } = balanceTotals(balance)
+
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
@@ -73,7 +73,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
       </View>
 
       <ModalOrders
-        ordersIds={balance.payments.map((p) => p.orderId)}
+        ordersIds={balance?.payments.map((p) => p.orderId)}
         buttonLabel="Ordenes pagadas"
         modalTitle="Ordenes pagadas"
       />
@@ -82,17 +82,17 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         <Text style={gStyles.h3}>Ordenes</Text>
       </View>
       <ModalOrders
-        ordersIds={balance.ordersCreated}
+        ordersIds={balance?.ordersCreated}
         buttonLabel="Creadas"
         modalTitle="Ordenes creadas"
       />
       <ModalOrders
-        ordersIds={balance.ordersDelivered}
+        ordersIds={balance?.ordersDelivered}
         buttonLabel="Entregadas"
         modalTitle="Ordenes entregadas"
       />
       <ModalOrders
-        ordersIds={balance.ordersPickup}
+        ordersIds={balance?.ordersPickup}
         buttonLabel="Recogidas"
         modalTitle="Ordenes recogidas"
       />
@@ -120,7 +120,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
 }
 
 const ModalOrders = ({
-  ordersIds,
+  ordersIds = [],
   buttonLabel,
   modalTitle
 }: {
@@ -131,7 +131,7 @@ const ModalOrders = ({
   const { navigate } = useNavigation()
   const modal = useModal({ title: modalTitle })
   const { orders } = useStore()
-  const fullOrders = ordersIds.map((orderId) =>
+  const fullOrders = ordersIds?.map((orderId) =>
     orders.find((o) => o.id === orderId)
   )
 
