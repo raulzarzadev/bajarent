@@ -21,6 +21,7 @@ import ScreenPaymentsDetails from './ScreenPaymentsDetails'
 import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
+import ScreenOrderDetail from './ScreenOrderDetail'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -196,6 +197,13 @@ function StackStore() {
           title: 'Nuevo corte'
         }}
         component={ScreenBalancesNew}
+      />
+      <Stack.Screen
+        name="OrderDetails"
+        options={{
+          title: 'Detalle de  orden'
+        }}
+        component={ScreenOrderDetail}
       />
     </Stack.Navigator>
   )

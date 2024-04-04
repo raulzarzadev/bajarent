@@ -17,6 +17,8 @@ import { useNavigation } from '@react-navigation/native'
 import useOrders from '../hooks/useOrders'
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
+import OrderType from '../types/OrderType'
+import OrderDetails from './OrderDetails'
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const { navigate } = useNavigation()
@@ -49,6 +51,9 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           marginHorizontal: 'auto'
         }}
       >
+        <View>
+          <Text style={gStyles.h3}>Pagos</Text>
+        </View>
         <Button
           label={`Pagos ${balance?.payments.length || 0}`}
           // variant="ghost"
@@ -66,6 +71,12 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           />
         </StyledModal>
       </View>
+
+      <ModalOrders
+        ordersIds={balance.payments.map((p) => p.orderId)}
+        buttonLabel="Ordenes pagadas"
+        modalTitle="Ordenes pagadas"
+      />
 
       <View>
         <Text style={gStyles.h3}>Ordenes</Text>
@@ -117,11 +128,13 @@ const ModalOrders = ({
   buttonLabel: string
   modalTitle: string
 }) => {
+  const { navigate } = useNavigation()
   const modal = useModal({ title: modalTitle })
   const { orders } = useStore()
   const fullOrders = ordersIds.map((orderId) =>
     orders.find((o) => o.id === orderId)
   )
+
   return (
     <View>
       <View
@@ -139,7 +152,14 @@ const ModalOrders = ({
         ></Button>
       </View>
       <StyledModal {...modal} size="full">
-        <OrdersList orders={fullOrders} />
+        <OrdersList
+          orders={fullOrders}
+          onPressRow={(orderId) => {
+            // @ts-ignore
+            navigate('OrderDetails', { orderId })
+            modal.toggleOpen()
+          }}
+        />
       </StyledModal>
     </View>
   )
