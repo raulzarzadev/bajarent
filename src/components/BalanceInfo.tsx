@@ -23,7 +23,8 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const { navigate } = useNavigation()
   const modalPayments = useModal({ title: 'Pagos' })
   const { card, cash, total, transfers } = balanceTotals(balance)
-
+  const paidOrdersIds = balance?.payments.map((p) => p.orderId)
+  const uniquePaidOrdersIds = [...new Set(paidOrdersIds)]
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
@@ -73,7 +74,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
       </View>
 
       <ModalOrders
-        ordersIds={balance?.payments.map((p) => p.orderId)}
+        ordersIds={uniquePaidOrdersIds}
         buttonLabel="Ordenes pagadas"
         modalTitle="Ordenes pagadas"
       />

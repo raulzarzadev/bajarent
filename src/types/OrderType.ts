@@ -36,6 +36,9 @@ type OrderBase = {
 
   scheduledAt: Date
 
+  authorizedAt: Date
+  authorizedBy: string
+
   deliveredAt: Date
   deliveredBy: string
   deliveredByStaff: string

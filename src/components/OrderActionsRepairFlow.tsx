@@ -30,7 +30,9 @@ const RentFlow = ({
 }) => {
   const { storeId, myStaffId: staffId, staffPermissions, store } = useStore()
   const { user } = useAuth()
-  const isOwner = store?.createdBy === user?.id
+  const userId = user?.id
+
+  const isOwner = store?.createdBy === userId
   const isAdmin = staffPermissions?.isAdmin || isOwner
   const canAuthorizeOrder = staffPermissions?.canAuthorizeOrder
   const canDeliveryOrder = staffPermissions?.canDeliveryOrder
@@ -71,10 +73,10 @@ const RentFlow = ({
       onPress: () => {
         if (step === order_status.AUTHORIZED) {
           setStep(order_status.PENDING)
-          onAuthorize({ orderId, storeId, staffId, undo: true })
+          onAuthorize({ orderId, storeId, staffId, undo: true, userId })
         } else {
           setStep(order_status.AUTHORIZED)
-          onAuthorize({ orderId, storeId, staffId, undo: false })
+          onAuthorize({ orderId, storeId, staffId, undo: false, userId })
         }
       }
     },
@@ -88,11 +90,11 @@ const RentFlow = ({
         if (step === order_status.REPAIRING) {
           // * Undo it
           setStep(order_status.AUTHORIZED)
-          onRepairStart({ orderId, storeId, staffId, undo: true })
+          onRepairStart({ orderId, storeId, staffId, undo: true, userId })
         } else {
           //* Do it
           setStep(order_status.REPAIRING)
-          onRepairStart({ orderId, storeId, staffId, undo: false })
+          onRepairStart({ orderId, storeId, staffId, undo: false, userId })
         }
       }
     },
@@ -106,14 +108,15 @@ const RentFlow = ({
       onPress: () => {
         if (step === order_status.REPAIRED) {
           setStep(order_status.REPAIRING)
-          onFinishRepair({ orderId, storeId, staffId, undo: true })
+          onFinishRepair({ orderId, storeId, staffId, undo: true, userId })
         } else {
           setStep(order_status.REPAIRED)
           onFinishRepair({
             orderId,
             storeId,
             staffId,
-            undo: false
+            undo: false,
+            userId
           })
 
           // setStep(order_status.REPAIRED)
@@ -129,10 +132,16 @@ const RentFlow = ({
       disabled: !enableDeliveryRepair,
       onPress: () => {
         if (step === order_status.REPAIR_DELIVERED) {
-          onRepairStartRepair({ orderId, storeId, staffId, undo: true })
+          onRepairStartRepair({ orderId, storeId, staffId, undo: true, userId })
           setStep(order_status.REPAIRED)
         } else {
-          onRepairStartRepair({ orderId, storeId, staffId, undo: false })
+          onRepairStartRepair({
+            orderId,
+            storeId,
+            staffId,
+            undo: false,
+            userId
+          })
           setStep(order_status.REPAIR_DELIVERED)
         }
       }
@@ -172,9 +181,11 @@ const RentFlow = ({
 
 export default OrderActionsRepairFlow
 
-const onAuthorize = ({ orderId, storeId, undo, staffId }) => {
+const onAuthorize = ({ orderId, storeId, undo, staffId, userId }) => {
   ServiceOrders.update(orderId, {
-    status: undo ? order_status.PENDING : order_status.AUTHORIZED
+    status: undo ? order_status.PENDING : order_status.AUTHORIZED,
+    authorizedAt: new Date(),
+    authorizedBy: userId
   })
     .then(console.log)
     .catch(console.error)
@@ -189,11 +200,12 @@ const onAuthorize = ({ orderId, storeId, undo, staffId }) => {
     .catch(console.error)
 }
 
-const onRepairStart = ({ orderId, storeId, undo, staffId }) => {
+const onRepairStart = ({ orderId, storeId, undo, staffId, userId }) => {
   ServiceOrders.update(orderId, {
     status: undo ? order_status.AUTHORIZED : order_status.REPAIRING,
     deliveredAt: new Date(),
-    deliveredByStaff: staffId
+    deliveredByStaff: staffId,
+    deliveredBy: userId || ''
   })
     .then(console.log)
     .catch(console.error)
@@ -207,11 +219,12 @@ const onRepairStart = ({ orderId, storeId, undo, staffId }) => {
     .catch(console.error)
 }
 
-const onFinishRepair = async ({ orderId, storeId, undo, staffId }) => {
+const onFinishRepair = async ({ orderId, storeId, undo, staffId, userId }) => {
   await ServiceOrders.update(orderId, {
     status: undo ? order_status.REPAIRING : order_status.REPAIRED,
     pickedUpAt: new Date(),
-    pickedUpByStaff: staffId
+    pickedUpByStaff: staffId,
+    pickedUpBy: userId || ''
   })
     .then(console.log)
     .catch(console.error)
@@ -225,11 +238,12 @@ const onFinishRepair = async ({ orderId, storeId, undo, staffId }) => {
     .catch(console.error)
 }
 
-const onRepairStartRepair = ({ orderId, storeId, undo, staffId }) => {
+const onRepairStartRepair = ({ orderId, storeId, undo, staffId, userId }) => {
   ServiceOrders.update(orderId, {
     status: undo ? order_status.REPAIRED : order_status.REPAIR_DELIVERED,
     deliveredAt: new Date(),
-    deliveredByStaff: staffId
+    deliveredByStaff: staffId,
+    deliveredBy: userId || ''
   })
     .then(console.log)
     .catch(console.error)
