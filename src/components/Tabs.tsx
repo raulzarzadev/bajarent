@@ -90,11 +90,11 @@ const styles = StyleSheet.create({
     borderColor: '#cccb',
     borderBottomWidth: 0,
     shadowOffset: { width: 0, height: 2 },
-    shadowColor: theme.base
+    shadowColor: '#f2f2f2'
   },
   selectedTab: {
     backgroundColor: '#ccc',
-    shadowColor: theme.black,
+    shadowColor: '#f2f2f2',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     shadowOpacity: 0.3
