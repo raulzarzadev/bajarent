@@ -1,4 +1,4 @@
-import { Timestamp, orderBy, where } from 'firebase/firestore'
+import { orderBy, where } from 'firebase/firestore'
 import { CommentType } from '../types/CommentType'
 import { FirebaseGenericService } from './genericService'
 

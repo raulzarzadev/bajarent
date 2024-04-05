@@ -6,7 +6,7 @@ import OrderType, { order_type } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
-import asDate, { dateFormat } from '../libs/utils-date'
+import asDate from '../libs/utils-date'
 import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './InputRadiosFormik'
 import FormikInputImage from './FormikInputImage'
@@ -160,8 +160,6 @@ const FormOrderA = ({
                     'itemBrand',
                     'itemSerial',
                     'assignIt'
-                    // 'assignedToSection'
-                    // 'scheduledAt' //
                   ]}
                   values={values}
                   setValues={setValues}
@@ -179,8 +177,6 @@ const FormOrderA = ({
                     'address',
                     'references',
                     'selectItemRent',
-                    // 'assignedToSection'
-                    // 'scheduledAt'
                     'assignIt',
                     'hasDelivered'
                   ]}
@@ -190,14 +186,7 @@ const FormOrderA = ({
               )}
               {values.type === order_type.RENT && (
                 <FormFields
-                  fields={[
-                    'fullName',
-                    'phone',
-                    'selectItemRent',
-                    'imageID'
-
-                    // 'assignedToSection'
-                  ]}
+                  fields={['fullName', 'phone', 'selectItemRent', 'imageID']}
                   values={values}
                   setValues={setValues}
                 />
@@ -216,15 +205,9 @@ const FormOrderA = ({
                   setValues={setValues}
                 />
               )}
-              {values.type === order_type.SALE && (
+              {values?.type === order_type.SALE && (
                 <FormFields
-                  fields={[
-                    'fullName',
-                    'phone',
-                    'selectItems'
-                    // 'itemBrand',
-                    // 'itemSerial'
-                  ]}
+                  fields={['fullName', 'phone', 'selectItems']}
                   values={values}
                   setValues={setValues}
                 />
@@ -273,17 +256,8 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
 
   useEffect(() => {
     if (!sheetRow) return
-    const [
-      note,
-      name,
-      phone,
-      neighborhood,
-      address,
-      references,
-      number,
-      date,
-      time
-    ] = sheetRow?.split('\t') || []
+    const [note, name, phone, neighborhood, address, references, number, date] =
+      sheetRow?.split('\t') || []
 
     const scheduledAt = date && new Date(asDate(date)?.setHours(9))
 
@@ -362,7 +336,6 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         helperText="Ejemplo: Casa blanca con portón rojo"
       />
     ),
-
     scheduledAt: (
       <InputDate
         label="Fecha programada"
@@ -426,7 +399,6 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     itemSerial: (
       <InputValueFormik name={'itemSerial'} placeholder="No. de serie" />
     ),
-
     assignIt: (
       <ErrorBoundary componentName="ModalAssignOrder">
         <ModalAssignOrder
@@ -453,7 +425,6 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
   )
 }
 
-// export default FormOrderA
 export default function FormOrder(props: FormOrderProps) {
   return (
     <ErrorBoundary componentName="FormOrder">
