@@ -1,7 +1,7 @@
 import { Component, ReactNode } from 'react'
 import { ServiceAppErrors } from '../firebase/ServiceAppErrors'
 import { NavigationProp } from '@react-navigation/native'
-
+import { Platform } from 'react-native'
 interface Props {
   fallback?: ReactNode
   children?: ReactNode
@@ -48,10 +48,12 @@ class ErrorBoundary extends Component<Props, State> {
   logErrorToMyService = async () => {
     const { error } = this.state
     const { componentName } = this.props
+    const userAgent = Platform.OS + ' ' + Platform.Version
     const newError = {
       code: 'ERROR_BOUNDARY',
       message: error.message || '',
-      componentName: componentName || ''
+      componentName: componentName || '',
+      userAgent
     }
     console.log('error sent', { newError })
     await ServiceAppErrors.create({
@@ -82,12 +84,12 @@ class ErrorBoundary extends Component<Props, State> {
             <p>{this?.state?.componentName}</p>
             {/* <p>{this?.state?.error?.message}</p> */}
             <div>
-              <button
+              {/* <button
                 style={{ margin: 4, width: 100 }}
                 onClick={() => this.props.navigation.goBack()}
               >
                 Regresar
-              </button>
+              </button> */}
               {this.state.errorSent ? (
                 <p>Error enviado</p>
               ) : (
