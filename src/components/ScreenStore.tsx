@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native'
  * @param param0
  * @returns
  */
-const ScreenStore = ({ navigation }) => {
+const ScreenStoreA = ({ navigation }) => {
   const { navigate } = useNavigation()
   const { store, staffPermissions } = useStore()
   const { user } = useAuth()
@@ -86,7 +86,7 @@ const ScreenStore = ({ navigation }) => {
                 >
                   Caja
                 </Button>
-                {store.allowSections && (
+                {store?.allowSections && (
                   <Button
                     buttonStyles={styles.button}
                     onPress={() => {
@@ -97,7 +97,7 @@ const ScreenStore = ({ navigation }) => {
                   </Button>
                 )}
 
-                {store.allowStaff && (
+                {store?.allowStaff && (
                   <Button
                     buttonStyles={styles.button}
                     onPress={() => {
@@ -121,7 +121,13 @@ const ScreenStore = ({ navigation }) => {
   )
 }
 
-export default ScreenStore
+export default function ScreenStore(props) {
+  return (
+    <ErrorBoundary componentName="ScreenStore">
+      <ScreenStoreA {...props} />
+    </ErrorBoundary>
+  )
+}
 
 const styles = StyleSheet.create({
   button: {

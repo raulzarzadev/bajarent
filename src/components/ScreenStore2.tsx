@@ -7,8 +7,9 @@ import ScreenStoreDetails from './ScreenStoreDetails'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
 import Stats from './Stats'
+import ErrorBoundary from './ErrorBoundary'
 
-const ScreenStore = (props) => {
+const ScreenStoreA = (props) => {
   const { store, staffPermissions } = useStore()
   const { user } = useAuth()
   const isOwner = store?.createdBy === user?.id
@@ -39,7 +40,7 @@ const ScreenStore = (props) => {
         {
           title: 'Staff',
           content: <ScreenStaff {...props} />,
-          show: store.allowStaff
+          show: store?.allowStaff
         },
         {
           title: 'Areas',
@@ -51,4 +52,10 @@ const ScreenStore = (props) => {
   )
 }
 
-export default ScreenStore
+export default function ScreenStore(props) {
+  return (
+    <ErrorBoundary componentName="ScreenStore2">
+      <ScreenStoreA {...props} />
+    </ErrorBoundary>
+  )
+}
