@@ -19,6 +19,7 @@ import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
+import FormikSelectCategoryItems from './FormikSelectCategoryItems'
 
 const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -32,6 +33,7 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'references',
   'selectItemRepair',
   'selectItemRent',
+  'selectItemsRent',
   'repairDescription', // Field name is 'description' in the form
   'itemBrand',
   'itemSerial',
@@ -190,8 +192,9 @@ const FormOrderA = ({
                   fields={[
                     'fullName',
                     'phone',
-                    'selectItemRent',
+                    'selectItemsRent',
                     'imageID'
+
                     // 'assignedToSection'
                   ]}
                   values={values}
@@ -379,6 +382,17 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     ),
     selectItemRent: (
       <FormikSelectCategoryItem
+        name="item"
+        label="Selecciona un artículo"
+        categories={categories.map((cat) => ({
+          ...cat
+        }))}
+        selectPrice
+        startAt={values.scheduledAt}
+      />
+    ),
+    selectItemsRent: (
+      <FormikSelectCategoryItems
         name="item"
         label="Selecciona un artículo"
         categories={categories.map((cat) => ({
