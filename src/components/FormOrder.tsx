@@ -192,7 +192,7 @@ const FormOrderA = ({
                   fields={[
                     'fullName',
                     'phone',
-                    'selectItemsRent',
+                    'selectItemRent',
                     'imageID'
 
                     // 'assignedToSection'
@@ -220,7 +220,7 @@ const FormOrderA = ({
                   fields={[
                     'fullName',
                     'phone',
-                    'selectItemRepair',
+                    'selectItemsRent',
                     'itemBrand',
                     'itemSerial'
                   ]}

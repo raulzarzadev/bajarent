@@ -23,6 +23,7 @@ export type ItemSelected = {
   priceSelectedId?: string
   priceQty?: number
   priceSelected?: Partial<PriceType>
+  id?: string
   // priceId?: string
   // timestamp?: Date
 }
@@ -33,7 +34,9 @@ const FormSelectItem = ({
   value,
   label = 'Categorias',
   selectPrice = false,
-  startAt
+  startAt,
+  showDetails = true,
+  showCount = true
 }: {
   categories: Partial<CategoryType>[]
   setValue: (value: ItemSelected) => void
@@ -41,6 +44,8 @@ const FormSelectItem = ({
   label?: string
   selectPrice?: boolean
   startAt?: Date
+  showDetails?: boolean
+  showCount?: boolean
 }) => {
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
@@ -131,7 +136,7 @@ const FormSelectItem = ({
           />
         </View>
       )}
-      {!!value?.priceSelected && (
+      {showCount && !!value?.priceSelected && (
         <View style={{ marginVertical: gSpace(2) }}>
           <InputCount
             value={value?.priceQty || 0}
@@ -143,12 +148,16 @@ const FormSelectItem = ({
           </Text>
         </View>
       )}
-      {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
-      {!!amount && shouldExpireAt && (
-        <View style={{ alignItems: 'center', alignContent: 'center' }}>
-          <Text>Expira:</Text>
-          <DateCell date={shouldExpireAt} />
-        </View>
+      {showDetails && (
+        <>
+          {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
+          {!!amount && shouldExpireAt && (
+            <View style={{ alignItems: 'center', alignContent: 'center' }}>
+              <Text>Expira:</Text>
+              <DateCell date={shouldExpireAt} />
+            </View>
+          )}
+        </>
       )}
     </View>
   )
