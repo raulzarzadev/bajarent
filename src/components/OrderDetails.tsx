@@ -20,8 +20,21 @@ import ModalRepairQuote from './ModalRepairQuote'
 import ModalPayment from './ModalPayment'
 import { Timestamp } from 'firebase/firestore'
 import DateCell from './DateCell'
+import { Totals } from './FormikSelectItems'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  const multiItemOrder = order?.items?.length > 0
+  const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
+    const price = item?.priceSelected?.amount || 0
+    const qty = item?.priceQty || 1
+
+    // ? * qty should be 1 always ?
+    return acc + price * qty
+  }, 0)
+  const singleItemAmount =
+    order?.item?.priceSelected?.amount * order?.item?.priceQty
+  const defaultAmount = multiItemOrder ? multiItemOrderAmount : singleItemAmount
+
   return (
     <View>
       <OrderMetadata order={order} />
@@ -118,9 +131,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         <ModalPayment
           orderId={order.id}
           storeId={order.storeId}
-          defaultAmount={
-            order?.item?.priceSelected?.amount * order?.item?.priceQty
-          }
+          defaultAmount={defaultAmount}
         />
       </View>
 
@@ -189,25 +200,26 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           Artículos
         </Text>
         {order?.items?.map((item) => (
-          <View key={item.id}>
+          <View
+            key={item.id}
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-evenly'
+            }}
+          >
             <Text style={[gStyles.h3]}>{item.categoryName}</Text>
             <Text style={[gStyles.p, gStyles.tCenter]}>
-              <Text style={gStyles.helper}>{item.priceQty || 1}x</Text>{' '}
+              {/* <Text style={gStyles.helper}>{item.priceQty || 1}x</Text>{' '} */}
               {item.priceSelected?.title}
             </Text>
             <CurrencyAmount
-              style={gStyles.h1}
+              style={gStyles.h3}
               amount={(item.priceSelected?.amount || 0) * (item.priceQty || 1)}
             />
           </View>
         ))}
-        <View style={{ marginTop: gSpace(3) }}>
-          <ItemDates
-            expireAt={order.expireAt}
-            scheduledAt={order.scheduledAt}
-            startedAt={order.deliveredAt}
-          />
-        </View>
+        <Totals items={order.items} />
       </View>
     )
   }

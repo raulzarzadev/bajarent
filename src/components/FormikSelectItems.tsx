@@ -85,7 +85,7 @@ const FormikSelectItems = ({
   )
 }
 
-const Totals = ({ items }: { items: ItemSelected[] }) => {
+export const Totals = ({ items }: { items: ItemSelected[] }) => {
   const total = items.reduce((acc, item) => acc + item.priceSelected?.amount, 0)
 
   return (
