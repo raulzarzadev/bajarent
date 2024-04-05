@@ -13,24 +13,32 @@ const FormikSelectItems = ({
   label,
   categories,
   selectPrice,
-  startAt
+  startAt,
+  items = [],
+  setItems
 }: {
   name: string
   label?: string
   categories: Partial<Category>[]
   selectPrice?: boolean
   startAt?: Date
+  setItems?: (items: ItemSelected[]) => void
+  items?: ItemSelected[]
 }) => {
   const [field, meta, helpers] = useField(name)
   const value: ItemSelected = useMemo(() => field.value, [field.value])
-  const [items, setItems] = useState([])
+  const [_items, _setItems] = useState([...items])
 
   const handleRemoveItem = (id: string) => {
-    setItems(items.filter((item) => item.id !== id))
+    const newItems = _items.filter((item) => item.id !== id)
+    _setItems(newItems)
+    setItems(newItems)
   }
   const handleAddItem = (value) => {
     value.id = uidGenerator()
-    setItems([...items, value])
+    const newItems = [..._items, value]
+    _setItems(newItems)
+    setItems(newItems)
     helpers.setValue({})
   }
 
@@ -45,12 +53,21 @@ const FormikSelectItems = ({
               ?.find((category) => category?.name === value?.categoryName)
               ?.prices?.find((price) => price?.id === value?.priceSelectedId) ||
             null
+          const priceSelectedImportantInfo = {
+            amount: priceSelected?.amount,
+            title: priceSelected?.title,
+            time: priceSelected?.time,
+            id: priceSelected?.id
+          }
           helpers.setValue({
             ...value,
-            priceSelected
+            priceSelected: priceSelectedImportantInfo
           })
           if (priceSelected) {
-            handleAddItem({ ...value, priceSelected })
+            handleAddItem({
+              ...value,
+              priceSelected: priceSelectedImportantInfo
+            })
           }
         }}
         categories={categories}
@@ -58,12 +75,12 @@ const FormikSelectItems = ({
         startAt={startAt}
         showCount={false}
         showDetails={false}
-        askItemInfo={true}
+        // askItemInfo={true}
       />
 
-      <ListItems items={items} handleRemoveItem={handleRemoveItem} />
+      <ListItems items={_items} handleRemoveItem={handleRemoveItem} />
 
-      <Totals items={items} />
+      <Totals items={_items} />
     </>
   )
 }

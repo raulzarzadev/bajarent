@@ -174,6 +174,43 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
+  console.log(order)
+  if (order?.items?.length > 0) {
+    return (
+      <View
+        style={{
+          marginVertical: 16,
+          paddingVertical: 16,
+          backgroundColor: theme?.base,
+          margin: 4
+        }}
+      >
+        <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
+          Artículos
+        </Text>
+        {order?.items?.map((item) => (
+          <View key={item.id}>
+            <Text style={[gStyles.h3]}>{item.categoryName}</Text>
+            <Text style={[gStyles.p, gStyles.tCenter]}>
+              <Text style={gStyles.helper}>{item.priceQty || 1}x</Text>{' '}
+              {item.priceSelected?.title}
+            </Text>
+            <CurrencyAmount
+              style={gStyles.h1}
+              amount={(item.priceSelected?.amount || 0) * (item.priceQty || 1)}
+            />
+          </View>
+        ))}
+        <View style={{ marginTop: gSpace(3) }}>
+          <ItemDates
+            expireAt={order.expireAt}
+            scheduledAt={order.scheduledAt}
+            startedAt={order.deliveredAt}
+          />
+        </View>
+      </View>
+    )
+  }
   if (!order?.item)
     return (
       <View
