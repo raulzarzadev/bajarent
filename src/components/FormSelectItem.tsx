@@ -149,7 +149,7 @@ const FormSelectItem = ({
             value={brand}
             onChangeText={(text) => setBrand(text)}
             helperText="Ejemplo: HP, Mytag, Mac, etc."
-            style={{ marginBottom: gSpace(2) }}
+            containerStyle={{ marginBottom: gSpace(2) }}
           />
           <InputTextStyled
             placeholder="No. de serie"

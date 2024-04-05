@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, TextInputProps, Text, View } from 'react-native'
+import {
+  StyleSheet,
+  TextInput,
+  TextInputProps,
+  Text,
+  View,
+  ViewStyle
+} from 'react-native'
 import theme, { BORDER_RADIUS, PADDING } from '../theme'
 import { useEffect, useState } from 'react'
 
@@ -15,6 +22,7 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
   helperText?: string
   helperTextColor?: 'error' | 'primary' | 'black' | 'white'
   type?: 'number' | 'text'
+  containerStyle?: ViewStyle
 }
 const InputTextStyled = ({
   disabled,
@@ -22,6 +30,7 @@ const InputTextStyled = ({
   helperTextColor,
   type = 'text',
   value: defValue,
+  containerStyle,
   ...props
 }: InputTextProps): JSX.Element => {
   const [value, setValue] = useState<string | number>()
@@ -29,11 +38,15 @@ const InputTextStyled = ({
     setValue(defValue)
   }, [defValue])
   return (
-    <View style={props.style}>
+    <View style={containerStyle}>
       <TextInput
         {...props}
         value={String(value || '')}
-        style={[baseStyle.inputStyle, disabled && { opacity: 0.5 }]}
+        style={[
+          baseStyle.inputStyle,
+          disabled && { opacity: 0.5 },
+          props.style
+        ]}
         onChangeText={(text) => {
           if (text === '') {
             setValue('')
