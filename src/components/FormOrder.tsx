@@ -19,6 +19,7 @@ import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
+import FormikSelectCategoryItems from './FormikSelectItems'
 
 const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -32,6 +33,7 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'references',
   'selectItemRepair',
   'selectItemRent',
+  'selectItems',
   'repairDescription', // Field name is 'description' in the form
   'itemBrand',
   'itemSerial',
@@ -144,100 +146,100 @@ const FormOrderA = ({
                   label="Tipo de orden"
                 />
 
-                {values.type === order_type.REPAIR && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'location',
-                      'neighborhood',
-                      'address',
-                      'references',
-                      'selectItemRepair',
-                      'repairDescription',
-                      'itemBrand',
-                      'itemSerial',
-                      'assignIt'
-                      // 'assignedToSection'
-                      // 'scheduledAt' //
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.DELIVERY_RENT && (
-                  <FormFields
-                    fields={[
-                      'sheetRow',
-                      'note',
-                      'fullName',
-                      'phone',
-                      'location',
-                      'neighborhood',
-                      'address',
-                      'references',
-                      'selectItemRent',
-                      // 'assignedToSection'
-                      // 'scheduledAt'
-                      'assignIt',
-                      'hasDelivered'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.RENT && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'selectItemRent',
-                      'imageID'
-                      // 'assignedToSection'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.STORE_RENT && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'selectItemRent',
-                      'imageID',
-                      'assignIt',
-                      'hasDelivered'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.SALE && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'selectItemRepair',
-                      'itemBrand',
-                      'itemSerial'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                <View style={[styles.item]}>
-                  <Button
-                    disabled={loading || !values?.fullName}
-                    onPress={async () => {
-                      handleSubmit()
-                    }}
-                    label={'Guardar'}
-                  />
-                </View>
-              </>
-            )
-          }}
+              {values.type === order_type.REPAIR && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'location',
+                    'neighborhood',
+                    'address',
+                    'references',
+                    'selectItemRepair',
+                    'repairDescription',
+                    'itemBrand',
+                    'itemSerial',
+                    'assignIt'
+                    // 'assignedToSection'
+                    // 'scheduledAt' //
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.DELIVERY_RENT && (
+                <FormFields
+                  fields={[
+                    'sheetRow',
+                    'note',
+                    'fullName',
+                    'phone',
+                    'location',
+                    'neighborhood',
+                    'address',
+                    'references',
+                    'selectItemRent',
+                    // 'assignedToSection'
+                    // 'scheduledAt'
+                    'assignIt',
+                    'hasDelivered'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.RENT && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'selectItemRent',
+                    'imageID'
+
+                    // 'assignedToSection'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.STORE_RENT && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'selectItemRent',
+                    'imageID',
+                    'assignIt',
+                    'hasDelivered'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              {values.type === order_type.SALE && (
+                <FormFields
+                  fields={[
+                    'fullName',
+                    'phone',
+                    'selectItems'
+                    // 'itemBrand',
+                    // 'itemSerial'
+                  ]}
+                  values={values}
+                  setValues={setValues}
+                />
+              )}
+              <View style={[styles.item]}>
+                <Button
+                  disabled={loading || !values?.fullName}
+                  onPress={async () => {
+                    handleSubmit()
+                  }}
+                  label={'Guardar'}
+                />
+              </View>
+            </>
+          )}
         </Formik>
       </View>
     </ScrollView>
@@ -381,6 +383,17 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     ),
     selectItemRent: (
       <FormikSelectCategoryItem
+        name="item"
+        label="Selecciona un artículo"
+        categories={categories.map((cat) => ({
+          ...cat
+        }))}
+        selectPrice
+        startAt={values.scheduledAt}
+      />
+    ),
+    selectItems: (
+      <FormikSelectCategoryItems
         name="item"
         label="Selecciona un artículo"
         categories={categories.map((cat) => ({

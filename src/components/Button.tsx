@@ -63,19 +63,18 @@ const ButtonX: React.FC<ButtonProps> = ({
     color: variant === 'filled' ? theme.white : theme[color]
   }
 
-  const justIconStyles = {
-    padding: 5,
-    borderRadius: 9999,
-    width: 30,
-    height: 30,
-    margin: 'auto'
-  }
-
   const sizes = {
     xs: { padding: 5 },
     small: { padding: 10 },
     medium: { padding: 15 },
     large: { padding: 20 }
+  }
+  const justIconStyles = {
+    padding: sizes[size].padding,
+    borderRadius: 9999,
+    width: sizes[size].padding * 2,
+    height: sizes[size].padding * 2,
+    margin: 'auto'
   }
 
   if (justIcon) {
@@ -128,7 +127,11 @@ const ButtonX: React.FC<ButtonProps> = ({
       )}
       {!!icon && (
         <View style={{ marginLeft: label || children ? 4 : 0 }}>
-          <Icon icon={icon} color={textColor.color} size={26} />
+          <Icon
+            icon={icon}
+            color={textColor.color}
+            size={sizes[size].padding * 2}
+          />
         </View>
       )}
     </Pressable>

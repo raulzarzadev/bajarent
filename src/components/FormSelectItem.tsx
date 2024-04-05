@@ -17,12 +17,17 @@ import InputCount from './InputCount'
 import { gSpace, gStyles } from '../styles'
 import DateCell from './DateCell'
 import { expireDate2 } from '../libs/expireDate'
+import InputTextStyled from './InputTextStyled'
+import { set } from 'date-fns'
 
 export type ItemSelected = {
   categoryName?: string
   priceSelectedId?: string
   priceQty?: number
   priceSelected?: Partial<PriceType>
+  id?: string
+  brand?: string
+  serial?: string
   // priceId?: string
   // timestamp?: Date
 }
@@ -33,7 +38,10 @@ const FormSelectItem = ({
   value,
   label = 'Categorias',
   selectPrice = false,
-  startAt
+  startAt,
+  showDetails = true,
+  showCount = true,
+  askItemInfo = false
 }: {
   categories: Partial<CategoryType>[]
   setValue: (value: ItemSelected) => void
@@ -41,7 +49,13 @@ const FormSelectItem = ({
   label?: string
   selectPrice?: boolean
   startAt?: Date
+  showDetails?: boolean
+  showCount?: boolean
+  askItemInfo?: boolean
 }) => {
+  const [brand, setBrand] = useState<string | null>(null)
+  const [serial, setSerial] = useState<string | null>(null)
+
   const [categoryId, setCategoryId] = useState<
     ItemSelected['categoryName'] | null
   >(value?.categoryName || null)
@@ -53,6 +67,9 @@ const FormSelectItem = ({
   const [priceId, setPriceId] = useState<
     ItemSelected['priceSelectedId'] | null
   >(value?.priceSelectedId || null)
+  const [amount, setAmount] = useState<number | null>(null)
+
+  const [shouldExpireAt, setShouldExpireAt] = useState<Date | null>(null)
 
   const prices =
     categories?.find((category) => category?.name === categoryId)?.prices || []
@@ -60,13 +77,21 @@ const FormSelectItem = ({
   const handleSelectPrice = (priceId: string) => {
     if (priceId === value.priceSelectedId) {
       setPriceId(null)
-      setValue({ categoryName: categoryId, priceSelectedId: null, priceQty: 0 })
+      setValue({
+        categoryName: categoryId,
+        priceSelectedId: null,
+        priceQty: 0,
+        brand,
+        serial
+      })
     } else {
       setPriceId(priceId)
       setValue({
         categoryName: categoryId,
         priceSelectedId: priceId,
-        priceQty: 1
+        priceQty: 1,
+        brand,
+        serial
       })
     }
   }
@@ -80,9 +105,6 @@ const FormSelectItem = ({
     setValue({ ...value, priceQty: qty })
   }
 
-  const [amount, setAmount] = useState<number | null>(null)
-
-  const [shouldExpireAt, setShouldExpireAt] = useState<Date | null>(null)
   useEffect(() => {
     const total = (value?.priceQty || 0) * (value?.priceSelected?.amount || 0)
     setAmount(total)
@@ -120,6 +142,23 @@ const FormSelectItem = ({
           containerStyle={{ flexWrap: 'wrap', justifyContent: 'center' }}
         />
       </View>
+      {askItemInfo && value?.categoryName && (
+        <View style={{ marginVertical: gSpace(2) }}>
+          <InputTextStyled
+            placeholder="Marca"
+            value={brand}
+            onChangeText={(text) => setBrand(text)}
+            helperText="Ejemplo: HP, Mytag, Mac, etc."
+            style={{ marginBottom: gSpace(2) }}
+          />
+          <InputTextStyled
+            placeholder="No. de serie"
+            value={serial}
+            onChangeText={(text) => setSerial(text)}
+            helperText="Ejemplo: ABC-34567890, 0987654321, etc."
+          />
+        </View>
+      )}
       {selectPrice && (
         <View>
           <FormSelectPrice
@@ -131,21 +170,29 @@ const FormSelectItem = ({
           />
         </View>
       )}
-      {!!value?.priceSelected && (
+
+      {showCount && !!value?.priceSelected && (
         <View style={{ marginVertical: gSpace(2) }}>
           <InputCount
             value={value?.priceQty || 0}
             setValue={handleSetQty}
             label="Cantidad"
           />
+          <Text style={[gStyles.helper, gStyles.tCenter]}>
+            Agrega tiempo a este item
+          </Text>
         </View>
       )}
-      {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
-      {!!amount && shouldExpireAt && (
-        <View style={{ alignItems: 'center', alignContent: 'center' }}>
-          <Text>Expira:</Text>
-          <DateCell date={shouldExpireAt} />
-        </View>
+      {showDetails && (
+        <>
+          {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
+          {!!amount && shouldExpireAt && (
+            <View style={{ alignItems: 'center', alignContent: 'center' }}>
+              <Text>Expira:</Text>
+              <DateCell date={shouldExpireAt} />
+            </View>
+          )}
+        </>
       )}
     </View>
   )
