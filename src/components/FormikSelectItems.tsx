@@ -8,7 +8,7 @@ import CurrencyAmount from './CurrencyAmount'
 import { gSpace, gStyles } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
 
-const FormikSelectCategoryItems = ({
+const FormikSelectItems = ({
   name,
   label,
   categories,
@@ -25,7 +25,7 @@ const FormikSelectCategoryItems = ({
   const value: ItemSelected = useMemo(() => field.value, [field.value])
   const [items, setItems] = useState([])
 
-  const handleRemoveItem = (id: number) => {
+  const handleRemoveItem = (id: string) => {
     setItems(items.filter((item) => item.id !== id))
   }
   const handleAddItem = (value) => {
@@ -34,7 +34,7 @@ const FormikSelectCategoryItems = ({
     helpers.setValue({})
   }
 
-  const total = items.reduce((acc, item) => acc + item.priceSelected?.amount, 0)
+  console.log({ items })
 
   return (
     <>
@@ -60,51 +60,64 @@ const FormikSelectCategoryItems = ({
         startAt={startAt}
         showCount={false}
         showDetails={false}
+        askItemInfo={true}
       />
 
-      <FlatList
-        style={{ marginVertical: gSpace(2) }}
-        data={items}
-        renderItem={({ item, index }) => (
-          <ItemRow
-            item={item}
-            onPressDelete={() => handleRemoveItem(item.id)}
-          ></ItemRow>
-        )}
-        keyExtractor={(item) => item.id}
-      ></FlatList>
+      <ListItems items={items} handleRemoveItem={handleRemoveItem} />
 
-      <View style={{ justifyContent: 'center', marginBottom: gSpace(4) }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'baseline',
-            justifyContent: 'center'
-          }}
-        >
-          <Text style={{ marginRight: 4 }}>Items: </Text>
-          <Text>{items.length || 0}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Text style={{ textAlign: 'center', marginRight: 4 }}> Total: </Text>
-          <CurrencyAmount style={gStyles.h1} amount={total} />
-        </View>
-      </View>
-      {value?.categoryName && value.priceSelectedId && (
-        <Button
-          label="Agregar item"
-          onPress={() => {
-            handleAddItem(value)
-          }}
-        ></Button>
-      )}
+      <Totals items={items} />
     </>
+  )
+}
+
+const Totals = ({ items }: { items: ItemSelected[] }) => {
+  const total = items.reduce((acc, item) => acc + item.priceSelected?.amount, 0)
+
+  return (
+    <View style={{ justifyContent: 'center', marginBottom: gSpace(4) }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'baseline',
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={{ marginRight: 4 }}>Items: </Text>
+        <Text>{items.length || 0}</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={{ textAlign: 'center', marginRight: 4 }}> Total: </Text>
+        <CurrencyAmount style={gStyles.h1} amount={total} />
+      </View>
+    </View>
+  )
+}
+
+const ListItems = ({
+  items,
+  handleRemoveItem
+}: {
+  items: ItemSelected[]
+  handleRemoveItem: (itemId: string) => void
+}) => {
+  return (
+    <FlatList
+      style={{ marginVertical: gSpace(2) }}
+      data={items}
+      renderItem={({ item, index }) => (
+        <ItemRow
+          item={item}
+          onPressDelete={() => handleRemoveItem(item.id)}
+        ></ItemRow>
+      )}
+      keyExtractor={(item) => item.id}
+    ></FlatList>
   )
 }
 
@@ -136,11 +149,14 @@ const ItemRow = ({
           size="small"
         />
       </View>
-      <Text style={gStyles.h3}>{item?.categoryName}</Text>
-      <Text>{item.priceSelected?.title}</Text>
-      <CurrencyAmount style={gStyles.h3} amount={item.priceSelected?.amount} />
+      <Text style={{ fontWeight: 'bold' }}>{item?.categoryName}</Text>
+      <Text style={{ alignItems: 'center' }}>{item.priceSelected?.title}</Text>
+      <CurrencyAmount
+        style={{ fontWeight: 'bold' }}
+        amount={item.priceSelected?.amount}
+      />
     </View>
   )
 }
 
-export default FormikSelectCategoryItems
+export default FormikSelectItems
