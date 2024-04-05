@@ -87,7 +87,12 @@ export default function InputImagePicker({
         </View>
       </Pressable> */}
       <View style={{ marginVertical: 4 }}>
-        <Button onPress={pickImage} label={label} icon="addImage" size="xs" />
+        <Button
+          onPress={pickImage}
+          label={label}
+          icon="addImage"
+          size="small"
+        />
       </View>
       {!!image && (
         <Image
