@@ -34,8 +34,6 @@ const FormikSelectItems = ({
     helpers.setValue({})
   }
 
-  console.log({ items })
-
   return (
     <>
       <FormSelectItem

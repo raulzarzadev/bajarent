@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
-import ButtonIcon from './ButtonIcon'
 import useFilter from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -14,6 +13,7 @@ import { formatDate } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import { order_status } from '../types/OrderType'
+import Button from './Button'
 
 export type FilterListType<T> = { field: keyof T; label: string }
 
@@ -143,13 +143,14 @@ function ModalFilterList<T>({
           }}
         />
         <View style={{ marginLeft: 8 }}>
-          <ButtonIcon
+          <Button
             variant={!filtersBy?.length ? 'ghost' : 'filled'}
             color={!filtersBy?.length ? 'black' : 'primary'}
             icon="filter"
             onPress={() => {
               filterModal.toggleOpen()
             }}
+            justIcon
           />
         </View>
       </View>
@@ -173,14 +174,13 @@ function ModalFilterList<T>({
                 justifyContent: 'center'
               }}
             >
-              <ButtonIcon
+              <Button
                 icon="broom"
-                type="material-community"
-                buttonStyles={{ margin: 8 }}
                 variant="ghost"
-                onPress={cleanFilter}
                 color="secondary"
-              ></ButtonIcon>
+                onPress={cleanFilter}
+                justIcon
+              />
               <Text style={{ fontSize: 10 }}>Todas</Text>
             </View>
           )}
