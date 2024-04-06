@@ -45,7 +45,7 @@ const ScreenStoreA = (props) => {
         {
           title: 'Areas',
           content: <ScreenSections {...props} />,
-          show: store.allowSections
+          show: store?.allowSections
         }
       ]}
     />
