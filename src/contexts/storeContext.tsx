@@ -137,8 +137,8 @@ const StoreContextProvider = ({ children }) => {
 
       return await Promise.all(staffs)
     }
-    if (staff.length) getStaffDetails().then(setStaffFormatted)
-  }, [staff])
+    getStaffDetails().then(setStaffFormatted)
+  }, [staff, storeId])
 
   useEffect(() => {
     if (myStaffId) {
