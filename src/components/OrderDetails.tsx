@@ -185,7 +185,6 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
-  console.log(order)
   if (order?.items?.length > 0) {
     return (
       <View

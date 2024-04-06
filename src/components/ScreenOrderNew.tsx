@@ -33,7 +33,7 @@ const ScreenOrderNew = ({ navigation }) => {
       .then((res) => {
         const orderId = res?.res?.id
         //  console.log({ res })
-        console.log({ res })
+        // console.log({ res })
 
         navigation.navigate('Orders')
         navigation.navigate('OrderDetails', { orderId })
