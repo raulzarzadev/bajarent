@@ -54,7 +54,7 @@ const FormCategoryA = ({
             />
             {!values?.marketVisible && (
               <Text style={[gStyles.helper, { textAlign: 'center' }]}>
-                {`Si la tienda no es visible, este producto NO sera visible en el mercado`}
+                {`Si la tienda no es visible, este producto NO será visible en el mercado`}
               </Text>
             )}
           </View>

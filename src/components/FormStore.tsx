@@ -55,9 +55,9 @@ const FormStore = ({
 
           <FormikInputImage name="img" label="Portada " />
 
-          <Text style={gStyles.h3}>Tipo de ordenes</Text>
+          <Text style={gStyles.h3}>Tipos de ordenes</Text>
           <Text style={gStyles.helper}>
-            Te permitira crear diferentes tipo de ordenes segun las necesidades
+            Te permitira crear diferentes tipos de ordenes según las necesidades
             de tu negocio
           </Text>
           <View style={[styles.input, styles.type]}>
@@ -73,7 +73,7 @@ const FormStore = ({
 
           <Text style={gStyles.h3}>Secciones</Text>
           <Text style={gStyles.helper}>
-            Te dara acceso a herramientas para organizar mejor tu negocio.
+            Te dará acceso a herramientas para organizar mejor tu negocio.
           </Text>
           <View style={[styles.input, styles.type]}>
             <FormikCheckbox name={'allowStaff'} label={'Staff'} />
@@ -82,7 +82,7 @@ const FormStore = ({
 
           <Text style={gStyles.h3}>Visibilidad</Text>
           <Text style={gStyles.helper}>
-            {`La tienda sera visible en el mercado. (nombre, descripción, imagen y  contacto)`}
+            {`La tienda será visible en el mercado. (nombre, descripción, imagen y  contacto)`}
           </Text>
           <View style={[styles.input, styles.type]}>
             <FormikCheckbox
