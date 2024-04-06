@@ -49,7 +49,9 @@ export const ORDER_TYPE_COLOR: Record<order_type, string> = {
   [order_type.SALE]: '#0a73ac',
   [order_type.REPAIR]: '#f9b162',
   [order_type.STORE_RENT]: '#f472b6',
-  [order_type.DELIVERY_RENT]: '#6DE89D'
+  [order_type.DELIVERY_RENT]: '#6DE89D',
+  [order_type.DELIVERY_SALE]: '#5A5357',
+  [order_type.MULTI_RENT]: '#086383'
 }
 
 export const STATUS_COLOR: Record<order_status, string> = {

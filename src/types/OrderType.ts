@@ -114,7 +114,9 @@ export enum order_type {
   SALE = 'SALE',
   REPAIR = 'REPAIR',
   STORE_RENT = 'STORE_RENT',
-  DELIVERY_RENT = 'DELIVERY_RENT'
+  DELIVERY_RENT = 'DELIVERY_RENT',
+  DELIVERY_SALE = 'DELIVERY_SALE',
+  MULTI_RENT = 'MULTI_RENT'
 }
 export type TypeOfOrderType = order_type
 export type OrderStatus = order_status

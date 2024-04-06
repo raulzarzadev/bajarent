@@ -221,6 +221,27 @@ const FormOrderA = ({
                     setValues={setValues}
                   />
                 )}
+                {values?.type === order_type.DELIVERY_SALE && (
+                  <FormFields
+                    fields={[
+                      'fullName',
+                      'phone',
+                      'selectItems',
+                      'address',
+                      'neighborhood',
+                      'references'
+                    ]}
+                    values={values}
+                    setValues={setValues}
+                  />
+                )}
+                {values?.type === order_type.MULTI_RENT && (
+                  <FormFields
+                    fields={['fullName', 'phone', 'selectItems', 'imageID']}
+                    values={values}
+                    setValues={setValues}
+                  />
+                )}
                 <View style={[styles.item]}>
                   <Button
                     disabled={loading || !values?.fullName}

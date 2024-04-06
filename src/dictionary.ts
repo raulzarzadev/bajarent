@@ -65,6 +65,8 @@ const labels = {
   hasNotSolvedReports: 'Reportes no resueltos',
   STORE_RENT: 'Renta local',
   DELIVERY_RENT: 'Renta a domicilio',
+  DELIVERY_SALE: 'Venta a domicilio',
+  MULTI_RENT: 'Renta múltiple',
   ' ': '',
   '': ''
 } as const
