@@ -68,6 +68,16 @@ const ChooseProfile = () => {
         }
         renderItem={({ item: store }) => <SquareStore store={store} />}
       />
+      {storePositions?.length > 0 && !myStaffId && (
+        <Text style={[gStyles.h3, { marginTop: 6 }]}>Selecciona un puesto</Text>
+      )}
+      <FlatList
+        horizontal
+        data={storePositions}
+        renderItem={({ item: position }) => (
+          <SquarePosition position={position} />
+        )}
+      />
       {/* {userStores.length > 0 && !storeSelected && (
         <Text style={[gStyles.h3, { marginTop: 6 }]}>
           Selecciona una tienda
@@ -78,16 +88,7 @@ const ChooseProfile = () => {
         data={userStoresSorted || []}
         renderItem={({ item: store }) => <SquareStore store={store} />}
       />
-      {storePositions?.length > 0 && !myStaffId && (
-        <Text style={[gStyles.h3, { marginTop: 6 }]}>Selecciona un puesto</Text>
-      )}
-      <FlatList
-        horizontal
-        data={storePositions}
-        renderItem={({ item: position }) => (
-          <SquarePosition position={position} />
-        )}
-      /> */}
+     */}
     </View>
   )
 }
