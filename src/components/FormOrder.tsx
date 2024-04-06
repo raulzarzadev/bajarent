@@ -15,7 +15,7 @@ import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 import FormikCheckbox from './FormikCheckbox'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
@@ -110,6 +110,15 @@ const FormOrderA = ({
       defaultValues?.address ||
       `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`
   }
+
+  if (ordersTypesAllowed.length === 0)
+    return (
+      <>
+        <Text style={{ textAlign: 'center', marginVertical: gSpace(4) }}>
+          Para crear ordenes, debes configurarlas primero en la tienda
+        </Text>
+      </>
+    )
 
   return (
     <ScrollView>
