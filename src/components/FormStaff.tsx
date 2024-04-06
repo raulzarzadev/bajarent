@@ -25,7 +25,11 @@ const FormStaff = ({
       {({ handleSubmit }) => (
         <View style={styles.form}>
           <View style={styles.input}>
-            <FormikInputValue name={'position'} placeholder="Puesto" />
+            <FormikInputValue
+              name={'position'}
+              placeholder="Puesto"
+              helperText="Nombre, referencia o puesto que desempeñara"
+            />
           </View>
           <View></View>
           <H1>Permisos</H1>

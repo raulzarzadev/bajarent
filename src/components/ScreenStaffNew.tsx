@@ -27,13 +27,13 @@ const ScreenStaffNew = () => {
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
-        <SearchStaff setUser={setUser} />
+        {!user && <SearchStaff setUser={setUser} />}
         {user && <CardUser user={user} />}
         {user && (
           <FormStaff
             defaultValues={{
               userId: user.id,
-              position: '',
+              position: user.name,
               name: user.name || ''
             }}
             onSubmit={async (values) => {
@@ -46,6 +46,7 @@ const ScreenStaffNew = () => {
                 userId: user.id || ''
               }
               ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
+                setUser(undefined)
                 navigate('Staff')
               })
             }}
