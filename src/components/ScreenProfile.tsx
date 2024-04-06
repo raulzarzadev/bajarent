@@ -33,7 +33,7 @@ const ScreenProfile = ({ navigation }) => {
         <ButtonAskLocation />
       </ErrorBoundary>
 
-      {!!user?.canCreateStore && (
+      {/* {!!user?.canCreateStore && (
         <View style={styles.buttons}>
           <Button
             onPress={() => {
@@ -44,7 +44,7 @@ const ScreenProfile = ({ navigation }) => {
             Crear tienda
           </Button>
         </View>
-      )}
+      )} */}
 
       <View style={styles.buttons}>
         <Button

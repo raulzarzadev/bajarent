@@ -5,8 +5,11 @@ import theme from '../theme'
 import { gStyles } from '../styles'
 import StaffType from '../types/StaffType'
 import { useAuth } from '../contexts/authContext'
+import Icon from './Icon'
+import { useNavigation } from '@react-navigation/native'
 
 const ChooseProfile = () => {
+  const { navigate } = useNavigation()
   const {
     userStores,
     userPositions,
@@ -26,13 +29,18 @@ const ChooseProfile = () => {
   }, [storeSelected, userStores, userPositions])
 
   const sortUserStore = (userStores, storeSelected) => {
+    let res = []
     const selectedStore = userStores?.find(
       (store) => store?.id === storeSelected
     )
     const otherStores = userStores?.filter(
       (store) => store?.id !== storeSelected
     )
-    return [selectedStore, ...otherStores]
+    if (selectedStore) {
+      res.push(selectedStore)
+    }
+    res = res.concat(otherStores)
+    return res
   }
 
   const [userStoresSorted, setUserStoresSorted] = React.useState(userStores)
@@ -42,16 +50,32 @@ const ChooseProfile = () => {
     setUserStoresSorted(sortedUserStores)
   }, [userStores])
 
+  const handleCreateStore = () => {
+    // @ts-ignore
+    navigate('CreateStore')
+  }
+
   return (
     <View style={{ margin: 'auto', maxWidth: 500, width: '100%' }}>
-      {userStores.length > 0 && !storeSelected && (
+      <FlatList
+        style={{ height: 100, marginVertical: 6 }}
+        horizontal
+        data={
+          [
+            ...userStoresSorted,
+            { createStore: true, handleCreateStore, disabled: false }
+          ] || []
+        }
+        renderItem={({ item: store }) => <SquareStore store={store} />}
+      />
+      {/* {userStores.length > 0 && !storeSelected && (
         <Text style={[gStyles.h3, { marginTop: 6 }]}>
           Selecciona una tienda
         </Text>
       )}
       <FlatList
         horizontal
-        data={userStoresSorted}
+        data={userStoresSorted || []}
         renderItem={({ item: store }) => <SquareStore store={store} />}
       />
       {storePositions?.length > 0 && !myStaffId && (
@@ -63,12 +87,35 @@ const ChooseProfile = () => {
         renderItem={({ item: position }) => (
           <SquarePosition position={position} />
         )}
-      />
+      /> */}
     </View>
   )
 }
 
 const SquareStore = ({ store }) => {
+  if (store?.createStore) {
+    return (
+      <Pressable
+        disabled={store.disabled}
+        key={'createStore'}
+        onPress={() => {
+          store.handleCreateStore()
+        }}
+        style={[
+          styles.store,
+          {
+            backgroundColor: theme.info
+          },
+          store.disabled && { opacity: 0.2, backgroundColor: '#444' }
+        ]}
+      >
+        <Text style={[gStyles.h3, { color: theme.white }]}>Crear Tienda</Text>
+        <View style={{ margin: 'auto' }}>
+          <Icon icon="add" size={40} color={theme.white} />
+        </View>
+      </Pressable>
+    )
+  }
   const {
     handleSetStoreId,
     storeId: storeSelected,
