@@ -79,7 +79,7 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
         .then((res) => {
           if (!res.length)
             setError(
-              'Usuario no encontrado, asegurate que esta registrado, y su nombre, telefono o email es correcto'
+              'Usuario no encontrado, asegurate que esta registrado sus datos son correctos'
             )
 
           setUsers(res)
@@ -100,15 +100,9 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
           setError(null)
         }}
         placeholder="Nombre, teléfono o email"
+        helperText="Usuario deberá estar previamente registrado"
       />
-
-      {error ? (
-        <P styles={{ color: theme.error }}>{error}</P>
-      ) : (
-        <P size="sm" styles={{ textAlign: 'left', opacity: 0.7 }}>
-          {`Usuario deberá estar previamente registrado`}
-        </P>
-      )}
+      {error && <P styles={{ color: theme.error }}>{error}</P>}
 
       <View style={{ padding: 4, justifyContent: 'center' }}>
         {loading && <ActivityIndicator />}
