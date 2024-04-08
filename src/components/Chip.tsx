@@ -8,15 +8,21 @@ const Chip = ({
   titleColor,
   size = 'md',
   style,
+  onPress,
   ...props
 }: ChipProps & {
   title: string
   color: string
   titleColor?: string
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xs'
   style?: ViewStyle
+  onPress?: () => void
 }) => {
   const sizes = {
+    xs: {
+      fontSize: 7,
+      padding: 3
+    },
     sm: {
       fontSize: 10,
       padding: 5
@@ -45,6 +51,7 @@ const Chip = ({
         fontSize: sizes[size].fontSize,
         fontWeight: 'bold'
       }}
+      onPress={onPress}
       {...props}
     />
   )

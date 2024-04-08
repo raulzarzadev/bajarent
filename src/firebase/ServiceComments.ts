@@ -1,4 +1,4 @@
-import { orderBy, where } from 'firebase/firestore'
+import { limit, orderBy, where } from 'firebase/firestore'
 import { CommentType } from '../types/CommentType'
 import { FirebaseGenericService } from './genericService'
 
@@ -48,6 +48,35 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 
   listenByOrder(orderId: string, cb: CallableFunction) {
     return this.listenMany([where('orderId', '==', orderId)], cb)
+  }
+
+  listenLastComments(ops: { storeId: string; count: number }, cb) {
+    return this.listenMany(
+      [
+        where('storeId', '==', ops?.storeId),
+        orderBy('createdAt', 'desc'),
+        where('type', '==', 'comment'),
+        limit(ops.count)
+      ],
+      cb
+    )
+  }
+
+  listenLastReports(
+    ops: { storeId: string; count: number; solved: boolean },
+    cb
+  ) {
+    const storeId = ops?.storeId
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        // where('solved', '==', ops.solved),
+        orderBy('createdAt', 'desc'),
+        where('type', '==', 'report'),
+        limit(ops.count)
+      ],
+      cb
+    )
   }
 
   // TODO: Implementar para solo obtener unos pocos comentarios

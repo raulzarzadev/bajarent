@@ -15,7 +15,7 @@ const ScreenStoreA = (props) => {
   const isOwner = store?.createdBy === user?.id
   return (
     <Tabs
-      defaultTab="Gráficas"
+      defaultTab="Tienda"
       tabs={[
         {
           title: 'Tienda',

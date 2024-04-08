@@ -51,7 +51,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       orderId,
       storeId,
       type,
-      content
+      content,
+      solved: false
     }
 
     return await ServiceComments.create(comment)

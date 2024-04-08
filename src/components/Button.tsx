@@ -64,7 +64,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   }
 
   const sizes = {
-    xs: { padding: 5 },
+    xs: { padding: 7 },
     small: { padding: 10 },
     medium: { padding: 15 },
     large: { padding: 20 }
