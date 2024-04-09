@@ -31,11 +31,11 @@ export default function Stats() {
               value: 'week'
             },
             {
-              label: 'Ultimos 30 días',
+              label: 'Últimos 30 días',
               value: 'last30days'
             },
             {
-              label: 'Ultimos 7 días',
+              label: 'Últimos 7 días',
               value: 'last7days'
             }
           ]}

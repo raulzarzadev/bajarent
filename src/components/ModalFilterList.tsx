@@ -15,7 +15,11 @@ import { useStore } from '../contexts/storeContext'
 import { order_status } from '../types/OrderType'
 import Button from './Button'
 
-export type FilterListType<T> = { field: keyof T; label: string }
+export type FilterListType<T> = {
+  field: keyof T
+  label: string
+  boolean?: boolean
+}
 
 export type ModalFilterOrdersProps<T> = {
   data: T[]

@@ -25,20 +25,20 @@ const ListComments = ({
   refetch?: () => void
 }) => {
   const sortByDate = (a, b) =>
-    asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
+    asDate(b?.createdAt).getTime() - asDate(a?.createdAt).getTime()
   return (
     <FlatList
       style={style}
       data={comments.sort(sortByDate)}
       renderItem={({ item }) => (
-        <Comment comment={item} viewOrder={viewOrder} refetch={refetch} />
+        <CommentRow comment={item} viewOrder={viewOrder} refetch={refetch} />
       )}
       keyExtractor={(item) => item.id}
     />
   )
 }
 
-const Comment = ({
+export const CommentRow = ({
   comment,
   viewOrder,
   refetch
@@ -50,7 +50,6 @@ const Comment = ({
   // orderId: string
 }) => {
   const [disabled, setDisabled] = React.useState(false)
-  const { navigate } = useNavigation()
   const { staff } = useStore()
 
   const handleToggleSolveReport = async (commentId, solved) => {
@@ -74,7 +73,7 @@ const Comment = ({
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {staff?.find((s) => s?.userId === comment?.createdBy)?.name}
           </Text>
-          <Text style={{ marginRight: 4 }}>{fromNow(comment.createdAt)}</Text>
+          <Text style={{ marginRight: 4 }}>{fromNow(comment?.createdAt)}</Text>
           {comment?.type === 'report' && (
             <Chip
               disabled={disabled}
@@ -89,10 +88,10 @@ const Comment = ({
             <Button
               disabled={disabled}
               icon="done"
-              color={comment.solved ? 'success' : 'primary'}
-              variant={comment.solved ? 'filled' : 'ghost'}
+              color={comment?.solved ? 'success' : 'primary'}
+              variant={comment?.solved ? 'filled' : 'ghost'}
               onPress={() =>
-                handleToggleSolveReport(comment.id, comment.solved)
+                handleToggleSolveReport(comment?.id, comment?.solved)
               }
               justIcon
               size="xs"
@@ -101,7 +100,7 @@ const Comment = ({
           {viewOrder && (
             <OrderShortData
               style={{ marginLeft: 4 }}
-              orderId={comment.orderId}
+              orderId={comment?.orderId}
             />
           )}
         </View>

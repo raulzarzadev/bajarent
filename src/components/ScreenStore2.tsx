@@ -22,11 +22,7 @@ const ScreenStoreA = (props) => {
           content: <ScreenStoreDetails {...props} />,
           show: true
         },
-        {
-          title: 'Gráficas',
-          content: <Stats {...props} />,
-          show: true
-        },
+
         {
           title: 'Caja',
           content: <ScreenCashbox {...props} />,
@@ -46,6 +42,11 @@ const ScreenStoreA = (props) => {
           title: 'Areas',
           content: <ScreenSections {...props} />,
           show: store?.allowSections
+        },
+        {
+          title: 'Gráficas',
+          content: <Stats {...props} />,
+          show: true
         }
       ]}
     />
