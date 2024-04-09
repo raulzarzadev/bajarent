@@ -75,7 +75,7 @@ const TabsBusiness = (props) => {
     <Tabs
       tabs={[
         {
-          title: 'Coments',
+          title: 'Comentarios',
           content: <ScreenComments {...props} />,
           show: true
         },

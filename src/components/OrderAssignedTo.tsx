@@ -1,14 +1,16 @@
 import useAssignOrder from '../hooks/useAssignOrder'
-import Chip from './Chip'
+import Chip, { Size } from './Chip'
 import theme from '../theme'
 import { View, ViewStyle } from 'react-native'
 
 const OrderAssignedTo = ({
   orderId,
-  chipStyles
+  chipStyles,
+  chipSize
 }: {
   orderId: string
   chipStyles?: ViewStyle
+  chipSize?: Size
 }) => {
   const { assignedToSection, assignedToStaff } = useAssignOrder({
     orderId
@@ -29,6 +31,7 @@ const OrderAssignedTo = ({
           title={assignedToSection?.toUpperCase()}
           color={theme.info}
           titleColor={theme.white}
+          size={chipSize}
         ></Chip>
       )}
       {assignedToStaff && (
@@ -37,6 +40,7 @@ const OrderAssignedTo = ({
           title={assignedToStaff?.toUpperCase()}
           color={theme.base}
           titleColor={theme.black}
+          size={chipSize}
         ></Chip>
       )}
     </View>

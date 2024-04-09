@@ -1,7 +1,7 @@
 import { ViewStyle } from 'react-native'
 import React from 'react'
 import { ChipProps, Chip as RNEChip } from 'react-native-elements'
-
+export type Size = 'xs' | 'sm' | 'md' | 'lg'
 const Chip = ({
   title = '',
   color,
@@ -14,7 +14,7 @@ const Chip = ({
   title: string
   color: string
   titleColor?: string
-  size?: 'sm' | 'md' | 'lg' | 'xs'
+  size?: Size
   style?: ViewStyle
   onPress?: () => void
 }) => {

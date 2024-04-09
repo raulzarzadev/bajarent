@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 5,
+    padding: 4,
+    marginVertical: 4,
+    borderRadius: 6,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     borderWidth: 1,

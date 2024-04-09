@@ -1,6 +1,5 @@
-import { View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import OrderType from '../types/OrderType'
 import theme from '../theme'
 import P from './P'
 import { ServiceComments } from '../firebase/ServiceComments'
@@ -9,9 +8,10 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import InputCheckbox from './InputCheckbox'
 import { gSpace } from '../styles'
-import ListComments from './ListComments'
+import ListComments, { CommentRow } from './ListComments'
 import { FormattedComment } from '../types/CommentType'
 import formatComments from '../libs/formatComments'
+import asDate from '../libs/utils-date'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { orders, staff } = useStore()
@@ -32,8 +32,17 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>
       <InputComment orderId={orderId} updateComments={getComments} />
-      <View style={{ padding: 6 }}>
-        <ListComments comments={orderComments} refetch={getComments} />
+      <View style={{ padding: 0 }}>
+        <FlatList
+          data={orderComments.sort(
+            (a, b) =>
+              asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
+          )}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <CommentRow comment={item} refetch={getComments} />
+          )}
+        />
       </View>
     </View>
   )

@@ -62,7 +62,7 @@ export const CommentRow = ({
 }: // orderId
 {
   comment: FormattedComment
-  viewOrder: boolean
+  viewOrder?: boolean
   refetch?: () => void
   // orderId: string
 }) => {

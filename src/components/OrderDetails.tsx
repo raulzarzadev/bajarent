@@ -337,9 +337,18 @@ export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         title={dictionary(order?.type)?.toUpperCase()}
         color={theme?.info}
         titleColor={theme.black}
+        size="sm"
       ></Chip>
-      <OrderStatus orderId={order?.id} chipStyles={styles.chip} />
-      <OrderAssignedTo orderId={order?.id} chipStyles={styles.chip} />
+      <OrderStatus
+        orderId={order?.id}
+        chipStyles={styles.chip}
+        chipSize={'sm'}
+      />
+      <OrderAssignedTo
+        orderId={order?.id}
+        chipStyles={styles.chip}
+        chipSize={'sm'}
+      />
     </View>
   )
 }
