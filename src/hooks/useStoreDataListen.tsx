@@ -65,7 +65,7 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   >([])
 
   useEffect(() => {
-    console.log('prices or categories changed')
+    // console.log('prices or categories changed')
     const catsWithPrices = categories?.map((cat) => {
       const catPrices = prices?.filter((price) => price.categoryId === cat.id)
       return {

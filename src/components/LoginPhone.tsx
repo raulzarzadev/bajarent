@@ -37,7 +37,7 @@ const PhoneLogin = () => {
       .confirm(code)
       .then((result) => {
         // User signed in successfully.
-        console.log(result)
+        // console.log(result)
         // console.log({ user })
         // ...
       })
@@ -68,7 +68,7 @@ const PhoneLogin = () => {
           // @ts-ignore
           window.confirmationResult = confirmationResult
           setMsmSent(true)
-          console.log({ confirmationResult })
+          //  console.log({ confirmationResult })
 
           // * ... redirect to ConfirmCode
         })
