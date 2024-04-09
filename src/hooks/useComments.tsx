@@ -16,7 +16,6 @@ export default function useComments({
 }) {
   const [comments, setComments] = useState<FormattedComment[]>([])
   const fetchComments = () => {
-    console.log('fetching comments', staff)
     ServiceComments.getByStore(storeId)
       .then((res) => {
         setComments(formatComments({ comments: res, staff, orders }))
