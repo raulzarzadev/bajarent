@@ -26,7 +26,7 @@ export default function useComments({
   }
 
   useEffect(() => {
-    if (storeId && orders.length > 0) fetchComments()
+    if (storeId && orders.length > 0 && staff.length > 0) fetchComments()
   }, [storeId, orders.length, staff.length])
   return { comments, fetchComments }
 }
