@@ -41,9 +41,9 @@ const ListComments = ({
         )}
         data={comments}
         filters={[
+          { field: 'type', label: 'Tipo' },
           { field: 'solved', label: 'Resuelto', boolean: true },
-          { field: 'createdBy', label: 'Creado por' },
-          { field: 'type', label: 'Tipo' }
+          { field: 'createdByName', label: 'Creado por' }
         ]}
         sortFields={[
           { label: 'Fecha', key: 'createdAt' },
