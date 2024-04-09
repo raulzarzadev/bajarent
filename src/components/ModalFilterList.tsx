@@ -71,9 +71,15 @@ function ModalFilterList<T>({
     }, 300)
   }
 
-  const createFieldFilters = (field: string): Record<string, T[]> => {
+  const createFieldFilters = (
+    field: string,
+    isBoolean?: boolean
+  ): Record<string, T[]> => {
     const groupedByField = filteredData.reduce((acc, curr) => {
       let currField = curr[field]
+      if (isBoolean) {
+        currField = currField ? 'true' : 'false'
+      }
 
       //* Avoid invalid fields
       if (!currField || currField === 'undefined') return acc
@@ -192,37 +198,43 @@ function ModalFilterList<T>({
         {filtersBy.find((a) => a.field === 'customIds') && (
           <Text style={gStyles.h2}>Filtro predefinido</Text>
         )}
-        {filters?.map(({ field, label }, i) => (
+        {filters?.map(({ field, label, boolean }, i) => (
           <View key={i}>
             <Text style={[gStyles.h3]}>{label}</Text>
             <View style={styles.filters}>
-              {Object.keys(createFieldFilters(field as string)).map((value) => {
-                if (!value) return null
-                if (value === 'undefined') return null
+              {Object.keys(createFieldFilters(field as string, boolean)).map(
+                (value) => {
+                  if (!value) return null
+                  if (value === 'undefined') return null
 
-                return (
-                  <Chip
-                    color={chipColor(field as string, value)}
-                    title={chipLabel(field as string, value)}
-                    key={value}
-                    onPress={() => {
-                      if (value === 'REPORTED') {
-                        filterBy('hasNotSolvedReports', true)
-                        return
-                      }
-                      filterBy(field as string, value)
-                    }}
-                    style={{
-                      margin: 4,
-                      borderWidth: 4,
-                      borderColor: isFilterSelected(field, value)
-                        ? theme.black
-                        : 'transparent'
-                      // backgroundColor:
-                    }}
-                  />
-                )
-              })}
+                  return (
+                    <Chip
+                      color={chipColor(field as string, value)}
+                      title={chipLabel(field as string, value)}
+                      key={value}
+                      onPress={() => {
+                        if (value === 'REPORTED') {
+                          filterBy('hasNotSolvedReports', true)
+                          return
+                        }
+                        if (boolean) {
+                          filterBy(field as string, value === 'true')
+                          return
+                        }
+                        filterBy(field as string, value)
+                      }}
+                      style={{
+                        margin: 4,
+                        borderWidth: 4,
+                        borderColor: isFilterSelected(field, value)
+                          ? theme.black
+                          : 'transparent'
+                        // backgroundColor:
+                      }}
+                    />
+                  )
+                }
+              )}
             </View>
           </View>
         ))}

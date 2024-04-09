@@ -25,13 +25,6 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.tabsContainer}>
-        <View
-          style={{
-            height: 2,
-            marginRight: `${100 - scrollWidth}%`,
-            backgroundColor: theme.info
-          }}
-        ></View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -51,6 +44,13 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
             </Pressable>
           ))}
         </ScrollView>
+        <View
+          style={{
+            height: 2,
+            marginRight: `${100 - scrollWidth}%`,
+            backgroundColor: theme.info
+          }}
+        ></View>
       </View>
       <View style={styles.tabContent}>
         {visibleTabs.find((tab) => tab.title === selectedTab)?.content}
@@ -62,7 +62,8 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    width: '100%'
   },
   tabsContainer: {
     maxHeight: 50, // Ajusta esta altura según tu diseño
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
     borderTopEndRadius: 5,
     borderTopStartRadius: 5,
-    width: 100, // Ajusta el ancho de cada botón
+    width: 120, // Ajusta el ancho de cada botón
     borderWidth: 0.2,
     borderColor: '#cccb',
     borderBottomWidth: 0,
@@ -105,8 +106,9 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    width: '100%'
   },
   moreTabsIndicator: {
     fontSize: 16,

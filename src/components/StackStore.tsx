@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenCreateStore from './ScreenStoreCreate'
-import ScreenStore from './ScreenStore2'
+import ScreenStore from './ScreenStore3'
 import ScreenStoreEdit from './ScreenStoreEdit'
 import ScreenStaff from './ScreenStaff'
 import ScreenStaffNew from './ScreenStaffNew'

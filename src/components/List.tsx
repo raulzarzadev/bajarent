@@ -36,6 +36,7 @@ export type ListPops<T extends { id: string }> = {
   defaultOrder?: 'asc' | 'des'
   onPressNew?: () => void
   sideButtons?: ListSideButton[]
+  rowsPerPage?: number
 }
 
 function MyList<T extends { id: string }>({
@@ -48,7 +49,8 @@ function MyList<T extends { id: string }>({
   filters,
   onPressNew,
   preFilteredIds,
-  sideButtons = []
+  sideButtons = [],
+  rowsPerPage = 10
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([])
 
@@ -58,6 +60,18 @@ function MyList<T extends { id: string }>({
     defaultOrder
   })
 
+  //* pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.ceil(sortedData.length / rowsPerPage)
+  const startIndex = (currentPage - 1) * rowsPerPage
+  const endIndex = Math.min(startIndex + rowsPerPage, sortedData.length)
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
+  }
   if (onPressNew) {
     sideButtons = [
       ...sideButtons,
@@ -99,11 +113,34 @@ function MyList<T extends { id: string }>({
           filters={filters}
         />
       </View>
-      <View>
-        <Text style={{ textAlign: 'center' }}>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={{ textAlign: 'center', marginRight: 4 }}>
           {filteredData.length} coincidencias
         </Text>
+        <View style={styles.paginationContainer}>
+          <Button
+            onPress={handlePrevPage}
+            disabled={currentPage === 1}
+            label="Prev"
+            size="small"
+            icon="rowLeft"
+            justIcon
+          />
+          <Text style={styles.pageText}>
+            {currentPage} de {totalPages}
+          </Text>
+          <Button
+            onPress={handleNextPage}
+            disabled={currentPage === totalPages}
+            label="Next"
+            size="small"
+            icon="rowRight"
+            justIcon
+          />
+        </View>
       </View>
+
       <View
         style={{
           padding: 4,
@@ -149,7 +186,8 @@ function MyList<T extends { id: string }>({
       </View>
       <FlatList
         style={styles.orderList}
-        data={sortedData}
+        // data={sortedData}
+        data={sortedData.slice(startIndex, endIndex)}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {
@@ -175,6 +213,16 @@ const styles = StyleSheet.create({
   orderList: {
     width: '100%',
     paddingHorizontal: 4
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 4
+  },
+  pageText: {
+    marginHorizontal: 10,
+    fontSize: 16
   }
 })
 

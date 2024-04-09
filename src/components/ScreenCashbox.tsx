@@ -11,18 +11,14 @@ const ScreenCashbox = ({ navigation }) => {
   const isOwner = user.id === store.createdBy
   const canViewCashbox = staffPermissions?.isAdmin || isOwner
   return (
-    <View
-      style={[
-        { justifyContent: 'flex-start', height: '100%', paddingTop: gSpace(2) }
-      ]}
-    >
+    <View style={[{ maxWidth: 500, marginHorizontal: 'auto' }]}>
       {!canViewCashbox && (
         <Text style={[gStyles.helper, { textAlign: 'center' }]}>
           Permisios insuficientes
         </Text>
       )}
       {canViewCashbox && (
-        <>
+        <View>
           <View style={{ marginVertical: gSpace(2) }}>
             <Button
               label="Pagos"
@@ -39,7 +35,7 @@ const ScreenCashbox = ({ navigation }) => {
               }}
             ></Button>
           </View>
-        </>
+        </View>
       )}
     </View>
   )

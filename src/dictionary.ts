@@ -67,6 +67,9 @@ const labels = {
   DELIVERY_RENT: 'Renta a domicilio',
   DELIVERY_SALE: 'Venta a domicilio',
   MULTI_RENT: 'Renta múltiple',
+  true: 'Sí',
+  false: 'No',
+
   ' ': '',
   '': ''
 } as const

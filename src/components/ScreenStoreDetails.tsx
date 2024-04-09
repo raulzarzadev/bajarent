@@ -5,7 +5,6 @@ import { useAuth } from '../contexts/authContext'
 import theme from '../theme'
 import { gStyles } from '../styles'
 import { useNavigation } from '@react-navigation/native'
-import StoreComments from './StoreComments'
 
 const ScreenStoreDetails = ({ navigation }) => {
   const { navigate } = useNavigation()
@@ -60,7 +59,6 @@ const ScreenStoreDetails = ({ navigation }) => {
         {store && (
           <>
             <StoreDetails store={store} />
-            <StoreComments />
           </>
         )}
       </View>

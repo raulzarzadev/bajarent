@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
 import StoreType from '../types/StoreType'
 import OrderType, { order_status } from '../types/OrderType'
-import { CommentType } from '../types/CommentType'
+import { CommentType, FormattedComment } from '../types/CommentType'
 import orderStatus from '../libs/orderStatus'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import StaffType, {
@@ -16,6 +16,7 @@ import { CategoryType } from '../types/RentItem'
 import PaymentType from '../types/PaymentType'
 import useStoreDataListen from '../hooks/useStoreDataListen'
 import useUserStores from '../hooks/useUserStores'
+import useComments from '../hooks/useComments'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -36,6 +37,8 @@ export type StoreContextType = {
   payments?: PaymentType[]
   categories?: Partial<CategoryType>[]
   updateUserStores?: () => any
+  allComments?: FormattedComment[]
+  fetchComments?: () => any
 }
 
 type UseStoreDataListenType = Partial<ReturnType<typeof useStoreDataListen>>
@@ -60,6 +63,12 @@ const StoreContextProvider = ({ children }) => {
     updateCategories,
     handleGetSolvedOrders
   } = useStoreDataListen({ storeId })
+
+  const { comments: allComments, fetchComments } = useComments({
+    storeId,
+    orders,
+    staff
+  })
 
   const { userPositions, userStores, updateUserStores } = useUserStores()
 
@@ -221,7 +230,9 @@ const StoreContextProvider = ({ children }) => {
         updateCategories,
         updateUserStores,
         categories,
-        handleGetSolvedOrders
+        handleGetSolvedOrders,
+        allComments,
+        fetchComments
       }}
     >
       {children}

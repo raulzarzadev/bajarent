@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import StoreType from '../types/StoreType'
 import OrderType from '../types/OrderType'
-import { CommentType } from '../types/CommentType'
+import { CommentType, FormattedComment } from '../types/CommentType'
 import StaffType from '../types/StaffType'
 import PaymentType from '../types/PaymentType'
 import { SectionType } from '../types/SectionType'
@@ -50,6 +50,7 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
       ServiceComments.listenStoreReports(store.id, setComments)
 
       //* GETS
+
       updateCategories()
     }
   }, [store])

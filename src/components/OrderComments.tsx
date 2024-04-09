@@ -10,17 +10,24 @@ import { useStore } from '../contexts/storeContext'
 import InputCheckbox from './InputCheckbox'
 import { gSpace } from '../styles'
 import ListComments from './ListComments'
+import { FormattedComment } from '../types/CommentType'
+import formatComments from '../libs/formatComments'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
-  const [orderComments, setOrderComments] = useState<OrderType['comments']>([])
-  useEffect(() => {
-    getComments()
-  }, [orderId])
-
-  const getComments = () => {
-    ServiceComments.getByOrder(orderId).then(setOrderComments)
+  const { orders, staff } = useStore()
+  const getComments = async () => {
+    const comments = await ServiceComments.getByOrder(orderId)
+    const formattedComments: FormattedComment[] = formatComments({
+      comments,
+      staff,
+      orders
+    })
+    setOrderComments(formattedComments)
   }
-
+  const [orderComments, setOrderComments] = useState([])
+  useEffect(() => {
+    if (orderId) getComments()
+  }, [orderId])
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>

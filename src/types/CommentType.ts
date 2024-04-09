@@ -1,4 +1,5 @@
 import BaseType from './BaseType'
+import { order_type } from './OrderType'
 
 export type CommentBase = {
   id: string
@@ -15,6 +16,15 @@ export type CommentBase = {
   solvedBy?: string
   solvedComment?: string
 }
+
+export type FormattedComment = CommentBase &
+  BaseType & {
+    createdByName: string
+    orderFolio?: string | number
+    orderName?: string
+    orderStatus?: string
+    orderType?: order_type
+  }
 
 export type CommentType = CommentBase & BaseType
 export type CreateCommentType = Omit<

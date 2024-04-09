@@ -1,15 +1,17 @@
-import { FlatList, StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { Text, View, ViewStyle } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import Chip from './Chip'
 import dictionary from '../dictionary'
-import asDate, { fromNow } from '../libs/utils-date'
+import { fromNow } from '../libs/utils-date'
 import theme from '../theme'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useStore } from '../contexts/storeContext'
 import OrderType from '../types/OrderType'
 import { gStyles } from '../styles'
 import { useNavigation } from '@react-navigation/native'
+import List from './List'
+import { FormattedComment } from '../types/CommentType'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -19,22 +21,37 @@ const ListComments = ({
   viewOrder,
   refetch
 }: {
-  comments: CommentType[]
+  comments: FormattedComment[]
   style?: ViewStyle
   viewOrder?: boolean
   refetch?: () => void
 }) => {
-  const sortByDate = (a, b) =>
-    asDate(b?.createdAt).getTime() - asDate(a?.createdAt).getTime()
   return (
-    <FlatList
-      style={style}
-      data={comments.sort(sortByDate)}
-      renderItem={({ item }) => (
-        <CommentRow comment={item} viewOrder={viewOrder} refetch={refetch} />
-      )}
-      keyExtractor={(item) => item.id}
-    />
+    <View style={[{ width: '100%' }, style]}>
+      <List
+        defaultOrder="des"
+        defaultSortBy="createdAt"
+        ComponentRow={(props) => (
+          <CommentRow
+            comment={props.item}
+            viewOrder
+            key={props.item.id}
+            refetch={refetch}
+          />
+        )}
+        data={comments}
+        filters={[
+          { field: 'solved', label: 'Resuelto', boolean: true },
+          { field: 'createdBy', label: 'Creado por' },
+          { field: 'type', label: 'Tipo' }
+        ]}
+        sortFields={[
+          { label: 'Fecha', key: 'createdAt' },
+          { label: 'Creado por', key: 'createdBy' },
+          { label: 'Tipo', key: 'type' }
+        ]}
+      />
+    </View>
   )
 }
 
@@ -44,11 +61,12 @@ export const CommentRow = ({
   refetch
 }: // orderId
 {
-  comment: CommentType
+  comment: FormattedComment
   viewOrder: boolean
   refetch?: () => void
   // orderId: string
 }) => {
+  const { navigate } = useNavigation()
   const [disabled, setDisabled] = React.useState(false)
   const { staff } = useStore()
 
@@ -63,11 +81,15 @@ export const CommentRow = ({
       .catch((res) => console.error(res))
       .finally(() => {
         refetch?.()
-        setDisabled(false)
+        // setDisabled(false)
       })
+
+    setTimeout(() => {
+      setDisabled(false)
+    }, 1000)
   }
   return (
-    <View style={{ width: '100%', marginHorizontal: 'auto' }}>
+    <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
       <View style={{ justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
@@ -98,10 +120,15 @@ export const CommentRow = ({
             />
           </View>
           {viewOrder && (
-            <OrderShortData
-              style={{ marginLeft: 4 }}
-              orderId={comment?.orderId}
-            />
+            <Chip
+              title={`${comment?.orderFolio}  ${comment?.orderName}`}
+              size="xs"
+              color={theme.primary}
+              onPress={() =>
+                // @ts-ignore
+                navigate('OrderDetails', { orderId: comment.orderId })
+              }
+            ></Chip>
           )}
         </View>
       </View>
@@ -121,30 +148,4 @@ export const CommentRow = ({
   )
 }
 
-const OrderShortData = ({
-  orderId,
-  style
-}: {
-  orderId: string
-  style: ViewStyle
-}) => {
-  const { orders } = useStore()
-  const order = orders.find((o) => o.id === orderId)
-  const { navigate } = useNavigation()
-  return (
-    <Chip
-      style={style}
-      title={`${order?.folio}  ${order?.fullName}`}
-      size="xs"
-      color={theme.primary}
-      onPress={() =>
-        // @ts-ignore
-        navigate('OrderDetails', { orderId: order.id })
-      }
-    ></Chip>
-  )
-}
-
 export default ListComments
-
-const styles = StyleSheet.create({})
