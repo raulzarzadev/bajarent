@@ -24,7 +24,7 @@ const ListComments = ({
   comments: FormattedComment[]
   style?: ViewStyle
   viewOrder?: boolean
-  refetch?: () => void
+  refetch?: (props?: { id?: string }) => void
 }) => {
   return (
     <View style={[{ width: '100%' }, style]}>
@@ -63,7 +63,7 @@ export const CommentRow = ({
 {
   comment: FormattedComment
   viewOrder?: boolean
-  refetch?: () => void
+  refetch?: (props?: { id?: string }) => void
   // orderId: string
 }) => {
   const { navigate } = useNavigation()
@@ -80,7 +80,7 @@ export const CommentRow = ({
       })
       .catch((res) => console.error(res))
       .finally(() => {
-        refetch?.()
+        refetch?.({ id: commentId })
         // setDisabled(false)
       })
 
@@ -106,7 +106,7 @@ export const CommentRow = ({
             />
           )}
 
-          <View style={{ marginLeft: 4 }}>
+          <View style={{ marginHorizontal: 4 }}>
             <Button
               disabled={disabled}
               icon="done"

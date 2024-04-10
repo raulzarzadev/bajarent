@@ -80,7 +80,7 @@ function MyList<T extends { id: string }>({
   }
 
   return (
-    <View style={[styles.container, { maxWidth: 1024, maxHeight }]}>
+    <View style={[styles.container]}>
       <View
         style={{
           flexDirection: 'row',

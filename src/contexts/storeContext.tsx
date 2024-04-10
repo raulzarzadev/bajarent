@@ -64,11 +64,11 @@ const StoreContextProvider = ({ children }) => {
     handleGetSolvedOrders
   } = useStoreDataListen({ storeId })
 
-  const { comments: allComments, fetchComments } = useComments({
-    storeId,
-    orders,
-    staff
-  })
+  // const { comments: allComments, fetchComments } = useComments({
+  //   storeId,
+  //   orders,
+  //   staff
+  // })
 
   const { userPositions, userStores, updateUserStores } = useUserStores()
 
@@ -230,9 +230,9 @@ const StoreContextProvider = ({ children }) => {
         updateCategories,
         updateUserStores,
         categories,
-        handleGetSolvedOrders,
-        allComments,
-        fetchComments
+        handleGetSolvedOrders
+        // allComments,
+        // fetchComments
       }}
     >
       {children}
