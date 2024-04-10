@@ -30,21 +30,19 @@ function ScreenOrders({ navigation, route }) {
     }, 5000)
   }
   return (
-    <ScrollView style={{ maxWidth: '100%' }}>
-      <ListOrders
-        orders={fullOrders}
-        defaultOrdersIds={filtered}
-        sideButtons={[
-          {
-            icon: 'download',
-            label: '',
-            onPress: getSolvedOrders,
-            visible: true,
-            disabled: true
-          }
-        ]}
-      />
-    </ScrollView>
+    <ListOrders
+      orders={fullOrders}
+      defaultOrdersIds={filtered}
+      sideButtons={[
+        {
+          icon: 'download',
+          label: '',
+          onPress: getSolvedOrders,
+          visible: true,
+          disabled: true
+        }
+      ]}
+    />
   )
 }
 

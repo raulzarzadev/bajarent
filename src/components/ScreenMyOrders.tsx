@@ -17,7 +17,7 @@ function ScreenMyOrders({ navigation }) {
   const { navigate } = useNavigation()
 
   return (
-    <View>
+    <>
       {view === 'list' && (
         <ListOrders
           orders={myOrders}
@@ -37,9 +37,10 @@ function ScreenMyOrders({ navigation }) {
         <>
           <View
             style={{
-              marginVertical: gSpace(2),
+              marginVertical: gSpace(1),
               maxWidth: 200,
-              marginHorizontal: 'auto'
+              marginHorizontal: 'auto',
+              marginBottom: 0
             }}
           >
             <Button
@@ -61,7 +62,7 @@ function ScreenMyOrders({ navigation }) {
           />
         </>
       )}
-    </View>
+    </>
   )
 }
 

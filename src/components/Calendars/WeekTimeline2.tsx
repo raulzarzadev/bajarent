@@ -50,7 +50,7 @@ const WeekTimeline = ({
   }
 
   return (
-    <View style={{ marginVertical: gSpace(4) }}>
+    <View style={{ marginVertical: gSpace(1), marginTop: 0 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -87,7 +87,6 @@ const WeekTimeline = ({
       <View style={{ flexDirection: 'row' }}>
         {/* back week  */}
         <Button
-          size="xs"
           onPress={() => {
             handleSetWeek(-1)
           }}
@@ -107,7 +106,6 @@ const WeekTimeline = ({
 
         {/* next week */}
         <Button
-          size="xs"
           onPress={() => {
             handleSetWeek(+1)
           }}

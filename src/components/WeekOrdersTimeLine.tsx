@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import OrderType from '../types/OrderType'
 import WeekTimeline, { Event } from './Calendars/WeekTimeline2'
@@ -52,7 +52,7 @@ const WeekOrdersTimeLine = ({
     })) || []
 
   return (
-    <View style={gStyles.container}>
+    <View style={[gStyles.container, { padding: 4, marginTop: 0 }]}>
       <WeekTimeline
         currentEventId={orderId}
         events={[...events, ...expiredEvents]}
@@ -72,5 +72,3 @@ export default function (props: WeekOrdersTimeLineProps) {
     </ErrorBoundary>
   )
 }
-
-const styles = StyleSheet.create({})
