@@ -20,7 +20,8 @@ export default function formatComments({
       orderFolio: order?.folio,
       orderName: order?.fullName,
       orderStatus: order?.status,
-      orderType: order?.type
+      orderType: order?.type,
+      solved: !!comment?.solved
     }
   })
 }
