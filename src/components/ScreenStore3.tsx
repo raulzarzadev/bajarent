@@ -9,6 +9,7 @@ import Stats from './Stats'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComments from './ScreenComments'
 import { Text, View } from 'react-native'
+import StoreDetails from './StoreDetails'
 
 const ScreenStoreA = (props) => {
   const { store, staffPermissions } = useStore()
@@ -19,14 +20,14 @@ const ScreenStoreA = (props) => {
       defaultTab="Tienda"
       tabs={[
         {
-          title: 'Tienda',
-          content: <TabsStore {...props} />,
-          show: true
-        },
-        {
           title: 'Negocio',
           content: <TabsBusiness {...props} />,
-          show: true
+          show: isOwner || staffPermissions?.isAdmin
+        },
+        {
+          title: 'Tienda',
+          content: <TabsStore {...props} />,
+          show: isOwner || staffPermissions?.isAdmin
         }
         // {
         //   title: 'Mercado',
@@ -64,6 +65,11 @@ const TabsStore = (props) => {
           title: 'Areas',
           content: <ScreenSections {...props} />,
           show: store?.allowSections
+        },
+        {
+          title: 'Config',
+          content: <StoreDetails store={store} {...props} />,
+          show: staffPermissions?.isAdmin || isOwner
         }
       ]}
     />
@@ -73,6 +79,7 @@ const TabsStore = (props) => {
 const TabsBusiness = (props) => {
   return (
     <Tabs
+      defaultTab="Comentarios"
       tabs={[
         {
           title: 'Comentarios',
