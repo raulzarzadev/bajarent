@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native'
 import useSort from '../hooks/useSort'
 import { FC, useState } from 'react'
@@ -80,7 +81,7 @@ function MyList<T extends { id: string }>({
   }
 
   return (
-    <View style={[styles.container]}>
+    <View>
       <View
         style={{
           flexDirection: 'row',
@@ -88,6 +89,7 @@ function MyList<T extends { id: string }>({
           alignItems: 'center',
           width: '100%',
           maxWidth: 500,
+          margin: 'auto',
           padding: 4
         }}
       >
@@ -114,7 +116,13 @@ function MyList<T extends { id: string }>({
         />
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
         <Text style={{ textAlign: 'center', marginRight: 4 }}>
           {filteredData.length} coincidencias
         </Text>
@@ -143,14 +151,18 @@ function MyList<T extends { id: string }>({
 
       <View
         style={{
-          padding: 4,
+          padding: 2,
           justifyContent: 'center',
-          marginTop: gSpace(2),
+          // marginTop: gSpace(2),
           maxWidth: '100%'
         }}
       >
         <FlatList
-          style={{ width: '100%' }}
+          style={{
+            width: '100%',
+            maxWidth: 600,
+            margin: 'auto'
+          }}
           horizontal
           data={sortFields}
           renderItem={({ item: field }) => (
@@ -165,7 +177,7 @@ function MyList<T extends { id: string }>({
                   flexDirection: 'row',
                   alignItems: 'center',
                   margin: 4,
-                  width: 65
+                  width: 72
                 }}
               >
                 <Text
@@ -185,8 +197,6 @@ function MyList<T extends { id: string }>({
         />
       </View>
       <FlatList
-        style={styles.orderList}
-        // data={sortedData}
         data={sortedData.slice(startIndex, endIndex)}
         renderItem={({ item }) => (
           <Pressable
@@ -208,11 +218,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 'auto',
-    width: '100%'
+    width: '100%',
+    padding: 2
   },
   orderList: {
-    width: '100%',
-    paddingHorizontal: 4
+    width: '100%'
+
+    // paddingHorizontal: 4
   },
   paginationContainer: {
     flexDirection: 'row',

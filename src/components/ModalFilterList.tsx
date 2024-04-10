@@ -144,7 +144,11 @@ function ModalFilterList<T>({
 
   return (
     <View>
-      <View style={{ flexDirection: 'row' }}>
+      <View
+        style={{
+          flexDirection: 'row'
+        }}
+      >
         <InputTextStyled
           style={{ width: '100%', marginLeft: 4 }}
           placeholder="Buscar..."

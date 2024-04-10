@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 function ScreenOrders({ navigation, route }) {
   const { orders, handleGetSolvedOrders } = useStore()
@@ -30,7 +30,7 @@ function ScreenOrders({ navigation, route }) {
     }, 5000)
   }
   return (
-    <View style={{ maxWidth: '100%' }}>
+    <ScrollView style={{ maxWidth: '100%' }}>
       <ListOrders
         orders={fullOrders}
         defaultOrdersIds={filtered}
@@ -44,7 +44,7 @@ function ScreenOrders({ navigation, route }) {
           }
         ]}
       />
-    </View>
+    </ScrollView>
   )
 }
 
