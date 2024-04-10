@@ -17,6 +17,12 @@ import { useNavigation } from '@react-navigation/native'
 
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
+import List from './List'
+import { ItemSelected } from './FormSelectItem'
+import OrderType from '../types/OrderType'
+import { Timestamp } from 'firebase/firestore'
+import { id } from 'date-fns/locale'
+import ListItemsStatus from './ListItemsStatus'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
@@ -53,7 +59,14 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         }}
       >
         <View>
-          <Text style={gStyles.h3}>Pagos</Text>
+          <Text
+            style={[
+              gStyles.h3,
+              { marginTop: gSpace(3), marginBottom: gSpace(2) }
+            ]}
+          >
+            Pagos
+          </Text>
         </View>
         <Button
           label={`Pagos ${balance?.payments.length || 0}`}
@@ -80,7 +93,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
       />
 
       <View>
-        <Text style={gStyles.h3}>Ordenes</Text>
+        <Text style={[gStyles.h3, { marginTop: gSpace(3) }]}>Ordenes</Text>
       </View>
       <ModalOrders
         ordersIds={balance?.ordersCreated}
@@ -96,6 +109,20 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         ordersIds={balance?.ordersPickup}
         buttonLabel="Recogidas"
         modalTitle="Ordenes recogidas"
+      />
+
+      <View>
+        <Text style={[gStyles.h3, { marginTop: gSpace(3) }]}>Artículos</Text>
+      </View>
+      <ModalItems
+        ordersIds={balance?.ordersDelivered}
+        buttonLabel="Entregadas"
+        modalTitle="Artículos recogidas"
+      />
+      <ModalItems
+        ordersIds={balance?.ordersPickup}
+        buttonLabel="Recogidos"
+        modalTitle="Artículos recogidas"
       />
 
       <View style={styles.totals}>
@@ -116,6 +143,44 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         <Text style={gStyles.h3}>Total</Text>
         <CurrencyAmount style={gStyles.h1} amount={total} />
       </View>
+    </View>
+  )
+}
+
+const ModalItems = ({
+  ordersIds = [],
+  buttonLabel,
+  modalTitle
+}: {
+  ordersIds: string[]
+  buttonLabel?: string
+  modalTitle?: string
+}) => {
+  const modal = useModal({ title: modalTitle })
+  const { orders } = useStore()
+  const fullOrders = ordersIds?.map((orderId) =>
+    orders.find((o) => o.id === orderId)
+  )
+
+  return (
+    <View>
+      <View
+        style={{
+          width: 180,
+          marginVertical: gSpace(2),
+          marginHorizontal: 'auto'
+        }}
+      >
+        <Button
+          size="small"
+          label={`${buttonLabel}`}
+          // variant="ghost"
+          onPress={modal.toggleOpen}
+        ></Button>
+      </View>
+      <StyledModal {...modal} size="full">
+        <ListItemsStatus orders={fullOrders} />
+      </StyledModal>
     </View>
   )
 }

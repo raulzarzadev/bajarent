@@ -10,6 +10,8 @@ import ErrorBoundary from './ErrorBoundary'
 import ScreenComments from './ScreenComments'
 import { Text, View } from 'react-native'
 import StoreDetails from './StoreDetails'
+import ListItemsStatus from './ListItemsStatus'
+import ScreenItemsStatus from './ScreenItemsStatus'
 
 const ScreenStoreA = (props) => {
   const { store, staffPermissions } = useStore()
@@ -93,6 +95,11 @@ const TabsBusiness = (props) => {
               <Text>Próximamente</Text>
             </View>
           ),
+          show: true
+        },
+        {
+          title: 'Artículos',
+          content: <ScreenItemsStatus {...props} />,
           show: true
         },
         {
