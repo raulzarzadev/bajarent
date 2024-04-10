@@ -1,7 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import getItemsFromOrders, { ItemList } from '../libs/getItemsFromOrders'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  order_type,
+  orders_should_expire
+} from '../types/OrderType'
 import { gStyles } from '../styles'
 import theme from '../theme'
 import StyledModal from './StyledModal'
@@ -17,9 +21,7 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
   //* is already delivered
   const itemsActive = items.filter(
     (i) =>
-      [order_type.RENT, order_type.MULTI_RENT, order_type.STORE_RENT].includes(
-        i.orderType
-      ) &&
+      orders_should_expire.includes(i.orderType) &&
       (i.orderStatus === order_status.DELIVERED ||
         !(i.orderStatus === order_status.PICKUP))
   )
@@ -29,9 +31,8 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
   //* pickup
   const itemsFinished = items.filter(
     (i) =>
-      [order_type.RENT, order_type.MULTI_RENT, order_type.STORE_RENT].includes(
-        i.orderType
-      ) && i.orderStatus === order_status.PICKUP
+      orders_should_expire.includes(i.orderType) &&
+      i.orderStatus === order_status.PICKUP
   )
 
   //* ITEMS DELIVERED
@@ -39,10 +40,7 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
   //* delivered
   //*
   const itemsDelivered = items.filter(
-    (i) =>
-      [order_type.RENT, order_type.MULTI_RENT, order_type.STORE_RENT].includes(
-        i.orderType
-      ) && !!i.deliveredAt
+    (i) => orders_should_expire.includes(i.orderType) && !!i.deliveredAt
   )
 
   return (
@@ -60,17 +58,17 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
         items={itemsActive}
       />
       {/* Items finished */}
-      {/* <Square
+      <Square
         title="Finalizados"
         subtitle={`${itemsFinished.length} `}
         items={itemsFinished}
-      /> */}
+      />
       {/* Items delivered */}
-      {/* <Square
+      <Square
         title="Entregados"
         subtitle={`${itemsDelivered.length} `}
         items={itemsDelivered}
-      /> */}
+      />
     </View>
   )
 }
