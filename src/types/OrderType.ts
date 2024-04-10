@@ -118,6 +118,12 @@ export enum order_type {
   DELIVERY_SALE = 'DELIVERY_SALE',
   MULTI_RENT = 'MULTI_RENT'
 }
+export const orders_should_expire = [
+  order_type.RENT,
+  order_type.STORE_RENT,
+  order_type.DELIVERY_RENT,
+  order_type.MULTI_RENT
+]
 export type TypeOfOrderType = order_type
 export type OrderStatus = order_status
 

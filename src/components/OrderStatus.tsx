@@ -19,7 +19,6 @@ const OrderStatus = ({
   const status = order?.status
   const color = STATUS_COLOR[order?.status]
   const hasReport = order?.hasNotSolvedReports
-
   return (
     <Chip
       style={[chipStyles]}

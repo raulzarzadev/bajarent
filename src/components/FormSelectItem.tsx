@@ -18,7 +18,6 @@ import { gSpace, gStyles } from '../styles'
 import DateCell from './DateCell'
 import { expireDate2 } from '../libs/expireDate'
 import InputTextStyled from './InputTextStyled'
-import { set } from 'date-fns'
 
 export type ItemSelected = {
   categoryName?: string

@@ -108,23 +108,23 @@ const StoreContextProvider = ({ children }) => {
       const orderComments = comments?.filter(
         (comment) => comment.orderId === order.id
       )
-
+      const expireAt = expireDate2({
+        startedAt: order.deliveredAt || order.scheduledAt,
+        price: order?.item?.priceSelected,
+        priceQty: order?.item?.priceQty
+      })
+      const hasNotSolvedReports = orderComments?.some(
+        (comment) => comment.type === 'report' && !comment.solved
+      )
       return {
         ...order,
-        hasNotSolvedReports: orderComments?.some(
-          (comment) => comment.type === 'report' && !comment.solved
-        ),
+        hasNotSolvedReports,
         comments: orderComments,
-        status: orderStatus(order),
-
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,
         assignToPosition: staff?.find((s) => s.id === order.assignTo)?.position,
-        expireAt: expireDate2({
-          startedAt: order.deliveredAt || order.scheduledAt,
-          price: order?.item?.priceSelected,
-          priceQty: order?.item?.priceQty
-        }),
-        payments: payments.filter((p) => p.orderId === order.id) || []
+        expireAt,
+        payments: payments.filter((p) => p.orderId === order.id) || [],
+        status: orderStatus({ ...order, expireAt, hasNotSolvedReports })
       }
     })
     setOrderFormatted(orderFormatted)
