@@ -16,7 +16,7 @@ const ListOrders = ({
 }) => {
   const { navigate } = useNavigation()
   return (
-    <View style={{ margin: 'auto' }}>
+    <View style={{ margin: 'auto', maxWidth: '100%' }}>
       <List
         sideButtons={sideButtons}
         preFilteredIds={defaultOrdersIds}

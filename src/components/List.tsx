@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
 
 export default function <T extends { id: string }>(props: ListPops<T>) {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary componentName="MyList">
       <MyList {...props}></MyList>
     </ErrorBoundary>
   )
