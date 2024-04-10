@@ -113,6 +113,15 @@ function ModalFilterList<T>({
   }
 
   const chipColor = (field: string, value: string) => {
+    //* FILTERS FOR COMMENTS
+    if (field === 'type') {
+      if (value === 'comment') return theme.info
+      if (value === 'report') return theme.error
+    }
+    if (field === 'solved') {
+      return value === 'true' ? theme.success : theme.error
+    }
+
     //* this is useful for orders table to find status color
     if (field === 'status') {
       return STATUS_COLOR[value as keyof typeof STATUS_COLOR] || theme.base
@@ -124,7 +133,7 @@ function ModalFilterList<T>({
       )
     }
 
-    return theme.base
+    return theme.info
   }
 
   const chipLabel = (field: string, value: string) => {
