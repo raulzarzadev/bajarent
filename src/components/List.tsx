@@ -82,119 +82,121 @@ function MyList<T extends { id: string }>({
 
   return (
     <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          maxWidth: 500,
-          margin: 'auto',
-          padding: 4
-        }}
-      >
-        {sideButtons?.map(
-          (button, index) =>
-            button.visible && (
-              <View key={index} style={{ marginHorizontal: 2 }}>
-                <Button
-                  icon={button?.icon}
-                  // label={button.label}
-                  onPress={button?.onPress}
-                  size="small"
-                  disabled={button?.disabled}
-                ></Button>
-              </View>
-            )
-        )}
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: 500,
+            margin: 'auto',
+            padding: 4
+          }}
+        >
+          {sideButtons?.map(
+            (button, index) =>
+              button.visible && (
+                <View key={index} style={{ marginHorizontal: 2 }}>
+                  <Button
+                    icon={button?.icon}
+                    // label={button.label}
+                    onPress={button?.onPress}
+                    size="small"
+                    disabled={button?.disabled}
+                  ></Button>
+                </View>
+              )
+          )}
 
-        <ModalFilterList
-          preFilteredIds={preFilteredIds}
-          data={data}
-          setData={setFilteredData}
-          filters={filters}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Text style={{ textAlign: 'center', marginRight: 4 }}>
-          {filteredData.length} coincidencias
-        </Text>
-        <View style={styles.paginationContainer}>
-          <Button
-            onPress={handlePrevPage}
-            disabled={currentPage === 1}
-            label="Prev"
-            size="small"
-            icon="rowLeft"
-            justIcon
-          />
-          <Text style={styles.pageText}>
-            {currentPage} de {totalPages}
-          </Text>
-          <Button
-            onPress={handleNextPage}
-            disabled={currentPage === totalPages}
-            label="Next"
-            size="small"
-            icon="rowRight"
-            justIcon
+          <ModalFilterList
+            preFilteredIds={preFilteredIds}
+            data={data}
+            setData={setFilteredData}
+            filters={filters}
           />
         </View>
-      </View>
 
-      <View
-        style={{
-          padding: 2,
-          justifyContent: 'center',
-          // marginTop: gSpace(2),
-          maxWidth: '100%'
-        }}
-      >
-        <FlatList
+        <View
           style={{
-            width: '100%',
-            maxWidth: 600,
-            margin: 'auto'
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
-          horizontal
-          data={sortFields}
-          renderItem={({ item: field }) => (
-            <View key={field.key}>
-              <Pressable
-                onPress={() => {
-                  // sortBy(field.key)
-                  sortBy(field.key)
-                  changeOrder()
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  margin: 4,
-                  width: 72
-                }}
-              >
-                <Text
-                  numberOfLines={1}
+        >
+          <Text style={{ textAlign: 'center', marginRight: 4 }}>
+            {filteredData.length} coincidencias
+          </Text>
+          <View style={styles.paginationContainer}>
+            <Button
+              onPress={handlePrevPage}
+              disabled={currentPage === 1}
+              label="Prev"
+              size="small"
+              icon="rowLeft"
+              justIcon
+            />
+            <Text style={styles.pageText}>
+              {currentPage} de {totalPages}
+            </Text>
+            <Button
+              onPress={handleNextPage}
+              disabled={currentPage === totalPages}
+              label="Next"
+              size="small"
+              icon="rowRight"
+              justIcon
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            padding: 2,
+            justifyContent: 'center',
+            // marginTop: gSpace(2),
+            maxWidth: '100%'
+          }}
+        >
+          <FlatList
+            style={{
+              width: '100%',
+              maxWidth: 600,
+              margin: 'auto'
+            }}
+            horizontal
+            data={sortFields}
+            renderItem={({ item: field }) => (
+              <View key={field.key}>
+                <Pressable
+                  onPress={() => {
+                    // sortBy(field.key)
+                    sortBy(field.key)
+                    changeOrder()
+                  }}
                   style={{
-                    fontWeight: sortedBy === field.key ? 'bold' : 'normal'
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    margin: 4,
+                    width: 72
                   }}
                 >
-                  {field.label}
-                </Text>
-                {sortedBy === field.key && (
-                  <Icon icon={order === 'asc' ? 'up' : 'down'} size={12} />
-                )}
-              </Pressable>
-            </View>
-          )}
-        />
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontWeight: sortedBy === field.key ? 'bold' : 'normal'
+                    }}
+                  >
+                    {field.label}
+                  </Text>
+                  {sortedBy === field.key && (
+                    <Icon icon={order === 'asc' ? 'up' : 'down'} size={12} />
+                  )}
+                </Pressable>
+              </View>
+            )}
+          />
+        </View>
       </View>
       <FlatList
         data={sortedData.slice(startIndex, endIndex)}

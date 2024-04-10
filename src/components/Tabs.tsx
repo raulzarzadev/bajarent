@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'space-around',// this make disappears some tabs
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 4,
     paddingBottom: 0,
     // maxWidth: '100%', // Esto establece el ancho máximo del ScrollView
     width: '100%', // Esto establece el ancho del ScrollView
