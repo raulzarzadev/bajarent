@@ -15,19 +15,28 @@ export default function useComments({
   orders: OrderType[]
 }) {
   const [comments, setComments] = useState<FormattedComment[]>([])
-  const fetchComments = (props?: { id?: string }) => {
+  const fetchComments = (props?: { id?: string; count?: number }) => {
     const id = props?.id
-    if (id) {
-      ServiceComments.get(id).then((res) => {
-        const formatted = formatComments({ comments: [res], orders, staff })
-        setComments(comments.map((c) => (c.id === res.id ? formatted[0] : c)))
-      })
-    } else {
-      ServiceComments.getLast(storeId, 10).then((res) => {
+    const count = props?.count
+
+    if (count) {
+      return ServiceComments.getLast(storeId, count).then((res) => {
         const formatted = formatComments({ comments: res, orders, staff })
         setComments(formatted)
       })
     }
+
+    if (id) {
+      return ServiceComments.get(id).then((res) => {
+        const formatted = formatComments({ comments: [res], orders, staff })
+        setComments(comments.map((c) => (c.id === res.id ? formatted[0] : c)))
+      })
+    }
+
+    ServiceComments.getLast(storeId, 10).then((res) => {
+      const formatted = formatComments({ comments: res, orders, staff })
+      setComments(formatted)
+    })
   }
   useEffect(() => {
     if (orders.length && staff.length) fetchComments()

@@ -18,7 +18,9 @@ import {
   MdChevronRight,
   MdSettings,
   MdDownload,
-  MdOutlinePhotoCamera
+  MdOutlinePhotoCamera,
+  MdInfoOutline,
+  MdWarningAmber
 } from 'react-icons/md'
 
 import {
@@ -105,7 +107,9 @@ const icons = {
   settings: MdSettings,
   download: MdDownload,
   camera: MdOutlinePhotoCamera,
-  addImage: RiImageAddLine
+  addImage: RiImageAddLine,
+  info: MdInfoOutline,
+  warning: MdWarningAmber
 } as const
 
 export type IconName = keyof typeof icons
