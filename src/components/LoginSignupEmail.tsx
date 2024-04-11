@@ -2,18 +2,21 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
-import { signInWithPassword } from '../firebase/auth'
+import { createUserWithPassword } from '../firebase/auth'
 import { gStyles } from '../styles'
 
-const LoginEmail = () => {
-  const [form, setForm] = useState({ email: '', password: '' })
+const LoginSignUpEmail = () => {
+  const [form, setForm] = useState({ email: '', password: '', name: '' })
+
   const handleChange = (field: string, value: string) => {
     setForm({ ...form, [field]: value })
   }
+
   const handleSubmit = () => {
-    signInWithPassword({
+    createUserWithPassword({
       email: form.email,
-      password: form.password
+      password: form.password,
+      name: form.name
     })
       .then((user) => {
         console.log({ user })
@@ -22,8 +25,18 @@ const LoginEmail = () => {
         console.error({ error })
       })
   }
+
   return (
-    <View style={gStyles.container}>
+    <View style={gStyles.container} testID="form-sign-up">
+      <View>
+        <Text>Crear usuario</Text>
+      </View>
+      <View style={{ margin: 4 }}>
+        <InputTextStyled
+          onChangeText={(value) => handleChange('name', value)}
+          placeholder="Nombre"
+        ></InputTextStyled>
+      </View>
       <View style={{ margin: 4 }}>
         <InputTextStyled
           onChangeText={(value) => handleChange('email', value)}
@@ -46,6 +59,6 @@ const LoginEmail = () => {
   )
 }
 
-export default LoginEmail
+export default LoginSignUpEmail
 
 const styles = StyleSheet.create({})
