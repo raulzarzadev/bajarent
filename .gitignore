@@ -37,3 +37,6 @@ yarn-error.*
 .vercel
 
 .testEmail.ts
+
+# cypress
+cypress/screenshots/
