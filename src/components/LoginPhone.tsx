@@ -85,6 +85,8 @@ const PhoneLogin = () => {
     }
   }
 
+  const validPhone = phone.length === 13
+
   return (
     <View style={{ padding: 4 }}>
       {!msmSent && (
@@ -103,11 +105,21 @@ const PhoneLogin = () => {
               </View>
             )}
             <View style={styles.item}>
-              <Button onPress={onSignInSubmit} disabled={sending}>
+              <Button
+                onPress={onSignInSubmit}
+                disabled={!validPhone || sending}
+              >
                 Enviar
               </Button>
             </View>
-
+            <Button
+              onPress={() => {
+                setMsmSent(true)
+              }}
+              // disabled={sending}
+              label="tengo un codigo"
+              variant="ghost"
+            ></Button>
             <View style={{ position: 'relative' }} id="sign-in-button"></View>
           </View>
         </>
@@ -134,6 +146,17 @@ const PhoneLogin = () => {
                 onPress={onSendCode}
                 disabled={sending}
                 label="Envíar"
+              ></Button>
+            </View>
+            <View style={styles.item}>
+              <Button
+                onPress={() => {
+                  setMsmSent(false)
+                  setCode('')
+                }}
+                disabled={sending}
+                label="atras"
+                variant="ghost"
               ></Button>
             </View>
           </View>
