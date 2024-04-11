@@ -22,17 +22,12 @@ const ScreenProfile = ({ navigation }) => {
   if (user === undefined) return <ActivityIndicator />
   if (user === null)
     return (
-      <ScrollView>
-        <ErrorBoundary componentName="FormLogin">
+      <ErrorBoundary componentName="FormLogin">
+        <ScrollView>
           <PhoneLogin />
-          {!!__DEV__ && (
-            <>
-              <LoginEmail />
-              <LoginSignUpEmail />
-            </>
-          )}
-        </ErrorBoundary>
-      </ScrollView>
+          {!!__DEV__ && <LoginSignUpEmail />}
+        </ScrollView>
+      </ErrorBoundary>
     )
   return (
     <View style={{ padding: 2 }}>

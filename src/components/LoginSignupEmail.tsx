@@ -49,12 +49,26 @@ const LoginSignUpEmail = () => {
           placeholder="Password"
         ></InputTextStyled>
       </View>
-      <Button
-        label="Enviar"
-        onPress={() => {
-          handleSubmit()
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          marginTop: 8
         }}
-      ></Button>
+      >
+        <Button
+          label="Registrate"
+          onPress={() => {
+            handleSubmit()
+          }}
+        ></Button>
+        <Button
+          label="Ingresar"
+          onPress={() => {
+            handleSubmit()
+          }}
+        ></Button>
+      </View>
     </View>
   )
 }

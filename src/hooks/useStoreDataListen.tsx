@@ -16,8 +16,10 @@ import { ServicePrices } from '../firebase/ServicePrices'
 import { CategoryType } from '../types/RentItem'
 import { ServiceCategories } from '../firebase/ServiceCategories'
 import useOrders from './useOrders'
+import { useAuth } from '../contexts/authContext'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
+  const { user } = useAuth()
   const { orders, handleGetSolvedOrders } = useOrders({ storeId })
 
   const [store, setStore] = useState<StoreType>(null)
@@ -30,15 +32,15 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
   const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
 
   useEffect(() => {
-    if (storeId) {
+    if (storeId && user) {
       ServiceStores.listen(storeId, setStore)
     } else {
       setStore(null)
     }
-  }, [storeId])
+  }, [storeId, user])
 
   useEffect(() => {
-    if (store) {
+    if (store && user) {
       //* LISTENERS
 
       ServiceStaff.listenByStore(store.id, setStaff)
@@ -53,7 +55,7 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
 
       updateCategories()
     }
-  }, [store])
+  }, [store, user])
 
   const updateCategories = async () => {
     await ServicePrices.getByStore(storeId).then(setPrices)

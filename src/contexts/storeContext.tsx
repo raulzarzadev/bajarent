@@ -64,12 +64,6 @@ const StoreContextProvider = ({ children }) => {
     handleGetSolvedOrders
   } = useStoreDataListen({ storeId })
 
-  // const { comments: allComments, fetchComments } = useComments({
-  //   storeId,
-  //   orders,
-  //   staff
-  // })
-
   const { userPositions, userStores, updateUserStores } = useUserStores()
 
   const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
