@@ -65,6 +65,7 @@ const ButtonConfirm = ({
             Cancelar
           </Button>
           <Button
+            id={'confirmButton'}
             buttonStyles={{}}
             color={confirmColor}
             variant={confirmVariant}

@@ -35,3 +35,9 @@ yarn-error.*
 *.tsbuildinfo
 
 .vercel
+
+.testEmail.ts
+
+# cypress
+cypress/screenshots/
+cypress/downloads/

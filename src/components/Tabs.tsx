@@ -32,6 +32,7 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
         >
           {visibleTabs.map((tab) => (
             <Pressable
+              role="tab"
               key={tab.title}
               style={({ pressed }) => [
                 styles.tabButton,

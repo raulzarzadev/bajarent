@@ -28,5 +28,8 @@ module.exports = {
   },
   globals: {
     __DEV__: true
+  },
+  env: {
+    'cypress/globals': true
   }
 }

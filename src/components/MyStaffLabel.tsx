@@ -18,9 +18,11 @@ const MyStaffLabel = () => {
   const isProfile = routeName === 'Profile'
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      {user && <LocationStatus />}
-      {!!store && !!label && <StoreTopButton />}
+      {/* {user && <LocationStatus />} */}
+      {!!store && <StoreTopButton />}
       <Pressable
+        role="button"
+        id="profileButton"
         style={{
           minWidth: 60,
           flexDirection: 'column',
@@ -61,8 +63,11 @@ const StoreTopButton = () => {
   const { store } = useStore()
   const routeName = navigation.getState()?.routes?.[0]?.name
   const isStore = routeName === 'Store'
+
   return (
     <Pressable
+      role="button"
+      id="storeButton"
       style={{
         flexDirection: 'row',
         opacity: isStore ? 1 : 0.5
