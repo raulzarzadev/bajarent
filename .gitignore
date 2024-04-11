@@ -40,3 +40,4 @@ yarn-error.*
 
 # cypress
 cypress/screenshots/
+cypress/downloads/

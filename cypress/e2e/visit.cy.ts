@@ -1,4 +1,7 @@
-const testUser = { email: 'prueba@example.com', password: 'passwordseguro' }
+export const testUser = {
+  email: 'prueba@example.com',
+  password: 'passwordseguro'
+}
 describe('visit', () => {
   // beforeEach(() => {
   //   cy.visit('http://localhost:19006/')

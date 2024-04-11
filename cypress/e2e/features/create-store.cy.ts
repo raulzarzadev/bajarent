@@ -1,10 +1,20 @@
+import { testUser } from '../visit.cy'
+
 const storeTest = {
   name: 'Mi tienda de prueba',
   description: 'Esta es una tienda de prueba',
   nameEdited: 'Tienda editada'
 }
 describe('login and create a store', () => {
-  it('should be able to login and create a store', () => {
+  it('open sesion', () => {
+    cy.visit('http://localhost:19006/')
+    cy.get('input[placeholder="Email"]').type(testUser.email)
+    cy.get('input[placeholder="Password"]').type(testUser.password)
+    cy.get('button').contains('Ingresar').click()
+    cy.get('button').contains('Cerrar sesión').should('be.visible')
+  })
+
+  it('should be able to create a store', () => {
     cy.visit('http://localhost:19006/')
     cy.get('button').contains('Crear tienda').click()
     cy.get('input[placeholder="Nombre"]').type(storeTest.name)
@@ -63,5 +73,11 @@ describe('login and create a store', () => {
     cy.wait(1000)
     //cy.wait(500)
     cy.get('div').contains(storeTest.nameEdited).should('not.exist')
+  })
+  it('close sesion', () => {
+    cy.visit('http://localhost:19006/')
+    cy.wait(1000)
+    cy.get('#profileButton').should('be.visible').click()
+    cy.get('button').contains('Cerrar sesión').click()
   })
 })
