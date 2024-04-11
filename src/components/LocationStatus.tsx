@@ -21,7 +21,7 @@ const LocationStatus = () => {
 }
 
 export const ButtonAskLocation = () => {
-  const { locationEnabled } = useLocation()
+  const { locationEnabled, askLocation } = useLocation()
 
   return (
     <>
@@ -32,24 +32,7 @@ export const ButtonAskLocation = () => {
         variant="ghost"
         buttonStyles={{ width: 220, margin: 'auto' }}
         onPress={() => {
-          if ('geolocation' in navigator) {
-            // Solicitar permiso para acceder a la ubicación
-            navigator.geolocation.getCurrentPosition(
-              function (position) {
-                // Se ejecuta si el usuario otorga permiso
-                const latitude = position.coords.latitude
-                const longitude = position.coords.longitude
-                console.log('Ubicación obtenida:', latitude, longitude)
-              },
-              function (error) {
-                // Se ejecuta si el usuario niega el permiso o hay un error
-                console.error('Error al obtener la ubicación:', error)
-              }
-            )
-          } else {
-            // El navegador no soporta la geolocalización
-            console.error('Geolocalización no soportada en este navegador')
-          }
+          askLocation()
         }}
       ></Button>
       {!locationEnabled && (

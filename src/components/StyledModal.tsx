@@ -29,6 +29,7 @@ const StyledModal = ({
   return (
     <View style={styles.centeredView}>
       <Modal
+        role="dialog"
         animationType="slide"
         transparent={true}
         visible={open}

@@ -24,6 +24,7 @@ export type ButtonProps = {
   textStyles?: TextStyle
   icon?: IconName
   justIcon?: boolean
+  id?: string
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
@@ -37,7 +38,8 @@ const ButtonX: React.FC<ButtonProps> = ({
   color = 'primary',
   size = 'medium',
   icon,
-  justIcon
+  justIcon,
+  ...props
 }) => {
   const { theme } = useTheme()
   const buttonXColor = {
@@ -73,8 +75,8 @@ const ButtonX: React.FC<ButtonProps> = ({
     padding: sizes[size].padding,
     borderRadius: 9999,
     width: sizes[size].padding * 2,
-    height: sizes[size].padding * 2,
-    margin: 'auto'
+    height: sizes[size].padding * 2
+    //margin: 'auto'
   }
 
   if (justIcon) {
@@ -84,6 +86,8 @@ const ButtonX: React.FC<ButtonProps> = ({
 
   return (
     <Pressable
+      {...props}
+      role="button"
       style={({ pressed }) => [
         baseStyles.buttonX,
         buttonXColor,

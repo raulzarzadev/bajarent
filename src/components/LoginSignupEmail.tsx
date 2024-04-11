@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
-import { createUserWithPassword } from '../firebase/auth'
+import { createUserWithPassword, signInWithPassword } from '../firebase/auth'
 import { gStyles } from '../styles'
 
 const LoginSignUpEmail = () => {
@@ -12,7 +12,7 @@ const LoginSignUpEmail = () => {
     setForm({ ...form, [field]: value })
   }
 
-  const handleSubmit = () => {
+  const handleSignup = () => {
     createUserWithPassword({
       email: form.email,
       password: form.password,
@@ -25,49 +25,60 @@ const LoginSignUpEmail = () => {
         console.error({ error })
       })
   }
+  const handleLogin = () => {
+    signInWithPassword({ email: form.email, password: form.password })
+      .then((user) => {
+        console.log({ user })
+      })
+      .catch((error) => {
+        console.error({ error })
+      })
+  }
 
   return (
     <View style={gStyles.container} testID="form-sign-up">
       <View>
-        <Text>Crear usuario</Text>
+        <Text style={gStyles.h2}>Ingresar con email</Text>
       </View>
-      <View style={{ margin: 4 }}>
-        <InputTextStyled
-          onChangeText={(value) => handleChange('name', value)}
-          placeholder="Nombre"
-        ></InputTextStyled>
-      </View>
-      <View style={{ margin: 4 }}>
-        <InputTextStyled
-          onChangeText={(value) => handleChange('email', value)}
-          placeholder="Email"
-        ></InputTextStyled>
-      </View>
-      <View style={{ margin: 4 }}>
-        <InputTextStyled
-          onChangeText={(value) => handleChange('password', value)}
-          placeholder="Password"
-        ></InputTextStyled>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          marginTop: 8
-        }}
-      >
-        <Button
-          label="Registrate"
-          onPress={() => {
-            handleSubmit()
+      <View role="form">
+        <View style={{ margin: 4 }}>
+          <InputTextStyled
+            onChangeText={(value) => handleChange('name', value)}
+            placeholder="Nombre"
+          ></InputTextStyled>
+        </View>
+        <View style={{ margin: 4 }}>
+          <InputTextStyled
+            onChangeText={(value) => handleChange('email', value)}
+            placeholder="Email"
+          ></InputTextStyled>
+        </View>
+        <View style={{ margin: 4 }}>
+          <InputTextStyled
+            onChangeText={(value) => handleChange('password', value)}
+            placeholder="Password"
+          ></InputTextStyled>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 8
           }}
-        ></Button>
-        <Button
-          label="Ingresar"
-          onPress={() => {
-            handleSubmit()
-          }}
-        ></Button>
+        >
+          <Button
+            label="Registrate"
+            onPress={() => {
+              handleSignup()
+            }}
+          ></Button>
+          <Button
+            label="Ingresar"
+            onPress={() => {
+              handleLogin()
+            }}
+          ></Button>
+        </View>
       </View>
     </View>
   )

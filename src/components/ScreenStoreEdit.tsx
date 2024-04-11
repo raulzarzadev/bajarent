@@ -5,8 +5,11 @@ import { ServiceStores } from '../firebase/ServiceStore'
 import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
 import { gStyles } from '../styles'
+import { clearStorage } from '../firebase/auth'
+import { useNavigation } from '@react-navigation/native'
 
 const ScreenStoreEdit = ({ navigation }) => {
+  const { navigate } = navigation
   const { store, updateUserStores } = useStore()
   if (!store) return <ActivityIndicator />
   return (
@@ -37,8 +40,10 @@ const ScreenStoreEdit = ({ navigation }) => {
                 .catch(console.error)
                 .finally(() => {
                   updateUserStores()
+                  clearStorage()
+                  navigate('Profile')
                 })
-              navigation.goBack()
+              //navigation.goBack()
             }}
           />
         </View>

@@ -35,3 +35,19 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('login', ({ email, password }) => {
+  cy.visit('http://localhost:19006/')
+
+  cy.get('input[placeholder="Email"]').type(email)
+  cy.get('input[placeholder="Password"]').type(password)
+
+  // 3. Haz clic en el botón de enviar
+  cy.get('button').contains('Ingresar').should('be.visible').click()
+})
+
+// Cypress.Commands.add('logout', () => {
+//   cy.visit('http://localhost:19006/')
+
+//   // cy.get('button').contains('Cerrar sesión').click()
+// })
