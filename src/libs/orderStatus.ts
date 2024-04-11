@@ -16,8 +16,8 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
   if (status === order_status.REPAIRED) return status
   if (status === order_status.DELIVERED) {
     if (!order.expireAt) {
-      console.error('first you need to set expireAt')
-      console.error('check if item is missing')
+      // console.error('first you need to set expireAt')
+      // console.error('check if item is missing')
       return status
     }
     // //* validate if this kind of order should be expired

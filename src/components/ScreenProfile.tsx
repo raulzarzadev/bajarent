@@ -1,4 +1,10 @@
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 import React from 'react'
 import { useAuth } from '../contexts/authContext'
 import PhoneLogin from './LoginPhone'
@@ -9,6 +15,7 @@ import ErrorBoundary from './ErrorBoundary'
 import LoginEmail from './LoginEmail'
 import ChooseProfile from './ChooseProfile'
 import { ButtonAskLocation } from './LocationStatus'
+import LoginSignUpEmail from './LoginSignupEmail'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -16,8 +23,10 @@ const ScreenProfile = ({ navigation }) => {
   if (user === null)
     return (
       <ErrorBoundary componentName="FormLogin">
-        <PhoneLogin />
-        {!!__DEV__ && <LoginEmail />}
+        <ScrollView>
+          <PhoneLogin />
+          {!!__DEV__ && <LoginSignUpEmail />}
+        </ScrollView>
       </ErrorBoundary>
     )
   return (
