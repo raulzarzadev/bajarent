@@ -18,9 +18,13 @@ import { useState } from 'react'
 import ModalSendWhatsapp from './ModalSendWhatsapp'
 import dictionary from '../dictionary'
 import asDate, { dateFormat } from '../libs/utils-date'
+import { useAuth } from '../contexts/authContext'
 
 const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
+  const { user } = useAuth()
   const { staffPermissions, store } = useStore()
+  const isAdmin = staffPermissions?.isAdmin
+  const isOwner = user.id === store.createdBy
   const navigation = useNavigation()
   const status = orderStatus(order)
   const areIn = (statuses: order_status[]) => statuses.includes(status)
@@ -32,19 +36,13 @@ const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
       order_status.AUTHORIZED,
       order_status.CANCELLED
     ]) &&
-    (staffPermissions?.isAdmin || staffPermissions?.canCancelOrder)
+    (staffPermissions?.canCancelOrder || isAdmin || isOwner)
 
-  // const canAuthorize =
-  //   areIn([order_status.PENDING]) &&
-  //   (staffPermissions?.canAuthorizeOrder || staffPermissions?.isAdmin)
+  const canAssign = staffPermissions?.canAssignOrder || isAdmin || isOwner
 
-  const canAssign =
-    staffPermissions?.canAssignOrder || staffPermissions?.isAdmin
+  const canEdit = staffPermissions?.canEditOrder || isAdmin || isOwner
 
-  const canEdit = staffPermissions?.canEditOrder || staffPermissions?.isAdmin
-
-  const canDelete =
-    staffPermissions?.canDeleteOrder || staffPermissions?.isAdmin
+  const canDelete = staffPermissions?.canDeleteOrder || isAdmin || isOwner
 
   const orderPeriod = (order: Partial<OrderType>): string => {
     const res = ''
@@ -190,7 +188,8 @@ ${orderPayments()}
       {[
         order_type.RENT,
         order_type.STORE_RENT,
-        order_type.DELIVERY_RENT
+        order_type.DELIVERY_RENT,
+        order_type.MULTI_RENT
       ].includes(order.type) && (
         <ErrorBoundary componentName="OrderActionsRentFlow">
           <OrderActionsRentFlow orderId={orderId} orderStatus={order.status} />
@@ -202,6 +201,14 @@ ${orderPayments()}
             orderId={orderId}
             orderStatus={order.status}
           />
+        </ErrorBoundary>
+      )}
+      {[order_type.SALE, order_type.DELIVERY_SALE].includes(order.type) && (
+        <ErrorBoundary componentName="OrderActionsRepairFlow">
+          {/* <OrderActionsRepairFlow
+            orderId={orderId}
+            orderStatus={order.status}
+          /> */}
         </ErrorBoundary>
       )}
       <ErrorBoundary componentName="OrderActionsCommonButtons">
