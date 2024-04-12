@@ -11,7 +11,12 @@ export default function ModalSendWhatsapp({ message = '', to = '' }) {
   const invalidPhone = !to || to?.length < 10
   return (
     <View>
-      <Button label="Enviar Whatsapp" onPress={modal.toggleOpen}></Button>
+      <Button
+        label="Whatsapp"
+        onPress={modal.toggleOpen}
+        size="small"
+        icon="whatsapp"
+      ></Button>
       <StyledModal {...modal}>
         <Text>{message}</Text>
         {invalidPhone && (

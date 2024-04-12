@@ -64,8 +64,8 @@ const ModalAssignOrder = ({
     }
   }, [assignedToSection, orders])
   return (
-    <>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+    <View>
+      {/* <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         {sectionAssigned && (
           <View>
             <Text style={gStyles.h3}>Area</Text>
@@ -80,8 +80,8 @@ const ModalAssignOrder = ({
             </Text>
           </View>
         )}
-      </View>
-      <Button onPress={modal.toggleOpen} label="Asignar"></Button>
+      </View> */}
+      <Button onPress={modal.toggleOpen} label="Asignar" size="small"></Button>
       <StyledModal {...modal}>
         <InputSelect
           value={assignedToSection}
@@ -110,7 +110,7 @@ const ModalAssignOrder = ({
           }}
         /> */}
       </StyledModal>
-    </>
+    </View>
   )
 }
 export default ModalAssignOrder

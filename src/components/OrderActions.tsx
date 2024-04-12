@@ -16,6 +16,11 @@ import theme from '../theme'
 import ProgressBar from './ProgressBar'
 import OrderType, { order_status } from '../types/OrderType'
 import Button from './Button'
+import ModalAssignOrder from './OrderActions/ModalAssignOrder'
+import ModalSendWhatsapp from './ModalSendWhatsapp'
+import ModalWhatsAppOrderStatus from './OrderActions/ModalWhatsAppOrderStatus'
+import OrderStatus from './OrderStatus'
+import OrderAssignInfo from './OrderAssignInfo'
 
 enum acts {
   AUTHORIZE = 'AUTHORIZE',
@@ -114,31 +119,91 @@ const OrderActions = ({
   )
   const progress =
     ((statusIndex + 1) / ORDER_TYPE_ACTIONS[orderType].length) * 100
-  console.log({ progress, statusIndex, orderStatus })
   return (
     <View>
+      <OrderStatus orderId={orderId} />
+      <OrderAssignInfo orderId={orderId} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         {ORDER_TYPE_ACTIONS[orderType].map(({ label, action }) => (
-          <Pressable
-            key={label}
-            onPress={() => {
-              action()
-            }}
-          >
-            <Text key={label} style={{ textTransform: 'capitalize' }}>
-              {dictionary(label)}
-            </Text>
-          </Pressable>
+          <Button
+            label={dictionary(label)}
+            onPress={action}
+            variant="ghost"
+            size="xs"
+          />
         ))}
       </View>
       <ProgressBar progress={progress} />
-      <View style={{ marginTop: 8, flexDirection: 'row' }}>
-        <Button
-          label="Cancelar"
-          onPress={actions_fns[acts.CANCEL]}
-          size="small"
-          variant="outline"
-        />
+      <GeneralActions orderId={orderId} />
+    </View>
+  )
+}
+
+const GeneralActions = ({ orderId }) => {
+  const { user } = useAuth()
+  const userId = user?.id
+  const buttons = [
+    <ModalWhatsAppOrderStatus orderId={orderId} />,
+    <Button
+      label="Cancelar"
+      onPress={() => {
+        onCancel({ orderId, userId })
+      }}
+      size="small"
+      variant="outline"
+    />,
+    <ModalAssignOrder orderId={orderId} />
+  ]
+  const buttons2 = [
+    <Button
+      size="small"
+      label="Editar"
+      onPress={() => {}}
+      variant="outline"
+      icon="edit"
+    />,
+    <Button
+      size="small"
+      label="Eliminar"
+      onPress={() => {}}
+      color="error"
+      variant="outline"
+      icon="delete"
+    />
+  ]
+  return (
+    <View>
+      <View
+        style={{
+          marginTop: 8,
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-around',
+          padding: 2,
+          flexWrap: 'wrap'
+        }}
+      >
+        {buttons.map((button, i) => (
+          <View key={i} style={{ padding: 4, width: '50%' }}>
+            {button}
+          </View>
+        ))}
+        {/* To fix las element */}
+        <View style={{ flex: 1 }} />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-around',
+          padding: 2
+        }}
+      >
+        {buttons2.map((button, i) => (
+          <View key={i} style={{ padding: 4, width: '50%' }}>
+            {button}
+          </View>
+        ))}
       </View>
     </View>
   )
