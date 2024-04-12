@@ -17,6 +17,7 @@ import { app, db } from './main'
 import UserType from '../types/UserType'
 import { ServiceUsers } from './ServiceUser'
 import { where } from 'firebase/firestore'
+import { removeItem } from '../libs/storage'
 
 export const auth = getAuth(app)
 auth.languageCode = 'es'
@@ -170,7 +171,13 @@ export async function signInWithPassword({
 }
 
 export async function logout() {
+  clearStorage()
   return await signOut(auth)
+}
+export const clearStorage = () => {
+  removeItem('myStaffId')
+  removeItem('storeId')
+  removeItem('NAVIGATION_STATE_V1')
 }
 
 export async function getCurrentUser() {

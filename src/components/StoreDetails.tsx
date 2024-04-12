@@ -7,6 +7,7 @@ import { useStore } from '../contexts/storeContext'
 import { useStoreNavigation } from './StackStore'
 import { useAuth } from '../contexts/authContext'
 import { gStyles } from '../styles'
+import Button from './Button'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useStoreNavigation()
@@ -25,16 +26,16 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
         {/* <ChangeStore /> */}
         <Text style={gStyles.h1}>{store?.name}</Text>
         {(staffPermissions?.isAdmin || isOwner) && (
-          <ButtonIcon
-            icon="settings"
-            variant="ghost"
+          <Button
             color="secondary"
-            buttonStyles={{ marginLeft: 10 }}
-            size="medium"
+            variant="ghost"
+            justIcon
+            icon="settings"
             onPress={() => {
               navigate('EditStore')
             }}
-          ></ButtonIcon>
+            id="editStore"
+          />
         )}
       </View>
       <P>{store.description}</P>

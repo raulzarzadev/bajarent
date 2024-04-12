@@ -1,5 +1,7 @@
 {
-  "compilerOptions": {},
+  "compilerOptions": {
+    "types": ["cypress", "node"]
+  },
   "extends": "expo/tsconfig.base",
   "exclude": [
     "node_modules",

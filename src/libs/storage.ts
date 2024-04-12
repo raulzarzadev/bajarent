@@ -24,3 +24,13 @@ export const setItem = async (key: string, payload: string) => {
 
   return null
 }
+
+export const removeItem = async (key: string) => {
+  if (key) {
+    return os === 'web'
+      ? webStorage.removeItem(key)
+      : await appStorage.removeItem(key)
+  }
+
+  return null
+}
