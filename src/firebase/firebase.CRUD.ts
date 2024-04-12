@@ -189,17 +189,24 @@ export class FirebaseCRUD {
   }
 
   async updateItem(itemId: string, item: object) {
+    if (!itemId) return console.error('invalid value', { itemId })
     const newItem = {
       ...item,
       ...this.updateItemMetadata()
     }
-    return await updateDoc(doc(this.db, this.collectionName, itemId), newItem)
-      .then((res) =>
-        this.formatResponse(true, `${this.collectionName}_UPDATED`, {
-          id: itemId
+    try {
+      return await updateDoc(doc(this.db, this.collectionName, itemId), newItem)
+        .then((res) =>
+          this.formatResponse(true, `${this.collectionName}_UPDATED`, {
+            id: itemId
+          })
+        )
+        .catch((err) => {
+          console.error(err)
         })
-      )
-      .catch((err) => console.error(err))
+    } catch (error) {
+      console.log({ error })
+    }
   }
 
   async setItem(itemId: string, newItem: object) {
