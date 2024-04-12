@@ -72,7 +72,9 @@ type OrderBase = {
   assignTo: string
 
   renewedAt: Date
-  renewedFrom: string
+  renewedBy: string
+  renewedFrom: OrderType['id']
+  renewedTo: OrderType['id']
 
   hasDelivered?: boolean
 
@@ -85,9 +87,16 @@ type OrderBase = {
   repairedBy?: string
   repairedByStaff?: string
 
+  repairingBy?: string
+  repairingAt?: Date
+
   repairTotal?: number
   repairInfo?: string
   quoteBy?: string
+
+  cancelledAt?: Date
+  cancelledBy?: string
+  cancelledReason?: string
 
   payments: PaymentType[]
 

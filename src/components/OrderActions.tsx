@@ -1,342 +1,149 @@
-import { StyleSheet, Text, View } from 'react-native'
-import Button from './Button'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType, { order_status, order_type } from '../types/OrderType'
-import OrderStatus from './OrderStatus'
-import orderStatus from '../libs/orderStatus'
-import { useNavigation } from '@react-navigation/native'
-import { useStore } from '../contexts/storeContext'
-import ModalAssignOrder from './OrderActions/ModalAssignOrder'
-
-import ErrorBoundary from './ErrorBoundary'
-import ButtonConfirm from './ButtonConfirm'
-import { ServiceComments } from '../firebase/ServiceComments'
-import OrderActionsRentFlow from './OrderActionsRentFlow'
-import OrderActionsRepairFlow from './OrderActionsRepairFlow'
-import { gStyles } from '../styles'
-import { useState } from 'react'
-import ModalSendWhatsapp from './ModalSendWhatsapp'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import {
+  onAuthorize,
+  onDelivery,
+  onPickup,
+  onRenew,
+  onComment,
+  onRepairStart,
+  onRepairFinish,
+  onCancel
+} from '../libs/order-actions'
 import dictionary from '../dictionary'
-import asDate, { dateFormat } from '../libs/utils-date'
 import { useAuth } from '../contexts/authContext'
+import theme from '../theme'
+import ProgressBar from './ProgressBar'
+import OrderType, { order_status } from '../types/OrderType'
+import Button from './Button'
 
-const OrderActions = ({ order }: { order: Partial<OrderType> }) => {
+enum acts {
+  AUTHORIZE = 'AUTHORIZE',
+  DELIVER = 'DELIVER',
+  PICKUP = 'PICKUP',
+  RENEW = 'RENEW',
+  COMMENT = 'COMMENT',
+  REPAIR_START = 'REPAIR_START',
+  REPAIR_FINISH = 'REPAIR_FINISH',
+  CANCEL = 'CANCEL'
+}
+
+export type OrderTypes = 'RENT' | 'SALE' | 'REPAIR'
+
+const OrderActions = ({
+  orderId,
+  orderType,
+  orderStatus
+}: {
+  orderId: string
+  orderType: OrderTypes
+  orderStatus: OrderType['status']
+}) => {
   const { user } = useAuth()
-  const { staffPermissions, store } = useStore()
-  const isAdmin = staffPermissions?.isAdmin
-  const isOwner = user.id === store.createdBy
-  const navigation = useNavigation()
-  const status = orderStatus(order)
-  const areIn = (statuses: order_status[]) => statuses.includes(status)
-  const orderId = order?.id || ''
+  const userId = user?.id
 
-  const canCancel =
-    areIn([
-      order_status.PENDING,
-      order_status.AUTHORIZED,
-      order_status.CANCELLED
-    ]) &&
-    (staffPermissions?.canCancelOrder || isAdmin || isOwner)
-
-  const canAssign = staffPermissions?.canAssignOrder || isAdmin || isOwner
-
-  const canEdit = staffPermissions?.canEditOrder || isAdmin || isOwner
-
-  const canDelete = staffPermissions?.canDeleteOrder || isAdmin || isOwner
-
-  const orderPeriod = (order: Partial<OrderType>): string => {
-    const res = ''
-    //* if is rent should return the period
-    if (
-      order.type === order_type.RENT ||
-      order.type === order_type.STORE_RENT
-    ) {
-      return `Periodo:  ${dateFormat(
-        asDate(order.deliveredAt),
-        'dd/MM/yy'
-      )} al ${dateFormat(asDate(order.expireAt), 'dd/MM/yy')}`
-    }
-
-    if (order.type === order_type.REPAIR) {
-      return `
-      Marca: ${order.itemBrand || ''}
-      Serie: ${order.itemSerial || ''}
-      Problema: ${order.description || ''}
-
-      ${
-        order.repairInfo
-          ? `
-      ${order.repairInfo || ''}
-      $${order.repairTotal || 0}
-      `
-          : ''
-      }`
-    }
-    return res
+  const actions_fns = {
+    [acts.AUTHORIZE]: () => onAuthorize({ orderId, userId }),
+    [acts.DELIVER]: () => onDelivery({ orderId, userId }),
+    [acts.PICKUP]: () => onPickup({ orderId, userId }),
+    [acts.RENEW]: () => onRenew({ orderId, userId }),
+    //[acts.COMMENT]: ()=>onComment({ orderId ,content,storeId,type}),
+    [acts.REPAIR_START]: () => onRepairStart({ orderId, userId }),
+    [acts.REPAIR_FINISH]: () => onRepairFinish({ orderId, userId }),
+    [acts.CANCEL]: () => onCancel({ orderId, userId })
   }
-  const orderPayments = () => {
-    let res = ''
-    if (order.payments.length > 0) {
-      res += `
-      *Pagos:* \n`
-      order.payments.forEach((p) => {
-        res += `${new Intl.NumberFormat('es-MX', {
-          style: 'currency',
-          currency: 'MXN'
-        }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
-          asDate(p.createdAt),
-          'dd/MMM/yy HH:mm'
-        )} \n`
-      })
-    }
-    return res
-  }
-  const orderStatusMessage = `
-Tienda: *${store.name}*
-Order: *${order.folio}*
-Tipo: ${dictionary(order.type)}
-Status: ${dictionary(status)}
-Reportes activos: ${order.hasNotSolvedReports ? '*Si*' : 'No'}
-${orderPeriod(order)}
-${orderPayments()}
- `
-  const COMMON_BUTTONS = [
-    {
-      label: 'Asignar',
-      show: canAssign,
-      button: <ModalAssignOrder orderId={orderId} />
-    },
-    {
-      label: 'Cancelar',
-      show: canCancel,
-      button: (
-        <ButtonCancel
-          orderId={orderId}
-          isCancelled={status === order_status.CANCELLED}
-        />
-      )
-    },
-    {
-      label: 'Editar',
-      show: canEdit,
-      button: (
-        <Button
-          onPress={() => {
-            // @ts-ignore
-            navigation.navigate('EditOrder', { orderId })
-          }}
-          label="Editar"
-        />
-      )
-    },
-    {
-      label: 'Eliminar',
-      show: canDelete,
-      button: (
-        <ButtonConfirm
-          openLabel="Eliminar"
-          openColor="error"
-          openVariant="outline"
-          confirmColor="error"
-          confirmVariant="filled"
-          confirmLabel="Eliminar "
-          modalTitle="Eliminar orden"
-          handleConfirm={async () => {
-            ServiceOrders.delete(orderId)
-              // .then((r) => console.log(r))
-              .catch((e) => console.log(e))
 
-            await ServiceComments.deleteOrderComments(orderId)
-              // .then((r) => console.log(r))
-              .catch((e) => console.log(e))
-
-            navigation.goBack()
-          }}
-          text=" Se eliminara esta orden y todos sus comentarios !"
-        ></ButtonConfirm>
-      )
-    },
+  const SALE_FLOW = [
     {
-      label: 'Enviar Whatsapp',
-      show: true,
-      button: (
-        <ModalSendWhatsapp to={order?.phone} message={orderStatusMessage} />
-      )
+      label: 'Deliver',
+      action: actions_fns[acts.DELIVER],
+      status: order_status.DELIVERED
     }
   ]
-
-  return (
-    <View style={{ padding: 4 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          maxWidth: 200,
-          width: '100%',
-          margin: 'auto'
-        }}
-      >
-        <OrderStatus orderId={orderId} />
-      </View>
-      <Text style={[gStyles.h2, { marginVertical: 8, marginTop: 16 }]}>
-        Acciones de orden
-      </Text>
-
-      <PriorityOrder orderId={orderId} />
-
-      {[
-        order_type.RENT,
-        order_type.STORE_RENT,
-        order_type.DELIVERY_RENT,
-        order_type.MULTI_RENT
-      ].includes(order.type) && (
-        <ErrorBoundary componentName="OrderActionsRentFlow">
-          <OrderActionsRentFlow orderId={orderId} orderStatus={order.status} />
-        </ErrorBoundary>
-      )}
-      {order.type === order_type.REPAIR && (
-        <ErrorBoundary componentName="OrderActionsRepairFlow">
-          <OrderActionsRepairFlow
-            orderId={orderId}
-            orderStatus={order.status}
-          />
-        </ErrorBoundary>
-      )}
-      {[order_type.SALE, order_type.DELIVERY_SALE].includes(order.type) && (
-        <ErrorBoundary componentName="OrderActionsRepairFlow">
-          {/* <OrderActionsRepairFlow
-            orderId={orderId}
-            orderStatus={order.status}
-          /> */}
-        </ErrorBoundary>
-      )}
-      <ErrorBoundary componentName="OrderActionsCommonButtons">
-        <View style={styles.container}>
-          {COMMON_BUTTONS.map(
-            ({ button, label, show }) =>
-              show && (
-                <View style={styles.item} key={label}>
-                  {button}
-                </View>
-              )
-          )}
-        </View>
-      </ErrorBoundary>
-    </View>
+  const RENT_FLOW = [
+    {
+      label: 'Authorize',
+      action: actions_fns[acts.AUTHORIZE],
+      status: order_status.AUTHORIZED
+    },
+    {
+      label: 'Deliver',
+      action: actions_fns[acts.DELIVER],
+      status: order_status.DELIVERED
+    },
+    {
+      label: 'Pickup',
+      action: actions_fns[acts.PICKUP],
+      status: order_status.PICKUP
+    }
+  ]
+  const REPAIR_FLOW = [
+    {
+      label: 'Authorize',
+      action: actions_fns[acts.AUTHORIZE],
+      status: order_status.AUTHORIZED
+    },
+    {
+      label: 'Pickup',
+      action: actions_fns[acts.PICKUP],
+      status: order_status.PICKUP
+    },
+    {
+      label: 'Repair start',
+      action: actions_fns[acts.REPAIR_START],
+      status: order_status.REPAIRING
+    },
+    {
+      label: 'Repair finish',
+      action: actions_fns[acts.REPAIR_FINISH],
+      status: order_status.REPAIRED
+    },
+    {
+      label: 'Deliver',
+      action: actions_fns[acts.DELIVER],
+      status: order_status.DELIVERED
+    }
+  ]
+  const ORDER_TYPE_ACTIONS = {
+    RENT: RENT_FLOW,
+    SALE: SALE_FLOW,
+    REPAIR: REPAIR_FLOW
+  }
+  const statusIndex = ORDER_TYPE_ACTIONS[orderType].findIndex(
+    (act) => act.status === orderStatus
   )
-}
-
-const PriorityOrder = ({ orderId }) => {
-  const { orders } = useStore()
-  const order = orders.find((o) => o.id === orderId)
-  const orderPriority = order?.priority
-  const [priority, setPriority] = useState(orderPriority || 0)
-  const [disabled, setDisabled] = useState(false)
-
-  const handleSetPriority = async (amount: number) => {
-    setDisabled(true)
-    setPriority(priority + amount)
-    await updatePriority(orderId, priority + amount)
-    setTimeout(() => {
-      setDisabled(false)
-    }, 600)
-  }
-
-  const updatePriority = async (orderId: string, value: number) => {
-    await ServiceOrders.update(orderId, { priority: value })
-      .then((r) => console.log(r))
-      .catch((e) => console.error(e))
-  }
-
+  const progress =
+    ((statusIndex + 1) / ORDER_TYPE_ACTIONS[orderType].length) * 100
+  console.log({ progress, statusIndex, orderStatus })
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Text style={gStyles.h2}>Prioridad:</Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        {!!priority && (
-          <Button
-            disabled={disabled}
-            variant="ghost"
-            icon="sub"
-            justIcon
-            onPress={() => handleSetPriority(-1)}
-          ></Button>
-        )}
-        {!priority && <Text style={{ marginLeft: 8 }}>Sin prioridad </Text>}
-        {!!priority && <Text style={gStyles.h2}>{priority}</Text>}
+    <View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        {ORDER_TYPE_ACTIONS[orderType].map(({ label, action }) => (
+          <Pressable
+            key={label}
+            onPress={() => {
+              action()
+            }}
+          >
+            <Text key={label} style={{ textTransform: 'capitalize' }}>
+              {dictionary(label)}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+      <ProgressBar progress={progress} />
+      <View style={{ marginTop: 8, flexDirection: 'row' }}>
         <Button
-          disabled={disabled}
-          variant="ghost"
-          icon="add"
-          justIcon
-          onPress={() => handleSetPriority(1)}
-        ></Button>
+          label="Cancelar"
+          onPress={actions_fns[acts.CANCEL]}
+          size="small"
+          variant="outline"
+        />
       </View>
     </View>
   )
 }
-
-const ButtonCancel = ({
-  orderId,
-  isCancelled,
-  disabled
-}: {
-  orderId?: string
-  isCancelled?: boolean
-  disabled?: boolean
-}) => {
-  const { storeId } = useStore()
-  const handleCancel = () => {
-    ServiceOrders.update(orderId, {
-      status: isCancelled ? order_status.PENDING : order_status.CANCELLED
-    })
-      .then(console.log)
-      .catch(console.error)
-    ServiceOrders.addComment({
-      content: isCancelled ? 'Orden reanudada' : 'Orden cancelada',
-      type: 'comment',
-      orderId,
-      storeId
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
-  return (
-    <Button
-      disabled={disabled}
-      label={isCancelled ? 'Reanudar orden' : 'Cancelar orden'}
-      onPress={() => {
-        handleCancel()
-      }}
-    />
-  )
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between'
-  },
-  item: {
-    width: '48%', // for 2 items in a row
-    marginVertical: '1%' // spacing between items
-  },
-  repairItemForm: {
-    marginVertical: 4
-  }
-})
 
 export default OrderActions
+
+const styles = StyleSheet.create({})

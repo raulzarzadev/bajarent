@@ -69,14 +69,36 @@ const labels = {
   MULTI_RENT: 'Renta múltiple',
   true: 'Sí',
   false: 'No',
+  REPAIR_START: 'Iniciar reparación',
+  REPAIR_FINISH: 'Terminar reparación',
+  AUTHORIZE: 'Autorizar',
+  DELIVER: 'Entregar',
+  RENEW: 'Renovar',
+  COMMENT: 'Comentar',
+  Authorize: 'Autorizar',
+  Deliver: 'Entregar',
+  Pickup: 'Recoger',
+  Renew: 'Renovar',
+  Repair: 'Reparar',
+  'Repair start': 'Iniciar reparación',
+  'Repair finish': 'Terminar reparación',
 
   ' ': '',
   '': ''
 } as const
-export type Labels = keyof typeof labels
+const labels_lowercase = Object.keys(labels).reduce((acc, key) => {
+  const lowerKey = key.toLowerCase()
+  const lowerValue = labels[key].toLowerCase()
+  acc[lowerKey] = lowerValue
+  return acc
+}, {} as Record<string, string>)
+
+export type Labels = keyof typeof labels_lowercase
+
 const dictionary = (value: Labels) => {
   if (!labels[value] || value === ' ') return value
-  return labels[value]
+  const lowerValue = value.toLowerCase()
+  return labels_lowercase[lowerValue]
 }
 
 export default dictionary

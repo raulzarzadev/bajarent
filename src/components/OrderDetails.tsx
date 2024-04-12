@@ -136,7 +136,32 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       </View>
 
       <ErrorBoundary componentName="OrderActions">
-        <OrderActions order={order} />
+        {[
+          order_type.RENT,
+          order_type.MULTI_RENT,
+          order_type.STORE_RENT,
+          order_type.DELIVERY_RENT
+        ].includes(order.type) && (
+          <OrderActions
+            orderId={order.id}
+            orderType={'RENT'}
+            orderStatus={order.status}
+          />
+        )}
+        {order.type === order_type.SALE && (
+          <OrderActions
+            orderId={order.id}
+            orderType={'SALE'}
+            orderStatus={order.status}
+          />
+        )}
+        {order.type === order_type.REPAIR && (
+          <OrderActions
+            orderId={order.id}
+            orderType={'REPAIR'}
+            orderStatus={order.status}
+          />
+        )}
       </ErrorBoundary>
       <ErrorBoundary componentName="OrderComments">
         <OrderComments orderId={order.id} />

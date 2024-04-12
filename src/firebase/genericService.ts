@@ -24,6 +24,7 @@ export class FirebaseGenericService<T extends Identifiable> {
   }
 
   async update(itemId: string, updates: CreateItem<T>) {
+    console.log({ updates })
     return await this.itemCRUD.updateItem(itemId, updates)
   }
 

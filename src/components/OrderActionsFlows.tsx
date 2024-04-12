@@ -6,12 +6,13 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
-export type Action = {
-  label: string
-  action: () => Promise<any> | void
-  undoAction: () => Promise<any> | void
-  disabled: boolean
-}
+export type Action =
+  | 'authorize'
+  | 'deliver'
+  | 'pickup'
+  | 'renew'
+  | 'cancel'
+  | 'renew'
 const OrderActionsRentFlow = ({
   orderId,
   orderStatus,
@@ -19,11 +20,11 @@ const OrderActionsRentFlow = ({
 }: {
   orderId: string
   orderStatus: OrderType['status']
-  actions: Action[]
+  actions: Action
 }) => {
   const [currentStep, setCurrentStep] =
     useState<OrderType['status']>(orderStatus)
-  const _steps: Actions[] = [
+  const _steps: Action[] = [
     {
       key: order_status.AUTHORIZED,
       should: order_status.PENDING,
