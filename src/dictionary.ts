@@ -30,7 +30,7 @@ const labels = {
   available: 'disponible',
   PENDING: 'Pendiente',
   AUTHORIZED: 'Autorizada',
-  DELIVERED: 'En renta',
+  DELIVERED: 'Entregada',
   CANCELLED: 'Cancelada',
   REPORT: 'Reporte',
   REPORTED: 'Reportada',

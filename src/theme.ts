@@ -60,6 +60,7 @@ export const STATUS_COLOR: Record<order_status, string> = {
 
   DELIVERED: theme.success,
   PICKUP: '#f472b6',
+  PICKED_UP: '#f472b6',
 
   CANCELLED: theme.neutral,
   RENEWED: theme.neutral,

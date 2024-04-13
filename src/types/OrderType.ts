@@ -115,7 +115,8 @@ export enum order_status {
   RENEWED = 'RENEWED',
   REPAIRING = 'REPAIRING',
   REPAIRED = 'REPAIRED',
-  REPAIR_DELIVERED = 'REPAIR_DELIVERED'
+  REPAIR_DELIVERED = 'REPAIR_DELIVERED',
+  PICKED_UP = 'PICKED_UP'
 }
 
 export enum order_type {
