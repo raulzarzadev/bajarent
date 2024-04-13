@@ -1,35 +1,37 @@
-import Button from 'components/Button'
-import { onAuthorize, onCancel, onDelete } from 'libs/order-actions'
+import { View } from 'react-native'
 import ModalWhatsAppOrderStatus from './ModalWhatsAppOrderStatus'
 import ModalAssignOrder from './ModalAssignOrder'
-import ButtonConfirm from 'components/ButtonConfirm'
-import { View } from 'react-native'
-import { useAuth } from 'contexts/authContext'
+import Button from '../Button'
+import { onAuthorize, onCancel, onDelete } from '../../libs/order-actions'
+import ButtonConfirm from '../ButtonConfirm'
 
 const OrderCommonActions = ({
-  orderId
+  actionsAllowed,
+  orderId,
+  userId
 }: {
   orderId: string
-  permissions: {
+  actionsAllowed: {
     canRenew?: boolean
     canCancel?: boolean
     canEdit?: boolean
     canDelete?: boolean
     canSendWS?: boolean
     canAuthorize?: boolean
+    canReorder?: boolean
+    canAssign?: boolean
   }
+  userId: string
 }) => {
-  const { user } = useAuth()
-  const userId = user?.id
-  const userOrderPermissions = user?.permissions?.orders
-  const userCanAuthorize = !!userOrderPermissions?.canAuthorize
-  const canReorder = !!userOrderPermissions?.canReorder
-  const userCanCancel = !!userOrderPermissions?.canCancel
-  const userCanEdit = !!userOrderPermissions?.canEdit
-  const userCanDelete = !!userOrderPermissions?.canDelete
-  const userCanSendWS = !!userOrderPermissions?.canSentWS
-  const userCanAssign = !!userOrderPermissions?.canAssign
-  // const userCanRenew = !!userOrderPermissions?.canRenew
+  const canCancel = actionsAllowed.canCancel
+  const canEdit = actionsAllowed.canEdit
+  const canDelete = actionsAllowed.canDelete
+  const canSendWS = actionsAllowed.canSendWS
+  const canAuthorize = actionsAllowed.canAuthorize
+  const canReorder = actionsAllowed.canReorder
+  const canAssign = actionsAllowed.canAssign
+
+  const canRenew = actionsAllowed.canRenew
 
   const handleReorder = () => {
     console.log('Reorder')
@@ -38,7 +40,7 @@ const OrderCommonActions = ({
     console.log('Edit')
   }
   const buttons = [
-    userCanAuthorize && (
+    canAuthorize && (
       <Button
         label="Autorizar"
         onPress={() => {
@@ -55,8 +57,8 @@ const OrderCommonActions = ({
       />
     ),
 
-    userCanSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
-    userCanCancel && (
+    canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
+    canCancel && (
       <ButtonConfirm
         text={'Cancelar orden'}
         handleConfirm={async () => {
@@ -64,10 +66,10 @@ const OrderCommonActions = ({
         }}
       />
     ),
-    userCanAssign && <ModalAssignOrder orderId={orderId} />
+    canAssign && <ModalAssignOrder orderId={orderId} />
   ]
   const buttons2 = [
-    userCanEdit && (
+    canEdit && (
       <Button
         size="small"
         label="Editar"
@@ -78,7 +80,7 @@ const OrderCommonActions = ({
         icon="edit"
       />
     ),
-    userCanDelete && (
+    canDelete && (
       <ButtonConfirm
         text="Esta orden se eliminara de forma permanente"
         handleConfirm={async () => {

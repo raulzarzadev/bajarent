@@ -6,7 +6,6 @@ import CardPhone from './CardPhone'
 import theme from '../theme'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
-import OrderActions from './OrderActions'
 import OrderComments from './OrderComments'
 import dictionary from '../dictionary'
 import Chip from './Chip'
@@ -21,6 +20,7 @@ import ModalPayment from './ModalPayment'
 import { Timestamp } from 'firebase/firestore'
 import DateCell from './DateCell'
 import { Totals } from './FormikSelectItems'
+import OrderActions from './OrderActions/OrderActions'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0

@@ -1,18 +1,18 @@
 import { View } from 'react-native'
+import { useAuth } from '../../contexts/authContext'
 import {
   onDelivery,
   onPickup,
   onRenew,
-  onRepairStart,
-  onRepairFinish
-} from 'libs/order-actions'
-import { useAuth } from 'contexts/authContext'
-import OrderType, { order_status } from 'types/OrderType'
-import OrderStatus from 'components/OrderStatus'
-import OrderAssignInfo from 'components/OrderAssignInfo'
-import Button from 'components/Button'
-import dictionary from 'dictionary'
-import ProgressBar from 'components/ProgressBar'
+  onRepairFinish,
+  onRepairStart
+} from '../../libs/order-actions'
+import OrderType, { order_status } from '../../types/OrderType'
+import OrderStatus from '../OrderStatus'
+import OrderAssignInfo from '../OrderAssignInfo'
+import Button from '../Button'
+import dictionary from '../../dictionary'
+import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
 
 enum acts {
@@ -75,6 +75,8 @@ const OrderActions = ({
   const userCanEdit = userOrderPermissions?.canEdit
   const userCanDelete = userOrderPermissions?.canDelete
   const userCanSendWS = userOrderPermissions?.canSentWS
+  const userCanAssign = userOrderPermissions?.canAssign
+  const userCanReorder = userOrderPermissions?.canReorder
 
   /* ********************************************
    * ORDER ACTIONS ALLOWED
@@ -218,6 +220,8 @@ const OrderActions = ({
   const canDelete = userCanDelete
   const canSendWS = userCanSendWS
   const canAuthorize = userCanAuthorize
+  const canAssign = userCanAssign
+  const canReorder = userCanReorder
 
   return (
     <View>
@@ -226,6 +230,7 @@ const OrderActions = ({
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         {ORDER_TYPE_ACTIONS[orderType].map(({ label, action, disabled }) => (
           <Button
+            key={label}
             label={dictionary(label)}
             onPress={action}
             variant="ghost"
@@ -236,14 +241,17 @@ const OrderActions = ({
       </View>
       <ProgressBar progress={progress} />
       <OrderCommonActions
+        userId={userId}
         orderId={orderId}
-        permissions={{
+        actionsAllowed={{
           canRenew,
           canCancel,
           canEdit,
           canDelete,
           canSendWS,
-          canAuthorize
+          canAuthorize,
+          canAssign,
+          canReorder
         }}
       />
     </View>
