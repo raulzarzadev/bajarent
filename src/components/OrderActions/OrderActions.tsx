@@ -1,24 +1,19 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import {
-  onAuthorize,
   onDelivery,
   onPickup,
   onRenew,
   onRepairStart,
-  onRepairFinish,
-  onCancel,
-  onDelete
-} from '../libs/order-actions'
-import dictionary from '../dictionary'
-import { useAuth } from '../contexts/authContext'
-import ProgressBar from './ProgressBar'
-import OrderType, { order_status } from '../types/OrderType'
-import Button from './Button'
-import ModalAssignOrder from './OrderActions/ModalAssignOrder'
-import ModalWhatsAppOrderStatus from './OrderActions/ModalWhatsAppOrderStatus'
-import OrderStatus from './OrderStatus'
-import OrderAssignInfo from './OrderAssignInfo'
-import ButtonConfirm from './ButtonConfirm'
+  onRepairFinish
+} from 'libs/order-actions'
+import { useAuth } from 'contexts/authContext'
+import OrderType, { order_status } from 'types/OrderType'
+import OrderStatus from 'components/OrderStatus'
+import OrderAssignInfo from 'components/OrderAssignInfo'
+import Button from 'components/Button'
+import dictionary from 'dictionary'
+import ProgressBar from 'components/ProgressBar'
+import OrderCommonActions from './OrderCommonActions'
 
 enum acts {
   AUTHORIZE = 'AUTHORIZE',
@@ -47,14 +42,15 @@ const OrderActions = ({
 
   // Resume in one place tha functions that will be called some times
   const actions_fns = {
-    [acts.AUTHORIZE]: () => onAuthorize({ orderId, userId }),
     [acts.DELIVER]: () => onDelivery({ orderId, userId }),
     [acts.PICKUP]: () => onPickup({ orderId, userId }),
     [acts.RENEW]: () => onRenew({ orderId, userId }),
-    //[acts.COMMENT]: ()=>onComment({ orderId ,content,storeId,type}),
     [acts.REPAIR_START]: () => onRepairStart({ orderId, userId }),
-    [acts.REPAIR_FINISH]: () => onRepairFinish({ orderId, userId }),
-    [acts.CANCEL]: () => onCancel({ orderId, userId })
+    [acts.REPAIR_FINISH]: () => onRepairFinish({ orderId, userId })
+    //* this are part of common actions
+    //[acts.COMMENT]: ()=>onComment({ orderId ,content,storeId,type}),
+    //[acts.AUTHORIZE]: () => onAuthorize({ orderId, userId }),
+    //[acts.CANCEL]: () => onCancel({ orderId, userId })
   }
 
   //TODO: should not be able to do some actions depends of the status // yes , absolutely
@@ -239,7 +235,7 @@ const OrderActions = ({
         ))}
       </View>
       <ProgressBar progress={progress} />
-      <GeneralActions
+      <OrderCommonActions
         orderId={orderId}
         permissions={{
           canRenew,
@@ -254,131 +250,4 @@ const OrderActions = ({
   )
 }
 
-const GeneralActions = ({
-  orderId,
-  permissions
-}: {
-  orderId: string
-  permissions: {
-    canRenew?: boolean
-    canCancel?: boolean
-    canEdit?: boolean
-    canDelete?: boolean
-    canSendWS?: boolean
-    canAuthorize?: boolean
-  }
-}) => {
-  const { user } = useAuth()
-  const userId = user?.id
-  const userOrderPermissions = user?.permissions?.orders
-  const userCanAuthorize = userOrderPermissions?.canAuthorize
-  const userCanRenew = userOrderPermissions?.canRenew
-  const canReorder = userOrderPermissions?.canReorder
-  const userCanCancel = userOrderPermissions?.canCancel
-  const userCanEdit = userOrderPermissions?.canEdit
-  const userCanDelete = userOrderPermissions?.canDelete
-  const userCanSendWS = userOrderPermissions?.canSentWS
-  const userCanAssign = userOrderPermissions?.canAssign
-
-  const handleReorder = ({ orderId, userId }) => {
-    console.log('Reorder')
-  }
-  const buttons = [
-    userCanAuthorize && (
-      <Button
-        label="Autorizar"
-        onPress={() => {
-          onAuthorize({ orderId, userId })
-        }}
-      />
-    ),
-    canReorder && (
-      <Button
-        label="Reordenar"
-        onPress={() => {
-          handleReorder({ orderId, userId })
-        }}
-      />
-    ),
-
-    userCanSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
-    userCanCancel && (
-      <Button
-        label="Cancelar"
-        onPress={() => {
-          onCancel({ orderId, userId })
-        }}
-        size="small"
-        variant="outline"
-      />
-    ),
-    userCanAssign && <ModalAssignOrder orderId={orderId} />
-  ]
-  const buttons2 = [
-    userCanEdit && (
-      <Button
-        size="small"
-        label="Editar"
-        onPress={handleEdit}
-        variant="outline"
-        icon="edit"
-      />
-    ),
-    userCanDelete && (
-      <ButtonConfirm
-        text="Esta orden se eliminara de forma permanente"
-        handleConfirm={() => {
-          onDelete
-        }}
-      ></ButtonConfirm>
-      // <Button
-      //   size="small"
-      //   label="Eliminar"
-      //   onPress={handleDelete}
-      //   color="error"
-      //   variant="outline"
-      //   icon="delete"
-      // />
-    )
-  ]
-  return (
-    <View>
-      <View
-        style={{
-          marginTop: 8,
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'space-around',
-          padding: 2,
-          flexWrap: 'wrap'
-        }}
-      >
-        {buttons.map((button, i) => (
-          <View key={i} style={{ padding: 4, width: '50%' }}>
-            {button}
-          </View>
-        ))}
-        {/* To fix las element */}
-        <View style={{ flex: 1 }} />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'space-around',
-          padding: 2
-        }}
-      >
-        {buttons2.map((button, i) => (
-          <View key={i} style={{ padding: 4, width: '50%' }}>
-            {button}
-          </View>
-        ))}
-      </View>
-    </View>
-  )
-}
-
 export default OrderActions
-
-const styles = StyleSheet.create({})

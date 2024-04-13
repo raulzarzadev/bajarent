@@ -81,3 +81,9 @@ export const onCancel = async ({ orderId, userId }) => {
     .then(console.log)
     .catch(console.error)
 }
+
+export const onDelete = async ({ orderId }) => {
+  return await ServiceOrders.delete(orderId)
+    .then(console.log)
+    .catch(console.error)
+}
