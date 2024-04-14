@@ -14,6 +14,7 @@ import Button from '../Button'
 import dictionary from '../../dictionary'
 import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
+import { useStore } from '../../contexts/storeContext'
 
 enum acts {
   AUTHORIZE = 'AUTHORIZE',
@@ -38,6 +39,9 @@ const OrderActions = ({
   orderStatus: OrderType['status']
 }) => {
   const { user } = useAuth()
+  const { staff } = useStore()
+  const userStaff = staff.find(({ userId }) => userId === user?.id)
+  console.log({ userStaff })
   const userId = user?.id
 
   // Resume in one place tha functions that will be called some times

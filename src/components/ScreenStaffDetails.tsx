@@ -5,6 +5,7 @@ import ButtonIcon from './ButtonIcon'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import CardStaff from './CardStaff'
 import ButtonConfirm from './ButtonConfirm'
+import ScreenEmployee from './ScreenEmployee'
 
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
@@ -50,6 +51,7 @@ const ScreenStaffDetails = ({ route, navigation }) => {
           ></ButtonIcon>
         </View>
         <CardStaff staff={employee} />
+        <ScreenEmployee />
       </View>
     </View>
   )

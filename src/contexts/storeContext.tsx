@@ -135,6 +135,7 @@ const StoreContextProvider = ({ children }) => {
           storeId,
           name: user.name,
           email: user.email
+          //permissions //? new persmissions are already there?
         }
       })
 
