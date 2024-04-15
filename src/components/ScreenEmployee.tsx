@@ -9,8 +9,6 @@ import { gStyles } from '../styles'
 import { Formik } from 'formik'
 import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
 import dictionary from '../dictionary'
-import InputRadios from './InputRadios'
-import { predefinedPermissions } from '../libs/predefinedPermissions'
 const screenWidth = Dimensions.get('window').width
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
@@ -31,12 +29,13 @@ const ScreenEmployee = () => {
       })
   }
 
+  //? TODO:  should add predefined permissions?
+
   return (
     <View style={gStyles.container}>
       <View style={{ marginVertical: 16 }}>
-        <Text>Permisos de empleado</Text>
+        <Text style={gStyles.h2}>Permisos de empleado</Text>
       </View>
-      <Text>Empleado</Text>
 
       <Formik
         initialValues={{
@@ -48,22 +47,26 @@ const ScreenEmployee = () => {
         }}
       >
         {({ handleSubmit, isSubmitting, values }) => {
-          const [sortedOrders, setSortedOrder] = useState(permissionsOrderKeys)
-          const [sortedStores, setSortedStore] = useState(permissionsStoreKeys)
+          const sortStorePermissions = (a, b) =>
+            values.permissions.store[b] - values.permissions.store[a]
+          const sortOrderPermissions = (a, b) =>
+            values.permissions.order[b] - values.permissions.order[a]
+
+          const [sortedOrders, setSortedOrder] = useState(
+            permissionsOrderKeys.sort(sortOrderPermissions)
+          )
+          const [sortedStores, setSortedStore] = useState(
+            permissionsStoreKeys.sort(sortStorePermissions)
+          )
+
           useEffect(() => {
-            setSortedOrder(
-              permissionsOrderKeys.sort(
-                (a, b) =>
-                  values.permissions.order[b] - values.permissions.order[a]
-              )
-            )
-            setSortedStore(
-              permissionsStoreKeys.sort(
-                (a, b) =>
-                  values.permissions.store[b] - values.permissions.store[a]
-              )
-            )
-          }, [values])
+            setSortedOrder(permissionsOrderKeys.sort(sortOrderPermissions))
+          }, [values.permissions.order])
+
+          useEffect(() => {
+            setSortedStore(permissionsStoreKeys.sort(sortStorePermissions))
+          }, [values.permissions.store])
+
           return (
             <View>
               <Text>Permisos de ordenes</Text>

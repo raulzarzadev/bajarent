@@ -95,4 +95,3 @@ export const permissionsOrderKeys = Object.keys(permissions_orders).filter(
 export const permissionsStoreKeys = Object.keys(permissions_store).filter(
   (key) => isNaN(Number(key))
 )
-console.log({ permissionsOrderKeys, permissionsStoreKeys })
