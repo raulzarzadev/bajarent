@@ -2,6 +2,7 @@ import React, { ReactNode, useState } from 'react'
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
+import { gStyles } from '../styles'
 
 export type Tab = {
   title: string
@@ -21,7 +22,8 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
     setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
   }
   const [scrollWidth, setScrollWidth] = useState(100 / tabs.length)
-
+  if (visibleTabs.length === 0)
+    return <Text style={gStyles.h2}>No hay tabs visibles</Text>
   return (
     <View style={styles.container}>
       <View style={styles.tabsContainer}>

@@ -1,6 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenCreateStore from './ScreenStoreCreate'
-import ScreenStore from './ScreenStore3'
 import ScreenStoreEdit from './ScreenStoreEdit'
 import ScreenStaff from './ScreenStaff'
 import ScreenStaffNew from './ScreenStaffNew'
@@ -23,6 +22,7 @@ import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenOrderRenew from './ScreenOrderRenew'
+import { ScreenStoreE } from './ScreenStore4'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -54,7 +54,7 @@ function StackStore() {
         options={{
           title: 'Tienda'
         }}
-        component={ScreenStore}
+        component={ScreenStoreE}
       />
       <Stack.Screen
         name="CreateStore"

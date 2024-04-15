@@ -2,14 +2,15 @@ import { Text, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { gSpace, gStyles } from '../styles'
-import { useStore } from '../contexts/storeContext'
-import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenCashbox = ({ navigation }) => {
-  const { user } = useAuth()
-  const { staffPermissions, store } = useStore()
-  const isOwner = user.id === store.createdBy
-  const canViewCashbox = staffPermissions?.isAdmin || isOwner
+  const {
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
+
+  const canViewCashbox = isAdmin || isOwner
+
   return (
     <View style={[{ maxWidth: 500, marginHorizontal: 'auto' }]}>
       {!canViewCashbox && (

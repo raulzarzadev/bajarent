@@ -62,34 +62,14 @@ const ChooseProfile = () => {
     ] || []
 
   return (
-    <View style={{ margin: 'auto', maxWidth: 500, width: '100%' }}>
+    <View style={{ margin: 'auto', maxWidth: 500 }}>
+      <Text>Selecciona una tienda</Text>
       <FlatList
-        style={{ height: 100, marginVertical: 6 }}
+        ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
         horizontal
         data={stores}
         renderItem={({ item: store }) => <SquareStore store={store} />}
       />
-      {storePositions?.length > 0 && !myStaffId && (
-        <Text style={[gStyles.h3, { marginTop: 6 }]}>Selecciona un puesto</Text>
-      )}
-      <FlatList
-        horizontal
-        data={storePositions}
-        renderItem={({ item: position }) => (
-          <SquarePosition position={position} />
-        )}
-      />
-      {/* {userStores.length > 0 && !storeSelected && (
-        <Text style={[gStyles.h3, { marginTop: 6 }]}>
-          Selecciona una tienda
-        </Text>
-      )}
-      <FlatList
-        horizontal
-        data={userStoresSorted || []}
-        renderItem={({ item: store }) => <SquareStore store={store} />}
-      />
-     */}
     </View>
   )
 }
@@ -156,39 +136,6 @@ const SquareStore = ({ store }) => {
   )
 }
 
-const SquarePosition = ({ position }) => {
-  const { myStaffId, handleSetMyStaffId } = useStore()
-  const isPositionSelected = (positionId: string) => myStaffId === positionId
-  return (
-    <Pressable
-      key={position?.id}
-      onPress={() => {
-        if (position?.id === myStaffId) {
-          handleSetMyStaffId('')
-        } else {
-          handleSetMyStaffId(position?.id || '')
-        }
-      }}
-      style={[
-        styles.store,
-        {
-          // borderColor: isPositionSelected(position.id)
-          //   ? theme.secondary
-          //   : 'transparent',
-          backgroundColor: isPositionSelected(position.id)
-            ? theme.info
-            : theme.white
-        }
-      ]}
-    >
-      <Text style={[gStyles.h3]}>{position?.position}</Text>
-      <Text numberOfLines={2} style={[gStyles.p, gStyles.tCenter]}>
-        {position?.store?.name}
-      </Text>
-    </Pressable>
-  )
-}
-
 export default ChooseProfile
 const styles = StyleSheet.create({
   row: {
@@ -196,12 +143,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   store: {
-    marginVertical: 6,
     borderWidth: 2,
     borderColor: 'transparent',
     width: 120,
     height: 80,
-    margin: 8,
     aspectRatio: 4 / 2,
     padding: 8,
     borderRadius: 8,

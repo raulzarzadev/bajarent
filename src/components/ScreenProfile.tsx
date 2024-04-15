@@ -3,6 +3,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Text,
   View
 } from 'react-native'
 import React from 'react'
@@ -12,13 +13,14 @@ import Button from './Button'
 import { logout } from '../firebase/auth'
 import CardUser from './CardUser'
 import ErrorBoundary from './ErrorBoundary'
-import LoginEmail from './LoginEmail'
 import ChooseProfile from './ChooseProfile'
-import { ButtonAskLocation } from './LocationStatus'
 import LoginSignUpEmail from './LoginSignupEmail'
+import { useStore } from '../contexts/storeContext'
+import { CardEmployeeE } from './CardEmployee'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
+  const { staff, store } = useStore()
   if (user === undefined) return <ActivityIndicator />
   if (user === null)
     return (
@@ -29,31 +31,19 @@ const ScreenProfile = ({ navigation }) => {
         </ScrollView>
       </ErrorBoundary>
     )
+  const employee = staff.find(({ userId }) => userId === user?.id)
+  const isOwner = user?.id === store?.createdBy
   return (
-    <View style={{ padding: 2 }}>
-      <ErrorBoundary componentName="ChooseProfile">
-        <ChooseProfile />
-      </ErrorBoundary>
-
+    <ScrollView style={{ padding: 2 }}>
       <ErrorBoundary componentName="CardUser">
         <CardUser user={user} />
       </ErrorBoundary>
-      {/* <ErrorBoundary componentName="ButtonAskLocation">
-        <ButtonAskLocation />
-      </ErrorBoundary> */}
-
-      {/* {!!user?.canCreateStore && (
-        <View style={styles.buttons}>
-          <Button
-            onPress={() => {
-              navigation?.navigate('CreateStore')
-            }}
-            variant="outline"
-          >
-            Crear tienda
-          </Button>
-        </View>
-      )} */}
+      <ErrorBoundary componentName="ChooseProfile">
+        <ChooseProfile />
+      </ErrorBoundary>
+      <ErrorBoundary componentName="CardStaff">
+        <CardEmployeeE />
+      </ErrorBoundary>
 
       <View style={styles.buttons}>
         <Button
@@ -75,7 +65,7 @@ const ScreenProfile = ({ navigation }) => {
           label="Cerrar sesión"
         ></Button>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -86,6 +76,21 @@ export default function (props) {
     </ErrorBoundary>
   )
 }
+
+// export const CardStaff = () => {
+//   const { staff, store } = useStore()
+//   const { user } = useAuth()
+//   const employee = staff.find(({ userId }) => userId === user?.id)
+//   console.log({ staff, user, employee })
+//   const isOwner = store?.createdBy === user.id
+//   return (
+//     <View>
+//       {/* <Text>Staff</Text>
+//       {isOwner && <Text style={gStyles.h2}>Dueño</Text>}
+//       {employee && <CardStaff />} */}
+//     </View>
+//   )
+// }
 
 const styles = StyleSheet.create({
   store: {

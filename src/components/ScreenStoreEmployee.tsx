@@ -1,6 +1,7 @@
 import { Dimensions, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 import FormikCheckbox from './FormikCheckbox'
 import Button from './Button'
 import { ServiceStaff } from '../firebase/ServiceStaff'
@@ -8,11 +9,14 @@ import { gStyles } from '../styles'
 import { Formik } from 'formik'
 import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
 import dictionary from '../dictionary'
+import ErrorBoundary from './ErrorBoundary'
 const screenWidth = Dimensions.get('window').width
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
-
-const ScreenEmployee = ({ staffId }) => {
+export type ScreenStoreEmployeeProps = {
+  staffId: string
+}
+const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
   const { staff } = useStore()
 
   const employee = staff.find((s) => s.id === staffId)
@@ -106,4 +110,12 @@ const ScreenEmployee = ({ staffId }) => {
   )
 }
 
-export default ScreenEmployee
+export const ScreenStoreEmployeeE = (props: ScreenStoreEmployeeProps) => {
+  return (
+    <ErrorBoundary componentName="ScreenStoreEmployee">
+      <ScreenStoreEmployee {...props} />
+    </ErrorBoundary>
+  )
+}
+
+export default ScreenStoreEmployee

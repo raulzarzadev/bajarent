@@ -48,7 +48,7 @@ class ErrorBoundary extends Component<Props, State> {
   logErrorToMyService = async () => {
     const { error } = this.state
     const { componentName } = this.props
-    const userAgent = Platform.OS + ' ' + Platform.Version
+    const userAgent = Platform.OS + ' ' + window?.navigator?.userAgent
     const newError = {
       code: 'ERROR_BOUNDARY',
       message: error.message || '',

@@ -6,13 +6,27 @@ import H1 from './H1'
 import Chip from './Chip'
 import dictionary from '../dictionary'
 import theme from '../theme'
+import { gStyles } from '../styles'
 
 // import Chip from './Chip'
 // import dictionary from '../dictionary'
 
-const CardStaff = ({ staff }: { staff?: StaffType }) => {
+const CardStaff = ({
+  staff,
+  isOwner
+}: {
+  staff?: StaffType
+  isOwner: boolean
+}) => {
   const permissions = Object.keys(staff_permissions)
   // const { staffPermissions } = useStore()
+  if (isOwner)
+    return (
+      <Text style={[gStyles.h3, { marginVertical: 12 }]}>
+        Eres el dueño de esta tienda
+      </Text>
+    )
+  if (!staff) return null
   return (
     <View
       style={{
@@ -22,9 +36,10 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
         marginHorizontal: 'auto'
       }}
     >
-      <CardUser user={staff as UserType} />
+      <Text style={gStyles.h1}>Empleado</Text>
       <View>
         <Text style={{ textAlign: 'center' }}>Puesto: {staff?.position}</Text>
+        <Text style={{ textAlign: 'center' }}>Id: {staff?.id}</Text>
       </View>
 
       <View style={{ marginVertical: 16 }}>
@@ -38,7 +53,7 @@ const CardStaff = ({ staff }: { staff?: StaffType }) => {
         >
           {permissions?.map((permission) => (
             <View key={permission} style={{ margin: 4 }}>
-              {permission && staff[permission] && (
+              {permission && staff?.[permission] && (
                 <Chip
                   color={theme.secondary}
                   titleColor="white"
