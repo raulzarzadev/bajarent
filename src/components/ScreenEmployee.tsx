@@ -48,9 +48,9 @@ const ScreenEmployee = () => {
       >
         {({ handleSubmit, isSubmitting, values }) => {
           const sortStorePermissions = (a, b) =>
-            values.permissions.store[b] - values.permissions.store[a]
+            values?.permissions?.store[b] - values?.permissions?.store[a]
           const sortOrderPermissions = (a, b) =>
-            values.permissions.order[b] - values.permissions.order[a]
+            values?.permissions?.order[b] - values.permissions?.order[a]
 
           const [sortedOrders, setSortedOrder] = useState(
             permissionsOrderKeys.sort(sortOrderPermissions)
@@ -61,11 +61,11 @@ const ScreenEmployee = () => {
 
           useEffect(() => {
             setSortedOrder(permissionsOrderKeys.sort(sortOrderPermissions))
-          }, [values.permissions.order])
+          }, [values?.permissions?.order])
 
           useEffect(() => {
             setSortedStore(permissionsStoreKeys.sort(sortStorePermissions))
-          }, [values.permissions.store])
+          }, [values?.permissions?.store])
 
           return (
             <View>
