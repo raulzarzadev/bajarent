@@ -20,7 +20,8 @@ import {
   MdDownload,
   MdOutlinePhotoCamera,
   MdInfoOutline,
-  MdWarningAmber
+  MdWarningAmber,
+  MdOutlineUndo
 } from 'react-icons/md'
 
 import {
@@ -109,7 +110,8 @@ const icons = {
   camera: MdOutlinePhotoCamera,
   addImage: RiImageAddLine,
   info: MdInfoOutline,
-  warning: MdWarningAmber
+  warning: MdWarningAmber,
+  undo: MdOutlineUndo
 } as const
 
 export type IconName = keyof typeof icons

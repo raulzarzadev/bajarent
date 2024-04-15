@@ -34,7 +34,7 @@ export const onDelivery = async ({ orderId, userId }) => {
 
 export const onPickup = async ({ orderId, userId }) => {
   return await ServiceOrders.update(orderId, {
-    status: order_status.PICKUP,
+    status: order_status.PICKED_UP,
     pickedUpAt: new Date(),
     pickedUpBy: userId
   })
@@ -84,6 +84,14 @@ export const onCancel = async ({ orderId, userId }) => {
 
 export const onDelete = async ({ orderId }) => {
   return await ServiceOrders.delete(orderId)
+    .then(console.log)
+    .catch(console.error)
+}
+
+export const onPending = async ({ orderId }) => {
+  return await ServiceOrders.update(orderId, {
+    status: order_status.PENDING
+  })
     .then(console.log)
     .catch(console.error)
 }

@@ -7,11 +7,13 @@ export type EmployeeContextType = {
   permissions: {
     isAdmin: boolean
     isOwner: boolean
+    orders: StaffType['permissions']['order']
+    store: StaffType['permissions']['store']
   }
 }
 const EmployeeContext = createContext<EmployeeContextType>({
   employee: null,
-  permissions: { isAdmin: false, isOwner: false }
+  permissions: { isAdmin: false, isOwner: false, orders: {}, store: {} }
 })
 
 export const EmployeeContextProvider = ({ children }) => {
@@ -43,7 +45,9 @@ export const EmployeeContextProvider = ({ children }) => {
         employee,
         permissions: {
           isAdmin: !!employee?.permissions?.isAdmin,
-          isOwner: isOwner
+          isOwner: isOwner,
+          orders: employee?.permissions?.order || {},
+          store: employee?.permissions?.store || {}
         }
       }}
     >

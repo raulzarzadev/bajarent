@@ -67,6 +67,7 @@ const labels = {
   DELIVERY_RENT: 'Renta a domicilio',
   DELIVERY_SALE: 'Venta a domicilio',
   MULTI_RENT: 'Renta múltiple',
+  PICKED_UP: 'Recogida',
   true: 'Sí',
   false: 'No',
   REPAIR_START: 'Iniciar reparación',

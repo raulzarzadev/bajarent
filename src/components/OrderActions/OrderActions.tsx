@@ -1,11 +1,13 @@
 import { View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import {
+  onAuthorize,
   onDelivery,
   onPickup,
   onRenew,
   onRepairFinish,
-  onRepairStart
+  onRepairStart,
+  onPending
 } from '../../libs/order-actions'
 import OrderType, { order_status } from '../../types/OrderType'
 import OrderStatus from '../OrderStatus'
@@ -14,7 +16,7 @@ import Button from '../Button'
 import dictionary from '../../dictionary'
 import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
-import { useStore } from '../../contexts/storeContext'
+import { useEmployee } from '../../contexts/employeeContext'
 
 enum acts {
   AUTHORIZE = 'AUTHORIZE',
@@ -38,10 +40,8 @@ const OrderActions = ({
   orderType: OrderTypes
   orderStatus: OrderType['status']
 }) => {
+  const { permissions } = useEmployee()
   const { user } = useAuth()
-  const { staff } = useStore()
-  const userStaff = staff.find(({ userId }) => userId === user?.id)
-  console.log({ userStaff })
   const userId = user?.id
 
   // Resume in one place tha functions that will be called some times
@@ -72,15 +72,24 @@ const OrderActions = ({
   /* ********************************************
    * USER PERMISSIONS
    *******************************************rz */
-  const userOrderPermissions = user?.permissions?.orders
-  const userCanAuthorize = userOrderPermissions?.canAuthorize
-  const userCanRenew = userOrderPermissions?.canRenew
-  const userCanCancel = userOrderPermissions?.canCancel
-  const userCanEdit = userOrderPermissions?.canEdit
-  const userCanDelete = userOrderPermissions?.canDelete
-  const userCanSendWS = userOrderPermissions?.canSentWS
-  const userCanAssign = userOrderPermissions?.canAssign
-  const userCanReorder = userOrderPermissions?.canReorder
+  const employeeOrderPermissions = permissions?.orders
+  const isAdmin = permissions.isAdmin
+  const isOwner = permissions.isOwner
+
+  const userCanAuthorize =
+    employeeOrderPermissions?.canAuthorize || isAdmin || isOwner
+  const userCanRenew = employeeOrderPermissions?.canRenew || isAdmin || isOwner
+  const userCanCancel =
+    employeeOrderPermissions?.canCancel || isAdmin || isOwner
+  const userCanEdit = employeeOrderPermissions?.canEdit || isAdmin || isOwner
+  const userCanDelete =
+    employeeOrderPermissions?.canDelete || isAdmin || isOwner
+  const userCanSendWS =
+    employeeOrderPermissions?.canSentWS || isAdmin || isOwner
+  const userCanAssign =
+    employeeOrderPermissions?.canAssign || isAdmin || isOwner
+  const userCanReorder =
+    employeeOrderPermissions?.canReorder || isAdmin || isOwner
 
   /* ********************************************
    * ORDER ACTIONS ALLOWED
@@ -149,6 +158,9 @@ const OrderActions = ({
    * ORDER FLOWS
    *******************************************rz */
 
+  /* ******************************************** 
+             SALE FLOW               
+   *******************************************rz */
   const SALE_FLOW = [
     {
       label: 'Deliver',
@@ -157,6 +169,9 @@ const OrderActions = ({
       disabled: !canDeliverSale
     }
   ]
+  /* ******************************************** 
+             RENT FLOW               
+   *******************************************rz */
   const RENT_FLOW = [
     {
       label: 'Deliver',
@@ -167,15 +182,19 @@ const OrderActions = ({
     {
       label: 'Pickup',
       action: actions_fns[acts.PICKUP],
-      status: order_status.PICKUP,
+      status: order_status.PICKED_UP,
       disabled: !canPickupRent
     }
   ]
+
+  /* ******************************************** 
+             REPAIR FLOW               
+   *******************************************rz */
   const REPAIR_FLOW = [
     {
       label: 'Pickup',
       action: actions_fns[acts.PICKUP],
-      status: order_status.PICKUP,
+      status: order_status.PICKED_UP,
       disabled: !canPickupRepair
     },
     {
@@ -197,6 +216,9 @@ const OrderActions = ({
       disabled: !canDeliverRepair
     }
   ]
+  /* ******************************************** 
+             FLOWS              
+   *******************************************rz */
   const ORDER_TYPE_ACTIONS = {
     RENT: RENT_FLOW,
     SALE: SALE_FLOW,
@@ -223,15 +245,65 @@ const OrderActions = ({
   const canEdit = userCanEdit
   const canDelete = userCanDelete
   const canSendWS = userCanSendWS
-  const canAuthorize = userCanAuthorize
+  const canAuthorize =
+    userCanAuthorize &&
+    (orderStatus === order_status.PENDING ||
+      orderStatus === order_status.CANCELLED)
   const canAssign = userCanAssign
   const canReorder = userCanReorder
+  const handleBack = (status) => {
+    const index = statusIndex
+    const action = ORDER_TYPE_ACTIONS[orderType][index - 1]
+    if (!action) {
+      onAuthorize({ orderId, userId })
+    } else {
+      action.action()
+    }
+  }
+  const showAuthorizeButton =
+    orderStatus === order_status.PENDING ||
+    orderStatus === order_status.CANCELLED
 
+  const showBackButton =
+    !showAuthorizeButton && orderStatus !== order_status.AUTHORIZED
+  const showPendingButton = orderStatus === order_status.AUTHORIZED
   return (
     <View>
       <OrderStatus orderId={orderId} />
       <OrderAssignInfo orderId={orderId} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        {showPendingButton && (
+          <Button
+            label="Pendiente"
+            onPress={() => {
+              onPending({ orderId })
+            }}
+            size="xs"
+            variant="ghost"
+          />
+        )}
+        {showAuthorizeButton && (
+          <Button
+            label="Autorizar"
+            onPress={() => {
+              onAuthorize({ orderId, userId })
+            }}
+            size="xs"
+            variant="ghost"
+          />
+        )}
+        {showBackButton && (
+          <Button
+            label={'Atras'}
+            onPress={() => {
+              handleBack(orderStatus)
+            }}
+            variant="ghost"
+            size="xs"
+            icon="undo"
+          />
+        )}
+
         {ORDER_TYPE_ACTIONS[orderType].map(({ label, action, disabled }) => (
           <Button
             key={label}
