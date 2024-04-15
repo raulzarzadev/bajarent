@@ -1,11 +1,21 @@
 import React, { useMemo } from 'react'
 import { useField } from 'formik'
 import InputCheckbox from './InputCheckbox'
+import { TextStyle, ViewStyle } from 'react-native'
 
-const FormikCheckbox = ({ name, label }: { name: string; label?: string }) => {
+const FormikCheckbox = ({
+  name,
+  label,
+  textStyle,
+  style
+}: {
+  name: string
+  label?: string
+  textStyle?: TextStyle
+  style?: ViewStyle
+}) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [field.value])
-
   return (
     <InputCheckbox
       label={label}
@@ -13,6 +23,8 @@ const FormikCheckbox = ({ name, label }: { name: string; label?: string }) => {
         helpers.setValue(isChecked)
       }}
       value={value}
+      style={style}
+      textStyle={textStyle}
     />
   )
 }

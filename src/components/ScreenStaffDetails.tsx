@@ -1,4 +1,4 @@
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import ButtonIcon from './ButtonIcon'
@@ -13,7 +13,7 @@ const ScreenStaffDetails = ({ route, navigation }) => {
   const employee = staff.find(({ id }) => id === staffId)
   if (!employee) return <ActivityIndicator />
   return (
-    <View>
+    <ScrollView>
       <View
         style={{
           justifyContent: 'center',
@@ -53,7 +53,7 @@ const ScreenStaffDetails = ({ route, navigation }) => {
         <CardStaff staff={employee} />
         <ScreenEmployee />
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

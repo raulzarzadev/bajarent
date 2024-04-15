@@ -82,7 +82,31 @@ const labels = {
   Repair: 'Reparar',
   'Repair start': 'Iniciar reparación',
   'Repair finish': 'Terminar reparación',
-
+  /* ********************************************
+   * PERMISSIONS ORDERS V2
+   *******************************************rz */
+  canCreate: 'Crear', // Added meaning in Spanish
+  canViewAll: 'Ordenes',
+  canViewMy: 'Mis ordenes',
+  canEdit: 'Editar',
+  canDelete: 'Eliminar',
+  canAssign: 'Asignar',
+  canAuthorize: 'Autorizar',
+  canRenew: 'Renovar',
+  canCancel: 'Cancelar',
+  canPickup: 'Recoger',
+  canDelivery: 'Entregar',
+  canStartRepair: 'Iniciar reparación',
+  canFinishRepair: 'Terminar reparación',
+  canSentWS: 'Enviar WS',
+  canReorder: 'Pedir de nuevo',
+  /* ********************************************
+   * PERMISSIONS STORE V2
+   *******************************************rz */
+  canCreateBalance: 'Crear balance',
+  canViewBalances: 'Ver balances',
+  canDeleteBalances: 'Eliminar balances',
+  canSaveBalances: 'Guardar balances',
   ' ': '',
   '': ''
 } as const

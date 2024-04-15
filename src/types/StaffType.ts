@@ -21,30 +21,6 @@ export enum staff_permissions {
   canRepairOrder = 'canRepairOrder'
 }
 
-export enum staff_permissions_orders_v2 {
-  canCreate,
-  canViewAll,
-  canEdit,
-  canDelete,
-  canAssign,
-  canAuthorize,
-  canRenew,
-  canCancel,
-  canPickup,
-  canDelivery,
-  canStartRepair,
-  canFinishRepair,
-  isAdmin,
-  canSentWS,
-  canReorder
-}
-export enum staff_permissions_store_v2 {
-  canCreateBalance,
-  canViewBalances,
-  canDeleteBalances,
-  canSaveBalances
-}
-
 /**
  * @deprecated use StaffPermissions instead
  */
@@ -64,6 +40,7 @@ export type BaseStaffType = {
 
   store?: Partial<StoreType>
   permissions?: StaffPermissions
+  predefinedPermission?: string
 }
 
 type StaffType = BaseType & BaseStaffType & StaffPermissionType
@@ -72,10 +49,50 @@ export type CreateStaffType = Partial<BaseStaffType>
 
 export default StaffType
 
-export type StaffPermissionsOrders = keyof typeof staff_permissions_orders_v2
-export type StaffPermissionsStore = keyof typeof staff_permissions_store_v2
+/* ********************************************
+ * PERMISSIONS V2
+ *******************************************rz */
+export enum permissions_orders {
+  canCreate,
+  canViewAll,
+  canViewMy,
+  canEdit,
+  canDelete,
+  canAssign,
+  canAuthorize,
+  canRenew,
+  canCancel,
+  canPickup,
+  canDelivery,
+  canStartRepair,
+  canFinishRepair,
+  isAdmin,
+  canSentWS,
+  canReorder
+}
+export enum permissions_store {
+  canCreateBalance,
+  canViewBalances,
+  canDeleteBalances,
+  canSaveBalances
+}
+
+export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
+export type PermissionsStore = Record<keyof typeof permissions_store, boolean>
 
 export type StaffPermissions = {
-  orders?: Partial<StaffPermissionsOrders>
-  store?: Partial<StaffPermissionsStore>
+  order?: Partial<PermissionsOrder>
+  store?: Partial<PermissionsStore>
 }
+
+export type PermissionsOrderType = keyof typeof permissions_orders
+export type PermissionsStoreType = keyof typeof permissions_store
+
+export const permissionsOrderKeys = Object.keys(permissions_orders).filter(
+  (key) => isNaN(Number(key))
+)
+
+export const permissionsStoreKeys = Object.keys(permissions_store).filter(
+  (key) => isNaN(Number(key))
+)
+console.log({ permissionsOrderKeys, permissionsStoreKeys })
