@@ -15,6 +15,7 @@ const CardEmployee = () => {
       )}
       <Text style={gStyles.h3}>{employee?.name}</Text>
       {employee?.permissions?.isAdmin && <Text style={gStyles.h1}>Admin</Text>}
+      <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
     </View>
   )
 }

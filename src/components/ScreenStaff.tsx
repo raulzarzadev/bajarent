@@ -7,7 +7,6 @@ import { gStyles } from '../styles'
 
 const ScreenStaff = ({ navigation }) => {
   const { staff } = useStore()
-  console.log({ staff })
   if (!staff) return <ActivityIndicator />
   return (
     <ScrollView
@@ -33,6 +32,7 @@ const ScreenStaff = ({ navigation }) => {
             navigation.navigate('StaffDetails', { staffId })
           }}
           staff={staff}
+          hideActions
         />
       </View>
     </ScrollView>

@@ -10,6 +10,7 @@ import { Formik } from 'formik'
 import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
+import InputValueFormik from './InputValueFormik'
 const screenWidth = Dimensions.get('window').width
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
@@ -21,7 +22,10 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
 
   const employee = staff.find((s) => s.id === staffId)
   const handleSubmit = (values) => {
-    ServiceStaff.update(employee.id, { permissions: values.permissions })
+    ServiceStaff.update(employee.id, {
+      permissions: values.permissions,
+      position: values.position
+    })
       .then((res) => {
         console.log(res)
       })
@@ -35,13 +39,19 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
   return (
     <View style={gStyles.container}>
       <View style={{ marginVertical: 16 }}>
+        <Text style={gStyles.h2}>{employee.name}</Text>
+        <Text style={gStyles.h3}>{employee.position}</Text>
+      </View>
+
+      <View style={{ marginVertical: 16 }}>
         <Text style={gStyles.h2}>Permisos de empleado</Text>
       </View>
 
       <Formik
         initialValues={{
-          predefinedPermission: employee?.predefinedPermission,
-          permissions: employee?.permissions
+          position: employee?.position || '',
+          predefinedPermission: employee?.predefinedPermission || '',
+          permissions: employee?.permissions || null
         }}
         onSubmit={(values) => {
           handleSubmit(values)
@@ -70,6 +80,13 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
 
           return (
             <View>
+              <View style={{ marginVertical: 4 }}>
+                <InputValueFormik
+                  name="position"
+                  helperText="Etiqueta o nombre del puesto"
+                  placeholder="Etiqueta o nombre del puesto"
+                />
+              </View>
               <FormikCheckbox
                 style={{ width: checkboxWidth, marginVertical: 4 }}
                 name={`permissions.isAdmin`}

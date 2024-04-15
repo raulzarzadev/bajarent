@@ -12,6 +12,7 @@ import ScreenComponents from './ScreenComponents'
 import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
+import { useEmployee } from '../contexts/employeeContext'
 
 const Tab = createBottomTabNavigator()
 
@@ -120,9 +121,14 @@ const NotUserTabs = () => {
 }
 
 const UserAndStoreTabs = () => {
-  const { staffPermissions, store } = useStore()
-  const { user } = useAuth()
-  const isOwner = store?.createdBy === user?.id
+  const {
+    permissions: { isAdmin, isOwner, orders }
+  } = useEmployee()
+
+  const canSeeOrders = orders.canViewAll || isAdmin || isOwner
+  const canCreateOrder = orders.canCreate || isAdmin || isOwner
+  const canSeeMyOrders = orders?.canViewMy
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -161,9 +167,7 @@ const UserAndStoreTabs = () => {
           tabBarButton: () => null
         }}
       />
-      {(staffPermissions?.canViewOrders ||
-        staffPermissions?.isAdmin ||
-        isOwner) && (
+      {canSeeOrders && (
         <Tab.Screen
           name="Orders"
           component={StackOrders}
@@ -174,9 +178,7 @@ const UserAndStoreTabs = () => {
         />
       )}
 
-      {(staffPermissions?.canCreateOrder ||
-        staffPermissions?.isAdmin ||
-        isOwner) && (
+      {canCreateOrder && (
         <Tab.Screen
           name="NewOrder"
           component={ScreenNewOrder}
@@ -189,7 +191,7 @@ const UserAndStoreTabs = () => {
         />
       )}
 
-      {(staffPermissions?.canViewMyOrders || staffPermissions?.isAdmin) && (
+      {canSeeMyOrders && (
         <Tab.Screen
           name="MyOrders"
           component={StackMyOrders}

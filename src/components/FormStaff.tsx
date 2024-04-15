@@ -7,14 +7,25 @@ import FormikCheckbox from './FormikCheckbox'
 import H1 from './H1'
 import { staff_permissions } from '../types/StaffType'
 import dictionary from '../dictionary'
+import { useStore } from '../contexts/storeContext'
 
 const FormStaff = ({
   defaultValues = {},
   onSubmit = async (values) => {
     console.log(values)
   }
+}: {
+  defaultValues?: {
+    userId?: string
+    position?: string
+    name?: string
+  }
+  onSubmit?: (values: any) => Promise<void>
 }) => {
   const permissions = Object.keys(staff_permissions)
+  const { staff } = useStore()
+  const alreadyAreStaff = staff.map((s) => s.userId === defaultValues.userId)
+  console.log({ alreadyAreStaff, defaultValues })
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
