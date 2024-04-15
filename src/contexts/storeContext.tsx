@@ -123,11 +123,13 @@ const StoreContextProvider = ({ children }) => {
     })
     setOrderFormatted(orderFormatted)
   }, [orders, comments, staff, storeId, payments, payments])
-
   useEffect(() => {
     const getStaffDetails = async () => {
       const staffs: Promise<StaffType>[] = staff.map(async (employee) => {
-        const user = await ServiceUsers.get(employee.userId)
+        const user = await ServiceUsers.get(employee.userId).catch((e) =>
+          console.error({ e })
+        )
+        if (!user) return null
         return {
           // @ts-ignore // FIXME: fix this
           ...employee,
@@ -139,7 +141,7 @@ const StoreContextProvider = ({ children }) => {
         }
       })
 
-      return await Promise.all(staffs)
+      return (await Promise.all(staffs)).filter((s) => !!s)
     }
     getStaffDetails().then(setStaffFormatted)
   }, [staff, storeId])

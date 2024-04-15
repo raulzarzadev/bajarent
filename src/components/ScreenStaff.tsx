@@ -7,6 +7,7 @@ import { gStyles } from '../styles'
 
 const ScreenStaff = ({ navigation }) => {
   const { staff } = useStore()
+  console.log({ staff })
   if (!staff) return <ActivityIndicator />
   return (
     <ScrollView
