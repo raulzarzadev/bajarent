@@ -23,6 +23,7 @@ import ScreenBalancesNew from './ScreenBalancesNew'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenOrderRenew from './ScreenOrderRenew'
 import { ScreenStoreE } from './ScreenStore4'
+import ScreenOrderReorder from './ScreenOrderReorder'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -212,6 +213,13 @@ function StackStore() {
           title: 'Renovar Orden'
         }}
         component={ScreenOrderRenew}
+      />
+      <Stack.Screen
+        name="ReorderOrder"
+        options={{
+          title: 'Re ordenar '
+        }}
+        component={ScreenOrderReorder}
       />
     </Stack.Navigator>
   )

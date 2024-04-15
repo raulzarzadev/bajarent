@@ -5,6 +5,7 @@ import ScreenMyOrders from './ScreenMyOrders'
 import MyStaffLabel from './MyStaffLabel'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenOrderRenew from './ScreenOrderRenew'
+import ScreenOrderReorder from './ScreenOrderReorder'
 
 const Stack = createStackNavigator()
 function StackMyOrders() {
@@ -53,6 +54,13 @@ function StackMyOrders() {
           title: 'Renovar Orden'
         }}
         component={ScreenOrderRenew}
+      />
+      <Stack.Screen
+        name="ReorderOrder"
+        options={{
+          title: 'Re ordenar '
+        }}
+        component={ScreenOrderReorder}
       />
     </Stack.Navigator>
   )

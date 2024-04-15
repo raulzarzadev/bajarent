@@ -4,7 +4,6 @@ import Button, { ButtonProps } from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ButtonIcon, { IconButtonProps } from './ButtonIcon'
-import Icon from './Icon'
 
 const ButtonConfirm = ({
   openLabel,
@@ -18,7 +17,8 @@ const ButtonConfirm = ({
   openVariant,
   openColor,
   confirmVariant,
-  confirmColor
+  confirmColor,
+  openSize
 }: {
   openLabel?: string
   modalTitle?: string
@@ -32,6 +32,7 @@ const ButtonConfirm = ({
   confirmVariant?: ButtonProps['variant']
   confirmColor?: ButtonProps['color']
   text: string
+  openSize?: ButtonProps['size']
 }) => {
   const modal = useModal({ title: modalTitle })
   const [sending, setSending] = React.useState(false)
@@ -43,6 +44,7 @@ const ButtonConfirm = ({
           color={openColor}
           variant={openVariant}
           onPress={modal.toggleOpen}
+          size={openSize}
         ></ButtonIcon>
       ) : (
         <Button
@@ -51,6 +53,7 @@ const ButtonConfirm = ({
           onPress={modal.toggleOpen}
           label={openLabel}
           icon={icon}
+          size={openSize}
         ></Button>
       )}
       <StyledModal {...modal}>

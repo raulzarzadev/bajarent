@@ -60,13 +60,15 @@ export type FormOrderProps = {
   renew?: string | number
   onSubmit?: (values: Partial<OrderType>) => Promise<any>
   defaultValues?: Partial<OrderType>
+  title?: string
 }
 const FormOrderA = ({
   renew = '', // number of order to renew
   onSubmit = async (values) => {
     console.log(values)
   },
-  defaultValues = initialValues
+  defaultValues = initialValues,
+  title
 }: FormOrderProps) => {
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
@@ -131,6 +133,7 @@ const FormOrderA = ({
             <P size="xl">{defaultValues?.folio}</P>
           </Text>
         )}
+        {title && <Text style={gStyles.h3}>{title}</Text>}
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
         <Formik
           initialValues={initialValues}

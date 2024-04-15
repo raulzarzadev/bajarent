@@ -4,6 +4,7 @@ import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import { onAuthorize, onCancel, onDelete } from '../../libs/order-actions'
 import ButtonConfirm from '../ButtonConfirm'
+import { useNavigation } from '@react-navigation/native'
 
 const OrderCommonActions = ({
   actionsAllowed,
@@ -23,6 +24,7 @@ const OrderCommonActions = ({
   }
   userId: string
 }) => {
+  const { navigate } = useNavigation()
   const canCancel = actionsAllowed.canCancel
   const canEdit = actionsAllowed.canEdit
   const canDelete = actionsAllowed.canDelete
@@ -34,39 +36,58 @@ const OrderCommonActions = ({
   const canRenew = actionsAllowed.canRenew
 
   const handleReorder = () => {
-    console.log('Reorder')
+    // @ts-ignore
+    navigate('ReorderOrder', { orderId })
   }
   const handleEdit = () => {
-    console.log('Edit')
+    // @ts-ignore
+    navigate('EditOrder', { orderId })
   }
+  const handleRenew = () => {
+    // @ts-ignore
+    navigate('RenewOrder', { orderId })
+  }
+  const handleDelete = () => {
+    onDelete({ orderId })
+  }
+  const handleAuthorize = () => {
+    onAuthorize({ orderId, userId })
+  }
+  const handleCancel = async () => {
+    return await onCancel({ orderId, userId })
+  }
+
   const buttons = [
-    canAuthorize && (
-      <Button
-        label="Autorizar"
-        onPress={() => {
-          onAuthorize({ orderId, userId })
-        }}
-      />
-    ),
+    canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
+
+    canAssign && <ModalAssignOrder orderId={orderId} />,
     canReorder && (
       <Button
         label="Reordenar"
         onPress={() => {
           handleReorder()
         }}
+        size="small"
       />
     ),
-
-    canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
-    canCancel && (
-      <ButtonConfirm
-        text={'Cancelar orden'}
-        handleConfirm={async () => {
-          return await onCancel({ orderId, userId })
+    canAuthorize && (
+      <Button
+        label="Autorizar"
+        onPress={() => {
+          handleAuthorize()
         }}
+        size="small"
       />
     ),
-    canAssign && <ModalAssignOrder orderId={orderId} />
+    canRenew && (
+      <Button
+        label="Renovar"
+        onPress={() => {
+          handleRenew()
+        }}
+        size="small"
+      />
+    )
   ]
   const buttons2 = [
     canEdit && (
@@ -82,11 +103,32 @@ const OrderCommonActions = ({
     ),
     canDelete && (
       <ButtonConfirm
+        icon="delete"
+        openSize="small"
+        openColor="error"
+        openLabel="Eliminar"
+        openVariant="outline"
+        confirmColor="error"
+        confirmLabel="Eliminar"
         text="Esta orden se eliminara de forma permanente"
         handleConfirm={async () => {
-          onDelete({ orderId })
+          handleDelete()
         }}
       ></ButtonConfirm>
+    ),
+    canCancel && (
+      <ButtonConfirm
+        openLabel="Cancelar"
+        openVariant="outline"
+        openColor="info"
+        confirmColor="info"
+        openSize="small"
+        icon="cancel"
+        text={'Cancelar orden'}
+        handleConfirm={async () => {
+          return await handleCancel()
+        }}
+      />
     )
   ]
   return (
@@ -114,10 +156,12 @@ const OrderCommonActions = ({
       </View>
       <View
         style={{
+          marginTop: 8,
           flexDirection: 'row',
           width: '100%',
           justifyContent: 'space-around',
-          padding: 2
+          padding: 2,
+          flexWrap: 'wrap'
         }}
       >
         {buttons2.map(

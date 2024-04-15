@@ -239,19 +239,29 @@ const OrderActions = ({
    * RESUME
    *******************************************rz */
 
-  const canRenew =
-    userCanCancel && (canCancelRent || canCancelRepair || canCancelSale)
-  const canCancel = userCanRenew && canRenewRent
-  const canEdit = userCanEdit
-  const canDelete = userCanDelete
-  const canSendWS = userCanSendWS
   const canAuthorize =
     userCanAuthorize &&
     (orderStatus === order_status.PENDING ||
       orderStatus === order_status.CANCELLED)
-  const canAssign = userCanAssign
+
+  const canRenew =
+    userCanRenew &&
+    (orderStatus === order_status.DELIVERED ||
+      orderStatus === order_status.EXPIRED)
+
+  const canCancel =
+    userCanCancel &&
+    (orderStatus === order_status.PENDING ||
+      orderStatus === order_status.AUTHORIZED)
+
   const canReorder = userCanReorder
-  const handleBack = (status) => {
+
+  const canEdit = userCanEdit
+  const canDelete = userCanDelete
+  const canSendWS = userCanSendWS
+  const canAssign = userCanAssign
+
+  const handleBack = () => {
     const index = statusIndex
     const action = ORDER_TYPE_ACTIONS[orderType][index - 1]
     if (!action) {
@@ -296,7 +306,7 @@ const OrderActions = ({
           <Button
             label={'Atras'}
             onPress={() => {
-              handleBack(orderStatus)
+              handleBack()
             }}
             variant="ghost"
             size="xs"

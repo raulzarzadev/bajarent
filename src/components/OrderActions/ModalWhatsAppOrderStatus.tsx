@@ -62,11 +62,7 @@ ${orderPeriod(order)}
 ${orderPayments({ order })}
  `
 
-  return (
-    <View>
-      <ModalSendWhatsapp message={orderStatusMessage} to={order.phone} />
-    </View>
-  )
+  return <ModalSendWhatsapp message={orderStatusMessage} to={order.phone} />
 }
 
 export default ModalWhatsAppOrderStatus
