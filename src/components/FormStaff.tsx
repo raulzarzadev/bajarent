@@ -25,8 +25,8 @@ const FormStaff = ({
 }) => {
   const permissions = Object.keys(staff_permissions)
   const { staff } = useStore()
-  const alreadyAreStaff = staff.map((s) => s.userId === defaultValues.userId)
-  // console.log({ alreadyAreStaff, defaultValues })
+  const alreadyAreStaff = staff.find((s) => s.userId === defaultValues.userId)
+
   if (alreadyAreStaff)
     return (
       <Text style={[gStyles.h3, { marginVertical: 8 }]}>
@@ -50,7 +50,7 @@ const FormStaff = ({
               helperText="Nombre, referencia o puesto que desempeñara"
             />
           </View>
-          <View></View>
+
           <H1>Permisos</H1>
           <View style={[styles.input, styles.permissions]}>
             {permissions.map((permission) => (

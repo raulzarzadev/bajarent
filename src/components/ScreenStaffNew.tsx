@@ -24,12 +24,15 @@ const ScreenStaffNew = () => {
   const { store } = useStore()
   const { navigate } = useStoreNavigation()
   const [user, setUser] = React.useState<UserType>()
+
+  console.log({ user })
+
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
         {!user && <SearchStaff setUser={setUser} />}
-        {user && <CardUser user={user} />}
-        {user && (
+        {!!user && <CardUser user={user} />}
+        {!!user && (
           <FormStaff
             defaultValues={{
               userId: user.id,
@@ -53,17 +56,6 @@ const ScreenStaffNew = () => {
           />
         )}
       </View>
-
-      {/* <FormStaff
-        onSubmit={async (values) => {
-          console.log('onSubmit', values)
-          values.storeId = store.id
-          ServiceStaff.create(values).then((res) => {
-            console.log(res)
-            navigate('Staff')
-          })
-        }}
-      /> */}
     </ScrollView>
   )
 }
@@ -105,10 +97,10 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
         placeholder="Nombre, teléfono o email"
         helperText="Usuario deberá estar previamente registrado"
       />
-      {error && <P styles={{ color: theme.error }}>{error}</P>}
+      {!!error && <P styles={{ color: theme.error }}>{error}</P>}
 
       <View style={{ padding: 4, justifyContent: 'center' }}>
-        {loading && <ActivityIndicator />}
+        {!!loading && <ActivityIndicator />}
         {users.map((user) => (
           <Pressable
             onPress={() => {

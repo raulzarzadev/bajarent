@@ -13,6 +13,21 @@ const EmployeePermissions = ({ staff }: { staff: Partial<StaffType> }) => {
   const storePermissionsKeys = Object.keys(storePermissions)
   const isAdmin = staff?.permissions?.isAdmin
 
+  const orderPermissionsAllowed = orderPermissionsKeys?.filter(
+    (permission) => orderPermissions[permission]
+  )
+  const storePermissionsAllowed = storePermissionsKeys?.filter(
+    (permission) => storePermissions[permission]
+  )
+
+  if (
+    !isAdmin &&
+    !orderPermissionsAllowed?.length &&
+    !storePermissionsAllowed?.length
+  ) {
+    return <Text style={gStyles.p}>Este usuario no tiene permisos</Text>
+  }
+
   return (
     <View style={{ maxWidth: 500, marginHorizontal: 'auto' }}>
       <Text style={gStyles.h3}>Permisos de empleado</Text>
@@ -23,7 +38,9 @@ const EmployeePermissions = ({ staff }: { staff: Partial<StaffType> }) => {
           title={dictionary('isAdmin')}
         ></Chip>
       )}
-      <Text style={gStyles.h3}>Ordenes</Text>
+      {!!orderPermissionsAllowed?.length && (
+        <Text style={gStyles.h3}>Ordenes</Text>
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -32,20 +49,19 @@ const EmployeePermissions = ({ staff }: { staff: Partial<StaffType> }) => {
           justifyContent: 'center'
         }}
       >
-        {orderPermissionsKeys?.map(
-          (permission) =>
-            orderPermissions[permission] && (
-              <View key={permission} style={{ margin: 4 }}>
-                <Chip
-                  color={theme.info}
-                  titleColor="white"
-                  title={dictionary(permission)}
-                ></Chip>
-              </View>
-            )
-        )}
+        {orderPermissionsAllowed?.map((permission) => (
+          <View key={permission} style={{ margin: 4 }}>
+            <Chip
+              color={theme.info}
+              titleColor="white"
+              title={dictionary(permission)}
+            ></Chip>
+          </View>
+        ))}
       </View>
-      <Text style={gStyles.h3}>Store</Text>
+      {!!storePermissionsAllowed?.length && (
+        <Text style={gStyles.h3}>Store</Text>
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -54,18 +70,15 @@ const EmployeePermissions = ({ staff }: { staff: Partial<StaffType> }) => {
           justifyContent: 'center'
         }}
       >
-        {storePermissionsKeys?.map(
-          (permission) =>
-            storePermissions[permission] && (
-              <View key={permission} style={{ margin: 4 }}>
-                <Chip
-                  color={theme.info}
-                  titleColor="white"
-                  title={dictionary(permission)}
-                ></Chip>
-              </View>
-            )
-        )}
+        {storePermissionsAllowed?.map((permission) => (
+          <View key={permission} style={{ margin: 4 }}>
+            <Chip
+              color={theme.info}
+              titleColor="white"
+              title={dictionary(permission)}
+            ></Chip>
+          </View>
+        ))}
       </View>
     </View>
   )
