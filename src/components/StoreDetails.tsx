@@ -45,7 +45,8 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
           flexDirection: 'row',
           justifyContent: 'space-evenly',
           maxWidth: 500,
-          width: '100%'
+          width: '100%',
+          margin: 'auto'
         }}
       >
         <View style={{ margin: gSpace(1) }}>
