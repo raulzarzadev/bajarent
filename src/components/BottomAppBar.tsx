@@ -62,7 +62,7 @@ const NotStoreTabs = () => {
             )
           },
           tabBarIconStyle: {
-            marginTop: 0
+            marginTop: 0 //* <- Avoid the scroll small scroll in all  app
           }
         }
       }}
@@ -109,7 +109,7 @@ const NotUserTabs = () => {
             )
           },
           tabBarIconStyle: {
-            marginTop: 0
+            marginTop: 0 //* <- Avoid the scroll small scroll in all  app
           }
         }
       }}
@@ -158,7 +158,7 @@ const UserAndStoreTabs = () => {
           },
 
           tabBarIconStyle: {
-            marginTop: 0
+            marginTop: 0 //* <- Avoid the scroll small scroll in all  app
           },
           //* shows the staff label on the right side of the header specially for __DEV__ components
           headerRight(props) {
