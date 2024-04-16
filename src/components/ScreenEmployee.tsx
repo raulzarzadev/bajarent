@@ -97,6 +97,7 @@ const ScreenEmployee = ({ staffId }) => {
                 disabled={isSubmitting}
                 label="Guardar"
                 onPress={() => handleSubmit()}
+                disabled={disabledSave}
               />
             </View>
           )

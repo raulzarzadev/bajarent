@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
@@ -8,6 +8,7 @@ import H1 from './H1'
 import { staff_permissions } from '../types/StaffType'
 import dictionary from '../dictionary'
 import { useStore } from '../contexts/storeContext'
+import { gStyles } from '../styles'
 
 const FormStaff = ({
   defaultValues = {},
@@ -25,7 +26,14 @@ const FormStaff = ({
   const permissions = Object.keys(staff_permissions)
   const { staff } = useStore()
   const alreadyAreStaff = staff.map((s) => s.userId === defaultValues.userId)
-  console.log({ alreadyAreStaff, defaultValues })
+  // console.log({ alreadyAreStaff, defaultValues })
+  if (alreadyAreStaff)
+    return (
+      <Text style={[gStyles.h3, { marginVertical: 8 }]}>
+        Este usuario ya es parte de tu staff
+      </Text>
+    )
+
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -55,7 +63,11 @@ const FormStaff = ({
             ))}
           </View>
           <View style={styles.input}>
-            <Button onPress={handleSubmit} label={'Guardar'} />
+            <Button
+              onPress={handleSubmit}
+              label={'Guardar'}
+              disabled={!!alreadyAreStaff}
+            />
           </View>
         </View>
       )}
