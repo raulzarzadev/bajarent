@@ -2,18 +2,19 @@ import { Text, View } from 'react-native'
 import React from 'react'
 import P from './P'
 import StoreType from '../types/StoreType'
-import ButtonIcon from './ButtonIcon'
 import { useStore } from '../contexts/storeContext'
 import { useStoreNavigation } from './StackStore'
-import { useAuth } from '../contexts/authContext'
-import { gStyles } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import Button from './Button'
+import { useEmployee } from '../contexts/employeeContext'
+import BadgeAdmin from './BadgeAdmin'
+import BadgeOwner from './BadgeOwner'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useStoreNavigation()
-  const { staffPermissions } = useStore()
-  const { user } = useAuth()
-  const isOwner = store?.createdBy === user.id
+  const {
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
   return (
     <View>
       <View
@@ -25,7 +26,8 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       >
         {/* <ChangeStore /> */}
         <Text style={gStyles.h1}>{store?.name}</Text>
-        {(staffPermissions?.isAdmin || isOwner) && (
+
+        {(isAdmin || isOwner) && (
           <Button
             color="secondary"
             variant="ghost"
@@ -37,6 +39,21 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
             id="editStore"
           />
         )}
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          maxWidth: 500,
+          width: '100%'
+        }}
+      >
+        <View style={{ margin: gSpace(1) }}>
+          <BadgeOwner isOwner={isOwner} />
+        </View>
+        <View style={{ margin: gSpace(1) }}>
+          <BadgeAdmin isAdmin={isAdmin} />
+        </View>
       </View>
       <P>{store.description}</P>
     </View>
