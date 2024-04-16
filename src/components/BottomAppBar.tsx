@@ -60,6 +60,9 @@ const NotStoreTabs = () => {
                 // color={color}
               />
             )
+          },
+          tabBarIconStyle: {
+            marginTop: 0
           }
         }
       }}
@@ -72,14 +75,14 @@ const NotStoreTabs = () => {
           headerShown: false
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Store"
         component={StackStore}
         options={{
           title: 'Tienda ',
           headerShown: false
         }}
-      /> */}
+      />
     </Tab.Navigator>
   )
 }
@@ -104,6 +107,9 @@ const NotUserTabs = () => {
                 // color={color}
               />
             )
+          },
+          tabBarIconStyle: {
+            marginTop: 0
           }
         }
       }}
@@ -149,6 +155,10 @@ const UserAndStoreTabs = () => {
                 color={color}
               />
             )
+          },
+
+          tabBarIconStyle: {
+            marginTop: 0
           },
           //* shows the staff label on the right side of the header specially for __DEV__ components
           headerRight(props) {
