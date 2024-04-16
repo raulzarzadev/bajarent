@@ -70,8 +70,8 @@ const labels = {
   PICKED_UP: 'Recogida',
   true: 'Sí',
   false: 'No',
-  REPAIR_START: 'Iniciar reparación',
-  REPAIR_FINISH: 'Terminar reparación',
+  REPAIR_START: 'Iniciar rep',
+  REPAIR_FINISH: 'Terminar rep',
   AUTHORIZE: 'Autorizar',
   DELIVER: 'Entregar',
   RENEW: 'Renovar',
@@ -81,8 +81,8 @@ const labels = {
   Pickup: 'Recoger',
   Renew: 'Renovar',
   Repair: 'Reparar',
-  'Repair start': 'Iniciar reparación',
-  'Repair finish': 'Terminar reparación',
+  'Repair start': 'Iniciar rep',
+  'Repair finish': 'Terminar rep',
   /* ********************************************
    * PERMISSIONS ORDERS V2
    *******************************************rz */
@@ -97,8 +97,8 @@ const labels = {
   canCancel: 'Cancelar',
   canPickup: 'Recoger',
   canDelivery: 'Entregar',
-  canStartRepair: 'Iniciar reparación',
-  canFinishRepair: 'Terminar reparación',
+  canStartRepair: 'Iniciar rep',
+  canFinishRepair: 'Terminar rep',
   canSentWS: 'Enviar WS',
   canReorder: 'Pedir de nuevo',
   canUnAuthorize: 'Desautorizar',

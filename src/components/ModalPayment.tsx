@@ -30,7 +30,7 @@ export const ModalPayment = ({
     storeId,
     orderId
   }
-  const label = 'Pagar'
+  const label = 'Registrar pago'
 
   const modal = useModal({ title: label })
   // const { updatePayments } = useStore()

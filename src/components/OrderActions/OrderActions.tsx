@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import {
   onAuthorize,
@@ -17,7 +17,9 @@ import dictionary from '../../dictionary'
 import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
 import { useEmployee } from '../../contexts/employeeContext'
+import { gSpace } from '../../styles'
 
+// #region ENUM ACTIONS
 enum acts {
   AUTHORIZE = 'AUTHORIZE',
   DELIVER = 'DELIVER',
@@ -29,21 +31,25 @@ enum acts {
   CANCEL = 'CANCEL'
 }
 
+// #region TYPES
 export type OrderTypes = 'RENT' | 'SALE' | 'REPAIR'
+export type OrderActionsType = {
+  orderId: string
+  orderType: OrderTypes
+  orderStatus: OrderType['status']
+}
 
+// #region FUNCTION
 const OrderActions = ({
   orderId,
   orderType,
   orderStatus
-}: {
-  orderId: string
-  orderType: OrderTypes
-  orderStatus: OrderType['status']
-}) => {
+}: OrderActionsType) => {
   const { permissions } = useEmployee()
   const { user } = useAuth()
   const userId = user?.id
 
+  // #region  ACTIONS FUNCTIONS
   // Resume in one place tha functions that will be called some times
   const actions_fns = {
     [acts.DELIVER]: () => onDelivery({ orderId, userId }),
@@ -69,6 +75,7 @@ const OrderActions = ({
   // rent can renew -> is delivered , expired
   // rent can cancel -> is pending, authorized
 
+  // #region USER PERMISSIONS
   /* ********************************************
    * USER PERMISSIONS
    *******************************************rz */
@@ -134,6 +141,7 @@ const OrderActions = ({
   const canDeliverSale = isSale && orderStatus === order_status.AUTHORIZED
   //**** CANCEL JUST IF IS PENDING OR AUTHORIZED OR DELIVERED
 
+  // #region PERMISSION FLOWS
   /* ********************************************
    * ORDER FLOWS
    *******************************************rz */
@@ -155,6 +163,8 @@ const OrderActions = ({
     orderPermissions.canUnAuthorize || isAdmin || isOwner
   const employeeCanAuthorize =
     orderPermissions.canAuthorize || isAdmin || isOwner
+
+  // #region FLOWS
   /* ******************************************** 
              SALE FLOW               
    *******************************************rz */
@@ -216,6 +226,7 @@ const OrderActions = ({
   /* ******************************************** 
              FLOWS              
    *******************************************rz */
+
   const ORDER_TYPE_ACTIONS = {
     RENT: RENT_FLOW,
     SALE: SALE_FLOW,
@@ -225,7 +236,7 @@ const OrderActions = ({
   /* ********************************************
    * ORDER PROGRESS FLOW
    *******************************************rz */
-
+  // #region PROGRESS
   const statusIndex = ORDER_TYPE_ACTIONS[orderType].findIndex(
     (act) => act.status === orderStatus
   )
@@ -281,12 +292,21 @@ const OrderActions = ({
 
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
-
+  // #region COMPONENT
   return (
     <View>
-      <OrderStatus orderId={orderId} />
+      <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
+        <OrderStatus orderId={orderId} />
+      </View>
       <OrderAssignInfo orderId={orderId} />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      {/* 
+      // #region FLOW 
+      */}
+      <ScrollView
+        horizontal
+        style={{ maxWidth: '100%' }}
+        //style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+      >
         {showPendingButton && (
           <Button
             label="Pendiente"
@@ -329,8 +349,13 @@ const OrderActions = ({
             disabled={disabled}
           />
         ))}
+      </ScrollView>
+      <View style={{ padding: 4, marginTop: 8 }}>
+        <ProgressBar progress={progress} />
       </View>
-      <ProgressBar progress={progress} />
+      {/* 
+      // #region COMMON ACTIONS 
+      */}
       <OrderCommonActions
         userId={userId}
         orderId={orderId}
