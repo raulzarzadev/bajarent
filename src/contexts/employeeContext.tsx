@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import StaffType from '../types/StaffType'
+import StaffType, { PermissionsOrder } from '../types/StaffType'
 import { useAuth } from './authContext'
 import { useStore } from './storeContext'
 export type EmployeeContextType = {
@@ -21,6 +21,37 @@ export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
   const { staff, store, storeId } = useStore()
   const isOwner = store?.createdBy === user?.id
+  const oldOrderPermissions: Record<keyof PermissionsOrder, boolean> = {
+    canAssign: !!employee?.canAssignOrder,
+    canCreate: !!employee?.canCreateOrder,
+    canViewAll: !!employee?.canViewOrders,
+    canViewMy: !!employee?.canViewMyOrders,
+    canEdit: !!employee?.canEditOrder,
+    canDelete: !!employee?.canDeleteOrder,
+    canAuthorize: !!employee?.canAuthorizeOrder,
+    canRenew: !!employee?.canRenewOrder,
+    canCancel: !!employee?.canCancelOrder,
+    canPickup: !!employee?.canPickupOrder,
+    canDelivery: !!employee?.canDeliveryOrder,
+    canStartRepair: false,
+    canFinishRepair: false,
+    canSentWS: false,
+    canReorder: false,
+    canUndo: false,
+    canUnAuthorize: false
+  }
+  const newOrderPermissions = employee?.permissions?.order || {}
+
+  /* ********************************************
+   *  This code is added to remove the isAdmin key
+   *******************************************rz */
+  delete newOrderPermissions?.isAdmin
+
+  const mixOrdersPermissions = {
+    ...oldOrderPermissions,
+    ...newOrderPermissions
+  }
+
   useEffect(() => {
     const employee = staff?.find((s) => s?.userId === user?.id)
     if (employee) {
@@ -46,7 +77,7 @@ export const EmployeeContextProvider = ({ children }) => {
         permissions: {
           isAdmin: !!employee?.permissions?.isAdmin,
           isOwner: isOwner,
-          orders: employee?.permissions?.order || {},
+          orders: mixOrdersPermissions || {},
           store: employee?.permissions?.store || {}
         }
       }}
