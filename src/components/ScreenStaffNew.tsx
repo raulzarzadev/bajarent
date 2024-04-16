@@ -78,12 +78,14 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
     if (debouncedSearchTerm) {
       ServiceUsers.searchUser(debouncedSearchTerm)
         .then((res) => {
-          if (!res.length)
+          if (!res.length) {
             setError(
               'Usuario no encontrado, asegurate que esta registrado sus datos son correctos'
             )
-
-          setUsers(res)
+          } else {
+            setUsers(res)
+            setError(null)
+          }
         })
         .catch(() => {})
         .finally(() => {
