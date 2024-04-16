@@ -9,6 +9,7 @@ import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
 import BadgeAdmin from './BadgeAdmin'
 import BadgeOwner from './BadgeOwner'
+import BadgesStore from './BadgesStore'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useStoreNavigation()
@@ -40,22 +41,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
           />
         )}
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          maxWidth: 500,
-          width: '100%',
-          margin: 'auto'
-        }}
-      >
-        <View style={{ margin: gSpace(1) }}>
-          <BadgeOwner isOwner={isOwner} />
-        </View>
-        <View style={{ margin: gSpace(1) }}>
-          <BadgeAdmin isAdmin={isAdmin} />
-        </View>
-      </View>
+      <BadgesStore />
       <P>{store.description}</P>
     </View>
   )
