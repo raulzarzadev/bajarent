@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { FieldValue } from 'firebase/firestore'
 import BaseType from './BaseType'
 import StoreType from './StoreType'
 
@@ -25,9 +26,10 @@ export enum staff_permissions {
  * @deprecated use StaffPermissions instead
  */
 export type StaffPermissionType = {
-  [K in keyof typeof staff_permissions]: boolean
+  [K in keyof typeof staff_permissions]: boolean | FieldValue
 }
 
+export type old_StaffPermissionType = StaffPermissionType
 export type BaseStaffType = {
   storeId: string
   position?: string

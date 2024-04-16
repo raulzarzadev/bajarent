@@ -1,7 +1,6 @@
 import { Dimensions, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
-import { useAuth } from '../contexts/authContext'
 import FormikCheckbox from './FormikCheckbox'
 import Button from './Button'
 import { ServiceStaff } from '../firebase/ServiceStaff'
@@ -11,6 +10,8 @@ import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
 import InputValueFormik from './InputValueFormik'
+import { StaffPermissionsE } from './StaffPermissions_old'
+import { EmployeePermissionsE } from './EmployeePermissions'
 const screenWidth = Dimensions.get('window').width
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
@@ -35,6 +36,12 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
   }
 
   //? TODO:  should add predefined permissions?
+  //console.log({ employee })
+
+  //* 0 remove mixed permissions ✅
+  //* 1 show old permissions ✅
+  //* 2 add button to delete old permissions ✅
+  //* 3 if no old permissions show only new permissions ✅
 
   return (
     <View style={gStyles.container}>
@@ -43,9 +50,8 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
         <Text style={gStyles.h3}>{employee.position}</Text>
       </View>
 
-      <View style={{ marginVertical: 16 }}>
-        <Text style={gStyles.h2}>Permisos de empleado</Text>
-      </View>
+      <StaffPermissionsE staff={employee} />
+      <EmployeePermissionsE staff={employee} />
 
       <Formik
         initialValues={{

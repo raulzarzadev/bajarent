@@ -1,15 +1,10 @@
 import { Text, View } from 'react-native'
-import UserType from '../types/UserType'
 import StaffType, { staff_permissions } from '../types/StaffType'
-import CardUser from './CardUser'
 import H1 from './H1'
 import Chip from './Chip'
 import dictionary from '../dictionary'
 import theme from '../theme'
 import { gStyles } from '../styles'
-
-// import Chip from './Chip'
-// import dictionary from '../dictionary'
 
 const CardStaff = ({
   staff,

@@ -24,12 +24,12 @@ const ScreenStoreA = (props) => {
         {
           title: 'Negocio',
           content: <TabsBusiness {...props} />,
-          show: isOwner || staffPermissions?.isAdmin
+          show: isOwner || !!staffPermissions?.isAdmin
         },
         {
           title: 'Tienda',
           content: <TabsStore {...props} />,
-          show: isOwner || staffPermissions?.isAdmin
+          show: isOwner || !!staffPermissions?.isAdmin
         }
         // {
         //   title: 'Mercado',
@@ -51,12 +51,12 @@ const TabsStore = (props) => {
         {
           title: 'Caja',
           content: <ScreenCashbox {...props} />,
-          show: staffPermissions?.isAdmin || isOwner
+          show: !!staffPermissions?.isAdmin || isOwner
         },
         {
           title: 'Articulos',
           content: <ScreenItems {...props} />,
-          show: staffPermissions?.isAdmin || isOwner
+          show: !!staffPermissions?.isAdmin || isOwner
         },
         {
           title: 'Staff',
@@ -71,7 +71,7 @@ const TabsStore = (props) => {
         {
           title: 'Config',
           content: <StoreDetails store={store} {...props} />,
-          show: staffPermissions?.isAdmin || isOwner
+          show: !!staffPermissions?.isAdmin || isOwner
         }
       ]}
     />

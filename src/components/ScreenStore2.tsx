@@ -8,7 +8,6 @@ import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
 import Stats from './Stats'
 import ErrorBoundary from './ErrorBoundary'
-import ScreenComments from './ScreenComments'
 
 const ScreenStoreA = (props) => {
   const { store, staffPermissions } = useStore()
@@ -27,13 +26,13 @@ const ScreenStoreA = (props) => {
         {
           title: 'Caja',
           content: <ScreenCashbox {...props} />,
-          show: staffPermissions?.isAdmin || isOwner
+          show: !!staffPermissions?.isAdmin || isOwner
         },
 
         {
           title: 'Articulos',
           content: <ScreenItems {...props} />,
-          show: staffPermissions?.isAdmin || isOwner
+          show: !!staffPermissions?.isAdmin || isOwner
         },
         {
           title: 'Staff',

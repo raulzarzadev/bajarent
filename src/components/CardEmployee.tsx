@@ -6,6 +6,7 @@ import { gStyles } from '../styles'
 import dictionary from '../dictionary'
 import Chip from './Chip'
 import theme from '../theme'
+import { EmployeePermissionsE } from './EmployeePermissions'
 
 const CardEmployee = () => {
   const { employee } = useEmployee()
@@ -17,28 +18,7 @@ const CardEmployee = () => {
         <Text style={gStyles.h2}>Empleado</Text>
       )}
       <Text style={gStyles.h3}>{employee?.name}</Text>
-      {employee?.permissions?.isAdmin && <Text style={gStyles.h1}>Admin</Text>}
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          maxWidth: 500,
-          justifyContent: 'center'
-        }}
-      >
-        {Object.entries(employee?.permissions?.order || {}).map(
-          ([key, value]) =>
-            value && (
-              <Chip
-                key={key}
-                title={dictionary(key)}
-                color={theme.secondary}
-                style={{ margin: 4 }}
-                titleColor={theme.white}
-              />
-            )
-        )}
-      </View>
+      {/* <EmployeePermissionsE staff={employee} /> */}
       <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
     </View>
   )

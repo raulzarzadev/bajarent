@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore'
+import { deleteField, where } from 'firebase/firestore'
 import StaffType from '../types/StaffType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStores } from './ServiceStore'
@@ -45,6 +45,24 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
       uniqueStoreIds.map((storeId) => ServiceStores.get(storeId))
     )
     return stores
+  }
+
+  async deleteOldPermissions(staffId: string) {
+    return await this.update(staffId, {
+      canAssignOrder: deleteField(),
+      canAuthorizeOrder: deleteField(),
+      canCancelOrder: deleteField(),
+      canCreateOrder: deleteField(),
+      canDeleteOrder: deleteField(),
+      canDeliveryOrder: deleteField(),
+      canEditOrder: deleteField(),
+      canPickupOrder: deleteField(),
+      canRenewOrder: deleteField(),
+      canRepairOrder: deleteField(),
+      canViewMyOrders: deleteField(),
+      canViewOrders: deleteField(),
+      isAdmin: deleteField()
+    })
   }
 }
 
