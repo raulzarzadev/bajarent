@@ -3,10 +3,6 @@ import React from 'react'
 import { useEmployee } from '../contexts/employeeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
-import dictionary from '../dictionary'
-import Chip from './Chip'
-import theme from '../theme'
-import { EmployeePermissionsE } from './EmployeePermissions'
 
 const CardEmployee = () => {
   const { employee } = useEmployee()

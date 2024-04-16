@@ -13,7 +13,7 @@ const StaffPermissions = ({ staff }: { staff: StaffType }) => {
   const allowedPermissions = permissions.filter(
     (permission) => staff?.[permission]
   )
-  console.log({ allowedPermissions })
+
   if (allowedPermissions.length === 0) return null
 
   return (
@@ -63,4 +63,4 @@ export const StaffPermissionsE = (props: { staff: StaffType }) => {
   )
 }
 
-export default Permissions
+export default StaffPermissions
