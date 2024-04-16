@@ -38,10 +38,11 @@ export const EmployeeContextProvider = ({ children }) => {
     canSentWS: false,
     canReorder: false,
     canUndo: false,
-    canUnAuthorize: false
+    canUnAuthorize: false,
+    isAdmin: false
   }
   const newOrderPermissions = employee?.permissions?.order || {}
-
+  const isAdmin = employee?.isAdmin || employee?.permissions?.isAdmin
   /* ********************************************
    *  This code is added to remove the isAdmin key
    *******************************************rz */
@@ -75,7 +76,7 @@ export const EmployeeContextProvider = ({ children }) => {
       value={{
         employee,
         permissions: {
-          isAdmin: !!employee?.permissions?.isAdmin,
+          isAdmin: !!isAdmin,
           isOwner: isOwner,
           orders: mixOrdersPermissions || {},
           store: employee?.permissions?.store || {}
