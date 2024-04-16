@@ -149,9 +149,11 @@ export const CommentRow = ({
       solved: !solved
     })
       .then((res) => {
-        console.log(res)
+        // console.log(res)
       })
-      .catch((res) => console.error(res))
+      .catch((res) => {
+        //console.error(res)
+      })
       .finally(() => {
         refetch?.({ id: commentId })
         // setDisabled(false)
