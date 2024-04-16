@@ -68,7 +68,9 @@ export enum permissions_orders {
   canStartRepair,
   canFinishRepair,
   canSentWS,
-  canReorder
+  canReorder,
+  canUndo,
+  canUnAuthorize
 }
 export enum permissions_store {
   canCreateBalance,

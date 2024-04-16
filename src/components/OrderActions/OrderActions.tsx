@@ -108,17 +108,6 @@ const OrderActions = ({
     isRent &&
     (orderStatus === order_status.DELIVERED ||
       orderStatus === order_status.EXPIRED)
-  //**** RENEW JUST IF IS DELIVERED OR EXPIRED
-  const canRenewRent =
-    isRent &&
-    (orderStatus === order_status.DELIVERED ||
-      orderStatus === order_status.EXPIRED)
-
-  //**** CANCEL JUST IF IS PENDING OR AUTHORIZED
-  const canCancelRent =
-    isRent &&
-    (orderStatus === order_status.PENDING ||
-      orderStatus === order_status.AUTHORIZED)
 
   /* ********************************************
    * IF ORDER IS REPAIR
@@ -135,10 +124,6 @@ const OrderActions = ({
   //**** DELIVER JUST IF IS REPAIRED
   const canDeliverRepair = isRepair && orderStatus === order_status.REPAIRED
   //**** CANCEL JUST IF IS PENDING OR AUTHORIZED
-  const canCancelRepair =
-    isRepair &&
-    (orderStatus === order_status.PENDING ||
-      orderStatus === order_status.AUTHORIZED)
 
   /* ********************************************
    * IF ORDER IS SALE
@@ -148,16 +133,28 @@ const OrderActions = ({
   //****DELIVER JUST IF IS AUTH
   const canDeliverSale = isSale && orderStatus === order_status.AUTHORIZED
   //**** CANCEL JUST IF IS PENDING OR AUTHORIZED OR DELIVERED
-  const canCancelSale =
-    isSale &&
-    (orderStatus === order_status.PENDING ||
-      orderStatus === order_status.AUTHORIZED ||
-      orderStatus === order_status.DELIVERED)
 
   /* ********************************************
    * ORDER FLOWS
    *******************************************rz */
+  const orderPermissions = permissions.orders
 
+  const employeeCanDelivery = orderPermissions.canDelivery || isAdmin || isOwner
+
+  const employeeCanPickup = orderPermissions.canPickup || isAdmin || isOwner
+
+  const employeeCanStartRepair =
+    orderPermissions.canStartRepair || isAdmin || isOwner
+
+  const employeeCanFinishRepair =
+    orderPermissions.canFinishRepair || isAdmin || isOwner
+
+  const employeeCanUndo = orderPermissions.canUndo || isAdmin || isOwner
+
+  const employeeCanUnAuthorize =
+    orderPermissions.canUnAuthorize || isAdmin || isOwner
+  const employeeCanAuthorize =
+    orderPermissions.canAuthorize || isAdmin || isOwner
   /* ******************************************** 
              SALE FLOW               
    *******************************************rz */
@@ -166,7 +163,7 @@ const OrderActions = ({
       label: 'Deliver',
       action: actions_fns[acts.DELIVER],
       status: order_status.DELIVERED,
-      disabled: !canDeliverSale
+      disabled: !canDeliverSale || !employeeCanDelivery
     }
   ]
   /* ******************************************** 
@@ -177,13 +174,13 @@ const OrderActions = ({
       label: 'Deliver',
       action: actions_fns[acts.DELIVER],
       status: order_status.DELIVERED,
-      disabled: !canDeliverRent
+      disabled: !canDeliverRent || !employeeCanDelivery
     },
     {
       label: 'Pickup',
       action: actions_fns[acts.PICKUP],
       status: order_status.PICKED_UP,
-      disabled: !canPickupRent
+      disabled: !canPickupRent || !employeeCanPickup
     }
   ]
 
@@ -195,25 +192,25 @@ const OrderActions = ({
       label: 'Pickup',
       action: actions_fns[acts.PICKUP],
       status: order_status.PICKED_UP,
-      disabled: !canPickupRepair
+      disabled: !canPickupRepair || !employeeCanPickup
     },
     {
       label: 'Repair start',
       action: actions_fns[acts.REPAIR_START],
       status: order_status.REPAIRING,
-      disabled: !canStartRepair
+      disabled: !canStartRepair || !employeeCanStartRepair
     },
     {
       label: 'Repair finish',
       action: actions_fns[acts.REPAIR_FINISH],
       status: order_status.REPAIRED,
-      disabled: !canFinishRepair
+      disabled: !canFinishRepair || !employeeCanFinishRepair
     },
     {
       label: 'Deliver',
       action: actions_fns[acts.DELIVER],
       status: order_status.DELIVERED,
-      disabled: !canDeliverRepair
+      disabled: !canDeliverRepair || !employeeCanDelivery
     }
   ]
   /* ******************************************** 
@@ -271,12 +268,20 @@ const OrderActions = ({
     }
   }
   const showAuthorizeButton =
-    orderStatus === order_status.PENDING ||
-    orderStatus === order_status.CANCELLED
+    (orderStatus === order_status.PENDING ||
+      orderStatus === order_status.CANCELLED) &&
+    employeeCanAuthorize
+
+  //TODO: check if this is correct
 
   const showBackButton =
-    !showAuthorizeButton && orderStatus !== order_status.AUTHORIZED
-  const showPendingButton = orderStatus === order_status.AUTHORIZED
+    !showAuthorizeButton &&
+    orderStatus !== order_status.AUTHORIZED &&
+    employeeCanUndo
+
+  const showPendingButton =
+    orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
+
   return (
     <View>
       <OrderStatus orderId={orderId} />

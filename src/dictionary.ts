@@ -101,6 +101,8 @@ const labels = {
   canFinishRepair: 'Terminar reparación',
   canSentWS: 'Enviar WS',
   canReorder: 'Pedir de nuevo',
+  canUnAuthorize: 'Desautorizar',
+  canUndo: 'Deshacer',
   /* ********************************************
    * PERMISSIONS STORE V2
    *******************************************rz */
