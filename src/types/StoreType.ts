@@ -1,5 +1,6 @@
+import { FormOrderFields } from '../components/FormOrder'
 import BaseType from './BaseType'
-import { order_type } from './OrderType'
+import { TypeOrderKey, order_type } from './OrderType'
 import { SectionType } from './SectionType'
 import StaffType from './StaffType'
 
@@ -9,11 +10,12 @@ export type BaseStoreType = {
   staff?: StaffType[]
   currentFolio?: number
   sections?: SectionType[]
-  orderTypes?: keyof order_type[]
   allowSections?: boolean
   allowStaff?: boolean
   img?: string
   marketVisible?: boolean
+  orderTypes?: Record<TypeOrderKey, boolean>
+  orderFields?: Record<TypeOrderKey, FormOrderFields[]>
 }
 
 type StoreType = BaseType & BaseStoreType

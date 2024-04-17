@@ -4,16 +4,12 @@ import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 import StoreType from '../types/StoreType'
-import {
-  TypeOrder,
-  TypeOrderKes,
-  TypeOrderKeys,
-  order_type
-} from '../types/OrderType'
+import { TypeOrderKeys, order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
+import { FormOrderFields } from './FormOrder'
 
 const FormStore = ({
   defaultValues,
@@ -33,7 +29,40 @@ const FormStore = ({
         setSubmitting(false)
       })
   }
+  const oldOrdersTypes = Object.keys(order_type)
   const ordersTypes = TypeOrderKeys
+
+  const extraFields: FormOrderFields[] = [
+    //'type',//*<- Required already included
+    //'fullName',//*<- Required already included
+    // 'phone',//*<- Required already included
+    // 'selectItems', //*<- Required already included
+    //* address
+    'neighborhood',
+    'address',
+    'location',
+    'references',
+
+    //* assign
+    'scheduledAt',
+    'assignIt',
+
+    //* repair
+    'selectItemRepair',
+    'selectItemRent',
+    'itemBrand',
+    'itemSerial',
+    'repairDescription', //*<- Field name is 'description' in the form
+
+    //* images
+    'imageID',
+    'imageHouse',
+
+    //* extra ops
+    'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+    'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
+    'note' //*<- kind of external reference
+  ]
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -41,7 +70,7 @@ const FormStore = ({
         handleSubmit(values)
       }}
     >
-      {({ handleSubmit }) => (
+      {({ handleSubmit, values }) => (
         <View>
           <View style={styles.input}>
             <FormikInputValue name={'name'} placeholder="Nombre" />
@@ -60,12 +89,26 @@ const FormStore = ({
 
           <FormikInputImage name="img" label="Portada " />
 
-          <Text style={gStyles.h3}>Tipos de ordenes</Text>
+          <Text style={gStyles.h3}>Tipos de ordenes (antiguas)</Text>
           <Text style={gStyles.helper}>
             Te permitira crear diferentes tipos de ordenes según las necesidades
             de tu negocio
           </Text>
-
+          <View style={[styles.input, styles.type]}>
+            {oldOrdersTypes.map((type) => (
+              <View key={type} style={[styles.type]}>
+                <FormikCheckbox
+                  name={'orderTypes.' + type}
+                  label={dictionary(type as order_type)}
+                />
+              </View>
+            ))}
+          </View>
+          <Text style={gStyles.h3}>Tipos de ordenes (recomendado)</Text>
+          <Text style={gStyles.helper}>
+            Te permitira crear diferentes tipos de ordenes según las necesidades
+            de tu negocio
+          </Text>
           <View style={[styles.input, styles.type]}>
             {ordersTypes.map((type) => (
               <View key={type} style={[styles.type]}>
@@ -76,6 +119,29 @@ const FormStore = ({
               </View>
             ))}
           </View>
+          <Text style={gStyles.h3}>Campos por tipo de orden</Text>
+          <Text style={gStyles.helper}>
+            Te permitira agregar campos personalizados a las ordenes.
+          </Text>
+
+          {Object.keys(values.orderTypes).map((type) => {
+            if (!['RENT', 'SALE', 'REPAIR'].includes(type)) return null // only show the new types
+            if (values.orderTypes[type] === false) return null // only config the selected types
+            return (
+              <View key={type}>
+                <Text style={gStyles.h3}>{dictionary(type)}</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  {extraFields.map((field) => (
+                    <FormikCheckbox
+                      key={field}
+                      name={`orderFields.${type}.${field}`}
+                      label={dictionary(field)}
+                    />
+                  ))}
+                </View>
+              </View>
+            )
+          })}
 
           <Text style={gStyles.h3}>Secciones</Text>
           <Text style={gStyles.helper}>
