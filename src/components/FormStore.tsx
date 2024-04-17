@@ -4,7 +4,12 @@ import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 import StoreType from '../types/StoreType'
-import { order_type } from '../types/OrderType'
+import {
+  TypeOrder,
+  TypeOrderKes,
+  TypeOrderKeys,
+  order_type
+} from '../types/OrderType'
 import dictionary from '../dictionary'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
@@ -28,7 +33,7 @@ const FormStore = ({
         setSubmitting(false)
       })
   }
-  const ordersTypes = Object.keys(order_type)
+  const ordersTypes = TypeOrderKeys
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -60,12 +65,13 @@ const FormStore = ({
             Te permitira crear diferentes tipos de ordenes según las necesidades
             de tu negocio
           </Text>
+
           <View style={[styles.input, styles.type]}>
             {ordersTypes.map((type) => (
               <View key={type} style={[styles.type]}>
                 <FormikCheckbox
                   name={'orderTypes.' + type}
-                  label={dictionary(type as order_type)}
+                  label={dictionary(type)}
                 />
               </View>
             ))}

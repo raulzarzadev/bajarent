@@ -5,11 +5,17 @@ import { CommentType } from './CommentType'
 import PaymentType from './PaymentType'
 
 type OrderBase = {
+  /**
+   * @deprecated use typeOrder instead
+   */
+  type: TypeOfOrderType
+
+  typeOrder: TypeOrder
+
   note: string
 
   folio: number
   status: OrderStatus
-  type: TypeOfOrderType
 
   storeId: StoreType['id']
 
@@ -119,6 +125,9 @@ export enum order_status {
   PICKED_UP = 'PICKED_UP'
 }
 
+/**
+ * @deprecated use TypeOrder instead
+ */
 export enum order_type {
   RENT = 'RENT',
   SALE = 'SALE',
@@ -152,3 +161,19 @@ export const ORDER_STATUS_UNSOLVED = Object.keys(order_status).filter(
 )
 
 export default OrderType
+
+/* ********************************************
+ *Start using typeOrder instead of order_type reduce options to select order form
+ *******************************************rz */
+
+export enum TypeOrder {
+  RENT,
+  SALE,
+  REPAIR
+}
+
+export const TypeOrderKeys = Object.keys(TypeOrder).filter((a) =>
+  isNaN(Number(a))
+)
+
+export type TypeOrderKey = keyof typeof TypeOrder

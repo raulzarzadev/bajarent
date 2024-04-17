@@ -17,28 +17,36 @@ import { useEmployee } from '../contexts/employeeContext'
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
-  const { user } = useAuth()
-  const { store, staff, userStores } = useStore()
-  const anyStoreOption = !!store || !!staff?.length || !!userStores?.length
-  if (!user)
-    return (
-      <ErrorBoundary componentName="NotUserTabs">
-        <NotUserTabs />
-      </ErrorBoundary>
-    )
-
-  if (!anyStoreOption)
-    return (
-      <ErrorBoundary componentName="NotStoreTabs">
-        <NotStoreTabs />
-      </ErrorBoundary>
-    )
   return (
-    <ErrorBoundary componentName="UserAndStoreTabs">
+    <ErrorBoundary componentName="NotUserTabs">
       <UserAndStoreTabs />
     </ErrorBoundary>
   )
 }
+
+// const BottomAppBar = () => {
+//   const { user } = useAuth()
+//   const { store, staff, userStores } = useStore()
+//   const anyStoreOption = !!store || !!staff?.length || !!userStores?.length
+//   if (!user)
+//     return (
+//       <ErrorBoundary componentName="NotUserTabs">
+//         <NotUserTabs />
+//       </ErrorBoundary>
+//     )
+
+//   if (!anyStoreOption)
+//     return (
+//       <ErrorBoundary componentName="NotStoreTabs">
+//         <NotStoreTabs />
+//       </ErrorBoundary>
+//     )
+//   return (
+//     <ErrorBoundary componentName="UserAndStoreTabs">
+//       <UserAndStoreTabs />
+//     </ErrorBoundary>
+//   )
+// }
 
 const NotStoreTabs = () => {
   return (
@@ -125,9 +133,10 @@ const NotUserTabs = () => {
     </Tab.Navigator>
   )
 }
-
+// #region UserAndStoreTabs
 const UserAndStoreTabs = () => {
   const {
+    employee,
     permissions: { isAdmin, isOwner, orders }
   } = useEmployee()
 

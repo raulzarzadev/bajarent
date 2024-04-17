@@ -20,8 +20,9 @@ export const EmployeeContextProvider = ({ children }) => {
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const { user } = useAuth()
   const { staff, store, storeId } = useStore()
-  const isOwner = store?.createdBy === user?.id
+  const isOwner = !!store && !!user && store?.createdBy === user?.id
 
+  console.log({ user, staff, employee })
   const newOrderPermissions = employee?.permissions?.order || {}
   const isAdmin = employee?.permissions?.isAdmin
 
@@ -32,21 +33,27 @@ export const EmployeeContextProvider = ({ children }) => {
 
   useEffect(() => {
     const employee = staff?.find((s) => s?.userId === user?.id)
-    if (employee) {
-      setEmployee({
-        isOwner,
-        ...employee
-      })
-    } else {
-      setEmployee({
-        isOwner,
-        name: user?.name,
-        phone: user?.phone,
-        userId: user?.id,
-        storeId,
-        email: user?.email
-      })
-    }
+    if (!employee) return setEmployee(null)
+    setEmployee({
+      ...employee,
+      isOwner
+    })
+
+    // if (employee) {
+    //   setEmployee({
+    //     isOwner,
+    //     ...employee
+    //   })
+    // } else {
+    //   setEmployee({
+    //     isOwner,
+    //     name: user?.name,
+    //     phone: user?.phone,
+    //     userId: user?.id,
+    //     storeId,
+    //     email: user?.email
+    //   })
+    // }
   }, [storeId, user?.id, staff])
   return (
     <EmployeeContext.Provider
