@@ -7,7 +7,7 @@ import StoreType from '../types/StoreType'
 import { TypeOrderKeys, order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import FormikCheckbox from './FormikCheckbox'
-import { gStyles } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
 import { FormOrderFields } from './FormOrder'
 
@@ -125,11 +125,18 @@ const FormStore = ({
           </Text>
 
           {Object.keys(values.orderTypes).map((type) => {
-            if (!['RENT', 'SALE', 'REPAIR'].includes(type)) return null // only show the new types
-            if (values.orderTypes[type] === false) return null // only config the selected types
+            if (!['RENT', 'SALE', 'REPAIR'].includes(type)) return null //<- only show the new types
+            if (values.orderTypes[type] === false) return null // <- only config the selected types
             return (
               <View key={type}>
-                <Text style={gStyles.h3}>{dictionary(type)}</Text>
+                <Text
+                  style={[
+                    gStyles.h2,
+                    { textTransform: 'capitalize', marginTop: gSpace(2) }
+                  ]}
+                >
+                  {dictionary(type)}
+                </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   {extraFields.map((field) => (
                     <FormikCheckbox

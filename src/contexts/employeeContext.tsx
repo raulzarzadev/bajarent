@@ -22,7 +22,6 @@ export const EmployeeContextProvider = ({ children }) => {
   const { staff, store, storeId } = useStore()
   const isOwner = !!store && !!user && store?.createdBy === user?.id
 
-  console.log({ user, staff, employee })
   const newOrderPermissions = employee?.permissions?.order || {}
   const isAdmin = employee?.permissions?.isAdmin
 
