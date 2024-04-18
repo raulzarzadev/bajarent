@@ -63,10 +63,10 @@ const FormikSelectItems = ({
               ?.prices?.find((price) => price?.id === value?.priceSelectedId) ||
             null
           const priceSelectedImportantInfo = {
-            amount: priceSelected?.amount,
-            title: priceSelected?.title,
-            time: priceSelected?.time,
-            id: priceSelected?.id
+            amount: priceSelected?.amount || null,
+            title: priceSelected?.title || null,
+            time: priceSelected?.time || null,
+            id: priceSelected?.id || null
           }
           helpers.setValue({
             ...value,
