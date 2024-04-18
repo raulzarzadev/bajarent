@@ -29,7 +29,19 @@ import InputRadios from './InputRadios'
 
 //#region FUNCTIONS
 
-const getOrderFields = (fields, type): FormOrderFields[] => {
+const getOrderFields = (
+  fields: Record<FormOrderFields, boolean>,
+  type: TypeOrder
+): FormOrderFields[] => {
+  //* extra ops config
+
+  //* add extra ops config at the really first of the form
+  const extraOps = [
+    'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+    'note', //*<- kind of external reference
+    'sheetRow' //*<- you can paste a google sheet row to get the data much more easy
+  ].filter((field) => !!fields?.[field]) as FormOrderFields[]
+
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
 
   let mandatoryFieldsEnd: FormOrderFields[] = []
@@ -37,10 +49,18 @@ const getOrderFields = (fields, type): FormOrderFields[] => {
   if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
   if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItemsSale']
 
-  let res: FormOrderFields[] = []
-  const extraFieldsAllowed = extraFields.filter((field) => fields?.[field])
-  res = extraFieldsAllowed
-  return [...mandatoryFieldsStart, ...res, ...mandatoryFieldsEnd]
+  let addedFields: FormOrderFields[] = []
+  const extraFieldsAllowed = extraFields
+    .filter((field) => fields?.[field])
+    //* clear extra ops because are already included at the first of the form
+    .filter((field) => !extraOps.includes(field))
+  addedFields = extraFieldsAllowed
+  return [
+    ...extraOps,
+    ...mandatoryFieldsStart,
+    ...addedFields,
+    ...mandatoryFieldsEnd
+  ]
 }
 const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -56,10 +76,12 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'itemSerial',
   'imageID',
   'imageHouse',
-  'hasDelivered',
   'assignIt',
+
+  'hasDelivered',
   'sheetRow',
   'note',
+
   'selectItemsRepair',
   'selectItemsRent',
   'selectItemsSale'

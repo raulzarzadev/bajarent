@@ -174,10 +174,10 @@ export const extraFields: FormOrderFields[] = [
   //'fullName',//*<- Required already included
   // 'phone',//*<- Required already included
 
-  //* extra ops
+  //* extra ops config
+  'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
   'note', //*<- kind of external reference
   'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
-  'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
 
   //* address
   'neighborhood',
