@@ -17,6 +17,7 @@ import PaymentType from '../types/PaymentType'
 import useStoreDataListen from '../hooks/useStoreDataListen'
 import useUserStores from '../hooks/useUserStores'
 import useComments from '../hooks/useComments'
+import asDate from '../libs/utils-date'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -102,16 +103,37 @@ const StoreContextProvider = ({ children }) => {
       const orderComments = comments?.filter(
         (comment) => comment.orderId === order.id
       )
-      const expireAt = expireDate2({
-        startedAt: order.deliveredAt || order.scheduledAt,
-        price: order?.item?.priceSelected,
-        priceQty: order?.item?.priceQty
+
+      const orderItemsExpireDate = order?.items?.map((item) => {
+        const expireAt = expireDate2({
+          startedAt: order.deliveredAt || order.scheduledAt,
+          price: item.priceSelected,
+          priceQty: item.priceQty
+        })
+        return { ...item, expireAt }
       })
+
+      let expireAt = null
+      if (!!order?.items?.length) {
+        //* sort items by expireAt and choose the nearest one as expire date for all order
+        expireAt = orderItemsExpireDate.sort((a, b) => {
+          return asDate(a?.expireAt)?.getTime() - asDate(b?.expireAt)?.getTime()
+        })[0].expireAt
+      } else {
+        //* if order has no items, use the order expire date
+        expireAt = expireDate2({
+          startedAt: order.deliveredAt || order.scheduledAt,
+          price: order?.item?.priceSelected,
+          priceQty: order?.item?.priceQty
+        })
+      }
+
       const hasNotSolvedReports = orderComments?.some(
         (comment) => comment.type === 'report' && !comment.solved
       )
       return {
         ...order,
+        items: orderItemsExpireDate,
         hasNotSolvedReports,
         comments: orderComments,
         assignToName: staff?.find((s) => s.id === order.assignTo)?.name,

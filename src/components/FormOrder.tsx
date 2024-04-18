@@ -35,7 +35,6 @@ const getOrderFields = (
   type: TypeOrder
 ): FormOrderFields[] => {
   //* extra ops config
-  console.log({ fields })
   //* add extra ops config at the really first of the form
   const extraOps = [
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists

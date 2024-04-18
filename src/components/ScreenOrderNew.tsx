@@ -28,16 +28,17 @@ const ScreenOrderNew = ({ navigation }) => {
     }
 
     //* if has delivered is true
+
+    // //* if type is local rent
+    // if (values.type === order_type.RENT) {
+    //   values.status = order_status.DELIVERED
+    //   values.deliveredAt = new Date()
+    //   values.deliveredBy = user.id
+    // }
+
     if (values.hasDelivered) {
       values.status = order_status.DELIVERED
       values.deliveredAt = values.scheduledAt
-      values.deliveredBy = user.id
-    }
-
-    //* if type is local rent
-    if (values.type === order_type.RENT) {
-      values.status = order_status.DELIVERED
-      values.deliveredAt = new Date()
       values.deliveredBy = user.id
     }
 

@@ -4,7 +4,7 @@ import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
 import theme from '../theme'
-import { dateFormat, fromNow } from '../libs/utils-date'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderComments from './OrderComments'
 import dictionary from '../dictionary'
@@ -213,7 +213,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
-  if (order?.items?.length > 0) {
+q  if (order?.items?.length > 0) {
     return (
       <View
         style={{
@@ -247,6 +247,13 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           </View>
         ))}
         <Totals items={order.items} />
+        <View style={{ marginTop: gSpace(3) }}>
+          <ItemDates
+            expireAt={order.expireAt}
+            scheduledAt={order.scheduledAt}
+            startedAt={order.deliveredAt}
+          />
+        </View>
       </View>
     )
   }

@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase/firestore'
 import asDate from './utils-date'
 import { PriceType, TimePriceType } from '../types/PriceType'
 import { addDays, addHours, addMinutes, addMonths, addWeeks } from 'date-fns'
+import OrderType from '../types/OrderType'
 /**
  *
  * @param time its a string with the time and the unit of time
