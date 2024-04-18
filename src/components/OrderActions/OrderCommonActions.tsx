@@ -41,7 +41,7 @@ const OrderCommonActions = ({
   }) => {
     onComment({ orderId, content, storeId, type })
   }
-  const { navigate } = useNavigation()
+  const { navigate, goBack } = useNavigation()
   const canCancel = actionsAllowed.canCancel
   const canEdit = actionsAllowed.canEdit
   const canDelete = actionsAllowed.canDelete
@@ -64,8 +64,13 @@ const OrderCommonActions = ({
     // @ts-ignore
     navigate('RenewOrder', { orderId })
   }
-  const handleDelete = () => {
-    onDelete({ orderId })
+  const handleDelete = async () => {
+    try {
+      await onDelete({ orderId })
+      goBack()
+    } catch (error) {
+      console.log({ error })
+    }
   }
   const handleAuthorize = async () => {
     await onAuthorize({ orderId, userId })
