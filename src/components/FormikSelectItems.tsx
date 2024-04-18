@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useField } from 'formik'
 import FormSelectItem, { ItemSelected } from './FormSelectItem'
 import { Category } from '../types/RentItem'
@@ -7,6 +7,8 @@ import { FlatList, Text, View } from 'react-native'
 import CurrencyAmount from './CurrencyAmount'
 import { gSpace, gStyles } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
+import { TypeOrderKey } from '../types/OrderType'
+import { set } from 'cypress/types/lodash'
 
 const FormikSelectItems = ({
   name,
@@ -15,7 +17,8 @@ const FormikSelectItems = ({
   selectPrice,
   startAt,
   items = [],
-  setItems
+  setItems,
+  orderType
 }: {
   name: string
   label?: string
@@ -24,6 +27,7 @@ const FormikSelectItems = ({
   startAt?: Date
   setItems?: (items: ItemSelected[]) => void
   items?: ItemSelected[]
+  orderType?: TypeOrderKey
 }) => {
   const [field, meta, helpers] = useField(name)
   const value: ItemSelected = useMemo(() => field.value, [field.value])
@@ -41,6 +45,11 @@ const FormikSelectItems = ({
     setItems(newItems)
     helpers.setValue({})
   }
+
+  useEffect(() => {
+    _setItems([]) //* <- should reset items if change order type
+    setItems([]) //* <- should reset items if change order type
+  }, [orderType])
 
   return (
     <>

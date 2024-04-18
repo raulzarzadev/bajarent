@@ -402,6 +402,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         startAt={values.scheduledAt}
         setItems={(items) => setValues({ ...values, items })}
         items={values.items}
+        orderType={TypeOrder.REPAIR}
       />
     ),
     selectItemsRent: (
@@ -415,6 +416,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         startAt={values.scheduledAt}
         setItems={(items) => setValues({ ...values, items })}
         items={values.items}
+        orderType={TypeOrder.RENT}
       />
     ),
     selectItemsSale: (
@@ -428,6 +430,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         startAt={values.scheduledAt}
         setItems={(items) => setValues({ ...values, items })}
         items={values.items}
+        orderType={TypeOrder.SALE}
       />
     ),
     hasDelivered: (

@@ -41,6 +41,14 @@ const ScreenOrderNew = ({ navigation }) => {
       values.deliveredBy = user.id
     }
 
+    // if (values.type === order_type.REPAIR) {
+    //   values.items = values.items.map((item) => {
+    //     item.priceSelected = null
+    //     item.priceSelectedId = null
+    //     return item
+    //   })
+    // }
+
     return await ServiceOrders.create(values)
       .then((res) => {
         const orderId = res?.res?.id
