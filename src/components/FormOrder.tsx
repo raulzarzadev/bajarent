@@ -210,6 +210,8 @@ const FormOrderA = ({
           }}
           value={orderType}
           layout="row"
+          label="Tipo de orden"
+          containerStyle={{ justifyContent: 'center' }}
         />
         {/*
          // *** *** render form depending on order type

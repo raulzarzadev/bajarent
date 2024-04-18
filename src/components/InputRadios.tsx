@@ -24,9 +24,13 @@ const InputRadios = <T extends string = string>({
   layout,
   containerStyle
 }: InputRadiosProps<T>) => {
-  const radioButtons = useMemo(
-    () => options.map((option) => ({ ...option, id: option.value })),
-    [options]
+  const capitalizeLabels = options.map((option) => ({
+    ...option,
+    label: option.label.charAt(0).toUpperCase() + option.label.slice(1)
+  }))
+  const radioButtonsOptions = useMemo(
+    () => capitalizeLabels.map((option) => ({ ...option, id: option.value })),
+    [capitalizeLabels]
   )
 
   return (
@@ -34,11 +38,9 @@ const InputRadios = <T extends string = string>({
       {label && <Text style={styles.label}>{label}</Text>}
       <RadioGroup
         accessibilityLabel={label}
-        // layout={'row'}
-        radioButtons={radioButtons}
+        radioButtons={radioButtonsOptions}
         onPress={setValue}
         selectedId={value}
-        // labelStyle={{ textTransform: 'capitalize' }}
         containerStyle={[
           containerStyle,
           {
