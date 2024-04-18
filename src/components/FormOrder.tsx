@@ -2,11 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
-import OrderType, {
-  TypeOrder,
-  TypeOrderKey,
-  order_type
-} from '../types/OrderType'
+import OrderType, { TypeOrder, order_type } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
@@ -15,7 +11,6 @@ import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './InputRadiosFormik'
 import FormikInputImage from './FormikInputImage'
 import P from './P'
-import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 import FormikCheckbox from './FormikCheckbox'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
@@ -25,8 +20,6 @@ import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
 import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
-import InputRadios from './InputRadios'
-import { useEmployee } from '../contexts/employeeContext'
 import theme from '../theme'
 
 //#region FUNCTIONS
@@ -119,11 +112,6 @@ const FormOrderA = ({
 }: FormOrderProps) => {
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
-  const { permissions } = useEmployee()
-  const canAuthorizeOrder =
-    permissions.orders.canAuthorize ||
-    permissions.isAdmin ||
-    permissions.isOwner
 
   //* <- Define order types allowed
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -179,11 +167,6 @@ const FormOrderA = ({
   /* ********************************************
    * define order fields depends of order type
    *******************************************rz */
-
-  const [orderFields, setOrderFields] = useState<FormOrderFields[]>([])
-  const [orderType, setOrderType] = useState<TypeOrderKey>(
-    initialValues.type as TypeOrderKey
-  )
 
   //#region render
   return (
