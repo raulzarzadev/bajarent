@@ -79,17 +79,21 @@ const FormikSelectItems = ({
       />
       <ListItems items={_items} handleRemoveItem={handleRemoveItem} />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          justifyContent: 'center'
-        }}
-      >
-        <Text style={{ marginRight: 4 }}>Items: </Text>
-        <Text style={gStyles.h2}>{_items.length || 0}</Text>
-      </View>
-      <Totals items={_items} />
+      {!!selectPrice && (
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'baseline',
+              justifyContent: 'center'
+            }}
+          >
+            <Text style={{ marginRight: 4 }}>Items: </Text>
+            <Text style={gStyles.h2}>{_items.length || 0}</Text>
+          </View>
+          <Totals items={_items} />
+        </>
+      )}
     </>
   )
 }
