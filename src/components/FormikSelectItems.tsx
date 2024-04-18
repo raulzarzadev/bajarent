@@ -7,8 +7,6 @@ import { FlatList, Text, View } from 'react-native'
 import CurrencyAmount from './CurrencyAmount'
 import { gSpace, gStyles } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
-import { TypeOrderKey } from '../types/OrderType'
-import { set } from 'cypress/types/lodash'
 
 const FormikSelectItems = ({
   name,
@@ -17,8 +15,7 @@ const FormikSelectItems = ({
   selectPrice,
   startAt,
   items = [],
-  setItems,
-  orderType
+  setItems
 }: {
   name: string
   label?: string
@@ -27,7 +24,6 @@ const FormikSelectItems = ({
   startAt?: Date
   setItems?: (items: ItemSelected[]) => void
   items?: ItemSelected[]
-  orderType?: TypeOrderKey
 }) => {
   const [field, meta, helpers] = useField(name)
   const value: ItemSelected = useMemo(() => field.value, [field.value])
@@ -45,11 +41,6 @@ const FormikSelectItems = ({
     setItems(newItems)
     helpers.setValue({})
   }
-
-  // useEffect(() => {
-  //   _setItems([]) //* <- should reset items if change order type
-  //   setItems([]) //* <- should reset items if change order type
-  // }, [orderType])
 
   return (
     <>
@@ -86,23 +77,20 @@ const FormikSelectItems = ({
         showDetails={false}
         // askItemInfo={true}
       />
+
       <ListItems items={_items} handleRemoveItem={handleRemoveItem} />
 
-      {!!selectPrice && (
-        <>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'baseline',
-              justifyContent: 'center'
-            }}
-          >
-            <Text style={{ marginRight: 4 }}>Items: </Text>
-            <Text style={gStyles.h2}>{_items.length || 0}</Text>
-          </View>
-          <Totals items={_items} />
-        </>
-      )}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'baseline',
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={{ marginRight: 4 }}>Items: </Text>
+        <Text style={gStyles.h2}>{_items.length || 0}</Text>
+      </View>
+      <Totals items={_items} />
     </>
   )
 }

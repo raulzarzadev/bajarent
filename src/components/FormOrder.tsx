@@ -183,13 +183,6 @@ const FormOrderA = ({
   const [orderType, setOrderType] = useState<TypeOrderKey>(
     initialValues.type as TypeOrderKey
   )
-  useEffect(() => {
-    const res = getOrderFields(
-      store?.orderFields?.[orderType] as OrderFields,
-      orderType as TypeOrder
-    )
-    setOrderFields(res)
-  }, [orderType])
 
   //#region render
   return (
@@ -209,27 +202,9 @@ const FormOrderA = ({
         {title && <Text style={gStyles.h3}>{title}</Text>}
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
 
-        {/*
-         // *** *** Select order type
-         */}
-        {/* <InputRadios
-          options={ordersTypesAllowed}
-          setValue={(value: TypeOrderKey) => {
-            setOrderType(value)
-          }}
-          value={orderType}
-          layout="row"
-          label="Tipo de orden"
-          containerStyle={{ justifyContent: 'center' }}
-        /> */}
-        {/*
-         // *** *** render form depending on order type
-         */}
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, { resetForm }) => {
-            //@ts-ignore
-            values.type = orderType //* <- hard set order type !
             setLoading(true)
             await onSubmit(values)
               .then((res) => {
@@ -252,7 +227,8 @@ const FormOrderA = ({
                 <FormFields
                   fields={getOrderFields(
                     store?.orderFields?.[values.type] as OrderFields,
-                    orderType as TypeOrder
+                    //@ts-ignore FIXME: as TypeOrder or TypeOrderKey
+                    values.type
                   )}
                   values={values}
                   setValues={setValues}
@@ -405,11 +381,10 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         categories={categories.map((cat) => ({
           ...cat
         }))}
-        //selectPrice
+        selectPrice
         startAt={values.scheduledAt}
         setItems={(items) => setValues({ ...values, items })}
         items={values.items}
-        orderType={TypeOrder.REPAIR}
       />
     ),
     selectItemsRent: (
@@ -423,7 +398,6 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         startAt={values.scheduledAt}
         setItems={(items) => setValues({ ...values, items })}
         items={values.items}
-        orderType={TypeOrder.RENT}
       />
     ),
     selectItemsSale: (
@@ -437,7 +411,6 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         startAt={values.scheduledAt}
         setItems={(items) => setValues({ ...values, items })}
         items={values.items}
-        orderType={TypeOrder.SALE}
       />
     ),
     hasDelivered: (

@@ -26,7 +26,7 @@ const ScreenOrderEdit = ({ route, navigation }) => {
           values.deliveredAt = values.scheduledAt
         }
         //* if type is store rent
-        if (values.type === order_type.STORE_RENT) {
+        if (values.type === 'RENT') {
           values.updatedBy = user.id
         }
 
