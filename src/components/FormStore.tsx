@@ -173,7 +173,6 @@ export const extraFields: FormOrderFields[] = [
   //'type',//*<- Required already included
   //'fullName',//*<- Required already included
   // 'phone',//*<- Required already included
-  // 'selectItems', //*<- Required already included
 
   //* extra ops
   'note', //*<- kind of external reference
@@ -191,8 +190,6 @@ export const extraFields: FormOrderFields[] = [
   'assignIt',
 
   //* repair
-  'selectItemRepair',
-  'selectItemRent',
   'itemBrand',
   'itemSerial',
   'repairDescription', //*<- Field name is 'description' in the form
@@ -202,4 +199,7 @@ export const extraFields: FormOrderFields[] = [
   'imageHouse'
 
   //* select item
+  // 'selectItemsRent',//* <- Included by default
+  // 'selectItemsSale',//* <- Included by default
+  // 'selectItemsRepair'//* <- Included by default
 ]

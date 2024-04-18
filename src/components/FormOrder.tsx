@@ -33,8 +33,8 @@ const getOrderFields = (fields, type): FormOrderFields[] => {
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
 
   let mandatoryFieldsEnd: FormOrderFields[] = []
-  if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItemRent']
-  if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemRepair']
+  if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItemsRent']
+  if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
   if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItemsSale']
 
   let res: FormOrderFields[] = []
@@ -51,9 +51,6 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'location',
   'neighborhood',
   'references',
-  'selectItemRepair',
-  'selectItemRent',
-  'selectItems',
   'repairDescription', // Field name is 'description' in the form
   'itemBrand',
   'itemSerial',
@@ -244,12 +241,16 @@ type FormFieldsProps = {
     shouldValidate?: boolean | undefined
   ) => void
 }
-//#region FormFields
+
+//#region FormFields ErrorBoundary
+
 const FormFields = (props: FormFieldsProps) => (
   <ErrorBoundary componentName="FormFieldsA">
     <FormFieldsA {...props}></FormFieldsA>
   </ErrorBoundary>
 )
+
+//#region FormFields
 
 const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
   const { categories, store } = useStore()
@@ -362,17 +363,17 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         }))}
       />
     ),
-    selectItemRent: (
-      <FormikSelectItems
-        name="item"
-        label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
-        selectPrice
-        startAt={values.scheduledAt}
-      />
-    ),
+    // selectItemRent: (
+    //   <FormikSelectItems
+    //     name="item"
+    //     label="Selecciona un artículo"
+    //     categories={categories.map((cat) => ({
+    //       ...cat
+    //     }))}
+    //     selectPrice
+    //     startAt={values.scheduledAt}
+    //   />
+    // ),
     selectItemsRepair: (
       <FormikSelectItems
         name="item"
