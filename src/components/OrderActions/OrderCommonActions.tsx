@@ -2,15 +2,23 @@ import { View } from 'react-native'
 import ModalWhatsAppOrderStatus from './ModalWhatsAppOrderStatus'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
-import { onAuthorize, onCancel, onDelete } from '../../libs/order-actions'
+import {
+  onAuthorize,
+  onCancel,
+  onComment,
+  onDelete
+} from '../../libs/order-actions'
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
+import { CommentType } from '../ListComments'
 
 const OrderCommonActions = ({
+  storeId,
   actionsAllowed,
   orderId,
   userId
 }: {
+  storeId: string
   orderId: string
   actionsAllowed: {
     canRenew?: boolean
@@ -24,6 +32,15 @@ const OrderCommonActions = ({
   }
   userId: string
 }) => {
+  const onOrderComment = ({
+    content,
+    type = 'comment'
+  }: {
+    content: string
+    type?: CommentType['type']
+  }) => {
+    onComment({ orderId, content, storeId, type })
+  }
   const { navigate } = useNavigation()
   const canCancel = actionsAllowed.canCancel
   const canEdit = actionsAllowed.canEdit
@@ -50,11 +67,14 @@ const OrderCommonActions = ({
   const handleDelete = () => {
     onDelete({ orderId })
   }
-  const handleAuthorize = () => {
-    onAuthorize({ orderId, userId })
+  const handleAuthorize = async () => {
+    await onAuthorize({ orderId, userId })
+    onOrderComment({ content: 'Autorizada' })
   }
   const handleCancel = async () => {
-    return await onCancel({ orderId, userId })
+    return await onCancel({ orderId, userId }).then(() => {
+      onOrderComment({ content: 'Cancelada' })
+    })
   }
 
   const buttons = [

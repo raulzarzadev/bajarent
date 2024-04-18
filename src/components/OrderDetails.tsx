@@ -146,6 +146,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             orderId={order.id}
             orderType={'RENT'}
             orderStatus={order.status}
+            storeId={order.storeId}
           />
         )}
         {order.type === order_type.SALE && (
@@ -153,6 +154,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             orderId={order.id}
             orderType={'SALE'}
             orderStatus={order.status}
+            storeId={order.storeId}
           />
         )}
         {order.type === order_type.REPAIR && (
@@ -160,6 +162,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             orderId={order.id}
             orderType={'REPAIR'}
             orderStatus={order.status}
+            storeId={order.storeId}
           />
         )}
       </ErrorBoundary>

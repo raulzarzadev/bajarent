@@ -1,7 +1,18 @@
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { CommentType } from '../types/CommentType'
 import { order_status } from '../types/OrderType'
 
-export const onComment = async ({ orderId, storeId, content, type }) => {
+export const onComment = async ({
+  orderId,
+  storeId,
+  content,
+  type
+}: {
+  orderId: string
+  storeId: string
+  content: string
+  type: CommentType['type']
+}) => {
   return await ServiceOrders.addComment({
     storeId,
     orderId,
@@ -18,7 +29,9 @@ export const onAuthorize = async ({ orderId, userId }) => {
     authorizedAt: new Date(),
     authorizedBy: userId
   })
-    .then(console.log)
+    .then((res) => {
+      console.log(res)
+    })
     .catch(console.error)
 }
 

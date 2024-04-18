@@ -7,7 +7,9 @@ import {
   onRenew,
   onRepairFinish,
   onRepairStart,
-  onPending
+  onPending,
+  onComment,
+  onCancel
 } from '../../libs/order-actions'
 import OrderType, { order_status } from '../../types/OrderType'
 import OrderStatus from '../OrderStatus'
@@ -18,6 +20,8 @@ import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
 import { useEmployee } from '../../contexts/employeeContext'
 import { gSpace } from '../../styles'
+import { CommentType } from '../ListComments'
+import ErrorBoundary from '../ErrorBoundary'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -37,13 +41,15 @@ export type OrderActionsType = {
   orderId: string
   orderType: OrderTypes
   orderStatus: OrderType['status']
+  storeId: string
 }
 
 // #region FUNCTION
 const OrderActions = ({
   orderId,
   orderType,
-  orderStatus
+  orderStatus,
+  storeId
 }: OrderActionsType) => {
   const { permissions } = useEmployee()
   const { user } = useAuth()
@@ -51,16 +57,75 @@ const OrderActions = ({
 
   // #region  ACTIONS FUNCTIONS
   // Resume in one place tha functions that will be called some times
+  const onOrderComment = async ({
+    content,
+    type = 'comment'
+  }: {
+    content: string
+    type?: CommentType['type']
+  }) => {
+    return await onComment({ orderId, content, storeId, type })
+  }
   const actions_fns = {
-    [acts.DELIVER]: () => onDelivery({ orderId, userId }),
-    [acts.PICKUP]: () => onPickup({ orderId, userId }),
-    [acts.RENEW]: () => onRenew({ orderId, userId }),
-    [acts.REPAIR_START]: () => onRepairStart({ orderId, userId }),
-    [acts.REPAIR_FINISH]: () => onRepairFinish({ orderId, userId })
+    [acts.DELIVER]: async () => {
+      try {
+        await onDelivery({ orderId, userId })
+        await onOrderComment({ content: 'Entregada' })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [acts.PICKUP]: async () => {
+      try {
+        await onPickup({ orderId, userId })
+        await onOrderComment({ content: 'Recogida' })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [acts.RENEW]: async () => {
+      try {
+        await onRenew({ orderId, userId })
+        await onOrderComment({ content: 'Renovada' })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [acts.REPAIR_START]: async () => {
+      try {
+        await onRepairStart({ orderId, userId })
+        await onOrderComment({ content: 'Reparación comenzada' })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [acts.REPAIR_FINISH]: async () => {
+      try {
+        await onRepairFinish({ orderId, userId })
+        await onOrderComment({ content: 'Reparación terminada' })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
     //* this are part of common actions
-    //[acts.COMMENT]: ()=>onComment({ orderId ,content,storeId,type}),
-    //[acts.AUTHORIZE]: () => onAuthorize({ orderId, userId }),
-    //[acts.CANCEL]: () => onCancel({ orderId, userId })
+
+    [acts.AUTHORIZE]: async () => {
+      try {
+        await onAuthorize({ orderId, userId })
+        await onOrderComment({ content: 'Autorizada' })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [acts.CANCEL]: async () => {
+      try {
+        await onCancel({ orderId, userId })
+        await onOrderComment({ content: 'Cancelada' })
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
   //TODO: should not be able to do some actions depends of the status // yes , absolutely
@@ -321,7 +386,7 @@ const OrderActions = ({
           <Button
             label="Autorizar"
             onPress={() => {
-              onAuthorize({ orderId, userId })
+              actions_fns[acts.AUTHORIZE]()
             }}
             size="xs"
             variant="ghost"
@@ -357,6 +422,7 @@ const OrderActions = ({
       // #region COMMON ACTIONS 
       */}
       <OrderCommonActions
+        storeId={storeId}
         userId={userId}
         orderId={orderId}
         actionsAllowed={{
@@ -374,4 +440,12 @@ const OrderActions = ({
   )
 }
 
+//#region Error boundary
+export const OrderActionsE = (props: OrderActionsType) => {
+  return (
+    <ErrorBoundary componentName="OrderActions">
+      <OrderActions {...props} />
+    </ErrorBoundary>
+  )
+}
 export default OrderActions
