@@ -5,12 +5,7 @@ import { CommentType } from './CommentType'
 import PaymentType from './PaymentType'
 
 type OrderBase = {
-  /**
-   * @deprecated use typeOrder instead
-   */
   type: TypeOfOrderType
-
-  typeOrder: TypeOrder
 
   note: string
 
@@ -167,9 +162,9 @@ export default OrderType
  *******************************************rz */
 
 export enum TypeOrder {
-  RENT,
-  SALE,
-  REPAIR
+  RENT = 'RENT',
+  SALE = 'SALE',
+  REPAIR = 'REPAIR'
 }
 
 export const TypeOrderKeys = Object.keys(TypeOrder).filter((a) =>

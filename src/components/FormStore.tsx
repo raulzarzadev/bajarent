@@ -32,37 +32,6 @@ const FormStore = ({
   const oldOrdersTypes = Object.keys(order_type)
   const ordersTypes = TypeOrderKeys
 
-  const extraFields: FormOrderFields[] = [
-    //'type',//*<- Required already included
-    //'fullName',//*<- Required already included
-    // 'phone',//*<- Required already included
-    // 'selectItems', //*<- Required already included
-    //* address
-    'neighborhood',
-    'address',
-    'location',
-    'references',
-
-    //* assign
-    'scheduledAt',
-    'assignIt',
-
-    //* repair
-    'selectItemRepair',
-    'selectItemRent',
-    'itemBrand',
-    'itemSerial',
-    'repairDescription', //*<- Field name is 'description' in the form
-
-    //* images
-    'imageID',
-    'imageHouse',
-
-    //* extra ops
-    'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
-    'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
-    'note' //*<- kind of external reference
-  ]
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -196,3 +165,39 @@ const styles = StyleSheet.create({
     margin: 4
   }
 })
+
+/* ********************************************
+ *  SORT of this array change the order of the fields
+ *******************************************rz */
+export const extraFields: FormOrderFields[] = [
+  //'type',//*<- Required already included
+  //'fullName',//*<- Required already included
+  // 'phone',//*<- Required already included
+  // 'selectItems', //*<- Required already included
+
+  //* extra ops
+  'note', //*<- kind of external reference
+  'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
+  'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+
+  //* address
+  'neighborhood',
+  'address',
+  'location',
+  'references',
+
+  //* assign
+  'scheduledAt',
+  'assignIt',
+
+  //* repair
+  'selectItemRepair',
+  'selectItemRent',
+  'itemBrand',
+  'itemSerial',
+  'repairDescription', //*<- Field name is 'description' in the form
+
+  //* images
+  'imageID',
+  'imageHouse'
+]

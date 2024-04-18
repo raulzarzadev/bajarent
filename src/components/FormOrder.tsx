@@ -2,7 +2,11 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './InputValueFormik'
-import OrderType, { order_type } from '../types/OrderType'
+import OrderType, {
+  TypeOrder,
+  TypeOrderKey,
+  order_type
+} from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './InputPhoneFormik'
 import InputDate from './InputDate'
@@ -20,14 +24,25 @@ import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
 import FormikSelectItems from './FormikSelectItems'
+import { extraFields } from './FormStore'
+import InputRadios from './InputRadios'
 
+//#region FUNCTIONS
+
+const getOrderFields = (fields): FormOrderFields[] => {
+  const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
+  const mandatoryFieldsEnd: FormOrderFields[] = ['selectItems']
+  let res: FormOrderFields[] = []
+  const extraFieldsAllowed = extraFields.filter((field) => fields?.[field])
+  res = extraFieldsAllowed
+  return [...mandatoryFieldsStart, ...res, ...mandatoryFieldsEnd]
+}
 const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
   'fullName',
   'phone',
   'scheduledAt',
   'address',
-  'type',
   'location',
   'neighborhood',
   'references',
@@ -56,12 +71,16 @@ const initialValues: Partial<OrderType> = {
   // type: order_type.RENT,
   address: ''
 }
+
+//#region TYPES
 export type FormOrderProps = {
   renew?: string | number
   onSubmit?: (values: Partial<OrderType>) => Promise<any>
   defaultValues?: Partial<OrderType>
   title?: string
 }
+
+//#region COMPONENT
 const FormOrderA = ({
   renew = '', // number of order to renew
   onSubmit = async (values) => {
@@ -73,6 +92,7 @@ const FormOrderA = ({
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
 
+  //* <- Define order types allowed
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
@@ -87,8 +107,8 @@ const FormOrderA = ({
   const [defaultType, setDefaultType] = useState<order_type>(
     defaultValues?.type || (ordersTypesAllowed[0]?.value as order_type)
   )
-  // ordersTypesAllowed[0]?.value as order_type
 
+  //* <- Set default type
   useEffect(() => {
     if (defaultValues.type) {
       setDefaultType(defaultValues.type)
@@ -96,7 +116,8 @@ const FormOrderA = ({
       setDefaultType(ordersTypesAllowed[0]?.value as order_type)
     }
   }, [ordersTypesAllowed, defaultValues])
-  // => const defaultType =  ordersTypesAllowed[0]?.value as order_type
+
+  //* <- Define initial values
   const initialValues = {
     ...defaultValues,
     type: defaultType,
@@ -122,9 +143,25 @@ const FormOrderA = ({
       </>
     )
 
+  /* ********************************************
+   * define order fields depends of order type
+   *******************************************rz */
+  const [orderFields, setOrderFields] = useState<FormOrderFields[]>([])
+  const [orderType, setOrderType] = useState<TypeOrderKey>(
+    initialValues.type as TypeOrderKey
+  )
+  useEffect(() => {
+    const res = getOrderFields(store?.orderFields?.[orderType])
+    setOrderFields(res)
+  }, [orderType])
+
+  //#region render
   return (
     <ScrollView>
       <View style={gStyles.container}>
+        {/*
+         // *** *** shows some metadata
+         */}
         {defaultValues?.folio && (
           <Text style={{ textAlign: 'center', marginTop: 12 }}>
             <P bold size="xl">
@@ -135,6 +172,21 @@ const FormOrderA = ({
         )}
         {title && <Text style={gStyles.h3}>{title}</Text>}
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
+
+        {/*
+         // *** *** Select order type
+         */}
+        <InputRadios
+          options={ordersTypesAllowed}
+          setValue={(value: TypeOrderKey) => {
+            setOrderType(value)
+          }}
+          value={orderType}
+          layout="row"
+        />
+        {/*
+         // *** *** render form depending on order type
+         */}
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, { resetForm }) => {
@@ -152,99 +204,12 @@ const FormOrderA = ({
           {({ handleSubmit, setValues, values }) => {
             return (
               <>
-                <InputRadiosFormik
-                  name="type"
-                  options={ordersTypesAllowed}
-                  label="Tipo de orden"
+                <FormFields
+                  fields={orderFields}
+                  values={values}
+                  setValues={setValues}
                 />
 
-                {values.type === order_type.REPAIR && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'location',
-                      'neighborhood',
-                      'address',
-                      'references',
-                      'selectItemRepair',
-                      'repairDescription',
-                      'itemBrand',
-                      'itemSerial',
-                      'assignIt'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.DELIVERY_RENT && (
-                  <FormFields
-                    fields={[
-                      'sheetRow',
-                      'note',
-                      'fullName',
-                      'phone',
-                      'location',
-                      'neighborhood',
-                      'address',
-                      'references',
-                      'selectItemRent',
-                      'assignIt',
-                      'hasDelivered'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.RENT && (
-                  <FormFields
-                    fields={['fullName', 'phone', 'selectItemRent', 'imageID']}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values.type === order_type.STORE_RENT && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'selectItemRent',
-                      'imageID',
-                      'assignIt',
-                      'hasDelivered'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values?.type === order_type.SALE && (
-                  <FormFields
-                    fields={['fullName', 'phone', 'selectItems']}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values?.type === order_type.DELIVERY_SALE && (
-                  <FormFields
-                    fields={[
-                      'fullName',
-                      'phone',
-                      'selectItems',
-                      'address',
-                      'neighborhood',
-                      'references'
-                    ]}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
-                {values?.type === order_type.MULTI_RENT && (
-                  <FormFields
-                    fields={['fullName', 'phone', 'selectItems', 'imageID']}
-                    values={values}
-                    setValues={setValues}
-                  />
-                )}
                 <View style={[styles.item]}>
                   <Button
                     disabled={loading || !values?.fullName}
@@ -271,6 +236,7 @@ type FormFieldsProps = {
     shouldValidate?: boolean | undefined
   ) => void
 }
+//#region FormFields
 const FormFields = (props: FormFieldsProps) => (
   <ErrorBoundary componentName="FormFieldsA">
     <FormFieldsA {...props}></FormFieldsA>
@@ -312,6 +278,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     })
   }, [sheetRow])
 
+  //#region InputFields
   const inputFields: Record<FormOrderFields, ReactNode> = {
     type: (
       <InputRadiosFormik
@@ -459,6 +426,8 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     </View>
   )
 }
+
+//#region ERROR BOUNDARY
 
 export default function FormOrder(props: FormOrderProps) {
   return (
