@@ -212,7 +212,7 @@ const FormOrderA = ({
         {/*
          // *** *** Select order type
          */}
-        <InputRadios
+        {/* <InputRadios
           options={ordersTypesAllowed}
           setValue={(value: TypeOrderKey) => {
             setOrderType(value)
@@ -221,7 +221,7 @@ const FormOrderA = ({
           layout="row"
           label="Tipo de orden"
           containerStyle={{ justifyContent: 'center' }}
-        />
+        /> */}
         {/*
          // *** *** render form depending on order type
          */}
@@ -244,8 +244,16 @@ const FormOrderA = ({
           {({ handleSubmit, setValues, values }) => {
             return (
               <>
+                <InputRadiosFormik
+                  name="type"
+                  options={ordersTypesAllowed}
+                  label="Tipo de orden"
+                />
                 <FormFields
-                  fields={orderFields}
+                  fields={getOrderFields(
+                    store?.orderFields?.[values.type] as OrderFields,
+                    orderType as TypeOrder
+                  )}
                   values={values}
                   setValues={setValues}
                 />

@@ -46,10 +46,10 @@ const FormikSelectItems = ({
     helpers.setValue({})
   }
 
-  useEffect(() => {
-    _setItems([]) //* <- should reset items if change order type
-    setItems([]) //* <- should reset items if change order type
-  }, [orderType])
+  // useEffect(() => {
+  //   _setItems([]) //* <- should reset items if change order type
+  //   setItems([]) //* <- should reset items if change order type
+  // }, [orderType])
 
   return (
     <>

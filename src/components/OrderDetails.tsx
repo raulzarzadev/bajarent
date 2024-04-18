@@ -213,7 +213,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
-q  if (order?.items?.length > 0) {
+  if (order?.items?.length > 0) {
     return (
       <View
         style={{
