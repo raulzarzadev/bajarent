@@ -354,26 +354,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         }
       />
     ),
-    selectItemRepair: (
-      <FormikSelectItems
-        name="item"
-        label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
-      />
-    ),
-    // selectItemRent: (
-    //   <FormikSelectItems
-    //     name="item"
-    //     label="Selecciona un artículo"
-    //     categories={categories.map((cat) => ({
-    //       ...cat
-    //     }))}
-    //     selectPrice
-    //     startAt={values.scheduledAt}
-    //   />
-    // ),
+
     selectItemsRepair: (
       <FormikSelectItems
         name="item"
