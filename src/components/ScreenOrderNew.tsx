@@ -4,16 +4,28 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
   const { user } = useAuth()
+  const { permissions } = useEmployee()
+  const canAuthorizeOrder =
+    permissions.orders.canAuthorize ||
+    permissions.isAdmin ||
+    permissions.isOwner
   const handleSubmit = async (values: OrderType) => {
     //* Default values
     values.storeId = storeId
     values.status = order_status.PENDING
     values.deliveredAt = null
     values.deliveredBy = null
+
+    if (canAuthorizeOrder) {
+      values.status = order_status.AUTHORIZED
+      values.authorizedAt = new Date()
+      values.authorizedBy = user.id
+    }
 
     //* if has delivered is true
     if (values.hasDelivered) {

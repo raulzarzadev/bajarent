@@ -26,15 +26,16 @@ import InputTextStyled from './InputTextStyled'
 import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
 import InputRadios from './InputRadios'
+import { useEmployee } from '../contexts/employeeContext'
 
 //#region FUNCTIONS
-
+type OrderFields = Partial<Record<FormOrderFields, boolean>>
 const getOrderFields = (
-  fields: Record<FormOrderFields, boolean>,
+  fields: OrderFields,
   type: TypeOrder
 ): FormOrderFields[] => {
   //* extra ops config
-
+  console.log({ fields })
   //* add extra ops config at the really first of the form
   const extraOps = [
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
@@ -118,6 +119,11 @@ const FormOrderA = ({
 }: FormOrderProps) => {
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
+  const { permissions } = useEmployee()
+  const canAuthorizeOrder =
+    permissions.orders.canAuthorize ||
+    permissions.isAdmin ||
+    permissions.isOwner
 
   //* <- Define order types allowed
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -173,12 +179,16 @@ const FormOrderA = ({
   /* ********************************************
    * define order fields depends of order type
    *******************************************rz */
+
   const [orderFields, setOrderFields] = useState<FormOrderFields[]>([])
   const [orderType, setOrderType] = useState<TypeOrderKey>(
     initialValues.type as TypeOrderKey
   )
   useEffect(() => {
-    const res = getOrderFields(store?.orderFields?.[orderType], orderType)
+    const res = getOrderFields(
+      store?.orderFields?.[orderType] as OrderFields,
+      orderType as TypeOrder
+    )
     setOrderFields(res)
   }, [orderType])
 
