@@ -4,7 +4,7 @@ import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
 
-const InputLocation = ({ value, setValue }) => {
+const InputLocation = ({ value, setValue, helperText }) => {
   // const { locationEnabled, askLocation } = useLocation()
   return (
     <View style={styles.group}>
@@ -12,6 +12,8 @@ const InputLocation = ({ value, setValue }) => {
         placeholder="Ubicación"
         value={value}
         onChangeText={setValue}
+        helperText={helperText}
+        containerStyle={{ flex: 1 }}
       />
       <Button
         justIcon

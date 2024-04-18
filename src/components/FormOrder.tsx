@@ -27,6 +27,7 @@ import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
 import InputRadios from './InputRadios'
 import { useEmployee } from '../contexts/employeeContext'
+import theme from '../theme'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -215,8 +216,14 @@ const FormOrderA = ({
                 setLoading(false)
               })
           }}
+          validate={(values) => {
+            const errors: Partial<OrderType> = {}
+            if (!values.fullName) errors.fullName = '*Nombre necesario'
+            if (!values.location) errors.location = '*Ubicación requerida'
+            return errors
+          }}
         >
-          {({ handleSubmit, setValues, values }) => {
+          {({ handleSubmit, setValues, values, errors }) => {
             return (
               <>
                 <InputRadiosFormik
@@ -234,9 +241,17 @@ const FormOrderA = ({
                   setValues={setValues}
                 />
 
+                <View>
+                  {Object.entries(errors).map(([key, value]) => (
+                    <Text key={key} style={[gStyles.p, { color: theme.error }]}>
+                      {value as string}
+                    </Text>
+                  ))}
+                </View>
+
                 <View style={[styles.item]}>
                   <Button
-                    disabled={loading || !values?.fullName}
+                    disabled={loading || Object.keys(errors).length > 0}
                     onPress={async () => {
                       handleSubmit()
                     }}
@@ -336,7 +351,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       <InputValueFormik
         name={'fullName'}
         placeholder="Nombre completo"
-        helperText={!values.fullName && 'Nombre es requerido'}
+        //helperText={!values.fullName && 'Nombre es requerido'}
       />
     ),
     phone: <FormikInputPhone name={'phone'} />,
