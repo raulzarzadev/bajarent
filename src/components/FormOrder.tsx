@@ -169,6 +169,9 @@ const FormOrderA = ({
    *******************************************rz */
 
   //#region render
+
+  const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
+
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -202,11 +205,18 @@ const FormOrderA = ({
           validate={(values) => {
             const errors: Partial<OrderType> = {}
             if (!values.fullName) errors.fullName = '*Nombre necesario'
-            if (!values.location) errors.location = '*Ubicación requerida'
+
+            if (orderFields?.location && !values.location)
+              errors.location = '*Ubicación requerida'
+            //f (!values.location) errors.location = '*Ubicación requerida'
             return errors
           }}
         >
-          {({ handleSubmit, setValues, values, errors }) => {
+          {({ handleSubmit, setValues, values, errors, setErrors }) => {
+            useEffect(() => {
+              setErrors({})
+              setOrderFields(store?.orderFields?.[values.type] as OrderFields)
+            }, [values.type])
             return (
               <>
                 <InputRadiosFormik
