@@ -17,14 +17,15 @@ const InputCheckbox = ({
   textStyle?: TextStyle
   color?: string
 }) => {
+  const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1)
   return (
     <BouncyCheckbox
       fillColor={color}
       style={[{ marginHorizontal: 'auto' }, style]}
       textStyle={[
         {
-          textDecorationLine: 'none',
-          textTransform: 'capitalize'
+          textDecorationLine: 'none'
+          //  textTransform: 'capitalize'
         },
         textStyle
       ]}
@@ -32,7 +33,7 @@ const InputCheckbox = ({
       onPress={(isChecked: boolean) => {
         setValue(isChecked)
       }}
-      text={label}
+      text={capitalizedLabel}
     />
   )
 }
