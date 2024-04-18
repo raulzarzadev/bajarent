@@ -219,6 +219,8 @@ const FormOrderA = ({
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, { resetForm }) => {
+            //@ts-ignore
+            values.type = orderType //* <- hard set order type !
             setLoading(true)
             await onSubmit(values)
               .then((res) => {
