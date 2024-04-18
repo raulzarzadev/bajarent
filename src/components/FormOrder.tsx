@@ -29,9 +29,14 @@ import InputRadios from './InputRadios'
 
 //#region FUNCTIONS
 
-const getOrderFields = (fields): FormOrderFields[] => {
+const getOrderFields = (fields, type): FormOrderFields[] => {
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
-  const mandatoryFieldsEnd: FormOrderFields[] = ['selectItems']
+
+  let mandatoryFieldsEnd: FormOrderFields[] = []
+  if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItemRent']
+  if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemRepair']
+  if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItemsSale']
+
   let res: FormOrderFields[] = []
   const extraFieldsAllowed = extraFields.filter((field) => fields?.[field])
   res = extraFieldsAllowed
@@ -57,7 +62,10 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'hasDelivered',
   'assignIt',
   'sheetRow',
-  'note'
+  'note',
+  'selectItemsRepair',
+  'selectItemsRent',
+  'selectItemsSale'
   // 'folio'
 ] as const
 
@@ -151,7 +159,7 @@ const FormOrderA = ({
     initialValues.type as TypeOrderKey
   )
   useEffect(() => {
-    const res = getOrderFields(store?.orderFields?.[orderType])
+    const res = getOrderFields(store?.orderFields?.[orderType], orderType)
     setOrderFields(res)
   }, [orderType])
 
@@ -346,7 +354,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       />
     ),
     selectItemRepair: (
-      <FormikSelectCategoryItem
+      <FormikSelectItems
         name="item"
         label="Selecciona un artículo"
         categories={categories.map((cat) => ({
@@ -355,7 +363,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       />
     ),
     selectItemRent: (
-      <FormikSelectCategoryItem
+      <FormikSelectItems
         name="item"
         label="Selecciona un artículo"
         categories={categories.map((cat) => ({
@@ -365,7 +373,33 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         startAt={values.scheduledAt}
       />
     ),
-    selectItems: (
+    selectItemsRepair: (
+      <FormikSelectItems
+        name="item"
+        label="Selecciona un artículo"
+        categories={categories.map((cat) => ({
+          ...cat
+        }))}
+        //selectPrice
+        startAt={values.scheduledAt}
+        setItems={(items) => setValues({ ...values, items })}
+        items={values.items}
+      />
+    ),
+    selectItemsRent: (
+      <FormikSelectItems
+        name="item"
+        label="Selecciona un artículo"
+        categories={categories.map((cat) => ({
+          ...cat
+        }))}
+        selectPrice
+        startAt={values.scheduledAt}
+        setItems={(items) => setValues({ ...values, items })}
+        items={values.items}
+      />
+    ),
+    selectItemsSale: (
       <FormikSelectItems
         name="item"
         label="Selecciona un artículo"

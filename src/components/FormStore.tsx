@@ -187,7 +187,7 @@ export const extraFields: FormOrderFields[] = [
   'references',
 
   //* assign
-  'scheduledAt',
+  // 'scheduledAt',
   'assignIt',
 
   //* repair
@@ -200,4 +200,6 @@ export const extraFields: FormOrderFields[] = [
   //* images
   'imageID',
   'imageHouse'
+
+  //* select item
 ]

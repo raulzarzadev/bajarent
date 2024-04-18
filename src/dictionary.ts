@@ -130,6 +130,9 @@ const labels = {
   assignIt: 'Asignar',
   sheetRow: 'Fila Excel',
   note: 'Nota',
+  selectItemsRepair: 'Items en reparación',
+  selectItemsRent: 'Items en renta',
+  selectItemsSale: 'Items en venta',
   ' ': '',
   '': ''
 } as const

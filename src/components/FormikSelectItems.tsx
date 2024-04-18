@@ -77,9 +77,18 @@ const FormikSelectItems = ({
         showDetails={false}
         // askItemInfo={true}
       />
-
       <ListItems items={_items} handleRemoveItem={handleRemoveItem} />
 
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'baseline',
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={{ marginRight: 4 }}>Items: </Text>
+        <Text style={gStyles.h2}>{_items.length || 0}</Text>
+      </View>
       <Totals items={_items} />
     </>
   )
@@ -90,16 +99,6 @@ export const Totals = ({ items }: { items: ItemSelected[] }) => {
 
   return (
     <View style={{ justifyContent: 'center', marginBottom: gSpace(4) }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          justifyContent: 'center'
-        }}
-      >
-        <Text style={{ marginRight: 4 }}>Items: </Text>
-        <Text>{items.length || 0}</Text>
-      </View>
       <View
         style={{
           flexDirection: 'row',

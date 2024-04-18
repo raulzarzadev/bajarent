@@ -304,7 +304,7 @@ const OrderActions = ({
       */}
       <ScrollView
         horizontal
-        style={{ maxWidth: '100%' }}
+        style={{ maxWidth: '100%', marginHorizontal: 'auto' }}
         //style={{ flexDirection: 'row', justifyContent: 'space-around' }}
       >
         {showPendingButton && (
