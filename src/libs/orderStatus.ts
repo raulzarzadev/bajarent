@@ -1,4 +1,4 @@
-import { isBefore } from 'date-fns'
+import { isBefore, isToday, isTomorrow } from 'date-fns'
 import OrderType, {
   OrderStatus,
   order_status,
@@ -23,6 +23,20 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
     // //* validate if this kind of order should be expired
     if (orders_should_expire.includes(order.type)) {
       const expireAt = asDate(order.expireAt)
+
+      /* ********************************************
+       * if the order timing is more than 24 hours should't validate if expires today or tomorrow
+       * in other case,
+       *******************************************rz */
+
+      if (isToday(expireAt)) {
+        status = order_status.EXPIRE_TODAY
+        return status
+      }
+      if (expireAt && isTomorrow(expireAt)) {
+        status = order_status.EXPIRED_TOMORROW
+        return status
+      }
       if (expireAt && isBefore(expireAt, new Date())) {
         status = order_status.EXPIRED
         return status

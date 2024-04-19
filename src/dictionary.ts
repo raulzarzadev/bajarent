@@ -56,6 +56,8 @@ const labels = {
   REPAIRING: 'Reparando',
   REPAIRED: 'Terminada',
   REPAIR_DELIVERED: 'Entregada',
+  EXPIRE_TODAY: 'Vence hoy',
+  EXPIRED_TOMORROW: 'Vence mañana',
   RENT: 'Renta',
   SALE: 'Venta',
   cash: 'efectivo',
