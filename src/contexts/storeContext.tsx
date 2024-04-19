@@ -18,6 +18,7 @@ import useStoreDataListen from '../hooks/useStoreDataListen'
 import useUserStores from '../hooks/useUserStores'
 import useComments from '../hooks/useComments'
 import asDate from '../libs/utils-date'
+import { useEmployee } from './employeeContext'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -49,6 +50,7 @@ const StoreContext = createContext<StoreContextType & UseStoreDataListenType>(
 )
 
 const StoreContextProvider = ({ children }) => {
+  //#region hooks
   const { user } = useAuth()
 
   const [storeId, setStoreId] = useState<StoreContextType['store']['id']>(null)
@@ -67,6 +69,7 @@ const StoreContextProvider = ({ children }) => {
 
   const { userPositions, userStores, updateUserStores } = useUserStores()
 
+  //#region states
   const [orderFormatted, setOrderFormatted] = useState<OrderType[]>([])
   const [staffFormatted, setStaffFormatted] = useState<StaffType[]>([])
 
@@ -78,15 +81,7 @@ const StoreContextProvider = ({ children }) => {
   const [staffPermissions, setStaffPermissions] =
     useState<Partial<StaffPermissions>>(null)
 
-  const handleSetStoreId = async (storeId: string) => {
-    setStoreId(storeId)
-    setItem('storeId', storeId)
-  }
-
-  const handleSetMyStaffId = async (staffId: string) => {
-    setMyStaffId(staffId)
-    setItem('myStaffId', staffId)
-  }
+  //#region effects
 
   useEffect(() => {
     getItem('myStaffId').then(setMyStaffId)
@@ -166,39 +161,39 @@ const StoreContextProvider = ({ children }) => {
     getStaffDetails().then(setStaffFormatted)
   }, [staff, storeId])
 
-  useEffect(() => {
-    if (myStaffId) {
-      const myCurrentPosition = staff?.find((s) => s.id === myStaffId)
-      const myCurrentSections = storeSections.filter((s) =>
-        s?.staff?.includes(myCurrentPosition?.id)
-      )
-      const orders =
-        orderFormatted
+  // useEffect(() => {
+  //   if (myStaffId) {
+  //     const myCurrentPosition = staff?.find((s) => s.id === myStaffId)
+  //     const myCurrentSections = storeSections.filter((s) =>
+  //       s?.staff?.includes(myCurrentPosition?.id)
+  //     )
+  //     const orders =
+  //       orderFormatted
 
-          ?.filter(
-            (order) =>
-              //* filter orders are assigned to my section
-              !!myCurrentSections.find((s) => s.id === order.assignToSection) ||
-              //* filter orders are assigned to me
-              order?.assignToStaff === myStaffId
-          )
-          //* filter  orders with status PICKUP
-          ?.filter(
-            (o: OrderType) =>
-              [
-                //* show orders EXPIRED, REPORTED, AUTHORIZED
-                order_status.AUTHORIZED,
-                order_status.EXPIRED,
-                order_status.REPORTED,
-                order_status.REPAIRING,
-                order_status.REPAIRED
-              ].includes(o.status) ||
-              //* show orders with reports
-              o.hasNotSolvedReports
-          ) || []
-      setMyOrders(orders)
-    }
-  }, [myStaffId, orderFormatted])
+  //         ?.filter(
+  //           (order) =>
+  //             //* filter orders are assigned to my section
+  //             !!myCurrentSections.find((s) => s.id === order.assignToSection) ||
+  //             //* filter orders are assigned to me
+  //             order?.assignToStaff === myStaffId
+  //         )
+  //         //* filter  orders with status PICKUP
+  //         ?.filter(
+  //           (o: OrderType) =>
+  //             [
+  //               //* show orders EXPIRED, REPORTED, AUTHORIZED
+  //               order_status.AUTHORIZED,
+  //               order_status.EXPIRED,
+  //               order_status.REPORTED,
+  //               order_status.REPAIRING,
+  //               order_status.REPAIRED
+  //             ].includes(o.status) ||
+  //             //* show orders with reports
+  //             o.hasNotSolvedReports
+  //         ) || []
+  //     setMyOrders(orders)
+  //   }
+  // }, [myStaffId, orderFormatted])
 
   useEffect(() => {
     const staffData = staff.find((s) => s.id === myStaffId)
@@ -227,6 +222,19 @@ const StoreContextProvider = ({ children }) => {
     )
   }, [payments, orders])
 
+  //#region functions
+
+  const handleSetStoreId = async (storeId: string) => {
+    setStoreId(storeId)
+    setItem('storeId', storeId)
+  }
+
+  const handleSetMyStaffId = async (staffId: string) => {
+    setMyStaffId(staffId)
+    setItem('myStaffId', staffId)
+  }
+
+  //#region render
   return (
     <StoreContext.Provider
       value={{
