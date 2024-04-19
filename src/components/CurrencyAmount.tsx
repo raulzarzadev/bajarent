@@ -9,7 +9,7 @@ const CurrencyAmount = ({
   style?: TextStyle
 }) => {
   return (
-    <Text style={[style]}>
+    <Text style={[style]} numberOfLines={1}>
       {amount?.toLocaleString('es-MX', {
         style: 'currency',
         currency: 'MXN'

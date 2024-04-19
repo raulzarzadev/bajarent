@@ -34,7 +34,7 @@ const RowBalance = ({ item }: { item: BalanceType }) => {
     },
     {
       field: 'type',
-      width: '30%',
+      width: '20%',
       component: (
         <View
           style={{
@@ -42,17 +42,19 @@ const RowBalance = ({ item }: { item: BalanceType }) => {
             alignItems: 'center'
           }}
         >
-          <Text>{dictionary(item?.type)}</Text>
+          <Text numberOfLines={1}>{dictionary(item?.type)}</Text>
           {item.type === 'partial' && <SpanUser userId={item?.userId} />}
         </View>
       )
     },
     {
       field: 'payments',
-      width: '10%',
+      width: '20%',
       component: (
         <>
-          <Text>{item?.payments?.length || 0}</Text>
+          <Text style={{ textAlign: 'center' }}>
+            Pagos: {item?.payments?.length || 0}
+          </Text>
           <CurrencyAmount amount={balanceTotal} />
         </>
       )
@@ -88,7 +90,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     borderWidth: 1,
-    borderColor: theme.neutral
+    borderColor: theme.neutral,
+    width: '100%',
+    maxWidth: 500,
+    marginHorizontal: 'auto'
     // borderColor: theme.neutral,
     // backgroundColor: STATUS_COLOR.PENDING
   }
