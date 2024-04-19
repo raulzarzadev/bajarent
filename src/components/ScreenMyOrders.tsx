@@ -17,6 +17,7 @@ function ScreenMyOrders({ navigation }) {
   const handleSwitchView = () => {
     setView(view === 'list' ? 'timeline' : 'list')
   }
+
   const { navigate } = useNavigation()
 
   return (
