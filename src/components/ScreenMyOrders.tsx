@@ -7,6 +7,7 @@ import Button from './Button'
 import { gSpace } from '../styles'
 import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
+
 type ViewType = 'list' | 'timeline'
 
 function ScreenMyOrders({ navigation }) {
@@ -58,7 +59,6 @@ function ScreenMyOrders({ navigation }) {
             orders={myOrders}
             onPressOrder={(id) => {
               // @ts-ignore
-              // navigate('OrdersDetails', { orderId: id })
               navigate('Orders')
               // @ts-ignore
               navigate('OrderDetails', { orderId: id })
