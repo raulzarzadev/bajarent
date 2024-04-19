@@ -23,8 +23,11 @@ const EmployeeContext = createContext<EmployeeContextType>({
 
 export const EmployeeContextProvider = ({ children }) => {
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
+
   const { user } = useAuth()
+
   const { staff, store, storeId, orders, storeSections } = useStore()
+
   const isOwner = !!store && !!user && store?.createdBy === user?.id
 
   const newOrderPermissions = employee?.permissions?.order || {}

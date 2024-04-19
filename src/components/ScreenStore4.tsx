@@ -40,30 +40,32 @@ const ScreenStore = (props) => {
 const TabsStore = (props) => {
   const { store } = useStore()
   const {
-    permissions: { isAdmin, isOwner }
+    permissions: { isAdmin, isOwner, store: storePermissions }
   } = useEmployee()
+  const canViewCashbox = isAdmin || isOwner || storePermissions?.canViewCashbox
+  const canViewItems = isAdmin || isOwner || storePermissions?.canViewItems
   return (
     <Tabs
       tabs={[
         {
           title: 'Caja',
           content: <ScreenCashbox {...props} />,
-          show: isAdmin || isOwner
+          show: isAdmin || isOwner || canViewCashbox
         },
         {
           title: 'Articulos',
           content: <ScreenItems {...props} />,
-          show: isAdmin || isOwner
+          show: isAdmin || isOwner || canViewItems
         },
         {
           title: 'Staff',
           content: <ScreenStaff {...props} />,
-          show: store?.allowStaff && (isAdmin || isOwner)
+          show: store?.allowStaff || isAdmin || isOwner
         },
         {
           title: 'Areas',
           content: <ScreenSections {...props} />,
-          show: store?.allowSections && (isAdmin || isOwner)
+          show: store?.allowSections || isAdmin || isOwner
         },
         {
           title: 'Config',

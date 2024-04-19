@@ -133,6 +133,8 @@ const labels = {
   selectItemsRepair: 'Items en reparación',
   selectItemsRent: 'Items en renta',
   selectItemsSale: 'Items en venta',
+  canViewCashbox: 'Ver caja',
+  canViewItems: 'Ver Items',
   ' ': '',
   '': ''
 } as const
