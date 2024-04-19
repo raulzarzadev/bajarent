@@ -56,7 +56,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const getEmployeeOrders = (employeeId: string) => {
     //* find section of the employee are assigned
     const employeeSectionsAssigned = storeSections
-      ?.filter((s) => s.staff.includes(employeeId))
+      ?.filter((s) => s.staff?.includes(employeeId))
       ?.map((s) => s.id)
     //* find orders are assigned to the sections
     const sectionOrders = orders?.filter(

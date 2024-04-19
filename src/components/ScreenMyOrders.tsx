@@ -7,6 +7,7 @@ import Button from './Button'
 import { gSpace } from '../styles'
 import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
+import ErrorBoundary from './ErrorBoundary'
 
 type ViewType = 'list' | 'timeline'
 
@@ -69,5 +70,11 @@ function ScreenMyOrders({ navigation }) {
     </>
   )
 }
-
+export const ScreenMyOrdersE = (props) => {
+  return (
+    <ErrorBoundary componentName="ScreenMyOrders">
+      <ScreenMyOrders {...props}></ScreenMyOrders>
+    </ErrorBoundary>
+  )
+}
 export default ScreenMyOrders
