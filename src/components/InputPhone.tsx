@@ -1,17 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, ViewStyle } from 'react-native'
+import { Text, View, ViewStyle } from 'react-native'
 import RNPhoneInput, { ICountry } from 'react-native-international-phone-number'
+import { gStyles } from '../styles'
 
 type PhoneInputProps = {
   defaultNumber?: string
   stylesContainer?: ViewStyle
   stylesInput?: ViewStyle
   onChange?: (phoneNumber: string) => void
+  helperText?: string
 }
 export default function InputPhone({
   defaultNumber = '+52',
   stylesContainer,
-  onChange = (phoneNumber: string) => console.log(phoneNumber)
+  onChange = (phoneNumber: string) => console.log(phoneNumber),
+  helperText
 }: // stylesInput
 PhoneInputProps) {
   const [selectedCountry, setSelectedCountry] = useState<null | ICountry>(null)
@@ -42,6 +45,7 @@ PhoneInputProps) {
         onChangeSelectedCountry={handleSelectedCountry}
         popularCountries={['MX', 'CA', 'US']}
       />
+      {helperText && <Text style={gStyles.helper}>{helperText}</Text>}
     </View>
   )
 }

@@ -205,9 +205,10 @@ const FormOrderA = ({
           validate={(values) => {
             const errors: Partial<OrderType> = {}
             if (!values.fullName) errors.fullName = '*Nombre necesario'
-
-            if (orderFields?.location && !values.location)
-              errors.location = '*Ubicación requerida'
+            if (!values.phone || values.phone.length !== 13)
+              errors.phone = '*Teléfono valido es necesario'
+            // if (orderFields?.location && !values.location)
+            //   errors.location = '*Ubicación requerida'
             //f (!values.location) errors.location = '*Ubicación requerida'
             return errors
           }}

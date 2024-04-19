@@ -5,6 +5,8 @@ import PhoneInput from './InputPhone'
 const InputPhoneFormik = ({ name }) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [])
+  console.log({ meta })
+
   return (
     <PhoneInput
       defaultNumber={value}
@@ -12,7 +14,9 @@ const InputPhoneFormik = ({ name }) => {
         if (value === undefined) return helpers.setValue('')
         if (value === 'undefined') return helpers.setValue('')
         helpers.setValue(value)
+        helpers.setTouched(true)
       }}
+      helperText={meta.error && meta.touched ? meta.error : undefined}
     />
   )
 }

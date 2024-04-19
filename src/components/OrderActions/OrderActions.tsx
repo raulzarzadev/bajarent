@@ -22,6 +22,12 @@ import { useEmployee } from '../../contexts/employeeContext'
 import { gSpace } from '../../styles'
 import { CommentType } from '../ListComments'
 import ErrorBoundary from '../ErrorBoundary'
+import StyledModal from '../StyledModal'
+import useModal from '../../hooks/useModal'
+import { Formik } from 'formik'
+import { useStore } from '../../contexts/storeContext'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import InputLocationFormik from '../InputLocationFormik'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -66,9 +72,22 @@ const OrderActions = ({
   }) => {
     return await onComment({ orderId, content, storeId, type })
   }
+
+  // #region hooks
+
+  const deliveryModal = useModal({ title: 'Confirmar datos de entrega' })
+
+  const { orders } = useStore()
+  const order = orders.find((o) => o.id === orderId)
+
   const actions_fns = {
-    [acts.DELIVER]: async () => {
+    [acts.DELIVER]: async (values?: Pick<OrderType, 'location'>) => {
+      const location = values?.location
+      deliveryModal.toggleOpen()
       try {
+        if (location) {
+          await ServiceOrders.update(orderId, { location })
+        }
         await onDelivery({ orderId, userId })
         await onOrderComment({ content: 'Entregada' })
       } catch (error) {
@@ -247,7 +266,7 @@ const OrderActions = ({
   const RENT_FLOW = [
     {
       label: 'Deliver',
-      action: actions_fns[acts.DELIVER],
+      action: deliveryModal.toggleOpen,
       status: order_status.DELIVERED,
       disabled: !canDeliverRent || !employeeCanDelivery
     },
@@ -357,16 +376,48 @@ const OrderActions = ({
 
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
+
   // #region COMPONENT
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
         <OrderStatus orderId={orderId} />
       </View>
+
+      <StyledModal {...deliveryModal}>
+        <Formik
+          initialValues={{ ...order }}
+          onSubmit={(values) => {
+            actions_fns[acts.DELIVER]({ location: values.location })
+          }}
+          validate={(values) => {
+            if (!values.location) return { location: 'Ubicación requerida' }
+          }}
+        >
+          {({ errors, handleSubmit }) => {
+            return (
+              <View>
+                <View style={{ marginVertical: 8 }}>
+                  <InputLocationFormik name={'location'} />
+                </View>
+
+                <Button
+                  disabled={Object.keys(errors).length > 0}
+                  label="Entregar"
+                  onPress={() => {
+                    handleSubmit()
+                    // actions_fns[acts.DELIVER]()
+                  }}
+                />
+              </View>
+            )
+          }}
+        </Formik>
+      </StyledModal>
       <OrderAssignInfo orderId={orderId} />
       {/* 
       // #region FLOW 
-      */}
+    */}
       <ScrollView
         horizontal
         style={{ maxWidth: '100%', marginHorizontal: 'auto' }}
@@ -386,7 +437,7 @@ const OrderActions = ({
           <Button
             label="Autorizar"
             onPress={() => {
-              actions_fns[acts.AUTHORIZE]()
+              //actions_fns[acts.AUTHORIZE]()
             }}
             size="xs"
             variant="ghost"
