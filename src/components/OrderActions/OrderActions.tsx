@@ -437,7 +437,7 @@ const OrderActions = ({
           <Button
             label="Autorizar"
             onPress={() => {
-              //actions_fns[acts.AUTHORIZE]()
+              actions_fns[acts.AUTHORIZE]()
             }}
             size="xs"
             variant="ghost"
