@@ -5,7 +5,6 @@ import PhoneInput from './InputPhone'
 const InputPhoneFormik = ({ name }) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [])
-  console.log({ meta })
 
   return (
     <PhoneInput

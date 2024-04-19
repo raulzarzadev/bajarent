@@ -15,53 +15,46 @@ const ScreenOrderNew = ({ navigation }) => {
     permissions.isAdmin ||
     permissions.isOwner
   const handleSubmit = async (values: OrderType) => {
-    //* Default values
-    values.storeId = storeId
-    values.status = order_status.PENDING
-    values.deliveredAt = null
-    values.deliveredBy = null
+    const defaultValues = {
+      //* Default values
+      storeId: storeId,
+      status: order_status.PENDING,
+      deliveredAt: null,
+      deliveredBy: null,
+      authorizedAt: null,
+      authorizedBy: null
+    }
 
+    /* ********************************************
+     *  override default values
+     *******************************************rz */
+
+    values = { ...defaultValues, ...values }
+
+    /* ********************************************
+     *  authorize order just in time, just if user has permission
+     *******************************************rz */
     if (canAuthorizeOrder) {
       values.status = order_status.AUTHORIZED
       values.authorizedAt = new Date()
       values.authorizedBy = user.id
     }
 
-    //* if has delivered is true
-
-    // //* if type is local rent
-    // if (values.type === order_type.RENT) {
-    //   values.status = order_status.DELIVERED
-    //   values.deliveredAt = new Date()
-    //   values.deliveredBy = user.id
-    // }
-
+    /* ********************************************
+     *  if has delivered is true
+     *******************************************rz */
     if (values.hasDelivered) {
       values.status = order_status.DELIVERED
       values.deliveredAt = values.scheduledAt
       values.deliveredBy = user.id
     }
 
-    // if (values.type === order_type.REPAIR) {
-    //   values.items = values.items.map((item) => {
-    //     item.priceSelected = null
-    //     item.priceSelectedId = null
-    //     return item
-    //   })
-    // }
-
-    return await ServiceOrders.create(values)
-      .then((res) => {
-        const orderId = res?.res?.id
-        //  console.log({ res })
-        // console.log({ res })
-
+    return await ServiceOrders.createSerialOrder(values).then((orderId) => {
+      if (orderId) {
         navigation.navigate('Orders')
         navigation.navigate('OrderDetails', { orderId })
-
-        // alert('Orden creada')
-      })
-      .catch(console.error)
+      }
+    })
   }
   return <FormOrder onSubmit={handleSubmit} />
 }

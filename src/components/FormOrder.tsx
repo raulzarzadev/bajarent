@@ -113,6 +113,8 @@ const FormOrderA = ({
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
 
+  const [error, setError] = useState<string | null>(null)
+
   //* <- Define order types allowed
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
@@ -193,11 +195,17 @@ const FormOrderA = ({
           initialValues={initialValues}
           onSubmit={async (values, { resetForm }) => {
             setLoading(true)
+            setError(null)
             await onSubmit(values)
               .then((res) => {
                 resetForm()
               })
-              .catch(console.error)
+              .catch((e) => {
+                setError(
+                  'Error al guardar la orden, intente de nuevo más tarde'
+                )
+                console.error
+              })
               .finally(() => {
                 setLoading(false)
               })
@@ -205,8 +213,17 @@ const FormOrderA = ({
           validate={(values) => {
             const errors: Partial<OrderType> = {}
             if (!values.fullName) errors.fullName = '*Nombre necesario'
-            if (!values.phone || values.phone.length !== 13)
+            if (!values.phone || values.phone.length < 12)
               errors.phone = '*Teléfono valido es necesario'
+
+            /* ********************************************
+             * If orders has delivered, then must have a scheduled date
+             *******************************************rz */
+
+            if (values.hasDelivered && !values.scheduledAt)
+              //@ts-ignore
+              errors.scheduledAt = '*Fecha  necesaria'
+
             // if (orderFields?.location && !values.location)
             //   errors.location = '*Ubicación requerida'
             //f (!values.location) errors.location = '*Ubicación requerida'
@@ -242,6 +259,11 @@ const FormOrderA = ({
                     </Text>
                   ))}
                 </View>
+                {!!error && (
+                  <Text style={[gStyles.p, { color: theme.error }]}>
+                    {error}
+                  </Text>
+                )}
 
                 <View style={[styles.item]}>
                   <Button

@@ -17,14 +17,41 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     super('orders')
   }
 
-  async create(order: Type) {
+  // async create(order: Type) {
+  //   if (!order.storeId) console.error('No storeId provided')
+  //   const store = await ServiceStores.get(order?.storeId)
+  //   const currentFolio = store?.currentFolio || 0
+  //   const nextFolio = currentFolio + 1
+  //   order.folio = nextFolio
+  //   ServiceStores.update(store.id, { currentFolio: nextFolio })
+  //   return super.create(order)
+  // }
+
+  async createSerialOrder(order: Type): Promise<string> | null {
     if (!order.storeId) console.error('No storeId provided')
-    const store = await ServiceStores.get(order?.storeId)
-    const currentFolio = store?.currentFolio || 0
-    const nextFolio = currentFolio + 1
-    ServiceStores.update(store.id, { currentFolio: nextFolio })
-    order.folio = nextFolio
-    return super.create(order)
+    try {
+      const store = await ServiceStores.get(order?.storeId)
+      const currentFolio = store?.currentFolio || 0
+      const nextFolio = currentFolio + 1
+      order.folio = nextFolio
+      /* ********************************************
+       * FIRST create order
+       *******************************************rz */
+
+      const orderId = await super.create(order).then((res) => res.res.id)
+
+      /* ********************************************
+       * SECOND update store
+       *******************************************rz */
+      await ServiceStores.update(store.id, { currentFolio: nextFolio }).then(
+        console.log
+      )
+
+      return orderId || null
+    } catch (error) {
+      console.log({ error })
+      throw new Error('Error creating order')
+    }
   }
 
   storeOrders(storeId: string, cb: CallableFunction): Promise<void> {

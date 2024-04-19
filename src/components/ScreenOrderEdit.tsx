@@ -2,7 +2,7 @@ import { ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { order_type } from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 
 const ScreenOrderEdit = ({ route, navigation }) => {
@@ -19,15 +19,20 @@ const ScreenOrderEdit = ({ route, navigation }) => {
     <FormOrder
       defaultValues={order}
       onSubmit={async (values) => {
-        //* if has delivered is true
-        if (values.hasDelivered) {
-          values.updatedBy = user.id
-          //* should update the deliveredAt
-          values.deliveredAt = values.scheduledAt
-        }
         //* if type is store rent
         if (values.type === 'RENT') {
           values.updatedBy = user.id
+        }
+
+        //* if has delivered is true
+        if (values.hasDelivered) {
+          values.status = order_status.DELIVERED
+          values.deliveredAt = values.scheduledAt
+          values.deliveredBy = user.id
+        } else {
+          values.status = order_status.AUTHORIZED
+          values.deliveredAt = null
+          values.deliveredBy = null
         }
 
         ServiceOrders.update(orderId, values)

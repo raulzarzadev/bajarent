@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Text, View, ViewStyle } from 'react-native'
 import RNPhoneInput, { ICountry } from 'react-native-international-phone-number'
 import { gStyles } from '../styles'
