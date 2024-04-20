@@ -22,7 +22,7 @@ const theme: Theme = {
   base: '#cffafe',
   info: '#60a5fa',
   success: '#65a30d',
-  warning: '#B5D911',
+  warning: '#facc15',
   error: '#f87171',
   white: '#e5e5e5',
   black: '#000000'
