@@ -56,7 +56,7 @@ export const ORDER_TYPE_COLOR: Record<order_type, string> = {
 
 export const STATUS_COLOR: Record<order_status, string> = {
   PENDING: theme.white,
-  AUTHORIZED: theme.warning,
+  AUTHORIZED: theme.success,
 
   DELIVERED: theme.success,
   PICKUP: '#f472b6',
