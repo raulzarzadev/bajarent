@@ -80,14 +80,16 @@ const OrderActions = ({
 
   const { orders } = useStore()
   const order = orders.find((o) => o.id === orderId)
-
   const actions_fns = {
-    [acts.DELIVER]: async (values?: Pick<OrderType, 'location'>) => {
+    [acts.DELIVER]: async (
+      values?: Pick<OrderType, 'location' | 'itemSerial'>
+    ) => {
       const location = values?.location
+      const itemSerial = values?.itemSerial
       deliveryModal.toggleOpen()
       try {
         if (location) {
-          await ServiceOrders.update(orderId, { location })
+          await ServiceOrders.update(orderId, { location, itemSerial })
         }
         await onDelivery({ orderId, userId })
         await onOrderComment({ content: 'Entregada' })
@@ -357,7 +359,6 @@ const OrderActions = ({
   const handleBack = () => {
     const index = statusIndex
     const action = ORDER_TYPE_ACTIONS[orderType][index - 1]
-    console.log({ action, statusIndex, orderType })
     if (!action) {
       onAuthorize({ orderId, userId })
     } else {
@@ -378,7 +379,6 @@ const OrderActions = ({
 
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
-
   // #region COMPONENT
   return (
     <View>
@@ -390,7 +390,10 @@ const OrderActions = ({
         <Formik
           initialValues={{ ...order }}
           onSubmit={(values) => {
-            actions_fns[acts.DELIVER]({ location: values.location })
+            actions_fns[acts.DELIVER]({
+              location: values.location,
+              itemSerial: values.itemSerial
+            })
           }}
           validate={(values: OrderType) => {
             const errors: Partial<OrderType> = {}
@@ -409,7 +412,7 @@ const OrderActions = ({
                 <View style={{ marginVertical: 8 }}>
                   <InputValueFormik
                     name={'itemSerial'}
-                    placeholder="No de serie"
+                    placeholder="No. de serie"
                   />
                 </View>
                 <View style={{ marginVertical: 8 }}>

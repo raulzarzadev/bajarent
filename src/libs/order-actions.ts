@@ -19,7 +19,9 @@ export const onComment = async ({
     type,
     content
   })
-    .then(console.log)
+    .then(() => {
+      console.log('comment')
+    })
     .catch(console.error)
 }
 
@@ -30,7 +32,7 @@ export const onAuthorize = async ({ orderId, userId }) => {
     authorizedBy: userId
   })
     .then((res) => {
-      console.log(res)
+      console.log('authorize')
     })
     .catch(console.error)
 }
@@ -41,7 +43,9 @@ export const onDelivery = async ({ orderId, userId }) => {
     deliveredAt: new Date(),
     deliveredBy: userId
   })
-    .then(console.log)
+    .then(() => {
+      console.log('delivery')
+    })
     .catch(console.error)
 }
 
@@ -51,7 +55,9 @@ export const onPickup = async ({ orderId, userId }) => {
     pickedUpAt: new Date(),
     pickedUpBy: userId
   })
-    .then(console.log)
+    .then(() => {
+      console.log('pickup')
+    })
     .catch(console.error)
 }
 
@@ -61,7 +67,9 @@ export const onRepairStart = async ({ orderId, userId }) => {
     repairingAt: new Date(),
     repairingBy: userId
   })
-    .then(console.log)
+    .then(() => {
+      console.log('repairing')
+    })
     .catch(console.error)
 }
 
@@ -71,7 +79,9 @@ export const onRepairFinish = async ({ orderId, userId }) => {
     repairedAt: new Date(),
     repairedBy: userId
   })
-    .then(console.log)
+    .then(() => {
+      console.log('repaired')
+    })
     .catch(console.error)
 }
 
@@ -91,13 +101,17 @@ export const onCancel = async ({ orderId, userId }) => {
     cancelledAt: new Date(),
     cancelledBy: userId
   })
-    .then(console.log)
+    .then(() => {
+      console.log('cancel')
+    })
     .catch(console.error)
 }
 
 export const onDelete = async ({ orderId }) => {
   return await ServiceOrders.delete(orderId)
-    .then(console.log)
+    .then(() => {
+      console.log('delete')
+    })
     .catch(console.error)
 }
 
@@ -105,6 +119,8 @@ export const onPending = async ({ orderId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.PENDING
   })
-    .then(console.log)
+    .then(() => {
+      console.log('pending')
+    })
     .catch(console.error)
 }
