@@ -394,7 +394,10 @@ const OrderActions = ({
           validate={(values: OrderType) => {
             const errors: Partial<OrderType> = {}
             if (!values.location) errors.location = 'Ubicación requerida'
-            if (!values.itemSerial)
+            if (
+              !values.itemSerial &&
+              (values.type === 'RENT' || values.type === 'REPAIR')
+            )
               errors.itemSerial = 'No. de serie es requerido'
             return errors
           }}

@@ -55,9 +55,9 @@ const ScreenOrderRenew = ({ route }) => {
           renewedFrom: orderId
         }
         // @ts-ignore
-        await ServiceOrders.create(renewedOrder)
-          .then((res) => {
-            if (res.ok)
+        await ServiceOrders.createSerialOrder(renewedOrder)
+          .then((newOrderId) => {
+            if (newOrderId)
               ServiceOrders.update(orderId, {
                 status: order_status.RENEWED
               })
@@ -65,13 +65,13 @@ const ScreenOrderRenew = ({ route }) => {
             // * Add comment to the new order
             ServiceOrders.addComment({
               storeId: order.storeId,
-              orderId: res.res.id || '',
+              orderId: newOrderId || '',
               type: 'comment',
               content: `Renovación de ordern No. ${originalOrder.folio} `
             })
               .then(() => {
                 // @ts-ignore
-                navigate('OrderDetails', { orderId: res.res.id || '' })
+                navigate('OrderDetails', { orderId: newOrderId || '' })
               })
               .catch(console.error)
             // * Add comment to the original order
@@ -83,7 +83,7 @@ const ScreenOrderRenew = ({ route }) => {
             })
               .then(() => {
                 // @ts-ignore
-                navigate('OrderDetails', { orderId: res.res.id || '' })
+                navigate('OrderDetails', { orderId: newOrderId || '' })
               })
               .catch(console.error)
           })

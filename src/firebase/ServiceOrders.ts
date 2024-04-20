@@ -27,6 +27,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   //   return super.create(order)
   // }
 
+  /**
+   *
+   * @param order OrderType
+   * @returns orderId or null in case of error
+   */
   async createSerialOrder(order: Type): Promise<string> | null {
     if (!order.storeId) console.error('No storeId provided')
     try {

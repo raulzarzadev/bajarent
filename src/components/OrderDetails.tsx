@@ -226,6 +226,11 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
           Artículos
         </Text>
+        {order.itemSerial && (
+          <Text style={[gStyles.p, gStyles.tCenter]}>
+            No.Serie: {order.itemSerial}
+          </Text>
+        )}
         {order?.items?.map((item) => (
           <View
             key={item.id}
@@ -246,6 +251,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
             />
           </View>
         ))}
+
         <Totals items={order.items} />
         <View style={{ marginTop: gSpace(3) }}>
           <ItemDates
@@ -267,6 +273,11 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           margin: 4
         }}
       >
+        {order.itemSerial && (
+          <Text style={[gStyles.p, gStyles.tCenter]}>
+            No.Serie: {order.itemSerial}
+          </Text>
+        )}
         <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
           Sin artículos
         </Text>
@@ -282,7 +293,11 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       }}
     >
       <Text style={[gStyles.h3, { marginBottom: 8 }]}>Artículo</Text>
-
+      {order.itemSerial && (
+        <Text style={[gStyles.p, gStyles.tCenter]}>
+          No.Serie: {order.itemSerial}
+        </Text>
+      )}
       <View>
         <View>
           <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
