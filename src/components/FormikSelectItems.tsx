@@ -7,6 +7,7 @@ import { FlatList, Text, View } from 'react-native'
 import CurrencyAmount from './CurrencyAmount'
 import { gSpace, gStyles } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
+import theme from '../theme'
 
 const FormikSelectItems = ({
   name,
@@ -77,19 +78,19 @@ const FormikSelectItems = ({
         showDetails={false}
         // askItemInfo={true}
       />
-
-      <ListItems items={_items} handleRemoveItem={handleRemoveItem} />
-
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'baseline',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          marginTop: gSpace(2)
         }}
       >
-        <Text style={{ marginRight: 4 }}>Items: </Text>
+        <Text style={{ marginRight: 4 }}>Artículos: </Text>
         <Text style={gStyles.h2}>{_items.length || 0}</Text>
       </View>
+      <ListItems items={_items} handleRemoveItem={handleRemoveItem} />
+
       <Totals items={_items} />
     </>
   )
@@ -123,7 +124,6 @@ const ListItems = ({
 }) => {
   return (
     <FlatList
-      style={{ marginVertical: gSpace(2) }}
       data={items}
       renderItem={({ item, index }) => (
         <ItemRow
@@ -152,7 +152,11 @@ const ItemRow = ({
         flexDirection: 'row',
         maxWidth: 320,
         marginHorizontal: 'auto',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: theme.neutral,
+        paddingHorizontal: gSpace(2),
+        paddingVertical: gSpace(1),
+        borderRadius: gSpace(2)
       }}
     >
       <View>
