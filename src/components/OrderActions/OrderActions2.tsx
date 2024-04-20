@@ -190,6 +190,7 @@ const OrderActions = ({
 
   /* ********************************************
    * ORDER ACTIONS ALLOWED
+  Determinate if an actions is allowed depending on the flow
    *******************************************rz */
 
   /* ********************************************
@@ -328,7 +329,7 @@ const OrderActions = ({
    *******************************************rz */
   // #region PROGRESS
   const statusIndex = ORDER_TYPE_ACTIONS[orderType].findIndex(
-    (act) => act.status === orderStatus //*!<- if is reported it don't found
+    (act) => act.status === orderStatus
   )
   const progress =
     ((statusIndex + 1) / ORDER_TYPE_ACTIONS[orderType].length) * 100
