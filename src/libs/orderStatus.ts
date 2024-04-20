@@ -7,6 +7,7 @@ import OrderType, {
 import asDate from './utils-date'
 
 const orderStatus = (order: Partial<OrderType>): OrderStatus => {
+  if (order.hasNotSolvedReports) return order_status.REPORTED
   let status: OrderStatus = order?.status || order_status.PENDING
 
   if (status === order_status.PICKUP) return status
