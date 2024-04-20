@@ -29,16 +29,12 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
        * if the order timing is more than 24 hours should't validate if expires today or tomorrow
        * in other case,
        *******************************************rz */
-
-      if (isToday(expireAt)) {
-        status = order_status.EXPIRE_TODAY
-        return status
-      }
       if (expireAt && isTomorrow(expireAt)) {
         status = order_status.EXPIRED_TOMORROW
         return status
       }
-      if (expireAt && isBefore(expireAt, new Date())) {
+
+      if (isToday(expireAt) || (expireAt && isBefore(expireAt, new Date()))) {
         status = order_status.EXPIRED
         return status
       }
