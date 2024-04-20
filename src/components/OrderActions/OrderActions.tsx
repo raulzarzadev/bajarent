@@ -28,6 +28,7 @@ import { Formik } from 'formik'
 import { useStore } from '../../contexts/storeContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
+import InputValueFormik from '../InputValueFormik'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -390,13 +391,23 @@ const OrderActions = ({
           onSubmit={(values) => {
             actions_fns[acts.DELIVER]({ location: values.location })
           }}
-          validate={(values) => {
-            if (!values.location) return { location: 'Ubicación requerida' }
+          validate={(values: OrderType) => {
+            const errors: Partial<OrderType> = {}
+            if (!values.location) errors.location = 'Ubicación requerida'
+            if (!values.itemSerial)
+              errors.itemSerial = 'No. de serie es requerido'
+            return errors
           }}
         >
           {({ errors, handleSubmit }) => {
             return (
               <View>
+                <View style={{ marginVertical: 8 }}>
+                  <InputValueFormik
+                    name={'itemSerial'}
+                    placeholder="No de serie"
+                  />
+                </View>
                 <View style={{ marginVertical: 8 }}>
                   <InputLocationFormik name={'location'} />
                 </View>
