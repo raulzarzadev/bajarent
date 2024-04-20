@@ -30,18 +30,19 @@ const orderStatus = (order: Partial<OrderType>): OrderStatus => {
        * in other case,
        *******************************************rz */
 
-      if (isToday(expireAt)) {
-        status = order_status.EXPIRE_TODAY
-        return status
-      }
-      if (expireAt && isTomorrow(expireAt)) {
-        status = order_status.EXPIRED_TOMORROW
-        return status
-      }
-      if (expireAt && isBefore(expireAt, new Date())) {
+      if (isToday(expireAt) || isBefore(expireAt, new Date())) {
         status = order_status.EXPIRED
         return status
       }
+
+      // if (expireAt && isTomorrow(expireAt)) {
+      //   status = order_status.EXPIRED_TOMORROW
+      //   return status
+      // }
+      // if (expireAt && isBefore(expireAt, new Date())) {
+      //   status = order_status.EXPIRED
+      //   return status
+      // }
     }
   }
 
