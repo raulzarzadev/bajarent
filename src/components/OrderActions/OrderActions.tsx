@@ -357,6 +357,7 @@ const OrderActions = ({
   const handleBack = () => {
     const index = statusIndex
     const action = ORDER_TYPE_ACTIONS[orderType][index - 1]
+    console.log({ action, statusIndex, orderType })
     if (!action) {
       onAuthorize({ orderId, userId })
     } else {
