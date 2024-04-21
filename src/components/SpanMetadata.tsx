@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
@@ -22,16 +22,14 @@ const SpanMetadata = ({
       style={{
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        paddingHorizontal: 16,
         alignItems: 'center',
-        flexWrap: 'wrap',
-        marginBottom: 8
+        flexWrap: 'wrap'
       }}
     >
       <Text style={gStyles.helper}>
         {` ${dateFormat(createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(createdAt)} `}
       </Text>
-      <Text style={{ textAlign: 'center' }}>
+      <Text style={[gStyles.helper, { textAlign: 'center' }]}>
         <SpanUser userId={createdBy} />
       </Text>
       <Text style={gStyles.helper}> {id}</Text>
@@ -40,5 +38,3 @@ const SpanMetadata = ({
 }
 
 export default SpanMetadata
-
-const styles = StyleSheet.create({})

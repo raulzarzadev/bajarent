@@ -4,7 +4,7 @@ import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
 import theme from '../theme'
-import asDate, { dateFormat, fromNow } from '../libs/utils-date'
+import { dateFormat } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderComments from './OrderComments'
 import dictionary from '../dictionary'
@@ -21,6 +21,7 @@ import { Timestamp } from 'firebase/firestore'
 import DateCell from './DateCell'
 import { Totals } from './FormikSelectItems'
 import OrderActions from './OrderActions/OrderActions'
+import SpanMetadata from './SpanMetadata'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -418,39 +419,39 @@ const styles = StyleSheet.create({
 
 export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        marginBottom: 8
-      }}
-    >
-      <View>
-        <Text style={gStyles.helper}>
-          {` ${dateFormat(order?.createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(
-            order?.createdAt
-          )} `}
-        </Text>
-        <Text style={gStyles.helper}> {order?.id}</Text>
-      </View>
-      <View>
-        <Text style={{ textAlign: 'center' }}>
-          <P bold size="lg">
-            Folio:{' '}
-          </P>
-          <P size="lg">{order?.folio}</P>
-        </Text>
-        {order?.note && (
+    <View>
+      <SpanMetadata
+        createdAt={order?.createdAt}
+        createdBy={order?.createdBy}
+        id={order?.id}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          marginBottom: 8
+        }}
+      >
+        <View></View>
+        <View>
           <Text style={{ textAlign: 'center' }}>
             <P bold size="lg">
-              Nota:{' '}
+              Folio:{' '}
             </P>
-            <P size="lg">{order?.note}</P>
+            <P size="lg">{order?.folio}</P>
           </Text>
-        )}
+          {order?.note && (
+            <Text style={{ textAlign: 'center' }}>
+              <P bold size="lg">
+                Nota:{' '}
+              </P>
+              <P size="lg">{order?.note}</P>
+            </Text>
+          )}
+        </View>
       </View>
     </View>
   )
