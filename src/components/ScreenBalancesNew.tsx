@@ -7,11 +7,11 @@ import asDate from '../libs/utils-date'
 import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
-import OrderType, { order_status } from '../types/OrderType'
 import { balanceOrders } from '../libs/balance'
 
 const ScreenBalancesNew = ({ navigation }) => {
   const { payments, storeId, orders } = useStore()
+
   const [balance, setBalance] = React.useState<BalanceType>()
 
   const getBalancePayments = async (values: BalanceType) => {
@@ -32,6 +32,7 @@ const ScreenBalancesNew = ({ navigation }) => {
   ): Promise<BalanceOrders> => {
     return balanceOrders({ values, orders })
   }
+
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
       const payments = await getBalancePayments(values)

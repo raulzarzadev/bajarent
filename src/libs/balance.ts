@@ -46,7 +46,38 @@ export const balanceOrders = ({
   let ordersPickup = []
   let ordersDelivered = []
 
-  ordersCreated = orders
+  /* ******************************************** 
+             FILTER BY DATE               
+   *******************************************rz */
+  ordersCreated = [...orders].filter((o) => {
+    const createdAt = asDate(o?.createdAt)
+    return (
+      asDate(createdAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
+      asDate(createdAt)?.getTime() <= asDate(values?.toDate)?.getTime()
+    )
+  })
+
+  ordersPickup = [...orders].filter((o) => {
+    const pickedUpAt = asDate(o?.pickedUpAt)
+    return (
+      asDate(pickedUpAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
+      asDate(pickedUpAt)?.getTime() <= asDate(values?.toDate)?.getTime()
+    )
+  })
+
+  ordersDelivered = [...orders].filter((o) => {
+    const deliveredAt = asDate(o?.deliveredAt)
+    return (
+      asDate(deliveredAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
+      asDate(deliveredAt)?.getTime() <= asDate(values?.toDate)?.getTime()
+    )
+  })
+
+  /* ******************************************** 
+             FILTER BY USER               
+   *******************************************rz */
+
+  ordersCreated = [...ordersCreated]
     .filter((o) => {
       //* if values.type === partial only show orders created by that user
       if (values.type === 'partial') return o.createdBy === values.userId
@@ -55,7 +86,7 @@ export const balanceOrders = ({
     //* returns only the id of the order
     .map(({ id }) => id)
 
-  ordersPickup = orders
+  ordersPickup = [...ordersPickup]
     .filter((o) => {
       //* if values.type === partial only show orders created by that user
       if (values.type === 'partial') return o.pickedUpBy === values.userId
@@ -63,7 +94,7 @@ export const balanceOrders = ({
     })
     //* returns only the id of the order
     .map(({ id }) => id)
-  ordersDelivered = orders
+  ordersDelivered = [...ordersDelivered]
     .filter((o) => {
       //* if values.type === partial only show orders created by that user
       if (values.type === 'partial') return o.deliveredBy === values.userId
