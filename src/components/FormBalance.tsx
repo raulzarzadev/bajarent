@@ -38,13 +38,14 @@ const FormBalanceE = ({
 
   const defaultBalanceValues: Partial<BalanceType> = {
     type: 'full',
-    fromDate: new Date(new Date().setHours(8, 0, 0, 0)),
-    toDate: new Date(),
+    fromDate: new Date(new Date().setHours(7, 0, 0, 0)),
+    toDate: new Date(new Date().setHours(19, 0, 0, 0)),
     userId: ''
   }
+  const initialValues = { ...defaultBalanceValues, ...defaultValues }
   return (
     <Formik
-      initialValues={{ ...defaultBalanceValues, ...defaultValues }}
+      initialValues={initialValues}
       onSubmit={async (values) => {
         handleSubmit(values)
       }}

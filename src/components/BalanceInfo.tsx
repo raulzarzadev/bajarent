@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
@@ -17,12 +17,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
-import List from './List'
-import { ItemSelected } from './FormSelectItem'
-import OrderType from '../types/OrderType'
-import { Timestamp } from 'firebase/firestore'
-import { id } from 'date-fns/locale'
-import ListItemsStatus from './ListItemsStatus'
+import Icon from './Icon'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
@@ -34,9 +29,12 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
-      <Text style={{ textAlign: 'center' }}>Corte</Text>
-      <Text style={gStyles.h2}>{dictionary(balance?.type)} </Text>
-      <Text style={gStyles.tCenter}>
+
+      <Text style={gStyles.h3}>Tipo:</Text>
+      <Text style={[gStyles.h2, { textTransform: 'capitalize' }]}>
+        {dictionary(balance?.type)}{' '}
+      </Text>
+      <Text style={[gStyles.tCenter]}>
         {balance?.type === 'partial' && <SpanUser userId={balance.userId} />}
       </Text>
       <View
@@ -48,7 +46,9 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         }}
       >
         <DateCell label="Desde" date={balance?.fromDate} showTime labelBold />
-        <Text> - </Text>
+        <View style={{ marginHorizontal: 8 }}>
+          <Icon icon="rowRight" />
+        </View>
         <DateCell label="Hasta" date={balance?.toDate} showTime labelBold />
       </View>
       <View
@@ -111,7 +111,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         modalTitle="Ordenes recogidas"
       />
 
-      <View>
+      {/* <View>
         <Text style={[gStyles.h3, { marginTop: gSpace(3) }]}>Artículos</Text>
       </View>
       <ModalItems
@@ -123,7 +123,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         ordersIds={balance?.ordersPickup}
         buttonLabel="Recogidos"
         modalTitle="Artículos recogidas"
-      />
+      /> */}
 
       <View style={styles.totals}>
         <View style={styles.row}>
@@ -147,43 +147,43 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   )
 }
 
-const ModalItems = ({
-  ordersIds = [],
-  buttonLabel,
-  modalTitle
-}: {
-  ordersIds: string[]
-  buttonLabel?: string
-  modalTitle?: string
-}) => {
-  const modal = useModal({ title: modalTitle })
-  const { orders } = useStore()
-  const fullOrders = ordersIds?.map((orderId) =>
-    orders.find((o) => o.id === orderId)
-  )
+// const ModalItems = ({
+//   ordersIds = [],
+//   buttonLabel,
+//   modalTitle
+// }: {
+//   ordersIds: string[]
+//   buttonLabel?: string
+//   modalTitle?: string
+// }) => {
+//   const modal = useModal({ title: modalTitle })
+//   const { orders } = useStore()
+//   const fullOrders = ordersIds?.map((orderId) =>
+//     orders.find((o) => o.id === orderId)
+//   )
 
-  return (
-    <View>
-      <View
-        style={{
-          width: 180,
-          marginVertical: gSpace(2),
-          marginHorizontal: 'auto'
-        }}
-      >
-        <Button
-          size="small"
-          label={`${buttonLabel}`}
-          // variant="ghost"
-          onPress={modal.toggleOpen}
-        ></Button>
-      </View>
-      <StyledModal {...modal} size="full">
-        <ListItemsStatus orders={fullOrders} />
-      </StyledModal>
-    </View>
-  )
-}
+//   return (
+//     <View>
+//       <View
+//         style={{
+//           width: 180,
+//           marginVertical: gSpace(2),
+//           marginHorizontal: 'auto'
+//         }}
+//       >
+//         <Button
+//           size="small"
+//           label={`${buttonLabel}`}
+//           // variant="ghost"
+//           onPress={modal.toggleOpen}
+//         ></Button>
+//       </View>
+//       <StyledModal {...modal} size="full">
+//         <ListItemsStatus orders={fullOrders} />
+//       </StyledModal>
+//     </View>
+//   )
+// }
 
 const ModalOrders = ({
   ordersIds = [],
@@ -217,7 +217,7 @@ const ModalOrders = ({
           onPress={modal.toggleOpen}
         ></Button>
       </View>
-      <StyledModal {...modal} size="full">
+      <StyledModal {...modal}>
         <OrdersList
           orders={fullOrders}
           onPressRow={(orderId) => {

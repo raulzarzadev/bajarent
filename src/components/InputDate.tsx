@@ -21,13 +21,20 @@ export default function InputDate({
   withTime?: boolean
 }) {
   const nowDate = new Date()
+  const defaultTime = value
+    ? {
+        hours: value.getHours(),
+        minutes: value.getMinutes()
+      }
+    : {
+        hours: nowDate.getHours(),
+        minutes: nowDate.getMinutes()
+      }
+
   const [open, setOpen] = React.useState(false)
 
   const [date, setDate] = React.useState(value)
-  const [time, setTime] = React.useState<PickerTime>({
-    hours: nowDate.getHours(),
-    minutes: nowDate.getMinutes()
-  })
+  const [time, setTime] = React.useState<PickerTime>(defaultTime)
 
   const onDismissSingle = React.useCallback(() => {
     setOpen(false)
@@ -49,6 +56,7 @@ export default function InputDate({
 
   const hours = date.getHours()
   const minutes = date.getMinutes()
+
   return (
     <>
       <Button
