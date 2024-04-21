@@ -8,6 +8,7 @@ import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
 import OrderType, { order_status } from '../types/OrderType'
+import { balanceOrders } from '../libs/balance'
 
 const ScreenBalancesNew = ({ navigation }) => {
   const { payments, storeId, orders } = useStore()
@@ -29,66 +30,7 @@ const ScreenBalancesNew = ({ navigation }) => {
   const getBalanceOrders = async (
     values: BalanceType
   ): Promise<BalanceOrders> => {
-    const ordersByDate = orders.filter((o) => {
-      //* filter orders by date
-      const createdAt = asDate(o.createdAt)
-      const fromDate = asDate(values.fromDate)
-      const toDate = asDate(values.toDate)
-
-      return (
-        createdAt.getTime() >= fromDate.getTime() &&
-        createdAt.getTime() <= toDate.getTime()
-      )
-    })
-    const ordersCreated = ordersByDate.filter((o) => {
-      //* if userId is set, only show orders created by that user
-      if (values.userId) return o.createdBy === values.userId
-      return true
-    })
-
-    const ordersPickup = orders
-      .filter((o) => {
-        const pickedUpAt = asDate(o.pickedUpAt)
-        const fromDate = asDate(values.fromDate)
-        const toDate = asDate(values.toDate)
-        if (!pickedUpAt) return false
-        return (
-          pickedUpAt.getTime() >= fromDate.getTime() &&
-          pickedUpAt.getTime() <= toDate.getTime()
-        )
-      })
-      .filter((o) => {
-        if (values.userId) return o.pickedUpBy === values.userId
-        return true
-      })
-
-    const ordersDelivered = orders
-      .filter((o) =>
-        [order_status.DELIVERED, order_status.REPAIR_DELIVERED].includes(
-          o.status
-        )
-      )
-
-      .filter((o) => {
-        const deliveredAt = asDate(o.deliveredAt)
-        const fromDate = asDate(values.fromDate)
-        const toDate = asDate(values.toDate)
-        if (!deliveredAt) return false
-        return (
-          deliveredAt.getTime() >= fromDate.getTime() &&
-          deliveredAt.getTime() <= toDate.getTime()
-        )
-      })
-      .filter((o) => {
-        if (values.userId) return o.deliveredBy === values.userId
-        return o.deliveredAt
-      })
-    const ordersIds = (orders: OrderType[]) => orders.map((o) => o.id)
-    return {
-      ordersCreated: ordersIds(ordersCreated),
-      ordersPickup: ordersIds(ordersPickup),
-      ordersDelivered: ordersIds(ordersDelivered)
-    }
+    return balanceOrders({ values, orders })
   }
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
