@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
@@ -8,10 +8,11 @@ import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
 import { balanceOrders } from '../libs/balance'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenBalancesNew = ({ navigation }) => {
-  const { payments, storeId, orders } = useStore()
-
+  const { payments, storeId, orders, store } = useStore()
+  const { user } = useAuth()
   const [balance, setBalance] = React.useState<BalanceType>()
 
   const getBalancePayments = async (values: BalanceType) => {
@@ -59,6 +60,8 @@ const ScreenBalancesNew = ({ navigation }) => {
   const handleClear = () => {
     setBalance(undefined)
   }
+  if (!storeId || !store || !user) return <Text>Cargando...</Text>
+
   return (
     <ScrollView>
       <FormBalance

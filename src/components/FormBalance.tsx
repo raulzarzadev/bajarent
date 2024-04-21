@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Formik } from 'formik'
 import Button from './Button'
 import InputDate from './InputDate'
@@ -12,6 +12,7 @@ import InputRadios from './InputRadios'
 import { BalanceType } from '../types/BalanceType'
 import ErrorBoundary from './ErrorBoundary'
 import groupBy from '../libs/groupBy'
+import InputSelect from './InputSelect'
 
 export type FormBalanceProps = {
   defaultValues?: Partial<BalanceType>
@@ -44,7 +45,7 @@ const FormBalanceE = ({
     toDate: new Date(),
     userId: ''
   }
-
+  console.log({ defaultBalanceValues })
   return (
     <Formik
       initialValues={{ ...defaultBalanceValues, ...defaultValues }}
@@ -56,14 +57,14 @@ const FormBalanceE = ({
         <View style={gStyles.container}>
           {/* SELECT BALANCE TYPE , PARTIAL OR FULL. FULL ARE DEFAULT SELECTED */}
           <View style={[styles.input]}>
-            <SelectBalanceType
+            <SelectBalanceType2
               balanceType={{
                 type: values.type,
                 userId: values.userId
               }}
-              setBalanceType={(balance) =>
-                setValues((prev) => ({ ...prev, ...balance }))
-              }
+              setBalanceType={(balance) => {
+                setValues((values) => ({ ...values, ...balance }), false)
+              }}
             />
           </View>
           <View style={[styles.input]}>
@@ -241,6 +242,40 @@ const SelectBalanceType = ({
           ))}
         </View>
       </StyledModal>
+    </View>
+  )
+}
+
+const SelectBalanceType2 = ({
+  setBalanceType,
+  balanceType
+}: {
+  setBalanceType: (balanceUser: BalanceUser) => void
+  balanceType: BalanceUser
+}) => {
+  const { staff } = useStore()
+
+  const options = useMemo(() => {
+    return [
+      { label: 'Completo', value: 'full' },
+      ...staff.map((user) => ({ label: user.name, value: user.userId }))
+    ]
+  }, [staff])
+
+  return (
+    <View>
+      <InputSelect
+        value={balanceType.type}
+        options={options}
+        onChangeValue={(value) => {
+          console.log({ value })
+          if (value === 'full') {
+            return setBalanceType({ type: 'full', userId: '' })
+          } else {
+            setBalanceType({ type: 'partial', userId: value })
+          }
+        }}
+      />
     </View>
   )
 }
