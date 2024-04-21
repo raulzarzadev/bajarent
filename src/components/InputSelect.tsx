@@ -1,11 +1,11 @@
 import RNPickerSelect from 'react-native-picker-select'
 import { gStyles } from '../styles'
 import { ViewStyle } from 'react-native'
-
-export type SelectOptions = {
+export type SelectOption = {
   label: string
   value: string
-}[]
+}
+export type SelectOptions = SelectOption[]
 
 const InputSelect = ({
   options = [],
@@ -27,7 +27,7 @@ const InputSelect = ({
       }}
       onValueChange={onChangeValue}
       items={options}
-      placeholder={{ label: 'Seleccionar', value: '' }}
+      placeholder={{ label: 'Seleccionar', value: null }}
     />
   )
 }

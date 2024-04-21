@@ -1,18 +1,15 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useMemo } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import React, { useMemo } from 'react'
 import { Formik } from 'formik'
 import Button from './Button'
 import InputDate from './InputDate'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import theme from '../theme'
-import InputRadios from './InputRadios'
 import { BalanceType } from '../types/BalanceType'
 import ErrorBoundary from './ErrorBoundary'
-import groupBy from '../libs/groupBy'
 import InputSelect from './InputSelect'
+import TextInfo from './TextInfo'
+import Icon from './Icon'
 
 export type FormBalanceProps = {
   defaultValues?: Partial<BalanceType>
@@ -45,7 +42,6 @@ const FormBalanceE = ({
     toDate: new Date(),
     userId: ''
   }
-  console.log({ defaultBalanceValues })
   return (
     <Formik
       initialValues={{ ...defaultBalanceValues, ...defaultValues }}
@@ -67,6 +63,10 @@ const FormBalanceE = ({
               }}
             />
           </View>
+          <TextInfo
+            type="info"
+            text="Selecciona las fechas entre las que deseas calcular el balance. "
+          />
           <View style={[styles.input]}>
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-around' }}
@@ -86,6 +86,9 @@ const FormBalanceE = ({
                   }
                 />
               </View>
+              <View style={{ alignSelf: 'center' }}>
+                <Icon icon="rowRight" />
+              </View>
               <View style={{ justifyContent: 'center' }}>
                 <InputDate
                   withTime
@@ -99,12 +102,7 @@ const FormBalanceE = ({
               </View>
             </View>
           </View>
-          {/* <View style={styles.input}>
-            <FormikInputValue name={'name'} placeholder="Nombre" />
-          </View>
-          <View style={styles.input}>
-            <FormikInputValue name={'description'} placeholder="Descripción" />
-          </View> */}
+
           <View
             style={[
               styles.input,
@@ -134,117 +132,6 @@ type BalanceUser = {
   type: BalanceType['type']
   userId: string
 }
-const SelectBalanceType = ({
-  setBalanceType,
-  balanceType
-}: {
-  setBalanceType: (balanceUser: BalanceUser) => void
-  balanceType: BalanceUser
-}) => {
-  const { staff } = useStore()
-  const [type, setType] = React.useState('')
-  const [userSelected, setUserSelected] = React.useState<string | null>('')
-  useEffect(() => {
-    setType(balanceType.type)
-    setUserSelected(balanceType.userId)
-  }, [balanceType])
-
-  const modal = useModal({ title: 'Seleccionar usuario' })
-  const users = groupBy(staff, (user) => user.userId)
-
-  const usersData = Object.keys(users).map((userId) => {
-    const userData = staff.find((user) => user.userId === userId)
-    return {
-      userId,
-      positions: users[userId],
-      ...userData
-    }
-  })
-
-  const handleSelectUser = (userId: string) => {
-    setUserSelected(userId)
-    setBalanceType({ type: 'partial', userId })
-    modal.toggleOpen()
-  }
-
-  const handleSetType = (value: BalanceType['type']) => {
-    if (value === 'full') {
-      setBalanceType({ type: 'full', userId: '' })
-      setUserSelected(null)
-      setType(value)
-    } else {
-      setBalanceType({ type: 'partial', userId: userSelected })
-      setUserSelected('')
-      setType(value)
-    }
-  }
-
-  const userName = usersData.find((user) => user.userId === userSelected)?.name
-
-  return (
-    <View>
-      <View
-        style={{
-          marginVertical: 8,
-          flexDirection: 'row',
-          alignItems: 'flex-end',
-          justifyContent: 'space-evenly'
-        }}
-      >
-        <InputRadios
-          label="Tipo de corte"
-          options={[
-            { label: 'Completo', value: 'full' },
-            { label: 'Partial', value: 'partial' }
-          ]}
-          layout="row"
-          setValue={(value: BalanceType['type']) => handleSetType(value)}
-          value={type}
-        />
-        {type === 'partial' && (
-          <View>
-            <Button
-              size="small"
-              label={`${userSelected ? userName : 'Seleccionar usuario'}`}
-              onPress={modal.toggleOpen}
-            ></Button>
-          </View>
-        )}
-      </View>
-      <StyledModal {...modal}>
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ width: 120 }}>Usuiario</Text>
-            <Text>Posisiones </Text>
-          </View>
-          {usersData.map((user) => (
-            <Pressable
-              onPress={() => handleSelectUser(user.userId)}
-              key={user.id}
-              style={{
-                flexDirection: 'row',
-                marginVertical: 8,
-                padding: 4,
-                backgroundColor: theme.info,
-                borderWidth: 2,
-                borderColor:
-                  user.id === userSelected ? theme.secondary : 'transparent',
-                borderRadius: 4
-              }}
-            >
-              <Text style={{ width: 120 }}>{user.name} </Text>
-              <View style={{ flexDirection: 'row' }}>
-                {user.positions.map((p) => (
-                  <Text key={p.id}>{`${p.position} `}</Text>
-                ))}
-              </View>
-            </Pressable>
-          ))}
-        </View>
-      </StyledModal>
-    </View>
-  )
-}
 
 const SelectBalanceType2 = ({
   setBalanceType,
@@ -254,7 +141,6 @@ const SelectBalanceType2 = ({
   balanceType: BalanceUser
 }) => {
   const { staff } = useStore()
-
   const options = useMemo(() => {
     return [
       { label: 'Completo', value: 'full' },
@@ -264,11 +150,19 @@ const SelectBalanceType2 = ({
 
   return (
     <View>
+      <Text style={gStyles.h2}>Tipo de balance</Text>
+      <Text style={[gStyles.helper, gStyles.tCenter]}> </Text>
+
+      <TextInfo
+        type="info"
+        text=" Puedes escoger entre hacer un balance general o seleccionar una persona
+        del staff"
+      />
+
       <InputSelect
-        value={balanceType.type}
+        value={balanceType.type === 'full' ? 'full' : balanceType.userId}
         options={options}
         onChangeValue={(value) => {
-          console.log({ value })
           if (value === 'full') {
             return setBalanceType({ type: 'full', userId: '' })
           } else {
