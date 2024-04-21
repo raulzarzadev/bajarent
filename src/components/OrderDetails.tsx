@@ -223,12 +223,14 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           margin: 4
         }}
       >
-        <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
+        <Text
+          style={[gStyles.h2, { marginVertical: gSpace(4), marginBottom: 4 }]}
+        >
           Artículos
         </Text>
         {order.itemSerial && (
-          <Text style={[gStyles.p, gStyles.tCenter]}>
-            No.Serie: {order.itemSerial}
+          <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
+            serie: {order.itemSerial}
           </Text>
         )}
         {order?.items?.map((item) => (
@@ -274,8 +276,8 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         }}
       >
         {order.itemSerial && (
-          <Text style={[gStyles.p, gStyles.tCenter]}>
-            No.Serie: {order.itemSerial}
+          <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
+            serie: {order.itemSerial}
           </Text>
         )}
         <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
@@ -292,10 +294,14 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         margin: 4
       }}
     >
-      <Text style={[gStyles.h3, { marginBottom: 8 }]}>Artículo</Text>
+      <Text
+        style={[gStyles.h2, { marginVertical: gSpace(4), marginBottom: 4 }]}
+      >
+        Artículos
+      </Text>
       {order.itemSerial && (
-        <Text style={[gStyles.p, gStyles.tCenter]}>
-          No.Serie: {order.itemSerial}
+        <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
+          serie: {order.itemSerial}
         </Text>
       )}
       <View>
