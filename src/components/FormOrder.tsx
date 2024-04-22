@@ -211,7 +211,6 @@ const FormOrderA = ({
               })
           }}
           validate={(values) => {
-            console.log({ values })
             const errors: Partial<OrderType> = {}
             if (!values.fullName) errors.fullName = '*Nombre necesario'
             if (!values.phone || values.phone.length < 12)

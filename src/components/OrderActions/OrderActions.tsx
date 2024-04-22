@@ -30,6 +30,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
 import FormikSelectItems from '../FormikSelectItems'
+import FormikSelectCategories from '../FormikSelectCategories'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -91,7 +92,6 @@ const OrderActions = ({
       const location = values?.location || ''
       const itemSerial = values?.itemSerial || ''
       const items = values?.items || []
-      console.log({ items })
       try {
         await ServiceOrders.update(orderId, { location, itemSerial, items })
 
@@ -387,7 +387,6 @@ const OrderActions = ({
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
   // #region COMPONENT
 
-  console.log({ order })
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
@@ -416,7 +415,6 @@ const OrderActions = ({
           }}
         >
           {({ errors, handleSubmit, values, setValues }) => {
-            console.log({ items: values.items })
             return (
               <View>
                 <View style={{ marginVertical: 8 }}>
@@ -430,6 +428,7 @@ const OrderActions = ({
                 </View>
 
                 <View style={{ marginVertical: 8 }}>
+                  <FormikSelectCategories name="items" selectPrice />
                   {/* <FormikSelectItems
                     name="items"
                     label="Selecciona un artículo"
