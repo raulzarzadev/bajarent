@@ -29,6 +29,7 @@ import { useStore } from '../../contexts/storeContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
+import FormikSelectItems from '../FormikSelectItems'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -78,22 +79,22 @@ const OrderActions = ({
 
   const deliveryModal = useModal({ title: 'Confirmar datos de entrega' })
 
-  const { orders } = useStore()
+  const { orders, categories } = useStore()
   const order = orders.find((o) => o.id === orderId)
 
   // #region ACTIONS
 
   const actions_fns = {
     [acts.DELIVER]: async (
-      values?: Pick<OrderType, 'location' | 'itemSerial'>
+      values?: Pick<OrderType, 'location' | 'itemSerial' | 'items'>
     ) => {
-      const location = values?.location
-      const itemSerial = values?.itemSerial
-
+      const location = values?.location || ''
+      const itemSerial = values?.itemSerial || ''
+      const items = values?.items || []
+      console.log({ items })
       try {
-        if (location) {
-          await ServiceOrders.update(orderId, { location, itemSerial })
-        }
+        await ServiceOrders.update(orderId, { location, itemSerial, items })
+
         await onDelivery({ orderId, userId })
         await onOrderComment({ content: 'Entregada' })
       } catch (error) {
@@ -385,6 +386,8 @@ const OrderActions = ({
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
   // #region COMPONENT
+
+  console.log({ order })
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
@@ -397,7 +400,8 @@ const OrderActions = ({
           onSubmit={(values) => {
             actions_fns[acts.DELIVER]({
               location: values.location,
-              itemSerial: values.itemSerial
+              itemSerial: values.itemSerial,
+              items: values.items
             })
           }}
           validate={(values: OrderType) => {
@@ -411,7 +415,8 @@ const OrderActions = ({
             return errors
           }}
         >
-          {({ errors, handleSubmit }) => {
+          {({ errors, handleSubmit, values, setValues }) => {
+            console.log({ items: values.items })
             return (
               <View>
                 <View style={{ marginVertical: 8 }}>
@@ -422,6 +427,22 @@ const OrderActions = ({
                 </View>
                 <View style={{ marginVertical: 8 }}>
                   <InputLocationFormik name={'location'} />
+                </View>
+
+                <View style={{ marginVertical: 8 }}>
+                  {/* <FormikSelectItems
+                    name="items"
+                    label="Selecciona un artículo"
+                    categories={categories.map((cat) => ({
+                      ...cat
+                    }))}
+                    selectPrice
+                    startAt={values.scheduledAt}
+                    setItems={(items = []) => {
+                      console.log({ items })
+                    }}
+                    items={values.items || []}
+                  /> */}
                 </View>
 
                 <Button

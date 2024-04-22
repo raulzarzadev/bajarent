@@ -21,6 +21,7 @@ import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
 import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
+import FormikSelectCategories from './FormikSelectCategories'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -231,6 +232,7 @@ const FormOrderA = ({
           }}
         >
           {({ handleSubmit, setValues, values, errors, setErrors }) => {
+            console.log({ values })
             useEffect(() => {
               setErrors({})
               setOrderFields(store?.orderFields?.[values.type] as OrderFields)
@@ -406,42 +408,27 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     ),
 
     selectItemsRepair: (
-      <FormikSelectItems
+      <FormikSelectCategories
         name="item"
         label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
         selectPrice
         startAt={values.scheduledAt}
-        setItems={(items) => setValues({ ...values, items })}
-        items={values.items}
       />
     ),
     selectItemsRent: (
-      <FormikSelectItems
+      <FormikSelectCategories
         name="item"
         label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
         selectPrice
         startAt={values.scheduledAt}
-        setItems={(items) => setValues({ ...values, items })}
-        items={values.items}
       />
     ),
     selectItemsSale: (
-      <FormikSelectItems
+      <FormikSelectCategories
         name="item"
         label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
         selectPrice
         startAt={values.scheduledAt}
-        setItems={(items) => setValues({ ...values, items })}
-        items={values.items}
       />
     ),
     hasDelivered: (

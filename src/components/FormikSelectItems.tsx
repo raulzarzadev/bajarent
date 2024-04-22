@@ -43,6 +43,8 @@ const FormikSelectItems = ({
     helpers.setValue({})
   }
 
+  const [item, setItem] = useState<ItemSelected | null>(null)
+
   return (
     <>
       <FormSelectItem
@@ -60,10 +62,12 @@ const FormikSelectItems = ({
             time: priceSelected?.time || null,
             id: priceSelected?.id || null
           }
-          helpers.setValue({
-            ...value,
-            priceSelected: priceSelectedImportantInfo
-          })
+
+          // helpers.setValue({
+          //   //!<- This is the problem
+          //   ...value,
+          //   priceSelected: priceSelectedImportantInfo
+          // })
           if (priceSelected) {
             handleAddItem({
               ...value,
