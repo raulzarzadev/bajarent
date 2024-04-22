@@ -14,6 +14,18 @@ class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     return this.getItems([where('staff', 'array-contains', userId)])
   }
 
+  async userStores(userId: string) {
+    const asStaff = await this.getWhereUserIsStaff(userId)
+    const asOwner = await this.getStoresByUserId(userId)
+    const uniqueStores = new Set([
+      ...asStaff.map(({ id }) => id),
+      ...asOwner.map(({ id }) => id)
+    ])
+    return Array.from(uniqueStores).map((id) =>
+      [...asStaff, ...asOwner].find((store) => store.id === id)
+    )
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
