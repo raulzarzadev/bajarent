@@ -70,6 +70,9 @@ const AuthContextProvider = ({ children }) => {
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
     setItem('storeId', storeId) //*<- save the storeId in localStorage
+    getFullStoreData(storeId).then((storeData) => {
+      setStore(storeData)
+    })
   }
 
   const value = useMemo(

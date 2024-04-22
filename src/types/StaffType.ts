@@ -44,6 +44,7 @@ export type BaseStaffType = {
   permissions?: StaffPermissions
   predefinedPermission?: string
   isOwner?: boolean
+  sectionsAssigned?: string[]
 }
 
 type StaffType = BaseType & BaseStaffType & StaffPermissionType
