@@ -8,7 +8,7 @@ const OrderAssignInfo = ({ orderId }: { orderId: string }) => {
   const { storeSections, orders } = useStore()
   const order = orders.find((o) => o.id === orderId)
   const sectionAssigned = storeSections.find(
-    (o) => o?.id === order.assignToSection
+    (o) => o?.id === order?.assignToSection
   )?.name
   const assignedDate = order?.scheduledAt
   return (

@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import ModalSendWhatsapp from '../ModalSendWhatsapp'
-import { useStore } from '../../contexts/storeContext'
 import dictionary from '../../dictionary'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import OrderType, { order_type } from '../../types/OrderType'
+import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
+import { useAuth } from '../../contexts/authContext'
 const orderPeriod = (order: Partial<OrderType>): string => {
   const res = ''
   //* if is rent should return the period
-  if (order.type === order_type.RENT || order.type === order_type.STORE_RENT) {
+  if (
+    order?.type === order_type.RENT ||
+    order?.type === order_type.STORE_RENT
+  ) {
     return `Periodo:  ${dateFormat(
       asDate(order.deliveredAt),
       'dd/MM/yy'
@@ -50,14 +54,22 @@ const orderPayments = ({ order }: { order: OrderType }) => {
   return res
 }
 const ModalWhatsAppOrderStatus = ({ orderId }) => {
-  const { orders, store } = useStore()
-  const order = orders.find((o) => o.id === orderId)
+  const { store } = useAuth()
+  const [order, setOrder] = useState<OrderType>()
+
+  useEffect(() => {
+    getFullOrderData(orderId).then((order) => {
+      setOrder(order)
+    })
+  }, [])
+
+  if (!order) return null
   const orderStatusMessage = `
-Tienda: *${store.name}*
-Order: *${order.folio}*
-Tipo: ${dictionary(order.type)}
-Status: ${dictionary(order.status)}
-Reportes activos: ${order.hasNotSolvedReports ? '*Si*' : 'No'}
+Tienda: *${store?.name}*
+Order: *${order?.folio}*
+Tipo: ${dictionary(order?.type)}
+Status: ${dictionary(order?.status)}
+Reportes activos: ${order?.hasNotSolvedReports ? '*Si*' : 'No'}
 ${orderPeriod(order)}
 ${orderPayments({ order })}
  `

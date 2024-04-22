@@ -1,5 +1,5 @@
 import { Text, View, Image, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
@@ -22,6 +22,8 @@ import DateCell from './DateCell'
 import { Totals } from './FormikSelectItems'
 import OrderActions from './OrderActions/OrderActions'
 import SpanMetadata from './SpanMetadata'
+import { ServicePayments } from '../firebase/ServicePayments'
+import PaymentType from '../types/PaymentType'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -92,35 +94,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         </ErrorBoundary>
       )}
 
-      {order?.payments?.length > 0 && (
-        <ErrorBoundary componentName="ModalPayment">
-          <View
-            style={{
-              maxWidth: 190,
-              marginHorizontal: 'auto',
-              marginVertical: 16,
-              marginTop: 8
-            }}
-          >
-            <Text style={gStyles.h3}>Pagos</Text>
-            {order.payments?.map((payment) => (
-              <View
-                key={payment.id}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 6
-                }}
-              >
-                <Text style={{ marginRight: 8 }}>
-                  {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
-                </Text>
-                <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
-              </View>
-            ))}
-          </View>
-        </ErrorBoundary>
-      )}
+      <OrderPayments orderId={order.id} />
 
       <View
         style={{
@@ -416,6 +390,51 @@ const styles = StyleSheet.create({
     maxWidth: 105
   }
 })
+
+const OrderPayments = ({ orderId }: { orderId: string }) => {
+  const [payments, setPayments] = useState<PaymentType[]>([])
+  useEffect(() => {
+    if (orderId) {
+      ServicePayments.listenByOrder(orderId, setPayments)
+    }
+    return () => {}
+  }, [orderId])
+
+  console.log({ payments })
+  return (
+    <View>
+      {payments?.length > 0 && (
+        <ErrorBoundary componentName="ModalPayment">
+          <View
+            style={{
+              maxWidth: 190,
+              marginHorizontal: 'auto',
+              marginVertical: 16,
+              marginTop: 8
+            }}
+          >
+            <Text style={gStyles.h3}>Pagos</Text>
+            {payments?.map((payment) => (
+              <View
+                key={payment.id}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 6
+                }}
+              >
+                <Text style={{ marginRight: 8 }}>
+                  {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
+                </Text>
+                <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
+              </View>
+            ))}
+          </View>
+        </ErrorBoundary>
+      )}
+    </View>
+  )
+}
 
 export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
   return (
