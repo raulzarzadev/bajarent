@@ -8,7 +8,7 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import InputCheckbox from './InputCheckbox'
 import { gSpace } from '../styles'
-import ListComments, { CommentRow } from './ListComments'
+import { CommentRow } from './ListComments'
 import { FormattedComment } from '../types/CommentType'
 import formatComments from '../libs/formatComments'
 import asDate from '../libs/utils-date'
@@ -25,10 +25,11 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
     setOrderComments(formattedComments)
   }
   const [orderComments, setOrderComments] = useState([])
+
   useEffect(() => {
     if (orderId) getComments()
   }, [orderId])
-  console.log({ orderComments })
+
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>
