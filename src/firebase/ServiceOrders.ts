@@ -174,6 +174,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ])
   }
 
+  getSectionOrders(storeId: string, sections: string[]) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('assignToSection', 'in', sections)
+    ])
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

@@ -20,6 +20,7 @@ import useComments from '../hooks/useComments'
 import asDate from '../libs/utils-date'
 import { useEmployee } from './employeeContext'
 import { useEmployee as useEmployee2 } from './employeeContext2'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -55,11 +56,22 @@ const StoreContextProvider = ({ children }) => {
   const { user, storeId, handleSetStoreId, store: currentStore } = useAuth()
 
   const { employee } = useEmployee2()
-  console.log({ currentStore, employee })
+
+  const [orders, setOrders] = useState<OrderType[]>([])
+
+  useEffect(() => {
+    if (employee) {
+      ServiceOrders.getSectionOrders(storeId, employee?.sectionsAssigned).then(
+        setOrders
+      )
+    }
+  }, [employee])
+
+  console.log({ currentStore, employee, orders })
 
   const {
     comments,
-    orders,
+    //orders,
     payments,
     sections: storeSections,
     staff,
