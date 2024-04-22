@@ -19,7 +19,6 @@ export default function InputDate({
   format?: string
   withTime?: boolean
 }) {
-  console.log({ value })
   const nowDate = new Date()
 
   const [open, setOpen] = React.useState(false)
@@ -45,10 +44,6 @@ export default function InputDate({
     setDate(asDate(value))
   }, [value])
 
-  // useEffect(() => {
-  //   setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
-  // }, [date, time])
-
   const handleSetDate = ({ date }) => {
     setDate(date)
     setOpen(false)
@@ -66,16 +61,8 @@ export default function InputDate({
 
   return (
     <>
-      <Button
-        variant="outline"
-        onPress={() => setOpen(true)}
-        // uppercase={false}
-        // mode="outlined"
-      >
+      <Button variant="outline" onPress={() => setOpen(true)}>
         {`${label} ${!!date ? dateFormat(date, format) : ''}`}
-        {/* {date
-          ? `Fecha de entrega : ${dateFormat(date, 'EEEE dd / MMM / yy')}`
-          : 'Seleccionar fecha '} */}
       </Button>
       {withTime && (
         <TimePicker

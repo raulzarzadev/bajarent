@@ -1,12 +1,6 @@
-import { View, Text, Pressable } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import InputSelect from './InputSelect'
-import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
-import InputDate from './InputDate'
-import { useField } from 'formik'
 import FormikInputDate from './FormikInputDate'
 import FormikInputSelect from './FormikInputSelect'
 
