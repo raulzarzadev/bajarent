@@ -3,30 +3,13 @@ import React, { useEffect } from 'react'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gStyles } from '../styles'
-import StaffType from '../types/StaffType'
 import { useAuth } from '../contexts/authContext'
 import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
 
 const ChooseProfile = () => {
   const { navigate } = useNavigation()
-  const {
-    userStores,
-    userPositions,
-    storeId: storeSelected,
-    myStaffId
-  } = useStore()
-
-  const [storePositions, setStorePositions] = React.useState<
-    Partial<StaffType>[]
-  >([])
-
-  useEffect(() => {
-    const storePositions = userPositions?.filter((position) => {
-      return position?.storeId === storeSelected
-    })
-    setStorePositions(storePositions)
-  }, [storeSelected, userStores, userPositions])
+  const { userStores, storeId: storeSelected } = useStore()
 
   const sortUserStore = (userStores, storeSelected) => {
     let res = []
