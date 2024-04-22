@@ -8,7 +8,7 @@ import ScreenComponents from './ScreenComponents'
 import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
-import { useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext2'
 
 const Tab = createBottomTabNavigator()
 
@@ -23,7 +23,6 @@ export const BottomAppBarE = () => {
 // #region UserAndStoreTabs
 const BottomAppBar = () => {
   const {
-    employee,
     permissions: { isAdmin, isOwner, orders }
   } = useEmployee()
 

@@ -1,11 +1,21 @@
 import { View, ScrollView, ActivityIndicator } from 'react-native'
 import OrderDetails from './OrderDetails'
-import { useStore } from '../contexts/storeContext'
+import OrderType from '../types/OrderType'
+import { useEffect, useState } from 'react'
+import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 
-const ScreenOrderDetail = ({ route, navigation }) => {
+const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params
-  const { orders } = useStore()
-  const order = orders?.find((order) => order?.id === orderId)
+
+  const [order, setOrder] = useState<OrderType>()
+  useEffect(() => {
+    if (orderId) {
+      getFullOrderData(orderId).then((order) => {
+        setOrder(order)
+      })
+    }
+  }, [orderId])
+
   if (!order) {
     return (
       <View>

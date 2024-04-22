@@ -6,14 +6,12 @@ import { View } from 'react-native'
 import Button from './Button'
 import { gSpace } from '../styles'
 import { useNavigation } from '@react-navigation/native'
-import { useEmployee } from '../contexts/employeeContext'
 import ErrorBoundary from './ErrorBoundary'
 
 type ViewType = 'list' | 'timeline'
 
-function ScreenMyOrders({ navigation }) {
+function ScreenMyOrders() {
   const { myOrders } = useStore()
-  const { orders } = useEmployee()
   const [view, setView] = useState<ViewType>('list')
 
   const handleSwitchView = () => {
@@ -26,7 +24,7 @@ function ScreenMyOrders({ navigation }) {
     <>
       {view === 'list' && (
         <ListOrders
-          orders={orders}
+          orders={myOrders}
           sideButtons={[
             {
               // @ts-ignore

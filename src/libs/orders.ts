@@ -14,38 +14,8 @@ export const formatOrders = ({
   justActive?: boolean
 }) => {
   const ordersWithExpireDate = orders.map((order) => {
-    const orderComments = reports.filter((r) => r.orderId === order.id)
-    const reportsNotSolved = orderComments.some(
-      ({ type, solved }) => type === 'report' && !solved
-    )
-    // if (reportsNotSolved.length) console.log({ reportsNotSolved })
-    if (order.type === 'RENT') {
-      const expireOrder = orderExpireAt({ order })
-      return {
-        ...order,
-        comments: orderComments,
-        expireAt: expireOrder,
-        isExpired: isBefore(expireOrder, new Date()) || isToday(expireOrder),
-        hasNotSolvedReports: reportsNotSolved
-      }
-    }
-    if (order.type === 'REPAIR') {
-      return {
-        ...order,
-        comments: orderComments,
-        expireAt: null,
-        hasNotSolvedReports: reportsNotSolved
-      }
-    }
-    if (order.type === 'SALE') {
-      return {
-        ...order,
-        comments: orderComments,
-        expireAt: null,
-        hasNotSolvedReports: reportsNotSolved
-      }
-    }
-    return order
+    const formattedOrder = formatOrder({ order, comments: reports })
+    return formattedOrder
   })
 
   if (justActive) {
@@ -53,6 +23,43 @@ export const formatOrders = ({
   }
 
   return ordersWithExpireDate
+}
+
+export const formatOrder = ({ order, comments }) => {
+  const orderComments = comments.filter(
+    (comment) => comment.orderId === order.id
+  )
+  const reportsNotSolved = orderComments.some(
+    ({ type, solved }) => type === 'report' && !solved
+  )
+  // if (reportsNotSolved.length) console.log({ reportsNotSolved })
+  if (order.type === 'RENT') {
+    const expireOrder = orderExpireAt({ order })
+    return {
+      ...order,
+      comments: orderComments,
+      expireAt: expireOrder,
+      isExpired: isBefore(expireOrder, new Date()) || isToday(expireOrder),
+      hasNotSolvedReports: reportsNotSolved
+    }
+  }
+  if (order.type === 'REPAIR') {
+    return {
+      ...order,
+      comments: orderComments,
+      expireAt: null,
+      hasNotSolvedReports: reportsNotSolved
+    }
+  }
+  if (order.type === 'SALE') {
+    return {
+      ...order,
+      comments: orderComments,
+      expireAt: null,
+      hasNotSolvedReports: reportsNotSolved
+    }
+  }
+  return order
 }
 
 export const activeOrders = (ordersFormatted: OrderType[]) => {
