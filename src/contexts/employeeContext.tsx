@@ -21,6 +21,10 @@ const EmployeeContext = createContext<EmployeeContextType>({
   permissions: { isAdmin: false, isOwner: false, orders: {}, store: {} }
 })
 
+/**
+ *
+ * @deprecated Use employeeContext2
+ */
 export const EmployeeContextProvider = ({ children }) => {
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
 

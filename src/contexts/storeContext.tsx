@@ -19,6 +19,7 @@ import useUserStores from '../hooks/useUserStores'
 import useComments from '../hooks/useComments'
 import asDate from '../libs/utils-date'
 import { useEmployee } from './employeeContext'
+import { useEmployee as useEmployee2 } from './employeeContext2'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -51,9 +52,10 @@ const StoreContext = createContext<StoreContextType & UseStoreDataListenType>(
 
 const StoreContextProvider = ({ children }) => {
   //#region hooks
-  const { user } = useAuth()
+  const { user, storeId, handleSetStoreId, store: currentStore } = useAuth()
 
-  const [storeId, setStoreId] = useState<StoreContextType['store']['id']>(null)
+  const { employee } = useEmployee2()
+  console.log({ currentStore, employee })
 
   const {
     comments,
@@ -87,9 +89,9 @@ const StoreContextProvider = ({ children }) => {
     getItem('myStaffId').then(setMyStaffId)
   }, [])
 
-  useEffect(() => {
-    getItem('storeId').then(setStoreId)
-  }, [])
+  // useEffect(() => {
+  //   getItem('storeId').then(setStoreId)
+  // }, [])
 
   useEffect(() => {
     //* ** FORMAT ORDERS  */
@@ -224,10 +226,10 @@ const StoreContextProvider = ({ children }) => {
 
   //#region functions
 
-  const handleSetStoreId = async (storeId: string) => {
-    setStoreId(storeId)
-    setItem('storeId', storeId)
-  }
+  // const handleSetStoreId = async (storeId: string) => {
+  //   setStoreId(storeId)
+  //   setItem('storeId', storeId)
+  // }
 
   const handleSetMyStaffId = async (staffId: string) => {
     setMyStaffId(staffId)

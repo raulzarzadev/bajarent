@@ -13,6 +13,7 @@ import StaffType from '../types/StaffType'
 import StoreType from '../types/StoreType'
 import { getItem, setItem } from '../libs/storage'
 import { ServiceStores } from '../firebase/ServiceStore'
+import { getFullStoreData } from './libs/getFullStoreData'
 
 const initialAutState: {
   isAuthenticated: boolean
@@ -21,6 +22,7 @@ const initialAutState: {
   stores?: StoreType[]
   storeId?: string
   handleSetStoreId?: (storeId: string) => any
+  store?: StoreType
   /**
    * @deprecated use employee instead
    */
@@ -39,6 +41,7 @@ const AuthContextProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialAutState)
   const [storeId, setStoreId] = useState<string>('')
   const [stores, setStores] = useState<StoreType[]>([])
+  const [store, setStore] = useState<StoreType>(null)
 
   useEffect(() => {
     authStateChanged((user) => {
@@ -58,6 +61,9 @@ const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     getItem('storeId').then((res) => {
       setStoreId(res)
+      getFullStoreData(res).then((storeData) => {
+        setStore(storeData)
+      })
     })
   }, [])
 
@@ -72,9 +78,10 @@ const AuthContextProvider = ({ children }) => {
       setAuth,
       storeId,
       stores,
+      store,
       handleSetStoreId
     }),
-    [auth, setAuth, storeId, stores]
+    [auth, setAuth, storeId, stores, store]
   )
   at++
   console.log({ at })

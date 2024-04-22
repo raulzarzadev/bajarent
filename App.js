@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ThemeProvider } from './src/contexts/themeContext'
 import { EmployeeContextProvider } from './src/contexts/employeeContext'
+import { EmployeeContextProvider as JustEmployeeContextProvider } from './src/contexts/employeeContext2'
 
 export default function App() {
   const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
@@ -40,20 +41,22 @@ export default function App() {
   }
   return (
     <AuthContextProvider>
-      <StoreContextProvider>
-        <EmployeeContextProvider>
-          <ThemeProvider>
-            <NavigationContainer
-              initialState={initialState}
-              onStateChange={(state) => {
-                AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-              }}
-            >
-              <BottomAppBar />
-            </NavigationContainer>
-          </ThemeProvider>
-        </EmployeeContextProvider>
-      </StoreContextProvider>
+      <JustEmployeeContextProvider>
+        <StoreContextProvider>
+          <EmployeeContextProvider>
+            <ThemeProvider>
+              <NavigationContainer
+                initialState={initialState}
+                onStateChange={(state) => {
+                  AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+                }}
+              >
+                <BottomAppBar />
+              </NavigationContainer>
+            </ThemeProvider>
+          </EmployeeContextProvider>
+        </StoreContextProvider>
+      </JustEmployeeContextProvider>
     </AuthContextProvider>
   )
 }
