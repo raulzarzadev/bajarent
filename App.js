@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native'
-import BottomAppBar from './src/components/BottomAppBar'
+import { BottomAppBarE } from './src/components/BottomAppBar'
 import { AuthContextProvider } from './src/contexts/authContext'
 import { StoreContextProvider } from './src/contexts/storeContext'
 import { useEffect, useState } from 'react'
@@ -51,7 +51,7 @@ export default function App() {
                   AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
                 }}
               >
-                <BottomAppBar />
+                <BottomAppBarE />
               </NavigationContainer>
             </ThemeProvider>
           </EmployeeContextProvider>

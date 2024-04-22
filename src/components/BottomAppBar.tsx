@@ -12,16 +12,16 @@ import { useEmployee } from '../contexts/employeeContext'
 
 const Tab = createBottomTabNavigator()
 
-const BottomAppBar = () => {
+export const BottomAppBarE = () => {
   return (
     <ErrorBoundary componentName="NotUserTabs">
-      <UserAndStoreTabs />
+      <BottomAppBar />
     </ErrorBoundary>
   )
 }
 
 // #region UserAndStoreTabs
-const UserAndStoreTabs = () => {
+const BottomAppBar = () => {
   const {
     employee,
     permissions: { isAdmin, isOwner, orders }
