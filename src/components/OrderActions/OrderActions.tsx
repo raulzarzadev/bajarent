@@ -89,7 +89,7 @@ const OrderActions = ({
     ) => {
       const location = values?.location
       const itemSerial = values?.itemSerial
-      deliveryModal.toggleOpen()
+
       try {
         if (location) {
           await ServiceOrders.update(orderId, { location, itemSerial })
@@ -99,6 +99,8 @@ const OrderActions = ({
       } catch (error) {
         console.log(error)
       }
+      //* close modal once delivered
+      deliveryModal.toggleOpen()
     },
     [acts.PICKUP]: async () => {
       try {
