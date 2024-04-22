@@ -21,6 +21,7 @@ import InputTextStyled from './InputTextStyled'
 import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
 import theme from '../theme'
+import FormikAssignOrder from './FormikAssignOrder'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -467,9 +468,10 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     itemSerial: (
       <InputValueFormik name={'itemSerial'} placeholder="No. de serie" />
     ),
-    assignIt: (
+    assignIt: <FormikAssignOrder />
+    /*
       <ErrorBoundary componentName="ModalAssignOrder">
-        <ModalAssignOrder
+         <ModalAssignOrder
           orderId={values.id}
           section={values.assignToSection}
           date={values.scheduledAt}
@@ -477,9 +479,9 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
             setValues({ ...values, assignToSection: sectionId })
           }}
           assignDate={(date) => setValues({ ...values, scheduledAt: date })}
-        />
-      </ErrorBoundary>
-    )
+        /> 
+        </ErrorBoundary>
+      */
   }
 
   return (

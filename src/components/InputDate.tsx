@@ -3,10 +3,9 @@ import { View } from 'react-native'
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Button from './Button'
-import { dateFormat } from '../libs/utils-date'
+import asDate, { dateFormat } from '../libs/utils-date'
 
 type PickerTime = { hours: number; minutes: number }
-
 export default function InputDate({
   label = 'Fecha',
   value = new Date(),
@@ -20,20 +19,22 @@ export default function InputDate({
   format?: string
   withTime?: boolean
 }) {
+  console.log({ value })
   const nowDate = new Date()
-  const defaultTime = value
-    ? {
-        hours: value.getHours(),
-        minutes: value.getMinutes()
-      }
-    : {
-        hours: nowDate.getHours(),
-        minutes: nowDate.getMinutes()
-      }
 
   const [open, setOpen] = React.useState(false)
 
-  const [date, setDate] = React.useState(value)
+  const [date, setDate] = React.useState(nowDate)
+  const defaultTime = withTime
+    ? {
+        hours: date.getHours(),
+        minutes: date.getMinutes()
+      }
+    : {
+        hours: 0,
+        minutes: 0
+      }
+
   const [time, setTime] = React.useState<PickerTime>(defaultTime)
 
   const onDismissSingle = React.useCallback(() => {
@@ -41,21 +42,27 @@ export default function InputDate({
   }, [setOpen])
 
   useEffect(() => {
-    setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
-  }, [date, time])
+    setDate(asDate(value))
+  }, [value])
+
+  // useEffect(() => {
+  //   setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
+  // }, [date, time])
 
   const handleSetDate = ({ date }) => {
     setDate(date)
     setOpen(false)
+    setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
   }
 
   const handleSetTime = (time: PickerTime) => {
     setTime(time)
     setOpen(false)
+    setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
   }
 
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
+  const hours = date?.getHours()
+  const minutes = date?.getMinutes()
 
   return (
     <>
@@ -65,7 +72,7 @@ export default function InputDate({
         // uppercase={false}
         // mode="outlined"
       >
-        {`${label} ${!!date && dateFormat(date, format)}`}
+        {`${label} ${!!date ? dateFormat(date, format) : ''}`}
         {/* {date
           ? `Fecha de entrega : ${dateFormat(date, 'EEEE dd / MMM / yy')}`
           : 'Seleccionar fecha '} */}

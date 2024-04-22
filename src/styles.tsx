@@ -41,6 +41,10 @@ export const gStyles = StyleSheet.create({
   helper: {
     fontSize: 10
   },
+  helperError: {
+    fontSize: 10,
+    color: theme.error
+  },
   tCenter: {
     textAlign: 'center'
   },
