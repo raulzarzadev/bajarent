@@ -34,7 +34,7 @@ const orderPeriod = (order: Partial<OrderType>): string => {
 }
 const orderPayments = ({ order }: { order: OrderType }) => {
   let res = ''
-  if (order.payments.length > 0) {
+  if (order?.payments?.length > 0) {
     res += `
   *Pagos:* \n`
     order.payments.forEach((p) => {

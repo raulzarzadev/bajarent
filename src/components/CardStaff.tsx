@@ -14,7 +14,7 @@ const CardStaff = ({
   isOwner: boolean
 }) => {
   const permissions = Object.keys(staff_permissions)
-  // const { staffPermissions } = useStore()
+
   if (isOwner)
     return (
       <Text style={[gStyles.h3, { marginVertical: 12 }]}>

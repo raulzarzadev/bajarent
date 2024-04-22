@@ -51,6 +51,7 @@ type OrderBase = {
   items: RentItem[]
   item: RentItem
   expireAt?: Date | null
+  isExpired?: boolean
 
   comments: CommentType[]
 

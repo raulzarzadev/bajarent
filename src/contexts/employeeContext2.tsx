@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import StaffType from '../types/StaffType'
 import { useAuth } from './authContext'
-import { useStore } from './storeContext2'
-import OrderType from '../types/OrderType'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null

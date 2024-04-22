@@ -1,6 +1,5 @@
 import { Dimensions, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useStore } from '../contexts/storeContext'
 import FormikCheckbox from './FormikCheckbox'
 import Button from './Button'
 import { ServiceStaff } from '../firebase/ServiceStaff'
@@ -12,6 +11,7 @@ import ErrorBoundary from './ErrorBoundary'
 import InputValueFormik from './InputValueFormik'
 import { StaffPermissionsE } from './StaffPermissions_old'
 import { EmployeePermissionsE } from './EmployeePermissions'
+import { useAuth } from '../contexts/authContext'
 const screenWidth = Dimensions.get('window').width
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
@@ -19,8 +19,8 @@ export type ScreenStoreEmployeeProps = {
   staffId: string
 }
 const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
-  const { staff } = useStore()
-
+  const { store } = useAuth()
+  const staff = store?.staff || []
   const employee = staff.find((s) => s.id === staffId)
   const handleSubmit = (values) => {
     ServiceStaff.update(employee.id, {

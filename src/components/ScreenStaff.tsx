@@ -1,12 +1,15 @@
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
-import { useStore } from '../contexts/storeContext'
 import ListStaff from './ListStaff'
 import { gStyles } from '../styles'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenStaff = ({ navigation }) => {
-  const { staff } = useStore()
+  const {
+    store: { staff }
+  } = useAuth()
+
   if (!staff) return <ActivityIndicator />
   return (
     <ScrollView

@@ -28,6 +28,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
   useEffect(() => {
     if (orderId) getComments()
   }, [orderId])
+  console.log({ orderComments })
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>

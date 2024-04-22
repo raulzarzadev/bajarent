@@ -1,11 +1,9 @@
 import { Pressable, Text, View } from 'react-native'
-import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
-import LocationStatus from './LocationStatus'
 import theme from '../theme'
 
 const MyStaffLabel = () => {

@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import StoreType from '../types/StoreType'
-import OrderType from '../types/OrderType'
-import { CommentType, FormattedComment } from '../types/CommentType'
+import { CommentType } from '../types/CommentType'
 import StaffType from '../types/StaffType'
 import PaymentType from '../types/PaymentType'
 import { SectionType } from '../types/SectionType'
 import { ServiceStores } from '../firebase/ServiceStore'
-
 import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServicePayments } from '../firebase/ServicePayments'

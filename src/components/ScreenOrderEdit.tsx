@@ -2,7 +2,7 @@ import { ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { order_status, order_type } from '../types/OrderType'
+import { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 
 const ScreenOrderEdit = ({ route, navigation }) => {

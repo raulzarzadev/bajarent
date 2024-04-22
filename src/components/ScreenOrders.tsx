@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
-import { ScrollView, View } from 'react-native'
 
-function ScreenOrders({ navigation, route }) {
+function ScreenOrders({ route }) {
   const { orders, handleGetSolvedOrders } = useStore()
   const [filtered, setFiltered] = useState<string[]>([])
   const filter = route?.params?.orders || []

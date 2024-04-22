@@ -9,6 +9,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     super('comments')
   }
 
+  create(comment: Partial<Type>) {
+    return super.create({ ...comment, solved: false })
+  }
+
   orderComments(orderId: string, cb: CallableFunction): Promise<void> {
     return super.listenMany(
       [
@@ -87,22 +91,16 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     )
   }
 
-  // TODO: Implementar para solo obtener unos pocos comentarios
-  // listenByStore(storeId: string, cb: CallableFunction) {
-  //   const oneDay = 1000 * 60 * 60 * 24
-  //   const oneWeek = oneDay * 7
-  //   // const twoHoursAgo = 1000 * 60 * 60 * 2
-  //   // const tenMinutesAgo = 1000 * 60 * 10
-  //   const msFromNow = Timestamp.now().toDate().getTime() - oneWeek
-  //   const secondsFromNow = msFromNow / 1000
-  //   return this.listenMany(
-  //     [
-  //       where('storeId', '==', storeId),
-  //       where('createdAt', '>', new Timestamp(secondsFromNow, 0))
-  //     ],
-  //     cb
-  //   )
-  // }
+  listenReportsUnsolved(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('type', '==', 'report'),
+        where('solved', '==', false)
+      ],
+      cb
+    )
+  }
 }
 
 export const ServiceComments = new ServiceOrdersClass()

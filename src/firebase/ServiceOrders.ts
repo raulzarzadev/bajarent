@@ -181,6 +181,16 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ])
   }
 
+  getActives(storeId: string) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('status', 'not-in', [
+        order_status.CANCELLED,
+        order_status.CANCELLED
+      ])
+    ])
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

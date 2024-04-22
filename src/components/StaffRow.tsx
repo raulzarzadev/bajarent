@@ -5,11 +5,12 @@ import theme from '../theme'
 import { gStyles } from '../styles'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { useNavigation } from '@react-navigation/native'
-import { useStore } from '../contexts/storeContext'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ErrorBoundary from './ErrorBoundary'
 import Button from './Button'
+import { useAuth } from '../contexts/authContext'
+
 export type StaffRowProps = {
   staffId: StaffType['id']
   sectionId?: string
@@ -27,7 +28,9 @@ const Row = ({
   hideActions
 }: StaffRowProps) => {
   const navigation = useNavigation()
-  const { staff } = useStore()
+  const {
+    store: { staff }
+  } = useAuth()
   const staffItem = staff.find((s) => s.id === staffId)
   const text = (field?: string | Date): string => {
     if (typeof field === 'string') return field
