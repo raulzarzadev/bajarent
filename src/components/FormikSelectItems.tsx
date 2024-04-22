@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useField } from 'formik'
 import FormSelectItem, { ItemSelected } from './FormSelectItem'
 import { Category } from '../types/RentItem'
@@ -43,8 +43,6 @@ const FormikSelectItems = ({
     helpers.setValue({})
   }
 
-  const [item, setItem] = useState<ItemSelected | null>(null)
-
   return (
     <>
       <FormSelectItem
@@ -63,11 +61,6 @@ const FormikSelectItems = ({
             id: priceSelected?.id || null
           }
 
-          // helpers.setValue({
-          //   //!<- This is the problem
-          //   ...value,
-          //   priceSelected: priceSelectedImportantInfo
-          // })
           if (priceSelected) {
             handleAddItem({
               ...value,

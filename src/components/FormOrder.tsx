@@ -174,7 +174,6 @@ const FormOrderA = ({
   //#region render
 
   //const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
-
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -212,6 +211,7 @@ const FormOrderA = ({
               })
           }}
           validate={(values) => {
+            console.log({ values })
             const errors: Partial<OrderType> = {}
             if (!values.fullName) errors.fullName = '*Nombre necesario'
             if (!values.phone || values.phone.length < 12)
@@ -408,7 +408,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
 
     selectItemsRepair: (
       <FormikSelectCategories
-        name="item"
+        name="items"
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
@@ -416,7 +416,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     ),
     selectItemsRent: (
       <FormikSelectCategories
-        name="item"
+        name="items"
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
@@ -424,7 +424,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     ),
     selectItemsSale: (
       <FormikSelectCategories
-        name="item"
+        name="items"
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}

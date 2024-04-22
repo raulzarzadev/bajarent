@@ -229,7 +229,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         >
           Artículos
         </Text>
-        {order.itemSerial && (
+        {!!order.itemSerial && (
           <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
             serie: {order.itemSerial}
           </Text>
@@ -276,7 +276,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           margin: 4
         }}
       >
-        {order.itemSerial && (
+        {!!order.itemSerial && (
           <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
             serie: {order.itemSerial}
           </Text>
@@ -300,7 +300,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       >
         Artículos
       </Text>
-      {order.itemSerial && (
+      {!!order.itemSerial && (
         <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
           serie: {order.itemSerial}
         </Text>
