@@ -173,7 +173,7 @@ const FormOrderA = ({
 
   //#region render
 
-  const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
+  //const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
 
   return (
     <ScrollView>
@@ -232,10 +232,9 @@ const FormOrderA = ({
           }}
         >
           {({ handleSubmit, setValues, values, errors, setErrors }) => {
-            console.log({ values })
             useEffect(() => {
               setErrors({})
-              setOrderFields(store?.orderFields?.[values.type] as OrderFields)
+              //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
             }, [values.type])
             return (
               <>

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Form, useField } from 'formik'
-import FormSelectItem, { ItemSelected } from './FormSelectItem'
-import { Category, CategoryType } from '../types/RentItem'
+import { useField } from 'formik'
+import { ItemSelected } from './FormSelectItem'
+import { CategoryType } from '../types/RentItem'
 import Button from './Button'
 import { FlatList, Text, View } from 'react-native'
 import CurrencyAmount from './CurrencyAmount'
@@ -9,17 +9,17 @@ import { gSpace, gStyles } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
-import FormSelectCategory from './FormSelectCategory'
 import FormSelectPrice from './FormSelectPrice'
 import { PriceType } from '../types/PriceType'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
+import FormChooseCategory from './FormChooseCategory'
 
 const FormikSelectCategories = ({
   name,
   label,
   selectPrice,
-  startAt
+  startAt //? TODO: <--- Should be add?
 }: {
   name: string
   label?: string
@@ -40,11 +40,6 @@ const FormikSelectCategories = ({
     const newItems = items?.filter((item) => item?.id !== id)
     helpers.setValue(newItems)
   }
-  // const handleAddItem = (newItem) => {
-  //   newItem.id = uidGenerator()
-  //   const newItems = [...items, newItem]
-  //   helpers.setValue(newItems)
-  // }
 
   useEffect(() => {
     const catSelectedPrices =
@@ -52,8 +47,6 @@ const FormikSelectCategories = ({
     setCategoryPrices(catSelectedPrices)
     setPrice(catSelectedPrices[0])
   }, [category])
-
-  console.log({ category })
 
   const modal = useModal({ title: 'Agregar Item' })
   return (
@@ -81,7 +74,7 @@ const FormikSelectCategories = ({
 
         <StyledModal {...modal}>
           <View style={{ marginVertical: 8 }}>
-            <FormSelectCategory
+            <FormChooseCategory
               categories={categories}
               setValue={(value) => {
                 const newItem = categories.find(({ id }) => id === value)
@@ -90,16 +83,18 @@ const FormikSelectCategories = ({
               value={category?.id || ''}
             />
           </View>
-          <View style={{ marginVertical: 8 }}>
-            <FormSelectPrice
-              prices={categoryPrices}
-              setValue={(priceId) => {
-                if (priceId === price?.id) return setPrice(null)
-                setPrice(categoryPrices.find((price) => price.id === priceId))
-              }}
-              value={price?.id}
-            />
-          </View>
+          {selectPrice && (
+            <View style={{ marginVertical: 8 }}>
+              <FormSelectPrice
+                prices={categoryPrices}
+                setValue={(priceId) => {
+                  if (priceId === price?.id) return setPrice(null)
+                  setPrice(categoryPrices.find((price) => price.id === priceId))
+                }}
+                value={price?.id}
+              />
+            </View>
+          )}
           <View style={{ justifyContent: 'center' }}>
             <Button
               onPress={() => {
