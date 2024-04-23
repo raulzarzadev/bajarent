@@ -23,7 +23,8 @@ export default function InputDate({
 
   const [open, setOpen] = React.useState(false)
 
-  const [date, setDate] = React.useState(nowDate)
+  const [date, setDate] = React.useState(value || nowDate)
+
   const defaultTime = withTime
     ? {
         hours: date.getHours(),
@@ -58,7 +59,6 @@ export default function InputDate({
 
   const hours = date?.getHours()
   const minutes = date?.getMinutes()
-
   return (
     <>
       <Button variant="outline" onPress={() => setOpen(true)}>
