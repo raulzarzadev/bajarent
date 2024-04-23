@@ -53,11 +53,11 @@ const ScreenOrderReorder = ({ route }) => {
           status: order_status.AUTHORIZED
         }
         // @ts-ignore
-        await ServiceOrders.create(reOrder)
-          .then((res) => {
-            if (res.ok) {
+        await ServiceOrders.createSerialOrder(reOrder)
+          .then((orderId) => {
+            if (orderId) {
               // @ts-ignore
-              navigate('OrderDetails', { orderId: res?.res?.id })
+              navigate('OrderDetails', { orderId: orderId })
             }
           })
           .catch(console.error)
