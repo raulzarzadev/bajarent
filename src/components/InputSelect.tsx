@@ -1,6 +1,7 @@
 import RNPickerSelect from 'react-native-picker-select'
 import { gStyles } from '../styles'
 import { ViewStyle } from 'react-native'
+import theme from '../theme'
 export type SelectOption = {
   label: string
   value: string
@@ -24,7 +25,10 @@ const InputSelect = ({
     <RNPickerSelect
       value={value}
       style={{
-        inputWeb: [gStyles.inputStyle, { backgroundColor: 'transparent' }],
+        inputWeb: [
+          gStyles.inputStyle,
+          { backgroundColor: 'transparent', color: theme.placeholder }
+        ],
 
         ...style
       }}

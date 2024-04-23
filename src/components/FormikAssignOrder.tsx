@@ -1,13 +1,14 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import FormikInputDate from './FormikInputDate'
 import FormikInputSelect from './FormikInputSelect'
+import { gStyles } from '../styles'
 
 const FormikAssignOrder = () => {
   return (
     <View>
-      <View style={{ marginVertical: 4 }}>
+      <View style={{ marginVertical: 4, marginBottom: 12 }}>
         <AssignSection />
       </View>
       <View style={{ marginVertical: 4 }}>
@@ -32,7 +33,8 @@ const AssignSection = () => {
     <FormikInputSelect
       name={'assignToSection'}
       options={options}
-      placeholder={'Seleccionar area'}
+      placeholder={'Asignar area'}
+      helperText="Asigna esta orden a un area"
     />
   )
 }

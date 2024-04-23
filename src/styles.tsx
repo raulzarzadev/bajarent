@@ -57,6 +57,6 @@ export const gStyles = StyleSheet.create({
     borderRadius: BORDER_RADIUS * 1.8,
     padding: PADDING * 3,
     width: '100%',
-    placeholderTextColor: 'lightgrey' + placeholderOpacity // Set placeholder text color to transparent
+    placeholderTextColor: theme.neutral // Set placeholder text color to transparent
   }
 })
