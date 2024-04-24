@@ -84,14 +84,14 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             }}
           >
             <ModalRepairQuote
-              orderId={order.id}
+              orderId={order?.id}
               quote={{
-                info: order?.repairInfo,
-                total: order?.repairTotal,
-                brand: order.itemBrand,
-                serial: order.itemSerial,
-                category: order.items?.[0]?.categoryName || 'Sin articulo',
-                failDescription: order.description
+                info: order?.repairInfo || '',
+                total: order?.repairTotal || 0,
+                brand: order?.itemBrand || '',
+                serial: order?.itemSerial || '',
+                category: order?.items?.[0]?.categoryName || 'Sin articulo',
+                failDescription: order?.description || ''
               }}
             />
           </View>
