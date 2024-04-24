@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useFilter from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -46,9 +46,12 @@ function ModalFilterList<T>({
     setData?.(filteredData)
   }, [filteredData])
 
+  const [customFilterSelected, setCustomFilterSelected] = useState(false)
+
   useEffect(() => {
     if (preFilteredIds?.length) {
       filterBy('customIds', preFilteredIds)
+      setCustomFilterSelected(true)
     }
   }, [preFilteredIds])
 
@@ -201,16 +204,42 @@ function ModalFilterList<T>({
                 icon="broom"
                 variant="ghost"
                 color="secondary"
-                onPress={cleanFilter}
+                onPress={() => {
+                  cleanFilter()
+                  setCustomFilterSelected(false)
+                }}
                 justIcon
               />
               <Text style={{ fontSize: 10 }}>Todas</Text>
             </View>
           )}
         </View>
-        {filtersBy.find((a) => a.field === 'customIds') && (
-          <Text style={gStyles.h2}>Filtro predefinido</Text>
+        {!!preFilteredIds?.length && (
+          <View style={{ justifyContent: 'center' }}>
+            <Chip
+              color={theme.info}
+              title={'Filtro pre-definido'}
+              onPress={() => {
+                filterBy('customIds', preFilteredIds)
+                setCustomFilterSelected(!customFilterSelected)
+              }}
+              style={{
+                margin: 4,
+                borderWidth: 4,
+                marginBottom: 8,
+                borderColor: customFilterSelected ? theme.black : 'transparent',
+                flex: 1,
+                alignSelf: 'flex-start',
+                marginHorizontal: 'auto'
+                // borderColor: isFilterSelected(field, value)
+                //   ? theme.black
+                //   : 'transparent'
+                // // backgroundColor:
+              }}
+            />
+          </View>
         )}
+
         {filters?.map(({ field, label, boolean }, i) => (
           <View key={i}>
             <Text style={[gStyles.h3]}>{label}</Text>

@@ -137,7 +137,8 @@ const NotUserTabs = () => {
 const UserAndStoreTabs = () => {
   const {
     employee,
-    permissions: { isAdmin, isOwner, orders }
+    permissions: { isAdmin, isOwner, orders },
+    orders: myOrders
   } = useEmployee()
 
   const canSeeOrders = orders.canViewAll || isAdmin || isOwner
