@@ -27,6 +27,7 @@ function StackOrders() {
         }}
         component={ScreenOrders}
       />
+
       <Stack.Screen
         name="OrderDetails"
         options={{

@@ -2,23 +2,19 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
-import { ScrollView, View } from 'react-native'
 
 function ScreenOrders({ navigation, route }) {
   const { orders, handleGetSolvedOrders } = useStore()
-  const [filtered, setFiltered] = useState<string[]>([])
-  const filter = route?.params?.orders || []
+  const preOrders = route?.params?.orders || null
   const [fullOrders, setFullOrders] = useState<OrderType[]>([])
 
   useEffect(() => {
-    if (filter.length > 0)
-      setFiltered(
-        orders.filter((o) => filter.includes(o.id)).map((o) => o.id) || []
-      )
-  }, [filter])
-
-  useEffect(() => {
-    setFullOrders(orders)
+    if (preOrders) {
+      const filteredOrders = orders.filter(({ id }) => preOrders.includes(id))
+      setFullOrders(filteredOrders)
+    } else {
+      setFullOrders(orders)
+    }
   }, [orders])
 
   const [disabledDownload, setDisabledDownload] = useState(false)
@@ -33,7 +29,7 @@ function ScreenOrders({ navigation, route }) {
   return (
     <ListOrders
       orders={fullOrders}
-      defaultOrdersIds={filtered}
+      //defaultOrdersIds={filtered}
       sideButtons={[
         {
           icon: 'download',

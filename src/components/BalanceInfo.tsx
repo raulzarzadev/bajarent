@@ -149,11 +149,7 @@ const ModalOrders = ({
   modalTitle: string
 }) => {
   const { navigate } = useNavigation()
-  const modal = useModal({ title: modalTitle })
-  const { orders } = useStore()
-  const fullOrders = ordersIds?.map((orderId) =>
-    orders.find((o) => o.id === orderId)
-  )
+
   return (
     <View>
       <View
@@ -165,22 +161,13 @@ const ModalOrders = ({
       >
         <Button
           size="small"
-          label={`${buttonLabel} ${fullOrders.length || 0}`}
+          label={`${buttonLabel} ${ordersIds.length || 0}`}
           // variant="ghost"
-          onPress={modal.toggleOpen}
+          onPress={() => {
+            navigate('OrdersList', { orders: ordersIds, title: modalTitle })
+          }}
         ></Button>
       </View>
-      <StyledModal {...modal}>
-        <ListOrders
-          orders={fullOrders}
-
-          // onPressRow={(orderId) => {
-          //   // @ts-ignore
-          //   navigate('OrderDetails', { orderId })
-          //   modal.toggleOpen()
-          // }}
-        />
-      </StyledModal>
     </View>
   )
 }
