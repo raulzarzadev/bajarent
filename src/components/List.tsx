@@ -79,8 +79,6 @@ function MyList<T extends { id: string }>({
     ]
   }
 
-  console.log({ filteredData })
-
   return (
     <ScrollView>
       <View style={{ margin: 'auto', maxWidth: '100%' }}>

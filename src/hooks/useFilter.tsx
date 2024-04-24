@@ -111,8 +111,6 @@ export default function useFilter<T extends { id?: string }>({
       })
     })
     search(searchValue)
-
-    //setFilteredData(res)
   }, [data])
 
   return { filteredData, filteredBy, cleanFilter, filterBy, search, filtersBy }

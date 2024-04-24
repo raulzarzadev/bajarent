@@ -15,10 +15,7 @@ import SpanMetadata from './SpanMetadata'
 import { balanceTotals } from '../libs/balance'
 import { useNavigation } from '@react-navigation/native'
 
-import { useStore } from '../contexts/storeContext'
-import OrdersList from './OrdersList'
 import Icon from './Icon'
-import ListOrders from './ListOrders'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
@@ -164,6 +161,7 @@ const ModalOrders = ({
           label={`${buttonLabel} ${ordersIds.length || 0}`}
           // variant="ghost"
           onPress={() => {
+            // @ts-ignore
             navigate('OrdersList', { orders: ordersIds, title: modalTitle })
           }}
         ></Button>
