@@ -8,6 +8,7 @@ import CurrencyAmount from './CurrencyAmount'
 import { gSpace, gStyles } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
 import theme from '../theme'
+import Totals from './ItemsTotals'
 
 const FormikSelectItems = ({
   name,
@@ -90,25 +91,6 @@ const FormikSelectItems = ({
 
       <Totals items={_items} />
     </>
-  )
-}
-
-export const Totals = ({ items }: { items: ItemSelected[] }) => {
-  const total = items.reduce((acc, item) => acc + item.priceSelected?.amount, 0)
-
-  return (
-    <View style={{ justifyContent: 'center', marginBottom: gSpace(4) }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Text style={{ textAlign: 'center', marginRight: 4 }}> Total: </Text>
-        <CurrencyAmount style={gStyles.h1} amount={total} />
-      </View>
-    </View>
   )
 }
 

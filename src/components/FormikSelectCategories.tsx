@@ -14,6 +14,7 @@ import { PriceType } from '../types/PriceType'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import FormChooseCategory from './FormChooseCategory'
+import Totals from './ItemsTotals'
 
 const FormikSelectCategories = ({
   name,
@@ -119,28 +120,6 @@ const FormikSelectCategories = ({
 
       <Totals items={items} />
     </>
-  )
-}
-
-export const Totals = ({ items }: { items: ItemSelected[] }) => {
-  const total = items.reduce(
-    (acc, item) => acc + (item.priceSelected?.amount || 0),
-    0
-  )
-
-  return (
-    <View style={{ justifyContent: 'center', marginBottom: gSpace(4) }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Text style={{ textAlign: 'center', marginRight: 4 }}> Total: </Text>
-        <CurrencyAmount style={gStyles.h1} amount={total} />
-      </View>
-    </View>
   )
 }
 

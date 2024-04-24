@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
@@ -6,6 +6,9 @@ import Button from './Button'
 import InputTextStyled from './InputTextStyled'
 import { useAuth } from '../contexts/authContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import CurrencyAmount from './CurrencyAmount'
+import { gStyles } from '../styles'
+import theme from '../theme'
 
 export const ModalRepairQuote = ({
   orderId,
@@ -14,7 +17,12 @@ export const ModalRepairQuote = ({
   orderId: string
   quote?: {
     info: string
-    total: number
+    total?: number
+    failDescription?: string
+    brand?: string
+    model?: string
+    serial?: string
+    category?: string
   }
 }) => {
   const quoteAlreadyExists = !quote || quote?.info || quote?.total
@@ -43,6 +51,33 @@ export const ModalRepairQuote = ({
 
   return (
     <>
+      <View>
+        <Text style={gStyles.h3}>Artículo</Text>
+        <Text style={[gStyles.tCenter, gStyles.helper]}>{quote.category}</Text>
+        <Text style={[gStyles.tCenter, gStyles.helper]}>
+          <Text>Marca: </Text>
+          {quote.brand}
+        </Text>
+        <Text style={[gStyles.tCenter, gStyles.helper]}>
+          <Text>Serie: </Text>
+          {quote.serial}
+        </Text>
+        <Text style={[gStyles.tCenter, gStyles.tBold]}>
+          Descripción de la falla
+        </Text>
+        <Text style={[gStyles.tCenter, { marginBottom: 14 }]}>
+          {quote.failDescription}
+        </Text>
+        {quoteAlreadyExists && (
+          <View>
+            <Text style={gStyles.h3}>Detalles de cotización </Text>
+            <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
+            <Text style={[gStyles.p, gStyles.tCenter]}>
+              <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
+            </Text>
+          </View>
+        )}
+      </View>
       <Button
         onPress={modal.toggleOpen}
         icon="money"
