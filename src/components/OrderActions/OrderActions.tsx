@@ -414,7 +414,7 @@ const OrderActions = ({
             return errors
           }}
         >
-          {({ errors, handleSubmit, values, setValues }) => {
+          {({ errors, handleSubmit, values, setValues, isSubmitting }) => {
             return (
               <View>
                 <View style={{ marginVertical: 8 }}>
@@ -445,7 +445,7 @@ const OrderActions = ({
                 </View>
 
                 <Button
-                  disabled={Object.keys(errors).length > 0}
+                  disabled={Object.keys(errors).length > 0 || isSubmitting}
                   label="Entregar"
                   onPress={() => {
                     handleSubmit()
