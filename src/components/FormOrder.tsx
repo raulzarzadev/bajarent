@@ -12,7 +12,6 @@ import InputRadiosFormik from './InputRadiosFormik'
 import FormikInputImage from './FormikInputImage'
 import P from './P'
 import FormikCheckbox from './FormikCheckbox'
-import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import ErrorBoundary from './ErrorBoundary'
 import { gSpace, gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
@@ -21,6 +20,8 @@ import InputTextStyled from './InputTextStyled'
 import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
 import theme from '../theme'
+import FormikAssignOrder from './FormikAssignOrder'
+import FormikSelectCategories from './FormikSelectCategories'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -172,8 +173,7 @@ const FormOrderA = ({
 
   //#region render
 
-  const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
-
+  //const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -233,7 +233,7 @@ const FormOrderA = ({
           {({ handleSubmit, setValues, values, errors, setErrors }) => {
             useEffect(() => {
               setErrors({})
-              setOrderFields(store?.orderFields?.[values.type] as OrderFields)
+              //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
             }, [values.type])
             return (
               <>
@@ -318,7 +318,8 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     const [note, name, phone, neighborhood, address, references, number, date] =
       sheetRow?.split('\t') || []
 
-    const scheduledAt = date && new Date(asDate(date)?.setHours(9))
+    //const scheduledAt = date && new Date(asDate(date)?.setHours(9))
+    const scheduledAt = new Date(date || new Date()) //*<--- FIXME: this is a temporal fix, can't format some dates with 0s from excel
 
     setValues({
       ...values,
@@ -406,42 +407,27 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     ),
 
     selectItemsRepair: (
-      <FormikSelectItems
-        name="item"
+      <FormikSelectCategories
+        name="items"
         label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
         selectPrice
         startAt={values.scheduledAt}
-        setItems={(items) => setValues({ ...values, items })}
-        items={values.items}
       />
     ),
     selectItemsRent: (
-      <FormikSelectItems
-        name="item"
+      <FormikSelectCategories
+        name="items"
         label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
         selectPrice
         startAt={values.scheduledAt}
-        setItems={(items) => setValues({ ...values, items })}
-        items={values.items}
       />
     ),
     selectItemsSale: (
-      <FormikSelectItems
-        name="item"
+      <FormikSelectCategories
+        name="items"
         label="Selecciona un artículo"
-        categories={categories.map((cat) => ({
-          ...cat
-        }))}
         selectPrice
         startAt={values.scheduledAt}
-        setItems={(items) => setValues({ ...values, items })}
-        items={values.items}
       />
     ),
     hasDelivered: (
@@ -467,9 +453,10 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     itemSerial: (
       <InputValueFormik name={'itemSerial'} placeholder="No. de serie" />
     ),
-    assignIt: (
+    assignIt: <FormikAssignOrder />
+    /*
       <ErrorBoundary componentName="ModalAssignOrder">
-        <ModalAssignOrder
+         <ModalAssignOrder
           orderId={values.id}
           section={values.assignToSection}
           date={values.scheduledAt}
@@ -477,9 +464,9 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
             setValues({ ...values, assignToSection: sectionId })
           }}
           assignDate={(date) => setValues({ ...values, scheduledAt: date })}
-        />
-      </ErrorBoundary>
-    )
+        /> 
+        </ErrorBoundary>
+      */
   }
 
   return (

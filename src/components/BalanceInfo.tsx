@@ -15,8 +15,6 @@ import SpanMetadata from './SpanMetadata'
 import { balanceTotals } from '../libs/balance'
 import { useNavigation } from '@react-navigation/native'
 
-import { useStore } from '../contexts/storeContext'
-import OrdersList from './OrdersList'
 import Icon from './Icon'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
@@ -110,20 +108,11 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         buttonLabel="Recogidas"
         modalTitle="Ordenes recogidas"
       />
-
-      {/* <View>
-        <Text style={[gStyles.h3, { marginTop: gSpace(3) }]}>Artículos</Text>
-      </View>
-      <ModalItems
-        ordersIds={balance?.ordersDelivered}
-        buttonLabel="Entregadas"
-        modalTitle="Artículos recogidas"
+      <ModalOrders
+        ordersIds={balance?.ordersRenewed}
+        buttonLabel="Renovadas"
+        modalTitle="Ordenes renovadas"
       />
-      <ModalItems
-        ordersIds={balance?.ordersPickup}
-        buttonLabel="Recogidos"
-        modalTitle="Artículos recogidas"
-      /> */}
 
       <View style={styles.totals}>
         <View style={styles.row}>
@@ -147,44 +136,6 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   )
 }
 
-// const ModalItems = ({
-//   ordersIds = [],
-//   buttonLabel,
-//   modalTitle
-// }: {
-//   ordersIds: string[]
-//   buttonLabel?: string
-//   modalTitle?: string
-// }) => {
-//   const modal = useModal({ title: modalTitle })
-//   const { orders } = useStore()
-//   const fullOrders = ordersIds?.map((orderId) =>
-//     orders.find((o) => o.id === orderId)
-//   )
-
-//   return (
-//     <View>
-//       <View
-//         style={{
-//           width: 180,
-//           marginVertical: gSpace(2),
-//           marginHorizontal: 'auto'
-//         }}
-//       >
-//         <Button
-//           size="small"
-//           label={`${buttonLabel}`}
-//           // variant="ghost"
-//           onPress={modal.toggleOpen}
-//         ></Button>
-//       </View>
-//       <StyledModal {...modal} size="full">
-//         <ListItemsStatus orders={fullOrders} />
-//       </StyledModal>
-//     </View>
-//   )
-// }
-
 const ModalOrders = ({
   ordersIds = [],
   buttonLabel,
@@ -195,11 +146,6 @@ const ModalOrders = ({
   modalTitle: string
 }) => {
   const { navigate } = useNavigation()
-  const modal = useModal({ title: modalTitle })
-  const { orders } = useStore()
-  const fullOrders = ordersIds?.map((orderId) =>
-    orders.find((o) => o.id === orderId)
-  )
 
   return (
     <View>
@@ -212,21 +158,14 @@ const ModalOrders = ({
       >
         <Button
           size="small"
-          label={`${buttonLabel} ${fullOrders.length || 0}`}
+          label={`${buttonLabel} ${ordersIds.length || 0}`}
           // variant="ghost"
-          onPress={modal.toggleOpen}
+          onPress={() => {
+            // @ts-ignore
+            navigate('OrdersList', { orders: ordersIds, title: modalTitle })
+          }}
         ></Button>
       </View>
-      <StyledModal {...modal}>
-        <OrdersList
-          orders={fullOrders}
-          onPressRow={(orderId) => {
-            // @ts-ignore
-            navigate('OrderDetails', { orderId })
-            modal.toggleOpen()
-          }}
-        />
-      </StyledModal>
     </View>
   )
 }

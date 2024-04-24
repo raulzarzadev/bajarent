@@ -19,11 +19,9 @@ import ModalRepairQuote from './ModalRepairQuote'
 import ModalPayment from './ModalPayment'
 import { Timestamp } from 'firebase/firestore'
 import DateCell from './DateCell'
-import { Totals } from './FormikSelectItems'
 import OrderActions from './OrderActions/OrderActions'
 import SpanMetadata from './SpanMetadata'
-import { ServicePayments } from '../firebase/ServicePayments'
-import PaymentType from '../types/PaymentType'
+import Totals from './ItemsTotals'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -69,25 +67,34 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />
       </ErrorBoundary>
-      <ErrorBoundary componentName="ItemDetails">
-        <ItemDetails order={order} />
-      </ErrorBoundary>
+      {order?.type !== order_type.REPAIR && (
+        <ErrorBoundary componentName="ItemDetails">
+          <ItemDetails order={order} />
+        </ErrorBoundary>
+      )}
 
       {order?.type === order_type.REPAIR && (
         <ErrorBoundary componentName="ModalRepairQuote">
           <View
             style={{
-              maxWidth: 230,
-              marginHorizontal: 'auto',
-              marginTop: 4,
-              marginBottom: 8
+              marginVertical: 16,
+              paddingVertical: 16,
+              backgroundColor: theme?.base,
+              width: '100%'
             }}
           >
             <ModalRepairQuote
-              orderId={order.id}
+              orderId={order?.id}
               quote={{
-                info: order?.repairInfo,
-                total: order?.repairTotal
+                info: order?.repairInfo || '',
+                total: order?.repairTotal || 0,
+                brand: order?.itemBrand || '',
+                serial: order?.itemSerial || '',
+                category:
+                  order?.items?.[0]?.categoryName ||
+                  order?.item?.categoryName ||
+                  'Sin articulo',
+                failDescription: order?.description || ''
               }}
             />
           </View>
@@ -188,85 +195,16 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
-  if (order?.items?.length > 0) {
-    return (
-      <View
-        style={{
-          marginVertical: 16,
-          paddingVertical: 16,
-          backgroundColor: theme?.base,
-          margin: 4
-        }}
-      >
-        <Text
-          style={[gStyles.h2, { marginVertical: gSpace(4), marginBottom: 4 }]}
-        >
-          Artículos
-        </Text>
-        {order.itemSerial && (
-          <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-            serie: {order.itemSerial}
-          </Text>
-        )}
-        {order?.items?.map((item) => (
-          <View
-            key={item.id}
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              justifyContent: 'space-evenly'
-            }}
-          >
-            <Text style={[gStyles.h3]}>{item.categoryName}</Text>
-            <Text style={[gStyles.p, gStyles.tCenter]}>
-              {/* <Text style={gStyles.helper}>{item.priceQty || 1}x</Text>{' '} */}
-              {item.priceSelected?.title}
-            </Text>
-            <CurrencyAmount
-              style={gStyles.h3}
-              amount={(item.priceSelected?.amount || 0) * (item.priceQty || 1)}
-            />
-          </View>
-        ))}
+  const items = [...(order.items || [])]
+  if (order?.item) items?.push(order.item)
 
-        <Totals items={order.items} />
-        <View style={{ marginTop: gSpace(3) }}>
-          <ItemDates
-            expireAt={order.expireAt}
-            scheduledAt={order.scheduledAt}
-            startedAt={order.deliveredAt}
-          />
-        </View>
-      </View>
-    )
-  }
-  if (!order?.item)
-    return (
-      <View
-        style={{
-          marginVertical: 16,
-          paddingVertical: 16,
-          backgroundColor: theme?.base,
-          margin: 4
-        }}
-      >
-        {order.itemSerial && (
-          <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-            serie: {order.itemSerial}
-          </Text>
-        )}
-        <Text style={[gStyles.h2, { marginVertical: gSpace(4) }]}>
-          Sin artículos
-        </Text>
-      </View>
-    )
   return (
     <View
       style={{
         marginVertical: 16,
         paddingVertical: 16,
         backgroundColor: theme?.base,
-        margin: 4
+        width: '100%'
       }}
     >
       <Text
@@ -274,50 +212,41 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       >
         Artículos
       </Text>
-      {order.itemSerial && (
+      {!!order?.itemSerial && (
         <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-          serie: {order.itemSerial}
+          serie: {order?.itemSerial}
         </Text>
       )}
-      <View>
-        <View>
-          <Text style={[gStyles.h3]}>{order?.item?.categoryName}</Text>
+
+      {items?.map((item, i) => (
+        <View
+          key={item?.id || i}
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-evenly'
+          }}
+        >
+          <Text style={[gStyles.h3]}>{item?.categoryName}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
-            <Text style={gStyles.helper}>{order?.item?.priceQty || 1}x</Text>{' '}
-            {order?.item?.priceSelected?.title}
+            {/* <Text style={gStyles.helper}>{item.priceQty || 1}x</Text>{' '} */}
+            {item?.priceSelected?.title}
           </Text>
           <CurrencyAmount
-            style={gStyles.h1}
-            amount={
-              (order?.item?.priceSelected?.amount || 0) *
-              (order?.item?.priceQty || 1)
-            }
+            style={gStyles.h3}
+            amount={(item?.priceSelected?.amount || 0) * (item.priceQty || 1)}
           />
-          <View style={{ marginTop: gSpace(3) }}>
-            <ItemDates
-              expireAt={order.expireAt}
-              scheduledAt={order.scheduledAt}
-              startedAt={order.deliveredAt}
-            />
-          </View>
         </View>
-      </View>
-      {order.type === order_type.REPAIR && (
-        <View>
-          <Text style={[gStyles.p, gStyles.tCenter]}>
-            {order?.item?.categoryName}
-          </Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.description}</Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemBrand}</Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.itemSerial}</Text>
+      ))}
 
-          <Text style={gStyles.h3}>Detalles de cotización </Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>{order?.repairInfo}</Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>
-            <CurrencyAmount style={gStyles.tBold} amount={order?.repairTotal} />
-          </Text>
-        </View>
-      )}
+      <Totals items={order.items} />
+      <View style={{ marginTop: gSpace(3) }}>
+        <ItemDates
+          expireAt={order.expireAt}
+          scheduledAt={order.scheduledAt}
+          startedAt={order.deliveredAt}
+        />
+      </View>
     </View>
   )
 }

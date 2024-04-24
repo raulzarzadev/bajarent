@@ -1,6 +1,6 @@
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
-import OrderType from '../types/OrderType'
-import PaymentType, { payment_methods } from '../types/PaymentType'
+import OrderType, { order_status } from '../types/OrderType'
+import { payment_methods } from '../types/PaymentType'
 import asDate from './utils-date'
 
 export const balanceTotal = (balance: BalanceType) =>
@@ -45,6 +45,7 @@ export const balanceOrders = ({
   let ordersCreated = []
   let ordersPickup = []
   let ordersDelivered = []
+  let ordersRenewed = []
 
   /* ******************************************** 
              FILTER BY DATE               
@@ -70,6 +71,14 @@ export const balanceOrders = ({
     return (
       asDate(deliveredAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
       asDate(deliveredAt)?.getTime() <= asDate(values?.toDate)?.getTime()
+    )
+  })
+
+  ordersRenewed = [...orders].filter((o) => {
+    const renewedAt = asDate(o?.renewedAt)
+    return (
+      asDate(renewedAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
+      asDate(renewedAt)?.getTime() <= asDate(values?.toDate)?.getTime()
     )
   })
 
@@ -103,9 +112,18 @@ export const balanceOrders = ({
     //* returns only the id of the order
     .map(({ id }) => id)
 
+  ordersRenewed = [...ordersRenewed]
+    .filter((o) => {
+      //* if values.type === partial only show orders created by that user
+      if (values.type === 'partial') return o.renewedBy === values.userId
+      return true
+    })
+    //* returns only the id of the order
+    .map(({ id }) => id)
   return {
     ordersCreated,
     ordersPickup,
-    ordersDelivered
+    ordersDelivered,
+    ordersRenewed
   }
 }

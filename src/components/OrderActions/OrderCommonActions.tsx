@@ -54,9 +54,13 @@ const OrderCommonActions = ({
 
   const handleReorder = () => {
     // @ts-ignore
+
     navigate('ReorderOrder', { orderId })
   }
   const handleEdit = () => {
+    // @ts-ignore
+    navigate('Orders')
+    // navigate('Orders', { screen: 'EditOrder', params: { orderId } }) //! this ignore de Root stack
     // @ts-ignore
     navigate('EditOrder', { orderId })
   }

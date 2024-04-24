@@ -21,15 +21,13 @@ PhoneInputProps) {
   const [inputValue, setInputValue] = useState<string>('')
 
   function handleInputValue(phoneNumber: string) {
-    onChange &&
-      onChange((selectedCountry?.callingCode + phoneNumber).replaceAll(' ', ''))
     setInputValue(phoneNumber)
+    onChange?.((selectedCountry?.callingCode + phoneNumber).replaceAll(' ', ''))
   }
 
   function handleSelectedCountry(country: ICountry) {
-    onChange &&
-      onChange((country?.callingCode + inputValue).replaceAll(' ', ''))
     setSelectedCountry(country)
+    onChange?.((country + inputValue).replaceAll(' ', ''))
   }
 
   return (

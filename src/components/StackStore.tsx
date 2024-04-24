@@ -24,6 +24,7 @@ import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenOrderRenew from './ScreenOrderRenew'
 import { ScreenStoreE } from './ScreenStore4'
 import ScreenOrderReorder from './ScreenOrderReorder'
+import ScreenOrders from './ScreenOrders'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -199,6 +200,12 @@ function StackStore() {
           title: 'Nuevo corte'
         }}
         component={ScreenBalancesNew}
+      />
+
+      <Stack.Screen
+        options={({ route }) => ({ title: route?.params?.title || 'Ordenes' })}
+        name="OrdersList"
+        component={ScreenOrders}
       />
       <Stack.Screen
         name="OrderDetails"

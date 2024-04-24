@@ -48,14 +48,14 @@ const ModalFilterOrders = ({
 
   useEffect(() => {
     //* Remove status filters that are not used
-    const groupedStatus = filteredData.reduce((result, order) => {
-      const { status } = order
+    const groupedStatus = filteredData?.reduce((result, order) => {
+      const status = order?.status
       if (!result[status]) {
         result[status] = []
       }
 
       //* Create report filters if there are any reports that are not solved
-      if (order.comments.find((a) => a.type === 'report' && !a.solved)) {
+      if (order?.comments?.find((a) => a?.type === 'report' && !a?.solved)) {
         if (!result[order_status.REPORTED]) {
           result[order_status.REPORTED] = [order]
         } else {

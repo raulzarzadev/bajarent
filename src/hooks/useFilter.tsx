@@ -84,7 +84,10 @@ export default function useFilter<T extends { id?: string }>({
     setFilteredData(res)
   }
 
+  const [searchValue, setSearchValue] = useState('')
   const search = (value: string) => {
+    setSearchValue(value)
+    if (!value) return setFilteredData([...data])
     const res = [...data].filter((order) => {
       return Object.values(order).some((val) => {
         if (typeof val === 'string') {
@@ -107,7 +110,7 @@ export default function useFilter<T extends { id?: string }>({
         return order[filter.field] === filter.value
       })
     })
-    setFilteredData(res)
+    search(searchValue)
   }, [data])
 
   return { filteredData, filteredBy, cleanFilter, filterBy, search, filtersBy }

@@ -19,10 +19,10 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
       component: (
         <View>
           <Text style={{ textAlign: 'center' }} numberOfLines={1}>
-            <Text style={gStyles.tBold}>{`${
-              order?.priority ? `(${order.priority})` : ''
-            }`}</Text>{' '}
-            {order.folio}
+            {order?.folio}
+            {!!order?.note && (
+              <Text style={gStyles.helper}> - {order?.note}</Text>
+            )}
           </Text>
           <Text style={{ textAlign: 'center' }} numberOfLines={2}>
             <ClientName order={order} />

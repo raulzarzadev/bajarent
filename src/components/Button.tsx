@@ -25,6 +25,7 @@ export type ButtonProps = {
   icon?: IconName
   justIcon?: boolean
   id?: string
+  fullWidth?: boolean
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
@@ -39,6 +40,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   size = 'medium',
   icon,
   justIcon,
+  fullWidth = true,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -89,6 +91,7 @@ const ButtonX: React.FC<ButtonProps> = ({
       {...props}
       role="button"
       style={({ pressed }) => [
+        !fullWidth && { flex: 1, alignSelf: 'flex-start' },
         baseStyles.buttonX,
         buttonXColor,
         buttonXVariant,

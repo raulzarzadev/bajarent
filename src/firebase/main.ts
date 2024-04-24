@@ -5,7 +5,10 @@ import {
   persistentLocalCache
 } from 'firebase/firestore'
 
-const localCache = __DEV__ ? persistentLocalCache() : memoryLocalCache()
+// use persistentLocalCache always
+const localCache = true ? persistentLocalCache() : memoryLocalCache()
+// use memoryLocalCache for development and persistentLocalCache for production
+// const localCache = __DEV__ ? persistentLocalCache() : memoryLocalCache()
 
 const firebaseConfig = process.env.FIREBASE_CONFIG || ''
 export const app = initializeApp(JSON.parse(firebaseConfig))
