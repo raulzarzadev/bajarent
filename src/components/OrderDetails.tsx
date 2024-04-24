@@ -90,7 +90,10 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
                 total: order?.repairTotal || 0,
                 brand: order?.itemBrand || '',
                 serial: order?.itemSerial || '',
-                category: order?.items?.[0]?.categoryName || 'Sin articulo',
+                category:
+                  order?.items?.[0]?.categoryName ||
+                  order?.item?.categoryName ||
+                  'Sin articulo',
                 failDescription: order?.description || ''
               }}
             />

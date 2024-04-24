@@ -68,7 +68,7 @@ export const ModalRepairQuote = ({
         <Text style={[gStyles.tCenter, { marginBottom: 14 }]}>
           {quote.failDescription}
         </Text>
-        {quoteAlreadyExists && (
+        {!!quoteAlreadyExists && (
           <View>
             <Text style={gStyles.h3}>Detalles de cotización </Text>
             <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
