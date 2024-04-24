@@ -100,9 +100,9 @@ const FormikSelectCategories = ({
               onPress={() => {
                 const newItem = {
                   id: uidGenerator(),
-                  categoryName: category?.name,
-                  priceSelectedId: price?.id,
-                  priceSelected: price
+                  categoryName: category?.name || '',
+                  priceSelectedId: price?.id || null,
+                  priceSelected: price || null
                 }
                 helpers.setValue([...items, newItem])
                 modal.toggleOpen()
