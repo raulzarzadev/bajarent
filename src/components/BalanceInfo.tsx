@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
 import OrdersList from './OrdersList'
 import Icon from './Icon'
+import ListOrders from './ListOrders'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
@@ -170,13 +171,14 @@ const ModalOrders = ({
         ></Button>
       </View>
       <StyledModal {...modal}>
-        <OrdersList
+        <ListOrders
           orders={fullOrders}
-          onPressRow={(orderId) => {
-            // @ts-ignore
-            navigate('OrderDetails', { orderId })
-            modal.toggleOpen()
-          }}
+
+          // onPressRow={(orderId) => {
+          //   // @ts-ignore
+          //   navigate('OrderDetails', { orderId })
+          //   modal.toggleOpen()
+          // }}
         />
       </StyledModal>
     </View>

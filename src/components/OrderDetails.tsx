@@ -220,7 +220,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 }
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
-  const items = [...order.items]
+  const items = [...(order.items || [])]
   if (order.item) items.push(order.item)
 
   return (
@@ -243,9 +243,9 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
         </Text>
       )}
 
-      {items?.map((item) => (
+      {items?.map((item, i) => (
         <View
-          key={item.id}
+          key={item.id || i}
           style={{
             flexDirection: 'row',
             width: '100%',

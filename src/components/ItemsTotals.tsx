@@ -3,8 +3,8 @@ import CurrencyAmount from './CurrencyAmount'
 import { ItemSelected } from './FormSelectItem'
 import { gSpace, gStyles } from '../styles'
 
-const Totals = ({ items }: { items: ItemSelected[] }) => {
-  const total = items.reduce(
+const Totals = ({ items = [] }: { items: ItemSelected[] }) => {
+  const total = items?.reduce(
     (acc, item) => acc + (item.priceSelected?.amount || 0),
     0
   )
