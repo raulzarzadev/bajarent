@@ -221,7 +221,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
   const items = [...(order.items || [])]
-  if (order.item) items.push(order.item)
+  if (order?.item) items?.push(order.item)
 
   return (
     <View
@@ -237,29 +237,29 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
       >
         Artículos
       </Text>
-      {!!order.itemSerial && (
+      {!!order?.itemSerial && (
         <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-          serie: {order.itemSerial}
+          serie: {order?.itemSerial}
         </Text>
       )}
 
       {items?.map((item, i) => (
         <View
-          key={item.id || i}
+          key={item?.id || i}
           style={{
             flexDirection: 'row',
             width: '100%',
             justifyContent: 'space-evenly'
           }}
         >
-          <Text style={[gStyles.h3]}>{item.categoryName}</Text>
+          <Text style={[gStyles.h3]}>{item?.categoryName}</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>
             {/* <Text style={gStyles.helper}>{item.priceQty || 1}x</Text>{' '} */}
-            {item.priceSelected?.title}
+            {item?.priceSelected?.title}
           </Text>
           <CurrencyAmount
             style={gStyles.h3}
-            amount={(item.priceSelected?.amount || 0) * (item.priceQty || 1)}
+            amount={(item?.priceSelected?.amount || 0) * (item.priceQty || 1)}
           />
         </View>
       ))}
