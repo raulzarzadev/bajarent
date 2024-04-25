@@ -9,7 +9,6 @@ import { SectionType } from '../types/SectionType'
 import { CategoryType } from '../types/RentItem'
 import PaymentType from '../types/PaymentType'
 import useStoreDataListen from '../hooks/useStoreDataListen'
-import useUserStores from '../hooks/useUserStores'
 import { useEmployee as useEmployee2 } from './employeeContext2'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
@@ -47,7 +46,7 @@ const StoreContext = createContext<StoreContextType & UseStoreDataListenType>(
 
 const StoreContextProvider = ({ children }) => {
   //#region hooks
-  const { storeId, handleSetStoreId, store: currentStore } = useAuth()
+  const { storeId, handleSetStoreId, store: currentStore, stores } = useAuth()
 
   const {
     employee,
@@ -81,13 +80,13 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (viewAllOrders) {
-      console.log('all orders')
+      //console.log('all orders')
       handleSetAllOrders().then((res) => {
         setAllOrders(res)
       })
     }
     if (justAssignedOrders) {
-      console.log('assigned orders')
+      // console.log('assigned orders')
       handleSetEmployeeOrders().then((res) => {
         setAssignedOrders(res)
       })
@@ -128,8 +127,6 @@ const StoreContextProvider = ({ children }) => {
     handleGetSolvedOrders
   } = useStoreDataListen({ storeId })
 
-  const { userPositions, userStores, updateUserStores } = useUserStores()
-
   //#region states
 
   const [myStaffId, setMyStaffId] = useState<string>('')
@@ -157,14 +154,14 @@ const StoreContextProvider = ({ children }) => {
         staff: store?.staff || [],
         myOrders: assignedOrders,
         myStaffId,
-        userStores,
-        userPositions,
+        userStores: stores,
+        userPositions: [],
         handleSetMyStaffId,
         staffPermissions,
         storeSections,
         payments: paymentsFormatted,
         updateCategories,
-        updateUserStores,
+        updateUserStores: () => {},
         categories,
         handleGetSolvedOrders,
         handleToggleJustActiveOrders: () =>

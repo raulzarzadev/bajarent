@@ -53,6 +53,7 @@ const AuthContextProvider = ({ children }) => {
     if (auth.user) {
       // Get the user's stores
       ServiceStores.userStores(auth.user.id).then((res) => {
+        console.log({ res, storeId })
         setStores(res)
       })
     }
@@ -61,6 +62,7 @@ const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     getItem('storeId').then((res) => {
       setStoreId(res)
+
       getFullStoreData(res).then((storeData) => {
         setStore(storeData)
       })
