@@ -46,7 +46,13 @@ const StoreContext = createContext<StoreContextType & UseStoreDataListenType>(
 
 const StoreContextProvider = ({ children }) => {
   //#region hooks
-  const { storeId, handleSetStoreId, store: currentStore, stores } = useAuth()
+  const {
+    storeId,
+    handleSetStoreId,
+    store: currentStore,
+    stores,
+    isAuthenticated
+  } = useAuth()
 
   const {
     employee,
@@ -62,7 +68,9 @@ const StoreContextProvider = ({ children }) => {
   const [assignedOrders, setAssignedOrders] = useState<OrderType[]>([])
 
   useEffect(() => {
-    ServiceComments.listenReportsUnsolved(storeId, setReports)
+    if (isAuthenticated) {
+      ServiceComments.listenReportsUnsolved(storeId, setReports)
+    }
   }, [employee])
 
   useEffect(() => {

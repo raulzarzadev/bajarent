@@ -43,18 +43,18 @@ export default function App() {
     <AuthContextProvider>
       <JustEmployeeContextProvider>
         <StoreContextProvider>
-          <EmployeeContextProvider>
-            <ThemeProvider>
-              <NavigationContainer
-                initialState={initialState}
-                onStateChange={(state) => {
-                  AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-                }}
-              >
-                <BottomAppBarE />
-              </NavigationContainer>
-            </ThemeProvider>
-          </EmployeeContextProvider>
+          {/* <EmployeeContextProvider> */}
+          <ThemeProvider>
+            <NavigationContainer
+              initialState={initialState}
+              onStateChange={(state) => {
+                AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+              }}
+            >
+              <BottomAppBarE />
+            </NavigationContainer>
+          </ThemeProvider>
+          {/* </EmployeeContextProvider> */}
         </StoreContextProvider>
       </JustEmployeeContextProvider>
     </AuthContextProvider>

@@ -60,13 +60,15 @@ const AuthContextProvider = ({ children }) => {
   }, [auth.user])
 
   useEffect(() => {
-    getItem('storeId').then((res) => {
-      setStoreId(res)
+    if (auth.user) {
+      getItem('storeId').then((res) => {
+        setStoreId(res)
 
-      getFullStoreData(res).then((storeData) => {
-        setStore(storeData)
+        getFullStoreData(res).then((storeData) => {
+          setStore(storeData)
+        })
       })
-    })
+    }
   }, [])
 
   const handleSetStoreId = async (storeId: string) => {
