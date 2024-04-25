@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import React from 'react'
 
 import { FormStoreE } from './FormStore'
@@ -10,18 +10,20 @@ import { useStore } from '../contexts/storeContext'
 const ScreenCreateStore = ({ navigation }) => {
   const { updateUserStores } = useStore()
   return (
-    <ScrollView style={[gStyles.container]}>
-      <FormStoreE
-        onSubmit={async (values) => {
-          return await ServiceStores.create(values)
-            .then(console.log)
-            .catch(console.error)
-            .finally(() => {
-              updateUserStores()
-              navigation.goBack()
-            })
-        }}
-      />
+    <ScrollView>
+      <View style={gStyles.container}>
+        <FormStoreE
+          onSubmit={async (values) => {
+            return await ServiceStores.create(values)
+              .then(console.log)
+              .catch(console.error)
+              .finally(() => {
+                updateUserStores()
+                navigation.goBack()
+              })
+          }}
+        />
+      </View>
     </ScrollView>
   )
 }
