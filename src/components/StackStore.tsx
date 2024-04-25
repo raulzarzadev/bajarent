@@ -25,6 +25,7 @@ import ScreenOrderRenew from './ScreenOrderRenew'
 import { ScreenStoreE } from './ScreenStore5'
 import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenOrders from './ScreenOrders'
+import StackStoreSections from './StackSections'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -74,64 +75,13 @@ function StackStore() {
         component={ScreenStoreEdit}
       />
 
-      {/* STAFF */}
-      <Stack.Screen
-        name="Staff"
-        options={{
-          title: 'Staff'
-        }}
-        component={ScreenStaff}
-      />
-      <Stack.Screen
-        name="StaffNew"
-        options={{
-          title: 'Nuevo Staff'
-        }}
-        component={ScreenStaffNew}
-      />
-      <Stack.Screen
-        name="StaffDetails"
-        options={{
-          title: 'Detalles de Staff '
-        }}
-        component={ScreenStaffDetails}
-      />
-      <Stack.Screen
-        name="StaffEdit"
-        options={{
-          title: 'Edit staff'
-        }}
-        component={ScreenStaffEdit}
-      />
-
       {/* SECTIONS  */}
       <Stack.Screen
-        name="Areas"
+        name="StackSections"
         options={{
           title: 'Areas'
         }}
-        component={ScreenSections}
-      />
-      <Stack.Screen
-        name="CreateSection"
-        options={{
-          title: 'Crear area'
-        }}
-        component={ScreenSectionsNew}
-      />
-      <Stack.Screen
-        name="SectionDetails"
-        options={{
-          title: 'Detalles de area'
-        }}
-        component={ScreenSectionsDetails}
-      />
-      <Stack.Screen
-        name="EditSection"
-        options={{
-          title: 'Editar area'
-        }}
-        component={ScreenSectionsEdit}
+        component={StackStoreSections}
       />
 
       {/* ITEMS */}

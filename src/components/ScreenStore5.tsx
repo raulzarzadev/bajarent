@@ -2,12 +2,21 @@ import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { View } from 'react-native'
 import { StoreDetailsE } from './StoreDetails'
+import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
 
 const ScreenStore = (props) => {
   const { store } = useStore()
+  const { navigate } = useNavigation()
   return (
     <View>
       <StoreDetailsE store={store} {...props} />
+      <Button
+        label="Areas"
+        onPress={() => {
+          navigate('StackSections')
+        }}
+      />
     </View>
   )
 }

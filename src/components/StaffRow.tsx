@@ -28,10 +28,9 @@ const Row = ({
   hideActions
 }: StaffRowProps) => {
   const navigation = useNavigation()
-  const {
-    store: { staff }
-  } = useAuth()
-  const staffItem = staff.find((s) => s.id === staffId)
+  const { store } = useAuth()
+  const staff = store?.staff || []
+  const staffItem = staff?.find((s) => s.id === staffId)
   const text = (field?: string | Date): string => {
     if (typeof field === 'string') return field
     if (field instanceof Date) {

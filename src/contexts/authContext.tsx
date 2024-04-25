@@ -89,7 +89,6 @@ const AuthContextProvider = ({ children }) => {
     }),
     [auth, setAuth, storeId, stores, store]
   )
-  console.log({ stores })
   at++
   console.log({ at })
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
