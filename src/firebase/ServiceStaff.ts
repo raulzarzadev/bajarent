@@ -2,6 +2,7 @@ import { deleteField, where } from 'firebase/firestore'
 import StaffType from '../types/StaffType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStores } from './ServiceStore'
+import { ServiceUsers } from './ServiceUser'
 
 type Type = StaffType
 class ServiceStaffClass extends FirebaseGenericService<Type> {
@@ -24,7 +25,22 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
   async getByStore(storeId: string) {
     // get all staff that has storeId
     const staff = await this.findMany([where('storeId', '==', storeId)])
-    return staff
+
+    const withUserData = await Promise.all(
+      staff.map(async (s) => {
+        const user = await ServiceUsers.get(s.userId)
+        return {
+          ...s,
+          name: user?.name || '',
+          phone: user?.phone || '',
+          email: user?.email || '',
+          image: user?.image || '',
+          user
+        }
+      })
+    )
+
+    return withUserData
   }
 
   async getStaffPositions(userId: string) {

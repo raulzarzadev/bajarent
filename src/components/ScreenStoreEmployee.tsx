@@ -42,11 +42,21 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
   //* 1 show old permissions ✅
   //* 2 add button to delete old permissions ✅
   //* 3 if no old permissions show only new permissions ✅
-
   return (
     <View style={gStyles.container}>
       <View style={{ marginVertical: 16 }}>
         <Text style={gStyles.h2}>{employee.name}</Text>
+        {employee.phone && (
+          <Text style={[gStyles.p, { textAlign: 'center' }]}>
+            {employee.phone}
+          </Text>
+        )}
+        {employee.email && (
+          <Text style={[gStyles.p, { textAlign: 'center' }]}>
+            {employee.email}
+          </Text>
+        )}
+
         <Text style={gStyles.h3}>{employee.position}</Text>
       </View>
 

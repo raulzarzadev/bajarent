@@ -75,19 +75,6 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (viewAllOrders) {
-      handleSetAllOrders().then((res) => {
-        setAllOrders(res)
-      })
-    }
-    if (justAssignedOrders) {
-      handleSetEmployeeOrders().then((res) => {
-        setAssignedOrders(res)
-      })
-    }
-  }, [justActiveOrders])
-
-  useEffect(() => {
-    if (viewAllOrders) {
       //console.log('all orders')
       handleSetAllOrders().then((res) => {
         setAllOrders(res)
@@ -99,10 +86,11 @@ const StoreContextProvider = ({ children }) => {
         setAssignedOrders(res)
       })
     }
-  }, [employee, reports, justAssignedOrders, justAssignedOrders])
+  }, [employee, reports, justAssignedOrders, justActiveOrders])
 
   const handleSetAllOrders = async () => {
     return await ServiceOrders.getActives(storeId).then((orders) => {
+      console.log({ orders })
       const formattedOrders = formatOrders({
         orders,
         reports,

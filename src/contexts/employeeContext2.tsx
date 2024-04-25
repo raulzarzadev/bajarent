@@ -46,7 +46,6 @@ export const EmployeeContextProvider = ({ children }) => {
       setIsAdmin(false)
     }
   }, [user, store])
-  console.log({ employee, store, user })
 
   const value = useMemo(
     () => ({
