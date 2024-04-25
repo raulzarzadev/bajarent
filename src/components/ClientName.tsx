@@ -12,7 +12,7 @@ const ClientName = ({
 }) => {
   const clientName =
     order?.fullName || ` ${order?.firstName || ''} ${order?.lastName || ''}`
-  return <Text style={[gStyles.p, style]}>{clientName}</Text>
+  return <Text style={[style]}>{clientName}</Text>
 }
 
 export default ClientName

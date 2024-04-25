@@ -24,7 +24,7 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
               <Text style={gStyles.helper}> - {order?.note}</Text>
             )}
           </Text>
-          <Text style={{ textAlign: 'center' }} numberOfLines={2}>
+          <Text style={{ textAlign: 'center' }} numberOfLines={1}>
             <ClientName order={order} />
           </Text>
         </View>
@@ -49,7 +49,7 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
       width: '20%',
       component: (
         <View>
-          <Text>{order?.neighborhood}</Text>
+          <Text numberOfLines={2}>{order?.neighborhood}</Text>
         </View>
       )
     },

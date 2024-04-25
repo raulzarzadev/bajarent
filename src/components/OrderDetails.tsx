@@ -22,6 +22,8 @@ import DateCell from './DateCell'
 import OrderActions from './OrderActions/OrderActions'
 import SpanMetadata from './SpanMetadata'
 import Totals from './ItemsTotals'
+import { ServicePayments } from '../firebase/ServicePayments'
+import PaymentType from '../types/PaymentType'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -329,7 +331,6 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
     return () => {}
   }, [orderId])
 
-  console.log({ payments })
   return (
     <View>
       {payments?.length > 0 && (
