@@ -1,11 +1,13 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext2'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import BadgesStore from './BadgesStore'
+import { useAuth } from '../contexts/authContext'
 
 const CardEmployee = () => {
+  const { store } = useAuth()
   const { employee } = useEmployee()
   return (
     <View>

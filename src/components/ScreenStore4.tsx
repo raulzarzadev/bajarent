@@ -10,7 +10,7 @@ import ScreenComments from './ScreenComments'
 import { Text, View } from 'react-native'
 import StoreDetails from './StoreDetails'
 import ScreenItemsStatus from './ScreenItemsStatus'
-import { useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext2'
 
 const ScreenStore = (props) => {
   return (

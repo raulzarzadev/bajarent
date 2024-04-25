@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext2'
 import BadgeOwner from './BadgeOwner'
 import BadgeAdmin from './BadgeAdmin'
 import { gSpace } from '../styles'

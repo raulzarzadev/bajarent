@@ -27,7 +27,8 @@ export const EmployeeContextProvider = ({ children }) => {
 
   useEffect(() => {
     const employee = store?.staff?.find(
-      ({ userId }) => user?.id && userId === user?.id
+      ({ userId }) =>
+        (user?.id && userId === user?.id) || user?.id === store?.createdBy
     )
     if (employee) {
       //* set employee whit store sections where he is assigned
@@ -45,6 +46,7 @@ export const EmployeeContextProvider = ({ children }) => {
       setIsAdmin(false)
     }
   }, [user, store])
+  console.log({ employee, store, user })
 
   const value = useMemo(
     () => ({

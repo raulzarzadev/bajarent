@@ -3,9 +3,9 @@ import React, { useEffect } from 'react'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gStyles } from '../styles'
-import { useAuth } from '../contexts/authContext'
 import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
+import StoreType from '../types/StoreType'
 
 const ChooseProfile = () => {
   const { navigate } = useNavigation()
@@ -51,73 +51,69 @@ const ChooseProfile = () => {
         ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
         horizontal
         data={stores}
-        renderItem={({ item: store }) => <SquareStore store={store} />}
+        renderItem={({ item: store }) => (
+          <SquareStore store={store as StoreType & { createStore: boolean }} />
+        )}
       />
     </View>
   )
 }
 
-const SquareStore = ({ store }) => {
-  if (store?.createStore) {
-    return (
-      <Pressable
-        role="button"
-        disabled={store.disabled}
-        key={'createStore'}
-        testID="storeButton"
-        onPress={() => {
-          store.handleCreateStore()
-        }}
-        style={[
-          styles.store,
-          {
-            backgroundColor: theme.info
-          },
-          store.disabled && { opacity: 0.2, backgroundColor: '#444' }
-        ]}
-      >
-        <Text style={[gStyles.h3, { color: theme.white }]}>Crear tienda</Text>
-        <View style={{ margin: 'auto' }}>
-          <Icon icon="add" size={40} color={theme.white} />
-        </View>
-      </Pressable>
-    )
+const SquareStore = ({
+  store
+}: {
+  store: StoreType & { createStore: boolean }
+}) => {
+  const { navigate } = useNavigation()
+  const { storeId: storeSelected, handleSetStoreId } = useStore()
+  const handleCreateStore = () => {
+    // @ts-ignore
+    navigate('CreateStore')
   }
-  const {
-    handleSetStoreId,
-    storeId: storeSelected,
-    handleSetMyStaffId
-  } = useStore()
-  const { user } = useAuth()
-  const isStoreSelected = (storeId: string) => storeId === storeSelected
-  const isOwner = (createdBy: string) => createdBy === user.id
+  const storeIsSelected = storeSelected && store?.id === storeSelected
   return (
     <Pressable
       role="button"
-      testID="storeButton"
-      key={store?.id}
+      key={'createStore'}
+      testID={store?.createStore ? 'createStoreButton' : 'storeButton'}
+      is-selected={storeIsSelected}
       onPress={() => {
-        if (store?.id === storeSelected) {
-          handleSetStoreId('')
-          handleSetMyStaffId('')
-        } else {
-          handleSetStoreId(store?.id || '')
+        if (store.createStore) handleCreateStore()
+        if (!store.createStore) {
+          if (storeIsSelected) {
+            handleSetStoreId('')
+          } else {
+            handleSetStoreId(store.id)
+          }
         }
       }}
       style={[
         styles.store,
         {
-          // borderColor: isStoreSelected(store.id)
-          //   ? theme.secondary
-          //   : 'transparent',
-          backgroundColor: isStoreSelected(store?.id) ? theme.info : theme.white
+          backgroundColor: storeIsSelected ? theme.info : theme.white
         }
+        //store.disabled && { opacity: 0.2, backgroundColor: '#444' }
       ]}
     >
-      <Text style={[gStyles.h3]}>{store?.name}</Text>
-      <Text style={[gStyles.p, gStyles.tCenter]}>
-        {isOwner(store?.createdBy) ? 'Dueño' : 'staff'}
-      </Text>
+      {store.createStore && (
+        <>
+          <Text style={[gStyles.h3]}>Crear tieda</Text>
+          <View style={{ justifyContent: 'center', margin: 'auto' }}>
+            <Icon icon="add" size={40} color={theme.black} />
+          </View>
+        </>
+      )}
+      {!store.createStore && (
+        <Text
+          numberOfLines={2}
+          style={[
+            gStyles.h1,
+            { color: storeIsSelected ? theme.white : theme.black }
+          ]}
+        >
+          {store.name}
+        </Text>
+      )}
     </Pressable>
   )
 }

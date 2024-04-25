@@ -68,7 +68,7 @@ const AuthContextProvider = ({ children }) => {
         })
       })
     }
-  }, [])
+  }, [auth.user])
 
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)

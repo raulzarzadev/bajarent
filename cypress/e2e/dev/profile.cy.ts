@@ -5,6 +5,6 @@ describe('template spec', () => {
     // cy.contains('Carlos').click()
     cy.get('#profileButton').click()
     cy.contains('Selecciona una tienda').should('exist')
-    cy.get(':nth-child(1) > [data-testid="storeButton"]').click()
+    cy.get(':button[data-testid="storeButton"]').should('be.visible').click()
   })
 })

@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ThemeProvider } from './src/contexts/themeContext'
-import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { EmployeeContextProvider as JustEmployeeContextProvider } from './src/contexts/employeeContext2'
 
 export default function App() {
@@ -43,7 +42,6 @@ export default function App() {
     <AuthContextProvider>
       <JustEmployeeContextProvider>
         <StoreContextProvider>
-          {/* <EmployeeContextProvider> */}
           <ThemeProvider>
             <NavigationContainer
               initialState={initialState}
@@ -54,7 +52,6 @@ export default function App() {
               <BottomAppBarE />
             </NavigationContainer>
           </ThemeProvider>
-          {/* </EmployeeContextProvider> */}
         </StoreContextProvider>
       </JustEmployeeContextProvider>
     </AuthContextProvider>

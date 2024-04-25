@@ -2,7 +2,7 @@ import { View } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { gSpace, gStyles } from '../styles'
-import { useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext2'
 
 const ScreenCashbox = ({ navigation }) => {
   const {
