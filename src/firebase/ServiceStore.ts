@@ -17,13 +17,13 @@ class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     ])
     const storesIds = staffWithStore.map(({ storeId }) => storeId)
     const staffStores = await Promise.all(storesIds.map((id) => this.get(id)))
-    return staffStores
+    const removeInvalid = staffStores.filter((store) => !!store)
+    return removeInvalid
   }
 
   async userStores(userId: string) {
     const asStaff = await this.getWhereUserIsStaff(userId)
     const asOwner = await this.getStoresByUserId(userId)
-    console.log({ asStaff, asOwner })
     const uniqueStores = new Set([
       ...asStaff.map(({ id }) => id),
       ...asOwner.map(({ id }) => id)

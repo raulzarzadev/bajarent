@@ -1,11 +1,4 @@
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { useAuth } from '../contexts/authContext'
 import PhoneLogin from './LoginPhone'
@@ -15,12 +8,11 @@ import CardUser from './CardUser'
 import ErrorBoundary from './ErrorBoundary'
 import ChooseProfile from './ChooseProfile'
 import LoginSignUpEmail from './LoginSignupEmail'
-import { useStore } from '../contexts/storeContext'
 import { CardEmployeeE } from './CardEmployee'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
-  const { staff, store } = useStore()
+
   if (user === undefined) return <ActivityIndicator />
   if (user === null)
     return (
@@ -31,8 +23,7 @@ const ScreenProfile = ({ navigation }) => {
         </ScrollView>
       </ErrorBoundary>
     )
-  const employee = staff.find(({ userId }) => userId === user?.id)
-  const isOwner = user?.id === store?.createdBy
+
   return (
     <ScrollView style={{ padding: 2 }}>
       <ErrorBoundary componentName="CardUser">
@@ -76,21 +67,6 @@ export default function (props) {
     </ErrorBoundary>
   )
 }
-
-// export const CardStaff = () => {
-//   const { staff, store } = useStore()
-//   const { user } = useAuth()
-//   const employee = staff.find(({ userId }) => userId === user?.id)
-//   console.log({ staff, user, employee })
-//   const isOwner = store?.createdBy === user.id
-//   return (
-//     <View>
-//       {/* <Text>Staff</Text>
-//       {isOwner && <Text style={gStyles.h2}>Dueño</Text>}
-//       {employee && <CardStaff />} */}
-//     </View>
-//   )
-// }
 
 const styles = StyleSheet.create({
   store: {

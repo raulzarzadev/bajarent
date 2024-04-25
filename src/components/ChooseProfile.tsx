@@ -10,10 +10,7 @@ import { useAuth } from '../contexts/authContext'
 
 const ChooseProfile = () => {
   const { navigate } = useNavigation()
-  //const { userStores, storeId: storeSelected } = useStore()
   const { stores: userStores, storeId: storeSelected } = useAuth()
-
-  console.log({ userStores })
 
   const sortUserStore = (userStores, storeSelected) => {
     let res = []
@@ -101,15 +98,15 @@ const SquareStore = ({
     >
       {store.createStore && (
         <>
-          <Text style={[gStyles.h2]}>Crear tieda</Text>
+          <Text style={[gStyles.h2, { marginBottom: 0 }]}>Crear tieda</Text>
           <View style={{ justifyContent: 'center', margin: 'auto' }}>
-            <Icon icon="add" size={40} color={theme.black} />
+            <Icon icon="add" size={35} color={theme.black} />
           </View>
         </>
       )}
       {!store.createStore && (
         <Text
-          numberOfLines={3}
+          numberOfLines={2}
           style={[
             gStyles.h3,
             { color: storeIsSelected ? theme.white : theme.black }
@@ -132,7 +129,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'transparent',
     width: 120,
-    height: 80,
+    height: 70,
     aspectRatio: 4 / 2,
     padding: 8,
     borderRadius: 8,
