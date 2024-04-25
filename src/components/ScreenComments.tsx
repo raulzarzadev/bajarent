@@ -4,13 +4,13 @@ import useComments from '../hooks/useComments'
 import { ScrollView } from 'react-native'
 
 const ScreenComments = () => {
-  const { orders, staff, storeId } = useStore()
+  // const { orders, staff, storeId } = useStore()
 
-  const { comments, fetchComments } = useComments({ storeId, orders, staff })
+  // const { comments, fetchComments } = useComments({ storeId, orders, staff })
 
   return (
     <ScrollView>
-      <ListComments comments={comments} refetch={fetchComments} />
+      {/* <ListComments comments={comments} refetch={fetchComments} /> */}
     </ScrollView>
   )
 }

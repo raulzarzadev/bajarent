@@ -22,7 +22,7 @@ import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenOrderRenew from './ScreenOrderRenew'
-import { ScreenStoreE } from './ScreenStore4'
+import { ScreenStoreE } from './ScreenStore5'
 import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenOrders from './ScreenOrders'
 

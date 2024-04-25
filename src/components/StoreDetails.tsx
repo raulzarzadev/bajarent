@@ -2,14 +2,12 @@ import { Text, View } from 'react-native'
 import React from 'react'
 import P from './P'
 import StoreType from '../types/StoreType'
-import { useStore } from '../contexts/storeContext'
 import { useStoreNavigation } from './StackStore'
-import { gSpace, gStyles } from '../styles'
+import { gStyles } from '../styles'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext2'
-import BadgeAdmin from './BadgeAdmin'
-import BadgeOwner from './BadgeOwner'
 import BadgesStore from './BadgesStore'
+import ErrorBoundary from './ErrorBoundary'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useStoreNavigation()
@@ -42,9 +40,15 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
         )}
       </View>
       <BadgesStore />
-      <P>{store.description}</P>
+      <P>{store?.description}</P>
     </View>
   )
 }
+
+export const StoreDetailsE = (props) => (
+  <ErrorBoundary componentName="StoreDetails">
+    <StoreDetails {...props} />
+  </ErrorBoundary>
+)
 
 export default StoreDetails
