@@ -1,7 +1,7 @@
 import { ScrollView } from 'react-native'
 import React from 'react'
 
-import FormStore from './FormStore'
+import { FormStoreE } from './FormStore'
 import { ServiceStores } from '../firebase/ServiceStore'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
@@ -11,7 +11,7 @@ const ScreenCreateStore = ({ navigation }) => {
   const { updateUserStores } = useStore()
   return (
     <ScrollView style={[gStyles.container]}>
-      <FormStore
+      <FormStoreE
         onSubmit={async (values) => {
           return await ServiceStores.create(values)
             .then(console.log)

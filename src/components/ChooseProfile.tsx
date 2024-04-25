@@ -64,6 +64,7 @@ const SquareStore = ({ store }) => {
         role="button"
         disabled={store.disabled}
         key={'createStore'}
+        testID="storeButton"
         onPress={() => {
           store.handleCreateStore()
         }}
@@ -92,6 +93,8 @@ const SquareStore = ({ store }) => {
   const isOwner = (createdBy: string) => createdBy === user.id
   return (
     <Pressable
+      role="button"
+      testID="storeButton"
       key={store?.id}
       onPress={() => {
         if (store?.id === storeSelected) {

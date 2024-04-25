@@ -1,6 +1,6 @@
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import React from 'react'
-import FormStore from './FormStore'
+import { FormStoreE } from './FormStore'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
@@ -15,7 +15,7 @@ const ScreenStoreEdit = ({ navigation }) => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <FormStore
+        <FormStoreE
           defaultValues={store}
           onSubmit={async (values) => {
             ServiceStores.update(store.id, values)

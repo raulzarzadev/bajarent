@@ -10,6 +10,7 @@ import FormikCheckbox from './FormikCheckbox'
 import { gSpace, gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
 import { FormOrderFields } from './FormOrder'
+import ErrorBoundary from './ErrorBoundary'
 
 const FormStore = ({
   defaultValues,
@@ -93,7 +94,7 @@ const FormStore = ({
             Te permitira agregar campos personalizados a las ordenes.
           </Text>
 
-          {Object.keys(values.orderTypes).map((type) => {
+          {Object.keys(values?.orderTypes || {}).map((type) => {
             if (!['RENT', 'SALE', 'REPAIR'].includes(type)) return null //<- only show the new types
             if (values.orderTypes[type] === false) return null // <- only config the selected types
             return (
@@ -151,6 +152,12 @@ const FormStore = ({
     </Formik>
   )
 }
+
+export const FormStoreE = (props) => (
+  <ErrorBoundary componentName="FormStore">
+    <FormStore {...props} />
+  </ErrorBoundary>
+)
 
 export default FormStore
 
