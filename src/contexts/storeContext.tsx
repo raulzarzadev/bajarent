@@ -36,6 +36,7 @@ export type StoreContextType = {
   updateUserStores?: () => any
   allComments?: FormattedComment[]
   fetchComments?: () => any
+  handleToggleJustActiveOrders?: () => any
 }
 
 type UseStoreDataListenType = Partial<ReturnType<typeof useStoreDataListen>>
@@ -66,24 +67,41 @@ const StoreContextProvider = ({ children }) => {
   }, [employee])
 
   useEffect(() => {
-    if (viewAllOrders)
+    if (viewAllOrders) {
       handleSetAllOrders().then((res) => {
         setAllOrders(res)
       })
-    if (justAssignedOrders)
+    }
+    if (justAssignedOrders) {
       handleSetEmployeeOrders().then((res) => {
         setAssignedOrders(res)
       })
+    }
+  }, [justActiveOrders])
+
+  useEffect(() => {
+    if (viewAllOrders) {
+      console.log('all orders')
+      handleSetAllOrders().then((res) => {
+        setAllOrders(res)
+      })
+    }
+    if (justAssignedOrders) {
+      console.log('assigned orders')
+      handleSetEmployeeOrders().then((res) => {
+        setAssignedOrders(res)
+      })
+    }
   }, [employee, reports, justAssignedOrders, justAssignedOrders])
 
   const handleSetAllOrders = async () => {
     return await ServiceOrders.getActives(storeId).then((orders) => {
-      const assignedOrders = formatOrders({
+      const formattedOrders = formatOrders({
         orders,
         reports,
         justActive: justActiveOrders
       })
-      return assignedOrders
+      return formattedOrders
     })
   }
 
@@ -148,7 +166,9 @@ const StoreContextProvider = ({ children }) => {
         updateCategories,
         updateUserStores,
         categories,
-        handleGetSolvedOrders
+        handleGetSolvedOrders,
+        handleToggleJustActiveOrders: () =>
+          setJustActiveOrders(!justActiveOrders)
         // allComments,
         // fetchComments
       }}
