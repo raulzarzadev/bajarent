@@ -4,8 +4,7 @@ import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
 
 function ScreenOrders({ route }) {
-  const { orders, handleGetSolvedOrders, handleToggleJustActiveOrders } =
-    useStore()
+  const { orders, handleToggleJustActiveOrders } = useStore()
   const preOrders = route?.params?.orders || null
   const [fullOrders, setFullOrders] = useState<OrderType[]>([])
 
@@ -18,14 +17,14 @@ function ScreenOrders({ route }) {
     }
   }, [orders])
 
-  const [disabledDownload, setDisabledDownload] = useState(false)
-  const getSolvedOrders = () => {
-    handleGetSolvedOrders()
-    setDisabledDownload(true)
-    setTimeout(() => {
-      setDisabledDownload(false)
-    }, 5000)
-  }
+  // const [disabledDownload, setDisabledDownload] = useState(false)
+  // const getSolvedOrders = () => {
+  //   handleGetSolvedOrders()
+  //   setDisabledDownload(true)
+  //   setTimeout(() => {
+  //     setDisabledDownload(false)
+  //   }, 5000)
+  // }
 
   return (
     <ListOrders
