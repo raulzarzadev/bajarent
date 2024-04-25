@@ -113,6 +113,9 @@ const StoreContextProvider = ({ children }) => {
   }
 
   const handleSetEmployeeOrders = async () => {
+    //* If the employee has no sections assigned return an empty array
+    if (employee?.sectionsAssigned?.length === 0) return []
+    //* other way get the orders of the sections assigned to the employee
     return await ServiceOrders.getSectionOrders(
       storeId,
       employee?.sectionsAssigned
