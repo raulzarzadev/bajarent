@@ -90,7 +90,6 @@ const StoreContextProvider = ({ children }) => {
 
   const handleSetAllOrders = async () => {
     return await ServiceOrders.getActives(storeId).then((orders) => {
-      console.log({ orders })
       const formattedOrders = formatOrders({
         orders,
         reports,

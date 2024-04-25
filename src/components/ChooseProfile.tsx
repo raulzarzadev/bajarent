@@ -6,10 +6,14 @@ import { gStyles } from '../styles'
 import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import StoreType from '../types/StoreType'
+import { useAuth } from '../contexts/authContext'
 
 const ChooseProfile = () => {
   const { navigate } = useNavigation()
-  const { userStores, storeId: storeSelected } = useStore()
+  //const { userStores, storeId: storeSelected } = useStore()
+  const { stores: userStores, storeId: storeSelected } = useAuth()
+
+  console.log({ userStores })
 
   const sortUserStore = (userStores, storeSelected) => {
     let res = []
@@ -97,7 +101,7 @@ const SquareStore = ({
     >
       {store.createStore && (
         <>
-          <Text style={[gStyles.h3]}>Crear tieda</Text>
+          <Text style={[gStyles.h2]}>Crear tieda</Text>
           <View style={{ justifyContent: 'center', margin: 'auto' }}>
             <Icon icon="add" size={40} color={theme.black} />
           </View>
@@ -105,9 +109,9 @@ const SquareStore = ({
       )}
       {!store.createStore && (
         <Text
-          numberOfLines={2}
+          numberOfLines={3}
           style={[
-            gStyles.h1,
+            gStyles.h3,
             { color: storeIsSelected ? theme.white : theme.black }
           ]}
         >
