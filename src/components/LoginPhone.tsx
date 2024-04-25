@@ -20,7 +20,8 @@ const PhoneLogin = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
       size: 'invisible',
       callback: (response) => {
-        console.log({ response })
+        console.log('sms sent')
+        //console.log({ response })
         // reCAPTCHA solved, allow signInWithPhoneNumber.
         // console.log(response)
         // onSignInSubmit()
@@ -36,6 +37,7 @@ const PhoneLogin = () => {
     window.confirmationResult
       .confirm(code)
       .then((result) => {
+        console.log('code sent')
         // User signed in successfully.
         // console.log(result)
         // console.log({ user })
