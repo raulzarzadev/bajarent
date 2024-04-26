@@ -360,7 +360,10 @@ const OrderActions = ({
       orderStatus === order_status.AUTHORIZED)
 
   const canExtend =
-    isRent && userCanExtend && orderStatus === order_status.DELIVERED
+    isRent &&
+    userCanExtend &&
+    (orderStatus === order_status.DELIVERED ||
+      orderStatus === order_status.EXPIRED)
 
   const canReorder = userCanReorder
 
