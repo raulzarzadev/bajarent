@@ -84,15 +84,21 @@ export default function expireDate(
 export function expireDate2({
   startedAt,
   price,
-  priceQty
+  priceQty,
+  extendTime
 }: {
   startedAt: Date | Timestamp
   price?: Partial<PriceType>
   priceQty?: number
+  extendTime?: TimePriceType
 }): Date | null {
   if (!price) return null
   if (!startedAt) return null
-  const startedAtDate = asDate(startedAt)
+  let startedAtDate = asDate(startedAt)
+  if (extendTime) {
+    console.log({ extendTime })
+    startedAtDate = addCustomTime({ date: startedAtDate, time: extendTime })
+  }
   return addCustomTime({ date: startedAtDate, time: price.time, qty: priceQty })
 }
 
