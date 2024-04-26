@@ -102,6 +102,12 @@ type OrderBase = {
   payments: PaymentType[]
 
   priority?: number
+
+  /* ******************************************** 
+             Extend expire feature               
+   *******************************************rz */
+  extendReason?: string
+  extendTime?: string
 }
 
 export enum order_status {

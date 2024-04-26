@@ -2,7 +2,6 @@ import { Timestamp } from 'firebase/firestore'
 import asDate from './utils-date'
 import { PriceType, TimePriceType } from '../types/PriceType'
 import { addDays, addHours, addMinutes, addMonths, addWeeks } from 'date-fns'
-import OrderType from '../types/OrderType'
 /**
  *
  * @param time its a string with the time and the unit of time
@@ -94,31 +93,43 @@ export function expireDate2({
   if (!price) return null
   if (!startedAt) return null
   const startedAtDate = asDate(startedAt)
-  const [qty, unit] = price?.time?.split(' ') || ['', '']
-  const QTY = parseInt(qty) * (priceQty || 1)
+  return addCustomTime({ date: startedAtDate, time: price.time, qty: priceQty })
+}
+
+export const addCustomTime = ({
+  date,
+  time,
+  qty = 1
+}: {
+  date: Date
+  time: TimePriceType
+  qty?: number
+}) => {
+  const [amount, unit] = time?.split(' ') || ['', '']
+  const QTY = parseInt(amount) * (qty || 1)
   if (unit === 'year') {
-    const expireDate = addMonths(startedAtDate, QTY * 12)
+    const expireDate = addMonths(date, QTY * 12)
     return expireDate
   }
   if (unit === 'hour') {
-    const expireDate = addHours(startedAtDate, QTY)
+    const expireDate = addHours(date, QTY)
     return expireDate
   }
   if (unit === 'minute') {
-    const expireDate = addMinutes(startedAtDate, QTY)
+    const expireDate = addMinutes(date, QTY)
 
     return expireDate
   }
   if (unit === 'month') {
-    const expireDate = addMonths(startedAtDate, QTY)
+    const expireDate = addMonths(date, QTY)
     return expireDate
   }
   if (unit === 'week') {
-    const expireDate = addWeeks(startedAtDate, QTY)
+    const expireDate = addWeeks(date, QTY)
     return expireDate
   }
   if (unit === 'day') {
-    const expireDate = addDays(startedAtDate, QTY)
+    const expireDate = addDays(date, QTY)
     return expireDate
   }
   return null

@@ -1,6 +1,7 @@
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
 import { order_status } from '../types/OrderType'
+import { TimePriceType } from '../types/PriceType'
 
 export const onComment = async ({
   orderId,
@@ -122,5 +123,17 @@ export const onPending = async ({ orderId }) => {
     .then(() => {
       console.log('pending')
     })
+    .catch(console.error)
+}
+
+export const onExtend = async (
+  orderId: string,
+  { time, reason }: { time: TimePriceType; reason: string }
+) => {
+  return await ServiceOrders.update(orderId, {
+    extendTime: time || '',
+    extendReason: reason || ''
+  })
+    .then(() => {})
     .catch(console.error)
 }

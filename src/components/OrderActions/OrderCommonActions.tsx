@@ -11,6 +11,7 @@ import {
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
+import AddExtendExpire from './AddExtendExpire'
 
 const OrderCommonActions = ({
   storeId,
@@ -29,6 +30,7 @@ const OrderCommonActions = ({
     canAuthorize?: boolean
     canReorder?: boolean
     canAssign?: boolean
+    canExtend?: boolean
   }
   userId: string
 }) => {
@@ -49,7 +51,7 @@ const OrderCommonActions = ({
   const canAuthorize = actionsAllowed.canAuthorize
   const canReorder = actionsAllowed.canReorder
   const canAssign = actionsAllowed.canAssign
-
+  const canExtend = actionsAllowed.canExtend
   const canRenew = actionsAllowed.canRenew
 
   const handleReorder = () => {
@@ -87,6 +89,7 @@ const OrderCommonActions = ({
   }
 
   const buttons = [
+    canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
 
     canAssign && <ModalAssignOrder orderId={orderId} />,

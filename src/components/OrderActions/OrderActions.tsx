@@ -31,6 +31,9 @@ import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
 import FormikSelectItems from '../FormikSelectItems'
 import FormikSelectCategories from '../FormikSelectCategories'
+import InputTextStyled from '../InputTextStyled'
+import InputCount from '../InputCount'
+import { useState } from 'react'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -190,7 +193,8 @@ const OrderActions = ({
     employeeOrderPermissions?.canAssign || isAdmin || isOwner
   const userCanReorder =
     employeeOrderPermissions?.canReorder || isAdmin || isOwner
-
+  const userCanExtend =
+    employeeOrderPermissions?.canExtend || isAdmin || isOwner
   /* ********************************************
    * ORDER ACTIONS ALLOWED
    *******************************************rz */
@@ -527,7 +531,8 @@ const OrderActions = ({
           canSendWS,
           canAuthorize,
           canAssign,
-          canReorder
+          canReorder,
+          canExtend: userCanExtend
         }}
       />
     </View>
