@@ -139,3 +139,19 @@ export const addCustomTime = ({
   }
   return null
 }
+
+export const translateTime = (time: TimePriceType) => {
+  const [amount, unit] = time?.split(' ') || ['', '']
+  const units = {
+    second: 'segundo',
+    minute: 'minuto',
+    hour: 'hora',
+    day: 'día',
+    week: 'semana',
+    month: 'mes', //<-- this is meses
+    year: 'año'
+  }
+  let unitCount = amount === '1' ? units[unit] : units[unit] + 's'
+  unit === 'month' && (unitCount = 'meses')
+  return `${amount} ${unitCount}`
+}

@@ -1,11 +1,4 @@
-import {
-  Dimensions,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
@@ -13,9 +6,6 @@ import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import { isThisWeek, isToday } from 'date-fns'
 import asDate, { isLastWeek } from '../libs/utils-date'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import OrdersList from './OrdersList'
 import { useNavigation } from '@react-navigation/native'
 
 type SquareItem = { title: string; value: number; orders: OrderType[] }

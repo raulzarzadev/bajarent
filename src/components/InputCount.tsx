@@ -4,12 +4,12 @@ import { gStyles } from '../styles'
 import Button from './Button'
 
 const InputCount = ({
-  label = 'Cantidad',
+  label,
   value = 0,
   setValue,
   disabled
 }: {
-  label: string
+  label?: string
   value?: number
   setValue?: (qty: number) => void
   disabled?: boolean
@@ -37,7 +37,7 @@ const InputCount = ({
         alignItems: 'center'
       }}
     >
-      <Text style={[gStyles.h2]}>{label}:</Text>
+      {label && <Text style={[gStyles.h2]}>{label}:</Text>}
       <View
         style={{
           justifyContent: 'center',

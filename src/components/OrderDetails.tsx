@@ -23,6 +23,7 @@ import OrderActions from './OrderActions/OrderActions'
 import SpanMetadata from './SpanMetadata'
 import Totals from './ItemsTotals'
 import { TimePriceType } from '../types/PriceType'
+import { translateTime } from '../libs/expireDate'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -296,7 +297,7 @@ const ItemDates = ({
       <Text style={[gStyles.h3]}>Fechas</Text>
       {extendTime && (
         <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-          Se extendio por: {extendTime?.split(' ')?.[0] || 0} días
+          Se extendio por: {translateTime(extendTime)}
         </Text>
       )}
       <View

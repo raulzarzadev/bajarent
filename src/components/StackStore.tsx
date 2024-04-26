@@ -203,7 +203,10 @@ function StackStore() {
       />
 
       <Stack.Screen
-        options={({ route }) => ({ title: route?.params?.title || 'Ordenes' })}
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Ordenes'
+        })}
         name="OrdersList"
         component={ScreenOrders}
       />

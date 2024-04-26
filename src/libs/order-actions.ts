@@ -131,8 +131,8 @@ export const onExtend = async (
   { time, reason }: { time: TimePriceType; reason: string }
 ) => {
   return await ServiceOrders.update(orderId, {
-    extendTime: time || '',
-    extendReason: reason || ''
+    extendTime: time,
+    extendReason: reason
   })
     .then(() => {})
     .catch(console.error)
