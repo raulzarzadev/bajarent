@@ -96,7 +96,6 @@ export function expireDate2({
   if (!startedAt) return null
   let startedAtDate = asDate(startedAt)
   if (extendTime) {
-    console.log({ extendTime })
     startedAtDate = addCustomTime({ date: startedAtDate, time: extendTime })
   }
   return addCustomTime({ date: startedAtDate, time: price.time, qty: priceQty })
