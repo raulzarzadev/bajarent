@@ -359,6 +359,9 @@ const OrderActions = ({
     (orderStatus === order_status.PENDING ||
       orderStatus === order_status.AUTHORIZED)
 
+  const canExtend =
+    isRent && userCanExtend && orderStatus === order_status.DELIVERED
+
   const canReorder = userCanReorder
 
   const canEdit = userCanEdit
@@ -532,7 +535,7 @@ const OrderActions = ({
           canAuthorize,
           canAssign,
           canReorder,
-          canExtend: userCanExtend
+          canExtend
         }}
       />
     </View>

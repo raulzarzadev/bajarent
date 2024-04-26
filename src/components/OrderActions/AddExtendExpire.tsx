@@ -25,10 +25,9 @@ const AddExtendExpire = ({
       await onComment({
         orderId,
         storeId,
-        content: `Extedio por ${count} días. Motivo: ${reason}`,
+        content: `Extendio por ${count} días. Motivo: ${reason}`,
         type: 'comment'
       }).catch(console.error)
-      console.log('extended')
       setDisabled(false)
       modal.toggleOpen()
     } catch (error) {
