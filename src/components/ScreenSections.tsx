@@ -12,27 +12,35 @@ const ScreenSections = ({ navigation }) => {
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
-        <Button
-          buttonStyles={{
-            margin: 'auto',
-            marginVertical: 16
-          }}
-          onPress={() => {
-            navigation.navigate('CreateSection')
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'center'
           }}
         >
-          Agregar area
-        </Button>
+          <Text>Areas {storeSections?.length || 0} </Text>
+          <View>
+            <Button
+              buttonStyles={{
+                margin: 'auto',
+                marginVertical: 16
+              }}
+              onPress={() => {
+                navigation.navigate('CreateSection')
+              }}
+              icon="add"
+              justIcon
+              size="small"
+            ></Button>
+          </View>
+        </View>
         <View>
           <FlatList
+          
             data={storeSections}
             renderItem={({ item }) => (
-              <SectionRow
-                section={item}
-                onPress={(sectionId) => {
-                  navigation.navigate('SectionDetails', { sectionId })
-                }}
-              />
+              <Row item={item}/>
             )}
           ></FlatList>
         </View>
@@ -40,6 +48,13 @@ const ScreenSections = ({ navigation }) => {
     </ScrollView>
   )
 }
+const Row=({item})=>{
+  return <View>
+    <View>
+      <Text>{item.name}</Text>
+    </View>
+    <Text>{}</Text>
+  </View>
 
 export const SectionRow = ({
   section,

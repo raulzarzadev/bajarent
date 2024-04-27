@@ -3,19 +3,165 @@ import ErrorBoundary from './ErrorBoundary'
 import { View } from 'react-native'
 import { StoreDetailsE } from './StoreDetails'
 import Button from './Button'
+import Tabs from './Tabs'
+import { useEmployee } from '../contexts/employeeContext2'
+import { useAuth } from '../contexts/authContext'
+import { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 
 const ScreenStore = (props) => {
   const { store } = useStore()
-  const { navigate } = useNavigation()
+  const {
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
+  const canViewOrders = isAdmin || isOwner
+  const canViewSections = isAdmin || isOwner
+  const canViewCashbox = isAdmin || isOwner
+  const canViewStoreNumbers = isAdmin || isOwner
+
+  if (!canViewCashbox && !canViewSections && !canViewOrders) return null //<- if have no permissions, return null
+
   return (
     <View>
       <StoreDetailsE store={store} {...props} />
+      {canViewStoreNumbers && <StoreNumbersRow />}
+      <Tabs
+        tabs={[
+          {
+            title: 'Ordenes',
+            content: <TabOrders />,
+            show: canViewOrders
+          },
+          {
+            title: 'Areas',
+            content: <TabAreas />,
+            show: canViewSections
+          },
+          {
+            title: 'Caja',
+            content: <TabCashbox />,
+            show: canViewCashbox
+          }
+        ]}
+      />
+    </View>
+  )
+}
+
+const StoreNumbersRow = () => {
+  const { store } = useAuth()
+  const { orders, comments } = useStore()
+  const authorized = orders.filter(
+    (order) => order.status === order_status.AUTHORIZED
+  )
+  const reportsUnsolved = comments.filter(
+    (comment) => comment.type === 'report' && !comment.solved
+  )
+  const currentFolio = store?.currentFolio
+
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <Button
+        label={`Folio: ${currentFolio}`}
+        onPress={() => {
+          console.log('folio')
+        }}
+        variant="ghost"
+        disabled
+      />
+      <Button
+        label={`Pedidos: ${authorized.length}`}
+        onPress={() => {
+          console.log('pedidos')
+        }}
+        variant="ghost"
+      />
+      <Button
+        label={`Reportes: ${reportsUnsolved.length}`}
+        onPress={() => {
+          console.log('Reportes')
+        }}
+        variant="ghost"
+      />
+    </View>
+  )
+}
+
+const TabCashbox = () => {
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <Button
+        disabled={true}
+        label="Cortes"
+        onPress={() => {
+          console.log('Caja')
+        }}
+        variant="ghost"
+      />
+      <Button
+        label="Pagos"
+        onPress={() => {
+          console.log('Pagos')
+        }}
+        variant="ghost"
+      />
+    </View>
+  )
+}
+
+const TabAreas = () => {
+  const { navigate } = useNavigation()
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       <Button
         label="Areas"
         onPress={() => {
+          console.log('Areas')
           navigate('StackSections')
         }}
+        variant="ghost"
+        disabled={false}
+        icon={'components'}
+      />
+      <Button
+        label="Staff"
+        onPress={() => {
+          console.log('Ordenes')
+        }}
+        icon={'orders'}
+        variant="ghost"
+        disabled={false}
+      />
+      <Button
+        label="Ordenes"
+        onPress={() => {
+          console.log('Configurar')
+        }}
+        variant="ghost"
+        icon="settings"
+        disabled={true}
+      />
+    </View>
+  )
+}
+
+const TabOrders = () => {
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <Button
+        disabled={true}
+        label="Todas"
+        onPress={() => {
+          console.log('Ver todas')
+        }}
+        variant="ghost"
+      />
+      <Button
+        label="Configurar"
+        onPress={() => {
+          console.log('Configurar')
+        }}
+        variant="ghost"
       />
     </View>
   )
