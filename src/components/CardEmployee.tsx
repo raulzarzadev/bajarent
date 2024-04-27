@@ -12,7 +12,6 @@ const CardEmployee = () => {
   const { store } = useAuth()
   const { employee } = useEmployee()
   const { navigate } = useNavigation()
-
   return (
     <View>
       <View>

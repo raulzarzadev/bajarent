@@ -36,6 +36,7 @@ export type StoreContextType = {
   allComments?: FormattedComment[]
   fetchComments?: () => any
   handleToggleJustActiveOrders?: () => any
+  fetchOrders?: () => any
 }
 
 type UseStoreDataListenType = Partial<ReturnType<typeof useStoreDataListen>>
@@ -74,6 +75,10 @@ const StoreContextProvider = ({ children }) => {
   }, [employee])
 
   useEffect(() => {
+    fetchOrders()
+  }, [employee, reports, justAssignedOrders, justActiveOrders])
+
+  const fetchOrders = () => {
     if (viewAllOrders) {
       //console.log('all orders')
       handleSetAllOrders().then((res) => {
@@ -86,8 +91,7 @@ const StoreContextProvider = ({ children }) => {
         setAssignedOrders(res)
       })
     }
-  }, [employee, reports, justAssignedOrders, justActiveOrders])
-
+  }
   const handleSetAllOrders = async () => {
     return await ServiceOrders.getActives(storeId).then((orders) => {
       const formattedOrders = formatOrders({
@@ -163,7 +167,8 @@ const StoreContextProvider = ({ children }) => {
         categories,
         handleGetSolvedOrders,
         handleToggleJustActiveOrders: () =>
-          setJustActiveOrders(!justActiveOrders)
+          setJustActiveOrders(!justActiveOrders),
+        fetchOrders
         // allComments,
         // fetchComments
       }}

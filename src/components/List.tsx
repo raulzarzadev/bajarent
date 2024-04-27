@@ -34,7 +34,6 @@ export type ListPops<T extends { id: string }> = {
   defaultSortBy?: keyof T
   filters: FilterListType<T>[]
   defaultOrder?: 'asc' | 'des'
-  onPressNew?: () => void
   sideButtons?: ListSideButton[]
   rowsPerPage?: number
 }
@@ -47,7 +46,6 @@ function MyList<T extends { id: string }>({
   defaultSortBy,
   defaultOrder = 'asc',
   filters,
-  onPressNew,
   preFilteredIds,
   sideButtons = [],
   rowsPerPage = 10
@@ -71,12 +69,6 @@ function MyList<T extends { id: string }>({
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
-  }
-  if (onPressNew) {
-    sideButtons = [
-      ...sideButtons,
-      { icon: 'add', label: 'Nuevo', onPress: onPressNew, visible: true }
-    ]
   }
 
   return (

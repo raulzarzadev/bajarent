@@ -1,23 +1,21 @@
 import React from 'react'
 import { STATUS_COLOR } from '../theme'
 import dictionary from '../dictionary'
-import { useStore } from '../contexts/storeContext'
 import Chip, { Size } from './Chip'
 import { ViewStyle } from 'react-native'
+import OrderType from '../types/OrderType'
 
 const OrderStatus = ({
-  orderId,
+  order,
   chipStyles,
   chipSize
 }: {
-  orderId?: string
+  order?: Partial<OrderType>
   chipStyles?: ViewStyle
   chipSize?: Size
 }) => {
-  const { orders } = useStore()
-  const order = orders.find((order) => order.id === orderId)
   const status = order?.status
-  const color = STATUS_COLOR[order?.status]
+  const color = STATUS_COLOR[status]
   const hasReport = order?.hasNotSolvedReports
   return (
     <Chip

@@ -12,7 +12,7 @@ import { order_status } from '../types/OrderType'
 type ViewType = 'list' | 'timeline'
 
 function ScreenMyOrders() {
-  const { myOrders } = useStore()
+  const { myOrders, fetchOrders } = useStore()
   const [view, setView] = useState<ViewType>('list')
 
   const handleSwitchView = () => {
@@ -31,6 +31,15 @@ function ScreenMyOrders() {
 
   const { navigate } = useNavigation()
 
+  const [disabled, setDisabled] = useState(false)
+  const debouncedFetchOrders = () => {
+    setDisabled(true)
+    fetchOrders()
+    setTimeout(() => {
+      setDisabled(false)
+    }, 3000) //<-- 3 seconds
+  }
+
   return (
     <>
       {view === 'list' && (
@@ -39,13 +48,29 @@ function ScreenMyOrders() {
           defaultOrdersIds={activeOrders.map((order) => order.id)}
           sideButtons={[
             {
-              // @ts-ignore
-              icon: view === 'timeline' ? 'list' : 'calendar',
+              icon: 'refresh',
               label: '',
-              onPress: handleSwitchView,
+              onPress: debouncedFetchOrders,
               visible: true,
-              disabled: false
+              disabled: disabled
+            },
+            {
+              icon: 'add',
+              label: '',
+              onPress: () => {
+                // @ts-ignore
+                navigate('NewOrder')
+              },
+              visible: true
             }
+            // {
+            //   // @ts-ignore
+            //   icon: view === 'timeline' ? 'list' : 'calendar',
+            //   label: '',
+            //   onPress: handleSwitchView,
+            //   visible: true,
+            //   disabled: false
+            // }
           ]}
         />
       )}

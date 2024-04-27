@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import OrdersScreen from './ScreenOrders'
 import OrderDetailScreen from './ScreenOrderDetail'
-import NewOrderScreen from './ScreenOrderNew'
+import ScreenOrderNew from './ScreenOrderNew'
 import MyStaffLabel from './MyStaffLabel'
 
 const Stack = createNativeStackNavigator()
@@ -22,7 +22,7 @@ export default function StackNavigator({ children }) {
         <Stack.Screen name="Orders" component={OrdersScreen} />
         <Stack.Screen
           name="NewOrder"
-          component={NewOrderScreen}
+          component={ScreenOrderNew}
           options={{ title: 'New order' }}
         />
         <Stack.Screen

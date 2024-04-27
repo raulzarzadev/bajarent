@@ -3,8 +3,8 @@ import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
 
-function ScreenOrders({ route }) {
-  const { orders, handleToggleJustActiveOrders } = useStore()
+function ScreenOrders({ route, navigation: { navigate } }) {
+  const { orders, handleToggleJustActiveOrders, fetchOrders } = useStore()
   const preOrders = route?.params?.orders || null
   const [fullOrders, setFullOrders] = useState<OrderType[]>([])
 
@@ -17,24 +17,41 @@ function ScreenOrders({ route }) {
     }
   }, [orders])
 
-  // const [disabledDownload, setDisabledDownload] = useState(false)
-  // const getSolvedOrders = () => {
-  //   handleGetSolvedOrders()
-  //   setDisabledDownload(true)
-  //   setTimeout(() => {
-  //     setDisabledDownload(false)
-  //   }, 5000)
-  // }
+  const [disabled, setDisabled] = useState(false)
+  const debouncedFetchOrders = () => {
+    setDisabled(true)
+    fetchOrders()
+    setTimeout(() => {
+      setDisabled(false)
+    }, 3000) //<-- 3 seconds
+  }
 
   return (
     <ListOrders
       orders={fullOrders}
       //defaultOrdersIds={filtered}
+
       sideButtons={[
+        // {
+        //   icon: 'download',
+        //   label: '',
+        //   onPress: handleToggleJustActiveOrders,
+        //   visible: true
+        // },
         {
-          icon: 'download',
+          icon: 'refresh',
           label: '',
-          onPress: handleToggleJustActiveOrders,
+          onPress: debouncedFetchOrders,
+          visible: true,
+          disabled: disabled
+        },
+        {
+          icon: 'add',
+          label: '',
+          onPress: () => {
+            // @ts-ignore
+            navigate('NewOrder')
+          },
           visible: true
         }
       ]}

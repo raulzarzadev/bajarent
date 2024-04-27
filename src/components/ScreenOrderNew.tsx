@@ -2,7 +2,7 @@ import React from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext2'
 
@@ -18,43 +18,33 @@ const ScreenOrderNew = ({ navigation }) => {
     const defaultValues = {
       //* Default values
       storeId: storeId,
-      status: order_status.PENDING,
+      status: order_status.AUTHORIZED, //*****<--- always authorize
+      authorizedAt: new Date(), //****+++++++*<--- always authorize
+      authorizedBy: user?.id || '', //**++++***<--- always authorize
       deliveredAt: null,
       deliveredBy: null,
-      authorizedAt: null,
-      authorizedBy: null
-    }
-
-    /* ********************************************
-     *  override default values
-     *******************************************rz */
-
-    values = { ...defaultValues, ...values }
-
-    /* ********************************************
-     *  authorize order just in time, just if user has permission
-     *******************************************rz */
-    if (canAuthorizeOrder) {
-      values.status = order_status.AUTHORIZED
-      values.authorizedAt = new Date()
-      values.authorizedBy = user.id
+      ...values //********** <-- override default values
     }
 
     /* ********************************************
      *  if has delivered is true
      *******************************************rz */
-    if (values.hasDelivered) {
-      values.status = order_status.DELIVERED
-      values.deliveredAt = values.scheduledAt
-      values.deliveredBy = user.id
+    if (defaultValues?.hasDelivered) {
+      defaultValues.status = order_status.DELIVERED
+      defaultValues.deliveredAt = values.scheduledAt
+      defaultValues.deliveredBy = user.id
     }
 
-    return await ServiceOrders.createSerialOrder(values).then((orderId) => {
-      if (orderId) {
-        navigation.navigate('Orders')
-        navigation.navigate('OrderDetails', { orderId })
+    console.log({ canAuthorizeOrder, values })
+
+    return await ServiceOrders.createSerialOrder(defaultValues).then(
+      (orderId) => {
+        if (orderId) {
+          navigation.navigate('Orders')
+          navigation.navigate('OrderDetails', { orderId })
+        }
       }
-    })
+    )
   }
   return <FormOrder onSubmit={handleSubmit} />
 }

@@ -301,11 +301,7 @@ export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         titleColor={theme.black}
         size="sm"
       ></Chip>
-      <OrderStatus
-        orderId={order?.id}
-        chipStyles={styles.chip}
-        chipSize={'sm'}
-      />
+      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       <OrderAssignedTo
         orderId={order?.id}
         chipStyles={styles.chip}

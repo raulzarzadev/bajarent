@@ -26,10 +26,6 @@ const ListOrders = ({
         // @ts-ignore
         navigate('OrderDetails', { orderId: id })
       }}
-      onPressNew={() => {
-        // @ts-ignore
-        navigate('NewOrder')
-      }}
       sortFields={[
         { key: 'priority', label: 'Prioridad' },
         { key: 'folio', label: 'Folio' },

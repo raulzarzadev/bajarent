@@ -22,7 +22,8 @@ import {
   MdInfoOutline,
   MdWarningAmber,
   MdOutlineUndo,
-  MdCancel
+  MdCancel,
+  MdOutlineRefresh
 } from 'react-icons/md'
 
 import {
@@ -113,7 +114,8 @@ const icons = {
   info: MdInfoOutline,
   warning: MdWarningAmber,
   undo: MdOutlineUndo,
-  cancel: MdCancel
+  cancel: MdCancel,
+  refresh: MdOutlineRefresh
 } as const
 
 export type IconName = keyof typeof icons
