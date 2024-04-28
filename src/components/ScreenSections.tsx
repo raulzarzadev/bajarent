@@ -37,10 +37,12 @@ const ScreenSections = ({ navigation }) => {
         </View>
         <View>
           <FlatList
-          
             data={storeSections}
+            ListHeaderComponent={() => (
+              <Row labels={['Nombre', 'Staff', 'Ordenes', 'Reportes']} />
+            )}
             renderItem={({ item }) => (
-              <Row item={item}/>
+              <Row labels={[item?.name, item?.staff?.length, '-', '-']} />
             )}
           ></FlatList>
         </View>
@@ -48,14 +50,18 @@ const ScreenSections = ({ navigation }) => {
     </ScrollView>
   )
 }
-const Row=({item})=>{
-  return <View>
-    <View>
-      <Text>{item.name}</Text>
+const Row = ({ labels = [] }) => {
+  const cellWidth = 100 / labels.length
+  return (
+    <View style={{ flexDirection: 'row', marginVertical: 6 }}>
+      {labels.map((label) => (
+        <View key={label} style={{ width: `${cellWidth}%` }}>
+          <Text style={{ textAlign: 'center' }}>{label}</Text>
+        </View>
+      ))}
     </View>
-    <Text>{}</Text>
-  </View>
-
+  )
+}
 export const SectionRow = ({
   section,
   onPress

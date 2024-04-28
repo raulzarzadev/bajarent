@@ -8,7 +8,6 @@ import ScreenSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
-import MyStaffLabel from './MyStaffLabel'
 
 export type StackStoreNavigationProps = {
   Store: undefined

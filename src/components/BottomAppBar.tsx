@@ -12,15 +12,6 @@ import { useEmployee } from '../contexts/employeeContext2'
 
 const Tab = createBottomTabNavigator()
 
-export const BottomAppBarE = () => {
-  return (
-    <ErrorBoundary componentName="NotUserTabs">
-      <BottomAppBar />
-    </ErrorBoundary>
-  )
-}
-
-// #region UserAndStoreTabs
 const BottomAppBar = () => {
   const {
     permissions: { isAdmin, isOwner, orders }
@@ -28,7 +19,9 @@ const BottomAppBar = () => {
 
   const canSeeOrders = orders.canViewAll || isAdmin || isOwner
   const canCreateOrder = orders.canCreate || isAdmin || isOwner
-  const canSeeMyOrders = orders?.canViewMy
+  const canSeeMyOrders = !!orders?.canViewMy
+
+  console.log({ canSeeOrders, canCreateOrder, canSeeMyOrders })
 
   return (
     <Tab.Navigator
@@ -72,41 +65,37 @@ const BottomAppBar = () => {
           tabBarButton: () => null
         }}
       />
-      {canSeeOrders && (
-        <Tab.Screen
-          name="Orders"
-          component={StackOrders}
-          options={{
-            title: 'Ordenes',
-            headerShown: false
-          }}
-        />
-      )}
 
-      {canCreateOrder && (
-        <Tab.Screen
-          name="NewOrder"
-          component={ScreenNewOrder}
-          options={{
-            title: 'Nueva orden',
-            headerRight(props) {
-              return <MyStaffLabel />
-            }
-          }}
-        />
-      )}
+      <Tab.Screen
+        name="Orders"
+        component={StackOrders}
+        options={{
+          title: 'Ordenes',
+          headerShown: false,
+          tabBarButton: !canSeeOrders ? () => null : undefined
+        }}
+      />
 
-      {canSeeMyOrders && (
-        <Tab.Screen
-          name="MyOrders"
-          component={StackMyOrders}
-          options={{
-            title: 'Mis ordenes',
-            headerShown: false
-          }}
-        />
-      )}
-
+      <Tab.Screen
+        name="NewOrder"
+        component={ScreenNewOrder}
+        options={{
+          title: 'Nueva orden',
+          headerRight(props) {
+            return <MyStaffLabel />
+          },
+          tabBarButton: !canCreateOrder ? () => null : undefined
+        }}
+      />
+      <Tab.Screen
+        name="MyOrders"
+        component={StackMyOrders}
+        options={{
+          title: 'Mis ordenes',
+          headerShown: false,
+          tabBarButton: !canSeeMyOrders ? () => null : undefined
+        }}
+      />
       <Tab.Screen
         name="Profile"
         component={StackProfile}
@@ -117,17 +106,23 @@ const BottomAppBar = () => {
           tabBarButton: () => null
         }}
       />
-
-      {!!__DEV__ && (
-        <Tab.Screen
-          name="Components"
-          component={ScreenComponents}
-          options={{
-            title: 'Componentes'
-          }}
-        />
-      )}
+      <Tab.Screen
+        name="Components"
+        component={ScreenComponents}
+        options={{
+          title: 'Componentes',
+          tabBarButton: !__DEV__ ? () => null : undefined
+        }}
+      />
     </Tab.Navigator>
+  )
+}
+
+export const BottomAppBarE = () => {
+  return (
+    <ErrorBoundary componentName="NotUserTabs">
+      <BottomAppBar />
+    </ErrorBoundary>
   )
 }
 
