@@ -19,7 +19,10 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
     ServiceSections.addStaff(section?.id, staffId)
   }
   const handleRemoveStaff = (staffId: string) => {
-    ServiceSections.removeStaff(section?.id, staffId)
+    console.log('secttion', section?.id)
+    // ServiceSections.removeStaff(section?.id, staffId)
+    //   .then((res) => console.log(res))
+    //   .catch((e) => console.log(e))
   }
 
   const handleSelectStaff = (staffId: string) => {
@@ -78,7 +81,15 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
         tabs={[
           {
             title: 'Staff',
-            content: <ListStaff staff={staff} sectionId={section.id} />,
+            content: (
+              <ListStaff
+                staff={staff}
+                sectionId={section.id}
+                handleSubtract={(staffId) => {
+                  handleRemoveStaff(staffId)
+                }}
+              />
+            ),
             show: true
           },
           {

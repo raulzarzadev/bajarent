@@ -47,20 +47,19 @@ const StoreContext = createContext<StoreContextType & UseStoreDataListenType>(
 
 const StoreContextProvider = ({ children }) => {
   //#region hooks
-  const {
-    storeId,
-    handleSetStoreId,
-    store: currentStore,
-    stores,
-    isAuthenticated
-  } = useAuth()
+  const { storeId, handleSetStoreId, store, stores, isAuthenticated } =
+    useAuth()
 
   const {
     employee,
     permissions: {
+      isAdmin,
+      isOwner,
       orders: { canViewAll: viewAllOrders, canViewMy: justAssignedOrders }
     }
   } = useEmployee2()
+
+  console.log({ employee })
 
   const [reports, setReports] = useState<CommentType[]>([])
   const [justActiveOrders, setJustActiveOrders] = useState<boolean>(true)
@@ -79,7 +78,7 @@ const StoreContextProvider = ({ children }) => {
   }, [employee, reports, justAssignedOrders, justActiveOrders])
 
   const fetchOrders = () => {
-    if (viewAllOrders) {
+    if (viewAllOrders || isOwner) {
       //console.log('all orders')
       handleSetAllOrders().then((res) => {
         setAllOrders(res)
@@ -123,7 +122,7 @@ const StoreContextProvider = ({ children }) => {
   const {
     comments,
     sections: storeSections,
-    store,
+    //store,
     categories,
     updateCategories,
     handleGetSolvedOrders,
@@ -145,6 +144,7 @@ const StoreContextProvider = ({ children }) => {
   }
 
   //#region render
+  console.log({ allOrders })
 
   return (
     <StoreContext.Provider

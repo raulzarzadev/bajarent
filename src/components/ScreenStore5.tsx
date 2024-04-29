@@ -126,7 +126,8 @@ const TabAreas = () => {
       <Button
         label="Staff"
         onPress={() => {
-          console.log('Ordenes')
+          console.log('Staffsss')
+          navigate('StackStaff')
         }}
         icon={'orders'}
         variant="ghost"

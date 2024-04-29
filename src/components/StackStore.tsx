@@ -82,7 +82,7 @@ function StackStore() {
 
       {/* STAFF  */}
       <Stack.Screen
-        name="StaffSections"
+        name="StackStaff"
         options={{
           title: 'Staff',
           headerShown: false // hide the header on the sections stack

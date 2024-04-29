@@ -27,12 +27,14 @@ const initialAutState: {
    * @deprecated use employee instead
    */
   staff?: StaffType
+  fetchStore: () => void | Promise<void>
 } = {
   isAuthenticated: false,
   user: undefined,
   storeId: '', //*<- get the storeId from localStorage
   setAuth: (value: SetStateAction<typeof initialAutState>) => {}, // Modify the setAuth definition to accept at least one argument
-  handleSetStoreId: (storeId: string) => {} // Add the handleSetStoreId function
+  handleSetStoreId: (storeId: string) => {}, // Add the handleSetStoreId function
+  fetchStore: () => {}
 }
 
 const AuthContext = createContext(initialAutState)
@@ -47,6 +49,9 @@ const AuthContextProvider = ({ children }) => {
     authStateChanged((user) => {
       setAuth({ ...auth, isAuthenticated: !!user, user })
     })
+    getItem('storeId').then((res) => {
+      handleSetStoreId(res)
+    })
   }, [])
 
   useEffect(() => {
@@ -55,25 +60,20 @@ const AuthContextProvider = ({ children }) => {
       ServiceStores.userStores(auth.user.id).then((res) => {
         setStores(res)
       })
-    }
-  }, [auth.user])
-
-  useEffect(() => {
-    if (auth.user) {
-      getItem('storeId').then((res) => {
-        setStoreId(res)
-
-        getFullStoreData(res).then((storeData) => {
-          setStore(storeData)
-        })
-      })
+      fetchStore(storeId)
     }
   }, [auth.user])
 
   const handleSetStoreId = async (storeId: string) => {
     setStoreId(storeId)
     setItem('storeId', storeId) //*<- save the storeId in localStorage
-    getFullStoreData(storeId).then((storeData) => {
+
+    fetchStore(storeId)
+  }
+
+  const fetchStore = async (newStoreId?: string) => {
+    console.log('fetching Store', newStoreId)
+    getFullStoreData(newStoreId || storeId).then((storeData) => {
       setStore(storeData)
     })
   }
@@ -85,6 +85,7 @@ const AuthContextProvider = ({ children }) => {
       storeId,
       stores,
       store,
+      fetchStore,
       handleSetStoreId
     }),
     [auth, setAuth, storeId, stores, store]

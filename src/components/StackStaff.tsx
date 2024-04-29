@@ -4,6 +4,10 @@ import ScreenProfile from './ScreenProfile'
 import ScreenProfileEdit from './ScreenProfileEdit'
 import MyStaffLabel from './MyStaffLabel'
 import ErrorBoundary from './ErrorBoundary'
+import { ScreenStaffE } from './ScreenStaff'
+import ScreenStaffNew from './ScreenStaffNew'
+import ScreenStaffDetails from './ScreenStaffDetails'
+import ScreenStaffEdit from './ScreenStaffEdit'
 
 const Stack = createStackNavigator()
 function StackStaff() {
@@ -21,23 +25,33 @@ function StackStaff() {
         name="ScreenStaff"
         options={({ route }) => ({
           //@ts-ignore
-          title: `${route?.params?.sectionName} staff`
+          title: `${route?.params?.sectionName || ''} staff`
         })}
-        component={ScreenProfile}
+        component={ScreenStaffE}
       />
+
       <Stack.Screen
-        name="ScreenStaffAdd"
+        name="ScreenStaffNew"
         options={{
-          title: 'Agregar staff'
+          title: 'Nuevo Staff'
         }}
-        component={ScreenCreateStore}
+        component={ScreenStaffNew}
       />
+
       <Stack.Screen
         name="ScreenStaffDetails"
         options={{
-          title: 'Detalles de staff'
+          title: 'Detalles de Staff '
         }}
-        component={ScreenProfileEdit}
+        component={ScreenStaffDetails}
+      />
+
+      <Stack.Screen
+        name="ScreenStaffEdit"
+        options={{
+          title: 'Edit staff'
+        }}
+        component={ScreenStaffEdit}
       />
     </Stack.Navigator>
   )

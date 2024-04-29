@@ -20,9 +20,17 @@ import { useStoreNavigation } from './StackStore'
 import StaffType, { CreateStaffType } from '../types/StaffType'
 import { gStyles } from '../styles'
 import Loading from './Loading'
+import ListStaff from './ListStaff2'
+import { ServiceSections } from '../firebase/ServiceSections'
+import Button from './Button'
 
 const ScreenStaffNew = ({ route }) => {
-  const { store } = useStore()
+  const { store, staff } = useStore()
+  const staffNotInSection = staff.filter(
+    (s) =>
+      !s.sectionsAssigned?.length ||
+      !s.sectionsAssigned.includes(route?.params?.sectionId)
+  )
   const { goBack } = useStoreNavigation()
   const [user, setUser] = React.useState<UserType>()
   const defaultValues: Partial<StaffType> = {
@@ -31,13 +39,30 @@ const ScreenStaffNew = ({ route }) => {
     name: user?.name || ''
   }
   const sectionId = route?.params?.sectionId
+
   if (!store) return <Loading />
   if (sectionId) defaultValues.sectionsAssigned = [sectionId]
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
-        {!user && <SearchStaff setUser={setUser} />}
-        {!!user && <CardUser user={user} />}
+        {!user && (
+          <View>
+            <Text style={gStyles.h3}>Agrea a un usuario nuevo</Text>
+            <SearchStaff setUser={setUser} />
+          </View>
+        )}
+        {!!user && (
+          <View>
+            <CardUser user={user} />
+            <Button
+              label="Buscar otro"
+              icon="search"
+              variant="ghost"
+              onPress={() => setUser(null)}
+            />
+          </View>
+        )}
+
         {!!user && (
           <FormStaff
             defaultValues={defaultValues}
@@ -50,15 +75,37 @@ const ScreenStaffNew = ({ route }) => {
                 storeId: store.id,
                 userId: user.id || ''
               }
-              console.log({ newStaff })
-              // ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
-              //   console.log({ res })
-              //   setUser(undefined)
-              //   goBack()
-              // })
+              ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
+                console.log({ res })
+                setUser(undefined)
+                goBack()
+              })
             }}
           />
         )}
+      </View>
+      <View>
+        {sectionId ? (
+          <Text style={gStyles.h3}>
+            O agrega a una persona que ya es Staff{' '}
+          </Text>
+        ) : (
+          <Text style={gStyles.h3}>Staff actual</Text>
+        )}
+        <ListStaff
+          showNewStaff={false}
+          staff={staffNotInSection}
+          onPressRow={(staffId) => {
+            ServiceSections.addStaff(sectionId, staffId).then(() => {
+              goBack()
+            })
+          }}
+          handleAdd={async (rowId) => {
+            await ServiceSections.addStaff(sectionId, rowId)
+              .then((res) => console.log(res))
+              .catch((err) => console.log(err))
+          }}
+        />
       </View>
     </ScrollView>
   )

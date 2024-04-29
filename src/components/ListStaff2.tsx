@@ -6,26 +6,45 @@ import StaffType from '../types/StaffType'
 import Button from './Button'
 
 const ListStaff = ({
-  staff,
-  sectionId
+  staff = [],
+  sectionId,
+  onPressRow,
+  showNewStaff = true,
+  handleAdd,
+  handleSubtract,
+  handleEdit
 }: {
   staff: StaffType[]
   sectionId?: string
+  onPressRow?: (itemId: string) => void
+  showNewStaff?: boolean
+  handleAdd?: (rowId: string) => void
+  handleSubtract?: (rowId: string) => void
+  handleEdit?: (rowId: string) => void
 }) => {
-  console.log({ staff })
   const { navigate } = useNavigation()
   return (
     <View>
       <List
-        ComponentRow={({ item }) => <StaffRow staff={item} />}
+        ComponentRow={({ item }) => (
+          <StaffRow
+            staff={item}
+            handleAdd={handleAdd}
+            handleSubtract={handleSubtract}
+            handleEdit={handleEdit}
+          />
+        )}
         data={staff}
+        onPressRow={(itemId) => {
+          onPressRow?.(itemId)
+        }}
         filters={[]}
         sideButtons={[
           {
             icon: 'add',
             onPress: () => navigate('ScreenStaffNew', { sectionId }),
             label: 'Add',
-            visible: true
+            visible: showNewStaff ? true : false
           }
         ]}
       />
@@ -33,7 +52,17 @@ const ListStaff = ({
   )
 }
 
-const StaffRow = ({ staff }: { staff: Partial<StaffType> }) => {
+const StaffRow = ({
+  staff,
+  handleAdd,
+  handleSubtract,
+  handleEdit
+}: {
+  staff: Partial<StaffType>
+  handleAdd?: (rowId: string) => void
+  handleSubtract?: (rowId: string) => void
+  handleEdit?: (rowId: string) => void
+}) => {
   return (
     <View
       style={{
@@ -44,23 +73,47 @@ const StaffRow = ({ staff }: { staff: Partial<StaffType> }) => {
     >
       <Text>{staff?.name}</Text>
       <Text>{staff?.position}</Text>
-      <View>
-        <Button
-          size="small"
-          icon="sub"
-          color="error"
-          justIcon
-          onPress={() => console.log('delete')}
-        />
-      </View>
-      <View>
-        <Button
-          size="small"
-          icon="edit"
-          justIcon
-          onPress={() => console.log('edit')}
-        />
-      </View>
+      {handleAdd && (
+        <View>
+          <Button
+            size="small"
+            icon="add"
+            color="info"
+            justIcon
+            onPress={() => {
+              console.log('add')
+              handleAdd?.(staff?.id)
+            }}
+          />
+        </View>
+      )}
+      {handleEdit && (
+        <View>
+          <Button
+            size="small"
+            icon="edit"
+            justIcon
+            onPress={() => {
+              console.log('edit')
+              handleEdit?.(staff?.id)
+            }}
+          />
+        </View>
+      )}
+      {handleSubtract && (
+        <View>
+          <Button
+            size="small"
+            icon="sub"
+            color="error"
+            justIcon
+            onPress={() => {
+              console.log('delete')
+              handleSubtract?.(staff?.id)
+            }}
+          />
+        </View>
+      )}
     </View>
   )
 }

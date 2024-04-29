@@ -168,17 +168,19 @@ function ModalFilterList<T>({
             handleDebounceSearch(e)
           }}
         />
-        <View style={{ marginLeft: 8 }}>
-          <Button
-            variant={!filtersBy?.length ? 'ghost' : 'filled'}
-            color={!filtersBy?.length ? 'black' : 'primary'}
-            icon="filter"
-            onPress={() => {
-              filterModal.toggleOpen()
-            }}
-            justIcon
-          />
-        </View>
+        {filters?.length > 0 && (
+          <View style={{ marginLeft: 8 }}>
+            <Button
+              variant={!filtersBy?.length ? 'ghost' : 'filled'}
+              color={!filtersBy?.length ? 'black' : 'primary'}
+              icon="filter"
+              onPress={() => {
+                filterModal.toggleOpen()
+              }}
+              justIcon
+            />
+          </View>
+        )}
       </View>
 
       <StyledModal {...filterModal}>

@@ -21,8 +21,6 @@ const BottomAppBar = () => {
   const canCreateOrder = orders.canCreate || isAdmin || isOwner
   const canSeeMyOrders = !!orders?.canViewMy
 
-  console.log({ canSeeOrders, canCreateOrder, canSeeMyOrders })
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {

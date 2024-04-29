@@ -8,6 +8,7 @@ import ScreenSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
+import StackStaff from './StackStaff'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -76,28 +77,7 @@ function StackSections() {
         options={{
           title: 'Staff'
         }}
-        component={ScreenStaff}
-      />
-      <Stack.Screen
-        name="ScreenStaffNew"
-        options={{
-          title: 'Nuevo Staff'
-        }}
-        component={ScreenStaffNew}
-      />
-      <Stack.Screen
-        name="ScreenStaffDetails"
-        options={{
-          title: 'Detalles de Staff '
-        }}
-        component={ScreenStaffDetails}
-      />
-      <Stack.Screen
-        name="ScreenStaffEdit"
-        options={{
-          title: 'Edit staff'
-        }}
-        component={ScreenStaffEdit}
+        component={StackStaff}
       />
     </Stack.Navigator>
   )
