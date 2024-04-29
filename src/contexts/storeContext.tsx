@@ -126,7 +126,8 @@ const StoreContextProvider = ({ children }) => {
     store,
     categories,
     updateCategories,
-    handleGetSolvedOrders
+    handleGetSolvedOrders,
+    staff
   } = useStoreDataListen({ storeId })
 
   //#region states
@@ -153,7 +154,7 @@ const StoreContextProvider = ({ children }) => {
         handleSetStoreId,
         orders: allOrders,
         comments,
-        staff: store?.staff || [],
+        staff,
         myOrders: assignedOrders,
         myStaffId,
         userStores: stores,

@@ -34,7 +34,7 @@ export const EmployeeContextProvider = ({ children }) => {
       //* set employee whit store sections where he is assigned
       const sectionsAssigned =
         store?.sections
-          ?.filter(({ staff }) => staff.includes(employee.id))
+          ?.filter(({ staff }) => staff?.includes(employee.id))
           .map(({ id }) => id) || []
       //* make sure that id is the id of staff not the user
       setEmployee({ ...employee, ...user, id: employee?.id, sectionsAssigned })

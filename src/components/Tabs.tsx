@@ -10,9 +10,13 @@ export type Tab = {
   show?: boolean
 }
 
-export type TabsProps = { tabs: Tab[]; defaultTab?: string }
+export type TabsProps = {
+  tabs: Tab[]
+  defaultTab?: string
+  showProgressBar?: boolean
+}
 
-const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
+const TabsA = ({ tabs = [], defaultTab, showProgressBar }: TabsProps) => {
   const [selectedTab, setSelectedTab] = useState(defaultTab || tabs[0]?.title)
   const visibleTabs = tabs.filter(({ show }) => show)
   const handleTabPress = (tab) => {
@@ -47,13 +51,15 @@ const TabsA = ({ tabs = [], defaultTab }: TabsProps) => {
             </Pressable>
           ))}
         </ScrollView>
-        <View
-          style={{
-            height: 2,
-            marginRight: `${100 - scrollWidth}%`,
-            backgroundColor: theme.info
-          }}
-        ></View>
+        {showProgressBar && (
+          <View
+            style={{
+              height: 2,
+              marginRight: `${100 - scrollWidth}%`,
+              backgroundColor: theme.info
+            }}
+          ></View>
+        )}
       </View>
       <View style={styles.tabContent}>
         {visibleTabs.find((tab) => tab.title === selectedTab)?.content}

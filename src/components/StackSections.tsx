@@ -24,12 +24,12 @@ export const useStoreNavigation = () => {
 }
 
 const Stack = createStackNavigator()
-function StackStoreSections() {
+function StackSections() {
   return (
     <Stack.Navigator
       screenOptions={() => {
         return {
-          headerShown: false
+          //headerShown: false
         }
       }}
     >
@@ -102,4 +102,4 @@ function StackStoreSections() {
     </Stack.Navigator>
   )
 }
-export default StackStoreSections
+export default StackSections

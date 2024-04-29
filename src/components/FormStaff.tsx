@@ -3,10 +3,6 @@ import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
-import FormikCheckbox from './FormikCheckbox'
-import H1 from './H1'
-import { staff_permissions } from '../types/StaffType'
-import dictionary from '../dictionary'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 
@@ -23,7 +19,6 @@ const FormStaff = ({
   }
   onSubmit?: (values: any) => Promise<void>
 }) => {
-  const permissions = Object.keys(staff_permissions)
   const { staff } = useStore()
   const alreadyAreStaff = staff.find((s) => s.userId === defaultValues.userId)
 
@@ -51,17 +46,6 @@ const FormStaff = ({
             />
           </View>
 
-          <H1>Permisos</H1>
-          <View style={[styles.input, styles.permissions]}>
-            {permissions.map((permission) => (
-              <View key={permission} style={[styles.permission]}>
-                <FormikCheckbox
-                  name={permission}
-                  label={dictionary(permission as staff_permissions)}
-                />
-              </View>
-            ))}
-          </View>
           <View style={styles.input}>
             <Button
               onPress={handleSubmit}

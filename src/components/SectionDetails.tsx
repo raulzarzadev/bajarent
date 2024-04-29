@@ -2,16 +2,18 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { SectionType } from '../types/SectionType'
 
-import ModalSelectStaff from './ModalSelectStaff'
 import { useStore } from '../contexts/storeContext'
 import { ServiceSections } from '../firebase/ServiceSections'
-import ListStaff from './ListStaff'
+import ListStaff from './ListStaff2'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
+import Tabs from './Tabs'
+import ListOrders from './ListOrders'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
+
   const navigation = useNavigation()
   const handleAddStaff = (staffId: string) => {
     ServiceSections.addStaff(section?.id, staffId)
@@ -27,6 +29,9 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
       handleAddStaff(staffId)
     }
   }
+
+  const orders = []
+  const reports = []
 
   return (
     <View>
@@ -63,24 +68,30 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
           color="secondary"
           onPress={() => {
             // @ts-ignore
-            navigation.navigate('EditSection', { sectionId: section?.id })
+            navigation.navigate('ScreenSectionsEdit', {
+              sectionId: section?.id
+            })
           }}
         ></ButtonIcon>
       </View>
-      <Text style={styles.subtitle}>Staff </Text>
-      <ListStaff
-        staff={section?.staff?.map(
-          (id) => staff.find((s) => s?.id === id) || { id, missing: true }
-        )}
-        sectionId={section?.id}
-        onPress={handleSelectStaff}
-      />
-      <ModalSelectStaff
-        staff={staff}
-        onPress={(id) => {
-          handleSelectStaff(id)
-        }}
-        staffSelected={section?.staff}
+      <Tabs
+        tabs={[
+          {
+            title: 'Staff',
+            content: <ListStaff staff={staff} sectionId={section.id} />,
+            show: true
+          },
+          {
+            title: 'Orders',
+            content: <ListOrders orders={orders} />,
+            show: true
+          },
+          {
+            title: 'Reports',
+            content: <ListOrders orders={reports} />,
+            show: true
+          }
+        ]}
       />
     </View>
   )

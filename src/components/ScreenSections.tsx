@@ -1,14 +1,25 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gSpace, gStyles } from '../styles'
 import StaffRow from './StaffRow'
+import Loading from './Loading'
 
 const ScreenSections = ({ navigation }) => {
-  const { storeSections } = useStore()
-
+  const { storeSections, store } = useStore()
+  const handlePressRow = (sectionId) => {
+    navigation.navigate('ScreenSectionsDetails', { sectionId })
+  }
+  if (!store) return <Loading />
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
@@ -27,7 +38,7 @@ const ScreenSections = ({ navigation }) => {
                 marginVertical: 16
               }}
               onPress={() => {
-                navigation.navigate('CreateSection')
+                navigation.navigate('ScreenSectionsNew')
               }}
               icon="add"
               justIcon
@@ -39,10 +50,18 @@ const ScreenSections = ({ navigation }) => {
           <FlatList
             data={storeSections}
             ListHeaderComponent={() => (
-              <Row labels={['Nombre', 'Staff', 'Ordenes', 'Reportes']} />
+              <Row
+                onPress={() => null}
+                labels={['Area', 'Staff', 'Ordenes', 'Reportes']}
+              />
             )}
             renderItem={({ item }) => (
-              <Row labels={[item?.name, item?.staff?.length, '-', '-']} />
+              <Row
+                onPress={() => {
+                  handlePressRow(item.id)
+                }}
+                labels={[item?.name, item?.staff?.length, '-', '-']}
+              />
             )}
           ></FlatList>
         </View>
@@ -50,16 +69,19 @@ const ScreenSections = ({ navigation }) => {
     </ScrollView>
   )
 }
-const Row = ({ labels = [] }) => {
+const Row = ({ labels = [], onPress }) => {
   const cellWidth = 100 / labels.length
   return (
-    <View style={{ flexDirection: 'row', marginVertical: 6 }}>
-      {labels.map((label) => (
-        <View key={label} style={{ width: `${cellWidth}%` }}>
+    <Pressable
+      style={{ flexDirection: 'row', marginVertical: 6 }}
+      onPress={onPress}
+    >
+      {labels.map((label, i) => (
+        <View key={`${label}-${i}`} style={{ width: `${cellWidth}%` }}>
           <Text style={{ textAlign: 'center' }}>{label}</Text>
         </View>
       ))}
-    </View>
+    </Pressable>
   )
 }
 export const SectionRow = ({

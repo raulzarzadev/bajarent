@@ -12,12 +12,10 @@ import ScreenPaymentsDetails from './ScreenPaymentsDetails'
 import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
-import ScreenOrderDetail from './ScreenOrderDetail'
-import ScreenOrderRenew from './ScreenOrderRenew'
 import { ScreenStoreE } from './ScreenStore5'
-import ScreenOrderReorder from './ScreenOrderReorder'
-import ScreenOrders from './ScreenOrders'
-import StackStoreSections from './StackSections'
+import StackSections from './StackSections'
+import StackOrders from './StackOrders'
+import StackStaff from './StackStaff'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -33,6 +31,7 @@ export const useStoreNavigation = () => {
   return navigation
 }
 const Stack = createStackNavigator()
+
 function StackStore() {
   return (
     <Stack.Navigator
@@ -67,14 +66,40 @@ function StackStore() {
         component={ScreenStoreEdit}
       />
 
+      {/* ******************************************** 
+                  NESTING STACKS                 
+       *******************************************rz */}
+
       {/* SECTIONS  */}
       <Stack.Screen
         name="StackSections"
         options={{
-          title: 'Areas'
+          title: 'Areas',
+          headerShown: false // hide the header on the sections stack
         }}
-        component={StackStoreSections}
+        component={StackSections}
       />
+
+      {/* STAFF  */}
+      <Stack.Screen
+        name="StaffSections"
+        options={{
+          title: 'Staff',
+          headerShown: false // hide the header on the sections stack
+        }}
+        component={StackStaff}
+      />
+
+      {/* ORDERS  */}
+      <Stack.Screen
+        options={({ route }) => ({ title: route?.params?.title || 'Ordenes' })}
+        name="StackOrders"
+        component={StackOrders}
+      />
+
+      {/* ******************************************** 
+                 MORE SCREENS                 
+       *******************************************rz */}
 
       {/* ITEMS */}
       <Stack.Screen
@@ -144,6 +169,7 @@ function StackStore() {
         component={ScreenBalancesNew}
       />
 
+      {/* 
       <Stack.Screen
         options={({ route }) => ({ title: route?.params?.title || 'Ordenes' })}
         name="OrdersList"
@@ -169,7 +195,7 @@ function StackStore() {
           title: 'Re ordenar '
         }}
         component={ScreenOrderReorder}
-      />
+      /> */}
     </Stack.Navigator>
   )
 }

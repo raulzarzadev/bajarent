@@ -17,16 +17,22 @@ import UserType from '../types/UserType'
 import P from './P'
 import CardUser from './CardUser'
 import { useStoreNavigation } from './StackStore'
-import { CreateStaffType } from '../types/StaffType'
+import StaffType, { CreateStaffType } from '../types/StaffType'
 import { gStyles } from '../styles'
+import Loading from './Loading'
 
-const ScreenStaffNew = () => {
+const ScreenStaffNew = ({ route }) => {
   const { store } = useStore()
-  const { navigate } = useStoreNavigation()
+  const { goBack } = useStoreNavigation()
   const [user, setUser] = React.useState<UserType>()
-
-  console.log({ user })
-
+  const defaultValues: Partial<StaffType> = {
+    userId: user?.id,
+    position: user?.name,
+    name: user?.name || ''
+  }
+  const sectionId = route?.params?.sectionId
+  if (!store) return <Loading />
+  if (sectionId) defaultValues.sectionsAssigned = [sectionId]
   return (
     <ScrollView style={{ width: '100%' }}>
       <View style={gStyles.container}>
@@ -34,11 +40,7 @@ const ScreenStaffNew = () => {
         {!!user && <CardUser user={user} />}
         {!!user && (
           <FormStaff
-            defaultValues={{
-              userId: user.id,
-              position: user.name,
-              name: user.name || ''
-            }}
+            defaultValues={defaultValues}
             onSubmit={async (values) => {
               const newStaff: CreateStaffType = {
                 // name: user.name || '',
@@ -48,10 +50,12 @@ const ScreenStaffNew = () => {
                 storeId: store.id,
                 userId: user.id || ''
               }
-              ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
-                setUser(undefined)
-                navigate('Staff')
-              })
+              console.log({ newStaff })
+              // ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
+              //   console.log({ res })
+              //   setUser(undefined)
+              //   goBack()
+              // })
             }}
           />
         )}
