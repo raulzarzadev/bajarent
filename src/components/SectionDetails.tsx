@@ -10,29 +10,21 @@ import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import Tabs from './Tabs'
 import ListOrders from './ListOrders'
+import ErrorBoundary from './ErrorBoundary'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
-
   const navigation = useNavigation()
-  const handleAddStaff = (staffId: string) => {
-    ServiceSections.addStaff(section?.id, staffId)
-  }
+
   const handleRemoveStaff = (staffId: string) => {
-    console.log('secttion', section?.id)
-    // ServiceSections.removeStaff(section?.id, staffId)
-    //   .then((res) => console.log(res))
-    //   .catch((e) => console.log(e))
+    ServiceSections.removeStaff(section?.id, staffId)
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e))
   }
 
-  const handleSelectStaff = (staffId: string) => {
-    if (section?.staff?.includes(staffId)) {
-      handleRemoveStaff(staffId)
-    } else {
-      handleAddStaff(staffId)
-    }
-  }
-
+  const staffSection = section?.staff?.map((staffId) =>
+    staff?.find((s) => s?.id === staffId)
+  )
   const orders = []
   const reports = []
 
@@ -83,7 +75,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
             title: 'Staff',
             content: (
               <ListStaff
-                staff={staff}
+                staff={staffSection}
                 sectionId={section.id}
                 handleSubtract={(staffId) => {
                   handleRemoveStaff(staffId)
@@ -109,6 +101,12 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
 }
 
 export default SectionDetails
+
+export const SectionDetailsE = (props) => (
+  <ErrorBoundary componentName="SectionDetails">
+    <SectionDetails {...props} />
+  </ErrorBoundary>
+)
 
 const styles = StyleSheet.create({
   title: {

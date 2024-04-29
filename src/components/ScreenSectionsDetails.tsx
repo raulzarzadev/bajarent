@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
-import SectionDetails from './SectionDetails'
+import { SectionDetailsE } from './SectionDetails'
 import Loading from './Loading'
 
 const ScreenSectionsDetails = ({ route }) => {
@@ -11,7 +11,7 @@ const ScreenSectionsDetails = ({ route }) => {
   if (!section) return <Loading />
   return (
     <View style={styles.container}>
-      <SectionDetails section={section} />
+      <SectionDetailsE section={section} />
     </View>
   )
 }
