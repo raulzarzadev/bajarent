@@ -13,5 +13,5 @@ const localCache = true ? persistentLocalCache() : memoryLocalCache()
 const firebaseConfig = process.env.FIREBASE_CONFIG || ''
 export const app = initializeApp(JSON.parse(firebaseConfig))
 export const db = initializeFirestore(app, {
-  localCache
+  localCache: persistentLocalCache()
 })

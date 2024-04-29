@@ -100,11 +100,15 @@ const ScreenStaffNew = ({ route }) => {
               goBack()
             })
           }}
-          handleAdd={async (rowId) => {
-            await ServiceSections.addStaff(sectionId, rowId)
-              .then((res) => console.log(res))
-              .catch((err) => console.log(err))
-          }}
+          handleAdd={
+            sectionId
+              ? async (rowId) => {
+                  await ServiceSections.addStaff(sectionId, rowId)
+                    .then((res) => console.log(res))
+                    .catch((err) => console.log(err))
+                }
+              : undefined
+          }
         />
       </View>
     </ScrollView>

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import List from './List'
 import { useNavigation } from '@react-navigation/native'
@@ -42,7 +42,13 @@ const ListStaff = ({
         sideButtons={[
           {
             icon: 'add',
-            onPress: () => navigate('ScreenStaffNew', { sectionId }),
+            onPress: () => {
+              //@ts-ignore
+              navigate('StackStaff', {
+                screen: 'ScreenStaffNew',
+                params: { sectionId }
+              })
+            },
             label: 'Add',
             visible: showNewStaff ? true : false
           }

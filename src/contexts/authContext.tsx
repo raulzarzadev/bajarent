@@ -72,7 +72,6 @@ const AuthContextProvider = ({ children }) => {
   }
 
   const fetchStore = async (newStoreId?: string) => {
-    console.log('fetching Store', newStoreId)
     getFullStoreData(newStoreId || storeId).then((storeData) => {
       setStore(storeData)
     })

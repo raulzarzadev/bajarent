@@ -67,18 +67,6 @@ function StackSections() {
         }}
         component={ScreenSectionsEdit}
       />
-      {/* 
-      ******************************************** 
-            STAFF                
-      *******************************************rz 
-       */}
-      <Stack.Screen
-        name="ScreenStaff"
-        options={{
-          title: 'Staff'
-        }}
-        component={StackStaff}
-      />
     </Stack.Navigator>
   )
 }
