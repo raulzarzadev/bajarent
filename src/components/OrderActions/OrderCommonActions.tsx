@@ -12,6 +12,7 @@ import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
+import ButtonCopyRow from './ButtonCopyRow'
 
 const OrderCommonActions = ({
   storeId,
@@ -53,6 +54,7 @@ const OrderCommonActions = ({
   const canAssign = actionsAllowed.canAssign
   const canExtend = actionsAllowed.canExtend
   const canRenew = actionsAllowed.canRenew
+  const canCopy = true
 
   const handleReorder = () => {
     // @ts-ignore
@@ -161,7 +163,8 @@ const OrderCommonActions = ({
           return await handleCancel()
         }}
       />
-    )
+    ),
+    canCopy && <ButtonCopyRow orderId={orderId} />
   ]
   return (
     <View>
