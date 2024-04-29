@@ -9,6 +9,7 @@ const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
 
   return (
     <Button
+      disabled={disabled}
       onPress={async () => {
         setDisabled(true)
         if (orderId) {
