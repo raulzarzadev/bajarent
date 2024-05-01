@@ -18,7 +18,7 @@ const BottomAppBar = () => {
   const {
     permissions: { isAdmin, isOwner, orders }
   } = useEmployee()
-
+  console.log({ isAdmin, isOwner, orders })
   const canSeeOrders = orders.canViewAll || isAdmin || isOwner
   const canCreateOrder = orders.canCreate || isAdmin || isOwner
   const canSeeMyOrders = !!orders?.canViewMy

@@ -18,33 +18,32 @@ const ScreenStore = (props) => {
   const canViewSections = isAdmin || isOwner
   const canViewCashbox = isAdmin || isOwner
   const canViewStoreNumbers = isAdmin || isOwner
-  //console.log({ store, isAdmin, isOwner, user })
-  console.log({ store })
-  if (!canViewCashbox && !canViewSections && !canViewOrders) return null //<- if have no permissions, return null
 
   return (
     <View>
-      <StoreDetailsE store={store} {...props} />
-      {canViewStoreNumbers && <StoreNumbersRow />}
-      <Tabs
-        tabs={[
-          {
-            title: 'Ordenes',
-            content: <TabOrders />,
-            show: canViewOrders
-          },
-          {
-            title: 'Areas',
-            content: <TabAreas />,
-            show: canViewSections
-          },
-          {
-            title: 'Caja',
-            content: <TabCashbox />,
-            show: canViewCashbox
-          }
-        ]}
-      />
+      {user && <StoreDetailsE store={store} {...props} />}
+      {user && canViewStoreNumbers && <StoreNumbersRow />}
+      {user && (canViewCashbox || canViewSections || canViewOrders) && (
+        <Tabs
+          tabs={[
+            {
+              title: 'Ordenes',
+              content: <TabOrders />,
+              show: canViewOrders
+            },
+            {
+              title: 'Areas',
+              content: <TabAreas />,
+              show: canViewSections
+            },
+            {
+              title: 'Caja',
+              content: <TabCashbox />,
+              show: canViewCashbox
+            }
+          ]}
+        />
+      )}
     </View>
   )
 }
