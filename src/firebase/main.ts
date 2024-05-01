@@ -2,16 +2,24 @@ import { initializeApp } from 'firebase/app'
 import {
   memoryLocalCache,
   initializeFirestore,
-  persistentLocalCache
+  persistentLocalCache,
+  connectFirestoreEmulator
 } from 'firebase/firestore'
 
 // use persistentLocalCache always
-const localCache = true ? persistentLocalCache() : memoryLocalCache()
+const USE_PERSISTANCE_CACHE = true
+export const USE_EMULATOR = true
 // use memoryLocalCache for development and persistentLocalCache for production
 // const localCache = __DEV__ ? persistentLocalCache() : memoryLocalCache()
 
 const firebaseConfig = process.env.FIREBASE_CONFIG || ''
 export const app = initializeApp(JSON.parse(firebaseConfig))
 export const db = initializeFirestore(app, {
-  localCache: persistentLocalCache()
+  localCache: USE_PERSISTANCE_CACHE
+    ? persistentLocalCache()
+    : memoryLocalCache()
 })
+if (USE_EMULATOR) {
+  console.log('connecting to emulator')
+  connectFirestoreEmulator(db, '127.0.0.1', 9098)
+}
