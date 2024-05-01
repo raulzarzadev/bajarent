@@ -41,6 +41,15 @@ const ScreenStaff = ({ navigation }) => {
             setStaffId(staffId)
             modal.toggleOpen()
           }}
+          handleEdit={
+            //@ts-ignore
+            (staffId: string) => {
+              navigation.navigate('StackStaff', {
+                screen: 'ScreenStaffEdit',
+                params: { staffId }
+              })
+            }
+          }
           // hideActions
         />
         <StyledModal {...modal}>

@@ -30,6 +30,9 @@ export const EmployeeContextProvider = ({ children }) => {
       ({ userId }) =>
         (user?.id && userId === user?.id) || user?.id === store?.createdBy
     )
+    const isOwner = store?.createdBy === user?.id
+    setIsOwner(store?.createdBy === user?.id)
+
     if (employee) {
       //* set employee whit store sections where he is assigned
       const sectionsAssigned =
@@ -39,9 +42,7 @@ export const EmployeeContextProvider = ({ children }) => {
       //* make sure that id is the id of staff not the user
       setEmployee({ ...employee, ...user, id: employee?.id, sectionsAssigned })
       setIsAdmin(employee?.permissions?.isAdmin)
-      setIsOwner(store?.createdBy === user?.id)
     } else {
-      setIsOwner(false)
       setEmployee(null)
       setIsAdmin(false)
     }

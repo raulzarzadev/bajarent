@@ -59,8 +59,6 @@ const StoreContextProvider = ({ children }) => {
     }
   } = useEmployee2()
 
-  console.log({ employee })
-
   const [reports, setReports] = useState<CommentType[]>([])
   const [justActiveOrders, setJustActiveOrders] = useState<boolean>(true)
 
@@ -144,7 +142,6 @@ const StoreContextProvider = ({ children }) => {
   }
 
   //#region render
-  console.log({ allOrders })
 
   return (
     <StoreContext.Provider

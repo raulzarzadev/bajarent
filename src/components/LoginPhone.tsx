@@ -45,7 +45,9 @@ const PhoneLogin = () => {
       })
       .catch((error) => {
         setError(
-          `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code}`
+          `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code} ${
+            __DEV__ ? fbErrorToCode(error).text : ''
+          }`
         )
 
         // User couldn't sign in (bad verification code?)
@@ -78,7 +80,9 @@ const PhoneLogin = () => {
           // Error; SMS not sent
           // ...
           setError(
-            `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code}`
+            `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code} ${
+              __DEV__ ? fbErrorToCode(error).text : ''
+            }`
           )
         })
         .finally(() => {

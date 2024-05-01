@@ -10,7 +10,7 @@ import { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 
 const ScreenStore = (props) => {
-  const { store } = useStore()
+  const { store, user } = useAuth()
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
@@ -18,7 +18,8 @@ const ScreenStore = (props) => {
   const canViewSections = isAdmin || isOwner
   const canViewCashbox = isAdmin || isOwner
   const canViewStoreNumbers = isAdmin || isOwner
-
+  //console.log({ store, isAdmin, isOwner, user })
+  console.log({ store })
   if (!canViewCashbox && !canViewSections && !canViewOrders) return null //<- if have no permissions, return null
 
   return (

@@ -43,7 +43,7 @@ const AuthContextProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialAutState)
   const [storeId, setStoreId] = useState<string>('')
   const [stores, setStores] = useState<StoreType[]>([])
-  const [store, setStore] = useState<StoreType>(null)
+  const [store, setStore] = useState<StoreType | null>(undefined)
 
   useEffect(() => {
     authStateChanged((user) => {
@@ -62,13 +62,22 @@ const AuthContextProvider = ({ children }) => {
       })
       fetchStore(storeId)
     }
+    if (!auth.isAuthenticated) {
+      setStore(null)
+      setStores([])
+    }
   }, [auth.user])
 
   const handleSetStoreId = async (storeId: string) => {
-    setStoreId(storeId)
-    setItem('storeId', storeId) //*<- save the storeId in localStorage
-
-    fetchStore(storeId)
+    if (storeId) {
+      setStoreId(storeId)
+      setItem('storeId', storeId) //*<- save the storeId in localStorage
+      fetchStore(storeId)
+    } else {
+      setStoreId('')
+      setItem('storeId', '') //*<- save the storeId in localStorage
+      setStore(null)
+    }
   }
 
   const fetchStore = async (newStoreId?: string) => {
@@ -94,7 +103,6 @@ const AuthContextProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 console.log(Platform.OS)
-
 export const useAuth = () => {
   return useContext(AuthContext)
 }

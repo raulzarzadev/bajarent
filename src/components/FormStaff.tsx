@@ -1,10 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
-import { useStore } from '../contexts/storeContext'
+import ErrorBoundary from './ErrorBoundary'
+import FormikCheckbox from './FormikCheckbox'
+import dictionary from '../dictionary'
+const screenWidth = Dimensions.get('window').width
+import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
 import { gStyles } from '../styles'
+
+const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
 
 const FormStaff = ({
   defaultValues = {},
@@ -19,15 +25,16 @@ const FormStaff = ({
   }
   onSubmit?: (values: any) => Promise<void>
 }) => {
-  const { staff } = useStore()
-  const alreadyAreStaff = staff.find((s) => s.userId === defaultValues.userId)
+  // TODO: move this to add staff
+  // const { staff } = useStore()
+  // const alreadyAreStaff = staff.find((s) => s.userId === defaultValues.userId)
 
-  if (alreadyAreStaff)
-    return (
-      <Text style={[gStyles.h3, { marginVertical: 8 }]}>
-        Este usuario ya es parte de tu staff
-      </Text>
-    )
+  // if (alreadyAreStaff)
+  //   return (
+  //     <Text style={[gStyles.h3, { marginVertical: 8 }]}>
+  //       Este usuario ya es parte de tu staff
+  //     </Text>
+  //   )
 
   return (
     <Formik
@@ -36,8 +43,11 @@ const FormStaff = ({
         await onSubmit(values).then(console.log).catch(console.error)
       }}
     >
-      {({ handleSubmit }) => (
+      {({ handleSubmit, isSubmitting, setSubmitting }) => (
         <View style={styles.form}>
+          {/*
+           *** *** *** INFORMATION
+           */}
           <View style={styles.input}>
             <FormikInputValue
               name={'position'}
@@ -46,11 +56,55 @@ const FormStaff = ({
             />
           </View>
 
+          {/*
+           *** *** *** PERMISSIONS
+           */}
+          <Text>Permisos especiales</Text>
+          <View>
+            <FormikCheckbox
+              style={{ width: checkboxWidth, marginVertical: 4 }}
+              name={`permissions.isAdmin`}
+              label={'Admin'}
+            />
+
+            <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
+              Permisos de ordenes
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {permissionsOrderKeys.map((permission) => (
+                <FormikCheckbox
+                  style={{ width: checkboxWidth, marginVertical: 4 }}
+                  key={permission}
+                  name={`permissions.order.${permission}`}
+                  label={dictionary(permission)}
+                />
+              ))}
+            </View>
+            <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
+              Permisos de tienda
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {permissionsStoreKeys.map((permission) => (
+                <FormikCheckbox
+                  style={{ width: checkboxWidth, marginVertical: 4 }}
+                  key={permission}
+                  name={`permissions.store.${permission}`}
+                  label={dictionary(permission)}
+                />
+              ))}
+            </View>
+          </View>
+
           <View style={styles.input}>
             <Button
-              onPress={handleSubmit}
-              label={'Guardar'}
-              disabled={!!alreadyAreStaff}
+              disabled={isSubmitting}
+              label="Actualizar información"
+              onPress={() => {
+                handleSubmit()
+                setTimeout(() => {
+                  setSubmitting(false)
+                }, 2000) //<- two seconds
+              }}
             />
           </View>
         </View>
@@ -58,6 +112,12 @@ const FormStaff = ({
     </Formik>
   )
 }
+
+export const FormStaffE = (props) => (
+  <ErrorBoundary componentName="FormStaff">
+    <FormStaff {...props} />
+  </ErrorBoundary>
+)
 
 export default FormStaff
 

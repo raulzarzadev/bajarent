@@ -25,19 +25,25 @@ const EmployeePermissions = ({ staff }: { staff: Partial<StaffType> }) => {
     !orderPermissionsAllowed?.length &&
     !storePermissionsAllowed?.length
   ) {
-    return <Text style={gStyles.p}>Este usuario no tiene permisos</Text>
+    return (
+      <Text style={[gStyles.p, { textAlign: 'center', marginVertical: 16 }]}>
+        Este usuario no tiene permisos
+      </Text>
+    )
   }
 
   return (
     <View style={{ maxWidth: 500, marginHorizontal: 'auto' }}>
       <Text style={gStyles.h3}>Permisos de empleado</Text>
-      {isAdmin && (
-        <Chip
-          color={theme.secondary}
-          titleColor="white"
-          title={dictionary('isAdmin')}
-        ></Chip>
-      )}
+      <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
+        {isAdmin && (
+          <Chip
+            color={theme.secondary}
+            titleColor="white"
+            title={dictionary('isAdmin')}
+          ></Chip>
+        )}
+      </View>
       {!!orderPermissionsAllowed?.length && (
         <Text style={gStyles.h3}>Ordenes</Text>
       )}

@@ -85,31 +85,38 @@ const ScreenStaffNew = ({ route }) => {
         )}
       </View>
       <View>
-        {sectionId ? (
-          <Text style={gStyles.h3}>
-            O agrega a una persona que ya es Staff{' '}
-          </Text>
-        ) : (
-          <Text style={gStyles.h3}>Staff actual</Text>
+        {staffNotInSection?.length > 0 && (
+          <>
+            {sectionId ? (
+              <Text style={gStyles.h3}>
+                O agrega a una persona que ya es Staff{' '}
+              </Text>
+            ) : (
+              <Text style={gStyles.h3}>Staff actual</Text>
+            )}
+            <ListStaff
+              showNewStaff={false}
+              staff={staffNotInSection}
+              onPressRow={(staffId) => {
+                ServiceSections.addStaff(sectionId, staffId).then(() => {
+                  goBack()
+                })
+              }}
+              handleAdd={
+                sectionId
+                  ? async (rowId) => {
+                      await ServiceSections.addStaff(sectionId, rowId)
+                        .then((res) => {
+                          goBack()
+                          console.log(res)
+                        })
+                        .catch((err) => console.log(err))
+                    }
+                  : undefined
+              }
+            />
+          </>
         )}
-        <ListStaff
-          showNewStaff={false}
-          staff={staffNotInSection}
-          onPressRow={(staffId) => {
-            ServiceSections.addStaff(sectionId, staffId).then(() => {
-              goBack()
-            })
-          }}
-          handleAdd={
-            sectionId
-              ? async (rowId) => {
-                  await ServiceSections.addStaff(sectionId, rowId)
-                    .then((res) => console.log(res))
-                    .catch((err) => console.log(err))
-                }
-              : undefined
-          }
-        />
       </View>
     </ScrollView>
   )

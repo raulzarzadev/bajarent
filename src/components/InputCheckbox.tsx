@@ -9,7 +9,8 @@ const InputCheckbox = ({
   value = false,
   style,
   textStyle,
-  color
+  color,
+  disabled
 }: {
   label: string
   setValue: (value: boolean) => void
@@ -17,6 +18,7 @@ const InputCheckbox = ({
   style?: ViewStyle
   textStyle?: TextStyle
   color?: string
+  disabled?: boolean
 }) => {
   const componentId = createId()
   const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1)
@@ -36,7 +38,11 @@ const InputCheckbox = ({
     <BouncyCheckbox
       key={key}
       fillColor={color}
-      style={[{ marginHorizontal: 'auto' }, style]}
+      style={[
+        { marginHorizontal: 'auto' },
+        style,
+        disabled ? { opacity: 0.4 } : {}
+      ]}
       textStyle={[
         {
           textDecorationLine: 'none'
@@ -45,6 +51,7 @@ const InputCheckbox = ({
         textStyle
       ]}
       isChecked={isChecked}
+      disabled={disabled}
       onPress={(isChecked: boolean) => {
         handlePress(isChecked)
       }}

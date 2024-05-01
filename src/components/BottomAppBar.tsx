@@ -9,10 +9,12 @@ import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
 import { useEmployee } from '../contexts/employeeContext2'
+import { useAuth } from '../contexts/authContext'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
+  const { isAuthenticated } = useAuth()
   const {
     permissions: { isAdmin, isOwner, orders }
   } = useEmployee()
@@ -70,7 +72,8 @@ const BottomAppBar = () => {
         options={{
           title: 'Ordenes',
           headerShown: false,
-          tabBarButton: !canSeeOrders ? () => null : undefined
+          tabBarButton:
+            !canSeeOrders || !isAuthenticated ? () => null : undefined
         }}
       />
 
@@ -82,7 +85,8 @@ const BottomAppBar = () => {
           headerRight(props) {
             return <MyStaffLabel />
           },
-          tabBarButton: !canCreateOrder ? () => null : undefined
+          tabBarButton:
+            !canCreateOrder || !isAuthenticated ? () => null : undefined
         }}
       />
       <Tab.Screen
@@ -91,7 +95,8 @@ const BottomAppBar = () => {
         options={{
           title: 'Mis ordenes',
           headerShown: false,
-          tabBarButton: !canSeeMyOrders ? () => null : undefined
+          tabBarButton:
+            !canSeeMyOrders || !isAuthenticated ? () => null : undefined
         }}
       />
       <Tab.Screen
