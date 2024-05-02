@@ -19,12 +19,12 @@ import Icon from './Icon'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
-  const { navigate } = useNavigation()
-  const modalPayments = useModal({ title: 'Pagos' })
-  const { card, cash, total, transfers } = balanceTotals(balance)
-  const paidOrdersIds = balance?.payments.map((p) => p.orderId)
-  const uniquePaidOrdersIds = [...new Set(paidOrdersIds)]
-
+  const { total } = balanceTotals(balance)
+  const cashPayments = balance?.payments.filter((p) => p.method === 'cash')
+  const cardPayments = balance?.payments.filter((p) => p.method === 'card')
+  const transferPayments = balance?.payments.filter(
+    (p) => p.method === 'transfer'
+  )
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
@@ -69,20 +69,19 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
       >
         <View style={styles.totals}>
           <View style={styles.row}>
-            <Text style={[styles.label]}>Efectivo: </Text>
-            <CurrencyAmount style={styles.amount} amount={cash} />
+            <LinkPayments payments={cashPayments} title={'Efectivo'} />
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Transferencia: </Text>
-            <CurrencyAmount style={styles.amount} amount={transfers} />
+            <LinkPayments
+              payments={transferPayments}
+              title={'Transferencias'}
+            />
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Tarjeta: </Text>
-            <CurrencyAmount style={styles.amount} amount={card} />
+            <LinkPayments payments={cardPayments} title={'Tarjetas'} />
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Retiros: </Text>
-            <CurrencyAmount style={styles.amount} amount={-0} />
+            <LinkPayments payments={[]} title={'Retiros'} />
           </View>
           <View
             style={{
@@ -106,7 +105,7 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           <ModalOrders
             modalTitle="creadas"
             buttonLabel="Creadas"
-            ordersIds={uniquePaidOrdersIds}
+            ordersIds={balance.ordersDelivered}
           />
           <ModalOrders
             modalTitle=" entregadas"
@@ -126,6 +125,29 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         </View>
       </View>
     </View>
+  )
+}
+
+const LinkPayments = ({ title, payments }) => {
+  const amount = payments.reduce((acc, p) => acc + p.amount, 0)
+  const ids = payments.map(({ id }) => id)
+  const { navigate } = useNavigation()
+  return (
+    <>
+      <Pressable
+        onPress={() => {
+          navigate('PaymentsList', {
+            payments: ids,
+            title
+          })
+        }}
+      >
+        <Text style={[styles.label, { textDecorationLine: 'underline' }]}>
+          {title}:{' '}
+        </Text>
+      </Pressable>
+      <CurrencyAmount style={styles.amount} amount={amount} />
+    </>
   )
 }
 

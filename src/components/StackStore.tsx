@@ -25,6 +25,7 @@ import ScreenOrderRenew from './ScreenOrderRenew'
 import { ScreenStoreE } from './ScreenStore4'
 import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenOrders from './ScreenOrders'
+import PaymentsList from './PaymentsList'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -205,11 +206,21 @@ function StackStore() {
       <Stack.Screen
         options={({ route }) => ({
           //@ts-ignore
+          title: route?.params?.title || 'Pagos'
+        })}
+        name="PaymentsList"
+        component={ScreenPayments}
+      />
+
+      <Stack.Screen
+        options={({ route }) => ({
+          //@ts-ignore
           title: route?.params?.title || 'Ordenes'
         })}
         name="OrdersList"
         component={ScreenOrders}
       />
+
       <Stack.Screen
         name="OrderDetails"
         options={{
