@@ -62,7 +62,7 @@ const StoreNumbersRow = () => {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       <Button
-        label={`Folio: ${currentFolio}`}
+        label={`Folio: ${currentFolio || 0}`}
         onPress={() => {
           console.log('folio')
         }}
