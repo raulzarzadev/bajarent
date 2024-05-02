@@ -133,6 +133,7 @@ const LinkPayments = ({ title, payments = [] }) => {
     <>
       <Pressable
         onPress={() => {
+          //@ts-ignore
           navigate('PaymentsList', {
             payments: ids,
             title
