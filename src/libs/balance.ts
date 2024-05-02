@@ -77,7 +77,7 @@ export const balanceOrders = async ({
     where('status', '==', order_status.RENEWED)
   ])
 
-  console.log({ createdOrders, pickedUpOrders, deliveredOrders, renewedOrders })
+  //console.log({ createdOrders, pickedUpOrders, deliveredOrders, renewedOrders })
 
   ordersCreated = [...createdOrders]
 

@@ -4,9 +4,6 @@ import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
 import ErrorBoundary from './ErrorBoundary'
 import { gSpace, gStyles } from '../styles'
-import PaymentsList from './PaymentsList'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
 import Button from './Button'
 import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
@@ -105,22 +102,22 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           <ModalOrders
             modalTitle="creadas"
             buttonLabel="Creadas"
-            ordersIds={balance.ordersCreated}
+            ordersIds={balance?.ordersCreated}
           />
           <ModalOrders
             modalTitle=" entregadas"
             buttonLabel="Entregadas"
-            ordersIds={balance.ordersDelivered}
+            ordersIds={balance?.ordersDelivered}
           />
           <ModalOrders
             modalTitle=" Recogidas"
             buttonLabel="Recogidas"
-            ordersIds={balance.ordersPickup}
+            ordersIds={balance?.ordersPickup}
           />
           <ModalOrders
             modalTitle=" Renovadas"
             buttonLabel="Renovadas"
-            ordersIds={balance.ordersRenewed}
+            ordersIds={balance?.ordersRenewed}
           />
         </View>
       </View>
@@ -128,8 +125,8 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   )
 }
 
-const LinkPayments = ({ title, payments }) => {
-  const amount = payments.reduce((acc, p) => acc + p.amount, 0)
+const LinkPayments = ({ title, payments = [] }) => {
+  const amount = payments?.reduce((acc, p) => acc + (p?.amount || 0), 0)
   const ids = payments.map(({ id }) => id)
   const { navigate } = useNavigation()
   return (

@@ -7,7 +7,6 @@ import PaymentType from '../types/PaymentType'
 export default function ScreenPayments({ navigation, route }) {
   const { payments } = useStore()
   const preList = route?.params?.payments || null
-  console.log({ preList })
   const [fullPayments, setFullPayments] = useState<PaymentType[]>([])
   useEffect(() => {
     if (preList) {
