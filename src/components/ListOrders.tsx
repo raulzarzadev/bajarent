@@ -31,7 +31,8 @@ const ListOrders = ({
         navigate('NewOrder')
       }}
       sortFields={[
-        { key: 'priority', label: 'Prioridad' },
+        //{ key: 'priority', label: 'Prioridad' },
+        { key: 'note', label: 'Nota' },
         { key: 'folio', label: 'Folio' },
         { key: 'fullName', label: 'Nombre' },
         { key: 'neighborhood', label: 'Colonia' },
