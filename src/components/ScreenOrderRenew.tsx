@@ -51,15 +51,18 @@ const ScreenOrderRenew = ({ route }) => {
           ...order,
           status: order_status.DELIVERED,
           deliveredAt: order.expireAt,
-          renewedAt: new Date(),
+          // renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
           renewedFrom: orderId
         }
         // @ts-ignore
         await ServiceOrders.createSerialOrder(renewedOrder)
           .then((newOrderId) => {
             if (newOrderId)
+              //* update the original order status
               ServiceOrders.update(orderId, {
-                status: order_status.RENEWED
+                status: order_status.RENEWED,
+                renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
+                renewedTo: newOrderId
               })
 
             // * Add comment to the new order

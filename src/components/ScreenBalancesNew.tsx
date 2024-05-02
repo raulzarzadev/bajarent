@@ -9,6 +9,7 @@ import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
 import { balanceOrders } from '../libs/balance'
 import { useAuth } from '../contexts/authContext'
+import { gStyles } from '../styles'
 
 const ScreenBalancesNew = ({ navigation }) => {
   const { payments, storeId, orders, store } = useStore()
@@ -28,16 +29,10 @@ const ScreenBalancesNew = ({ navigation }) => {
     return paymentsInDateRange
   }
 
-  const getBalanceOrders = async (
-    values: BalanceType
-  ): Promise<BalanceOrders> => {
-    return balanceOrders({ values, orders })
-  }
-
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
       const payments = await getBalancePayments(values)
-      const orders = await getBalanceOrders(values)
+      const orders = await balanceOrders({ values })
       setBalance({
         ...values,
         payments,
@@ -64,20 +59,23 @@ const ScreenBalancesNew = ({ navigation }) => {
 
   return (
     <ScrollView>
-      <FormBalance
-        onSubmit={handleCalculateBalance}
-        handleClear={handleClear}
-      />
-      {!!balance && <BalanceInfo balance={balance} hideMetadata />}
-      {!!balance && (
-        <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
-          <Button
-            disabled={saving}
-            label="Guardar"
-            onPress={handleSaveBalance}
-          ></Button>
-        </View>
-      )}
+      <View style={gStyles.container}>
+        <FormBalance
+          onSubmit={handleCalculateBalance}
+          handleClear={handleClear}
+        />
+
+        {!!balance && <BalanceInfo balance={balance} hideMetadata />}
+        {!!balance && (
+          <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
+            <Button
+              disabled={saving}
+              label="Guardar"
+              onPress={handleSaveBalance}
+            ></Button>
+          </View>
+        )}
+      </View>
     </ScrollView>
   )
 }

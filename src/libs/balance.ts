@@ -1,3 +1,5 @@
+import { where } from 'firebase/firestore'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
 import OrderType, { order_status } from '../types/OrderType'
 import { payment_methods } from '../types/PaymentType'
@@ -33,13 +35,13 @@ export const balanceTotals = (balance: BalanceType) => {
   }
 }
 
-export const balanceOrders = ({
-  values,
-  orders
-}: {
+export const balanceOrders = async ({
+  values
+}: //orders
+{
   values: BalanceType
-  orders: OrderType[]
-}): BalanceOrders => {
+  //orders: OrderType[]
+}): Promise<BalanceOrders> => {
   //* YOU CANT FILTER ORDERS BY USER OR DATE BECAUSE YOU ARE VALIDATING DIFFERENT THINGS
 
   let ordersCreated = []
@@ -50,37 +52,40 @@ export const balanceOrders = ({
   /* ******************************************** 
              FILTER BY DATE               
    *******************************************rz */
-  ordersCreated = [...orders].filter((o) => {
-    const createdAt = asDate(o?.createdAt)
-    return (
-      asDate(createdAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(createdAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
 
-  ordersPickup = [...orders].filter((o) => {
-    const pickedUpAt = asDate(o?.pickedUpAt)
-    return (
-      asDate(pickedUpAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(pickedUpAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
+  //*1 get orders creates from date
+  const createdOrders = await ServiceOrders.findMany([
+    where('createdAt', '>=', values.fromDate),
+    where('createdAt', '<=', values.toDate)
+  ])
 
-  ordersDelivered = [...orders].filter((o) => {
-    const deliveredAt = asDate(o?.deliveredAt)
-    return (
-      asDate(deliveredAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(deliveredAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
+  const pickedUpOrders = await ServiceOrders.findMany([
+    where('pickedUpAt', '>=', values.fromDate),
+    where('pickedUpAt', '<=', values.toDate),
+    where('status', '==', order_status.PICKED_UP)
+  ])
 
-  ordersRenewed = [...orders].filter((o) => {
-    const renewedAt = asDate(o?.renewedAt)
-    return (
-      asDate(renewedAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(renewedAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
+  const deliveredOrders = await ServiceOrders.findMany([
+    where('deliveredAt', '>=', values.fromDate),
+    where('deliveredAt', '<=', values.toDate),
+    where('status', '==', order_status.DELIVERED)
+  ])
+
+  const renewedOrders = await ServiceOrders.findMany([
+    where('renewedAt', '>=', values.fromDate),
+    where('renewedAt', '<=', values.toDate),
+    where('status', '==', order_status.RENEWED)
+  ])
+
+  console.log({ createdOrders, pickedUpOrders, deliveredOrders, renewedOrders })
+
+  ordersCreated = [...createdOrders]
+
+  ordersPickup = [...pickedUpOrders]
+
+  ordersDelivered = [...deliveredOrders]
+
+  ordersRenewed = [...renewedOrders]
 
   /* ******************************************** 
              FILTER BY USER               
