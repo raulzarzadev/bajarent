@@ -64,9 +64,9 @@ const ButtonConfirm = ({
         )}
         {children}
         <View style={styles.buttons}>
-          <Button buttonStyles={{}} onPress={modal.toggleOpen}>
+          {/* <Button buttonStyles={{}} onPress={modal.toggleOpen}>
             Cancelar
-          </Button>
+          </Button> */}
           <Button
             id={'confirmButton'}
             buttonStyles={{}}

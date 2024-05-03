@@ -153,12 +153,17 @@ const OrderCommonActions = ({
     canCancel && (
       <ButtonConfirm
         openLabel="Cancelar"
+        modalTitle="Cancelar orden"
         openVariant="outline"
         openColor="info"
-        confirmColor="info"
         openSize="small"
         icon="cancel"
-        text={'Cancelar orden'}
+        text={
+          'Cancelar orden. Si necesitas retomarla en cualquer momento debes tener permiso para autorizar ordenes o pidele a tu administrador que lo haga.  '
+        }
+        confirmLabel="Cancelar orden"
+        confirmVariant="outline"
+        confirmColor="info"
         handleConfirm={async () => {
           return await handleCancel()
         }}
