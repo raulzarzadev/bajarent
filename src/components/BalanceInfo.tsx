@@ -98,7 +98,13 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
 
       <View>
         <Text style={[gStyles.h2, { textAlign: 'left' }]}>Ordenes</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            flexWrap: 'wrap'
+          }}
+        >
           <ModalOrders
             modalTitle="creadas"
             buttonLabel="Creadas"
@@ -118,6 +124,11 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
             modalTitle=" Renovadas"
             buttonLabel="Renovadas"
             ordersIds={balance?.ordersRenewed}
+          />
+          <ModalOrders
+            modalTitle=" Canceladas"
+            buttonLabel="Canceladas"
+            ordersIds={balance?.ordersCancelled}
           />
         </View>
       </View>
