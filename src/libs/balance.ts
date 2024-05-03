@@ -1,9 +1,8 @@
 import { where } from 'firebase/firestore'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
-import OrderType, { order_status } from '../types/OrderType'
+import { order_status } from '../types/OrderType'
 import { payment_methods } from '../types/PaymentType'
-import asDate from './utils-date'
 
 export const balanceTotal = (balance: BalanceType) =>
   balance?.payments?.reduce((acc, p) => acc + p.amount, 0)
