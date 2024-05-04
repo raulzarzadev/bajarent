@@ -29,11 +29,7 @@ import { useStore } from '../../contexts/storeContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
-import FormikSelectItems from '../FormikSelectItems'
 import FormikSelectCategories from '../FormikSelectCategories'
-import InputTextStyled from '../InputTextStyled'
-import InputCount from '../InputCount'
-import { useState } from 'react'
 
 // #region ENUM ACTIONS
 enum acts {
