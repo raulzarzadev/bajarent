@@ -15,6 +15,7 @@ import { CategoryType } from '../types/RentItem'
 import { ServiceCategories } from '../firebase/ServiceCategories'
 import useOrders from './useOrders'
 import { useAuth } from '../contexts/authContext'
+import { ServiceUsers } from '../firebase/ServiceUser'
 
 function useStoreDataListen({ storeId }: { storeId: string }) {
   const { user } = useAuth()
@@ -41,8 +42,8 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     if (store && user) {
       //* LISTENERS
 
-      ServiceStaff.listenByStore(store.id, (staff) => {
-        const owner = { ...user }
+      ServiceStaff.listenByStore(store.id, async (staff) => {
+        const owner = await ServiceUsers.get(store.createdBy)
         staff.push(owner)
         setStaff(staff)
       })

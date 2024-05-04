@@ -74,7 +74,13 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     fetchOrders()
-  }, [employee, reports, justAssignedOrders, justActiveOrders])
+  }, [
+    employee,
+    reports,
+    justAssignedOrders,
+    justActiveOrders,
+    store?.currentFolio //*<--- we are ensure of this things , this smells like a shit... 😷
+  ])
 
   const fetchOrders = () => {
     if (viewAllOrders || isOwner) {

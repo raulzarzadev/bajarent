@@ -17,11 +17,11 @@ import { gSpace, gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
-import FormikSelectItems from './FormikSelectItems'
 import { extraFields } from './FormStore'
 import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
+import Loading from './Loading'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -158,6 +158,8 @@ const FormOrderA = ({
       `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`
   }
 
+  if (!store) return <Loading />
+  if (!defaultType) return <Loading />
   if (ordersTypesAllowed.length === 0)
     return (
       <>
@@ -173,7 +175,6 @@ const FormOrderA = ({
 
   //#region render
 
-  //const [orderFields, setOrderFields] = useState<OrderFields | null>(null)
   return (
     <ScrollView>
       <View style={gStyles.container}>

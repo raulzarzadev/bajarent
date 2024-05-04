@@ -9,11 +9,12 @@ import Loading from './Loading'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenStaff = ({ navigation }) => {
   const { store, fetchStore } = useAuth()
-
-  const staff = store?.staff || []
+  const { staff } = useStore()
+  // const staff = store?.staff || []
   const modal = useModal({ title: 'Eliminar empleado' })
 
   const [staffId, setStaffId] = useState('')

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import FormOrdersConfig from './FormOrdersConfig'
 import { gStyles } from '../styles'
@@ -10,6 +10,7 @@ const ScreenOrdersConfig = () => {
   const handleSubmit = async (values) => {
     try {
       const res = await ServiceStores.update(store.id, values)
+      console.log({ res })
       return res
     } catch (e) {
       console.error({ e })

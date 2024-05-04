@@ -60,7 +60,7 @@ const AuthContextProvider = ({ children }) => {
       ServiceStores.userStores(auth.user.id).then((res) => {
         setStores(res)
       })
-      fetchStore(storeId)
+      //ServiceStores.listen(storeId, setStore)
     }
     if (!auth.isAuthenticated) {
       setStore(null)
@@ -72,7 +72,7 @@ const AuthContextProvider = ({ children }) => {
     if (storeId) {
       setStoreId(storeId)
       setItem('storeId', storeId) //*<- save the storeId in localStorage
-      fetchStore(storeId)
+      ServiceStores.listen(storeId, setStore)
     } else {
       setStoreId('')
       setItem('storeId', '') //*<- save the storeId in localStorage
@@ -81,9 +81,9 @@ const AuthContextProvider = ({ children }) => {
   }
 
   const fetchStore = async (newStoreId?: string) => {
-    getFullStoreData(newStoreId || storeId).then((storeData) => {
-      setStore(storeData)
-    })
+    // getFullStoreData(newStoreId || storeId).then((storeData) => {
+    //   setStore(storeData)
+    // })
   }
 
   const value = useMemo(

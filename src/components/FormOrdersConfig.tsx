@@ -25,6 +25,7 @@ const FormOrdersConfig = ({
         initialValues={defaultValues}
         onSubmit={async (values) => {
           await onSubmit(values)
+          console.log('submitted')
           setIsSubmitting(false)
         }}
       >
