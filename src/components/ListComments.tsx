@@ -159,10 +159,6 @@ export const CommentRow = ({
         refetch?.({ id: commentId })
         // setDisabled(false)
       })
-
-    // setTimeout(() => {
-    //   setDisabled(false) //* <--- this is not aplaying because look like all list is re-rendering after refetch
-    // }, 6000)
   }
 
   const commentCreatedBy =
