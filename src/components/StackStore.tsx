@@ -15,7 +15,8 @@ import ScreenBalancesNew from './ScreenBalancesNew'
 import StackSections from './StackSections'
 import StackOrders from './StackOrders'
 import StackStaff from './StackStaff'
-import { ScreenStoreE } from './ScreenStore4'
+import { ScreenStoreE } from './ScreenStore5'
+import ScreenOrdersConfig from './ScreenOrdersConfig'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -64,6 +65,14 @@ function StackStore() {
           title: 'Editar Tienda'
         }}
         component={ScreenStoreEdit}
+      />
+
+      <Stack.Screen
+        name="ScreenOrdersConfig"
+        options={{
+          title: 'Configurar Ordenes'
+        }}
+        component={ScreenOrdersConfig}
       />
 
       {/* ******************************************** 

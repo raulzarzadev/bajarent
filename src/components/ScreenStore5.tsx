@@ -147,6 +147,7 @@ const TabAreas = () => {
 }
 
 const TabOrders = () => {
+  const { navigate } = useNavigation()
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       <Button
@@ -161,6 +162,8 @@ const TabOrders = () => {
         label="Configurar"
         onPress={() => {
           console.log('Configurar')
+
+          navigate('ScreenOrdersConfig')
         }}
         variant="ghost"
       />
