@@ -160,8 +160,8 @@ const baseStyles = StyleSheet.create({
     fontWeight: 'bold'
   },
   disabled: {
-    backgroundColor: 'lightgrey',
-    opacity: 0.2,
+    backgroundColor: 'gray',
+    opacity: 0.3,
     borderColor: 'transparent'
   }
 })

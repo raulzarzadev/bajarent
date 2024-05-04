@@ -3,6 +3,7 @@ import { RentItem } from './RentItem'
 import StoreType from './StoreType'
 import { CommentType } from './CommentType'
 import PaymentType from './PaymentType'
+import { TimePriceType } from './PriceType'
 
 type OrderBase = {
   type: TypeOfOrderType
@@ -103,6 +104,12 @@ type OrderBase = {
   payments: PaymentType[]
 
   priority?: number
+
+  /* ******************************************** 
+             Extend expire feature               
+   *******************************************rz */
+  extendReason?: string
+  extendTime?: TimePriceType
 }
 
 export enum order_status {

@@ -6,6 +6,7 @@ export type BalanceOrders = {
   ordersPickup?: string[]
   ordersDelivered?: string[]
   ordersRenewed?: string[]
+  ordersCancelled?: string[]
 }
 export type BalanceBase = {
   storeId: string

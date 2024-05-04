@@ -29,7 +29,6 @@ import { useStore } from '../../contexts/storeContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
-import FormikSelectItems from '../FormikSelectItems'
 import FormikSelectCategories from '../FormikSelectCategories'
 
 // #region ENUM ACTIONS
@@ -100,8 +99,6 @@ const OrderActions = ({
       } catch (error) {
         console.log(error)
       }
-      //* close modal once delivered
-      deliveryModal.toggleOpen()
     },
     [acts.PICKUP]: async () => {
       try {
@@ -190,7 +187,8 @@ const OrderActions = ({
     employeeOrderPermissions?.canAssign || isAdmin || isOwner
   const userCanReorder =
     employeeOrderPermissions?.canReorder || isAdmin || isOwner
-
+  const userCanExtend =
+    employeeOrderPermissions?.canExtend || isAdmin || isOwner
   /* ********************************************
    * ORDER ACTIONS ALLOWED
    *******************************************rz */
@@ -355,6 +353,12 @@ const OrderActions = ({
     (orderStatus === order_status.PENDING ||
       orderStatus === order_status.AUTHORIZED)
 
+  const canExtend =
+    isRent &&
+    userCanExtend &&
+    (orderStatus === order_status.DELIVERED ||
+      orderStatus === order_status.EXPIRED)
+
   const canReorder = userCanReorder
 
   const canEdit = userCanEdit
@@ -396,12 +400,14 @@ const OrderActions = ({
       <StyledModal {...deliveryModal}>
         <Formik
           initialValues={{ ...order }}
-          onSubmit={(values) => {
-            actions_fns[acts.DELIVER]({
+          onSubmit={async (values) => {
+            await actions_fns[acts.DELIVER]({
               location: values.location,
               itemSerial: values.itemSerial,
               items: values.items
             })
+
+            deliveryModal.setOpen(false)
           }}
           validate={(values: OrderType) => {
             const errors: Partial<OrderType> = {}
@@ -414,7 +420,7 @@ const OrderActions = ({
             return errors
           }}
         >
-          {({ errors, handleSubmit, values, setValues, isSubmitting }) => {
+          {({ errors, handleSubmit, isSubmitting }) => {
             return (
               <View>
                 <View style={{ marginVertical: 8 }}>
@@ -429,19 +435,6 @@ const OrderActions = ({
 
                 <View style={{ marginVertical: 8 }}>
                   <FormikSelectCategories name="items" selectPrice />
-                  {/* <FormikSelectItems
-                    name="items"
-                    label="Selecciona un artículo"
-                    categories={categories.map((cat) => ({
-                      ...cat
-                    }))}
-                    selectPrice
-                    startAt={values.scheduledAt}
-                    setItems={(items = []) => {
-                      console.log({ items })
-                    }}
-                    items={values.items || []}
-                  /> */}
                 </View>
 
                 <Button
@@ -449,7 +442,6 @@ const OrderActions = ({
                   label="Entregar"
                   onPress={() => {
                     handleSubmit()
-                    // actions_fns[acts.DELIVER]()
                   }}
                 />
               </View>
@@ -527,7 +519,8 @@ const OrderActions = ({
           canSendWS,
           canAuthorize,
           canAssign,
-          canReorder
+          canReorder,
+          canExtend
         }}
       />
     </View>

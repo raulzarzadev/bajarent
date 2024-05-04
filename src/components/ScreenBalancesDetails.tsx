@@ -4,6 +4,7 @@ import { ServiceBalances } from '../firebase/ServiceBalances'
 import { BalanceType } from '../types/BalanceType'
 import BalanceInfo from './BalanceInfo'
 import ButtonConfirm from './ButtonConfirm'
+import { gStyles } from '../styles'
 
 const ScreenBalancesDetails = ({ route, navigation }) => {
   const [balance, setBalance] = React.useState<BalanceType>(null)
@@ -14,9 +15,11 @@ const ScreenBalancesDetails = ({ route, navigation }) => {
     }
     fetchBalance()
   }, [])
+
+  if (!balance) return <View /> //*<-- this should be a loading spinner
   return (
     <ScrollView>
-      <View style={{ marginTop: 16 }}>
+      <View style={gStyles.container}>
         <BalanceInfo balance={balance} />
         <View
           style={{

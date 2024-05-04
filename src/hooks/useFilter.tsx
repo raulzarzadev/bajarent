@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+export type Filter = { field: string; value: string | number | boolean }
+
 export default function useFilter<T extends { id?: string }>({
   data = []
 }: {
@@ -9,9 +11,7 @@ export default function useFilter<T extends { id?: string }>({
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
   )
-  const [filtersBy, setFiltersBy] = useState<
-    { field: string; value: string | number | boolean }[]
-  >([])
+  const [filtersBy, setFiltersBy] = useState<Filter[]>([])
   const cleanFilter = () => {
     setFilteredBy('')
     setFilteredData(data)
@@ -50,11 +50,7 @@ export default function useFilter<T extends { id?: string }>({
       )
       filters = cleanFilter
       setFiltersBy(filters)
-      const res = [...data].filter((order) => {
-        return filters.every((filter) => {
-          return order[filter.field] === filter.value
-        })
-      })
+      const res = filterDataByFields(data, filters)
       setFilteredData(res)
       return
     }
@@ -64,11 +60,7 @@ export default function useFilter<T extends { id?: string }>({
       const cleanFilter = [...filters].filter((a) => !(a.field === field))
       filters = [...cleanFilter, { field, value }]
       setFiltersBy(filters)
-      const res = [...data].filter((order) => {
-        return filters.every((filter) => {
-          return order[filter.field] === filter.value
-        })
-      })
+      const res = filterDataByFields(data, filters)
       setFilteredData(res)
       return
     }
@@ -76,18 +68,20 @@ export default function useFilter<T extends { id?: string }>({
     //* if similar or same fails add it
     filters = [...filtersBy, { field, value }]
     setFiltersBy(filters)
-    const res = [...data].filter((order) => {
-      return filters.every((filter) => {
-        return order[filter.field] === filter.value
-      })
-    })
+    const res = filterDataByFields(data, filters)
     setFilteredData(res)
   }
 
   const [searchValue, setSearchValue] = useState('')
   const search = (value: string) => {
     setSearchValue(value)
-    if (!value) return setFilteredData([...data])
+
+    if (!value) {
+      //<-- Apply filters if exist to keep current selection
+      const res = filterDataByFields(data, filtersBy)
+      setFilteredData(res)
+      return
+    }
     const res = [...data].filter((order) => {
       return Object.values(order).some((val) => {
         if (typeof val === 'string') {
@@ -104,14 +98,16 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   useEffect(() => {
-    // setFilteredData(data)
-    const res = [...data].filter((order) => {
-      return filtersBy.every((filter) => {
+    search(searchValue)
+  }, [data])
+
+  const filterDataByFields = (data: T[], filters: Filter[]) => {
+    return data.filter((order) => {
+      return filters.every((filter) => {
         return order[filter.field] === filter.value
       })
     })
-    search(searchValue)
-  }, [data])
+  }
 
   return { filteredData, filteredBy, cleanFilter, filterBy, search, filtersBy }
 }

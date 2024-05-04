@@ -4,10 +4,12 @@ import { useStore } from '../contexts/storeContext'
 import FormOrder from './FormOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
   const { navigate } = useNavigation()
+  const { user } = useAuth()
   const { orders } = useStore()
   const originalOrder = orders.find((o) => o.id === orderId)
 
@@ -51,15 +53,20 @@ const ScreenOrderRenew = ({ route }) => {
           ...order,
           status: order_status.DELIVERED,
           deliveredAt: order.expireAt,
-          renewedAt: new Date(),
+          // renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
           renewedFrom: orderId
+          //renewedBy: user?.id// *<--- which order should have this prop? the new one or the original one?
         }
         // @ts-ignore
         await ServiceOrders.createSerialOrder(renewedOrder)
           .then((newOrderId) => {
             if (newOrderId)
+              //* update the ORIGINAL order status
               ServiceOrders.update(orderId, {
-                status: order_status.RENEWED
+                status: order_status.RENEWED,
+                renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
+                renewedTo: newOrderId,
+                renewedBy: user?.id // *<--- which order should have this prop? the new one or the original one?
               })
 
             // * Add comment to the new order

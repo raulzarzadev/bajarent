@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import ListBalances from './ListBalances'
 import { ServiceBalances } from '../firebase/ServiceBalances'
@@ -17,9 +17,9 @@ const ScreenBalances = () => {
     }
   }, [])
   return (
-    <View>
+    <ScrollView>
       <ListBalances balances={balances} />
-    </View>
+    </ScrollView>
   )
 }
 

@@ -12,10 +12,10 @@ import ScreenPaymentsDetails from './ScreenPaymentsDetails'
 import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
-import { ScreenStoreE } from './ScreenStore5'
 import StackSections from './StackSections'
 import StackOrders from './StackOrders'
 import StackStaff from './StackStaff'
+import { ScreenStoreE } from './ScreenStore4'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -171,10 +171,23 @@ function StackStore() {
 
       {/* 
       <Stack.Screen
-        options={({ route }) => ({ title: route?.params?.title || 'Ordenes' })}
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Pagos'
+        })}
+        name="PaymentsList"
+        component={ScreenPayments}
+      />
+
+      <Stack.Screen
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Ordenes'
+        })}
         name="OrdersList"
         component={ScreenOrders}
       />
+
       <Stack.Screen
         name="OrderDetails"
         options={{

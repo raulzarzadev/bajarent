@@ -27,7 +27,8 @@ const ListOrders = ({
         navigate('OrderDetails', { orderId: id })
       }}
       sortFields={[
-        { key: 'priority', label: 'Prioridad' },
+        //{ key: 'priority', label: 'Prioridad' },
+        { key: 'note', label: 'Nota' },
         { key: 'folio', label: 'Folio' },
         { key: 'fullName', label: 'Nombre' },
         { key: 'neighborhood', label: 'Colonia' },
@@ -38,9 +39,9 @@ const ListOrders = ({
       data={orders}
       ComponentRow={RowOrder}
       filters={[
+        { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },
-        { field: 'status', label: 'Status' },
-        { field: 'assignToSection', label: 'Area' }
+        { field: 'status', label: 'Status' }
       ]}
     />
   )

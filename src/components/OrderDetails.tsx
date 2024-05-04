@@ -24,6 +24,8 @@ import SpanMetadata from './SpanMetadata'
 import Totals from './ItemsTotals'
 import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
+import { TimePriceType } from '../types/PriceType'
+import { translateTime } from '../libs/expireDate'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -247,6 +249,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
           expireAt={order.expireAt}
           scheduledAt={order.scheduledAt}
           startedAt={order.deliveredAt}
+          extendTime={order.extendTime}
         />
       </View>
     </View>
@@ -255,15 +258,22 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
 const ItemDates = ({
   scheduledAt,
   expireAt,
-  startedAt
+  startedAt,
+  extendTime
 }: {
   scheduledAt?: Date | Timestamp
   expireAt?: Date | Timestamp
   startedAt?: Date | Timestamp
+  extendTime?: TimePriceType
 }) => {
   return (
     <>
-      <Text style={[gStyles.h3, { marginBottom: 8 }]}>Fechas</Text>
+      <Text style={[gStyles.h3]}>Fechas</Text>
+      {extendTime && (
+        <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
+          Se extendio por: {translateTime(extendTime)}
+        </Text>
+      )}
       <View
         style={{
           alignItems: 'center',

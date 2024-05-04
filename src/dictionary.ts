@@ -137,6 +137,7 @@ const labels = {
   selectItemsSale: 'Items en venta',
   canViewCashbox: 'Ver caja',
   canViewItems: 'Ver Items',
+  canExtend: 'Extender',
   ' ': '',
   '': ''
 } as const

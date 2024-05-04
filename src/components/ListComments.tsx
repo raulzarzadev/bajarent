@@ -159,9 +159,9 @@ export const CommentRow = ({
         // setDisabled(false)
       })
 
-    setTimeout(() => {
-      setDisabled(false)
-    }, 1000)
+    // setTimeout(() => {
+    //   setDisabled(false) //* <--- this is not aplaying because look like all list is re-rendering after refetch
+    // }, 6000)
   }
   return (
     <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
@@ -186,7 +186,7 @@ export const CommentRow = ({
               disabled={disabled}
               icon="done"
               color={comment?.solved ? 'success' : 'primary'}
-              variant={comment?.solved ? 'filled' : 'ghost'}
+              variant={comment?.solved ? 'filled' : 'outline'}
               onPress={() =>
                 handleToggleSolveReport(comment?.id, comment?.solved)
               }

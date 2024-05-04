@@ -11,6 +11,8 @@ import {
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
+import AddExtendExpire from './AddExtendExpire'
+import ButtonCopyRow from './ButtonCopyRow'
 
 const OrderCommonActions = ({
   storeId,
@@ -29,6 +31,7 @@ const OrderCommonActions = ({
     canAuthorize?: boolean
     canReorder?: boolean
     canAssign?: boolean
+    canExtend?: boolean
   }
   userId: string
 }) => {
@@ -49,8 +52,9 @@ const OrderCommonActions = ({
   const canAuthorize = actionsAllowed.canAuthorize
   const canReorder = actionsAllowed.canReorder
   const canAssign = actionsAllowed.canAssign
-
+  const canExtend = actionsAllowed.canExtend
   const canRenew = actionsAllowed.canRenew
+  const canCopy = true
 
   const handleReorder = () => {
     // @ts-ignore
@@ -87,6 +91,7 @@ const OrderCommonActions = ({
   }
 
   const buttons = [
+    canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
 
     canAssign && <ModalAssignOrder orderId={orderId} />,
@@ -148,17 +153,23 @@ const OrderCommonActions = ({
     canCancel && (
       <ButtonConfirm
         openLabel="Cancelar"
+        modalTitle="Cancelar orden"
         openVariant="outline"
         openColor="info"
-        confirmColor="info"
         openSize="small"
         icon="cancel"
-        text={'Cancelar orden'}
+        text={
+          'Cancelar orden. Si necesitas retomarla en cualquer momento debes tener permiso para autorizar ordenes o pidele a tu administrador que lo haga.  '
+        }
+        confirmLabel="Cancelar orden"
+        confirmVariant="outline"
+        confirmColor="info"
         handleConfirm={async () => {
           return await handleCancel()
         }}
       />
-    )
+    ),
+    canCopy && <ButtonCopyRow orderId={orderId} />
   ]
   return (
     <View>

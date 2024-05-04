@@ -1,129 +1,103 @@
+import { where } from 'firebase/firestore'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
-import OrderType, { order_status } from '../types/OrderType'
+import { order_status } from '../types/OrderType'
 import { payment_methods } from '../types/PaymentType'
-import asDate from './utils-date'
-
-export const balanceTotal = (balance: BalanceType) =>
-  balance?.payments?.reduce((acc, p) => acc + p.amount, 0)
-
-export const balanceTotalCash = (balance: BalanceType) =>
-  balance?.payments?.reduce(
-    (acc, p) => acc + (p.method === payment_methods.CASH ? p.amount : 0),
-    0
-  )
-
-export const balanceTotalCard = (balance: BalanceType) =>
-  balance?.payments?.reduce(
-    (acc, p) => acc + (p.method === payment_methods.CARD ? p.amount : 0),
-    0
-  )
-
-export const balanceTotalTransfers = (balance: BalanceType) =>
-  balance?.payments?.reduce(
-    (acc, p) => acc + (p.method === payment_methods.TRANSFER ? p.amount : 0),
-    0
-  )
 
 export const balanceTotals = (balance: BalanceType) => {
-  return {
-    total: balanceTotal(balance),
-    cash: balanceTotalCash(balance),
-    card: balanceTotalCard(balance),
-    transfers: balanceTotalTransfers(balance)
-  }
+  return balance?.payments?.reduce(
+    (acc, p) => {
+      const amount = p?.amount || 0
+      acc.total += amount
+      if (p.method === payment_methods.CASH) acc.cash += amount
+      if (p.method === payment_methods.CARD) acc.card += amount
+      if (p.method === payment_methods.TRANSFER) acc.transfers += amount
+      return acc
+    },
+    { total: 0, cash: 0, card: 0, transfers: 0 }
+  )
 }
 
-export const balanceOrders = ({
-  values,
-  orders
-}: {
+export const balanceOrders = async ({
+  values
+}: //orders
+{
   values: BalanceType
-  orders: OrderType[]
-}): BalanceOrders => {
+  //orders: OrderType[]
+}): Promise<BalanceOrders> => {
   //* YOU CANT FILTER ORDERS BY USER OR DATE BECAUSE YOU ARE VALIDATING DIFFERENT THINGS
 
   let ordersCreated = []
   let ordersPickup = []
   let ordersDelivered = []
   let ordersRenewed = []
+  let ordersCancelled = []
 
   /* ******************************************** 
              FILTER BY DATE               
    *******************************************rz */
-  ordersCreated = [...orders].filter((o) => {
-    const createdAt = asDate(o?.createdAt)
-    return (
-      asDate(createdAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(createdAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
 
-  ordersPickup = [...orders].filter((o) => {
-    const pickedUpAt = asDate(o?.pickedUpAt)
-    return (
-      asDate(pickedUpAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(pickedUpAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
+  //*1 get orders creates from date
+  const createdOrders = await ServiceOrders.findMany([
+    where('createdAt', '>=', values.fromDate),
+    where('createdAt', '<=', values.toDate)
+  ])
 
-  ordersDelivered = [...orders].filter((o) => {
-    const deliveredAt = asDate(o?.deliveredAt)
-    return (
-      asDate(deliveredAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(deliveredAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
+  const pickedUpOrders = await ServiceOrders.findMany([
+    where('pickedUpAt', '>=', values.fromDate),
+    where('pickedUpAt', '<=', values.toDate),
+    where('status', '==', order_status.PICKED_UP)
+  ])
 
-  ordersRenewed = [...orders].filter((o) => {
-    const renewedAt = asDate(o?.renewedAt)
-    return (
-      asDate(renewedAt)?.getTime() >= asDate(values?.fromDate)?.getTime() &&
-      asDate(renewedAt)?.getTime() <= asDate(values?.toDate)?.getTime()
-    )
-  })
+  const deliveredOrders = await ServiceOrders.findMany([
+    where('deliveredAt', '>=', values.fromDate),
+    where('deliveredAt', '<=', values.toDate),
+    where('status', '==', order_status.DELIVERED)
+  ])
 
+  const renewedOrders = await ServiceOrders.findMany([
+    where('renewedAt', '>=', values.fromDate),
+    where('renewedAt', '<=', values.toDate),
+    where('status', '==', order_status.RENEWED)
+  ])
+
+  const cancelledOrders = await ServiceOrders.findMany([
+    where('cancelledAt', '>=', values.fromDate),
+    where('cancelledAt', '<=', values.toDate),
+    where('status', '==', order_status.CANCELLED)
+  ])
   /* ******************************************** 
              FILTER BY USER               
    *******************************************rz */
 
-  ordersCreated = [...ordersCreated]
-    .filter((o) => {
-      //* if values.type === partial only show orders created by that user
-      if (values.type === 'partial') return o.createdBy === values.userId
-      return true
-    })
-    //* returns only the id of the order
-    .map(({ id }) => id)
+  const filterOrdersByUser = (
+    orders: any[],
+    values: BalanceType,
+    field: string
+  ) => {
+    return (
+      orders
+        .filter((o) => {
+          //* if values.type === partial only show orders created by that user
+          if (values.type === 'partial') return o[field] === values.userId
+          return true
+        })
+        //* returns only the id of the order
+        .map(({ id }) => id)
+    )
+  }
 
-  ordersPickup = [...ordersPickup]
-    .filter((o) => {
-      //* if values.type === partial only show orders created by that user
-      if (values.type === 'partial') return o.pickedUpBy === values.userId
-      return true
-    })
-    //* returns only the id of the order
-    .map(({ id }) => id)
-  ordersDelivered = [...ordersDelivered]
-    .filter((o) => {
-      //* if values.type === partial only show orders created by that user
-      if (values.type === 'partial') return o.deliveredBy === values.userId
-      return true
-    })
-    //* returns only the id of the order
-    .map(({ id }) => id)
+  ordersCreated = filterOrdersByUser(createdOrders, values, 'createdBy')
+  ordersPickup = filterOrdersByUser(pickedUpOrders, values, 'pickedUpBy')
+  ordersDelivered = filterOrdersByUser(deliveredOrders, values, 'deliveredBy')
+  ordersRenewed = filterOrdersByUser(renewedOrders, values, 'renewedBy')
+  ordersCancelled = filterOrdersByUser(cancelledOrders, values, 'cancelledBy')
 
-  ordersRenewed = [...ordersRenewed]
-    .filter((o) => {
-      //* if values.type === partial only show orders created by that user
-      if (values.type === 'partial') return o.renewedBy === values.userId
-      return true
-    })
-    //* returns only the id of the order
-    .map(({ id }) => id)
   return {
     ordersCreated,
     ordersPickup,
     ordersDelivered,
-    ordersRenewed
+    ordersRenewed,
+    ordersCancelled
   }
 }

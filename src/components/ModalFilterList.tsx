@@ -143,6 +143,7 @@ function ModalFilterList<T>({
     //* this is useful for orders table to find section name
     if (field === 'assignToSection') {
       const res = storeSections.find((a) => a.id === value)?.name || ''
+
       return dictionary(res as Labels).toUpperCase()
     }
     //* this is useful for payments table to find staff name
@@ -250,11 +251,12 @@ function ModalFilterList<T>({
                 (value) => {
                   if (!value) return null
                   if (value === 'undefined') return null
-
+                  const title = chipLabel(field as string, value) //<-- avoid shows empty chips
+                  if (!title) return null
                   return (
                     <Chip
                       color={chipColor(field as string, value)}
-                      title={chipLabel(field as string, value)}
+                      title={title}
                       key={value}
                       onPress={() => {
                         if (value === 'REPORTED') {
