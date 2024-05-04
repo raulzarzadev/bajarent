@@ -41,7 +41,11 @@ function useStoreDataListen({ storeId }: { storeId: string }) {
     if (store && user) {
       //* LISTENERS
 
-      ServiceStaff.listenByStore(store.id, setStaff)
+      ServiceStaff.listenByStore(store.id, (staff) => {
+        const owner = { ...user }
+        staff.push(owner)
+        setStaff(staff)
+      })
       ServiceSections.listenByStore(store.id, setSections)
 
       ServicePayments.listenByStore(store.id, setPayments)

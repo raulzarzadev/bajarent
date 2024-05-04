@@ -15,6 +15,7 @@ import { FormattedComment } from '../types/CommentType'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
+import { useEmployee } from '../contexts/employeeContext2'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -163,12 +164,17 @@ export const CommentRow = ({
     //   setDisabled(false) //* <--- this is not aplaying because look like all list is re-rendering after refetch
     // }, 6000)
   }
+
+  const commentCreatedBy =
+    staff.find((s) => s.id === comment?.createdBy)?.name ||
+    comment?.createdByName
+
   return (
     <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
       <View style={{ justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
-            {staff?.find((s) => s?.userId === comment?.createdBy)?.name}
+            {commentCreatedBy}
           </Text>
           <Text style={{ marginRight: 4 }}>{fromNow(comment?.createdAt)}</Text>
           {comment?.type === 'report' && (

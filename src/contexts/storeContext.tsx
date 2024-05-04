@@ -37,6 +37,7 @@ export type StoreContextType = {
   fetchComments?: () => any
   handleToggleJustActiveOrders?: () => any
   fetchOrders?: () => any
+  justActiveOrders?: boolean
 }
 
 type UseStoreDataListenType = Partial<ReturnType<typeof useStoreDataListen>>
@@ -166,6 +167,7 @@ const StoreContextProvider = ({ children }) => {
         handleGetSolvedOrders,
         handleToggleJustActiveOrders: () =>
           setJustActiveOrders(!justActiveOrders),
+        justActiveOrders,
         fetchOrders
         // allComments,
         // fetchComments

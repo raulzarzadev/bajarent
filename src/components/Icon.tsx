@@ -24,7 +24,8 @@ import {
   MdOutlineUndo,
   MdCancel,
   MdOutlineRefresh,
-  MdCopyAll
+  MdCopyAll,
+  MdUpload
 } from 'react-icons/md'
 
 import {
@@ -110,6 +111,7 @@ const icons = {
   rowRight: MdChevronRight,
   settings: MdSettings,
   download: MdDownload,
+  upload: MdUpload,
   camera: MdOutlinePhotoCamera,
   addImage: RiImageAddLine,
   info: MdInfoOutline,

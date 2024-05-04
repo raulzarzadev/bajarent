@@ -4,7 +4,12 @@ import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
-  const { orders, handleToggleJustActiveOrders, fetchOrders } = useStore()
+  const {
+    orders,
+    handleToggleJustActiveOrders,
+    fetchOrders,
+    justActiveOrders
+  } = useStore()
   const preOrders = route?.params?.orders || null
   const [fullOrders, setFullOrders] = useState<OrderType[]>([])
 
@@ -32,12 +37,18 @@ function ScreenOrders({ route, navigation: { navigate } }) {
       //defaultOrdersIds={filtered}
 
       sideButtons={[
-        // {
-        //   icon: 'download',
-        //   label: '',
-        //   onPress: handleToggleJustActiveOrders,
-        //   visible: true
-        // },
+        {
+          icon: 'download',
+          label: '',
+          onPress: handleToggleJustActiveOrders,
+          visible: justActiveOrders
+        },
+        {
+          icon: 'upload',
+          label: '',
+          onPress: handleToggleJustActiveOrders,
+          visible: !justActiveOrders
+        },
         {
           icon: 'refresh',
           label: '',

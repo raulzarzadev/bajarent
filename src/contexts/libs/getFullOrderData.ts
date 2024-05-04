@@ -11,3 +11,15 @@ export const getFullOrderData = async (orderId: string): Promise<OrderType> => {
   const formattedOrder = formatOrder({ comments, order })
   return { ...formattedOrder, payments, comments }
 }
+
+export const listenFullOrderData = async (
+  orderId: string,
+  cb: CallableFunction
+) => {
+  const payments = await ServicePayments.getByOrder(orderId)
+  const comments = await ServiceComments.getByOrder(orderId)
+  ServiceOrders.listen(orderId, (order) => {
+    const formattedOrder = formatOrder({ comments, order })
+    cb({ ...formattedOrder, payments, comments })
+  })
+}

@@ -2,7 +2,7 @@ import { View, ScrollView, ActivityIndicator } from 'react-native'
 import OrderDetails from './OrderDetails'
 import OrderType from '../types/OrderType'
 import { useEffect, useState } from 'react'
-import { getFullOrderData } from '../contexts/libs/getFullOrderData'
+import { listenFullOrderData } from '../contexts/libs/getFullOrderData'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params
@@ -10,9 +10,7 @@ const ScreenOrderDetail = ({ route }) => {
   const [order, setOrder] = useState<OrderType>()
   useEffect(() => {
     if (orderId) {
-      getFullOrderData(orderId).then((order) => {
-        setOrder(order)
-      })
+      listenFullOrderData(orderId, (order) => setOrder(order))
     }
   }, [orderId])
 
