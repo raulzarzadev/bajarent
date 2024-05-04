@@ -43,9 +43,9 @@ const ListOrders = ({
       data={orders}
       ComponentRow={RowOrder}
       filters={[
+        { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },
-        { field: 'status', label: 'Status' },
-        { field: 'assignToSection', label: 'Area' }
+        { field: 'status', label: 'Status' }
       ]}
     />
   )
