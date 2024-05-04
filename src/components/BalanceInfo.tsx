@@ -16,7 +16,8 @@ import Icon from './Icon'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
-  const { total } = balanceTotals(balance)
+  const data = balanceTotals(balance)
+  const total = data?.total
   const cashPayments = balance?.payments.filter((p) => p.method === 'cash')
   const cardPayments = balance?.payments.filter((p) => p.method === 'card')
   const transferPayments = balance?.payments.filter(

@@ -15,6 +15,8 @@ const ScreenBalancesDetails = ({ route, navigation }) => {
     }
     fetchBalance()
   }, [])
+
+  if (!balance) return <View /> //*<-- this should be a loading spinner
   return (
     <ScrollView>
       <View style={gStyles.container}>
