@@ -283,7 +283,7 @@ const OrderActions = ({
     },
     {
       label: 'Pickup',
-      action: deliveryModal.toggleOpen,
+      action: actions_fns[acts.PICKUP],
       status: order_status.PICKED_UP,
       disabled: !canPickupRent || !employeeCanPickup
     }
