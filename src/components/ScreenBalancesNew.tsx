@@ -50,7 +50,7 @@ const ScreenBalancesNew = ({ navigation }) => {
     balance.storeId = storeId
     const res = await ServiceBalances.create(balance)
     setSaving(false)
-    navigation.navigate('BalancesDetails', { id: res?.res?.id })
+    navigation.navigate('ScreenBalancesDetails', { id: res?.res?.id })
   }
   const handleClear = () => {
     setBalance(undefined)

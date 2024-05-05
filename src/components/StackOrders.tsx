@@ -12,7 +12,7 @@ const Stack = createStackNavigator()
 function StackOrders() {
   return (
     <Stack.Navigator
-      screenOptions={() => {
+      screenOptions={(props) => {
         return {
           headerRight(props) {
             return <MyStaffLabel />
@@ -22,9 +22,9 @@ function StackOrders() {
     >
       <Stack.Screen
         name="ScreenOrders"
-        options={{
-          title: 'Ordenes'
-        }}
+        options={({ route }) => ({
+          title: route?.params?.title || 'Ordenes'
+        })}
         component={ScreenOrders}
       />
 

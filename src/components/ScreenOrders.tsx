@@ -12,7 +12,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   } = useStore()
   const preOrders = route?.params?.orders || null
   const [fullOrders, setFullOrders] = useState<OrderType[]>([])
-
   useEffect(() => {
     if (preOrders) {
       const filteredOrders = orders.filter(({ id }) => preOrders.includes(id))

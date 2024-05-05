@@ -17,6 +17,8 @@ import StackOrders from './StackOrders'
 import StackStaff from './StackStaff'
 import { ScreenStoreE } from './ScreenStore5'
 import ScreenOrdersConfig from './ScreenOrdersConfig'
+import StackBalances, { StackBalancesE } from './StackBalances'
+import { StackPaymentsE } from './StackPayments'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -101,9 +103,32 @@ function StackStore() {
 
       {/* ORDERS  */}
       <Stack.Screen
-        options={({ route }) => ({ title: route?.params?.title || 'Ordenes' })}
+        options={({ route }) => ({
+          title: route?.params?.title || 'Ordenes',
+          orders: route?.params?.orders || [],
+          headerShown: false
+        })}
         name="StackOrders"
         component={StackOrders}
+      />
+
+      {/* CASHBOX  */}
+
+      <Stack.Screen
+        name="StackBalances"
+        options={{
+          title: 'Cortes',
+          headerShown: false
+        }}
+        component={StackBalancesE}
+      />
+      <Stack.Screen
+        name="StackPayments"
+        options={{
+          title: 'Pagos',
+          headerShown: false
+        }}
+        component={StackPaymentsE}
       />
 
       {/* ******************************************** 
@@ -134,8 +159,9 @@ function StackStore() {
         }}
         component={ScreenCategoryEdit}
       />
+
       {/* CASHBOX  */}
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Cashbox"
         options={{
           title: 'Caja'
@@ -155,8 +181,8 @@ function StackStore() {
           title: 'Detalle de pago'
         }}
         component={ScreenPaymentsDetails}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Balances"
         options={{
           title: 'Cortes de caja'
@@ -176,7 +202,7 @@ function StackStore() {
           title: 'Nuevo corte'
         }}
         component={ScreenBalancesNew}
-      />
+      /> */}
 
       {/* 
       <Stack.Screen

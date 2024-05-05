@@ -13,13 +13,13 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
   const { payments, orders, staff } = useStore()
   const payment = payments.find((p) => p.id === id)
-  const order = orders.find((o) => o.id === payment.orderId)
+  const order = orders.find((o) => o.id === payment?.orderId)
   const userName =
     staff.find((s) => s.userId === payment.createdBy)?.name || 'sin nombre'
   return (
     <View style={gStyles.container}>
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
-      {payment?.method && (
+      {!!payment?.method && (
         <Text
           style={{
             textAlign: 'center',
@@ -30,7 +30,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           {dictionary(payment?.method)}
         </Text>
       )}
-      {payment?.reference && (
+      {!!payment?.reference && (
         <Text
           style={[gStyles.helper, { textAlign: 'center', marginVertical: 8 }]}
         >
@@ -38,12 +38,12 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
         </Text>
       )}
 
-      {payment?.createdAt && (
+      {!!payment?.createdAt && (
         <Text style={{ textAlign: 'center', marginTop: 16 }}>
           <DateCell date={payment?.createdAt} />
         </Text>
       )}
-      {payment?.createdBy && (
+      {!!payment?.createdBy && (
         <View style={{ justifyContent: 'center' }}>
           <Text
             style={[gStyles.helper, { textAlign: 'center', marginBottom: 16 }]}
@@ -54,16 +54,14 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
       )}
 
       <View style={{ justifyContent: 'center', margin: 'auto' }}>
-        {order ? <OrderDirectives order={order} /> : <ActivityIndicator />}
+        {!!order ? <OrderDirectives order={order} /> : <ActivityIndicator />}
         <Button
           variant="ghost"
           onPress={() => {
-            navigation.navigate('Orders')
-            navigation.navigate('OrderDetails', { orderId: order?.id })
-            // navigation.navigate('Orders', {
-            //   screen: 'OrderDetails',
-            //   params: { orderId: order?.id }
-            // })
+            navigation.navigate('StackOrders', {
+              screen: 'OrderDetails',
+              params: { orderId: order?.id }
+            })
           }}
           label="Ver orden"
         ></Button>

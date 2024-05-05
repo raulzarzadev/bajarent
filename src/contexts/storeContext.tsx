@@ -13,6 +13,7 @@ import { useEmployee as useEmployee2 } from './employeeContext2'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import { ServiceComments } from '../firebase/ServiceComments'
+import { ServicePayments } from '../firebase/ServicePayments'
 export type StaffPermissions = StaffPermissionType
 
 export type StoreContextType = {
@@ -139,6 +140,14 @@ const StoreContextProvider = ({ children }) => {
   const [myStaffId, setMyStaffId] = useState<string>('')
 
   const [paymentsFormatted, setPaymentsFormatted] = useState<PaymentType[]>([])
+
+  useEffect(() => {
+    if (store)
+      ServicePayments.getByStore(storeId).then((payments) => {
+        console.log('payments')
+        setPaymentsFormatted(payments)
+      })
+  }, [store])
 
   const [staffPermissions, setStaffPermissions] =
     useState<Partial<StaffPermissions>>(null)

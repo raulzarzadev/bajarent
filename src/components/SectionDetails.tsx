@@ -11,6 +11,7 @@ import ButtonConfirm from './ButtonConfirm'
 import Tabs from './Tabs'
 import ListOrders from './ListOrders'
 import ErrorBoundary from './ErrorBoundary'
+import TextInfo from './TextInfo'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
@@ -69,18 +70,29 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
           }}
         ></ButtonIcon>
       </View>
+
       <Tabs
         tabs={[
           {
             title: 'Staff',
             content: (
-              <ListStaff
-                staff={staffSection}
-                sectionId={section.id}
-                handleSubtract={(staffId) => {
-                  handleRemoveStaff(staffId)
-                }}
-              />
+              <>
+                <TextInfo text="Descarta o edita staff que ya pertenece a esta AREA" />
+
+                <ListStaff
+                  staff={staffSection}
+                  sectionId={section.id}
+                  handleSubtract={(staffId) => {
+                    handleRemoveStaff(staffId)
+                  }}
+                  handleEdit={(staffId) => {
+                    navigation.navigate('StackStaff', {
+                      screen: 'ScreenStaffEdit',
+                      params: { staffId }
+                    })
+                  }}
+                />
+              </>
             ),
             show: true
           },

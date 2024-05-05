@@ -15,9 +15,9 @@ import { ServiceSections } from '../firebase/ServiceSections'
 import { gStyles } from '../styles'
 
 const ScreenStaffEdit = ({ route, navigation }) => {
-  const { staff, store } = useStore()
+  const { staff, store } = useStore() // <--Buscar staff
   const [loading, setLoading] = React.useState(false)
-
+  console.log({ staff })
   if (!staff.length) return <ActivityIndicator />
 
   const staffId = route.params.staffId
@@ -50,7 +50,7 @@ const ScreenStaffEdit = ({ route, navigation }) => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <CardUser userId={employee.userId} />
+        <CardUser userId={employee.userId || employee.id} />
         {/* <EmployeePermissionsE staff={employee} /> */}
         <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
           Areas asignadas

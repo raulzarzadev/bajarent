@@ -107,12 +107,12 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           }}
         >
           <ModalOrders
-            modalTitle="creadas"
+            modalTitle="Creadas"
             buttonLabel="Creadas"
             ordersIds={balance?.ordersCreated}
           />
           <ModalOrders
-            modalTitle=" entregadas"
+            modalTitle=" Entregadas"
             buttonLabel="Entregadas"
             ordersIds={balance?.ordersDelivered}
           />
@@ -146,10 +146,11 @@ const LinkPayments = ({ title, payments = [] }) => {
       <Pressable
         onPress={() => {
           //@ts-ignore
-          navigate('PaymentsList', {
-            payments: ids,
-            title
-          })
+          navigate('StackPayments', { payments: ids, title })
+          // navigate('ScreenPayments', {
+          //   payments: ids,
+          //   title
+          // })
         }}
       >
         <Text style={[styles.label, { textDecorationLine: 'underline' }]}>
@@ -186,8 +187,16 @@ const ModalOrders = ({
           label={`${buttonLabel} ${ordersIds.length || 0}`}
           variant="ghost"
           onPress={() => {
+            console.log(`on press ${modalTitle}`, { ordersIds })
             // @ts-ignore
-            navigate('OrdersList', { orders: ordersIds, title: modalTitle })
+            // navigate('StackOrders', {
+            //   orders: ordersIds,
+            //   title: modalTitle
+            // })
+            navigate('StackOrders', {
+              screen: 'ScreenOrders',
+              params: { orders: ordersIds, title: modalTitle }
+            })
           }}
           fullWidth={false}
         ></Button>

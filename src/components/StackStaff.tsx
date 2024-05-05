@@ -1,7 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenCreateStore from './ScreenStoreCreate'
-import ScreenProfile from './ScreenProfile'
-import ScreenProfileEdit from './ScreenProfileEdit'
 import MyStaffLabel from './MyStaffLabel'
 import ErrorBoundary from './ErrorBoundary'
 import { ScreenStaffE } from './ScreenStaff'

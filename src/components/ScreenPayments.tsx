@@ -5,8 +5,10 @@ import { useStore } from '../contexts/storeContext'
 import PaymentType from '../types/PaymentType'
 
 export default function ScreenPayments({ navigation, route }) {
-  const { payments } = useStore()
+  console.log({ route })
+  const { storeId, orders, payments } = useStore()
   const preList = route?.params?.payments || null
+  console.log({ payments })
   const [fullPayments, setFullPayments] = useState<PaymentType[]>([])
   useEffect(() => {
     if (preList) {
@@ -22,7 +24,7 @@ export default function ScreenPayments({ navigation, route }) {
       <PaymentsList
         payments={fullPayments}
         onPressRow={(paymentId) => {
-          navigation.navigate('PaymentsDetails', { id: paymentId })
+          navigation.navigate('ScreenPaymentsDetails', { id: paymentId })
         }}
       />
     </ScrollView>

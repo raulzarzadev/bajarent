@@ -88,20 +88,20 @@ const StoreNumbersRow = () => {
 }
 
 const TabCashbox = () => {
+  const { navigate } = useNavigation()
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       <Button
-        disabled={true}
         label="Cortes"
         onPress={() => {
-          console.log('Caja')
+          navigate('StackBalances')
         }}
         variant="ghost"
       />
       <Button
         label="Pagos"
         onPress={() => {
-          console.log('Pagos')
+          navigate('StackPayments')
         }}
         variant="ghost"
       />

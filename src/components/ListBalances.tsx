@@ -13,12 +13,24 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
         defaultSortBy="createdAt"
         onPressRow={(id) => {
           // @ts-ignore
-          navigate('BalancesDetails', { id })
+          navigate('ScreenBalancesDetails', { id })
         }}
-        onPressNew={() => {
-          // @ts-ignore
-          navigate('BalancesNew')
-        }}
+        //TODO:add as side button if its needed
+        // onPressNew={() => {
+        //   // @ts-ignore
+        //   navigate('ScreenBalancesNew')
+        // }}
+        sideButtons={[
+          {
+            icon: 'add',
+            label: 'Nuevo',
+            onPress: () => {
+              // @ts-ignore
+              navigate('ScreenBalancesNew')
+            },
+            visible: true
+          }
+        ]}
         sortFields={[
           {
             key: 'createdAt',
