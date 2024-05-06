@@ -16,15 +16,14 @@ function StackOrders() {
         return {
           headerRight(props) {
             return <MyStaffLabel />
-          }
+          },
+          headerShown: false
         }
       }}
     >
       <Stack.Screen
         name="ScreenOrders"
-        options={({ route }) => ({
-          title: route?.params?.title || 'Ordenes'
-        })}
+        // options={({ route }) => ({})}
         component={ScreenOrders}
       />
 

@@ -5,7 +5,7 @@ import RowOrder from './RowOrder'
 import OrderType from '../types/OrderType'
 
 const ListOrders = ({
-  orders,
+  orders = [],
   defaultOrdersIds,
   sideButtons = []
 }: {
@@ -22,9 +22,9 @@ const ListOrders = ({
       defaultOrder="des"
       onPressRow={(id) => {
         // @ts-ignore
-        navigate('Orders')
+        //navigate('Orders')
         // @ts-ignore
-        navigate('OrderDetails', { orderId: id })
+        //navigate('OrderDetails', { orderId: id })
       }}
       sortFields={[
         //{ key: 'priority', label: 'Prioridad' },

@@ -4,7 +4,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
-import { useEmployee } from '../contexts/employeeContext2'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()

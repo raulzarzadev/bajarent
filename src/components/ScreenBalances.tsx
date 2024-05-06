@@ -1,21 +1,19 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ListBalances from './ListBalances'
 import { ServiceBalances } from '../firebase/ServiceBalances'
-import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenBalances = () => {
-  const [balances, setBalances] = React.useState([])
-  const { storeId } = useStore()
+  const [balances, setBalances] = useState([])
+  const { store } = useAuth()
   useEffect(() => {
     const fetchBalances = async () => {
-      const balances = await ServiceBalances.getByStore(storeId)
+      const balances = await ServiceBalances.getByStore(store?.id)
       setBalances(balances)
     }
-    if (storeId) {
-      fetchBalances()
-    }
-  }, [])
+    if (store?.id) fetchBalances()
+  }, [store])
   return (
     <ScrollView>
       <ListBalances balances={balances} />

@@ -1,12 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { BottomAppBarE } from './src/components/BottomAppBar'
-import { AuthContextProvider } from './src/contexts/authContext'
+import { AuthContextProvider, useAuth } from './src/contexts/authContext'
 import { StoreContextProvider } from './src/contexts/storeContext'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ThemeProvider } from './src/contexts/themeContext'
-import { EmployeeContextProvider as JustEmployeeContextProvider } from './src/contexts/employeeContext2'
+import { EmployeeContextProvider } from './src/contexts/employeeContext'
+import { OrdersContextProvider } from './src/contexts/ordersContext'
 
 export default function App() {
   const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
@@ -40,20 +41,22 @@ export default function App() {
   }
   return (
     <AuthContextProvider>
-      <JustEmployeeContextProvider>
-        <StoreContextProvider>
-          <ThemeProvider>
-            <NavigationContainer
-              initialState={initialState}
-              onStateChange={(state) => {
-                AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-              }}
-            >
-              <BottomAppBarE />
-            </NavigationContainer>
-          </ThemeProvider>
-        </StoreContextProvider>
-      </JustEmployeeContextProvider>
+      <StoreContextProvider>
+        <EmployeeContextProvider>
+          <OrdersContextProvider>
+            <ThemeProvider>
+              <NavigationContainer
+                initialState={initialState}
+                onStateChange={(state) => {
+                  AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+                }}
+              >
+                <BottomAppBarE />
+              </NavigationContainer>
+            </ThemeProvider>
+          </OrdersContextProvider>
+        </EmployeeContextProvider>
+      </StoreContextProvider>
     </AuthContextProvider>
   )
 }

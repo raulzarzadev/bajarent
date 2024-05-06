@@ -15,7 +15,7 @@ import { FormattedComment } from '../types/CommentType'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
-import { useEmployee } from '../contexts/employeeContext2'
+import { useEmployee } from '../contexts/employeeContext'
 
 export type CommentType = OrderType['comments'][number]
 

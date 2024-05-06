@@ -6,18 +6,12 @@ import MyStaffLabel from './MyStaffLabel'
 import ScreenItems from './ScreenItems'
 import ScreenCategoryEdit from './ScreenCategoryEdit'
 import ScreenCategoryNew from './ScreenCategoryNew'
-import ScreenCashbox from './ScreenCashbox'
-import ScreenPayments from './ScreenPayments'
-import ScreenPaymentsDetails from './ScreenPaymentsDetails'
-import ScreenBalances from './ScreenBalances'
-import ScreenBalancesDetails from './ScreenBalancesDetails'
-import ScreenBalancesNew from './ScreenBalancesNew'
 import StackSections from './StackSections'
 import StackOrders from './StackOrders'
 import StackStaff from './StackStaff'
 import { ScreenStoreE } from './ScreenStore5'
 import ScreenOrdersConfig from './ScreenOrdersConfig'
-import StackBalances, { StackBalancesE } from './StackBalances'
+import { StackBalancesE } from './StackBalances'
 import { StackPaymentsE } from './StackPayments'
 
 export type StackStoreNavigationProps = {
@@ -105,8 +99,8 @@ function StackStore() {
       <Stack.Screen
         options={({ route }) => ({
           title: route?.params?.title || 'Ordenes',
-          orders: route?.params?.orders || [],
-          headerShown: false
+          orders: route?.params?.orders || []
+          //headerShown: false
         })}
         name="StackOrders"
         component={StackOrders}

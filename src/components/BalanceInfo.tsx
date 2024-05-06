@@ -190,7 +190,8 @@ const ModalOrders = ({
             //@ts-ignore
             navigate('StackOrders', {
               screen: 'ScreenOrders',
-              params: { orders: ordersIds, title: modalTitle }
+              title: modalTitle,
+              params: { orders: ordersIds }
             })
           }}
           fullWidth={false}

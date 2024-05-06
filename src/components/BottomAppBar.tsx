@@ -2,13 +2,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StackOrders from './StackOrders'
 import StackProfile from './StackProfile'
 import StackStore from './StackStore'
-import StackMyOrders from './StackMyOrders'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
-import { useEmployee } from '../contexts/employeeContext2'
+import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
 
 const Tab = createBottomTabNavigator()
@@ -18,10 +17,10 @@ const BottomAppBar = () => {
   const {
     permissions: { isAdmin, isOwner, orders }
   } = useEmployee()
+
   const canSeeOrders = orders.canViewAll || isAdmin || isOwner
   const canCreateOrder = orders.canCreate || isAdmin || isOwner
   const canSeeMyOrders = !!orders?.canViewMy
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -70,7 +69,7 @@ const BottomAppBar = () => {
         component={StackOrders}
         options={{
           title: 'Ordenes',
-          headerShown: false,
+          //headerShown: false,
           tabBarButton:
             !canSeeOrders || !isAuthenticated ? () => null : undefined
         }}
@@ -90,10 +89,10 @@ const BottomAppBar = () => {
       />
       <Tab.Screen
         name="MyOrders"
-        component={StackMyOrders}
+        component={StackOrders}
         options={{
           title: 'Mis ordenes',
-          headerShown: false,
+          //headerShown: true,
           tabBarButton:
             !canSeeMyOrders || !isAuthenticated ? () => null : undefined
         }}

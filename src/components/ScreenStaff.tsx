@@ -12,7 +12,7 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
 
 const ScreenStaff = ({ navigation }) => {
-  const { store, fetchStore } = useAuth()
+  const { store } = useAuth()
   const { staff } = useStore()
   // const staff = store?.staff || []
   const modal = useModal({ title: 'Eliminar empleado' })
@@ -25,7 +25,6 @@ const ScreenStaff = ({ navigation }) => {
     await ServiceStaff.removeStaffFromStore(store.id, staffId)
       .then(console.log)
       .catch(console.log)
-    await fetchStore()
     modal.toggleOpen()
     setDisabled(false)
   }

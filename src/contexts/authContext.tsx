@@ -13,7 +13,6 @@ import StaffType from '../types/StaffType'
 import StoreType from '../types/StoreType'
 import { getItem, setItem } from '../libs/storage'
 import { ServiceStores } from '../firebase/ServiceStore'
-import { getFullStoreData } from './libs/getFullStoreData'
 
 const initialAutState: {
   isAuthenticated: boolean
@@ -27,14 +26,12 @@ const initialAutState: {
    * @deprecated use employee instead
    */
   staff?: StaffType
-  fetchStore: () => void | Promise<void>
 } = {
   isAuthenticated: false,
   user: undefined,
   storeId: '', //*<- get the storeId from localStorage
   setAuth: (value: SetStateAction<typeof initialAutState>) => {}, // Modify the setAuth definition to accept at least one argument
-  handleSetStoreId: (storeId: string) => {}, // Add the handleSetStoreId function
-  fetchStore: () => {}
+  handleSetStoreId: (storeId: string) => {} // Add the handleSetStoreId function
 }
 
 const AuthContext = createContext(initialAutState)
@@ -80,12 +77,6 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
-  const fetchStore = async (newStoreId?: string) => {
-    // getFullStoreData(newStoreId || storeId).then((storeData) => {
-    //   setStore(storeData)
-    // })
-  }
-
   const value = useMemo(
     () => ({
       ...auth,
@@ -93,7 +84,6 @@ const AuthContextProvider = ({ children }) => {
       storeId,
       stores,
       store,
-      fetchStore,
       handleSetStoreId
     }),
     [auth, setAuth, storeId, stores, store]

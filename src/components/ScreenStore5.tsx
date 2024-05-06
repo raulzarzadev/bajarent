@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { StoreDetailsE } from './StoreDetails'
 import Button from './Button'
 import Tabs from './Tabs'
-import { useEmployee } from '../contexts/employeeContext2'
+import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
 import { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
@@ -51,14 +51,17 @@ const ScreenStore = (props) => {
 const StoreNumbersRow = () => {
   const { store } = useAuth()
   const { navigate } = useNavigation()
-  const { orders, comments } = useStore()
-  const OrdersAuthorized = orders.filter(
+  //const { orders, comments } = useStore()
+  const orders = []
+  const comments = []
+
+  const OrdersAuthorized = orders?.filter(
     (order) => order.status === order_status.AUTHORIZED
   )
-  const reportsUnsolved = comments.filter(
+  const reportsUnsolved = comments?.filter(
     (comment) => comment.type === 'report' && !comment.solved
   )
-  const OrdersReported = reportsUnsolved.map((comment) =>
+  const OrdersReported = reportsUnsolved?.map((comment) =>
     orders.find((o) => o.id === comment.orderId)
   )
   const currentFolio = store?.currentFolio
@@ -74,29 +77,29 @@ const StoreNumbersRow = () => {
         disabled
       />
       <Button
-        label={`Pedidos: ${OrdersAuthorized.length}`}
+        label={`Pedidos: ${OrdersAuthorized?.length}`}
         onPress={() => {
           // navigate('StackOrders')
           //@ts-ignore
           navigate('StackOrders', {
             screen: 'ScreenOrders',
+            title: 'Pedidos',
             params: {
-              orders: OrdersAuthorized.map(({ id }) => id),
-              title: 'Pedidos'
+              orders: OrdersAuthorized?.map(({ id }) => id)
             }
           })
         }}
         variant="ghost"
       />
       <Button
-        label={`Reportes: ${reportsUnsolved.length}`}
+        label={`Reportes: ${reportsUnsolved?.length || 0}`}
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {
             screen: 'ScreenOrders',
+            title: 'Reportes',
             params: {
-              orders: OrdersReported.map(({ id }) => id),
-              title: 'Reportes'
+              orders: OrdersReported?.map(({ id }) => id)
             }
           })
         }}
@@ -277,7 +280,7 @@ export default ScreenStore
 
 export const ScreenStoreE = (props) => {
   return (
-    <ErrorBoundary componentName="ScreenStore4">
+    <ErrorBoundary componentName="ScreenStore5">
       <ScreenStore {...props} />
     </ErrorBoundary>
   )

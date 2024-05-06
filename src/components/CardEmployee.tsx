@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { useEmployee } from '../contexts/employeeContext2'
+import { useEmployee } from '../contexts/employeeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import BadgesStore from './BadgesStore'

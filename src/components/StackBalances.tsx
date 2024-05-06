@@ -39,13 +39,6 @@ function StackBalances() {
         }}
         component={ScreenBalancesDetails}
       />
-      <Stack.Screen
-        name="StackBalances"
-        component={StackBalances}
-        options={{
-          title: 'Cortes de caja'
-        }}
-      />
     </Stack.Navigator>
   )
 }
