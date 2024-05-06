@@ -1,8 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenStaff from './ScreenStaff'
-import ScreenStaffNew from './ScreenStaffNew'
-import ScreenStaffDetails from './ScreenStaffDetails'
-import ScreenStaffEdit from './ScreenStaffEdit'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import ScreenSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'

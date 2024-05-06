@@ -12,7 +12,6 @@ import {
   onCancel
 } from '../../libs/order-actions'
 import OrderType, { order_status } from '../../types/OrderType'
-import OrderStatus from '../OrderStatus'
 import OrderAssignInfo from '../OrderAssignInfo'
 import Button from '../Button'
 import dictionary from '../../dictionary'
@@ -30,6 +29,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
 import FormikSelectCategories from '../FormikSelectCategories'
+import OrderStatus from '../OrderStatus'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -393,9 +393,9 @@ const OrderActions = ({
 
   return (
     <View>
-      <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
+      {/* <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
         <OrderStatus orderId={orderId} />
-      </View>
+      </View> */}
 
       <StyledModal {...deliveryModal}>
         <Formik
@@ -449,7 +449,6 @@ const OrderActions = ({
           }}
         </Formik>
       </StyledModal>
-      <OrderAssignInfo orderId={orderId} />
       {/* 
       // #region FLOW 
     */}
@@ -504,9 +503,16 @@ const OrderActions = ({
       <View style={{ padding: 4, marginTop: 8 }}>
         <ProgressBar progress={progress} />
       </View>
+
+      {/* 
+          ASSIGN INFO
+      */}
+      <OrderAssignInfo orderId={orderId} />
+
       {/* 
       // #region COMMON ACTIONS 
       */}
+
       <OrderCommonActions
         storeId={storeId}
         userId={userId}

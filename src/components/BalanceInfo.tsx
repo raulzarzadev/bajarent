@@ -187,12 +187,7 @@ const ModalOrders = ({
           label={`${buttonLabel} ${ordersIds.length || 0}`}
           variant="ghost"
           onPress={() => {
-            console.log(`on press ${modalTitle}`, { ordersIds })
-            // @ts-ignore
-            // navigate('StackOrders', {
-            //   orders: ordersIds,
-            //   title: modalTitle
-            // })
+            //@ts-ignore
             navigate('StackOrders', {
               screen: 'ScreenOrders',
               params: { orders: ordersIds, title: modalTitle }

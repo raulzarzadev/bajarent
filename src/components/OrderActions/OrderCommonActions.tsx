@@ -91,10 +91,10 @@ const OrderCommonActions = ({
   }
 
   const buttons = [
+    canAssign && <ModalAssignOrder orderId={orderId} />,
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
 
-    canAssign && <ModalAssignOrder orderId={orderId} />,
     canReorder && (
       <Button
         label="Reordenar"

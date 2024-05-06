@@ -50,12 +50,16 @@ const ScreenStore = (props) => {
 
 const StoreNumbersRow = () => {
   const { store } = useAuth()
+  const { navigate } = useNavigation()
   const { orders, comments } = useStore()
-  const authorized = orders.filter(
+  const OrdersAuthorized = orders.filter(
     (order) => order.status === order_status.AUTHORIZED
   )
   const reportsUnsolved = comments.filter(
     (comment) => comment.type === 'report' && !comment.solved
+  )
+  const OrdersReported = reportsUnsolved.map((comment) =>
+    orders.find((o) => o.id === comment.orderId)
   )
   const currentFolio = store?.currentFolio
 
@@ -70,16 +74,31 @@ const StoreNumbersRow = () => {
         disabled
       />
       <Button
-        label={`Pedidos: ${authorized.length}`}
+        label={`Pedidos: ${OrdersAuthorized.length}`}
         onPress={() => {
-          console.log('pedidos')
+          // navigate('StackOrders')
+          //@ts-ignore
+          navigate('StackOrders', {
+            screen: 'ScreenOrders',
+            params: {
+              orders: OrdersAuthorized.map(({ id }) => id),
+              title: 'Pedidos'
+            }
+          })
         }}
         variant="ghost"
       />
       <Button
         label={`Reportes: ${reportsUnsolved.length}`}
         onPress={() => {
-          console.log('Reportes')
+          //@ts-ignore
+          navigate('StackOrders', {
+            screen: 'ScreenOrders',
+            params: {
+              orders: OrdersReported.map(({ id }) => id),
+              title: 'Reportes'
+            }
+          })
         }}
         variant="ghost"
       />
