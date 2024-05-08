@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
-import OrderType from '../types/OrderType'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
-import { Text, View } from 'react-native'
+import { Text } from 'react-native'
 import { gStyles } from '../styles'
 import InputSelect from './InputSelect'
+import useOrders from '../hooks/useOrders'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
-  const { orders, ordersFetch, setFetchTypeOrders } = useOrdersCtx()
-  console.log({ orders })
 
-  console.log({ ordersIds: route?.params?.orders })
+  const hasOrderList = !!route?.params?.orders
+  const { orders, fetchTypeOrders, setFetchTypeOrders, orderTypeOptions } =
+    useOrdersCtx()
+  const { orders: preOrders } = useOrders({ ids: route?.params?.orders })
+
   const modal = useModal({
     title: 'Tipo de ordenes'
   })
+
   return (
     <>
       <StyledModal {...modal}>
@@ -25,44 +27,24 @@ function ScreenOrders({ route, navigation: { navigate } }) {
           Selecciona que tipo de ordenes quieres ver
         </Text>
         <InputSelect
-          options={[
-            { label: 'Todas', value: 'all' },
-            { label: 'Resueltas', value: 'solved' },
-            { label: 'No resueltas', value: 'unsolved' },
-            { label: 'Ordenes (Mias)', value: 'mine' },
-            { label: 'Resueltas (Mias)', value: 'mineSolved' },
-            { label: 'No resueltas (Mias)', value: 'mineUnsolved' }
-          ]}
-          value={ordersFetch}
+          options={orderTypeOptions}
+          value={fetchTypeOrders}
           onChangeValue={setFetchTypeOrders}
         />
       </StyledModal>
 
       <ListOrders
-        orders={orders}
+        orders={hasOrderList ? preOrders : orders}
         //defaultOrdersIds={filtered}
 
         sideButtons={[
-          // {
-          //   icon: 'download',
-          //   label: '',
-          //   onPress: handleToggleJustActiveOrders,
-          //   visible: justActiveOrders
-          // },
-          // {
-          //   icon: 'upload',
-          //   label: '',
-          //   onPress: handleToggleJustActiveOrders,
-          //   visible: !justActiveOrders
-          // },
-          // {
-          //   icon: 'refresh',
-          //   label: '',
-          //   onPress: debouncedFetchOrders,
-          //   visible: true,
-          //   disabled: disabled
-          // },
-          { icon: 'swap', label: '', onPress: modal.toggleOpen, visible: true },
+          {
+            icon: 'download',
+            label: '',
+            onPress: modal.toggleOpen,
+            //* If hasOrderList hide button to choose type of orders
+            visible: !hasOrderList
+          },
           {
             icon: 'add',
             label: '',

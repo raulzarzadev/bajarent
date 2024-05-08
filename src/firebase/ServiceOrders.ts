@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore'
+import { documentId, where } from 'firebase/firestore'
 import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
@@ -206,6 +206,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('storeId', '==', storeId),
       where('assignToSection', 'in', sections)
     ])
+  }
+
+  getList(ids: string[]) {
+    if (!ids || ids?.length === 0) return Promise.resolve([])
+    return this.findMany([where(documentId(), 'in', ids)])
   }
 
   // Agrega tus métodos aquí

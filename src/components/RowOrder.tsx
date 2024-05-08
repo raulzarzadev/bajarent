@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
 import OrderType from '../types/OrderType'
-// import { dateFormat, fromNow } from '../libs/utils-date'
 import theme, { STATUS_COLOR } from '../theme'
 import { OrderDirectives } from './OrderDetails'
 import ClientName from './ClientName'
@@ -30,20 +29,7 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
         </View>
       )
     },
-    // {
-    //   field: 'scheduledAt',
-    //   label: 'scheduledAt',
-    //   component: (
-    //     <View>
-    //       <Text style={[{ textAlign: 'center' }]}>
-    //         {dateFormat(order.scheduledAt, 'dd-MMM-yy')}
-    //       </Text>
-    //       <Text style={[{ textAlign: 'center' }]}>
-    //         {fromNow(order.scheduledAt)}
-    //       </Text>
-    //     </View>
-    //   )
-    // },
+
     {
       field: 'neighborhood',
       width: '20%',

@@ -2,27 +2,21 @@ import { useEffect, useState } from 'react'
 import OrderType from '../types/OrderType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 
-export default function useOrders({ storeId }: { storeId: string }) {
+export default function useOrders({ ids }: { ids: string[] }) {
   const [orders, setOrders] = useState<OrderType[]>([])
 
-  const handleGetSolvedOrders = () => {
-    ServiceOrders.getSolved(storeId).then((res) => {
-      setOrders((prev) => [...prev, ...res])
-    })
-  }
-
   useEffect(() => {
-    //* FIXME: This is generating problems because orders with reports or expired status are not getting
-    // ServiceOrders.listenUnsolved(storeId, setOrders)
-    ServiceOrders.listenByStore(storeId, setOrders)
-  }, [storeId])
-
-  useEffect(() => {
-    //* We should listen unsolved orders, expired and reported orders.
-  }, [orders])
+    const fetchOrders = async () => {
+      try {
+        await ServiceOrders.getList(ids).then((res) => setOrders(res))
+      } catch (e) {
+        console.error({ e })
+      }
+    }
+    fetchOrders()
+  }, [ids])
 
   return {
-    orders,
-    handleGetSolvedOrders
+    orders
   }
 }

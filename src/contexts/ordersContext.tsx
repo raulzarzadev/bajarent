@@ -6,7 +6,6 @@ import {
   useState
 } from 'react'
 import OrderType from '../types/OrderType'
-import { useStore } from './storeContext'
 import { useEmployee } from './employeeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useAuth } from './authContext'
@@ -18,48 +17,81 @@ export type FetchTypeOrders =
   | 'mine'
   | 'mineSolved'
   | 'mineUnsolved'
+
+export type OrderTypeOption = { label: string; value: FetchTypeOrders }
 export type OrdersContextType = {
   orders?: OrderType[]
-  ordersFetch?: FetchTypeOrders
+  fetchTypeOrders?: FetchTypeOrders
   setFetchTypeOrders?: (fetchType: FetchTypeOrders) => void
+  orderTypeOptions?: OrderTypeOption[]
 }
 
 export const OrdersContext = createContext<OrdersContextType>({})
 
 export const OrdersContextProvider = ({
-  children,
-  ordersIds
+  children
 }: {
   children: ReactNode
-  ordersIds: string[]
 }) => {
   const {
     employee,
     permissions: { orders: ordersPermissions, isOwner, isAdmin }
   } = useEmployee()
-  console.log({ ordersIds })
   const { storeId } = useAuth()
 
   const [orders, setOrders] = useState<OrderType[]>([])
+  const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
+    []
+  )
 
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
 
-  console.log({ fetchTypeOrders })
   useEffect(() => {
-    handleGetOrdersByFetchType({
-      fetchType: fetchTypeOrders,
-      sectionsAssigned: employee.sectionsAssigned,
-      storeId
-    }).then((orders) => {
-      setOrders(orders)
-    })
+    const all: OrderTypeOption = { label: 'Todas', value: 'all' }
+    const solved: OrderTypeOption = { label: 'Resueltas', value: 'solved' }
+    const unsolved: OrderTypeOption = {
+      label: 'No resueltas',
+      value: 'unsolved'
+    }
+    const mine: OrderTypeOption = { label: 'Mis ordenes', value: 'mine' }
+    const mineSolved: OrderTypeOption = {
+      label: 'Mis resueltas',
+      value: 'mineSolved'
+    }
+
+    const mineUnsolved: OrderTypeOption = {
+      label: 'Mis no resueltas',
+      value: 'mineUnsolved'
+    }
+
+    if (ordersPermissions?.canViewMy) {
+      setFetchTypeOrders('mineUnsolved')
+      setOrderTypeOptions([mine, mineSolved, mineUnsolved])
+    }
+
+    if (isAdmin || isOwner) {
+      setFetchTypeOrders('unsolved')
+      setOrderTypeOptions([all, solved, unsolved])
+    }
+  }, [employee])
+
+  useEffect(() => {
+    if (fetchTypeOrders) {
+      handleGetOrdersByFetchType({
+        fetchType: fetchTypeOrders,
+        sectionsAssigned: employee.sectionsAssigned,
+        storeId
+      }).then((orders) => {
+        setOrders(orders)
+      })
+    }
   }, [fetchTypeOrders, employee])
 
-  console.log({ orders, storeId })
-
   return (
-    <OrdersContext.Provider value={{ orders, setFetchTypeOrders }}>
+    <OrdersContext.Provider
+      value={{ orders, setFetchTypeOrders, fetchTypeOrders, orderTypeOptions }}
+    >
       {children}
     </OrdersContext.Provider>
   )

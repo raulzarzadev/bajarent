@@ -79,7 +79,6 @@ const StoreNumbersRow = () => {
       <Button
         label={`Pedidos: ${OrdersAuthorized?.length}`}
         onPress={() => {
-          // navigate('StackOrders')
           //@ts-ignore
           navigate('StackOrders', {
             screen: 'ScreenOrders',
