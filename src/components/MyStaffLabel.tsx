@@ -5,6 +5,7 @@ import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
 import theme from '../theme'
+import Button from './Button'
 
 const MyStaffLabel = () => {
   const { user } = useAuth()
@@ -17,8 +18,8 @@ const MyStaffLabel = () => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {/* {user && <LocationStatus />} */}
-      {!!store && <StoreTopButton />}
-      <Pressable
+      {/* {!!store && <StoreTopButton />} */}
+      {/* <Pressable
         role="button"
         id="profileButton"
         style={{
@@ -51,7 +52,18 @@ const MyStaffLabel = () => {
             {label}
           </Text>
         </View>
-      </Pressable>
+      </Pressable> */}
+      {store && (
+        <Button
+          icon="add"
+          onPress={() => {
+            navigation.navigate('NewOrder')
+          }}
+          justIcon
+          variant="outline"
+          buttonStyles={{ marginRight: 12 }}
+        ></Button>
+      )}
     </View>
   )
 }

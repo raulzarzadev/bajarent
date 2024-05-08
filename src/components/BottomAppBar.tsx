@@ -4,23 +4,18 @@ import StackProfile from './StackProfile'
 import StackStore from './StackStore'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
-import ScreenNewOrder from './ScreenOrderNew'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
-import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
-  const { isAuthenticated } = useAuth()
-  const {
-    permissions: { isAdmin, isOwner, orders }
-  } = useEmployee()
+  const { store } = useAuth()
 
-  const canSeeOrders = orders.canViewAll || isAdmin || isOwner
-  const canCreateOrder = orders.canCreate || isAdmin || isOwner
-  const canSeeMyOrders = !!orders?.canViewMy
+  const showProfileButton = true
+  const showOrdersButton = !!store
+  const showStoreButton = !!store
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
@@ -59,9 +54,9 @@ const BottomAppBar = () => {
         component={StackStore}
         options={{
           title: 'Tienda ',
-          headerShown: false
+          headerShown: false,
           //* hide the tab bar button on the store screen
-          // tabBarButton: () => null
+          tabBarButton: showStoreButton ? undefined : () => null
         }}
       />
 
@@ -70,34 +65,13 @@ const BottomAppBar = () => {
         component={StackOrders}
         options={({ route }) => ({
           headerShown: false,
-          title: 'Ordenes'
+          title: 'Ordenes',
+          tabBarButton: showOrdersButton ? undefined : () => null
           // tabBarButton:
           //   !canSeeOrders || !isAuthenticated ? () => null : undefined
         })}
       />
 
-      <Tab.Screen
-        name="NewOrder"
-        component={ScreenNewOrder}
-        options={{
-          title: 'Nueva orden',
-          headerRight(props) {
-            return <MyStaffLabel />
-          },
-          tabBarButton:
-            !canCreateOrder || !isAuthenticated ? () => null : undefined
-        }}
-      />
-      {/* <Tab.Screen
-        name="MyOrders"
-        component={StackOrders}
-        options={{
-          title: 'Mis ordenes',
-          //headerShown: true,
-          tabBarButton:
-            !canSeeMyOrders || !isAuthenticated ? () => null : undefined
-        }}
-      /> */}
       <Tab.Screen
         name="Profile"
         component={StackProfile}
@@ -105,7 +79,7 @@ const BottomAppBar = () => {
           title: 'Perfil',
           headerShown: false,
           //* hide the tab bar button on the profile screen
-          tabBarButton: () => null
+          tabBarButton: showProfileButton ? undefined : () => null
         }}
       />
       <Tab.Screen

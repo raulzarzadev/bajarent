@@ -14,22 +14,27 @@ const CardEmployee = () => {
   const { navigate } = useNavigation()
   return (
     <View>
-      <View>
-        <Text style={gStyles.h2}>{store?.name}</Text>
-        <Button
-          label="ir"
-          variant="ghost"
-          size="xs"
-          onPress={() => {
-            //@ts-ignore
-            navigate('Store', { storeId: store.id })
-          }}
-        ></Button>
-      </View>
-      <BadgesStore />
-      <Text style={gStyles.h3}>{employee?.name}</Text>
-      {/* <EmployeePermissionsE staff={employee} /> */}
-      <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
+      {store && (
+        <>
+          <View>
+            {/* <Text style={gStyles.h2}>{store?.name}</Text> */}
+            <Button
+              label={store?.name}
+              variant="ghost"
+              size="xs"
+              icon="arrowForward"
+              onPress={() => {
+                //@ts-ignore
+                navigate('Store', { storeId: store.id })
+              }}
+            ></Button>
+          </View>
+          <BadgesStore />
+          <Text style={gStyles.h3}>{employee?.name}</Text>
+          {/* <EmployeePermissionsE staff={employee} /> */}
+          <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
+        </>
+      )}
     </View>
   )
 }

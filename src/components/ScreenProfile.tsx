@@ -39,16 +39,6 @@ const ScreenProfile = ({ navigation }) => {
       <View style={styles.buttons}>
         <Button
           onPress={() => {
-            navigation?.navigate('EditProfile')
-          }}
-          variant="outline"
-          label="Editar información"
-        ></Button>
-      </View>
-
-      <View style={styles.buttons}>
-        <Button
-          onPress={() => {
             logout()
           }}
           variant="outline"

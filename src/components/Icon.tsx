@@ -25,7 +25,8 @@ import {
   MdCancel,
   MdOutlineRefresh,
   MdCopyAll,
-  MdUpload
+  MdUpload,
+  MdOutlineArrowForward
 } from 'react-icons/md'
 
 import {
@@ -119,7 +120,8 @@ const icons = {
   undo: MdOutlineUndo,
   cancel: MdCancel,
   refresh: MdOutlineRefresh,
-  copy: MdCopyAll
+  copy: MdCopyAll,
+  arrowForward: MdOutlineArrowForward
 } as const
 
 export type IconName = keyof typeof icons

@@ -5,8 +5,11 @@ import CardPhone from './CardPhone'
 import CardEmail from './CardEmail'
 import UserType from '../types/UserType'
 import { gStyles } from '../styles'
+import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
 
 const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
+  const { navigate } = useNavigation()
   const [_user, _setUser] = useState(user)
 
   useEffect(() => {
@@ -17,12 +20,27 @@ const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
       })
   }, [user, userId])
 
+  const itsMyUser = userId === user?.id
+
   if (!_user) return <ActivityIndicator />
 
   return (
     <View style={{ justifyContent: 'center' }}>
-      <Text style={gStyles.h1}>usuario</Text>
-      <Text style={gStyles.h2}>{_user?.name}</Text>
+      {/* <Text style={gStyles.h1}>usuario</Text> */}
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <Text style={[gStyles.h2, { marginRight: 4 }]}>{_user?.name}</Text>
+        <Button
+          icon="edit"
+          justIcon
+          onPress={() => {
+            //@ts-ignore
+            navigate('EditProfile')
+          }}
+          size="small"
+          variant="ghost"
+          //label="Editar información"
+        ></Button>
+      </View>
       <CardPhone phone={_user?.phone} />
       <CardEmail email={_user?.email} />
       {__DEV__ && (
