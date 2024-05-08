@@ -54,7 +54,7 @@ function StackStore() {
       <Stack.Screen
         name="EditStore"
         options={{
-          title: 'Editar Tienda'
+          title: 'Configurar tienda'
         }}
         component={ScreenStoreEdit}
       />
