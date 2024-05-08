@@ -23,7 +23,8 @@ function StackOrders() {
       <Stack.Screen
         name="ScreenOrders"
         options={({ route }) => ({
-          title: route?.params?.title || 'Ordenes'
+          //@ts-ignore
+          title: route?.params?.title || 'Ordenes' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
         component={ScreenOrders}
       />
