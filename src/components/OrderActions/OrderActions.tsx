@@ -86,13 +86,20 @@ const OrderActions = ({
 
   const actions_fns = {
     [acts.DELIVER]: async (
-      values?: Pick<OrderType, 'location' | 'itemSerial' | 'items'>
+      values?: Pick<OrderType, 'location' | 'itemSerial' | 'items' | 'note'>
     ) => {
       const location = values?.location || ''
       const itemSerial = values?.itemSerial || ''
       const items = values?.items || []
+      const note = values?.note || ''
+      console.log({ values })
       try {
-        await ServiceOrders.update(orderId, { location, itemSerial, items })
+        await ServiceOrders.update(orderId, {
+          location,
+          itemSerial,
+          items,
+          note
+        })
 
         await onDelivery({ orderId, userId })
         await onOrderComment({ content: 'Entregada' })
@@ -402,9 +409,7 @@ const OrderActions = ({
           initialValues={{ ...order }}
           onSubmit={async (values) => {
             await actions_fns[acts.DELIVER]({
-              location: values.location,
-              itemSerial: values.itemSerial,
-              items: values.items
+              ...values
             })
 
             deliveryModal.setOpen(false)
@@ -425,12 +430,23 @@ const OrderActions = ({
               <View>
                 <View style={{ marginVertical: 8 }}>
                   <InputValueFormik
-                    name={'itemSerial'}
-                    placeholder="No. de serie"
+                    name={'note'}
+                    placeholder="Nota"
+                    helperText={'Numero de nota o referencia externa'}
                   />
                 </View>
                 <View style={{ marginVertical: 8 }}>
-                  <InputLocationFormik name={'location'} />
+                  <InputValueFormik
+                    name={'itemSerial'}
+                    placeholder="No. de serie"
+                    helperText={'Numero de serie'}
+                  />
+                </View>
+                <View style={{ marginVertical: 8 }}>
+                  <InputLocationFormik
+                    name={'location'}
+                    helperText={'Ubicación con link o coordenadas'}
+                  />
                 </View>
 
                 <View style={{ marginVertical: 8 }}>
