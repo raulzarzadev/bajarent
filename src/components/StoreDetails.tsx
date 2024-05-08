@@ -2,15 +2,15 @@ import { Text, View } from 'react-native'
 import React from 'react'
 import P from './P'
 import StoreType from '../types/StoreType'
-import { useStoreNavigation } from './StackStore'
 import { gStyles } from '../styles'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
 import BadgesStore from './BadgesStore'
 import ErrorBoundary from './ErrorBoundary'
+import { useNavigation } from '@react-navigation/native'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
-  const { navigate } = useStoreNavigation()
+  const { navigate } = useNavigation()
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()

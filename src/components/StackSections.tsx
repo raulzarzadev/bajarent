@@ -1,10 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationProp, useNavigation } from '@react-navigation/native'
 import ScreenSections from './ScreenSections'
 import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
-import StackStaff from './StackStaff'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -14,10 +12,6 @@ export type StackStoreNavigationProps = {
   StaffNew: undefined
   StaffDetails: undefined
   StaffEdit: undefined
-}
-export const useStoreNavigation = () => {
-  const navigation = useNavigation<NavigationProp<StackStoreNavigationProps>>()
-  return navigation
 }
 
 const Stack = createStackNavigator()

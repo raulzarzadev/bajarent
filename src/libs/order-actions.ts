@@ -42,7 +42,8 @@ export const onDelivery = async ({ orderId, userId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.DELIVERED,
     deliveredAt: new Date(),
-    deliveredBy: userId
+    deliveredBy: userId,
+    isDelivered: true
   })
     .then(() => {
       console.log('delivery')
@@ -54,7 +55,8 @@ export const onPickup = async ({ orderId, userId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.PICKED_UP,
     pickedUpAt: new Date(),
-    pickedUpBy: userId
+    pickedUpBy: userId,
+    isDelivered: false
   })
     .then(() => {
       console.log('pickup')
@@ -66,7 +68,8 @@ export const onRepairStart = async ({ orderId, userId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.REPAIRING,
     repairingAt: new Date(),
-    repairingBy: userId
+    repairingBy: userId,
+    isRepairing: true
   })
     .then(() => {
       console.log('repairing')
@@ -78,7 +81,8 @@ export const onRepairFinish = async ({ orderId, userId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.REPAIRED,
     repairedAt: new Date(),
-    repairedBy: userId
+    repairedBy: userId,
+    isRepairing: false
   })
     .then(() => {
       console.log('repaired')
@@ -91,7 +95,8 @@ export const onRenew = async ({ orderId, renewedTo = '', userId }) => {
     status: order_status.RENEWED,
     renewedAt: new Date(),
     renewedBy: userId,
-    renewedTo
+    renewedTo,
+    isRenewed: true
   })
     .then(console.log)
     .catch(console.error)
@@ -100,7 +105,8 @@ export const onCancel = async ({ orderId, userId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.CANCELLED,
     cancelledAt: new Date(),
-    cancelledBy: userId
+    cancelledBy: userId,
+    isCancelled: true
   })
     .then(() => {
       console.log('cancel')
@@ -109,6 +115,7 @@ export const onCancel = async ({ orderId, userId }) => {
 }
 
 export const onDelete = async ({ orderId }) => {
+  //? should be a soft delete isDeleted: true
   return await ServiceOrders.delete(orderId)
     .then(() => {
       console.log('delete')
@@ -132,7 +139,8 @@ export const onExtend = async (
 ) => {
   return await ServiceOrders.update(orderId, {
     extendTime: time,
-    extendReason: reason
+    extendReason: reason,
+    isExtended: true
   })
     .then(() => {})
     .catch(console.error)

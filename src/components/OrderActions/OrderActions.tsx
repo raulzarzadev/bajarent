@@ -393,9 +393,9 @@ const OrderActions = ({
 
   return (
     <View>
-      {/* <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
-        <OrderStatus orderId={orderId} />
-      </View> */}
+      <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
+        <OrderStatus order={order} chipSize={'sm'} />
+      </View>
 
       <StyledModal {...deliveryModal}>
         <Formik

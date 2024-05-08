@@ -4,6 +4,7 @@ import ErrorBoundary from './ErrorBoundary'
 import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
+import StackOrders from './StackOrders'
 
 const Stack = createStackNavigator()
 function StackBalances() {
@@ -38,6 +39,14 @@ function StackBalances() {
           title: 'Detalles de corte'
         }}
         component={ScreenBalancesDetails}
+      />
+      <Stack.Screen
+        name="StackOrders"
+        options={{
+          title: 'Ordenes',
+          headerShown: false
+        }}
+        component={StackOrders}
       />
     </Stack.Navigator>
   )

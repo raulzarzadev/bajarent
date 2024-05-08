@@ -187,11 +187,11 @@ const ModalOrders = ({
           label={`${buttonLabel} ${ordersIds.length || 0}`}
           variant="ghost"
           onPress={() => {
+            // navigate('ScreenOrders')
             //@ts-ignore
             navigate('StackOrders', {
               screen: 'ScreenOrders',
-              title: modalTitle,
-              params: { orders: ordersIds }
+              params: { orders: ordersIds, title: modalTitle }
             })
           }}
           fullWidth={false}

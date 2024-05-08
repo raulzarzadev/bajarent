@@ -21,10 +21,10 @@ const ListOrders = ({
       defaultSortBy="folio"
       defaultOrder="des"
       onPressRow={(id) => {
-        // @ts-ignore
-        //navigate('Orders')
-        // @ts-ignore
-        //navigate('OrderDetails', { orderId: id })
+        //@ts-ignore
+        navigate('OrderDetails', { orderId: id })
+        //@ts-ignore
+        //  navigate('OrderDetails', { orderId: id })
       }}
       sortFields={[
         //{ key: 'priority', label: 'Prioridad' },

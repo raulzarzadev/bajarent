@@ -1,5 +1,6 @@
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import {
+  onAuthorize,
   onCancel,
   onComment,
   onDelivery,

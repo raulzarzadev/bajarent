@@ -2,74 +2,79 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
 import OrderType from '../types/OrderType'
+import { useOrdersCtx } from '../contexts/ordersContext'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import { Text, View } from 'react-native'
+import { gStyles } from '../styles'
+import InputSelect from './InputSelect'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
-
-  // const {
-  //   orders,
-  //   handleToggleJustActiveOrders,
-  //   fetchOrders,
-  //   justActiveOrders
-  // } = useStore()
-  // const preOrders = route?.params?.orders || null
-  // const [fullOrders, setFullOrders] = useState<OrderType[]>([])
-  // useEffect(() => {
-  //   // if (preOrders) {
-  //   //   const filteredOrders = orders.filter(({ id }) => preOrders.includes(id))
-  //   //   setFullOrders(filteredOrders)
-  //   // } else {
-  //   //   setFullOrders(orders)
-  //   // }
-  // }, [orders])
-
-  const [disabled, setDisabled] = useState(false)
-  // const debouncedFetchOrders = () => {
-  //   setDisabled(true)
-  //   fetchOrders()
-  //   setTimeout(() => {
-  //     setDisabled(false)
-  //   }, 3000) //<-- 3 seconds
-  // }
+  const { orders, ordersFetch, setFetchTypeOrders } = useOrdersCtx()
+  console.log({ orders })
 
   console.log({ ordersIds: route?.params?.orders })
-
+  const modal = useModal({
+    title: 'Tipo de ordenes'
+  })
   return (
-    <ListOrders
-      orders={[]}
-      //defaultOrdersIds={filtered}
+    <>
+      <StyledModal {...modal}>
+        <Text style={gStyles.h3}>
+          Selecciona que tipo de ordenes quieres ver
+        </Text>
+        <InputSelect
+          options={[
+            { label: 'Todas', value: 'all' },
+            { label: 'Resueltas', value: 'solved' },
+            { label: 'No resueltas', value: 'unsolved' },
+            { label: 'Ordenes (Mias)', value: 'mine' },
+            { label: 'Resueltas (Mias)', value: 'mineSolved' },
+            { label: 'No resueltas (Mias)', value: 'mineUnsolved' }
+          ]}
+          value={ordersFetch}
+          onChangeValue={setFetchTypeOrders}
+        />
+      </StyledModal>
 
-      sideButtons={[
-        // {
-        //   icon: 'download',
-        //   label: '',
-        //   onPress: handleToggleJustActiveOrders,
-        //   visible: justActiveOrders
-        // },
-        // {
-        //   icon: 'upload',
-        //   label: '',
-        //   onPress: handleToggleJustActiveOrders,
-        //   visible: !justActiveOrders
-        // },
-        // {
-        //   icon: 'refresh',
-        //   label: '',
-        //   onPress: debouncedFetchOrders,
-        //   visible: true,
-        //   disabled: disabled
-        // },
-        {
-          icon: 'add',
-          label: '',
-          onPress: () => {
-            // @ts-ignore
-            navigate('NewOrder')
-          },
-          visible: true
-        }
-      ]}
-    />
+      <ListOrders
+        orders={orders}
+        //defaultOrdersIds={filtered}
+
+        sideButtons={[
+          // {
+          //   icon: 'download',
+          //   label: '',
+          //   onPress: handleToggleJustActiveOrders,
+          //   visible: justActiveOrders
+          // },
+          // {
+          //   icon: 'upload',
+          //   label: '',
+          //   onPress: handleToggleJustActiveOrders,
+          //   visible: !justActiveOrders
+          // },
+          // {
+          //   icon: 'refresh',
+          //   label: '',
+          //   onPress: debouncedFetchOrders,
+          //   visible: true,
+          //   disabled: disabled
+          // },
+          { icon: 'swap', label: '', onPress: modal.toggleOpen, visible: true },
+          {
+            icon: 'add',
+            label: '',
+            onPress: () => {
+              // @ts-ignore
+              navigate('NewOrder')
+            },
+            visible: true
+          }
+        ]}
+      />
+    </>
   )
 }
 

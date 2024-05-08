@@ -110,6 +110,17 @@ type OrderBase = {
    *******************************************rz */
   extendReason?: string
   extendTime?: TimePriceType
+
+  /* ******************************************** 
+             STATUSES FOR ORDERS               
+   *******************************************rz */
+  isDelivered?: boolean
+  isReported?: boolean
+  isRenewed?: boolean
+  isCancelled?: boolean
+  isRepairing?: boolean
+  isDeleted?: boolean
+  isExtended?: boolean
 }
 
 export enum order_status {

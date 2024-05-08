@@ -1,18 +1,17 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenCreateStore from './ScreenStoreCreate'
 import ScreenStoreEdit from './ScreenStoreEdit'
-import { NavigationProp, useNavigation } from '@react-navigation/native'
 import MyStaffLabel from './MyStaffLabel'
 import ScreenItems from './ScreenItems'
 import ScreenCategoryEdit from './ScreenCategoryEdit'
 import ScreenCategoryNew from './ScreenCategoryNew'
 import StackSections from './StackSections'
-import StackOrders from './StackOrders'
 import StackStaff from './StackStaff'
 import { ScreenStoreE } from './ScreenStore5'
 import ScreenOrdersConfig from './ScreenOrdersConfig'
 import { StackBalancesE } from './StackBalances'
 import { StackPaymentsE } from './StackPayments'
+import StackOrders from './StackOrders'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -23,10 +22,7 @@ export type StackStoreNavigationProps = {
   StaffDetails: undefined
   StaffEdit: undefined
 }
-export const useStoreNavigation = () => {
-  const navigation = useNavigation<NavigationProp<StackStoreNavigationProps>>()
-  return navigation
-}
+
 const Stack = createStackNavigator()
 
 function StackStore() {
@@ -95,17 +91,6 @@ function StackStore() {
         component={StackStaff}
       />
 
-      {/* ORDERS  */}
-      <Stack.Screen
-        options={({ route }) => ({
-          title: route?.params?.title || 'Ordenes',
-          orders: route?.params?.orders || []
-          //headerShown: false
-        })}
-        name="StackOrders"
-        component={StackOrders}
-      />
-
       {/* CASHBOX  */}
 
       <Stack.Screen
@@ -123,6 +108,14 @@ function StackStore() {
           headerShown: false
         }}
         component={StackPaymentsE}
+      />
+      <Stack.Screen
+        name="StackOrders"
+        options={{
+          title: 'Ordenes',
+          headerShown: false
+        }}
+        component={StackOrders}
       />
 
       {/* ******************************************** 

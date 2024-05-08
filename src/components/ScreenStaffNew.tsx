@@ -16,13 +16,13 @@ import theme from '../theme'
 import UserType from '../types/UserType'
 import P from './P'
 import CardUser from './CardUser'
-import { useStoreNavigation } from './StackStore'
 import StaffType, { CreateStaffType } from '../types/StaffType'
 import { gStyles } from '../styles'
 import Loading from './Loading'
 import ListStaff from './ListStaff2'
 import { ServiceSections } from '../firebase/ServiceSections'
 import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
 
 const ScreenStaffNew = ({ route }) => {
   const { store, staff } = useStore()
@@ -31,7 +31,7 @@ const ScreenStaffNew = ({ route }) => {
       !s.sectionsAssigned?.length ||
       !s.sectionsAssigned.includes(route?.params?.sectionId)
   )
-  const { goBack } = useStoreNavigation()
+  const { goBack } = useNavigation()
   const [user, setUser] = React.useState<UserType>()
   const defaultValues: Partial<StaffType> = {
     userId: user?.id,
@@ -76,7 +76,6 @@ const ScreenStaffNew = ({ route }) => {
                 userId: user.id || ''
               }
               ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
-                console.log({ res })
                 setUser(undefined)
                 goBack()
               })

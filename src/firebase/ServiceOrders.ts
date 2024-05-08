@@ -192,10 +192,19 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   getBySections(sections: string[]) {
     return this.findMany([where('assignToSection', 'in', sections)])
   }
-  getUnsolvedBySections(sections: string[]) {
+
+  getMineUnsolved(storeId: string, sections: string[]) {
     return this.findMany([
+      where('storeId', '==', storeId),
       where('assignToSection', 'in', sections),
-      where('status', 'in', [order_status.AUTHORIZED])
+      where('status', 'in', ORDER_STATUS_UNSOLVED)
+    ])
+  }
+
+  getMineSolved(storeId: string, sections: string[]) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('assignToSection', 'in', sections)
     ])
   }
 

@@ -32,7 +32,8 @@ const BottomAppBar = () => {
               Profile: 'profile',
               NewOrder: 'add',
               Components: 'components',
-              MyOrders: 'myOrders'
+              MyOrders: 'myOrders',
+              StackOrders: 'orders'
             }
             return (
               <Icon
@@ -58,21 +59,21 @@ const BottomAppBar = () => {
         component={StackStore}
         options={{
           title: 'Tienda ',
-          headerShown: false,
+          headerShown: false
           //* hide the tab bar button on the store screen
-          tabBarButton: () => null
+          // tabBarButton: () => null
         }}
       />
 
       <Tab.Screen
-        name="Orders"
+        name="StackOrders"
         component={StackOrders}
-        options={{
-          title: 'Ordenes',
-          //headerShown: false,
-          tabBarButton:
-            !canSeeOrders || !isAuthenticated ? () => null : undefined
-        }}
+        options={({ route }) => ({
+          headerShown: false,
+          title: 'Ordenes'
+          // tabBarButton:
+          //   !canSeeOrders || !isAuthenticated ? () => null : undefined
+        })}
       />
 
       <Tab.Screen
@@ -87,7 +88,7 @@ const BottomAppBar = () => {
             !canCreateOrder || !isAuthenticated ? () => null : undefined
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="MyOrders"
         component={StackOrders}
         options={{
@@ -96,7 +97,7 @@ const BottomAppBar = () => {
           tabBarButton:
             !canSeeMyOrders || !isAuthenticated ? () => null : undefined
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Profile"
         component={StackProfile}

@@ -27,35 +27,37 @@ const StyledModal = ({
   size = 'md'
 }: StyledModalProps) => {
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        role="dialog"
-        animationType="slide"
-        transparent={true}
-        visible={open}
-        onRequestClose={() => {
-          // alert('Modal has been closed.')
-          setOpen(!open)
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View
-            style={[
-              styles.modalView,
-              size === 'full' && styles.fullSizeModal,
-              size === 'md' && styles.mdSizeModal
-            ]}
-          >
-            <View style={styles.topBar}>
-              <Text style={styles.title}>{title}</Text>
-              <Pressable onPress={() => setOpen(!open)}>
-                <Icon icon="close" />
-              </Pressable>
+    <View>
+      <View style={styles.centeredView}>
+        <Modal
+          role="dialog"
+          animationType="slide"
+          transparent={true}
+          visible={open}
+          onRequestClose={() => {
+            // alert('Modal has been closed.')
+            setOpen(!open)
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View
+              style={[
+                styles.modalView,
+                size === 'full' && styles.fullSizeModal,
+                size === 'md' && styles.mdSizeModal
+              ]}
+            >
+              <View style={styles.topBar}>
+                <Text style={styles.title}>{title}</Text>
+                <Pressable onPress={() => setOpen(!open)}>
+                  <Icon icon="close" />
+                </Pressable>
+              </View>
+              <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
             </View>
-            <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </View>
     </View>
   )
 }

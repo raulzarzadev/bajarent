@@ -22,7 +22,7 @@ const ScreenStore = (props) => {
   return (
     <View>
       {user && <StoreDetailsE store={store} {...props} />}
-      {user && canViewStoreNumbers && <StoreNumbersRow />}
+      {user && canViewStoreNumbers && <StoreNumbersRow {...props} />}
       {user && (canViewCashbox || canViewSections || canViewOrders) && (
         <Tabs
           tabs={[
@@ -83,8 +83,8 @@ const StoreNumbersRow = () => {
           //@ts-ignore
           navigate('StackOrders', {
             screen: 'ScreenOrders',
-            title: 'Pedidos',
             params: {
+              title: 'Pedidos',
               orders: OrdersAuthorized?.map(({ id }) => id)
             }
           })
@@ -97,8 +97,8 @@ const StoreNumbersRow = () => {
           //@ts-ignore
           navigate('StackOrders', {
             screen: 'ScreenOrders',
-            title: 'Reportes',
             params: {
+              title: 'Reportes',
               orders: OrdersReported?.map(({ id }) => id)
             }
           })

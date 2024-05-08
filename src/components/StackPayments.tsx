@@ -3,6 +3,7 @@ import MyStaffLabel from './MyStaffLabel'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenPayments from './ScreenPayments'
 import ScreenPaymentsDetails from './ScreenPaymentsDetails'
+import StackOrders from './StackOrders'
 
 const Stack = createStackNavigator()
 function StackPayments() {
