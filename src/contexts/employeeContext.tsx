@@ -49,7 +49,9 @@ export const EmployeeContextProvider = ({ children }) => {
 
   const value = useMemo(
     () => ({
-      employee: { ...employee, sectionsAssigned: assignedSections },
+      employee: employee
+        ? { ...employee, sectionsAssigned: assignedSections }
+        : undefined,
 
       permissions: {
         isAdmin: !!isAdmin,

@@ -2,9 +2,9 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
 import OrderType from '../types/OrderType'
 import theme, { STATUS_COLOR } from '../theme'
-import { OrderDirectives } from './OrderDetails'
 import ClientName from './ClientName'
 import { gStyles } from '../styles'
+import OrderDirectives from './OrderDirectives'
 
 const RowOrder = ({ item: order }: { item: OrderType }) => {
   const fields: {

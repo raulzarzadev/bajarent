@@ -26,6 +26,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
 import { translateTime } from '../libs/expireDate'
+import OrderDirectives from './OrderDirectives'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const multiItemOrder = order?.items?.length > 0
@@ -294,39 +295,6 @@ const ItemDates = ({
     </>
   )
 }
-export const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        flexWrap: 'wrap'
-      }}
-    >
-      <Chip
-        style={styles.chip}
-        title={dictionary(order?.type)?.toUpperCase()}
-        color={theme?.info}
-        titleColor={theme.black}
-        size="sm"
-      ></Chip>
-      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
-      <OrderAssignedTo
-        orderId={order?.id}
-        chipStyles={styles.chip}
-        chipSize={'sm'}
-      />
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
-  chip: {
-    margin: 2,
-    maxWidth: 105
-  }
-})
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
   const [payments, setPayments] = useState<PaymentType[]>([])

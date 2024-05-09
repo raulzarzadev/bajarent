@@ -9,6 +9,7 @@ import OrderType from '../types/OrderType'
 import { useEmployee } from './employeeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useAuth } from './authContext'
+import { ServiceComments } from '../firebase/ServiceComments'
 
 export type FetchTypeOrders =
   | 'all'
@@ -24,6 +25,7 @@ export type OrdersContextType = {
   fetchTypeOrders?: FetchTypeOrders
   setFetchTypeOrders?: (fetchType: FetchTypeOrders) => void
   orderTypeOptions?: OrderTypeOption[]
+  handleRefresh?: () => void
 }
 
 export const OrdersContext = createContext<OrdersContextType>({})
@@ -77,7 +79,8 @@ export const OrdersContextProvider = ({
   }, [employee])
 
   useEffect(() => {
-    if (fetchTypeOrders) {
+    if (fetchTypeOrders && employee) {
+      console.log({ employee })
       handleGetOrdersByFetchType({
         fetchType: fetchTypeOrders,
         sectionsAssigned: employee.sectionsAssigned,
@@ -88,9 +91,27 @@ export const OrdersContextProvider = ({
     }
   }, [fetchTypeOrders, employee])
 
+  const handleRefresh = () => {
+    if (fetchTypeOrders) {
+      handleGetOrdersByFetchType({
+        fetchType: fetchTypeOrders,
+        sectionsAssigned: employee.sectionsAssigned,
+        storeId
+      }).then((orders) => {
+        setOrders(orders)
+      })
+    }
+  }
+
   return (
     <OrdersContext.Provider
-      value={{ orders, setFetchTypeOrders, fetchTypeOrders, orderTypeOptions }}
+      value={{
+        orders,
+        setFetchTypeOrders,
+        fetchTypeOrders,
+        orderTypeOptions,
+        handleRefresh
+      }}
     >
       {children}
     </OrdersContext.Provider>
@@ -106,6 +127,7 @@ const handleGetOrdersByFetchType = async ({
   sectionsAssigned?: string[]
   storeId?: string
 }) => {
+  console.log({ fetchType })
   if (fetchType === 'mine') {
     return ServiceOrders.getBySections(sectionsAssigned)
   }
@@ -116,13 +138,80 @@ const handleGetOrdersByFetchType = async ({
     return ServiceOrders.getSolved(storeId)
   }
   if (fetchType === 'unsolved') {
-    return ServiceOrders.getUnsolved(storeId)
+    //*<--- 1. with reports
+    //*<--- 2. pending
+    //*<--- 3. authorized
+    //*<----4. rent expired
+    try {
+      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+      const reportedOrdersIds = reportsUnsolved
+        .map((r) => r.orderId)
+        // remove duplicates
+        .reduce((acc, curr) => {
+          if (!acc.includes(curr)) {
+            acc.push(curr)
+          }
+          return acc
+        }, [])
+      const pending = await ServiceOrders.getPending(storeId).then((res) => {
+        return res.filter((r) => !reportedOrdersIds.includes(r.id))
+      })
+
+      const expired = await ServiceOrders.getExpired(storeId).then((res) => {
+        return res.filter((r) => !reportedOrdersIds.includes(r.id))
+      })
+      const reported = (await ServiceOrders.getList(reportedOrdersIds)).map(
+        (r) => ({ ...r, isReported: true })
+      )
+
+      return [...pending, ...expired, ...reported]
+    } catch (e) {
+      console.error({ e })
+    }
+    //return ServiceOrders.getUnsolved(storeId)
   }
   if (fetchType === 'mineSolved') {
     return ServiceOrders.getMineSolved(storeId, sectionsAssigned)
   }
   if (fetchType === 'mineUnsolved') {
-    return ServiceOrders.getMineUnsolved(storeId, sectionsAssigned)
+    //return ServiceOrders.getMineUnsolved(storeId, sectionsAssigned)
+    // return ServiceOrders.getMineSolved(storeId, sectionsAssigned)
+    //*<--- 1. with reports
+    //*<--- 2. pending
+    //*<--- 3. authorized
+    //*<----4. rent expired
+    try {
+      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+      const reportedOrdersIds = reportsUnsolved
+        .map((r) => r.orderId)
+        // remove duplicates
+        .reduce((acc, curr) => {
+          if (!acc.includes(curr)) {
+            acc.push(curr)
+          }
+          return acc
+        }, [])
+      const pending = await ServiceOrders.getPending(storeId, {
+        sections: sectionsAssigned
+      }).then((res) => {
+        return res.filter((r) => !reportedOrdersIds.includes(r.id))
+      })
+
+      const expired = await ServiceOrders.getExpired(storeId, {
+        sections: sectionsAssigned
+      }).then((res) => {
+        return res.filter((r) => !reportedOrdersIds.includes(r.id))
+      })
+      const reported = (
+        await ServiceOrders.getList(reportedOrdersIds, {
+          sections: sectionsAssigned
+        })
+      ).map((r) => ({ ...r, isReported: true }))
+
+      return [...pending, ...expired, ...reported]
+    } catch (e) {
+      console.error({ e })
+    }
   }
   return []
 }

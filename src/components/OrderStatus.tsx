@@ -16,7 +16,7 @@ const OrderStatus = ({
 }) => {
   const status = order?.status
   const color = STATUS_COLOR[status]
-  const hasReport = order?.hasNotSolvedReports
+  const hasReport = order?.hasNotSolvedReports || order?.isReported
   return (
     <Chip
       style={[chipStyles]}

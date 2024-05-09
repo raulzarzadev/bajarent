@@ -12,8 +12,13 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
 
   const hasOrderList = !!route?.params?.orders
-  const { orders, fetchTypeOrders, setFetchTypeOrders, orderTypeOptions } =
-    useOrdersCtx()
+  const {
+    orders,
+    fetchTypeOrders,
+    setFetchTypeOrders,
+    orderTypeOptions,
+    handleRefresh: refreshOrders
+  } = useOrdersCtx()
   const { orders: preOrders } = useOrders({ ids: route?.params?.orders })
 
   const modal = useModal({
@@ -46,14 +51,22 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             visible: !hasOrderList
           },
           {
-            icon: 'add',
+            icon: 'refresh',
             label: '',
             onPress: () => {
-              // @ts-ignore
-              navigate('NewOrder')
+              refreshOrders()
             },
             visible: true
           }
+          // {
+          //   icon: 'add',
+          //   label: '',
+          //   onPress: () => {
+          //     // @ts-ignore
+          //     navigate('NewOrder')
+          //   },
+          //   visible: true
+          // }
         ]}
       />
     </>

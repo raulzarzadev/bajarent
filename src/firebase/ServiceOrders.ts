@@ -2,6 +2,7 @@ import { documentId, where } from 'firebase/firestore'
 import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
+  TypeOrder,
   order_status
 } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
@@ -208,9 +209,36 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ])
   }
 
-  getList(ids: string[]) {
+  getList(ids: string[], ops: { sections?: string[] } = {}) {
+    const sections = ops?.sections || []
     if (!ids || ids?.length === 0) return Promise.resolve([])
-    return this.findMany([where(documentId(), 'in', ids)])
+    const filters = [where(documentId(), 'in', ids)]
+    if (sections?.length > 0)
+      filters.push(where('assignToSection', 'in', sections))
+    return this.findMany(filters)
+  }
+
+  getPending(storeId: string, ops: { sections?: string[] } = {}) {
+    const sections = ops?.sections || []
+    const filters = [
+      where('storeId', '==', storeId),
+      where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
+    ]
+    if (sections?.length > 0)
+      filters.push(where('assignToSection', 'in', sections))
+    return this.findMany(filters)
+  }
+
+  getExpired(storeId: string, ops: { sections?: string[] } = {}) {
+    const sections = ops?.sections || []
+    const filters = [
+      where('storeId', '==', storeId),
+      where('type', '==', TypeOrder.RENT),
+      where('status', '==', order_status.DELIVERED)
+    ]
+    if (sections?.length > 0)
+      filters.push(where('assignToSection', 'in', sections))
+    return this.findMany(filters)
   }
 
   // Agrega tus métodos aquí
