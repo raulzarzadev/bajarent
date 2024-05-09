@@ -3,7 +3,7 @@ import { ServicePrices } from '../firebase/ServicePrices'
 import { useStore } from '../contexts/storeContext'
 
 function usePrices() {
-  const { updateCategories } = useStore()
+  //const { updateCategories } = useStore()
   const createPrice = async (
     price: Partial<PriceType>,
     storeId: string,
@@ -14,7 +14,7 @@ function usePrices() {
     await ServicePrices.create(price)
       .then((r) => {
         console.log({ r })
-        updateCategories()
+        // updateCategories()
       })
       .catch((e) => console.error({ e }))
   }
@@ -25,7 +25,7 @@ function usePrices() {
     await ServicePrices.update(priceId, price)
       .then((r) => {
         console.log({ r })
-        updateCategories()
+        //updateCategories()
       })
       .catch((e) => console.error({ e }))
   }
@@ -33,7 +33,7 @@ function usePrices() {
     await ServicePrices.delete(priceId)
       .then((r) => {
         console.log({ r })
-        updateCategories()
+        // updateCategories()
       })
       .catch((e) => console.error({ e }))
   }

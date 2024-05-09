@@ -30,6 +30,7 @@ import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
 import FormikSelectCategories from '../FormikSelectCategories'
 import OrderStatus from '../OrderStatus'
+import useOrder from '../../hooks/useFullOrder'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -79,8 +80,9 @@ const OrderActions = ({
 
   const deliveryModal = useModal({ title: 'Confirmar datos de entrega' })
 
-  const { orders, categories } = useStore()
-  const order = orders.find((o) => o.id === orderId)
+  // const { orders } = useStore()
+  // const order = orders.find((o) => o.id === orderId)
+  const { order } = useOrder({ orderId })
 
   // #region ACTIONS
 
@@ -92,7 +94,6 @@ const OrderActions = ({
       const itemSerial = values?.itemSerial || ''
       const items = values?.items || []
       const note = values?.note || ''
-      console.log({ values })
       try {
         await ServiceOrders.update(orderId, {
           location,
@@ -401,7 +402,7 @@ const OrderActions = ({
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
-        <OrderStatus order={order} chipSize={'sm'} />
+        {/* <OrderStatus order={order} chipSize={'sm'} /> */}
       </View>
 
       <StyledModal {...deliveryModal}>

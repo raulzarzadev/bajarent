@@ -7,6 +7,7 @@ import { Text } from 'react-native'
 import { gStyles } from '../styles'
 import InputSelect from './InputSelect'
 import useOrders from '../hooks/useOrders'
+import { useState } from 'react'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
@@ -24,7 +25,12 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const modal = useModal({
     title: 'Tipo de ordenes'
   })
-
+  const [disabled, setDisabled] = useState(false)
+  const handleRefresh = () => {
+    setDisabled(true)
+    refreshOrders()
+    setTimeout(() => setDisabled(false), 4000)
+  }
   return (
     <>
       <StyledModal {...modal}>
@@ -54,9 +60,10 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             icon: 'refresh',
             label: '',
             onPress: () => {
-              refreshOrders()
+              handleRefresh()
             },
-            visible: true
+            visible: true,
+            disabled: disabled
           }
           // {
           //   icon: 'add',

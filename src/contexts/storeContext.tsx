@@ -11,6 +11,7 @@ import { ServiceCategories } from '../firebase/ServiceCategories'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
+import { ServicePrices } from '../firebase/ServicePrices'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -52,7 +53,24 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (store) {
-      ServiceCategories.listenByStore(store.id, setCategories)
+      ServiceCategories.listenByStore(store.id, async (categories) => {
+        // const pricesCats = await categories.map(async (category) => {
+        //   const prices = await ServicePrices.getByCategory(category.id)
+        //   category.prices = prices
+        //   return category
+        // })
+        // console.log({ pricesCats })
+
+        const priceCategories = await Promise.all(
+          categories.map(async (category) => {
+            const prices = await ServicePrices.getByCategory(category.id)
+            category.prices = prices
+            return category
+          })
+        )
+
+        setCategories(priceCategories)
+      })
       ServiceSections.listenByStore(store.id, setSections)
       ServiceStaff.listenByStore(store.id, async (staff) => {
         const owner = await ServiceUsers.get(store.createdBy)

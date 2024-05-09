@@ -1,6 +1,6 @@
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { StoreDetailsE } from './StoreDetails'
 import Button from './Button'
 import Tabs from './Tabs'
@@ -8,6 +8,8 @@ import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
 import { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
+import ScreenItems from './ScreenItems'
+import { gSpace, gStyles } from '../styles'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -20,16 +22,16 @@ const ScreenStore = (props) => {
   const canViewStoreNumbers = isAdmin || isOwner
 
   return (
-    <View>
+    <ScrollView>
       {user && <StoreDetailsE store={store} {...props} />}
       {user && canViewStoreNumbers && <StoreNumbersRow {...props} />}
       {user && (canViewCashbox || canViewSections || canViewOrders) && (
         <Tabs
           tabs={[
             {
-              title: 'Ordenes',
-              content: <TabOrders />,
-              show: canViewOrders
+              title: 'Caja',
+              content: <TabCashbox />,
+              show: canViewCashbox
             },
             {
               title: 'Areas',
@@ -37,14 +39,19 @@ const ScreenStore = (props) => {
               show: canViewSections
             },
             {
-              title: 'Caja',
-              content: <TabCashbox />,
-              show: canViewCashbox
+              title: 'Ordenes',
+              content: <TabOrders />,
+              show: canViewOrders
+            },
+            {
+              title: 'Articulos',
+              content: <TabItems />,
+              show: true
             }
           ]}
         />
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -163,6 +170,14 @@ const TabAreas = () => {
         icon="settings"
         disabled={true}
       />
+    </View>
+  )
+}
+
+const TabItems = () => {
+  return (
+    <View style={[gStyles.container, { marginBottom: gSpace(16) }]}>
+      <ScreenItems />
     </View>
   )
 }

@@ -21,17 +21,13 @@ import useCategories from '../hooks/useCategories'
 import { priceTimeInSeconds } from '../libs/expireDate'
 
 const ScreenItems = () => {
-  return (
-    <View style={[gStyles.container, { height: '100%' }]}>
-      <StoreCategories />
-    </View>
-  )
+  return <StoreCategories />
 }
 
 const StoreCategories = () => {
   const [selected, setSelected] = useState<string | null>(null)
   const { navigate } = useNavigation()
-  const { categories, storeId, updateCategories } = useStore()
+  const { categories, storeId } = useStore()
 
   const { deleteCategory, createPrice, deletePrice, updatePrice } =
     useCategories()
@@ -43,15 +39,15 @@ const StoreCategories = () => {
   }
   const handleDeletePrice = async (id: string) => {
     await deletePrice(id)
-    updateCategories()
+    //updateCategories()
   }
   const handleEditPrice = async (id: string, values: Partial<PriceType>) => {
     await updatePrice(id, values)
-    updateCategories()
+    // updateCategories()
   }
   const handleDeleteCategory = async (id: string) => {
     await deleteCategory(id)
-    updateCategories()
+    //updateCategories()
   }
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
 
