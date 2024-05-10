@@ -1,12 +1,14 @@
 import { View, ScrollView, ActivityIndicator } from 'react-native'
 import OrderDetails from './OrderDetails'
-import OrderType from '../types/OrderType'
+import { useOrdersCtx } from '../contexts/ordersContext'
 import { useEffect, useState } from 'react'
 import { listenFullOrderData } from '../contexts/libs/getFullOrderData'
+import OrderType from '../types/OrderType'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params
-
+  const { orders } = useOrdersCtx()
+  const orderCtx = orders.find((order) => order.id === orderId)
   const [order, setOrder] = useState<OrderType>()
   useEffect(() => {
     if (orderId) {
@@ -31,7 +33,7 @@ const ScreenOrderDetail = ({ route }) => {
           marginTop: 12
         }}
       >
-        <OrderDetails order={order} />
+        <OrderDetails order={order || orderCtx} />
       </View>
     </ScrollView>
   )

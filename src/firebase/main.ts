@@ -8,7 +8,7 @@ import {
 
 // use persistentLocalCache always
 const USE_PERSISTANCE_CACHE = true
-export const USE_EMULATOR = true
+export const USE_EMULATOR = false
 // use memoryLocalCache for development and persistentLocalCache for production
 // const localCache = __DEV__ ? persistentLocalCache() : memoryLocalCache()
 

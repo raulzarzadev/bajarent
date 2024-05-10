@@ -13,6 +13,9 @@ import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
+import { handleSetStatuses } from './libs/update_statuses'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { ServiceComments } from '../../firebase/ServiceComments'
 
 const OrderCommonActions = ({
   storeId,
@@ -88,6 +91,14 @@ const OrderCommonActions = ({
     return await onCancel({ orderId, userId }).then(() => {
       onOrderComment({ content: 'Cancelada' })
     })
+  }
+
+  const handleUpdateStatuses = async () => {
+    const order = await ServiceOrders.get(orderId)
+    const reports = await ServiceComments.getOrderUnsolvedReports(orderId)
+    const { order: newOrder } = handleSetStatuses({ order, reports })
+
+    return await ServiceOrders.update(orderId, { ...newOrder, statuses: true })
   }
 
   const buttons = [
@@ -169,7 +180,18 @@ const OrderCommonActions = ({
         }}
       />
     ),
-    canCopy && <ButtonCopyRow orderId={orderId} />
+    canCopy && <ButtonCopyRow orderId={orderId} />,
+    true && (
+      <>
+        <ButtonConfirm
+          text="Desea actualizar los estados a statuses"
+          openLabel="Statuses"
+          openSize="small"
+          openVariant="outline"
+          handleConfirm={handleUpdateStatuses}
+        />
+      </>
+    )
   ]
   return (
     <View>

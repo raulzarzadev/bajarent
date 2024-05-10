@@ -234,7 +234,24 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const filters = [
       where('storeId', '==', storeId),
       where('type', '==', TypeOrder.RENT),
-      where('status', '==', order_status.DELIVERED)
+      where('status', '==', order_status.DELIVERED),
+      where('expireAt', '<', new Date())
+    ]
+    if (sections?.length > 0)
+      filters.push(where('assignToSection', 'in', sections))
+    return this.findMany(filters)
+  }
+
+  getRepairs(storeId: string, ops: { sections?: string[] } = {}) {
+    const sections = ops?.sections || []
+    const filters = [
+      where('storeId', '==', storeId),
+      where('type', '==', TypeOrder.REPAIR),
+      where('status', 'in', [
+        order_status.REPAIRING,
+        order_status.REPAIRED,
+        order_status.PICKED_UP
+      ])
     ]
     if (sections?.length > 0)
       filters.push(where('assignToSection', 'in', sections))

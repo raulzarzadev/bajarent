@@ -5,14 +5,17 @@ import FormOrder from './FormOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
+import { getFullOrderData } from '../contexts/libs/getFullOrderData'
+import { useEffect, useState } from 'react'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
   const { navigate } = useNavigation()
   const { user } = useAuth()
-  const { orders } = useStore()
-  const originalOrder = orders.find((o) => o.id === orderId)
-
+  const [originalOrder, setOriginalOrder] = useState<OrderType | null>(null)
+  useEffect(() => {
+    getFullOrderData(orderId).then((order) => setOriginalOrder(order))
+  }, [orderId])
   const newOrder: Partial<OrderType> = {
     storeId: originalOrder?.storeId || '',
     assignToSection: originalOrder?.assignToSection || '',
@@ -74,7 +77,7 @@ const ScreenOrderRenew = ({ route }) => {
               storeId: order.storeId,
               orderId: newOrderId || '',
               type: 'comment',
-              content: `Renovación de ordern No. ${originalOrder.folio} `
+              content: `Renovación de orden No. ${originalOrder.folio} `
             })
               .then(() => {
                 // @ts-ignore

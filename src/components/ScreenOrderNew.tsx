@@ -4,16 +4,11 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
-import { useEmployee } from '../contexts/employeeContext'
-
+//
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
   const { user } = useAuth()
-  const { permissions } = useEmployee()
-  const canAuthorizeOrder =
-    permissions.orders.canAuthorize ||
-    permissions.isAdmin ||
-    permissions.isOwner
+
   const handleSubmit = async (values: OrderType) => {
     const defaultValues = {
       //* Default values
@@ -34,8 +29,6 @@ const ScreenOrderNew = ({ navigation }) => {
       defaultValues.deliveredAt = values.scheduledAt
       defaultValues.deliveredBy = user.id
     }
-
-    console.log({ canAuthorizeOrder, values })
 
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       (orderId) => {

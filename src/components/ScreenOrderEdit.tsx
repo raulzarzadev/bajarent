@@ -2,8 +2,9 @@ import { ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { order_status } from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
+import { orderExpireAt } from '../libs/orders'
 
 const ScreenOrderEdit = ({ route, navigation }) => {
   const orderId = route?.params?.orderId
@@ -29,10 +30,6 @@ const ScreenOrderEdit = ({ route, navigation }) => {
           values.status = order_status.DELIVERED
           values.deliveredAt = values.scheduledAt
           values.deliveredBy = user.id
-        } else {
-          values.status = order_status.AUTHORIZED
-          values.deliveredAt = null
-          values.deliveredBy = null
         }
 
         ServiceOrders.update(orderId, values)

@@ -10,6 +10,8 @@ import { useEmployee } from './employeeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useAuth } from './authContext'
 import { ServiceComments } from '../firebase/ServiceComments'
+import { formatOrders } from '../libs/orders'
+import { CommentType } from '../types/CommentType'
 
 export type FetchTypeOrders =
   | 'all'
@@ -46,8 +48,14 @@ export const OrdersContextProvider = ({
     []
   )
 
+  const [reports, setReports] = useState<CommentType[]>([])
+
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
+
+  useEffect(() => {
+    ServiceComments.getReportsUnsolved(storeId).then((res) => setReports(res))
+  }, [storeId])
 
   useEffect(() => {
     const all: OrderTypeOption = { label: 'Todas', value: 'all' }
@@ -80,14 +88,7 @@ export const OrdersContextProvider = ({
 
   useEffect(() => {
     if (fetchTypeOrders && employee) {
-      console.log({ employee })
-      handleGetOrdersByFetchType({
-        fetchType: fetchTypeOrders,
-        sectionsAssigned: employee.sectionsAssigned,
-        storeId
-      }).then((orders) => {
-        setOrders(orders)
-      })
+      handleRefresh()
     }
   }, [fetchTypeOrders, employee])
 
@@ -98,7 +99,8 @@ export const OrdersContextProvider = ({
         sectionsAssigned: employee.sectionsAssigned,
         storeId
       }).then((orders) => {
-        setOrders(orders)
+        const ordersFormatted = formatOrders({ orders, reports })
+        setOrders(ordersFormatted)
       })
     }
   }
@@ -142,6 +144,7 @@ const handleGetOrdersByFetchType = async ({
     //*<--- 2. pending
     //*<--- 3. authorized
     //*<----4. rent expired
+    //*<----5. repair repairing, repaired ,pickedUp
     try {
       const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
       const reportedOrdersIds = reportsUnsolved
@@ -154,6 +157,7 @@ const handleGetOrdersByFetchType = async ({
           return acc
         }, [])
       const pending = await ServiceOrders.getPending(storeId).then((res) => {
+        // remove duplicates
         return res.filter((r) => !reportedOrdersIds.includes(r.id))
       })
 
@@ -163,34 +167,37 @@ const handleGetOrdersByFetchType = async ({
       const reported = (await ServiceOrders.getList(reportedOrdersIds)).map(
         (r) => ({ ...r, isReported: true })
       )
+      const repairs = await ServiceOrders.getRepairs(storeId).then((res) => {
+        // remove duplicates
+        return res.filter((r) => !reportedOrdersIds.includes(r.id))
+      })
 
-      return [...pending, ...expired, ...reported]
+      return [...pending, ...expired, ...reported, ...repairs]
     } catch (e) {
-      console.error({ e })
+      console.error(e)
     }
-    //return ServiceOrders.getUnsolved(storeId)
   }
   if (fetchType === 'mineSolved') {
     return ServiceOrders.getMineSolved(storeId, sectionsAssigned)
   }
   if (fetchType === 'mineUnsolved') {
-    //return ServiceOrders.getMineUnsolved(storeId, sectionsAssigned)
-    // return ServiceOrders.getMineSolved(storeId, sectionsAssigned)
     //*<--- 1. with reports
     //*<--- 2. pending
     //*<--- 3. authorized
     //*<----4. rent expired
+    //*<----5. repair repairing, repaired ,pickedUp
     try {
       const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
       const reportedOrdersIds = reportsUnsolved
         .map((r) => r.orderId)
-        // remove duplicates
+        // * remove duplicates
         .reduce((acc, curr) => {
           if (!acc.includes(curr)) {
             acc.push(curr)
           }
           return acc
         }, [])
+
       const pending = await ServiceOrders.getPending(storeId, {
         sections: sectionsAssigned
       }).then((res) => {
@@ -202,15 +209,22 @@ const handleGetOrdersByFetchType = async ({
       }).then((res) => {
         return res.filter((r) => !reportedOrdersIds.includes(r.id))
       })
+
+      const repairs = await ServiceOrders.getRepairs(storeId, {
+        sections: sectionsAssigned
+      }).then((res) => {
+        return res.filter((r) => !reportedOrdersIds.includes(r.id))
+      })
+
       const reported = (
         await ServiceOrders.getList(reportedOrdersIds, {
           sections: sectionsAssigned
         })
       ).map((r) => ({ ...r, isReported: true }))
 
-      return [...pending, ...expired, ...reported]
+      return [...pending, ...expired, ...reported, ...repairs]
     } catch (e) {
-      console.error({ e })
+      console.error(e.message)
     }
   }
   return []

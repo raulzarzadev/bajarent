@@ -1,16 +1,18 @@
 import { ActivityIndicator } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { useStore } from '../contexts/storeContext'
 import FormOrder from './FormOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
+import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 
 const ScreenOrderReorder = ({ route }) => {
   const orderId = route?.params?.orderId
   const { navigate } = useNavigation()
-  const { orders } = useStore()
-  const originalOrder = orders.find((o) => o.id === orderId)
-
+  const [originalOrder, setOriginalOrder] = useState<OrderType | null>(null)
+  useEffect(() => {
+    getFullOrderData(orderId).then((order) => setOriginalOrder(order))
+  }, [orderId])
   const newOrder: Partial<OrderType> = {
     status: order_status.AUTHORIZED,
     storeId: originalOrder?.storeId || '',

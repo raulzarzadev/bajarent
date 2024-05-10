@@ -34,12 +34,13 @@ export const formatOrder = ({ order, comments }) => {
   )
   // if (reportsNotSolved.length) console.log({ reportsNotSolved })
   if (order.type === 'RENT') {
-    const expireOrder = orderExpireAt({ order })
+    // const expireOrder = orderExpireAt({ order })
+    const expireAt = order.expireAt || orderExpireAt({ order })
+    const isExpired = expireAt && isBefore(asDate(expireAt), new Date())
     return {
       ...order,
       comments: orderComments,
-      expireAt: expireOrder,
-      isExpired: isBefore(expireOrder, new Date()) || isToday(expireOrder),
+      isExpired,
       hasNotSolvedReports: reportsNotSolved
     }
   }
@@ -86,7 +87,7 @@ export const activeOrders = (ordersFormatted: OrderType[]) => {
   })
 }
 
-export const orderExpireAt = ({ order }: { order: OrderType }) => {
+export const orderExpireAt = ({ order }: { order: Partial<OrderType> }) => {
   const orderItemsExpireDate = order?.items?.map((item) => {
     const expireAt = expireDate2({
       startedAt: order.deliveredAt || order.scheduledAt,

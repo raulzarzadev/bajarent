@@ -111,6 +111,7 @@ const FormOrderA = ({
   defaultValues = initialValues,
   title
 }: FormOrderProps) => {
+  const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
 
@@ -242,6 +243,7 @@ const FormOrderA = ({
                   name="type"
                   options={ordersTypesAllowed}
                   label="Tipo de orden"
+                  disabled={isRenew}
                 />
                 <FormFields
                   fields={getOrderFields(

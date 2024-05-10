@@ -24,34 +24,8 @@ const ModalAssignOrder = ({
   section?: string
   date?: Date
 }) => {
-  const { storeSections, orders } = useStore()
-  const order = orders.find((o) => o.id === orderId)
-  const assignedToSection = order?.assignToSection
-  const assignedDate = order?.scheduledAt
   const modal = useModal({ title: 'Asignar a' })
 
-  // const [sectionEvents, setSectionEvents] = useState<Event[]>([])
-
-  // const handleChangeAssignSection = (sectionId: string) => {
-  //   assignSection?.(sectionId)
-  //   if (orderId) ServiceOrders.update(orderId, { assignToSection: sectionId })
-  // }
-
-  //const [sectionOrders, setSectionOrders] = useState<OrderType[]>([])
-
-  // const handleChangeAssignDate = (date: Date) => {
-  //   assignDate?.(date)
-  //   if (orderId) ServiceOrders.update(orderId, { scheduledAt: date })
-  // }
-
-  // useEffect(() => {
-  //   if (assignedToSection) {
-  //     const sectionOrders = orders.filter(
-  //       (o) => o.assignToSection === assignedToSection
-  //     )
-  //     setSectionOrders(sectionOrders)
-  //   }
-  // }, [assignedToSection, orders])
   const [loading, setLoading] = useState(false)
   const handleSubmit = async (values: any) => {
     setLoading(true)
@@ -71,8 +45,8 @@ const ModalAssignOrder = ({
       <StyledModal {...modal}>
         <Formik
           initialValues={{
-            scheduledAt: order?.scheduledAt,
-            assignToSection: order?.assignToSection
+            scheduledAt: date || new Date(),
+            assignToSection: section || null
           }}
           onSubmit={handleSubmit}
         >
@@ -87,24 +61,6 @@ const ModalAssignOrder = ({
             </View>
           )}
         </Formik>
-        {/* <InputSelect
-          value={assignedToSection}
-          onChangeValue={(sectionId) => {
-            if (sectionId !== assignedToSection)
-              handleChangeAssignSection(sectionId)
-          }}
-          options={storeSections.map(({ name, id }) => ({
-            label: name,
-            value: id
-          }))}
-        />
-        <WeekOrdersTimeLine
-          orders={sectionOrders}
-          assignedDate={assignedDate}
-          onSelectDate={(date) => {
-            handleChangeAssignDate?.(date)
-          }}
-        /> */}
       </StyledModal>
     </View>
   )

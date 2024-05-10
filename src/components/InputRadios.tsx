@@ -14,6 +14,7 @@ type InputRadiosProps<T = string> = {
   label?: string
   layout?: 'row' | 'column'
   containerStyle?: ViewStyle
+  disabled?: boolean
 }
 
 const InputRadios = <T extends string = string>({
@@ -22,14 +23,20 @@ const InputRadios = <T extends string = string>({
   value,
   label,
   layout,
-  containerStyle
+  containerStyle,
+  disabled
 }: InputRadiosProps<T>) => {
   const capitalizeLabels = options.map((option) => ({
     ...option,
     label: option.label.charAt(0).toUpperCase() + option.label.slice(1)
   }))
   const radioButtonsOptions = useMemo(
-    () => capitalizeLabels.map((option) => ({ ...option, id: option.value })),
+    () =>
+      capitalizeLabels.map((option) => ({
+        ...option,
+        id: option.value,
+        disabled
+      })),
     [capitalizeLabels]
   )
 

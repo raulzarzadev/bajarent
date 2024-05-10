@@ -114,6 +114,7 @@ type OrderBase = {
   /* ******************************************** 
              STATUSES FOR ORDERS               
    *******************************************rz */
+  statuses?: boolean
   isDelivered?: boolean
   isReported?: boolean
   isRenewed?: boolean

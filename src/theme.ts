@@ -13,6 +13,7 @@ export type Theme = {
   white: string
   black: string
   placeholder?: string
+  transparent: string
 }
 
 const theme: Theme = {
@@ -27,7 +28,8 @@ const theme: Theme = {
   error: '#f87171',
   white: '#e5e5e5',
   black: '#000000',
-  placeholder: '#555e'
+  placeholder: '#555e',
+  transparent: 'transparent'
 } as const
 
 export type Colors = keyof Theme

@@ -1,4 +1,4 @@
-import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import {
   onAuthorize,
   onCancel,
@@ -8,9 +8,9 @@ import {
   onRenew,
   onRepairFinish,
   onRepairStart
-} from '../../libs/order-actions'
-import OrderType from '../../types/OrderType'
-import { CommentType } from '../ListComments'
+} from '../../../libs/order-actions'
+import OrderType from '../../../types/OrderType'
+import { CommentType } from '../../ListComments'
 
 const onOrderComment = async ({
   content,
@@ -25,29 +25,31 @@ const onOrderComment = async ({
 }) => {
   return await onComment({ orderId, content, storeId, type })
 }
-export const handleDelivery = async ({
-  values,
-  orderId,
-  userId,
-  storeId
-}: {
-  values: Pick<OrderType, 'location' | 'itemSerial' | 'items'>
-  orderId: string
-  userId: string
-  storeId: string
-}) => {
-  const location = values?.location || ''
-  const itemSerial = values?.itemSerial || ''
-  const items = values?.items || []
-  try {
-    await ServiceOrders.update(orderId, { location, itemSerial, items })
+// export const handleDelivery = async ({
+//   values,
+//   orderId,
+//   userId,
+//   storeId,
+//   expireAt
+// }: {
+//   values: Pick<OrderType, 'location' | 'itemSerial' | 'items' | 'items'>
+//   orderId: string
+//   userId: string
+//   storeId: string
+//   expireAt: Date
+// }) => {
+//   const location = values?.location || ''
+//   const itemSerial = values?.itemSerial || ''
+//   const items = values?.items || []
+//   try {
+//     await ServiceOrders.update(orderId, { location, itemSerial, items })
 
-    await onDelivery({ orderId, userId })
-    await onOrderComment({ content: 'Entregada', storeId, orderId })
-  } catch (error) {
-    console.log(error)
-  }
-}
+//     await onDelivery({ orderId, userId, expireAt })
+//     await onOrderComment({ content: 'Entregada', storeId, orderId })
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 export const handlePickup = async ({
   orderId,

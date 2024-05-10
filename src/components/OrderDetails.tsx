@@ -7,12 +7,8 @@ import theme from '../theme'
 import { dateFormat } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderComments from './OrderComments'
-import dictionary from '../dictionary'
-import Chip from './Chip'
-import OrderStatus from './OrderStatus'
 import { gSpace, gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
-import OrderAssignedTo from './OrderAssignedTo'
 import ClientName from './ClientName'
 import ButtonSearchLocation from './ButtonSearchLocation'
 import ModalRepairQuote from './ModalRepairQuote'
@@ -29,6 +25,7 @@ import { translateTime } from '../libs/expireDate'
 import OrderDirectives from './OrderDirectives'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  console.log({ order })
   const multiItemOrder = order?.items?.length > 0
   const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
     const price = item?.priceSelected?.amount || 0
@@ -366,7 +363,7 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
             </P>
             <P size="lg">{order?.folio}</P>
           </Text>
-          {order?.note && (
+          {!!order?.note && (
             <Text style={{ textAlign: 'center' }}>
               <P bold size="lg">
                 Nota:{' '}

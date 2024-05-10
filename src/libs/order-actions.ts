@@ -1,7 +1,8 @@
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
 import { order_status } from '../types/OrderType'
-import { TimePriceType } from '../types/PriceType'
+import { PriceType, TimePriceType } from '../types/PriceType'
+import { expireDate2 } from './expireDate'
 
 export const onComment = async ({
   orderId,
@@ -38,8 +39,17 @@ export const onAuthorize = async ({ orderId, userId }) => {
     .catch(console.error)
 }
 
-export const onDelivery = async ({ orderId, userId }) => {
+export const onDelivery = async ({
+  orderId,
+  userId,
+  expireAt
+}: {
+  orderId: string
+  userId: string
+  expireAt: Date
+}) => {
   return await ServiceOrders.update(orderId, {
+    expireAt,
     status: order_status.DELIVERED,
     deliveredAt: new Date(),
     deliveredBy: userId,

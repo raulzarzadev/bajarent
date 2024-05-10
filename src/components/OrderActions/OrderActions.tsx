@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import {
   onAuthorize,
@@ -31,6 +31,7 @@ import InputValueFormik from '../InputValueFormik'
 import FormikSelectCategories from '../FormikSelectCategories'
 import OrderStatus from '../OrderStatus'
 import useOrder from '../../hooks/useFullOrder'
+import { orderExpireAt } from '../../libs/orders'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -102,7 +103,11 @@ const OrderActions = ({
           note
         })
 
-        await onDelivery({ orderId, userId })
+        await onDelivery({
+          orderId,
+          userId,
+          expireAt: orderExpireAt({ order })
+        })
         await onOrderComment({ content: 'Entregada' })
       } catch (error) {
         console.log(error)
@@ -529,6 +534,10 @@ const OrderActions = ({
       {/* 
       // #region COMMON ACTIONS 
       */}
+
+      {order?.statuses && (
+        <Text style={{ textAlign: 'center' }}>Statuses OK</Text>
+      )}
 
       <OrderCommonActions
         storeId={storeId}
