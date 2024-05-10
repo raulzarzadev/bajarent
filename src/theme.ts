@@ -16,20 +16,46 @@ export type Theme = {
   transparent: string
 }
 
-const theme: Theme = {
-  primary: '#547EE8',
-  secondary: '#1948BD',
-  accent: '#e7e5efb',
-  neutral: '#fecaca',
-  base: '#cffafe',
-  info: '#60a5fa',
-  success: '#65a30d',
-  warning: '#facc15',
-  error: '#f87171',
-  white: '#e5e5e5',
+export const colors = {
+  green: '#65a30d',
+  red: '#f87171',
+  yellow: '#facc15',
+  blue: '#547EE8',
+  lightBlue: '#93c5fd',
+  darkBlue: '#1d4ed8',
+  gray: '#9ca3af',
+  lightGray: '#e5e7eb',
+  darkGray: '#374151',
   black: '#000000',
+  white: '#e5e5e5',
+  transparent: 'transparent',
+  pink: '#f472b6',
+  purple: '#9333ea',
+  orange: '#fb923c',
+  indigo: '#6366f1',
+  teal: '#14b8a6',
+  cyan: '#06b6d4',
+  lime: '#84cc16',
+  amber: '#f59e0b',
+  emerald: '#10b981',
+  lightPink: '#f9a8d4',
+  lightPurple: '#d6bcfa'
+}
+
+const theme: Theme = {
+  primary: colors.blue,
+  secondary: colors.darkBlue,
+  accent: colors.darkGray,
+  neutral: colors.gray,
+  base: colors.lightGray,
+  info: colors.lightBlue,
+  success: colors.green,
+  warning: colors.yellow,
+  error: colors.red,
+  white: colors.white,
+  black: colors.black,
   placeholder: '#555e',
-  transparent: 'transparent'
+  transparent: colors.transparent
 } as const
 
 export type Colors = keyof Theme
@@ -60,19 +86,19 @@ export const ORDER_TYPE_COLOR: Record<order_type, string> = {
 }
 
 export const STATUS_COLOR: Record<order_status, string> = {
-  PENDING: theme.white,
+  PENDING: theme.transparent,
   AUTHORIZED: theme.success,
 
-  DELIVERED: theme.success,
-  PICKUP: '#f472b6',
-  PICKED_UP: '#f472b6',
+  DELIVERED: theme.transparent,
+  PICKUP: theme.secondary,
+  PICKED_UP: theme.secondary,
 
-  CANCELLED: theme.neutral,
-  RENEWED: theme.neutral,
+  CANCELLED: theme.transparent,
+  RENEWED: theme.transparent,
 
   REPORTED: theme.error,
-  EXPIRED: theme.error,
-  [order_status.REPAIRING]: theme.success,
+  EXPIRED: theme.warning,
+  [order_status.REPAIRING]: theme.secondary,
   [order_status.REPAIRED]: theme.warning,
   REPAIR_DELIVERED: theme.neutral,
   EXPIRE_TODAY: theme.error,

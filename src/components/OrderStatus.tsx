@@ -1,5 +1,5 @@
 import React from 'react'
-import theme from '../theme'
+import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
 import { ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
@@ -29,14 +29,7 @@ const OrderStatus = ({
   return (
     <>
       {/* <Chip style={[chipStyles]} title={label} color={color} size={chipSize} />*/}
-      {rentPickedUp && (
-        <Chip
-          style={[chipStyles]}
-          title={'Recogida'}
-          color={theme.transparent}
-          size={chipSize}
-        />
-      )}
+
       {isRepaired && (
         <Chip
           style={[chipStyles]}
@@ -45,12 +38,13 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
-      {repairPickedUp && (
+      {(repairPickedUp || rentPickedUp) && (
         <Chip
           style={[chipStyles]}
           title={'Recogida'}
           color={theme.secondary}
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {isRepairing && (

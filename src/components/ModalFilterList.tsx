@@ -89,9 +89,11 @@ function ModalFilterList<T>({
 
       //* create a custom filter for orders with comment reports that are not solved
       // @ts-ignore
-      const hasUnsolvedComments = curr?.comments?.find(
-        (a) => a.type === 'report' && !a.solved
-      )
+
+      const hasUnsolvedComments =
+        curr?.comments?.find((a) => a.type === 'report' && !a.solved) ||
+        curr?.isReported
+
       if (field === 'status' && hasUnsolvedComments) {
         if (!acc[order_status.REPORTED]) {
           acc[order_status.REPORTED] = [curr]
@@ -260,7 +262,7 @@ function ModalFilterList<T>({
                       key={value}
                       onPress={() => {
                         if (value === 'REPORTED') {
-                          filterBy('hasNotSolvedReports', true)
+                          filterBy('isReported', true)
                           return
                         }
                         if (boolean) {
