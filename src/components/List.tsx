@@ -14,6 +14,9 @@ import Icon, { IconName } from './Icon'
 import ErrorBoundary from './ErrorBoundary'
 import ModalFilterList, { FilterListType } from './ModalFilterList'
 import Button from './Button'
+import InputCheckbox from './InputCheckbox'
+import StyledModal from './StyledModal'
+import useModal from '../hooks/useModal'
 
 // const windowHeight = Dimensions.get('window').height
 // const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
@@ -36,6 +39,7 @@ export type ListPops<T extends { id: string }> = {
   defaultOrder?: 'asc' | 'des'
   sideButtons?: ListSideButton[]
   rowsPerPage?: number
+  ComponentMultiActions?: FC<{ ids: string[] }>
 }
 
 function MyList<T extends { id: string }>({
@@ -43,6 +47,7 @@ function MyList<T extends { id: string }>({
   onPressRow,
   sortFields,
   ComponentRow,
+  ComponentMultiActions,
   defaultSortBy,
   defaultOrder = 'asc',
   filters,
@@ -71,6 +76,18 @@ function MyList<T extends { id: string }>({
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
   }
+
+  const [multiSelect, setMultiSelect] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<string[]>([])
+  const handleSelectRow = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id))
+    } else {
+      setSelectedRows([...selectedRows, id])
+    }
+  }
+
+  const multiSelectActionsModal = useModal({ title: 'Acciones' })
 
   return (
     <ScrollView>
@@ -146,6 +163,30 @@ function MyList<T extends { id: string }>({
                 justIcon
               />
             </View>
+            {ComponentMultiActions && (
+              <Button
+                label="Seleccionar"
+                variant={multiSelect ? 'filled' : 'ghost'}
+                size="xs"
+                onPress={() => setMultiSelect(!multiSelect)}
+              ></Button>
+            )}
+            {selectedRows?.length > 0 && (
+              <>
+                <Button
+                  icon="settings"
+                  justIcon
+                  onPress={() => {
+                    multiSelectActionsModal.toggleOpen()
+                  }}
+                  size="small"
+                  variant="ghost"
+                ></Button>
+                <StyledModal {...multiSelectActionsModal}>
+                  <ComponentMultiActions ids={selectedRows} />
+                </StyledModal>
+              </>
+            )}
           </View>
 
           {/* SORT OPTIONS   */}
@@ -202,15 +243,31 @@ function MyList<T extends { id: string }>({
         {/* TABLA OF CONTENT   */}
         <FlatList
           data={sortedData.slice(startIndex, endIndex)}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() => {
-                onPressRow && onPressRow(item?.id)
-              }}
-            >
-              <ComponentRow item={item} />
-            </Pressable>
-          )}
+          renderItem={({ item }) => {
+            return (
+              <>
+                {multiSelect ? (
+                  <View style={{ flexDirection: 'row' }}>
+                    <InputCheckbox
+                      label=""
+                      setValue={() => {
+                        handleSelectRow(item.id)
+                      }}
+                    />
+                    <ComponentRow item={item} />
+                  </View>
+                ) : (
+                  <Pressable
+                    onPress={() => {
+                      onPressRow && onPressRow(item?.id)
+                    }}
+                  >
+                    <ComponentRow item={item} />
+                  </Pressable>
+                )}
+              </>
+            )
+          }}
         ></FlatList>
       </View>
     </ScrollView>
@@ -235,7 +292,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 4
+    //marginTop: 4
+    marginRight: 4
   },
   pageText: {
     marginHorizontal: 10,
