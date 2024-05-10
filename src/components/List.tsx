@@ -168,10 +168,12 @@ function MyList<T extends { id: string }>({
                 label="Seleccionar"
                 variant={multiSelect ? 'filled' : 'ghost'}
                 size="xs"
-                onPress={() => setMultiSelect(!multiSelect)}
+                onPress={() => {
+                  setMultiSelect(!multiSelect)
+                }}
               ></Button>
             )}
-            {selectedRows?.length > 0 && (
+            {multiSelect && selectedRows?.length > 0 && (
               <>
                 <Button
                   icon="settings"
@@ -179,7 +181,6 @@ function MyList<T extends { id: string }>({
                   onPress={() => {
                     multiSelectActionsModal.toggleOpen()
                   }}
-                  size="small"
                   variant="ghost"
                 ></Button>
                 <StyledModal {...multiSelectActionsModal}>
@@ -253,6 +254,7 @@ function MyList<T extends { id: string }>({
                       setValue={() => {
                         handleSelectRow(item.id)
                       }}
+                      value={selectedRows.includes(item.id)}
                     />
                     <ComponentRow item={item} />
                   </View>
