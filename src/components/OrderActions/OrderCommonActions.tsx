@@ -6,16 +6,14 @@ import {
   onAuthorize,
   onCancel,
   onComment,
-  onDelete
+  onDelete,
+  onSetStatuses
 } from '../../libs/order-actions'
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
-import { handleSetStatuses } from './libs/update_statuses'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
-import { ServiceComments } from '../../firebase/ServiceComments'
 
 const OrderCommonActions = ({
   storeId,
@@ -94,11 +92,7 @@ const OrderCommonActions = ({
   }
 
   const handleUpdateStatuses = async () => {
-    const order = await ServiceOrders.get(orderId)
-    const reports = await ServiceComments.getOrderUnsolvedReports(orderId)
-    const { order: newOrder } = handleSetStatuses({ order, reports })
-
-    return await ServiceOrders.update(orderId, { ...newOrder, statuses: true })
+    onSetStatuses({ orderId })
   }
 
   const buttons = [
