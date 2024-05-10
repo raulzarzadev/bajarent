@@ -18,7 +18,7 @@ export const handleSetStatuses = ({
     isAuthorized?: boolean
   }
 } => {
-  const expireAt = order.expireAt || orderExpireAt({ order })
+  const expireAt = orderExpireAt({ order })
   const isReported =
     !!reports?.find((report) => report.type === 'report' && !report.solved) ||
     !!order?.isReported
