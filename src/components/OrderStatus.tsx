@@ -14,6 +14,7 @@ const OrderStatus = ({
   chipSize?: Size
 }) => {
   const { isReported, isExpired } = order
+  const isCancelled = order.status === order_status.CANCELLED
   const isAuthorized = order.status === order_status.AUTHORIZED
   const isPending = order.status === order_status.PENDING
   const isDelivered =
@@ -27,8 +28,27 @@ const OrderStatus = ({
   const rentAuthorized = order.type === 'RENT' && isAuthorized
   const repairAuthorized = order.type === 'REPAIR' && isAuthorized
   const saleAuthorized = order.type === 'SALE' && isAuthorized
+  const isRenewed =
+    order.type === 'RENT' &&
+    (order.isRenewed || order.status === order_status.RENEWED)
   return (
     <>
+      {isRenewed && (
+        <Chip
+          style={[chipStyles]}
+          title={'Renovada'}
+          color={theme.transparent}
+          size={chipSize}
+        />
+      )}
+      {isCancelled && (
+        <Chip
+          style={[chipStyles]}
+          title={'Cancelada'}
+          color={theme.transparent}
+          size={chipSize}
+        />
+      )}
       {isRepaired && (
         <Chip
           style={[chipStyles]}
@@ -37,7 +57,7 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
-      {(repairPickedUp || rentPickedUp) && (
+      {repairPickedUp && (
         <Chip
           style={[chipStyles]}
           title={'Recogida'}
@@ -46,12 +66,21 @@ const OrderStatus = ({
           titleColor={colors.white}
         />
       )}
+      {rentPickedUp && (
+        <Chip
+          style={[chipStyles]}
+          title={'Recogida'}
+          color={theme.transparent}
+          size={chipSize}
+        />
+      )}
       {isRepairing && (
         <Chip
           style={[chipStyles]}
           title={'Reparando'}
           color={theme.secondary}
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {!isReported && !isExpired && isDelivered && (
@@ -94,7 +123,7 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
-      {isExpired && !isPickedUp && (
+      {isExpired && !isPickedUp && !isRenewed && (
         <Chip
           style={[chipStyles]}
           title={'Vencida'}

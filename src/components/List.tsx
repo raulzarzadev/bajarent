@@ -177,27 +177,12 @@ function MyList<T extends { id: string }>({
             <Text style={{ textAlign: 'center', marginRight: 4 }}>
               {filteredData.length} coincidencias
             </Text>
-            <View style={styles.paginationContainer}>
-              <Button
-                onPress={handlePrevPage}
-                disabled={currentPage === 1}
-                label="Prev"
-                size="small"
-                icon="rowLeft"
-                justIcon
-              />
-              <Text style={styles.pageText}>
-                {currentPage} de {totalPages}
-              </Text>
-              <Button
-                onPress={handleNextPage}
-                disabled={currentPage === totalPages}
-                label="Next"
-                size="small"
-                icon="rowRight"
-                justIcon
-              />
-            </View>
+            <Pagination
+              currentPage={currentPage}
+              handleNextPage={handleNextPage}
+              handlePrevPage={handlePrevPage}
+              totalPages={totalPages}
+            />
           </View>
 
           {/* SORT OPTIONS   */}
@@ -284,8 +269,55 @@ function MyList<T extends { id: string }>({
             )
           }}
         ></FlatList>
+        <View
+          style={{
+            alignSelf: 'flex-end',
+            marginBottom: 16,
+            marginTop: 4,
+            marginRight: 4
+          }}
+        >
+          <Pagination
+            currentPage={currentPage}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+            totalPages={totalPages}
+          />
+        </View>
       </View>
     </ScrollView>
+  )
+}
+
+const Pagination = ({
+  currentPage,
+  totalPages,
+  handlePrevPage,
+  handleNextPage
+}) => {
+  if (totalPages <= 1) return null
+  return (
+    <View style={styles.paginationContainer}>
+      <Button
+        onPress={handlePrevPage}
+        disabled={currentPage === 1}
+        label="Prev"
+        size="small"
+        icon="rowLeft"
+        justIcon
+      />
+      <Text style={styles.pageText}>
+        {currentPage} de {totalPages}
+      </Text>
+      <Button
+        onPress={handleNextPage}
+        disabled={currentPage === totalPages}
+        label="Next"
+        size="small"
+        icon="rowRight"
+        justIcon
+      />
+    </View>
   )
 }
 
@@ -306,9 +338,9 @@ const styles = StyleSheet.create({
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
     //marginTop: 4
-    marginRight: 4
+    // marginRight: 4
   },
   pageText: {
     marginHorizontal: 10,

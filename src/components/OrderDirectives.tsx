@@ -27,6 +27,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         titleColor={theme.black}
         size="sm"
       ></Chip>
+      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       {!!sectionName && (
         <Chip
           style={styles.chip}
@@ -36,7 +37,6 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
           size="sm"
         ></Chip>
       )}
-      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       {/* <OrderAssignedTo
         orderId={order?.id}
         chipStyles={styles.chip}
