@@ -14,11 +14,11 @@ const OrderStatus = ({
   chipSize?: Size
 }) => {
   const { isReported, isExpired } = order
-
   const isAuthorized = order.status === order_status.AUTHORIZED
   const isPending = order.status === order_status.PENDING
   const isDelivered =
     order.status === order_status.DELIVERED || order.isDelivered
+
   const isRepairing = order.status === order_status.REPAIRING
   const isPickedUp = order.status === order_status.PICKED_UP
   const isRepaired = order.status === order_status.REPAIRED
@@ -26,10 +26,9 @@ const OrderStatus = ({
   const repairPickedUp = order.type === 'REPAIR' && isPickedUp
   const rentAuthorized = order.type === 'RENT' && isAuthorized
   const repairAuthorized = order.type === 'REPAIR' && isAuthorized
+  const saleAuthorized = order.type === 'SALE' && isAuthorized
   return (
     <>
-      {/* <Chip style={[chipStyles]} title={label} color={color} size={chipSize} />*/}
-
       {isRepaired && (
         <Chip
           style={[chipStyles]}
@@ -84,6 +83,14 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={'Pedido'}
           color={theme.success}
+          size={chipSize}
+        />
+      )}
+      {saleAuthorized && (
+        <Chip
+          style={[chipStyles]}
+          title={'Pedido'}
+          color={theme.warning}
           size={chipSize}
         />
       )}

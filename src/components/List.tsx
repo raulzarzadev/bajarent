@@ -8,7 +8,7 @@ import {
   //   Dimensions
 } from 'react-native'
 import useSort from '../hooks/useSort'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Icon, { IconName } from './Icon'
 
 import ErrorBoundary from './ErrorBoundary'
@@ -63,6 +63,7 @@ function MyList<T extends { id: string }>({
   const totalPages = Math.ceil(sortedData.length / rowsPerPage)
   const startIndex = (currentPage - 1) * rowsPerPage
   const endIndex = Math.min(startIndex + rowsPerPage, sortedData.length)
+
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
   }
@@ -105,7 +106,10 @@ function MyList<T extends { id: string }>({
             <ModalFilterList
               preFilteredIds={preFilteredIds}
               data={data}
-              setData={setFilteredData}
+              setData={(data) => {
+                setCurrentPage(1)
+                setFilteredData(data)
+              }}
               filters={filters}
             />
           </View>
