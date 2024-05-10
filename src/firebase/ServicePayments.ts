@@ -21,6 +21,13 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     if (!list.length) return []
     return this.getItems([where(documentId(), 'in', list)])
   }
+  async getToday(storeId: string) {
+    return this.getItems([
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', new Date().setHours(0, 0, 0, 0)),
+      where('createdAt', '<=', new Date().setHours(23, 59, 59, 999))
+    ])
+  }
 
   // Agrega tus métodos aquí
   async customMethod() {

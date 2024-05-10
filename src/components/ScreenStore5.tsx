@@ -9,8 +9,8 @@ import { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
-import useOrders from '../hooks/useOrders'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import ListMovements from './ListMovements'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -21,6 +21,7 @@ const ScreenStore = (props) => {
   const canViewSections = isAdmin || isOwner
   const canViewCashbox = isAdmin || isOwner
   const canViewStoreNumbers = isAdmin || isOwner
+  const canViewMovements = isAdmin || isOwner
 
   return (
     <ScrollView>
@@ -33,6 +34,11 @@ const ScreenStore = (props) => {
               title: 'Caja',
               content: <TabCashbox />,
               show: canViewCashbox
+            },
+            {
+              title: 'Movimientos',
+              content: <TabMovements />,
+              show: canViewMovements
             },
             {
               title: 'Areas',
@@ -54,6 +60,10 @@ const ScreenStore = (props) => {
       )}
     </ScrollView>
   )
+}
+
+const TabMovements = () => {
+  return <ListMovements />
 }
 
 const StoreNumbersRow = () => {

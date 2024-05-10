@@ -117,6 +117,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('solved', '==', false)
     ])
   }
+  getToday(storeId) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', new Date(new Date().setHours(0, 0, 0, 0))),
+      where('createdAt', '<=', new Date(new Date().setHours(23, 59, 59, 999)))
+    ])
+  }
 }
 
 export const ServiceComments = new ServiceOrdersClass()
