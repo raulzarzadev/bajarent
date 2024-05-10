@@ -18,7 +18,7 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
       component: (
         <View>
           <View style={{ flexDirection: 'row' }}>
-            {!order.statuses && (
+            {!order?.statuses && (
               <View
                 style={{
                   width: 16,

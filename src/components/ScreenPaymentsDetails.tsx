@@ -1,21 +1,33 @@
 import { ActivityIndicator, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
-import { OrderDirectives } from './OrderDetails'
 import Button from './Button'
+import OrderType from '../types/OrderType'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import OrderDirectives from './OrderDirectives'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
-  const { payments, orders, staff } = useStore()
-  const payment = payments.find((p) => p.id === id)
-  const order = orders.find((o) => o.id === payment?.orderId)
+  const { payments, staff } = useStore()
+  const payment = payments?.find((p) => p?.id === id)
+  const [order, setOrder] = useState<OrderType>()
+  useEffect(() => {
+    ServiceOrders.get(payment?.orderId).then((order) => {
+      console.log({ order })
+      if (order) {
+        setOrder(order)
+      } else {
+        setOrder(null)
+      }
+    })
+  }, [payment?.orderId])
   const userName =
-    staff.find((s) => s.userId === payment.createdBy)?.name || 'sin nombre'
+    staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
   return (
     <View style={gStyles.container}>
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
@@ -54,7 +66,9 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
       )}
 
       <View style={{ justifyContent: 'center', margin: 'auto' }}>
-        {!!order ? <OrderDirectives order={order} /> : <ActivityIndicator />}
+        {order === undefined && <ActivityIndicator />}
+        {order === null && <Text>Orden no encontrada</Text>}
+        {!!order && <OrderDirectives order={order} />}
         <Button
           variant="ghost"
           onPress={() => {

@@ -5,6 +5,7 @@ import dictionary from '../dictionary'
 import theme from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
+import ErrorBoundary from './ErrorBoundary'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   const { storeSections } = useStore()
@@ -52,5 +53,11 @@ const styles = StyleSheet.create({
     maxWidth: 105
   }
 })
+
+export const OrderDirectivesE = (props) => (
+  <ErrorBoundary componentName="OrderDirectives">
+    <OrderDirectives {...props} />
+  </ErrorBoundary>
+)
 
 export default OrderDirectives

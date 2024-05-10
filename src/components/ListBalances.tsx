@@ -11,6 +11,7 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
     <View>
       <List
         defaultSortBy="createdAt"
+        defaultOrder="des"
         onPressRow={(id) => {
           // @ts-ignore
           navigate('ScreenBalancesDetails', { id })

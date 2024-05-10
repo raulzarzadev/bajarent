@@ -6,9 +6,6 @@ import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
 import { onDelete, onSetStatuses } from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
-import { ServiceComments } from '../../firebase/ServiceComments'
-import { handleSetStatuses } from './libs/update_statuses'
 
 const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
   const { storeId, user } = useAuth()

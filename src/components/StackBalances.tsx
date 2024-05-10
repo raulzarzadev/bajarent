@@ -5,6 +5,7 @@ import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
 import StackOrders from './StackOrders'
+import { StackPaymentsE } from './StackPayments'
 
 const Stack = createStackNavigator()
 function StackBalances() {
@@ -47,6 +48,14 @@ function StackBalances() {
           headerShown: false
         }}
         component={StackOrders}
+      />
+      <Stack.Screen
+        name="StackPayments"
+        options={{
+          title: 'Pagos',
+          headerShown: false
+        }}
+        component={StackPaymentsE}
       />
     </Stack.Navigator>
   )

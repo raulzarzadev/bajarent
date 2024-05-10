@@ -25,8 +25,8 @@ export default function useSort<T>({
 
   const sortData = (field: string, data: T[], order?: 'asc' | 'des') => {
     const res = [...data].sort((a, b) => {
-      let aField = a[field] || ''
-      let bField = b[field] || ''
+      let aField = a?.[field] || ''
+      let bField = b?.[field] || ''
 
       const statusAreIn = () => {
         const omitSortPriorityStatus = [

@@ -10,7 +10,6 @@ import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { ServicePayments } from './ServicePayments'
 
 type Type = OrderType
 

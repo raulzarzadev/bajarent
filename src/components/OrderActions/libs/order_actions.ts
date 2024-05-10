@@ -1,15 +1,12 @@
-import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import {
   onAuthorize,
   onCancel,
   onComment,
-  onDelivery,
   onPickup,
   onRenew,
   onRepairFinish,
   onRepairStart
 } from '../../../libs/order-actions'
-import OrderType from '../../../types/OrderType'
 import { CommentType } from '../../ListComments'
 
 const onOrderComment = async ({

@@ -28,6 +28,7 @@ export type OrdersContextType = {
   setFetchTypeOrders?: (fetchType: FetchTypeOrders) => void
   orderTypeOptions?: OrderTypeOption[]
   handleRefresh?: () => void
+  reports?: CommentType[]
 }
 
 export const OrdersContext = createContext<OrdersContextType>({})
@@ -112,7 +113,8 @@ export const OrdersContextProvider = ({
         setFetchTypeOrders,
         fetchTypeOrders,
         orderTypeOptions,
-        handleRefresh
+        handleRefresh,
+        reports
       }}
     >
       {children}

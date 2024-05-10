@@ -247,9 +247,9 @@ function MyList<T extends { id: string }>({
                     <InputCheckbox
                       label=""
                       setValue={() => {
-                        handleSelectRow(item.id)
+                        handleSelectRow(item?.id)
                       }}
-                      value={selectedRows.includes(item.id)}
+                      value={selectedRows.includes(item?.id)}
                     />
                   )}
                   <Pressable

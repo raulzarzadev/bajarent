@@ -146,11 +146,13 @@ const LinkPayments = ({ title, payments = [] }) => {
       <Pressable
         onPress={() => {
           //@ts-ignore
-          navigate('StackPayments', { payments: ids, title })
-          // navigate('ScreenPayments', {
-          //   payments: ids,
-          //   title
-          // })
+          navigate('StackPayments', {
+            screen: 'ScreenPayments',
+            params: {
+              title,
+              payments: ids
+            }
+          })
         }}
       >
         <Text style={[styles.label, { textDecorationLine: 'underline' }]}>

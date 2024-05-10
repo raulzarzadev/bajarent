@@ -79,7 +79,7 @@ function ModalFilterList<T>({
     isBoolean?: boolean
   ): Record<string, T[]> => {
     const groupedByField = filteredData.reduce((acc, curr) => {
-      let currField = curr[field]
+      let currField = curr?.[field]
       if (isBoolean) {
         currField = currField ? 'true' : 'false'
       }

@@ -3,8 +3,7 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
 import { order_status } from '../types/OrderType'
-import { PriceType, TimePriceType } from '../types/PriceType'
-import { expireDate2 } from './expireDate'
+import { TimePriceType } from '../types/PriceType'
 
 export const onComment = async ({
   orderId,

@@ -12,6 +12,7 @@ import { ServiceSections } from '../firebase/ServiceSections'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
+import { ServicePayments } from '../firebase/ServicePayments'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -50,6 +51,7 @@ const StoreContextProvider = ({ children }) => {
   const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
   const [staff, setStaff] = useState<StaffType[]>([])
+  const [payments, setPayments] = useState<PaymentType[]>([])
 
   useEffect(() => {
     if (store) {
@@ -77,6 +79,7 @@ const StoreContextProvider = ({ children }) => {
         staff.push({ ...owner, userId: owner.id, isOwner: true })
         setStaff(staff)
       })
+      ServicePayments.getByStore(store.id).then((res) => setPayments(res))
     }
   }, [store])
 
@@ -92,6 +95,8 @@ const StoreContextProvider = ({ children }) => {
         categories,
         userStores: stores,
         storeSections: sections,
+        payments,
+
         /**
          * @deprecated
          */
@@ -101,10 +106,7 @@ const StoreContextProvider = ({ children }) => {
          * @deprecated
          */
         justActiveOrders,
-        /**
-         * @deprecated
-         */
-        payments: [],
+
         /**
          * @deprecated
          */

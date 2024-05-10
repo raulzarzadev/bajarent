@@ -10,8 +10,8 @@ import StackStaff from './StackStaff'
 import { ScreenStoreE } from './ScreenStore5'
 import ScreenOrdersConfig from './ScreenOrdersConfig'
 import { StackBalancesE } from './StackBalances'
-import { StackPaymentsE } from './StackPayments'
 import StackOrders from './StackOrders'
+import { StackPaymentsE } from './StackPayments'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -101,14 +101,7 @@ function StackStore() {
         }}
         component={StackBalancesE}
       />
-      <Stack.Screen
-        name="StackPayments"
-        options={{
-          title: 'Pagos',
-          headerShown: false
-        }}
-        component={StackPaymentsE}
-      />
+      {/* ORDERS  */}
       <Stack.Screen
         name="StackOrders"
         options={{
@@ -116,6 +109,15 @@ function StackStore() {
           headerShown: false
         }}
         component={StackOrders}
+      />
+      {/* PAYMENTS  */}
+      <Stack.Screen
+        name="StackPayments"
+        options={{
+          title: 'Pagos',
+          headerShown: false
+        }}
+        component={StackPaymentsE}
       />
 
       {/* ******************************************** 
@@ -146,91 +148,6 @@ function StackStore() {
         }}
         component={ScreenCategoryEdit}
       />
-
-      {/* CASHBOX  */}
-      {/* <Stack.Screen
-        name="Cashbox"
-        options={{
-          title: 'Caja'
-        }}
-        component={ScreenCashbox}
-      />
-      <Stack.Screen
-        name="Payments"
-        options={{
-          title: 'Pagos'
-        }}
-        component={ScreenPayments}
-      />
-      <Stack.Screen
-        name="PaymentsDetails"
-        options={{
-          title: 'Detalle de pago'
-        }}
-        component={ScreenPaymentsDetails}
-      /> */}
-      {/* <Stack.Screen
-        name="Balances"
-        options={{
-          title: 'Cortes de caja'
-        }}
-        component={ScreenBalances}
-      />
-      <Stack.Screen
-        name="BalancesDetails"
-        options={{
-          title: 'Detalle de corte'
-        }}
-        component={ScreenBalancesDetails}
-      />
-      <Stack.Screen
-        name="BalancesNew"
-        options={{
-          title: 'Nuevo corte'
-        }}
-        component={ScreenBalancesNew}
-      /> */}
-
-      {/* 
-      <Stack.Screen
-        options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Pagos'
-        })}
-        name="PaymentsList"
-        component={ScreenPayments}
-      />
-
-      <Stack.Screen
-        options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Ordenes'
-        })}
-        name="OrdersList"
-        component={ScreenOrders}
-      />
-
-      <Stack.Screen
-        name="OrderDetails"
-        options={{
-          title: 'Detalle de  orden'
-        }}
-        component={ScreenOrderDetail}
-      />
-      <Stack.Screen
-        name="RenewOrder"
-        options={{
-          title: 'Renovar Orden'
-        }}
-        component={ScreenOrderRenew}
-      />
-      <Stack.Screen
-        name="ReorderOrder"
-        options={{
-          title: 'Re ordenar '
-        }}
-        component={ScreenOrderReorder}
-      /> */}
     </Stack.Navigator>
   )
 }

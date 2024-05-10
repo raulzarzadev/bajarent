@@ -1,4 +1,4 @@
-import { Text, View, Image, StyleSheet } from 'react-native'
+import { Text, View, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
@@ -22,7 +22,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
 import { translateTime } from '../libs/expireDate'
-import OrderDirectives from './OrderDirectives'
+import { OrderDirectivesE } from './OrderDirectives'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -42,7 +42,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
     <View>
       <OrderMetadata order={order} />
 
-      <OrderDirectives order={order} />
+      <OrderDirectivesE order={order} />
       <View
         style={{
           padding: 4

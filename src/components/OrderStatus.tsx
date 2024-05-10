@@ -1,7 +1,7 @@
 import React from 'react'
 import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
-import { ViewStyle } from 'react-native'
+import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
 
 const OrderStatus = ({
@@ -13,16 +13,18 @@ const OrderStatus = ({
   chipStyles?: ViewStyle
   chipSize?: Size
 }) => {
-  const { isReported, isExpired } = order
-  const isCancelled = order.status === order_status.CANCELLED
-  const isAuthorized = order.status === order_status.AUTHORIZED
-  const isPending = order.status === order_status.PENDING
+  if (!order) return <Text>Orden no encontrada</Text>
+  const isReported = order?.isReported
+  const isExpired = order?.isExpired
+  const isCancelled = order?.status === order_status.CANCELLED
+  const isAuthorized = order?.status === order_status.AUTHORIZED
+  const isPending = order?.status === order_status.PENDING
   const isDelivered =
-    order.status === order_status.DELIVERED || order.isDelivered
+    order?.status === order_status.DELIVERED || order?.isDelivered
 
-  const isRepairing = order.status === order_status.REPAIRING
-  const isPickedUp = order.status === order_status.PICKED_UP
-  const isRepaired = order.status === order_status.REPAIRED
+  const isRepairing = order?.status === order_status.REPAIRING
+  const isPickedUp = order?.status === order_status.PICKED_UP
+  const isRepaired = order?.status === order_status.REPAIRED
   const rentPickedUp = order.type === 'RENT' && isPickedUp
   const repairPickedUp = order.type === 'REPAIR' && isPickedUp
   const rentAuthorized = order.type === 'RENT' && isAuthorized
@@ -30,7 +32,7 @@ const OrderStatus = ({
   const saleAuthorized = order.type === 'SALE' && isAuthorized
   const isRenewed =
     order.type === 'RENT' &&
-    (order.isRenewed || order.status === order_status.RENEWED)
+    (order.isRenewed || order?.status === order_status.RENEWED)
   return (
     <>
       {isRenewed && (

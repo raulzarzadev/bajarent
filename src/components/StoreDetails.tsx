@@ -33,6 +33,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
             justIcon
             icon="settings"
             onPress={() => {
+              //@ts-ignore
               navigate('EditStore')
             }}
             id="editStore"
