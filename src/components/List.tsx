@@ -91,6 +91,16 @@ function MyList<T extends { id: string }>({
     }
   }
 
+  const [selectAll, setSelectAll] = useState(false)
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedRows([])
+    } else {
+      setSelectedRows(sortedData.map((row) => row.id))
+    }
+    setSelectAll(!selectAll)
+  }
+
   const multiSelectActionsModal = useModal({ title: 'Acciones' })
 
   return (
@@ -237,6 +247,15 @@ function MyList<T extends { id: string }>({
           </View>
         </View>
         {/* TABLA OF CONTENT   */}
+        {multiSelect && (
+          <View style={{ alignSelf: 'flex-start' }}>
+            <InputCheckbox
+              value={selectAll}
+              setValue={handleSelectAll}
+              label="Todas"
+            />
+          </View>
+        )}
         <FlatList
           data={sortedData.slice(startIndex, endIndex)}
           renderItem={({ item }) => {
