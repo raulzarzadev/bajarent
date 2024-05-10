@@ -79,6 +79,10 @@ function MyList<T extends { id: string }>({
 
   const [multiSelect, setMultiSelect] = useState(false)
   const [selectedRows, setSelectedRows] = useState<string[]>([])
+  const handleMultiSelect = () => {
+    setMultiSelect(!multiSelect)
+    if (!multiSelect) setSelectedRows([])
+  }
   const handleSelectRow = (id: string) => {
     if (selectedRows.includes(id)) {
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id))
@@ -139,6 +143,37 @@ function MyList<T extends { id: string }>({
               justifyContent: 'center'
             }}
           >
+            <View style={{ flexDirection: 'row' }}>
+              {multiSelect && selectedRows?.length > 0 && (
+                <>
+                  <Button
+                    icon="settings"
+                    justIcon
+                    onPress={() => {
+                      multiSelectActionsModal.toggleOpen()
+                    }}
+                    variant="ghost"
+                  ></Button>
+                  <StyledModal {...multiSelectActionsModal}>
+                    <ComponentMultiActions ids={selectedRows} />
+                  </StyledModal>
+                </>
+              )}
+              {ComponentMultiActions && (
+                <Button
+                  label={
+                    multiSelect
+                      ? `${selectedRows.length || 0} Seleccionadas `
+                      : 'Seleccionar'
+                  }
+                  variant={'ghost'}
+                  size="xs"
+                  onPress={() => {
+                    handleMultiSelect()
+                  }}
+                ></Button>
+              )}
+            </View>
             <Text style={{ textAlign: 'center', marginRight: 4 }}>
               {filteredData.length} coincidencias
             </Text>
@@ -163,31 +198,6 @@ function MyList<T extends { id: string }>({
                 justIcon
               />
             </View>
-            {ComponentMultiActions && (
-              <Button
-                label="Seleccionar"
-                variant={multiSelect ? 'filled' : 'ghost'}
-                size="xs"
-                onPress={() => {
-                  setMultiSelect(!multiSelect)
-                }}
-              ></Button>
-            )}
-            {multiSelect && selectedRows?.length > 0 && (
-              <>
-                <Button
-                  icon="settings"
-                  justIcon
-                  onPress={() => {
-                    multiSelectActionsModal.toggleOpen()
-                  }}
-                  variant="ghost"
-                ></Button>
-                <StyledModal {...multiSelectActionsModal}>
-                  <ComponentMultiActions ids={selectedRows} />
-                </StyledModal>
-              </>
-            )}
           </View>
 
           {/* SORT OPTIONS   */}
@@ -247,8 +257,8 @@ function MyList<T extends { id: string }>({
           renderItem={({ item }) => {
             return (
               <>
-                {multiSelect ? (
-                  <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row' }}>
+                  {multiSelect && (
                     <InputCheckbox
                       label=""
                       setValue={() => {
@@ -256,17 +266,20 @@ function MyList<T extends { id: string }>({
                       }}
                       value={selectedRows.includes(item.id)}
                     />
-                    <ComponentRow item={item} />
-                  </View>
-                ) : (
+                  )}
                   <Pressable
+                    style={{ flex: 1 }}
                     onPress={() => {
-                      onPressRow && onPressRow(item?.id)
+                      if (multiSelect) {
+                        handleSelectRow(item.id)
+                      } else {
+                        onPressRow && onPressRow(item?.id)
+                      }
                     }}
                   >
                     <ComponentRow item={item} />
                   </Pressable>
-                )}
+                </View>
               </>
             )
           }}

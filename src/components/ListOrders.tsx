@@ -3,7 +3,7 @@ import List, { ListSideButton } from './List'
 import { useNavigation } from '@react-navigation/native'
 import RowOrder from './RowOrder'
 import OrderType from '../types/OrderType'
-import { Text, View } from 'react-native'
+import MultiOrderActions from './OrderActions/MultiOrderActions'
 
 const ListOrders = ({
   orders = [],
@@ -45,15 +45,7 @@ const ListOrders = ({
         { field: 'status', label: 'Status' }
       ]}
       ComponentMultiActions={({ ids }) => {
-        return (
-          <View>
-            <Text>
-              {ids.map((id) => (
-                <Text>{id}</Text>
-              ))}
-            </Text>
-          </View>
-        )
+        return <MultiOrderActions ordersIds={ids} />
       }}
     />
   )

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
 import OrderType from '../types/OrderType'
-import theme, { STATUS_COLOR } from '../theme'
+import theme, { STATUS_COLOR, colors } from '../theme'
 import ClientName from './ClientName'
 import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
@@ -17,12 +17,24 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
       width: '30%',
       component: (
         <View>
-          <Text style={{ textAlign: 'center' }} numberOfLines={1}>
-            {order?.folio}
-            {!!order?.note && (
-              <Text style={gStyles.helper}> - {order?.note}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            {!order.statuses && (
+              <View
+                style={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: 9999,
+                  backgroundColor: colors.amber
+                }}
+              />
             )}
-          </Text>
+            <Text style={{ textAlign: 'center', flex: 1 }} numberOfLines={1}>
+              {order?.folio}
+              {!!order?.note && (
+                <Text style={gStyles.helper}> - {order?.note}</Text>
+              )}
+            </Text>
+          </View>
           <Text style={{ textAlign: 'center' }} numberOfLines={1}>
             <ClientName order={order} />
           </Text>

@@ -48,15 +48,15 @@ const OrderCommonActions = ({
     onComment({ orderId, content, storeId, type })
   }
   const { navigate, goBack } = useNavigation()
-  const canCancel = actionsAllowed.canCancel
-  const canEdit = actionsAllowed.canEdit
-  const canDelete = actionsAllowed.canDelete
-  const canSendWS = actionsAllowed.canSendWS
-  const canAuthorize = actionsAllowed.canAuthorize
-  const canReorder = actionsAllowed.canReorder
-  const canAssign = actionsAllowed.canAssign
-  const canExtend = actionsAllowed.canExtend
-  const canRenew = actionsAllowed.canRenew
+  const canCancel = actionsAllowed?.canCancel
+  const canEdit = actionsAllowed?.canEdit
+  const canDelete = actionsAllowed?.canDelete
+  const canSendWS = actionsAllowed?.canSendWS
+  const canAuthorize = actionsAllowed?.canAuthorize
+  const canReorder = actionsAllowed?.canReorder
+  const canAssign = actionsAllowed?.canAssign
+  const canExtend = actionsAllowed?.canExtend
+  const canRenew = actionsAllowed?.canRenew
   const canCopy = true
 
   const handleReorder = () => {

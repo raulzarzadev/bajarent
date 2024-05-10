@@ -1,3 +1,5 @@
+import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
+import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { CommentType } from '../types/CommentType'
 import { order_status } from '../types/OrderType'
@@ -154,4 +156,11 @@ export const onExtend = async (
   })
     .then(() => {})
     .catch(console.error)
+}
+
+export const onSetStatuses = async ({ orderId }) => {
+  const order = await ServiceOrders.get(orderId)
+  const reports = await ServiceComments.getOrderUnsolvedReports(orderId)
+  const { order: newOrder } = handleSetStatuses({ order, reports })
+  return await ServiceOrders.update(orderId, { ...newOrder, statuses: true })
 }
