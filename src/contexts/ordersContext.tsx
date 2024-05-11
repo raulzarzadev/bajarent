@@ -82,7 +82,7 @@ export const OrdersContextProvider = ({
     if (isAdmin || isOwner) {
       setFetchTypeOrders('unsolved')
       setOrderTypeOptions([all, solved, unsolved])
-    } else if (ordersPermissions?.canViewAll) {
+    } else if (ordersPermissions?.canViewMy) {
       setFetchTypeOrders('mineUnsolved')
       setOrderTypeOptions([mine, mineSolved, mineUnsolved])
     }
