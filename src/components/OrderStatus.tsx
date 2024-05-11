@@ -14,8 +14,8 @@ const OrderStatus = ({
   chipSize?: Size
 }) => {
   if (!order) return <Text>Orden no encontrada</Text>
-  const isReported = order?.isReported
-  const isExpired = order?.isExpired
+  const isReported = order?.isReported || order?.hasNotSolvedReports
+  const isExpired = order?.isExpired && order.status === order_status.DELIVERED
   const isCancelled = order?.status === order_status.CANCELLED
   const isAuthorized = order?.status === order_status.AUTHORIZED
   const isPending = order?.status === order_status.PENDING
@@ -125,7 +125,7 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
-      {isExpired && !isPickedUp && !isRenewed && (
+      {isExpired && (
         <Chip
           style={[chipStyles]}
           title={'Vencida'}
