@@ -4,6 +4,8 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
+import { expireDate2 } from '../libs/expireDate'
+import { orderExpireAt } from '../libs/orders'
 //
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
@@ -29,6 +31,8 @@ const ScreenOrderNew = ({ navigation }) => {
       defaultValues.deliveredAt = values.scheduledAt
       defaultValues.deliveredBy = user.id
     }
+    defaultValues.expireAt = orderExpireAt({ order: values })
+    defaultValues.statuses = true //* it means is set with expireAt
 
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       (orderId) => {

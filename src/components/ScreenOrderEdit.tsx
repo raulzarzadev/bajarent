@@ -32,6 +32,9 @@ const ScreenOrderEdit = ({ route, navigation }) => {
           values.deliveredBy = user.id
         }
 
+        values.expireAt = orderExpireAt({ order: values })
+        values.statuses = true //* it means is set with expireAt
+
         ServiceOrders.update(orderId, values)
           .then((res) => {
             // console.log(res)
