@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useEffect, useState } from 'react'
+import { orderExpireAt } from '../libs/orders'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
@@ -56,10 +57,15 @@ const ScreenOrderRenew = ({ route }) => {
           ...order,
           status: order_status.DELIVERED,
           deliveredAt: order.expireAt,
+
           // renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
           renewedFrom: orderId
           //renewedBy: user?.id// *<--- which order should have this prop? the new one or the original one?
         }
+
+        //* RENEWED SET EXPIRE DATE WITH THE NEW DELIVERED DATE AT
+        const expiredAt = orderExpireAt({ order: renewedOrder })
+        renewedOrder.expireAt = expiredAt
         // @ts-ignore
         await ServiceOrders.createSerialOrder(renewedOrder)
           .then((newOrderId) => {

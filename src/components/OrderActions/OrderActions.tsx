@@ -32,6 +32,7 @@ import FormikSelectCategories from '../FormikSelectCategories'
 import OrderStatus from '../OrderStatus'
 import useOrder from '../../hooks/useFullOrder'
 import { orderExpireAt } from '../../libs/orders'
+import { useOrdersCtx } from '../../contexts/ordersContext'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -83,6 +84,9 @@ const OrderActions = ({
 
   // const { orders } = useStore()
   // const order = orders.find((o) => o.id === orderId)
+  // const { orders } = useOrdersCtx()
+  // const order = orders.find((o) => o.id === orderId)
+
   const { order } = useOrder({ orderId })
 
   // #region ACTIONS
@@ -102,11 +106,11 @@ const OrderActions = ({
           items,
           note
         })
-
+        const expireAt = orderExpireAt({ order })
         await onDelivery({
           orderId,
           userId,
-          expireAt: orderExpireAt({ order })
+          expireAt
         })
         await onOrderComment({ content: 'Entregada' })
       } catch (error) {
