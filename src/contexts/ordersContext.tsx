@@ -101,7 +101,7 @@ export const OrdersContextProvider = ({
       storeId
     })
     const reports = await fetchReports()
-
+    console.log({ reports })
     const formattedOrders = formatOrders({ orders, reports })
     const formattedComments = formatComments({
       comments: reports,
