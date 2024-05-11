@@ -3,34 +3,40 @@ import React, { ReactNode, useEffect } from 'react'
 import List from './List'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
-import { CommentType } from './ListComments'
+import { CommentRow, CommentType } from './ListComments'
 import { colors } from '../theme'
 import PaymentType from '../types/PaymentType'
 import CurrencyAmount from './CurrencyAmount'
 import { useStore } from '../contexts/storeContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
+import formatComments from '../libs/formatComments'
+import { FormattedComment } from '../types/CommentType'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 const ListMovements = () => {
-  const [data, setData] = React.useState<MovementType[]>([])
+  const [data, setData] = React.useState<FormattedComment[]>([])
   const { storeId } = useAuth()
-  const { payments } = useStore()
+  const { payments, staff } = useStore()
+  const { orders } = useOrdersCtx()
   useEffect(() => {
     ServiceComments.getToday(storeId).then(async (comments) => {
       const todayPayments = payments.filter(({ createdAt }) => {
         return isToday(asDate(createdAt))
       })
-      const movements = await formatMovements({
+      const movements = await formatComments({
         comments,
+        orders,
+        staff,
         payments: todayPayments
       })
-      setData(movements)
+      setData([...movements])
     })
-  }, [])
+  }, [orders])
 
   return (
     <List
-      ComponentRow={RowMovement}
+      ComponentRow={({ item }) => <CommentRow comment={item} viewOrder />}
       data={data}
       filters={[{ field: 'type', label: 'Tipo' }]}
       defaultSortBy={'createdAt'}

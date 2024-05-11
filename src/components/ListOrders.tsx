@@ -42,7 +42,12 @@ const ListOrders = ({
       filters={[
         { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },
-        { field: 'status', label: 'Status' }
+        { field: 'status', label: 'Status' },
+        {
+          field: 'hasNotSolvedReports',
+          label: 'Reportes ',
+          boolean: true
+        }
       ]}
       ComponentMultiActions={({ ids }) => {
         return <MultiOrderActions ordersIds={ids} />

@@ -12,6 +12,8 @@ import { useAuth } from './authContext'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { formatOrders } from '../libs/orders'
 import { CommentType } from '../types/CommentType'
+import formatComments from '../libs/formatComments'
+import { useStore } from './storeContext'
 
 export type FetchTypeOrders =
   | 'all'
@@ -43,7 +45,7 @@ export const OrdersContextProvider = ({
     permissions: { orders: ordersPermissions, isOwner, isAdmin }
   } = useEmployee()
   const { storeId } = useAuth()
-
+  const { staff } = useStore()
   const [orders, setOrders] = useState<OrderType[]>([])
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -54,9 +56,10 @@ export const OrdersContextProvider = ({
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
 
-  useEffect(() => {
-    ServiceComments.getReportsUnsolved(storeId).then((res) => setReports(res))
-  }, [storeId])
+  const fetchReports = async () => {
+    const reports = await ServiceComments.getReportsUnsolved(storeId)
+    return reports
+  }
 
   useEffect(() => {
     const all: OrderTypeOption = { label: 'Todas', value: 'all' }
@@ -89,19 +92,24 @@ export const OrdersContextProvider = ({
     if (fetchTypeOrders && employee) {
       handleRefresh()
     }
-  }, [fetchTypeOrders, employee, reports])
+  }, [fetchTypeOrders, employee])
 
-  const handleRefresh = () => {
-    if (fetchTypeOrders) {
-      handleGetOrdersByFetchType({
-        fetchType: fetchTypeOrders,
-        sectionsAssigned: employee.sectionsAssigned,
-        storeId
-      }).then((orders) => {
-        const ordersFormatted = formatOrders({ orders, reports })
-        setOrders(ordersFormatted)
-      })
-    }
+  const handleRefresh = async () => {
+    const orders = await handleGetOrdersByFetchType({
+      fetchType: fetchTypeOrders,
+      sectionsAssigned: employee.sectionsAssigned,
+      storeId
+    })
+    const reports = await fetchReports()
+
+    const formattedOrders = formatOrders({ orders, reports })
+    const formattedComments = formatComments({
+      comments: reports,
+      orders,
+      staff
+    })
+    setOrders(formattedOrders)
+    setReports(formattedComments)
   }
 
   return (

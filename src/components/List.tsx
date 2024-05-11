@@ -256,6 +256,7 @@ function MyList<T extends { id: string }>({
             />
           </View>
         )}
+
         <FlatList
           data={sortedData.slice(startIndex, endIndex)}
           renderItem={({ item }) => {

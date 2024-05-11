@@ -12,6 +12,7 @@ import ScreenOrdersConfig from './ScreenOrdersConfig'
 import { StackBalancesE } from './StackBalances'
 import StackOrders from './StackOrders'
 import { StackPaymentsE } from './StackPayments'
+import ScreenReports from './ScreenReports'
 
 export type StackStoreNavigationProps = {
   Store: undefined

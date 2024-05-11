@@ -90,17 +90,17 @@ function ModalFilterList<T>({
       //* create a custom filter for orders with comment reports that are not solved
       // @ts-ignore
 
-      const hasUnsolvedComments =
-        curr?.comments?.find((a) => a.type === 'report' && !a.solved) ||
-        curr?.isReported
+      // const hasUnsolvedComments =
+      //   //curr?.comments?.find((a) => a.type === 'report' && !a.solved) ||
+      //   curr?.hasNotSolvedReports
 
-      if (field === 'status' && hasUnsolvedComments) {
-        if (!acc[order_status.REPORTED]) {
-          acc[order_status.REPORTED] = [curr]
-        } else {
-          acc[order_status.REPORTED].push(curr)
-        }
-      }
+      // if (field === 'status' && hasUnsolvedComments) {
+      //   if (!acc[order_status.REPORTED]) {
+      //     acc[order_status.REPORTED] = [curr]
+      //   } else {
+      //     acc[order_status.REPORTED].push(curr)
+      //   }
+      // }
 
       if (currField instanceof Timestamp) {
         currField = formatDate(currField.toDate(), 'dd/MM/yy')

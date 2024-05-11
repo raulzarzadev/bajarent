@@ -85,7 +85,7 @@ const OrderStatus = ({
           titleColor={colors.white}
         />
       )}
-      {!isReported && !isExpired && isDelivered && (
+      {!isExpired && isDelivered && (
         <Chip
           style={[chipStyles]}
           title={'Entregada'}

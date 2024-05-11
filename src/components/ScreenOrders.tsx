@@ -33,6 +33,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     refreshPreOrders()
     setTimeout(() => setDisabled(false), 4000)
   }
+  console.log({ preOrders, orders })
   return (
     <>
       <StyledModal {...modal}>

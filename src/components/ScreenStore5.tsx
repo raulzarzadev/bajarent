@@ -70,21 +70,12 @@ const StoreNumbersRow = () => {
   const { store } = useAuth()
   const { navigate } = useNavigation()
   const { orders, reports } = useOrdersCtx()
-  //const { orders, comments } = useStore()
 
   const OrdersAuthorized = orders?.filter(
     (order) => order.status === order_status.AUTHORIZED
   )
-  const reportsUnsolved = reports?.filter(
-    (comment) => comment.type === 'report' && !comment.solved
-  )
-  const OrdersReported = reportsUnsolved?.map((comment) => comment.orderId)
-  // remove repeated orders
-  const OrdersReportedUnique = OrdersReported?.filter(
-    (value, index, self) => self.indexOf(value) === index
-  )
-  const currentFolio = store?.currentFolio
 
+  const currentFolio = store?.currentFolio
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       <Button
@@ -110,14 +101,14 @@ const StoreNumbersRow = () => {
         variant="ghost"
       />
       <Button
-        label={`Reportes: ${reportsUnsolved?.length || 0}`}
+        label={`Reportes: ${reports?.length || 0}`}
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {
-            screen: 'ScreenOrders',
+            screen: 'ScreenReports',
             params: {
               title: 'Reportes',
-              orders: OrdersReportedUnique
+              orders: reports.map(({ id }) => id)
             }
           })
         }}
