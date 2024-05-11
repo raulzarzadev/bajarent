@@ -241,7 +241,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.findMany(filters)
   }
 
-  getRepairs(storeId: string, ops: { sections?: string[] } = {}) {
+  getRepairsUnsolved(storeId: string, ops: { sections?: string[] } = {}) {
     const sections = ops?.sections || []
     const filters = [
       where('storeId', '==', storeId),
@@ -257,6 +257,18 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.findMany(filters)
   }
 
+  async getReported(storeId: string, ops: { sections?: string[] } = {}) {
+    const reportsNotSolved = await ServiceComments.getReportsUnsolved(storeId)
+    const uniqueOrdersIds = reportsNotSolved.reduce((acc, { orderId }) => {
+      if (!acc.includes(orderId)) acc.push(orderId)
+      return acc
+    }, [])
+    const orders = await this.getList(uniqueOrdersIds, ops)
+    return orders.map((order) => ({
+      ...order,
+      comments: reportsNotSolved.filter(({ orderId }) => orderId === order.id)
+    }))
+  }
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

@@ -20,8 +20,9 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     orderTypeOptions,
     handleRefresh: refreshOrders
   } = useOrdersCtx()
-  const { orders: preOrders } = useOrders({ ids: route?.params?.orders })
-
+  const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
+    ids: route?.params?.orders
+  })
   const modal = useModal({
     title: 'Tipo de ordenes'
   })
@@ -29,6 +30,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const handleRefresh = () => {
     setDisabled(true)
     refreshOrders()
+    refreshPreOrders()
     setTimeout(() => setDisabled(false), 4000)
   }
   return (

@@ -116,6 +116,9 @@ type OrderBase = {
    *******************************************rz */
   statuses?: boolean
   isDelivered?: boolean
+  /**
+   * @deprecated use hasNotSolvedReports instead
+   */
   isReported?: boolean
   isRenewed?: boolean
   isCancelled?: boolean

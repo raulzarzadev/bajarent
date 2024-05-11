@@ -13,10 +13,20 @@ export const formatOrders = ({
   reports?: CommentType[]
   justActive?: boolean
 }) => {
-  const ordersWithExpireDate = orders.map((order) => {
-    const formattedOrder = formatOrder({ order, comments: reports })
-    return formattedOrder
-  })
+  const ordersWithExpireDate = orders
+    .map((order) => {
+      const formattedOrder = formatOrder({ order, comments: reports })
+      return formattedOrder
+    })
+    // remove duplicates
+    .reduce((acc, current) => {
+      const x = acc.find((item) => item?.id === current?.id)
+      if (!x) {
+        return acc.concat([current])
+      } else {
+        return acc
+      }
+    }, [])
 
   if (justActive) {
     return activeOrders(ordersWithExpireDate)
@@ -27,13 +37,13 @@ export const formatOrders = ({
 
 export const formatOrder = ({ order, comments }) => {
   const orderComments = comments.filter(
-    (comment) => comment.orderId === order.id
+    (comment) => comment?.orderId === order?.id
   )
   const reportsNotSolved = orderComments.some(
     ({ type, solved }) => type === 'report' && !solved
   )
   // if (reportsNotSolved.length) console.log({ reportsNotSolved })
-  if (order.type === 'RENT') {
+  if (order?.type === 'RENT') {
     // const expireOrder = orderExpireAt({ order })
     const expireAt = order.expireAt || orderExpireAt({ order })
     const isExpired = expireAt && isBefore(asDate(expireAt), new Date())
@@ -44,7 +54,7 @@ export const formatOrder = ({ order, comments }) => {
       hasNotSolvedReports: reportsNotSolved
     }
   }
-  if (order.type === 'REPAIR') {
+  if (order?.type === 'REPAIR') {
     return {
       ...order,
       comments: orderComments,
@@ -52,7 +62,7 @@ export const formatOrder = ({ order, comments }) => {
       hasNotSolvedReports: reportsNotSolved
     }
   }
-  if (order.type === 'SALE') {
+  if (order?.type === 'SALE') {
     return {
       ...order,
       comments: orderComments,

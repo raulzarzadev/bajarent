@@ -159,7 +159,6 @@ export const onExtend = async (
 
 export const onSetStatuses = async ({ orderId }) => {
   const order = await ServiceOrders.get(orderId)
-  const reports = await ServiceComments.getOrderUnsolvedReports(orderId)
-  const { order: newOrder } = handleSetStatuses({ order, reports })
+  const { order: newOrder } = handleSetStatuses({ order })
   return await ServiceOrders.update(orderId, { ...newOrder, statuses: true })
 }
