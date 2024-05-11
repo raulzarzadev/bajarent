@@ -115,11 +115,8 @@ export const orderExpireAt = ({ order }: { order: Partial<OrderType> }) => {
     })[0].expireAt
   } else {
     //* if order has no items, use the order expire date
-    expireAt = expireDate2({
-      startedAt: order.deliveredAt || order.scheduledAt,
-      price: order?.item?.priceSelected,
-      priceQty: order?.item?.priceQty
-    })
+    //*******  show expire as null
+    expireAt = null
   }
   return expireAt
 }
