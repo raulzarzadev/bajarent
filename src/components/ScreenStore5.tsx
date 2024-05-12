@@ -190,10 +190,16 @@ const TabOrders = () => {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       <Button
-        disabled={true}
         label="Todas"
         onPress={() => {
-          console.log('Ver todas')
+          navigate('StackOrders', {
+            screen: 'ScreenOrders',
+            params: {
+              title: 'Ordenes',
+              orders: [],
+              searchInAll: true
+            }
+          })
         }}
         variant="ghost"
       />

@@ -14,7 +14,10 @@ import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import { order_status } from '../types/OrderType'
 import Button from './Button'
-
+export type CollectionSearch = {
+  collectionName: string
+  fields: string[]
+}
 export type FilterListType<T> = {
   field: keyof T
   label: string
@@ -26,20 +29,23 @@ export type ModalFilterOrdersProps<T> = {
   setData: (orders: T[]) => void
   filters?: FilterListType<T>[]
   preFilteredIds: string[]
+  collectionSearch?: CollectionSearch
 }
 
 function ModalFilterList<T>({
   data,
   filters,
   setData = (data) => console.log(data),
-  preFilteredIds
+  preFilteredIds,
+  collectionSearch
 }: ModalFilterOrdersProps<T>) {
   const { storeSections, staff } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
 
   const { filterBy, cleanFilter, filteredData, filtersBy, search } =
     useFilter<T>({
-      data
+      data,
+      collectionSearch
     })
 
   useEffect(() => {

@@ -13,6 +13,8 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
 
   const hasOrderList = !!route?.params?.orders
+  const searchInAll = !!route?.params?.searchInAll
+
   const {
     orders,
     fetchTypeOrders,
@@ -50,7 +52,22 @@ function ScreenOrders({ route, navigation: { navigate } }) {
       <ListOrders
         orders={hasOrderList ? preOrders : orders}
         //defaultOrdersIds={filtered}
-
+        collectionSearch={
+          searchInAll
+            ? {
+                collectionName: 'orders',
+                fields: [
+                  'folio',
+                  'note',
+                  'fullName',
+                  'name',
+                  'neighborhood',
+                  'status',
+                  'phone'
+                ]
+              }
+            : undefined
+        }
         sideButtons={[
           {
             icon: 'download',

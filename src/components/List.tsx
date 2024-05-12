@@ -12,11 +12,15 @@ import { FC, useEffect, useState } from 'react'
 import Icon, { IconName } from './Icon'
 
 import ErrorBoundary from './ErrorBoundary'
-import ModalFilterList, { FilterListType } from './ModalFilterList'
+import ModalFilterList, {
+  CollectionSearch,
+  FilterListType
+} from './ModalFilterList'
 import Button from './Button'
 import InputCheckbox from './InputCheckbox'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
+import Loading from './Loading'
 
 // const windowHeight = Dimensions.get('window').height
 // const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
@@ -40,6 +44,7 @@ export type ListPops<T extends { id: string }> = {
   sideButtons?: ListSideButton[]
   rowsPerPage?: number
   ComponentMultiActions?: FC<{ ids: string[] }>
+  collectionSearch?: CollectionSearch
 }
 
 function MyList<T extends { id: string }>({
@@ -53,7 +58,8 @@ function MyList<T extends { id: string }>({
   filters,
   preFilteredIds,
   sideButtons = [],
-  rowsPerPage = 10
+  rowsPerPage = 10,
+  collectionSearch
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([])
 
@@ -102,7 +108,7 @@ function MyList<T extends { id: string }>({
   }
 
   const multiSelectActionsModal = useModal({ title: 'Acciones' })
-
+  const [loading, setLoading] = useState(false)
   return (
     <ScrollView>
       <View style={{ margin: 'auto', maxWidth: '100%' }}>
@@ -135,11 +141,16 @@ function MyList<T extends { id: string }>({
             )}
 
             <ModalFilterList
+              collectionSearch={collectionSearch}
               preFilteredIds={preFilteredIds}
               data={data}
               setData={(data) => {
-                setCurrentPage(1)
-                setFilteredData(data)
+                setLoading(true)
+                setTimeout(() => {
+                  setCurrentPage(1)
+                  setFilteredData(data)
+                  setLoading(false)
+                }, 1000)
               }}
               filters={filters}
             />
@@ -256,54 +267,59 @@ function MyList<T extends { id: string }>({
             />
           </View>
         )}
+        {loading && <Loading />}
+        {!loading && (
+          <>
+            <FlatList
+              data={sortedData.slice(startIndex, endIndex)}
+              renderItem={({ item }) => {
+                return (
+                  <>
+                    <View style={{ flexDirection: 'row' }}>
+                      {multiSelect && (
+                        <InputCheckbox
+                          label=""
+                          setValue={() => {
+                            handleSelectRow(item?.id)
+                          }}
+                          value={selectedRows.includes(item?.id)}
+                        />
+                      )}
+                      <Pressable
+                        style={{ flex: 1 }}
+                        onPress={() => {
+                          if (multiSelect) {
+                            handleSelectRow(item.id)
+                          } else {
+                            onPressRow && onPressRow(item?.id)
+                          }
+                        }}
+                      >
+                        <ComponentRow item={item} />
+                      </Pressable>
+                    </View>
+                  </>
+                )
+              }}
+            ></FlatList>
 
-        <FlatList
-          data={sortedData.slice(startIndex, endIndex)}
-          renderItem={({ item }) => {
-            return (
-              <>
-                <View style={{ flexDirection: 'row' }}>
-                  {multiSelect && (
-                    <InputCheckbox
-                      label=""
-                      setValue={() => {
-                        handleSelectRow(item?.id)
-                      }}
-                      value={selectedRows.includes(item?.id)}
-                    />
-                  )}
-                  <Pressable
-                    style={{ flex: 1 }}
-                    onPress={() => {
-                      if (multiSelect) {
-                        handleSelectRow(item.id)
-                      } else {
-                        onPressRow && onPressRow(item?.id)
-                      }
-                    }}
-                  >
-                    <ComponentRow item={item} />
-                  </Pressable>
-                </View>
-              </>
-            )
-          }}
-        ></FlatList>
-        <View
-          style={{
-            alignSelf: 'flex-end',
-            marginBottom: 16,
-            marginTop: 4,
-            marginRight: 4
-          }}
-        >
-          <Pagination
-            currentPage={currentPage}
-            handleNextPage={handleNextPage}
-            handlePrevPage={handlePrevPage}
-            totalPages={totalPages}
-          />
-        </View>
+            <View
+              style={{
+                alignSelf: 'flex-end',
+                marginBottom: 16,
+                marginTop: 4,
+                marginRight: 4
+              }}
+            >
+              <Pagination
+                currentPage={currentPage}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+                totalPages={totalPages}
+              />
+            </View>
+          </>
+        )}
       </View>
     </ScrollView>
   )

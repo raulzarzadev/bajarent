@@ -34,6 +34,14 @@ const ScreenOrderNew = ({ navigation }) => {
     defaultValues.expireAt = orderExpireAt({ order: values })
     defaultValues.statuses = true //* it means is set with expireAt
 
+    //* remove spaces in each field before saving
+    Object.keys(defaultValues).forEach((key) => {
+      if (typeof defaultValues[key] === 'string') {
+        const normalized = defaultValues[key].replace(/\s+/g, ' ')
+        defaultValues[key] = normalized.trim()
+      }
+    })
+
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       (orderId) => {
         if (orderId) {

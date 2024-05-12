@@ -124,6 +124,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('createdAt', '<=', new Date(new Date().setHours(23, 59, 59, 999)))
     ])
   }
+  orderReports(orderId: string) {
+    return this.findMany([
+      where('orderId', '==', orderId),
+      where('type', '==', 'report'),
+      where('solved', '==', false)
+    ])
+  }
+  listenOrderReports(orderId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('orderId', '==', orderId),
+        where('type', '==', 'report'),
+        where('solved', '==', false)
+      ],
+      cb
+    )
+  }
 }
 
 export const ServiceComments = new ServiceOrdersClass()

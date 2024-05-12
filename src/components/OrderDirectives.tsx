@@ -12,6 +12,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   const sectionName = storeSections?.find(
     ({ id }) => id === order?.assignToSection
   )?.name
+
   return (
     <View
       style={{

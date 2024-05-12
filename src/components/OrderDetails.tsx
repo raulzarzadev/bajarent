@@ -25,6 +25,7 @@ import { translateTime } from '../libs/expireDate'
 import { OrderDirectivesE } from './OrderDirectives'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  console.log({ order })
   const multiItemOrder = order?.items?.length > 0
   const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
     const price = item?.priceSelected?.amount || 0

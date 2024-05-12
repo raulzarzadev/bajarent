@@ -24,15 +24,12 @@ import ErrorBoundary from '../ErrorBoundary'
 import StyledModal from '../StyledModal'
 import useModal from '../../hooks/useModal'
 import { Formik } from 'formik'
-import { useStore } from '../../contexts/storeContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../InputValueFormik'
 import FormikSelectCategories from '../FormikSelectCategories'
-import OrderStatus from '../OrderStatus'
 import useOrder from '../../hooks/useFullOrder'
 import { orderExpireAt } from '../../libs/orders'
-import { useOrdersCtx } from '../../contexts/ordersContext'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -106,7 +103,9 @@ const OrderActions = ({
           items,
           note
         })
-        const expireAt = orderExpireAt({ order })
+        const expireAt = orderExpireAt({
+          order: { ...order, deliveredAt: new Date() }
+        })
         await onDelivery({
           orderId,
           userId,

@@ -34,7 +34,13 @@ const ScreenOrderEdit = ({ route, navigation }) => {
 
         values.expireAt = orderExpireAt({ order: values })
         values.statuses = true //* it means is set with expireAt
-
+        //* remove spaces in each field before saving
+        Object.keys(values).forEach((key) => {
+          if (typeof values[key] === 'string') {
+            const normalized = values[key].replace(/\s+/g, ' ')
+            values[key] = normalized.trim()
+          }
+        })
         ServiceOrders.update(orderId, values)
           .then((res) => {
             // console.log(res)

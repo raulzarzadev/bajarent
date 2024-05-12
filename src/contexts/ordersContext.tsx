@@ -44,7 +44,7 @@ export const OrdersContextProvider = ({
     employee,
     permissions: { orders: ordersPermissions, isOwner, isAdmin }
   } = useEmployee()
-  const { storeId } = useAuth()
+  const { storeId, store } = useAuth()
   const { staff } = useStore()
   const [orders, setOrders] = useState<OrderType[]>([])
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
@@ -100,22 +100,23 @@ export const OrdersContextProvider = ({
       sectionsAssigned: employee.sectionsAssigned,
       storeId
     })
-    const reports = await fetchReports()
-    console.log({ reports })
-    const formattedOrders = formatOrders({ orders, reports })
-    const formattedComments = formatComments({
-      comments: reports,
-      orders,
-      staff
-    })
-    setOrders(formattedOrders)
-    setReports(formattedComments)
+
+    setOrders(orders)
   }
+
+  useEffect(() => {
+    if (store)
+      ServiceComments.listenReportsUnsolved(storeId, (reports) => {
+        setReports(reports)
+      })
+  }, [store])
+
+  const formattedOrders = formatOrders({ orders, reports })
 
   return (
     <OrdersContext.Provider
       value={{
-        orders,
+        orders: formattedOrders,
         setFetchTypeOrders,
         fetchTypeOrders,
         orderTypeOptions,

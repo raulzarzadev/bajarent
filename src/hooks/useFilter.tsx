@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react'
+import { CollectionSearch } from '../components/ModalFilterList'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { formatOrders } from '../libs/orders'
+import { ServiceComments } from '../firebase/ServiceComments'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 export type Filter = { field: string; value: string | number | boolean }
 
 export default function useFilter<T extends { id?: string }>({
-  data = []
+  data = [],
+  collectionSearch
 }: {
   data: T[]
+  collectionSearch?: CollectionSearch
 }) {
+  const { reports } = useOrdersCtx()
   const [filteredData, setFilteredData] = useState<T[]>([])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
@@ -80,6 +88,12 @@ export default function useFilter<T extends { id?: string }>({
       //<-- Apply filters if exist to keep current selection
       const res = filterDataByFields(data, filtersBy)
       setFilteredData(res)
+      return
+    }
+    if (collectionSearch?.collectionName === 'orders') {
+      ServiceOrders.search(collectionSearch?.fields, value).then((res) => {
+        setFilteredData(formatOrders({ orders: res, reports }))
+      })
       return
     }
     const res = [...data].filter((order) => {

@@ -8,11 +8,16 @@ import MultiOrderActions from './OrderActions/MultiOrderActions'
 const ListOrders = ({
   orders = [],
   defaultOrdersIds,
-  sideButtons = []
+  sideButtons = [],
+  collectionSearch
 }: {
   orders: OrderType[]
   defaultOrdersIds?: string[]
   sideButtons?: ListSideButton[]
+  collectionSearch?: {
+    collectionName: string
+    fields: string[]
+  }
 }) => {
   const { navigate } = useNavigation()
   return (
@@ -52,6 +57,7 @@ const ListOrders = ({
       ComponentMultiActions={({ ids }) => {
         return <MultiOrderActions ordersIds={ids} />
       }}
+      collectionSearch={collectionSearch}
     />
   )
 }

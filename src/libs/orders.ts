@@ -35,23 +35,22 @@ export const formatOrders = ({
   return ordersWithExpireDate
 }
 
-export const formatOrder = ({ order, comments }) => {
-  const orderComments = comments.filter(
+export const formatOrder = ({ order, comments = [] }) => {
+  const orderComments = comments?.filter(
     (comment) => comment?.orderId === order?.id
   )
-  const reportsNotSolved = orderComments.some(
+  const reportsNotSolved = orderComments?.some(
     ({ type, solved }) => type === 'report' && !solved
   )
-  // if (reportsNotSolved.length) console.log({ reportsNotSolved })
   if (order?.type === 'RENT') {
-    // const expireOrder = orderExpireAt({ order })
-    const expireAt = order.expireAt || orderExpireAt({ order })
-    const isExpired = expireAt && isBefore(asDate(expireAt), new Date())
+    const expireAt = orderExpireAt({ order })
+    const isExpired = !!expireAt && isBefore(asDate(expireAt), new Date())
     return {
       ...order,
       comments: orderComments,
+      hasNotSolvedReports: reportsNotSolved,
       isExpired,
-      hasNotSolvedReports: reportsNotSolved
+      expireAt
     }
   }
   if (order?.type === 'REPAIR') {
@@ -97,7 +96,24 @@ export const activeOrders = (ordersFormatted: OrderType[]) => {
   })
 }
 
-export const orderExpireAt = ({ order }: { order: Partial<OrderType> }) => {
+export const orderExpireAt = ({
+  order
+}: {
+  order: Partial<OrderType>
+}): Date | null => {
+  //* if is rent and is delivered or renewed calculate expire date, else return null
+  let expireAt = null
+
+  const { status } = order
+  if (
+    [
+      order_status.CANCELLED,
+      order_status.AUTHORIZED,
+      order_status.PENDING
+    ].includes(status)
+  )
+    return null
+
   const orderItemsExpireDate = order?.items?.map((item) => {
     const expireAt = expireDate2({
       startedAt: order.deliveredAt || order.scheduledAt,
@@ -107,7 +123,6 @@ export const orderExpireAt = ({ order }: { order: Partial<OrderType> }) => {
     return { ...item, expireAt }
   })
 
-  let expireAt = null
   if (!!order?.items?.length) {
     //* sort items by expireAt and choose the nearest one as expire date for all order
     expireAt = orderItemsExpireDate.sort((a, b) => {

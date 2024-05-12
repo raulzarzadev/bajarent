@@ -14,13 +14,15 @@ const OrderStatus = ({
   chipSize?: Size
 }) => {
   if (!order) return <Text>Orden no encontrada</Text>
+
   const isReported = order?.hasNotSolvedReports
-  const isExpired = order?.isExpired && order.status === order_status.DELIVERED
+  const isDelivered = order?.status === order_status.DELIVERED
+
+  const isExpired = order?.isExpired && isDelivered
+
   const isCancelled = order?.status === order_status.CANCELLED
   const isAuthorized = order?.status === order_status.AUTHORIZED
   const isPending = order?.status === order_status.PENDING
-  const isDelivered =
-    order?.status === order_status.DELIVERED || order?.isDelivered
 
   const isRepairing = order?.status === order_status.REPAIRING
   const isPickedUp = order?.status === order_status.PICKED_UP

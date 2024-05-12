@@ -269,6 +269,19 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       comments: reportsNotSolved.filter(({ orderId }) => orderId === order.id)
     }))
   }
+  async search(fields: string[] = [], value: string | number | boolean) {
+    const promises = fields.map((field) => {
+      const number = parseFloat(value as string)
+      //* search as number
+      if (field === 'folio') return this.findMany([where(field, '==', number)])
+      //* search with phone format
+      if (field === 'phone')
+        return this.findMany([where(field, '==', `+52${value}`)])
+      //* search as string
+      return this.findMany([where(field, '==', value)])
+    })
+    return await Promise.all(promises).then((res) => res.flat())
+  }
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
