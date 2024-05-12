@@ -4,7 +4,6 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
-import { expireDate2 } from '../libs/expireDate'
 import { orderExpireAt } from '../libs/orders'
 //
 const ScreenOrderNew = ({ navigation }) => {

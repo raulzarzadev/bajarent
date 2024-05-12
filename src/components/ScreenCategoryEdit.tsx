@@ -8,7 +8,7 @@ import ErrorBoundary from './ErrorBoundary'
 
 const ScreenCategoryEdit = ({ navigation, route }) => {
   const categoryId = route.params.id
-  const { categories, updateCategories } = useStore()
+  const { categories } = useStore()
   const { updateCategory } = useCategories()
   const category = categories?.find((c) => c.id === categoryId)
   if (!category) return null
@@ -19,7 +19,6 @@ const ScreenCategoryEdit = ({ navigation, route }) => {
           defaultValues={category}
           onSubmit={async (values) => {
             await updateCategory(categoryId, values)
-            updateCategories()
             navigation.goBack()
           }}
         />

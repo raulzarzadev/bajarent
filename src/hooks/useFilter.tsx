@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { CollectionSearch } from '../components/ModalFilterList'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
-import { ServiceComments } from '../firebase/ServiceComments'
 import { useOrdersCtx } from '../contexts/ordersContext'
 
 export type Filter = { field: string; value: string | number | boolean }

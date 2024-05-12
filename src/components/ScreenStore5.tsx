@@ -141,6 +141,7 @@ const TabCashbox = () => {
       <Button
         label="Cortes"
         onPress={() => {
+          //@ts-ignore
           navigate('StackBalances')
         }}
         variant="ghost"
@@ -148,6 +149,7 @@ const TabCashbox = () => {
       <Button
         label="Pagos"
         onPress={() => {
+          //@ts-ignore
           navigate('StackPayments')
         }}
         variant="ghost"
@@ -163,7 +165,7 @@ const TabAreas = () => {
       <Button
         label="Areas"
         onPress={() => {
-          console.log('Areas')
+          //@ts-ignore
           navigate('StackSections')
         }}
         variant="ghost"
@@ -173,21 +175,12 @@ const TabAreas = () => {
       <Button
         label="Staff"
         onPress={() => {
-          console.log('Staffsss')
+          //@ts-ignore
           navigate('StackStaff')
         }}
         icon={'orders'}
         variant="ghost"
         disabled={false}
-      />
-      <Button
-        label="Ordenes"
-        onPress={() => {
-          console.log('Configurar')
-        }}
-        variant="ghost"
-        icon="settings"
-        disabled={true}
       />
     </View>
   )
@@ -208,6 +201,7 @@ const TabOrders = () => {
       <Button
         label="Todas"
         onPress={() => {
+          //@ts-ignore
           navigate('StackOrders', {
             screen: 'ScreenOrders',
             params: {
@@ -222,8 +216,7 @@ const TabOrders = () => {
       <Button
         label="Configurar"
         onPress={() => {
-          console.log('Configurar')
-
+          //@ts-ignore
           navigate('ScreenOrdersConfig')
         }}
         variant="ghost"

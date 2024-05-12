@@ -226,9 +226,6 @@ const FormOrderA = ({
               //@ts-ignore
               errors.scheduledAt = '*Fecha  necesaria'
 
-            // if (orderFields?.location && !values.location)
-            //   errors.location = '*Ubicación requerida'
-            //f (!values.location) errors.location = '*Ubicación requerida'
             return errors
           }}
         >

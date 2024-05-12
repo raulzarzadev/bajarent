@@ -57,6 +57,7 @@ const MyStaffLabel = () => {
         <Button
           icon="add"
           onPress={() => {
+            // @ts-ignore
             navigation.navigate('NewOrder')
           }}
           justIcon

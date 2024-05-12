@@ -86,6 +86,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
                     handleRemoveStaff(staffId)
                   }}
                   handleEdit={(staffId) => {
+                    //@ts-ignore
                     navigation.navigate('StackStaff', {
                       screen: 'ScreenStaffEdit',
                       params: { staffId }

@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { handleSetStatuses } from '../libs/update_statuses'
 import OrderType, {
   TypeOrder,

@@ -3,18 +3,15 @@ import React from 'react'
 import FormCategory from './FormCategory'
 import { gStyles } from '../styles'
 import useCategories from '../hooks/useCategories'
-import { useStore } from '../contexts/storeContext'
 
 const ScreenCategoryNew = ({ navigation }) => {
   const { createCategory } = useCategories()
-  const { updateCategories } = useStore()
   return (
     <ScrollView>
       <View style={gStyles.container}>
         <FormCategory
           onSubmit={async (values) => {
             await createCategory(values)
-            updateCategories()
             navigation.goBack()
           }}
         />

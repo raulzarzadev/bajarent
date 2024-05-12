@@ -8,7 +8,7 @@ import {
   //   Dimensions
 } from 'react-native'
 import useSort from '../hooks/useSort'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import Icon, { IconName } from './Icon'
 
 import ErrorBoundary from './ErrorBoundary'
