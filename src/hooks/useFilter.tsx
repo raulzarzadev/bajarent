@@ -80,7 +80,7 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const [searchValue, setSearchValue] = useState('')
-  const search = (value: string) => {
+  const search = async (value: string) => {
     setSearchValue(value)
 
     if (!value) {
@@ -89,12 +89,7 @@ export default function useFilter<T extends { id?: string }>({
       setFilteredData(res)
       return
     }
-    if (collectionSearch?.collectionName === 'orders') {
-      ServiceOrders.search(collectionSearch?.fields, value).then((res) => {
-        setFilteredData(formatOrders({ orders: res, reports }))
-      })
-      return
-    }
+
     const res = [...data].filter((order) => {
       return Object.values(order).some((val) => {
         if (typeof val === 'string') {
@@ -107,7 +102,34 @@ export default function useFilter<T extends { id?: string }>({
         return false
       })
     })
-    setFilteredData(res)
+    if (collectionSearch?.collectionName === 'orders') {
+      const avoidIds = res.map(({ id }) => id)
+      console.log({ avoidIds })
+      const orders = await ServiceOrders.search(
+        collectionSearch?.fields,
+        value,
+        avoidIds
+      ).then((res) => {
+        return formatOrders({ orders: res, reports })
+      })
+      console.log({ orders })
+      setFilteredData([...orders, ...res])
+    }
+    console.log({ res })
+
+    // console.log({ res })
+    // if (collectionSearch?.collectionName === 'orders') {
+    //   ServiceOrders.search(
+    //     collectionSearch?.fields,
+    //     value,
+    //     res.map(({ id }) => id)
+    //   ).then((res) => {
+    //     const orders = formatOrders({ orders: res, reports })
+    //     setFilteredData([...res, ...orders])
+    //   })
+    // } else {
+    //   setFilteredData(res)
+    // }
   }
 
   useEffect(() => {

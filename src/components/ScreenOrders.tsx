@@ -31,22 +31,18 @@ function ScreenOrders({ route, navigation: { navigate } }) {
       <ListOrders
         orders={hasOrderList ? preOrders : orders}
         //defaultOrdersIds={filtered}
-        collectionSearch={
-          searchInAll
-            ? {
-                collectionName: 'orders',
-                fields: [
-                  'folio',
-                  'note',
-                  'fullName',
-                  'name',
-                  'neighborhood',
-                  'status',
-                  'phone'
-                ]
-              }
-            : undefined
-        }
+        collectionSearch={{
+          collectionName: 'orders',
+          fields: [
+            'folio',
+            'note',
+            'fullName',
+            'name',
+            'neighborhood',
+            'status',
+            'phone'
+          ]
+        }}
         sideButtons={[
           {
             icon: 'refresh',
