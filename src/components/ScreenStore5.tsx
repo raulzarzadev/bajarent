@@ -79,7 +79,13 @@ const StoreNumbersRow = () => {
 
   const currentFolio = store?.currentFolio
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        flexWrap: 'wrap'
+      }}
+    >
       <Button
         label={`Folio: ${currentFolio || 0}`}
         onPress={() => {
