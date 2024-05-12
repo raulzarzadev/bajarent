@@ -52,6 +52,12 @@ const ListOrders = ({
           field: 'hasNotSolvedReports',
           label: 'Reportes ',
           boolean: true
+        },
+
+        {
+          field: 'isExpired',
+          label: 'Vencidas ',
+          boolean: true
         }
       ]}
       ComponentMultiActions={({ ids }) => {

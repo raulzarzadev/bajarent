@@ -12,7 +12,6 @@ import InputTextStyled from './InputTextStyled'
 import { formatDate } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
-import { order_status } from '../types/OrderType'
 import Button from './Button'
 export type CollectionSearch = {
   collectionName: string
@@ -92,21 +91,6 @@ function ModalFilterList<T>({
 
       //* Avoid invalid fields
       if (!currField || currField === 'undefined') return acc
-
-      //* create a custom filter for orders with comment reports that are not solved
-      // @ts-ignore
-
-      // const hasUnsolvedComments =
-      //   //curr?.comments?.find((a) => a.type === 'report' && !a.solved) ||
-      //   curr?.hasNotSolvedReports
-
-      // if (field === 'status' && hasUnsolvedComments) {
-      //   if (!acc[order_status.REPORTED]) {
-      //     acc[order_status.REPORTED] = [curr]
-      //   } else {
-      //     acc[order_status.REPORTED].push(curr)
-      //   }
-      // }
 
       if (currField instanceof Timestamp) {
         currField = formatDate(currField.toDate(), 'dd/MM/yy')
@@ -266,6 +250,7 @@ function ModalFilterList<T>({
                       color={chipColor(field as string, value)}
                       title={title}
                       key={value}
+                      size="sm"
                       onPress={() => {
                         if (value === 'REPORTED') {
                           filterBy('isReported', true)

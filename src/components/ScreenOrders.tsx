@@ -17,17 +17,17 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
   const {
     orders,
-    fetchTypeOrders,
-    setFetchTypeOrders,
-    orderTypeOptions,
+    // fetchTypeOrders,
+    // setFetchTypeOrders,
+    // orderTypeOptions,
     handleRefresh: refreshOrders
   } = useOrdersCtx()
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
     ids: route?.params?.orders
   })
-  const modal = useModal({
-    title: 'Tipo de ordenes'
-  })
+  // const modal = useModal({
+  //   title: 'Tipo de ordenes'
+  // })
   const [disabled, setDisabled] = useState(false)
   const handleRefresh = () => {
     setDisabled(true)
@@ -38,7 +38,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   console.log({ preOrders, orders })
   return (
     <>
-      <StyledModal {...modal}>
+      {/* <StyledModal {...modal}>
         <Text style={gStyles.h3}>
           Selecciona que tipo de ordenes quieres ver
         </Text>
@@ -47,7 +47,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
           value={fetchTypeOrders}
           onChangeValue={setFetchTypeOrders}
         />
-      </StyledModal>
+      </StyledModal> */}
 
       <ListOrders
         orders={hasOrderList ? preOrders : orders}
@@ -69,13 +69,13 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             : undefined
         }
         sideButtons={[
-          {
-            icon: 'download',
-            label: '',
-            onPress: modal.toggleOpen,
-            //* If hasOrderList hide button to choose type of orders
-            visible: !hasOrderList
-          },
+          // {
+          //   icon: 'download',
+          //   label: '',
+          //   onPress: modal.toggleOpen,
+          //   //* If hasOrderList hide button to choose type of orders
+          //   visible: !hasOrderList
+          // },
           {
             icon: 'refresh',
             label: '',

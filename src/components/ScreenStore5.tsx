@@ -75,6 +75,8 @@ const StoreNumbersRow = () => {
     (order) => order.status === order_status.AUTHORIZED
   )
 
+  const ordersExpired = orders.filter((o) => o.isExpired)
+
   const currentFolio = store?.currentFolio
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -85,6 +87,20 @@ const StoreNumbersRow = () => {
         }}
         variant="ghost"
         disabled
+      />
+      <Button
+        label={`Vencidas: ${ordersExpired?.length}`}
+        onPress={() => {
+          //@ts-ignore
+          navigate('StackOrders', {
+            screen: 'ScreenOrders',
+            params: {
+              title: 'Vencidas',
+              orders: ordersExpired?.map(({ id }) => id)
+            }
+          })
+        }}
+        variant="ghost"
       />
       <Button
         label={`Pedidos: ${OrdersAuthorized?.length}`}
