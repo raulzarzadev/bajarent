@@ -96,7 +96,7 @@ export const OrdersContextProvider = ({
 
   useEffect(() => {
     if (employee) {
-      const orders = handleGetOrders()
+      handleGetOrders()
     }
   }, [employee])
 
@@ -111,17 +111,16 @@ export const OrdersContextProvider = ({
   }
 
   const handleGetOrders = async () => {
+    const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+
     if (employee?.permissions?.order?.canViewMy) {
-      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
-      const orders = await ServiceOrders.getMineUnsolved(
-        storeId,
-        employee.sectionsAssigned || []
-      )
+      const orders = await unsolvedOrders(storeId, {
+        sections: employee.sectionsAssigned || []
+      })
       const formatted = formatOrders({ orders, reports: reportsUnsolved })
       setOrders(formatted)
     } else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
-      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
-      const orders = await ServiceOrders.getUnsolved(storeId)
+      const orders = await unsolvedOrders(storeId)
       const formatted = formatOrders({ orders, reports: reportsUnsolved })
       setOrders(formatted)
     }
