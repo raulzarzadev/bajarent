@@ -45,7 +45,7 @@ export const OrdersContextProvider = ({
     permissions: { orders: ordersPermissions, isOwner, isAdmin }
   } = useEmployee()
   const { storeId, store } = useAuth()
-  const { staff } = useStore()
+
   const [orders, setOrders] = useState<OrderType[]>([])
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -56,43 +56,49 @@ export const OrdersContextProvider = ({
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
 
-  const fetchReports = async () => {
-    const reports = await ServiceComments.getReportsUnsolved(storeId)
-    return reports
-  }
+  // const fetchReports = async () => {
+  //   const reports = await ServiceComments.getReportsUnsolved(storeId)
+  //   return reports
+  // }
+
+  // useEffect(() => {
+  //   const all: OrderTypeOption = { label: 'Todas', value: 'all' }
+  //   const solved: OrderTypeOption = { label: 'Resueltas', value: 'solved' }
+  //   const unsolved: OrderTypeOption = {
+  //     label: 'No resueltas',
+  //     value: 'unsolved'
+  //   }
+  //   const mine: OrderTypeOption = { label: 'Mis ordenes', value: 'mine' }
+  //   const mineSolved: OrderTypeOption = {
+  //     label: 'Mis resueltas',
+  //     value: 'mineSolved'
+  //   }
+
+  //   const mineUnsolved: OrderTypeOption = {
+  //     label: 'Mis no resueltas',
+  //     value: 'mineUnsolved'
+  //   }
+
+  //   if (isAdmin || isOwner) {
+  //     setFetchTypeOrders('unsolved')
+  //     setOrderTypeOptions([all, solved, unsolved])
+  //   } else if (ordersPermissions?.canViewMy) {
+  //     setFetchTypeOrders('mineUnsolved')
+  //     setOrderTypeOptions([mine, mineSolved, mineUnsolved])
+  //   }
+  // }, [employee])
+
+  // useEffect(() => {
+  //   if (fetchTypeOrders && employee) {
+  //     handleRefresh()
+  //   }
+  // }, [fetchTypeOrders, employee])
 
   useEffect(() => {
-    const all: OrderTypeOption = { label: 'Todas', value: 'all' }
-    const solved: OrderTypeOption = { label: 'Resueltas', value: 'solved' }
-    const unsolved: OrderTypeOption = {
-      label: 'No resueltas',
-      value: 'unsolved'
-    }
-    const mine: OrderTypeOption = { label: 'Mis ordenes', value: 'mine' }
-    const mineSolved: OrderTypeOption = {
-      label: 'Mis resueltas',
-      value: 'mineSolved'
-    }
-
-    const mineUnsolved: OrderTypeOption = {
-      label: 'Mis no resueltas',
-      value: 'mineUnsolved'
-    }
-
-    if (isAdmin || isOwner) {
-      setFetchTypeOrders('unsolved')
-      setOrderTypeOptions([all, solved, unsolved])
-    } else if (ordersPermissions?.canViewMy) {
-      setFetchTypeOrders('mineUnsolved')
-      setOrderTypeOptions([mine, mineSolved, mineUnsolved])
+    if (employee) {
+      const orders = handleGetOrders()
     }
   }, [employee])
-
-  useEffect(() => {
-    if (fetchTypeOrders && employee) {
-      handleRefresh()
-    }
-  }, [fetchTypeOrders, employee])
 
   const handleRefresh = async () => {
     const orders = await handleGetOrdersByFetchType({
@@ -102,6 +108,23 @@ export const OrdersContextProvider = ({
     })
 
     setOrders(orders)
+  }
+
+  const handleGetOrders = async () => {
+    if (employee?.permissions?.order?.canViewMy) {
+      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+      const orders = await ServiceOrders.getMineUnsolved(
+        storeId,
+        employee.sectionsAssigned || []
+      )
+      const formatted = formatOrders({ orders, reports: reportsUnsolved })
+      setOrders(formatted)
+    } else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
+      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+      const orders = await ServiceOrders.getUnsolved(storeId)
+      const formatted = formatOrders({ orders, reports: reportsUnsolved })
+      setOrders(formatted)
+    }
   }
 
   useEffect(() => {
