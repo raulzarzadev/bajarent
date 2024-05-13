@@ -143,7 +143,7 @@ export const OrdersContextProvider = ({
         setFetchTypeOrders,
         fetchTypeOrders,
         orderTypeOptions,
-        handleRefresh,
+        handleRefresh: handleGetOrders,
         reports
       }}
     >
