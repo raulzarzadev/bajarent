@@ -196,11 +196,22 @@ export const CommentRow = ({
               size="xs"
             />
           </View>
-          {viewOrder && (
+          {viewOrder && comment?.orderFolio && (
             <Chip
               title={`${comment?.orderFolio}  ${comment?.orderName}`}
               size="xs"
               color={theme.primary}
+              onPress={() =>
+                // @ts-ignore
+                navigate('OrderDetails', { orderId: comment.orderId })
+              }
+            ></Chip>
+          )}
+          {viewOrder && !comment?.orderFolio && (
+            <Chip
+              color={theme.primary}
+              size="xs"
+              title="Ver orden"
               onPress={() =>
                 // @ts-ignore
                 navigate('OrderDetails', { orderId: comment.orderId })

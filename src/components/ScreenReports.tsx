@@ -19,6 +19,9 @@ const ScreenReports = ({ navigation }) => {
   }, [reports, orders, staff])
   return (
     <List
+      sortFields={[{ key: 'createdAt', label: 'Fecha' }]}
+      defaultOrder="des"
+      defaultSortBy="createdAt"
       sideButtons={[
         {
           icon: 'refresh',
