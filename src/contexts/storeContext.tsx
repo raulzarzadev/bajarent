@@ -75,8 +75,11 @@ const StoreContextProvider = ({ children }) => {
       })
       ServiceSections.listenByStore(store.id, setSections)
       ServiceStaff.listenByStore(store.id, async (staff) => {
-        const owner = await ServiceUsers.get(store.createdBy)
-        staff.push({ ...owner, userId: owner.id, isOwner: true })
+        const ownerIsNotStaff = staff.find((s) => s.id === store.createdBy)
+        if (ownerIsNotStaff) {
+          const owner = await ServiceUsers.get(store.createdBy)
+          staff.push({ ...owner, userId: owner.id, isOwner: true })
+        }
         setStaff(staff)
       })
       ServicePayments.getByStore(store.id).then((res) => setPayments(res))
