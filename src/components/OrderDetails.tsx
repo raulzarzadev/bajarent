@@ -198,8 +198,9 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
 
 const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
   const items = [...(order.items || [])]
-  if (order?.item) items?.push(order.item)
-
+  // console.log({ item: order.item })
+  //* NOTE: not show item. These will hide older orders item. :X
+  // if (order?.item) items?.push(order.item)
   return (
     <View
       style={{
