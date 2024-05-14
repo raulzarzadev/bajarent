@@ -7,11 +7,11 @@ import Button from './Button'
 import { gSpace, gStyles } from '../styles'
 
 const LocationStatus = () => {
-  const { locationEnabled } = useLocation()
-  if (!locationEnabled) return null
+  const { location } = useLocation()
+  if (!location) return null
   return (
     <View style={{ marginRight: 8 }}>
-      {locationEnabled ? (
+      {location ? (
         <Icon icon="location" color={theme.primary} />
       ) : (
         <Icon icon="locationOff" color={theme.neutral} />
@@ -21,21 +21,21 @@ const LocationStatus = () => {
 }
 
 export const ButtonAskLocation = () => {
-  const { locationEnabled, askLocation } = useLocation()
+  const { location, getLocation } = useLocation()
 
   return (
     <>
       <Button
-        icon={locationEnabled ? 'location' : 'locationOff'}
-        label={locationEnabled ? 'Ubicación activada' : 'Activar ubicación'}
+        icon={location ? 'location' : 'locationOff'}
+        label={location ? 'Ubicación activada' : 'Activar ubicación'}
         size="small"
         variant="ghost"
         buttonStyles={{ width: 220, margin: 'auto' }}
         onPress={() => {
-          askLocation()
+          getLocation()
         }}
       ></Button>
-      {!locationEnabled && (
+      {!location && (
         <Text
           style={[
             gStyles.helper,

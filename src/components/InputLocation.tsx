@@ -1,11 +1,12 @@
-import { Linking, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native'
 import React from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
 
 const InputLocation = ({ value, setValue, helperText }) => {
-  // const { locationEnabled, askLocation } = useLocation()
+  const { getLocation, loading } = useLocation()
+
   return (
     <View style={styles.group}>
       <InputTextStyled
@@ -23,6 +24,26 @@ const InputLocation = ({ value, setValue, helperText }) => {
           Linking.openURL('https://www.google.com/maps')
         }}
       />
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Button
+          justIcon
+          icon="location"
+          variant="ghost"
+          onPress={async () => {
+            const res = await getLocation()
+            const lat = res.coords.lat
+            const lon = res.coords.lon
+            if (lat && lon) {
+              setValue(`${lat},${lon}`)
+            } else {
+              setValue('')
+            }
+          }}
+        />
+      )}
+
       {/* {locationEnabled && (
         <Button
           justIcon

@@ -33,6 +33,7 @@
     "expo": "^49.0.21",
     "expo-font": "~11.4.0",
     "expo-image-picker": "~14.3.2",
+    "expo-location": "^17.0.1",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.7.2",
     "formik": "^2.4.5",

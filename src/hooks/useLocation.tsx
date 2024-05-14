@@ -1,92 +1,57 @@
-import { useEffect, useState } from 'react'
-import { useAuth } from '../contexts/authContext'
+import { useState } from 'react'
+import * as Location from 'expo-location'
 
 export type PermissionState = 'granted' | 'denied' | 'prompt'
-
+export type LocationRes = {
+  status: PermissionState
+  coords: { lat: number; lon: number } | null
+  errorMsg: string | null
+}
 export default function useLocation() {
-  const [location, setLocation] = useState<[number, number]>([0, 0])
-  const [locationEnabled, setLocationEnabled] = useState(false)
-  const [showButton, setShowButton] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [location, setLocation] = useState<{
+    status: PermissionState
+    coords: { lat: number; lon: number } | null
+    errorMsg: string | null
+  }>(null)
 
-  const setLocationStatus = (status: PermissionState) => {
-    setLocationEnabled(status === 'granted')
-  }
-
-  useEffect(() => {
-    // if (user && 'geoloaction' in navigator) {
-    //   askLocation()
-    // }
-  }, [])
-  // useEffect(() => {
-  //   if (navigator)
-  //     navigator?.permissions
-  //       ?.query({ name: 'geolocation' })
-  //       .then((permissionsStatus) => {
-  //         setLocationStatus(permissionsStatus.state)
-  //         permissionsStatus.onchange = function () {
-  //           const state = this.state
-  //           console.log('geolocation permission changed', state)
-  //           setLocationStatus(state)
-  //         }
-  //       })
-
-  //   // getCurrentPosition().then((position) => {
-  //   //   if (!position) return
-  //   //   // @ts-ignore
-  //   //   setLocation([position?.coords?.latitude, position?.coords?.longitude])
-  //   // })
-  // }, [])
-
-  const askLocation = async (): Promise<[number, number] | null> => {
+  const getLocation = async (): Promise<LocationRes | null> => {
+    setLoading(true)
     try {
-      const position = await getCurrentPosition()
-      // @ts-ignore
-
-      const lat = position?.coords?.latitude
-      // @ts-ignore
-
-      const lon = position?.coords?.longitude
-      setLocation([lat, lon])
-      // @ts-ignore
-      return [position?.coords?.latitude, position?.coords?.longitude]
+      let { status } = await Location.requestForegroundPermissionsAsync()
+      if (status === 'granted') {
+        let coords = (await Location.getCurrentPositionAsync({})).coords
+        const res: LocationRes = {
+          status: 'granted',
+          coords: {
+            lat: coords.latitude,
+            lon: coords.longitude
+          },
+          errorMsg: null
+        }
+        setLocation(res)
+        setLoading(false)
+        return res
+      }
+      const res: LocationRes = {
+        status: 'denied',
+        coords: null,
+        errorMsg: 'Permission to access location was denied'
+      }
+      setLocation(res)
+      setLoading(false)
+      return res
     } catch (error) {
       console.error(error)
       return null
+    } finally {
+      setLoading(false)
     }
   }
-  console.log({ location })
 
-  const getCurrentPosition = () => {
-    if (navigator?.permissions)
-      navigator?.permissions
-        ?.query({ name: 'geolocation' })
-        .then((permissionsStatus) => {
-          setLocationStatus(permissionsStatus.state)
-          permissionsStatus.onchange = function () {
-            const state = this.state
-            console.log('geolocation permission changed', state)
-            setLocationStatus(state)
-          }
-        })
-    if ('geoloaction' in navigator) {
-      // @ts-ignore
-      return new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 1000
-        })
-      })
-    } else {
-      return new Promise((resolve, reject) => {
-        reject(new Error('Geolocation is not supported by this browser.'))
-      })
-    }
-  }
   return {
-    locationEnabled,
-    showButton,
     location,
-    askLocation
+    getLocation,
+    loading
   }
 }
