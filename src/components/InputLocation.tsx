@@ -1,12 +1,18 @@
-import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Linking,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
 
 const InputLocation = ({ value, setValue, helperText }) => {
-  const { getLocation, loading } = useLocation()
-
+  const { getLocation, loading, location } = useLocation()
+  console.log(location?.status)
   return (
     <View style={styles.group}>
       <InputTextStyled
@@ -24,25 +30,29 @@ const InputLocation = ({ value, setValue, helperText }) => {
           Linking.openURL('https://www.google.com/maps')
         }}
       />
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <Button
-          justIcon
-          icon="location"
-          variant="ghost"
-          onPress={async () => {
-            const res = await getLocation()
-            const lat = res.coords.lat
-            const lon = res.coords.lon
-            if (lat && lon) {
-              setValue(`${lat},${lon}`)
-            } else {
-              setValue('')
-            }
-          }}
-        />
-      )}
+      <View style={{ width: 32, height: 32 }}>
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button
+            justIcon
+            disabled={location?.status === 'denied'}
+            icon={'location'}
+            variant="ghost"
+            onPress={async () => {
+              const res = await getLocation()
+              if (res?.status === 'granted' && res.coords) {
+                const lat = res?.coords?.lat
+                const lon = res?.coords?.lon
+                setValue(`${lat},${lon}`)
+              } else {
+                setValue('')
+              }
+            }}
+          />
+        )}
+        <Text style={{ fontSize: 8 }}>{location?.status}</Text>
+      </View>
 
       {/* {locationEnabled && (
         <Button
