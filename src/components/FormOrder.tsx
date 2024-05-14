@@ -198,6 +198,10 @@ const FormOrderA = ({
           onSubmit={async (values, { resetForm }) => {
             setLoading(true)
             setError(null)
+
+            console.log(values.sheetRow)
+            delete values.sheetRow //*<--- remove sheetRow from values
+
             await onSubmit(values)
               .then((res) => {
                 resetForm()
@@ -334,7 +338,8 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         categoryName: 'Lavadora',
         priceSelected: null,
         priceSelectedId: null
-      }
+      },
+      sheetRow
     })
   }, [sheetRow])
 
@@ -351,6 +356,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       <InputTextStyled
         onChangeText={(text) => setSheetRow(text)}
         placeholder="Fila de excel"
+        value={values.sheetRow}
         helperText={
           'Una fila de una hoja de excel (No.nota, nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
         }

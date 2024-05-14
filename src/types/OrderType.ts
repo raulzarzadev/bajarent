@@ -105,6 +105,8 @@ type OrderBase = {
 
   priority?: number
 
+  sheetRow?: string //* for google sheet row and lavarenta format
+
   /* ******************************************** 
              Extend expire feature               
    *******************************************rz */
