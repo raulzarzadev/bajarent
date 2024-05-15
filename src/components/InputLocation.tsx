@@ -30,10 +30,7 @@ const InputLocation = ({ value, setValue, helperText }) => {
             if (value.startsWith('http')) {
               return Linking.openURL(value)
             }
-            const coordinatesPattern = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/
-            if (coordinatesPattern.test(value)) {
-              return Linking.openURL(`https://www.google.com/maps?q=${value}`)
-            }
+            return Linking.openURL(`https://www.google.com/maps?q=${value}`)
           }}
         />
       </View>
