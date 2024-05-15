@@ -1,5 +1,4 @@
 import { View } from 'react-native'
-import ModalWhatsAppOrderStatus from './ModalWhatsAppOrderStatus'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import {
@@ -14,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
+import ModalSendWhatsapp from '../ModalSendWhatsapp'
 
 const OrderCommonActions = ({
   storeId,
@@ -98,7 +98,7 @@ const OrderCommonActions = ({
   const buttons = [
     canAssign && <ModalAssignOrder orderId={orderId} />,
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
-    canSendWS && <ModalWhatsAppOrderStatus orderId={orderId} />,
+    canSendWS && <ModalSendWhatsapp orderId={orderId} />,
 
     canReorder && (
       <Button
