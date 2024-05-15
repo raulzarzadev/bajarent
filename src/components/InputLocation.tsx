@@ -27,7 +27,13 @@ const InputLocation = ({ value, setValue, helperText }) => {
           icon="search"
           variant="ghost"
           onPress={() => {
-            Linking.openURL('https://www.google.com/maps?q=' + value)
+            if (value.startsWith('http')) {
+              return Linking.openURL(value)
+            }
+            const coordinatesPattern = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/
+            if (coordinatesPattern.test(value)) {
+              return Linking.openURL(`https://www.google.com/maps?q=${value}`)
+            }
           }}
         />
       </View>

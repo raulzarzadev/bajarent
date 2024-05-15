@@ -25,6 +25,7 @@ import { translateTime } from '../libs/expireDate'
 import { OrderDirectivesE } from './OrderDirectives'
 import Button from './Button'
 import { Link } from '@react-navigation/native'
+import LinkLocation from './LinkLocation'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -191,15 +192,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
           marginVertical: 8
         }}
       >
-        <Button
-          icon={location ? 'location' : 'locationOff'}
-          disabled={!location}
-          onPress={() => {
-            Linking.openURL(`https://www.google.com/maps?q=${location}`)
-          }}
-          variant="ghost"
-          justIcon
-        />
+        <LinkLocation location={location} />
         <Button
           icon={'map'}
           disabled={!neighborhood}

@@ -18,7 +18,22 @@ export default function useLocation() {
   const getLocation = async (): Promise<LocationRes | null> => {
     setLoading(true)
     try {
-      let { status } = await Location.requestForegroundPermissionsAsync()
+      const permissionPromise = Location.requestForegroundPermissionsAsync()
+      const timeoutPromise = new Promise(
+        (_, reject) =>
+          setTimeout(
+            () => reject(new Error('Permission request timed out')),
+            10000
+          ) // 10 seconds timeout
+      )
+
+      const result = (await Promise.race([
+        permissionPromise,
+        timeoutPromise
+      ])) as { status: PermissionState }
+      const { status } = result
+      console.log({ status })
+
       if (status === 'granted') {
         let coords = (await Location.getCurrentPositionAsync({})).coords
         const res: LocationRes = {
