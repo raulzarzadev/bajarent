@@ -12,7 +12,6 @@ import useLocation from '../hooks/useLocation'
 
 const InputLocation = ({ value, setValue, helperText }) => {
   const { getLocation, loading, location } = useLocation()
-  console.log(location?.status)
   return (
     <View style={styles.group}>
       <InputTextStyled
@@ -51,33 +50,7 @@ const InputLocation = ({ value, setValue, helperText }) => {
             }}
           />
         )}
-        <Text style={{ fontSize: 8 }}>{location?.status}</Text>
       </View>
-
-      {/* {locationEnabled && (
-        <Button
-          justIcon
-          icon={locationEnabled ? 'location' : 'locationOff'}
-          color={locationEnabled ? 'primary' : 'neutral'}
-          variant="ghost"
-          onPress={async () => {
-            const position = await askLocation()
-            setValue(`${position[0]},${position[1]}`)
-            // navigator.geolocation.getCurrentPosition(
-            //   (position) => {
-            //     setValue(
-            //       `${position.coords.latitude},${position.coords.longitude},${position.coords.accuracy}`
-            //     )
-            //     // console.log(position)
-            //   },
-            //   (error) => {
-            //     console.error(error)
-            //   },
-            //   { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-            // )
-          }}
-        ></Button>
-      )} */}
     </View>
   )
 }
