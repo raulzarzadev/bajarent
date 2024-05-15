@@ -1,4 +1,4 @@
-import { Text, View, Image } from 'react-native'
+import { Text, View, Image, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
@@ -23,6 +23,8 @@ import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
 import { translateTime } from '../libs/expireDate'
 import { OrderDirectivesE } from './OrderDirectives'
+import Button from './Button'
+import { Link } from '@react-navigation/native'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -165,6 +167,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const references = order?.references || ''
 
   const location = order?.location || ''
+
   return (
     <View
       style={{
@@ -180,8 +183,33 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
         <Text style={[gStyles.tCenter]}>{address}</Text>
         <Text style={[gStyles.tCenter]}>{references}</Text>
       </View>
-      <View>
-        {!!neighborhood ||
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          width: '100%',
+          marginVertical: 8
+        }}
+      >
+        <Button
+          icon={location ? 'location' : 'locationOff'}
+          disabled={!location}
+          onPress={() => {
+            Linking.openURL(`https://www.google.com/maps?q=${location}`)
+          }}
+          variant="ghost"
+          justIcon
+        />
+        <Button
+          icon={'map'}
+          disabled={!neighborhood}
+          onPress={() => {
+            Linking.openURL(`https://www.google.com/maps?q=${neighborhood}`)
+          }}
+          variant="ghost"
+          justIcon
+        />
+        {/* {!!neighborhood ||
         !!street ||
         !!betweenStreets ||
         !!address ||
@@ -190,7 +218,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
           <ButtonSearchLocation location={location} />
         ) : (
           <Text>Sin dirección</Text>
-        )}
+        )} */}
       </View>
     </View>
   )
