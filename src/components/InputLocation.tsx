@@ -21,15 +21,17 @@ const InputLocation = ({ value, setValue, helperText }) => {
         helperText={helperText}
         containerStyle={{ flex: 1 }}
       />
-      <Button
-        justIcon
-        icon="search"
-        variant="ghost"
-        onPress={() => {
-          Linking.openURL('https://www.google.com/maps')
-        }}
-      />
-      <View style={{ width: 32, height: 32 }}>
+      <View style={{ width: 32, height: 32, marginLeft: 4 }}>
+        <Button
+          justIcon
+          icon="search"
+          variant="ghost"
+          onPress={() => {
+            Linking.openURL('https://www.google.com/maps?q=' + value)
+          }}
+        />
+      </View>
+      <View style={{ width: 32, height: 32, marginLeft: 4 }}>
         {loading ? (
           <ActivityIndicator />
         ) : (
