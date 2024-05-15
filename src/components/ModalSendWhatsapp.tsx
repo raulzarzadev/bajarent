@@ -11,7 +11,7 @@ import asDate, { dateFormat } from '../libs/utils-date'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useStore } from '../contexts/storeContext'
 
-export default function ModalSendWhatsapp({ orderId = '', to = '' }) {
+export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   const [order, setOrder] = useState<OrderType>()
   const phone = order?.phone
@@ -62,7 +62,9 @@ export default function ModalSendWhatsapp({ orderId = '', to = '' }) {
           label="Enviar"
           onPress={() => {
             Linking.openURL(
-              `whatsapp://send?text=${encodeURIComponent(message)}&phone=${to}`
+              `whatsapp://send?text=${encodeURIComponent(
+                message
+              )}&phone=${phone}`
             )
           }}
         ></Button>
