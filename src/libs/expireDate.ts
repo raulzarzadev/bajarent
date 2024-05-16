@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase/firestore'
-import asDate from './utils-date'
+import asDate, { dateFormat } from './utils-date'
 import { PriceType, TimePriceType } from '../types/PriceType'
 import { addDays, addHours, addMinutes, addMonths, addWeeks } from 'date-fns'
 /**
@@ -94,11 +94,13 @@ export function expireDate2({
 }): Date | null {
   if (!price) return null
   if (!startedAt) return null
-  let startedAtDate = asDate(startedAt)
+  const startedDate = asDate(startedAt)
   if (extendTime) {
-    startedAtDate = addCustomTime({ date: startedAtDate, time: extendTime })
+    const expireDate = addCustomTime({ date: startedDate, time: price.time })
+    return addCustomTime({ date: expireDate, time: extendTime })
+  } else {
+    return addCustomTime({ date: startedDate, time: price.time })
   }
-  return addCustomTime({ date: startedAtDate, time: price.time, qty: priceQty })
 }
 
 export const addCustomTime = ({

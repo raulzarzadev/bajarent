@@ -118,7 +118,8 @@ export const orderExpireAt = ({
     const expireAt = expireDate2({
       startedAt: order.deliveredAt || order.scheduledAt,
       price: item.priceSelected,
-      priceQty: item.priceQty
+      priceQty: item.priceQty,
+      extendTime: order?.extendTime
     })
     return { ...item, expireAt }
   })
