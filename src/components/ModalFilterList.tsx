@@ -76,7 +76,7 @@ function ModalFilterList<T>({
 
     timerId = setTimeout(() => {
       search(e)
-    }, 600)
+    }, 1000)
   }
 
   const createFieldFilters = (

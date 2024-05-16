@@ -102,6 +102,7 @@ export default function useFilter<T extends { id?: string }>({
         return false
       })
     })
+
     if (collectionSearch?.collectionName === 'orders') {
       const avoidIds = res.map(({ id }) => id)
       const orders = await ServiceOrders.search(
@@ -112,6 +113,8 @@ export default function useFilter<T extends { id?: string }>({
         return formatOrders({ orders: res, reports })
       })
       setFilteredData([...orders, ...res])
+    } else {
+      setFilteredData([...res])
     }
 
     // console.log({ res })
