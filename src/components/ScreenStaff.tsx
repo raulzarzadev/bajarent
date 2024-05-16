@@ -10,6 +10,7 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
+import TextInfo from './TextInfo'
 
 const ScreenStaff = ({ navigation }) => {
   const { store } = useAuth()

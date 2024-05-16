@@ -74,11 +74,7 @@ export enum permissions_orders {
   canReorder,
   canUndo,
   canUnAuthorize,
-  canExtend,
-  /**
-   * @deprecated use isAdmin in StaffPermissions
-   */
-  isAdmin
+  canExtend
 }
 export enum permissions_store {
   canCreateBalance,

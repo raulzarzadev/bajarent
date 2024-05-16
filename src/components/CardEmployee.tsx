@@ -17,7 +17,6 @@ const CardEmployee = () => {
       {store && (
         <>
           <View>
-            {/* <Text style={gStyles.h2}>{store?.name}</Text> */}
             <Button
               label={store?.name}
               variant="ghost"
@@ -31,7 +30,6 @@ const CardEmployee = () => {
           </View>
           <BadgesStore />
           <Text style={gStyles.h3}>{employee?.name}</Text>
-          {/* <EmployeePermissionsE staff={employee} /> */}
           <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
         </>
       )}

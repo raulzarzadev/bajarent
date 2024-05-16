@@ -22,7 +22,7 @@ function StackStaff() {
         name="ScreenStaff"
         options={({ route }) => ({
           //@ts-ignore
-          title: `${route?.params?.sectionName || ''} staff`
+          title: `${route?.params?.sectionName || 'Staff'}`
         })}
         component={ScreenStaffE}
       />
@@ -30,7 +30,7 @@ function StackStaff() {
       <Stack.Screen
         name="ScreenStaffNew"
         options={{
-          title: 'Nuevo Staff'
+          title: 'Nuevo staff'
         }}
         component={ScreenStaffNew}
       />

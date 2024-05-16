@@ -82,7 +82,7 @@ const StoreContextProvider = ({ children }) => {
             return { ...rest, name, phone, email, userId: user.id }
           })
         )
-        const ownerIsNotStaff = staffUserInfo?.find(
+        const ownerIsNotStaff = [...staffUserInfo]?.find(
           (s) => s.id === store.createdBy
         )
         if (ownerIsNotStaff) {

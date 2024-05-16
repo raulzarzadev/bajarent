@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Icon, { IconName } from './Icon'
-import theme from '../theme'
+import theme, { colors } from '../theme'
 import { gStyles } from '../styles'
 
 export type TextIconType = 'info' | 'error' | 'success'
@@ -18,14 +18,24 @@ const TextInfo = ({ type = 'info', text }: TextInfoProps) => {
   return (
     <View
       style={{
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         flexDirection: 'row',
-        marginVertical: 4
+        marginVertical: 4,
+        backgroundColor: theme?.[type],
+        padding: 4,
+        borderRadius: 4
       }}
     >
-      <Icon icon={icons[type]} color={theme?.[type]} size={16} />
-      <Text style={[gStyles.helper, { color: theme?.[type] }]}>{text}</Text>
+      <Icon icon={icons[type]} color={colors.white} size={22} />
+      <Text
+        style={[
+          gStyles.helper,
+          { color: colors.white, fontWeight: 'bold', marginLeft: 8 }
+        ]}
+      >
+        {text}
+      </Text>
     </View>
   )
 }
