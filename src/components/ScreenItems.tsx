@@ -19,9 +19,15 @@ import { useStore } from '../contexts/storeContext'
 import ModalFormPrice from './ModalFormPrice'
 import useCategories from '../hooks/useCategories'
 import { priceTimeInSeconds } from '../libs/expireDate'
+import StoreItems from './StoreItems'
 
 const ScreenItems = () => {
-  return <StoreCategories />
+  return (
+    <View>
+      <StoreCategories />
+      <StoreItems />
+    </View>
+  )
 }
 
 const StoreCategories = () => {

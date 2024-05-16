@@ -291,6 +291,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     })
     return await Promise.all(promises).then((res) => res.flat())
   }
+
+  async getRentItemsLocation(storeId: string) {
+    return await this.findMany([
+      where('storeId', '==', storeId),
+      where('type', '==', TypeOrder.RENT),
+      where('status', 'in', [order_status.DELIVERED])
+    ])
+  }
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

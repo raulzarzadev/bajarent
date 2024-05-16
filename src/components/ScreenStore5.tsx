@@ -51,7 +51,7 @@ const ScreenStore = (props) => {
               show: canViewOrders
             },
             {
-              title: 'Articulos',
+              title: 'Artículos',
               content: <TabItems />,
               show: true
             }
