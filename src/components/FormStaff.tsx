@@ -9,6 +9,7 @@ import dictionary from '../dictionary'
 const screenWidth = Dimensions.get('window').width
 import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
 import { gStyles } from '../styles'
+import FormEmployeeSections from './FormEmployeeSections'
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
 
@@ -22,25 +23,25 @@ const FormStaff = ({
     userId?: string
     position?: string
     name?: string
+    id?: string
   }
   onSubmit?: (values: any) => Promise<void>
 }) => {
-  // TODO: move this to add staff
-  // const { staff } = useStore()
-  // const alreadyAreStaff = staff.find((s) => s.userId === defaultValues.userId)
-
-  // if (alreadyAreStaff)
-  //   return (
-  //     <Text style={[gStyles.h3, { marginVertical: 8 }]}>
-  //       Este usuario ya es parte de tu staff
-  //     </Text>
-  //   )
-
+  const [loading, setLoading] = React.useState(false)
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
       onSubmit={async (values) => {
-        await onSubmit(values).then(console.log).catch(console.error)
+        try {
+          setLoading(true)
+          await onSubmit(values).then(console.log).catch(console.error)
+        } catch (error) {
+          console.error(error)
+        } finally {
+          setTimeout(() => {
+            setLoading(false)
+          }, 2000)
+        }
       }}
     >
       {({ handleSubmit, isSubmitting, setSubmitting }) => (
@@ -55,6 +56,8 @@ const FormStaff = ({
               helperText="Nombre, referencia o puesto que desempeñara"
             />
           </View>
+
+          <FormEmployeeSections employeeId={defaultValues?.id} />
 
           {/*
            *** *** *** PERMISSIONS
@@ -97,13 +100,10 @@ const FormStaff = ({
 
           <View style={styles.input}>
             <Button
-              disabled={isSubmitting}
+              disabled={loading}
               label="Actualizar información"
               onPress={() => {
                 handleSubmit()
-                setTimeout(() => {
-                  setSubmitting(false)
-                }, 2000) //<- two seconds
               }}
             />
           </View>

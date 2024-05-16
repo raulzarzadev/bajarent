@@ -27,7 +27,12 @@ const ScreenProfile = ({ navigation }) => {
   return (
     <ScrollView style={{ padding: 2 }}>
       <ErrorBoundary componentName="CardUser">
-        <CardUser user={user} />
+        <CardUser
+          user={user}
+          onEdit={() => {
+            navigation.navigate('EditProfile')
+          }}
+        />
       </ErrorBoundary>
       <ErrorBoundary componentName="ChooseProfile">
         <ChooseProfile />

@@ -46,7 +46,7 @@ function StackStaff() {
       <Stack.Screen
         name="ScreenStaffEdit"
         options={{
-          title: 'Edit staff'
+          title: 'Editar staff'
         }}
         component={ScreenStaffEdit}
       />

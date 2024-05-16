@@ -10,12 +10,21 @@ const FormUser = ({
     console.log(values)
   }
 }) => {
-  console.log({ defaultValues })
+  const [loading, setLoading] = React.useState(false)
+
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
       onSubmit={async (values) => {
-        await onSubmit(values).then(console.log).catch(console.error)
+        try {
+          setLoading(true)
+          await onSubmit(values).then(console.log).catch(console.error)
+        } catch (error) {
+        } finally {
+          setTimeout(() => {
+            setLoading(false)
+          }, 2000)
+        }
       }}
     >
       {({ handleSubmit }) => (
@@ -30,7 +39,11 @@ const FormUser = ({
             <FormikInputValue name={'email'} placeholder="Correo" />
           </View>
           <View style={styles.input}>
-            <Button onPress={handleSubmit} label={'Guardar'} />
+            <Button
+              disabled={loading}
+              onPress={handleSubmit}
+              label={'Guardar'}
+            />
           </View>
         </View>
       )}

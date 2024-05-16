@@ -4,12 +4,13 @@ import FormUser from './FormUser'
 import { useAuth } from '../contexts/authContext'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import ErrorBoundary from './ErrorBoundary'
+import { gStyles } from '../styles'
 
 const ScreenProfileEdit = ({ navigation }) => {
   const { user } = useAuth()
   if (!user) return <ActivityIndicator />
   return (
-    <View>
+    <View style={gStyles.container}>
       <FormUser
         defaultValues={user}
         onSubmit={async (values) => {

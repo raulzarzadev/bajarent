@@ -1,45 +1,51 @@
-import { ActivityIndicator, Text, View } from 'react-native'
-import { useEffect, useState } from 'react'
-import { ServiceUsers } from '../firebase/ServiceUser'
+import { Text, View } from 'react-native'
 import CardPhone from './CardPhone'
 import CardEmail from './CardEmail'
 import UserType from '../types/UserType'
 import { gStyles } from '../styles'
 import Button from './Button'
-import { useNavigation } from '@react-navigation/native'
+import Chip from './Chip'
+import { colors } from '../theme'
+import { useAuth } from '../contexts/authContext'
 
-const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
-  const { navigate } = useNavigation()
-  const [_user, _setUser] = useState(user)
-
-  useEffect(() => {
-    _setUser(user)
-    if (userId && !user)
-      ServiceUsers.get(userId).then((res) => {
-        _setUser(res)
-      })
-  }, [user, userId])
-
-  const itsMyUser = userId === user?.id
-
-  if (!_user) return <ActivityIndicator />
-
+const CardUser = ({
+  user,
+  onEdit
+}: {
+  user?: UserType
+  onEdit?: () => void
+}) => {
+  const _user = user
+  const { user: currentUser } = useAuth()
+  const itsMyUser = currentUser.id === user?.id
+  if (!user) return <Text>No user found</Text>
   return (
     <View style={{ justifyContent: 'center' }}>
       {/* <Text style={gStyles.h1}>usuario</Text> */}
+      {itsMyUser && (
+        <Chip
+          title={'yo'}
+          color={colors.amber}
+          size="sm"
+          style={{ maxWidth: 80, margin: 'auto' }}
+        />
+      )}
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
         <Text style={[gStyles.h2, { marginRight: 4 }]}>{_user?.name}</Text>
-        <Button
-          icon="edit"
-          justIcon
-          onPress={() => {
-            //@ts-ignore
-            navigate('EditProfile')
-          }}
-          size="small"
-          variant="ghost"
-          //label="Editar información"
-        ></Button>
+        {onEdit && (
+          <Button
+            icon="edit"
+            justIcon
+            onPress={() => {
+              //@ts-ignore
+              //navigate('EditProfile')
+              onEdit?.()
+            }}
+            size="small"
+            variant="ghost"
+            //label="Editar información"
+          ></Button>
+        )}
       </View>
       <CardPhone phone={_user?.phone} />
       <CardEmail email={_user?.email} />
