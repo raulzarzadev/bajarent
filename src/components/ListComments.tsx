@@ -162,7 +162,7 @@ export const CommentRow = ({
   }
 
   const commentCreatedBy =
-    staff.find((s) => s.id === comment?.createdBy)?.name ||
+    staff.find((s) => s.userId === comment?.createdBy)?.name ||
     comment?.createdByName
 
   return (
