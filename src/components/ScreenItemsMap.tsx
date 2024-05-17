@@ -4,18 +4,24 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import LinkLocation from './LinkLocation'
 import List from './List'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import ListRow, { ListRowField } from './ListRow'
-
+import { ItemMap, ItemMapE } from './ItemsMap'
+import theme, { colors } from '../theme'
+import { formatOrders } from '../libs/orders'
+import { ServiceComments } from '../firebase/ServiceComments'
 const ScreenItemsMap = () => {
-  const [locatedOrders, setLocatedOrders] = useState([])
+  const [locatedOrders, setLocatedOrders] = useState<OrderType[]>([])
   const { storeId } = useStore()
   useEffect(() => {
     if (storeId) {
       ServiceOrders.getRentItemsLocation(storeId)
-        .then((res) => {
-          setLocatedOrders(res)
-          setLocatedOrders(res.filter((item) => item.location))
+        .then(async (res) => {
+          const reports = await ServiceComments.getReportsUnsolved(storeId)
+          const formattedORders = formatOrders({ orders: res, reports })
+          setLocatedOrders(formattedORders)
+
+          setLocatedOrders(formattedORders.filter((item) => item.location))
         })
         .catch((e) => {
           console.log(e)
@@ -25,6 +31,7 @@ const ScreenItemsMap = () => {
 
   return (
     <ScrollView>
+      <ItemMapE orders={locatedOrders} />
       <List
         sortFields={[
           { key: 'fullName', label: 'Nombre' },
