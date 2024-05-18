@@ -10,6 +10,7 @@ import { ItemMap, ItemMapE } from './ItemsMap'
 import theme, { colors } from '../theme'
 import { formatOrders } from '../libs/orders'
 import { ServiceComments } from '../firebase/ServiceComments'
+
 const ScreenItemsMap = () => {
   const [locatedOrders, setLocatedOrders] = useState<OrderType[]>([])
   const { storeId } = useStore()

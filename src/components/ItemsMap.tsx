@@ -10,6 +10,7 @@ import LinkLocation from './LinkLocation'
 import axios from 'axios'
 const INITIAL_POSITION = [24.145708, -110.311002]
 const LAVARENTA_COORD = [24.150635, -110.316583]
+axios.defaults.withCredentials = true
 
 export type ItemMap = {
   itemId: string
@@ -135,19 +136,18 @@ const isCoordinates = (str: string): boolean => {
   return regex.test(str)
 }
 
-const getCoordinates = async (location): Promise<[number, number]> => {
+const getCoordinates = async (location): Promise<[number, number]> | null => {
   const isLocationCoordinates = isCoordinates(location)
   const isShortUrl = location.match(/^https:\/\/\S+/)
   if (isLocationCoordinates) {
     const coords = location?.split(',')
     return [parseFloat(coords[0]), parseFloat(coords[1])]
   } else if (isShortUrl) {
-    console.log({ location })
-    const coords = await getCoordinatesFromShortUrl(location)
-    console.log({ coords })
-    return coords
+    console.log('is a url', { isShortUrl })
+    //const coords = await getCoordinatesFromShortUrl(location)
+    return null
   } else {
-    return [0, 0]
+    return null
   }
 }
 const formatItemsMaps = async (orders: OrderType[]): Promise<ItemMap[]> => {
@@ -169,33 +169,6 @@ const formatItemsMaps = async (orders: OrderType[]): Promise<ItemMap[]> => {
       }
     })
   )
-}
-async function getCoordinatesFromShortUrl(
-  shortUrl
-): Promise<[number, number]> | null {
-  const url = shortUrl
-
-  try {
-    // Realiza una solicitud HTTP para resolver el enlace acortado
-    const response = await axios.head(url, { maxRedirects: 5 })
-    const fullUrl = response.request.res.responseUrl
-
-    // Usa una expresión regular para extraer las coordenadas de la URL completa
-    const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/
-    const match = fullUrl.match(regex)
-
-    if (match) {
-      const latitude = parseFloat(match[1])
-      const longitude = parseFloat(match[2])
-      return [latitude, longitude]
-    } else {
-      throw new Error('No se encontraron coordenadas en la URL.')
-      return null
-    }
-  } catch (error) {
-    console.error('Error al obtener las coordenadas:', error)
-    return null
-  }
 }
 
 const styles = StyleSheet.create({
