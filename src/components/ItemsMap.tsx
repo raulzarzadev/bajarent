@@ -1,5 +1,5 @@
 // App.js
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -7,8 +7,10 @@ import ErrorBoundary from './ErrorBoundary'
 import OrderType, { order_status } from '../types/OrderType'
 import theme, { colors } from '../theme'
 import LinkLocation from './LinkLocation'
+import axios from 'axios'
 const INITIAL_POSITION = [24.145708, -110.311002]
 const LAVARENTA_COORD = [24.150635, -110.316583]
+
 export type ItemMap = {
   itemId: string
   clientName: string
@@ -52,7 +54,12 @@ const customSvgIcon = (color) =>
   })
 
 export default function ItemsMap({ orders = [] }: ItemsMapProps) {
-  const items = formatItemsMaps(orders)
+  const [items, setItems] = useState([])
+  useEffect(() => {
+    formatItemsMaps(orders).then((res) => {
+      setItems(res)
+    })
+  }, [orders])
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row' }}>
@@ -75,6 +82,7 @@ export default function ItemsMap({ orders = [] }: ItemsMapProps) {
         />
 
         {items?.map((item) => {
+          if (!item.coords) return null
           return (
             <Marker
               key={item.itemId}
@@ -126,32 +134,69 @@ const isCoordinates = (str: string): boolean => {
   const regex = /^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$/
   return regex.test(str)
 }
-const setLocation = (location: string): [number, number] => {
-  const isCoords = isCoordinates(location)
-  if (isCoords) {
+
+const getCoordinates = async (location): Promise<[number, number]> => {
+  const isLocationCoordinates = isCoordinates(location)
+  const isShortUrl = location.match(/^https:\/\/\S+/)
+  if (isLocationCoordinates) {
     const coords = location?.split(',')
     return [parseFloat(coords[0]), parseFloat(coords[1])]
+  } else if (isShortUrl) {
+    console.log({ location })
+    const coords = await getCoordinatesFromShortUrl(location)
+    console.log({ coords })
+    return coords
+  } else {
+    return [0, 0]
   }
-  return [0, 0]
 }
-const formatItemsMaps = (orders: OrderType[]): ItemMap[] =>
-  orders
-    .filter((item) => {
-      return isCoordinates(item.location)
+const formatItemsMaps = async (orders: OrderType[]): Promise<ItemMap[]> => {
+  return await Promise.all(
+    orders?.map(async (item) => {
+      let coords = await getCoordinates(item.location)
+      return {
+        itemId: item.id,
+        clientName: item.fullName,
+        orderFilo: item.folio,
+        coords,
+        label: `${item.folio}`,
+        iconColor: (() => {
+          if (item.isExpired) return theme.success
+          if (item.status === order_status.AUTHORIZED) return theme.warning
+          if (item.hasNotSolvedReports) return theme.error
+          return colors.transparent
+        })()
+      }
     })
-    ?.map((item) => ({
-      itemId: item.id,
-      clientName: item.fullName,
-      orderFilo: item.folio,
-      coords: setLocation(item.location),
-      label: `${item.folio}`,
-      iconColor: (() => {
-        if (item.isExpired) return theme.success
-        if (item.status === order_status.AUTHORIZED) return theme.warning
-        if (item.hasNotSolvedReports) return theme.error
-        return colors.transparent
-      })()
-    }))
+  )
+}
+async function getCoordinatesFromShortUrl(
+  shortUrl
+): Promise<[number, number]> | null {
+  const url = shortUrl
+
+  try {
+    // Realiza una solicitud HTTP para resolver el enlace acortado
+    const response = await axios.head(url, { maxRedirects: 5 })
+    const fullUrl = response.request.res.responseUrl
+
+    // Usa una expresión regular para extraer las coordenadas de la URL completa
+    const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/
+    const match = fullUrl.match(regex)
+
+    if (match) {
+      const latitude = parseFloat(match[1])
+      const longitude = parseFloat(match[2])
+      return [latitude, longitude]
+    } else {
+      throw new Error('No se encontraron coordenadas en la URL.')
+      return null
+    }
+  } catch (error) {
+    console.error('Error al obtener las coordenadas:', error)
+    return null
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

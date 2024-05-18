@@ -29,6 +29,7 @@
     "@react-navigation/stack": "^6.3.20",
     "@types/react": "~18.2.14",
     "@types/react-leaflet": "^3.0.0",
+    "axios": "^1.6.8",
     "date-fns": "^3.3.1",
     "eslint-plugin-cypress": "^2.15.1",
     "expo": "^49.0.21",
@@ -72,5 +73,6 @@
     "eslint-plugin-react-native": "^4.1.0",
     "react-native-dotenv": "^3.4.9"
   },
-  "private": true
+  "private": true,
+  "proxy": "http://localhost:19006"
 }
