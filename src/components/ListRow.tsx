@@ -7,9 +7,15 @@ export type ListRowField = {
   component: ReactNode
 }
 
-const ListRow = ({ fields }: { fields: ListRowField[] }) => {
+const ListRow = ({
+  fields,
+  style
+}: {
+  fields: ListRowField[]
+  style?: ViewStyle
+}) => {
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, style]}>
       {fields.map(({ field, component, width }, i) => (
         <View key={i} style={{ width }}>
           {component}
@@ -25,7 +31,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 4,
-    marginVertical: 5,
     borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'flex-start',

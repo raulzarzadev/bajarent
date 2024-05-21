@@ -12,8 +12,10 @@ import { useAuth } from './authContext'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { formatOrders } from '../libs/orders'
 import { CommentType } from '../types/CommentType'
-import formatComments from '../libs/formatComments'
-import { useStore } from './storeContext'
+import {
+  ConsolidatedStoreOrdersType,
+  ServiceConsolidatedOrders
+} from '../firebase/ServiceConsolidatedOrders'
 
 export type FetchTypeOrders =
   | 'all'
@@ -31,6 +33,7 @@ export type OrdersContextType = {
   orderTypeOptions?: OrderTypeOption[]
   handleRefresh?: () => void
   reports?: CommentType[]
+  consolidatedOrders?: ConsolidatedStoreOrdersType
 }
 
 export const OrdersContext = createContext<OrdersContextType>({})
@@ -56,43 +59,17 @@ export const OrdersContextProvider = ({
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
 
-  // const fetchReports = async () => {
-  //   const reports = await ServiceComments.getReportsUnsolved(storeId)
-  //   return reports
-  // }
+  const [consolidatedOrders, setConsolidatedOrders] =
+    useState<ConsolidatedStoreOrdersType>()
 
-  // useEffect(() => {
-  //   const all: OrderTypeOption = { label: 'Todas', value: 'all' }
-  //   const solved: OrderTypeOption = { label: 'Resueltas', value: 'solved' }
-  //   const unsolved: OrderTypeOption = {
-  //     label: 'No resueltas',
-  //     value: 'unsolved'
-  //   }
-  //   const mine: OrderTypeOption = { label: 'Mis ordenes', value: 'mine' }
-  //   const mineSolved: OrderTypeOption = {
-  //     label: 'Mis resueltas',
-  //     value: 'mineSolved'
-  //   }
-
-  //   const mineUnsolved: OrderTypeOption = {
-  //     label: 'Mis no resueltas',
-  //     value: 'mineUnsolved'
-  //   }
-
-  //   if (isAdmin || isOwner) {
-  //     setFetchTypeOrders('unsolved')
-  //     setOrderTypeOptions([all, solved, unsolved])
-  //   } else if (ordersPermissions?.canViewMy) {
-  //     setFetchTypeOrders('mineUnsolved')
-  //     setOrderTypeOptions([mine, mineSolved, mineUnsolved])
-  //   }
-  // }, [employee])
-
-  // useEffect(() => {
-  //   if (fetchTypeOrders && employee) {
-  //     handleRefresh()
-  //   }
-  // }, [fetchTypeOrders, employee])
+  useEffect(() => {
+    //* Consolidate orders it useful to search in all orders
+    if (employee?.permissions?.order?.canViewAll) {
+      ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
+        setConsolidatedOrders(res[0])
+      })
+    }
+  }, [employee?.permissions?.order?.canViewAll])
 
   useEffect(() => {
     if (employee) {
@@ -100,15 +77,15 @@ export const OrdersContextProvider = ({
     }
   }, [employee])
 
-  const handleRefresh = async () => {
-    const orders = await handleGetOrdersByFetchType({
-      fetchType: fetchTypeOrders,
-      sectionsAssigned: employee.sectionsAssigned,
-      storeId
-    })
+  // const handleRefresh = async () => {
+  //   const orders = await handleGetOrdersByFetchType({
+  //     fetchType: fetchTypeOrders,
+  //     sectionsAssigned: employee.sectionsAssigned,
+  //     storeId
+  //   })
 
-    setOrders(orders)
-  }
+  //   setOrders(orders)
+  // }
 
   const handleGetOrders = async () => {
     const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
@@ -143,7 +120,8 @@ export const OrdersContextProvider = ({
         fetchTypeOrders,
         orderTypeOptions,
         handleRefresh: handleGetOrders,
-        reports
+        reports,
+        consolidatedOrders
       }}
     >
       {children}

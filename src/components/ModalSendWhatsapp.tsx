@@ -22,11 +22,11 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const handleGetOrderInfo = () => {
     getFullOrderData(orderId).then((order) => {
       const orderStatusMessage = `
-      Tienda: *${store?.name}*
-      Order: *${order?.folio}*
+      *${store?.name}*
       Tipo: ${dictionary(order?.type)}
+      Order: *${order?.folio}*
       Status: ${dictionary(order?.status)}
-      Reportes activos: ${order?.hasNotSolvedReports ? '*Si*' : 'No'}
+      ${order?.hasNotSolvedReports ? 'Reportes activos: *Si*' : 'Sin reportes'}
       ${orderPeriod(order)}
       ${orderPayments({ order })}
       `

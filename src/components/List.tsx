@@ -110,7 +110,7 @@ function MyList<T extends { id: string }>({
   const multiSelectActionsModal = useModal({ title: 'Acciones' })
   const [loading, setLoading] = useState(false)
   return (
-    <ScrollView>
+    <ScrollView style={{ flex: 1 }}>
       <View style={{ margin: 'auto', maxWidth: '100%' }}>
         <View>
           {/* SEARCH FILTER AND SIDE BUTTONS   */}

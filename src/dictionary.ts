@@ -82,7 +82,7 @@ const labels = {
   Deliver: 'Entregar',
   Pickup: 'Recoger',
   Renew: 'Renovar',
-  Repair: 'Reparar',
+  Repair: 'Reparación',
   'Repair start': 'Iniciar rep',
   'Repair finish': 'Terminar rep',
   /* ********************************************

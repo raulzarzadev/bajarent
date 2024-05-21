@@ -8,6 +8,7 @@ import ScreenOrderRenew from './ScreenOrderRenew'
 import MyStaffLabel from './MyStaffLabel'
 import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenReports from './ScreenReports'
+import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 
 const Stack = createStackNavigator()
 function StackOrders() {
@@ -81,6 +82,16 @@ function StackOrders() {
           title: 'Reportes'
         }}
         component={ScreenReports}
+      />
+      {/* 
+//* Consolidated orders
+*/}
+      <Stack.Screen
+        name="ScreenOrdersConsolidated"
+        options={{
+          title: 'Ordenes consolidadas'
+        }}
+        component={ScreenOrdersConsolidated}
       />
     </Stack.Navigator>
   )

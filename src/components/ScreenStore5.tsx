@@ -1,5 +1,5 @@
 import ErrorBoundary from './ErrorBoundary'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { StoreDetailsE } from './StoreDetails'
 import Button from './Button'
 import Tabs from './Tabs'
@@ -11,6 +11,10 @@ import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
+import useOrder from '../hooks/useFullOrder'
+import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
+import { useStore } from '../contexts/storeContext'
+import ListOrdersConsolidated from './ListOrdersConsolidated'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -203,30 +207,28 @@ const TabItems = () => {
 const TabOrders = () => {
   const { navigate } = useNavigation()
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-      <Button
-        label="Todas"
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'ScreenOrders',
-            params: {
-              title: 'Ordenes',
-              orders: [],
-              searchInAll: true
-            }
-          })
-        }}
-        variant="ghost"
-      />
-      <Button
-        label="Configurar"
-        onPress={() => {
-          //@ts-ignore
-          navigate('ScreenOrdersConfig')
-        }}
-        variant="ghost"
-      />
+    <View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Button
+          label="Todas"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackOrders', {
+              screen: 'ScreenOrdersConsolidated',
+              params: {}
+            })
+          }}
+          variant="ghost"
+        />
+        <Button
+          label="Configurar"
+          onPress={() => {
+            //@ts-ignore
+            navigate('ScreenOrdersConfig')
+          }}
+          variant="ghost"
+        />
+      </View>
     </View>
   )
 }
