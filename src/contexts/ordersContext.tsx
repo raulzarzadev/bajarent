@@ -62,30 +62,24 @@ export const OrdersContextProvider = ({
   const [consolidatedOrders, setConsolidatedOrders] =
     useState<ConsolidatedStoreOrdersType>()
 
+  const viewAllOrders =
+    !!employee?.permissions?.order?.canViewAll ||
+    !!employee?.permissions.isAdmin
+
   useEffect(() => {
     //* Consolidate orders it useful to search in all orders
-    if (employee?.permissions?.order?.canViewAll) {
+    if (viewAllOrders) {
       ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
         setConsolidatedOrders(res[0])
       })
     }
-  }, [employee?.permissions?.order?.canViewAll])
+  }, [viewAllOrders])
 
   useEffect(() => {
     if (employee) {
       handleGetOrders()
     }
   }, [employee])
-
-  // const handleRefresh = async () => {
-  //   const orders = await handleGetOrdersByFetchType({
-  //     fetchType: fetchTypeOrders,
-  //     sectionsAssigned: employee.sectionsAssigned,
-  //     storeId
-  //   })
-
-  //   setOrders(orders)
-  // }
 
   const handleGetOrders = async () => {
     const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
