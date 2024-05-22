@@ -25,7 +25,7 @@ const CardUser = ({
       {itsMyUser && (
         <Chip
           title={'yo'}
-          color={colors.amber}
+          color={colors.indigo}
           size="sm"
           style={{ maxWidth: 80, margin: 'auto' }}
         />

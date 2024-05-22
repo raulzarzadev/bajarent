@@ -31,9 +31,9 @@ export const EmployeeContextProvider = ({ children }) => {
   useEffect(() => {
     setIsOwner(store?.createdBy === user?.id)
     const employee = staff?.find(
-      ({ userId }) =>
-        (user?.id && userId === user?.id) || user?.id === store?.createdBy
+      ({ userId }) => user?.id && userId === user?.id
     )
+
     if (employee) {
       const sectionsAssigned = storeSections
         ?.filter(({ staff }) => staff?.includes(employee.id))
