@@ -89,11 +89,12 @@ export const OrdersContextProvider = ({
       })
       const formatted = formatOrders({ orders, reports: reportsUnsolved })
       setOrders(formatted)
-    } else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
-      const orders = await unsolvedOrders(storeId)
-      const formatted = formatOrders({ orders, reports: reportsUnsolved })
-      setOrders(formatted)
     }
+    // else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
+    //   const orders = await unsolvedOrders(storeId)
+    //   const formatted = formatOrders({ orders, reports: reportsUnsolved })
+    //   setOrders(formatted)
+    // }
   }
 
   useEffect(() => {

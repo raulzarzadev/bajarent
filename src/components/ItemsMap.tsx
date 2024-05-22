@@ -8,6 +8,8 @@ import OrderType, { order_status } from '../types/OrderType'
 import theme, { colors } from '../theme'
 import LinkLocation from './LinkLocation'
 import axios from 'axios'
+import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
 const INITIAL_POSITION = [24.145708, -110.311002]
 const LAVARENTA_COORD = [24.150635, -110.316583]
 axios.defaults.withCredentials = true
@@ -55,6 +57,7 @@ const customSvgIcon = (color) =>
   })
 
 export default function ItemsMap({ orders = [] }: ItemsMapProps) {
+  const { navigate } = useNavigation()
   const [items, setItems] = useState([])
   useEffect(() => {
     formatItemsMaps(orders).then((res) => {
@@ -95,7 +98,29 @@ export default function ItemsMap({ orders = [] }: ItemsMapProps) {
                 <Text>{item.orderFilo}</Text>
                 <br />
                 <Text>{item.clientName}</Text>
-                <LinkLocation location={`${item.coords}`} />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    label={'ver'}
+                    onPress={() => {
+                      //@ts-ignore
+                      navigate('StackOrders', {
+                        screen: 'OrderDetails',
+                        params: {
+                          orderId: item.itemId
+                        }
+                      })
+                    }}
+                    justIcon
+                    icon="openEye"
+                  ></Button>
+                  <LinkLocation location={`${item.coords}`} />
+                </View>
               </Popup>
             </Marker>
           )
@@ -182,6 +207,9 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: 700
+    //height: 700,
+    maxWidth: 1200,
+    margin: 'auto',
+    aspectRatio: 16 / 12
   }
 })
