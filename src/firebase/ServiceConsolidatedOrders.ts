@@ -56,7 +56,8 @@ const formatConsolidateOrder = (order: OrderType) => {
     references: order?.references || '',
     location: order?.location || '',
     items: order?.items || '',
-    neighborhood: order?.neighborhood || ''
+    neighborhood: order?.neighborhood || '',
+    assignedSection: order?.assignToSection || ''
   }
 }
 

@@ -17,15 +17,19 @@ type OrderWithId = ConsolidatedOrderType & { id: string }
 
 const ListOrdersConsolidated = () => {
   const { consolidatedOrders } = useOrdersCtx()
-  const { storeId } = useStore()
+  const { storeId, storeSections } = useStore()
   const { navigate } = useNavigation()
   const orders = consolidatedOrders?.orders || {}
-  const data: OrderWithId[] = Array.from(Object.values(orders)).map(
-    (order) => ({
+  const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
+    const assignedSection =
+      storeSections.find((section) => section.id === order.assignedSection)
+        ?.name || null
+    return {
       id: order.orderId,
-      ...order
-    })
-  )
+      ...order,
+      assignedSection
+    }
+  })
   const [disabled, setDisabled] = useState(false)
 
   const handleConsolidate = () => {
@@ -72,12 +76,16 @@ const ListOrdersConsolidated = () => {
             label: 'Tipo'
           },
           {
-            field: 'neighborhood',
-            label: 'Colonia'
-          },
-          {
             field: 'status',
             label: 'Estatus'
+          },
+          {
+            field: 'assignedSection',
+            label: 'Seccion'
+          },
+          {
+            field: 'neighborhood',
+            label: 'Colonia'
           }
         ]}
         sortFields={[
