@@ -81,7 +81,7 @@ const ListOrdersConsolidated = () => {
           },
           {
             field: 'assignedSection',
-            label: 'Seccion'
+            label: 'Area'
           },
           {
             field: 'neighborhood',

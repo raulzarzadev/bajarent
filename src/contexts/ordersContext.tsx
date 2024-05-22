@@ -61,7 +61,6 @@ export const OrdersContextProvider = ({
 
   const [consolidatedOrders, setConsolidatedOrders] =
     useState<ConsolidatedStoreOrdersType>()
-
   const viewAllOrders =
     !!employee?.permissions?.order?.canViewAll ||
     !!employee?.permissions.isAdmin
