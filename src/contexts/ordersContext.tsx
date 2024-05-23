@@ -44,8 +44,8 @@ export const OrdersContextProvider = ({
   children: ReactNode
 }) => {
   const {
-    employee,
-    permissions: { orders: ordersPermissions, isOwner, isAdmin }
+    employee
+    //permissions
   } = useEmployee()
   const { storeId, store } = useAuth()
 
@@ -90,6 +90,8 @@ export const OrdersContextProvider = ({
       const formatted = formatOrders({ orders, reports: reportsUnsolved })
       setOrders(formatted)
     }
+    //
+    //* Admin, Owner, or Employee with permission to view all orders
     // else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
     //   const orders = await unsolvedOrders(storeId)
     //   const formatted = formatOrders({ orders, reports: reportsUnsolved })
@@ -121,61 +123,6 @@ export const OrdersContextProvider = ({
       {children}
     </OrdersContext.Provider>
   )
-}
-
-const handleGetOrdersByFetchType = async ({
-  fetchType,
-  sectionsAssigned,
-  storeId
-}: {
-  fetchType: FetchTypeOrders
-  sectionsAssigned?: string[]
-  storeId?: string
-}) => {
-  const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
-  // 1. get reports
-
-  if (fetchType === 'all') {
-    const orders = await ServiceOrders.getByStore(storeId)
-    const formatted = formatOrders({ orders, reports: reportsUnsolved })
-    return formatted
-  }
-  if (fetchType === 'solved') {
-    const orders = await ServiceOrders.getSolved(storeId)
-    const formatted = formatOrders({ orders, reports: reportsUnsolved })
-    return formatted
-  }
-  if (fetchType === 'unsolved') {
-    try {
-      const orders = await unsolvedOrders(storeId)
-      const formatted = formatOrders({ orders, reports: reportsUnsolved })
-      return formatted
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  if (fetchType === 'mine') {
-    const orders = await ServiceOrders.getBySections(sectionsAssigned)
-    const formatted = formatOrders({ orders, reports: reportsUnsolved })
-    return formatted
-  }
-  if (fetchType === 'mineSolved') {
-    const orders = await ServiceOrders.getMineSolved(storeId, sectionsAssigned)
-    const formatted = formatOrders({ orders, reports: reportsUnsolved })
-    return formatted
-  }
-  if (fetchType === 'mineUnsolved') {
-    try {
-      const orders = await unsolvedOrders(storeId, {
-        sections: sectionsAssigned
-      })
-      const formatted = formatOrders({ orders, reports: reportsUnsolved })
-      return formatted
-    } catch (e) {
-      console.error(e.message)
-    }
-  }
-  return []
 }
 
 const unsolvedOrders = async (
