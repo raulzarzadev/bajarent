@@ -81,16 +81,17 @@ export const OrdersContextProvider = ({
   }, [employee])
 
   const handleGetOrders = async () => {
-    const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+    const reportsUnsolved = await ServiceComments?.getReportsUnsolved(storeId)
 
     if (employee?.permissions?.order?.canViewMy) {
       const orders = await unsolvedOrders(storeId, {
-        sections: employee.sectionsAssigned || []
+        sections: employee?.sectionsAssigned || []
       })
       const formatted = formatOrders({ orders, reports: reportsUnsolved })
       setOrders(formatted)
     }
-    //
+
+    //*<----- FIXME: ------> ***
     //* Admin, Owner, or Employee with permission to view all orders
     // else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
     //   const orders = await unsolvedOrders(storeId)
