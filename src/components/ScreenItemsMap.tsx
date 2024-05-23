@@ -21,7 +21,6 @@ const ScreenItemsMap = () => {
           const reports = await ServiceComments.getReportsUnsolved(storeId)
           const formattedORders = formatOrders({ orders: res, reports })
           setLocatedOrders(formattedORders)
-
           setLocatedOrders(formattedORders.filter((item) => item.location))
         })
         .catch((e) => {

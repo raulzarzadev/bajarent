@@ -44,13 +44,17 @@ export const formatOrder = ({ order, comments = [] }) => {
   )
   if (order?.type === 'RENT') {
     const expireAt = orderExpireAt({ order })
-    const isExpired = !!expireAt && isBefore(asDate(expireAt), new Date())
+    const expireToday = isToday(asDate(expireAt))
+    const isExpired =
+      !!expireAt && (isBefore(asDate(expireAt), new Date()) || expireToday)
+    const expiresToday = expireToday
     return {
       ...order,
       comments: orderComments,
       hasNotSolvedReports: reportsNotSolved,
       isExpired,
-      expireAt
+      expireAt,
+      expiresToday
     }
   }
   if (order?.type === 'REPAIR') {

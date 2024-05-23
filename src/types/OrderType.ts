@@ -54,6 +54,8 @@ type OrderBase = {
   expireAt?: Date | null
   isExpired?: boolean
 
+  expiresToday?: boolean
+
   comments: CommentType[]
 
   hasNotSolvedReports?: boolean
@@ -118,6 +120,7 @@ type OrderBase = {
    *******************************************rz */
   statuses?: boolean
   isDelivered?: boolean
+
   /**
    * @deprecated use hasNotSolvedReports instead
    */
