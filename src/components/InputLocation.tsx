@@ -27,7 +27,7 @@ const InputLocation = ({ value, setValue, helperText }) => {
           icon="search"
           variant="ghost"
           onPress={() => {
-            if (value.startsWith('http')) {
+            if (value?.startsWith('http')) {
               return Linking.openURL(value)
             }
             return Linking.openURL(`https://www.google.com/maps?q=${value}`)
