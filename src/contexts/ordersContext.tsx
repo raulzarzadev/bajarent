@@ -63,7 +63,7 @@ export const OrdersContextProvider = ({
     useState<ConsolidatedStoreOrdersType>()
   const viewAllOrders =
     !!employee?.permissions?.order?.canViewAll ||
-    !!employee?.permissions.isAdmin
+    !!employee?.permissions?.isAdmin
 
   useEffect(() => {
     //* Consolidate orders it useful to search in all orders
