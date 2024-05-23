@@ -482,7 +482,7 @@ const OrderActions = ({
         style={{ maxWidth: '100%', marginHorizontal: 'auto' }}
         //style={{ flexDirection: 'row', justifyContent: 'space-around' }}
       >
-        {showPendingButton && (
+        {false && (
           <Button
             label="Pendiente"
             onPress={() => {
@@ -492,7 +492,7 @@ const OrderActions = ({
             variant="ghost"
           />
         )}
-        {showAuthorizeButton && (
+        {false && (
           <Button
             label="Autorizar"
             onPress={() => {
