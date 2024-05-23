@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ThemeProvider } from './src/contexts/themeContext'
 import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { OrdersContextProvider } from './src/contexts/ordersContext'
+import ErrorBoundary from './src/components/ErrorBoundary'
 
 export default function App() {
   const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
@@ -40,23 +41,25 @@ export default function App() {
     return <ActivityIndicator />
   }
   return (
-    <AuthContextProvider>
-      <StoreContextProvider>
-        <EmployeeContextProvider>
-          <OrdersContextProvider>
-            <ThemeProvider>
-              <NavigationContainer
-                initialState={initialState}
-                onStateChange={(state) => {
-                  AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-                }}
-              >
-                <BottomAppBarE />
-              </NavigationContainer>
-            </ThemeProvider>
-          </OrdersContextProvider>
-        </EmployeeContextProvider>
-      </StoreContextProvider>
-    </AuthContextProvider>
+    <ErrorBoundary componentName="App">
+      <AuthContextProvider>
+        <StoreContextProvider>
+          <EmployeeContextProvider>
+            <OrdersContextProvider>
+              <ThemeProvider>
+                <NavigationContainer
+                  initialState={initialState}
+                  onStateChange={(state) => {
+                    AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+                  }}
+                >
+                  <BottomAppBarE />
+                </NavigationContainer>
+              </ThemeProvider>
+            </OrdersContextProvider>
+          </EmployeeContextProvider>
+        </StoreContextProvider>
+      </AuthContextProvider>
+    </ErrorBoundary>
   )
 }
