@@ -11,10 +11,6 @@ import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
-import useOrder from '../hooks/useFullOrder'
-import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
-import { useStore } from '../contexts/storeContext'
-import ListOrdersConsolidated from './ListOrdersConsolidated'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -29,9 +25,9 @@ const ScreenStore = (props) => {
 
   return (
     <ScrollView>
-      {user && <StoreDetailsE store={store} {...props} />}
-      {user && canViewStoreNumbers && <StoreNumbersRow {...props} />}
-      {user && (canViewCashbox || canViewSections || canViewOrders) && (
+      {!!user && <StoreDetailsE store={store} {...props} />}
+      {!!user && canViewStoreNumbers && <StoreNumbersRow {...props} />}
+      {!!user && (canViewCashbox || canViewSections || canViewOrders) && (
         <Tabs
           tabs={[
             {
