@@ -95,17 +95,21 @@ export const OrdersContextProvider = ({
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
     console.log({ typeOfOrders })
     if (typeOfOrders === 'all') {
-      //* get orders from all sections
-      const orders = await ServiceOrders.getBySectionsUnsolved(
-        storeSections.map((s) => s.id)
+      const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
+        storeId,
+        { getBySections: false, sections: [] }
       )
-      const formatted = formatOrders({ orders, reports: reports })
+      const formatted = formatOrders({
+        orders: storeUnsolvedOrders,
+        reports: reports
+      })
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {
       //* get orders from sections where  sectionsAssigned contains sections
-      const orders = await ServiceOrders.getBySectionsUnsolved(
-        employee.sectionsAssigned
-      )
+      const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
+        getBySections: true,
+        sections: employee.sectionsAssigned
+      })
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)
     } else {

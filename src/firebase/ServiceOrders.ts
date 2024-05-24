@@ -193,37 +193,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.findMany([where('assignToSection', 'in', sections)])
   }
 
-  async getBySectionsUnsolved(sections: string[] = []) {
-    if (sections?.length < 0) {
-      console.log('no sections are provided')
-      return []
-    }
-    //* should we get expired rents
-    const expiredRents = await this.findMany([
-      where('type', '==', TypeOrder.RENT),
-      where('assignToSection', 'in', sections),
-      where('status', 'in', [order_status.DELIVERED]),
-      where('expireAt', '<', new Date())
-    ])
-    const rents = await this.findMany([
-      where('type', '==', TypeOrder.RENT),
-      where('assignToSection', 'in', sections),
-      where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
-    ])
-    const repairs = await this.findMany([
-      where('type', '==', TypeOrder.REPAIR),
-      where('assignToSection', 'in', sections),
-      where('status', 'in', [
-        order_status.PENDING,
-        order_status.AUTHORIZED,
-        order_status.REPAIRING,
-        order_status.REPAIRED,
-        order_status.PICKED_UP
-      ])
-    ])
-    return [...rents, ...repairs, ...expiredRents]
-  }
-
   getMineUnsolved(storeId: string, sections: string[]) {
     return this.findMany([
       where('storeId', '==', storeId),
@@ -330,6 +299,108 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('status', 'in', [order_status.DELIVERED])
     ])
   }
+
+  async getUnsolvedByStore(
+    storeId: string,
+    {
+      sections = [],
+      getBySections = false
+    }: { sections: string[]; getBySections: boolean }
+  ) {
+    const filterRentPending = [
+      where('type', '==', TypeOrder.RENT),
+      where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
+    ]
+    const filterRepairs = [
+      where('type', '==', TypeOrder.REPAIR),
+      where('status', 'in', [
+        order_status.PENDING,
+        order_status.AUTHORIZED,
+        order_status.REPAIRING,
+        order_status.REPAIRED,
+        order_status.PICKED_UP
+      ])
+    ]
+    const filterExpiredRents = [
+      where('type', '==', TypeOrder.RENT),
+      where('status', 'in', [order_status.DELIVERED]),
+      where('expireAt', '<', new Date())
+    ]
+    if (getBySections) {
+      filterRentPending.push(where('assignToSection', 'in', sections))
+      filterRepairs.push(where('assignToSection', 'in', sections))
+      filterExpiredRents.push(where('assignToSection', 'in', sections))
+    }
+    const rentPending = await this.findMany([
+      ...filterRentPending,
+      where('storeId', '==', storeId)
+    ])
+    const expiredRents = await this.findMany([
+      ...filterExpiredRents,
+      where('storeId', '==', storeId)
+    ])
+    const repairs = await this.findMany([
+      ...filterRepairs,
+      where('storeId', '==', storeId)
+    ])
+    return [...rentPending, ...repairs, ...expiredRents]
+  }
+
+  // async getAllUnsolved(storeId) {
+  //   const rentPending = await this.findMany([
+  //     where('storeId', '==', storeId),
+  //     where('type', '==', TypeOrder.RENT),
+  //     where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
+  //   ])
+  //   const repairs = await this.findMany([
+  //     where('storeId', '==', storeId),
+  //     where('type', '==', TypeOrder.REPAIR),
+  //     where('status', 'in', [
+  //       order_status.PENDING,
+  //       order_status.AUTHORIZED,
+  //       order_status.REPAIRING,
+  //       order_status.REPAIRED,
+  //       order_status.PICKED_UP
+  //     ])
+  //   ])
+  //   const expiredRents = await this.findMany([
+  //     where('storeId', '==', storeId),
+  //     where('type', '==', TypeOrder.RENT),
+  //     where('status', 'in', [order_status.DELIVERED]),
+  //     where('expireAt', '<', new Date())
+  //   ])
+  //   return [...rentPending, ...repairs, ...expiredRents]
+  // }
+  // async getBySectionsUnsolved(sections: string[] = []) {
+  //   if (sections?.length < 0) {
+  //     console.log('no sections are provided')
+  //     return []
+  //   }
+  //   //* should we get expired rents
+  //   const expiredRents = await this.findMany([
+  //     where('type', '==', TypeOrder.RENT),
+  //     where('assignToSection', 'in', sections),
+  //     where('status', 'in', [order_status.DELIVERED]),
+  //     where('expireAt', '<', new Date())
+  //   ])
+  //   const rents = await this.findMany([
+  //     where('type', '==', TypeOrder.RENT),
+  //     where('assignToSection', 'in', sections),
+  //     where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
+  //   ])
+  //   const repairs = await this.findMany([
+  //     where('type', '==', TypeOrder.REPAIR),
+  //     where('assignToSection', 'in', sections),
+  //     where('status', 'in', [
+  //       order_status.PENDING,
+  //       order_status.AUTHORIZED,
+  //       order_status.REPAIRING,
+  //       order_status.REPAIRED,
+  //       order_status.PICKED_UP
+  //     ])
+  //   ])
+  //   return [...rents, ...repairs, ...expiredRents]
+  // }
 
   // Agrega tus métodos aquí
   async customMethod() {
