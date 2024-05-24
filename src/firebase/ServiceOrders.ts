@@ -354,7 +354,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
           .map(({ orderId }) => orderId)
       )
     )
-    //* of is getBySection just take the reported orders by sections
+    //* IF is getBySection just take the reported orders by sections
     let reportedOrders = await this.getList(ordersWithReportsIds, { sections })
 
     //*  *** 2 *** remove reported orders from unsolved orders
