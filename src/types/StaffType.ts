@@ -43,6 +43,9 @@ export type BaseStaffType = {
   store?: Partial<StoreType>
   permissions?: StaffPermissions
   predefinedPermission?: string
+  /**
+   * @deprecated use permissions.isOwner instead
+   */
   isOwner?: boolean
   sectionsAssigned?: string[]
 }
@@ -89,6 +92,7 @@ export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
 export type PermissionsStore = Record<keyof typeof permissions_store, boolean>
 
 export type StaffPermissions = {
+  isOwner?: boolean
   isAdmin?: boolean
   order?: Partial<PermissionsOrder>
   store?: Partial<PermissionsStore>
