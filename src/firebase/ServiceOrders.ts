@@ -355,10 +355,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       )
     )
     const reportedOrders = await this.getList(ordersWithReportsIds)
-
+    console.log({ reportedOrders })
     //*  *** 2 *** remove reported orders from unsolved orders
     const removeReportedFromUnsolved = unsolvedOrders.filter(
-      ({ id }) => !ordersWithReportsIds.includes(id)
+      ({ id }) =>
+        !reportedOrders.find(({ id: reportedId }) => reportedId === id)
     )
     //*  *** 3 *** add reported orders to unsolved orders
     return [...removeReportedFromUnsolved, ...reportedOrders]
