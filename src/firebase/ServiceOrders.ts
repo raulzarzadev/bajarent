@@ -193,6 +193,37 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.findMany([where('assignToSection', 'in', sections)])
   }
 
+  async getBySectionsUnsolved(sections: string[] = []) {
+    if (sections?.length < 0) {
+      console.log('no sections are provided')
+      return []
+    }
+    //* should we get expired rents
+    const expiredRents = await this.findMany([
+      where('type', '==', TypeOrder.RENT),
+      where('assignToSection', 'in', sections),
+      where('status', 'in', [order_status.DELIVERED]),
+      where('expireAt', '<', new Date())
+    ])
+    const rents = await this.findMany([
+      where('type', '==', TypeOrder.RENT),
+      where('assignToSection', 'in', sections),
+      where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
+    ])
+    const repairs = await this.findMany([
+      where('type', '==', TypeOrder.REPAIR),
+      where('assignToSection', 'in', sections),
+      where('status', 'in', [
+        order_status.PENDING,
+        order_status.AUTHORIZED,
+        order_status.REPAIRING,
+        order_status.REPAIRED,
+        order_status.PICKED_UP
+      ])
+    ])
+    return [...rents, ...repairs, ...expiredRents]
+  }
+
   getMineUnsolved(storeId: string, sections: string[]) {
     return this.findMany([
       where('storeId', '==', storeId),
@@ -299,6 +330,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('status', 'in', [order_status.DELIVERED])
     ])
   }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

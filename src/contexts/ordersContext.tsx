@@ -16,6 +16,7 @@ import {
   ConsolidatedStoreOrdersType,
   ServiceConsolidatedOrders
 } from '../firebase/ServiceConsolidatedOrders'
+import { useStore } from './storeContext'
 
 export type FetchTypeOrders =
   | 'all'
@@ -48,11 +49,16 @@ export const OrdersContextProvider = ({
     //permissions
   } = useEmployee()
   const { storeId, store } = useAuth()
-
+  const { storeSections } = useStore()
   const [orders, setOrders] = useState<OrderType[]>([])
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
   )
+
+  const viewAllOrders =
+    !!employee?.permissions?.order?.canViewAll ||
+    !!employee?.permissions?.isAdmin ||
+    !!employee?.permissions?.isOwner
 
   const [reports, setReports] = useState<CommentType[]>([])
 
@@ -61,9 +67,6 @@ export const OrdersContextProvider = ({
 
   const [consolidatedOrders, setConsolidatedOrders] =
     useState<ConsolidatedStoreOrdersType>()
-  const viewAllOrders =
-    !!employee?.permissions?.order?.canViewAll ||
-    !!employee?.permissions?.isAdmin
 
   useEffect(() => {
     //* Consolidate orders it useful to search in all orders
@@ -80,26 +83,6 @@ export const OrdersContextProvider = ({
     }
   }, [employee])
 
-  const handleGetOrders = async () => {
-    const reportsUnsolved = await ServiceComments?.getReportsUnsolved(storeId)
-
-    if (employee?.permissions?.order?.canViewMy) {
-      const orders = await unsolvedOrders(storeId, {
-        sections: employee?.sectionsAssigned || []
-      })
-      const formatted = formatOrders({ orders, reports: reportsUnsolved })
-      setOrders(formatted)
-    }
-
-    //*<----- FIXME: ------> ***
-    //* Admin, Owner, or Employee with permission to view all orders
-    // else if (isAdmin || isOwner || employee?.permissions?.order?.canViewAll) {
-    //   const orders = await unsolvedOrders(storeId)
-    //   const formatted = formatOrders({ orders, reports: reportsUnsolved })
-    //   setOrders(formatted)
-    // }
-  }
-
   useEffect(() => {
     if (store)
       ServiceComments.listenReportsUnsolved(storeId, (reports) => {
@@ -107,12 +90,34 @@ export const OrdersContextProvider = ({
       })
   }, [store])
 
-  const formattedOrders = formatOrders({ orders, reports })
+  const viewMyOrders = employee?.permissions?.order?.canViewMy
+  const handleGetOrders = async () => {
+    const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
+    console.log({ typeOfOrders })
+    if (typeOfOrders === 'all') {
+      //* get orders from all sections
+      const orders = await ServiceOrders.getBySectionsUnsolved(
+        storeSections.map((s) => s.id)
+      )
+      const formatted = formatOrders({ orders, reports: reports })
+      setOrders(formatted)
+    } else if (typeOfOrders === 'mine') {
+      //* get orders from sections where  sectionsAssigned contains sections
+      const orders = await ServiceOrders.getBySectionsUnsolved(
+        employee.sectionsAssigned
+      )
+      const formatted = formatOrders({ orders, reports: reports })
+      setOrders(formatted)
+    } else {
+      // * do not get any order
+      setOrders([])
+    }
+  }
 
   return (
     <OrdersContext.Provider
       value={{
-        orders: formattedOrders,
+        orders,
         setFetchTypeOrders,
         fetchTypeOrders,
         orderTypeOptions,

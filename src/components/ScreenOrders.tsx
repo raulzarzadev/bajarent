@@ -8,9 +8,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
 
   const hasOrderList = !!route?.params?.orders
-  const searchInAll = !!route?.params?.searchInAll
   const { orders, handleRefresh: refreshOrders } = useOrdersCtx()
-  console.log({ orders })
 
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
     ids: route?.params?.orders
