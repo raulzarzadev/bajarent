@@ -27,7 +27,6 @@ export const EmployeeContextProvider = ({ children }) => {
   const [assignedSections, setAssignedSections] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
-  console.log({ isOwner })
   useEffect(() => {
     setIsOwner(store && store?.createdBy === user?.id)
     const employee = staff?.find(

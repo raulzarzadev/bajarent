@@ -52,6 +52,12 @@ const FormBalanceE = ({
     >
       {({ handleSubmit, setValues, values }) => (
         <View style={gStyles.container}>
+          <Text style={[gStyles.h2, { marginBottom: 0 }]}>Tipo de balance</Text>
+          <TextInfo
+            type="info"
+            text=" Puedes escoger entre hacer un balance general o seleccionar una persona
+        del staff"
+          />
           {/* SELECT BALANCE TYPE , PARTIAL OR FULL. FULL ARE DEFAULT SELECTED */}
           <View style={[styles.input]}>
             <SelectBalanceType2
@@ -64,6 +70,7 @@ const FormBalanceE = ({
               }}
             />
           </View>
+          <Text style={[gStyles.h2, { marginBottom: 0 }]}>Fechas</Text>
           <TextInfo
             type="info"
             text="Selecciona las fechas entre las que deseas calcular el balance. "
@@ -151,15 +158,6 @@ const SelectBalanceType2 = ({
 
   return (
     <View>
-      <Text style={gStyles.h2}>Tipo de balance</Text>
-      <Text style={[gStyles.helper, gStyles.tCenter]}> </Text>
-
-      <TextInfo
-        type="info"
-        text=" Puedes escoger entre hacer un balance general o seleccionar una persona
-        del staff"
-      />
-
       <InputSelect
         value={balanceType.type === 'full' ? 'full' : balanceType.userId}
         options={options}
