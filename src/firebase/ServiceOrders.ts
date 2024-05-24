@@ -304,8 +304,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     storeId: string,
     {
       sections = [],
-      getBySections = false
-    }: { sections: string[]; getBySections: boolean }
+      getBySections = false,
+      reports = []
+    }: { sections: string[]; getBySections: boolean; reports: CommentType[] }
   ) {
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),
@@ -343,7 +344,24 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       ...filterRepairs,
       where('storeId', '==', storeId)
     ])
-    return [...rentPending, ...repairs, ...expiredRents]
+    const unsolvedOrders = [...rentPending, ...repairs, ...expiredRents]
+
+    //* *** 1 *** get reports and set the ids, to get reports from the database
+    const ordersWithReportsIds = Array.from(
+      new Set(
+        reports
+          .filter(({ type }) => type === 'report')
+          .map(({ orderId }) => orderId)
+      )
+    )
+    const reportedOrders = await this.getList(ordersWithReportsIds)
+
+    //*  *** 2 *** remove reported orders from unsolved orders
+    const removeReportedFromUnsolved = unsolvedOrders.filter(
+      ({ id }) => !ordersWithReportsIds.includes(id)
+    )
+    //*  *** 3 *** add reported orders to unsolved orders
+    return [...removeReportedFromUnsolved, ...reportedOrders]
   }
 
   // async getAllUnsolved(storeId) {

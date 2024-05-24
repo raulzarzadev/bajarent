@@ -49,7 +49,6 @@ export const OrdersContextProvider = ({
     //permissions
   } = useEmployee()
   const { storeId, store } = useAuth()
-  const { storeSections } = useStore()
   const [orders, setOrders] = useState<OrderType[]>([])
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -97,7 +96,7 @@ export const OrdersContextProvider = ({
     if (typeOfOrders === 'all') {
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
-        { getBySections: false, sections: [] }
+        { getBySections: false, sections: [], reports }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
@@ -108,7 +107,8 @@ export const OrdersContextProvider = ({
       //* get orders from sections where  sectionsAssigned contains sections
       const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
         getBySections: true,
-        sections: employee.sectionsAssigned
+        sections: employee.sectionsAssigned,
+        reports
       })
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)
