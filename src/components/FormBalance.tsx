@@ -10,6 +10,7 @@ import ErrorBoundary from './ErrorBoundary'
 import InputSelect from './InputSelect'
 import TextInfo from './TextInfo'
 import Icon from './Icon'
+import SelectStoreSection from './SelectStoreSection'
 
 export type FormBalanceProps = {
   defaultValues?: Partial<BalanceType>
@@ -24,14 +25,12 @@ const FormBalanceE = ({
   }
 }: FormBalanceProps) => {
   const [submitting, setSubmitting] = React.useState(false)
-  const { staff } = useStore()
 
   const handleSubmit = async (values: Partial<BalanceType>) => {
     setSubmitting(true)
     if (values.type === 'partial') {
-      const staffUser = staff.find((s) => s.userId === values.userId)
-      const userSections = staffUser.sectionsAssigned
-      values.sections = userSections
+      //const userSections = staffUser?.sectionsAssigned
+      // values.sections = userSections
       console.log({ values })
     }
     return await onSubmit(values)
@@ -67,7 +66,8 @@ const FormBalanceE = ({
         del staff"
           />
           {/* SELECT BALANCE TYPE , PARTIAL OR FULL. FULL ARE DEFAULT SELECTED */}
-          <View style={[styles.input]}>
+
+          {/* <View style={[styles.input]}>
             <SelectBalanceType2
               balanceType={{
                 type: values.type,
@@ -77,7 +77,17 @@ const FormBalanceE = ({
                 setValues((values) => ({ ...values, ...balance }), false)
               }}
             />
+          </View> */}
+          <View style={[styles.input]}>
+            <SelectStoreSection
+              value={values.type}
+              setValue={(value) => {
+                console.log(value)
+                setValues({ ...values, ...value })
+              }}
+            />
           </View>
+
           <Text style={[gStyles.h2, { marginBottom: 0 }]}>Fechas</Text>
           <TextInfo
             type="info"
@@ -144,45 +154,55 @@ const FormBalanceE = ({
     </Formik>
   )
 }
-type BalanceUser = {
-  type: BalanceType['type']
-  userId: string
-}
+// type BalanceUser = {
+//   type: BalanceType['type']
+//   userId?: string
+//   section?: string
+// }
 
-const SelectBalanceType2 = ({
-  setBalanceType,
-  balanceType
-}: {
-  setBalanceType: (balanceUser: BalanceUser) => void
-  balanceType: BalanceUser
-}) => {
-  const { staff } = useStore()
-  const options = useMemo(() => {
-    return [
-      { label: 'Completo', value: 'full' },
-      ...staff.map((user) => ({ label: user.name, value: user.userId }))
-    ]
-  }, [staff])
+// const SelectBalanceType2 = ({
+//   setBalanceType,
+//   balanceType
+// }: {
+//   setBalanceType: (balanceUser: BalanceUser) => void
+//   balanceType: BalanceUser
+// }) => {
+//   const { staff, storeSections } = useStore()
+//   const options = useMemo(() => {
+//     return [
+//       { label: 'Completo', value: 'full' },
+//       //...staff.map((user) => ({ label: user.name, value: user.userId }))
+//       ...storeSections.map((section) => ({
+//         label: section.name,
+//         value: section.id
+//       }))
+//     ]
+//   }, [staff])
 
-  return (
-    <View>
-      <InputSelect
-        value={balanceType.type === 'full' ? 'full' : balanceType.userId}
-        options={options}
-        onChangeValue={(value) => {
-          if (value === 'full') {
-            return setBalanceType({ type: 'full', userId: '' })
-          } else {
-            setBalanceType({
-              type: 'partial',
-              userId: value
-            })
-          }
-        }}
-      />
-    </View>
-  )
-}
+//   return (
+//     <View>
+//       <InputSelect
+//         value={balanceType.type === 'full' ? 'full' : balanceType.userId}
+//         options={options}
+//         onChangeValue={(value) => {
+//           if (value === 'full') {
+//             return setBalanceType({ type: 'full', userId: '' })
+//           } else {
+//             return setBalanceType({
+//               type: 'partial',
+//               section: value,
+//               userId: null
+//             })
+//             // setBalanceType({
+//             //   type: 'partial',
+//             //   userId: value
+//             // })
+//           }
+//         }}
+//       />
+//     </View>
+//   )
+// }
 
 export default function FormBalance(props: FormBalanceProps) {
   return (
