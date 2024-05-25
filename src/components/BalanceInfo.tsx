@@ -78,9 +78,9 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           <View style={styles.row}>
             <LinkPayments payments={cardPayments} title={'Tarjetas'} />
           </View>
-          <View style={styles.row}>
+          {/* <View style={styles.row}>
             <LinkPayments payments={[]} title={'Retiros'} />
-          </View>
+          </View> */}
           <View
             style={{
               flexDirection: 'row',
@@ -111,6 +111,11 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
             buttonLabel="Creadas"
             ordersIds={balance?.ordersCreated}
           /> */}
+          <ModalOrders
+            modalTitle="Pagadas"
+            buttonLabel="Pagadas"
+            ordersIds={balance?.paidOrders}
+          />
           <ModalOrders
             modalTitle=" Entregadas"
             buttonLabel="Entregadas"

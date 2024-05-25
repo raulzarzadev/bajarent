@@ -10,29 +10,62 @@ import { ServiceBalances } from '../firebase/ServiceBalances'
 import { calculateSectionBalance } from '../libs/balance'
 import { useAuth } from '../contexts/authContext'
 import { gStyles } from '../styles'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 
 const ScreenBalancesNew = ({ navigation }) => {
-  const { payments, storeId, orders, store } = useStore()
+  const { payments: storePayments, storeId, orders, store } = useStore()
   const { user } = useAuth()
   const [balance, setBalance] = React.useState<BalanceType>()
 
-  const getBalancePayments = async (values: BalanceType) => {
-    const paymentsCount = values.userId
-      ? payments.filter((p) => p.createdBy === values.userId)
-      : payments
+  // const getBalancePayments = async (values: BalanceType) => {
+  //   const paymentsCount = values.userId
+  //     ? storePayments.filter((p) => p.createdBy === values.userId)
+  //     : storePayments
 
-    const paymentsInDateRange = paymentsCount.filter(
+  //   const paymentsInDateRange = paymentsCount.filter(
+  //     (p) =>
+  //       asDate(p.createdAt).getTime() >= asDate(values.fromDate).getTime() &&
+  //       asDate(p.createdAt).getTime() <= asDate(values.toDate).getTime()
+  //   )
+  //   return paymentsInDateRange
+  // }
+  const getSectionPayments = async ({ section, fromDate, toDate }) => {
+    /* ******************************************** 
+   //* Is necessary get the orders from the section to define section payments           
+     *******************************************rz */
+    //* 1.- Filter payments by date
+    const paymentsByDate = storePayments.filter(
       (p) =>
-        asDate(p.createdAt).getTime() >= asDate(values.fromDate).getTime() &&
-        asDate(p.createdAt).getTime() <= asDate(values.toDate).getTime()
+        asDate(p.createdAt).getTime() >= asDate(fromDate).getTime() &&
+        asDate(p.createdAt).getTime() <= asDate(toDate).getTime()
     )
-    return paymentsInDateRange
+    //* 2.- Find orders from payments
+    const paymentOrders = Array.from(
+      new Set(paymentsByDate.map((p) => p.orderId))
+    )
+    const sectionOrders = await ServiceOrders.getList(paymentOrders, {
+      sections: [section]
+    })
+    //* 3.- Set orders with payments
+    const ordersWithPayments = sectionOrders.map((o) => {
+      const orderPayments = paymentsByDate.filter((p) => p.orderId === o.id)
+      return { ...o, payments: orderPayments }
+    })
+
+    //* 3.- Need paid orders and payments in dates
+    const paidOrders = ordersWithPayments
+    const payments = ordersWithPayments.map((o) => o.payments).flat()
+    return { paidOrders, payments }
   }
 
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
-      const payments = await getBalancePayments(values)
-
+      //const payments = await getBalancePayments(values)
+      const { payments, paidOrders } = await getSectionPayments({
+        section: values.section,
+        fromDate: values.fromDate,
+        toDate: values.toDate
+      })
       //const orders = await balanceOrders({ values, storeId })
       const orders = await calculateSectionBalance({
         storeId,
@@ -45,7 +78,8 @@ const ScreenBalancesNew = ({ navigation }) => {
       setBalance({
         ...values,
         payments,
-        ...orders
+        ...orders,
+        paidOrders: paidOrders.map((o) => o.id)
       })
     } catch (error) {
       console.error(error)
