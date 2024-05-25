@@ -99,10 +99,10 @@ const StoreContextProvider = ({ children }) => {
   //#region render
 
   const staffWithSections = staff.map((staff) => {
-    const assignedSections = sections
+    const sectionsAssigned = sections
       .filter((section) => section.staff.includes(staff.id))
       .map((section) => section.id)
-    return { ...staff, assignedSections }
+    return { ...staff, sectionsAssigned }
   })
   return (
     <StoreContext.Provider

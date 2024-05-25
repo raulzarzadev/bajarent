@@ -19,14 +19,16 @@ export const balanceTotals = (balance: BalanceType) => {
 }
 
 export const balanceOrders = async ({
-  values
+  values,
+  storeId
 }: //orders
 {
   values: BalanceType
+  storeId: string
   //orders: OrderType[]
 }): Promise<BalanceOrders> => {
   //* YOU CANT FILTER ORDERS BY USER OR DATE BECAUSE YOU ARE VALIDATING DIFFERENT THINGS
-
+  console.log({ values })
   let ordersCreated = []
   let ordersPickup = []
   let ordersDelivered = []
@@ -67,15 +69,20 @@ export const balanceOrders = async ({
     where('status', '==', order_status.CANCELLED)
   ])
 
-  let assignedOrders = []
+  let assignedOrdersDelivered = []
   if (values.sections?.length > 0) {
-    assignedOrders = await ServiceOrders.findMany([
+    assignedOrdersDelivered = await ServiceOrders.findMany([
       where('assignToSection', 'in', values.sections),
       where('status', 'in', [order_status.DELIVERED])
     ])
+  } else if (values.type === 'full') {
+    assignedOrdersDelivered = await ServiceOrders.findMany([
+      where('status', 'in', [order_status.DELIVERED]),
+      where('storeId', '==', storeId)
+    ])
   }
 
-  console.log({ assignedOrders })
+  console.log({ assignedOrdersDelivered })
 
   /* ******************************************** 
              FILTER BY USER               
@@ -109,6 +116,7 @@ export const balanceOrders = async ({
     ordersPickup,
     ordersDelivered,
     ordersRenewed,
-    ordersCancelled
+    ordersCancelled,
+    assignedOrdersDelivered: assignedOrdersDelivered.map((o) => o.id)
   }
 }

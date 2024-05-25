@@ -32,7 +32,7 @@ const ScreenBalancesNew = ({ navigation }) => {
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
       const payments = await getBalancePayments(values)
-      const orders = await balanceOrders({ values })
+      const orders = await balanceOrders({ values, storeId })
       setBalance({
         ...values,
         payments,

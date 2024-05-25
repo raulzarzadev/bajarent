@@ -131,6 +131,11 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
             buttonLabel="Canceladas"
             ordersIds={balance?.ordersCancelled}
           />
+          <ModalOrders
+            modalTitle="En renta"
+            buttonLabel="En Renta"
+            ordersIds={balance?.assignedOrdersDelivered}
+          />
         </View>
       </View>
     </View>

@@ -24,8 +24,16 @@ const FormBalanceE = ({
   }
 }: FormBalanceProps) => {
   const [submitting, setSubmitting] = React.useState(false)
+  const { staff } = useStore()
+
   const handleSubmit = async (values: Partial<BalanceType>) => {
     setSubmitting(true)
+    if (values.type === 'partial') {
+      const staffUser = staff.find((s) => s.userId === values.userId)
+      const userSections = staffUser.sectionsAssigned
+      values.sections = userSections
+      console.log({ values })
+    }
     return await onSubmit(values)
       .then(console.log)
       .catch(() => {
@@ -148,15 +156,13 @@ const SelectBalanceType2 = ({
   setBalanceType: (balanceUser: BalanceUser) => void
   balanceType: BalanceUser
 }) => {
-  const { staff, storeSections } = useStore()
+  const { staff } = useStore()
   const options = useMemo(() => {
     return [
       { label: 'Completo', value: 'full' },
       ...staff.map((user) => ({ label: user.name, value: user.userId }))
     ]
   }, [staff])
-
-  console.log({ staff })
 
   return (
     <View>
@@ -167,7 +173,10 @@ const SelectBalanceType2 = ({
           if (value === 'full') {
             return setBalanceType({ type: 'full', userId: '' })
           } else {
-            setBalanceType({ type: 'partial', userId: value })
+            setBalanceType({
+              type: 'partial',
+              userId: value
+            })
           }
         }}
       />
