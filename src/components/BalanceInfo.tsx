@@ -106,11 +106,11 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
             flexWrap: 'wrap'
           }}
         >
-          <ModalOrders
+          {/* <ModalOrders
             modalTitle="Creadas"
             buttonLabel="Creadas"
             ordersIds={balance?.ordersCreated}
-          />
+          /> */}
           <ModalOrders
             modalTitle=" Entregadas"
             buttonLabel="Entregadas"

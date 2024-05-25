@@ -40,10 +40,12 @@ export const balanceOrders = async ({
    *******************************************rz */
 
   //*1 get orders creates from date
-  const createdOrders = await ServiceOrders.findMany([
-    where('createdAt', '>=', values.fromDate),
-    where('createdAt', '<=', values.toDate)
-  ])
+  const createdOrders = []
+  //* avoid this call
+  // await ServiceOrders.findMany([
+  //   where('createdAt', '>=', values.fromDate),
+  //   where('createdAt', '<=', values.toDate)
+  // ])
 
   const pickedUpOrders = await ServiceOrders.findMany([
     where('pickedUpAt', '>=', values.fromDate),
