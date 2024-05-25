@@ -18,6 +18,7 @@ export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
   const data = balanceTotals(balance)
   const total = data?.total
+
   const cashPayments = balance?.payments.filter((p) => p.method === 'cash')
   const cardPayments = balance?.payments.filter((p) => p.method === 'card')
   const transferPayments = balance?.payments.filter(
@@ -88,8 +89,9 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
               justifyContent: 'flex-end'
             }}
           >
-            <Text style={[gStyles.h3, { marginRight: 8 }]}>Total</Text>
-            <CurrencyAmount style={gStyles.h1} amount={total} />
+            {/* <Text style={[gStyles.h3, { marginRight: 8 }]}>Total</Text> */}
+            <LinkPayments payments={balance?.payments} title={'Total'} />
+            {/* <CurrencyAmount style={gStyles.h1} amount={total} /> */}
           </View>
         </View>
       </View>
