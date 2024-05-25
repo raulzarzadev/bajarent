@@ -17,35 +17,31 @@ const ScreenBalancesNew = ({ navigation }) => {
   const { user } = useAuth()
   const [balance, setBalance] = React.useState<BalanceType>()
 
-  // const getBalancePayments = async (values: BalanceType) => {
-  //   const paymentsCount = values.userId
-  //     ? storePayments.filter((p) => p.createdBy === values.userId)
-  //     : storePayments
-
-  //   const paymentsInDateRange = paymentsCount.filter(
-  //     (p) =>
-  //       asDate(p.createdAt).getTime() >= asDate(values.fromDate).getTime() &&
-  //       asDate(p.createdAt).getTime() <= asDate(values.toDate).getTime()
-  //   )
-  //   return paymentsInDateRange
-  // }
-  const getSectionPayments = async ({ section, fromDate, toDate }) => {
+  const getSectionPayments = async ({ section, fromDate, toDate, type }) => {
     /* ******************************************** 
    //* Is necessary get the orders from the section to define section payments           
      *******************************************rz */
+
     //* 1.- Filter payments by date
     const paymentsByDate = storePayments.filter(
       (p) =>
         asDate(p.createdAt).getTime() >= asDate(fromDate).getTime() &&
         asDate(p.createdAt).getTime() <= asDate(toDate).getTime()
     )
-    //* 2.- Find orders from payments
+    //* 2.- Find orders from payments, remove duplicates
     const paymentOrders = Array.from(
       new Set(paymentsByDate.map((p) => p.orderId))
     )
-    const sectionOrders = await ServiceOrders.getList(paymentOrders, {
-      sections: [section]
-    })
+
+    let sectionOrders = []
+    if (type === 'partial') {
+      sectionOrders = await ServiceOrders.getList(paymentOrders, {
+        sections: [section]
+      })
+    }
+    if (type === 'full') {
+      sectionOrders = await ServiceOrders.getList(paymentOrders)
+    }
     //* 3.- Set orders with payments
     const ordersWithPayments = sectionOrders.map((o) => {
       const orderPayments = paymentsByDate.filter((p) => p.orderId === o.id)
@@ -61,10 +57,12 @@ const ScreenBalancesNew = ({ navigation }) => {
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
       //const payments = await getBalancePayments(values)
+      console.log('balanceType', values.type)
       const { payments, paidOrders } = await getSectionPayments({
         section: values.section,
         fromDate: values.fromDate,
-        toDate: values.toDate
+        toDate: values.toDate,
+        type: values.type
       })
       //const orders = await balanceOrders({ values, storeId })
       const orders = await calculateSectionBalance({
