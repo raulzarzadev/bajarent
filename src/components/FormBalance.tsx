@@ -67,6 +67,8 @@ const FormBalanceE = ({
             <SelectStoreSection
               value={values.type}
               setValue={(value) => {
+                //FIXME: this is a hack to avoid the error
+                //@ts-ignore
                 setValues((prevValues) => ({ ...prevValues, ...value }))
               }}
             />

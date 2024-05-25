@@ -100,7 +100,7 @@ const StoreContextProvider = ({ children }) => {
 
   const staffWithSections = staff.map((staff) => {
     const sectionsAssigned = sections
-      .filter((section) => section.staff.includes(staff.id))
+      .filter((section) => section?.staff?.includes(staff.id))
       .map((section) => section.id)
     return { ...staff, sectionsAssigned }
   })
