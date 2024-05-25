@@ -27,12 +27,9 @@ const FormBalanceE = ({
   const [submitting, setSubmitting] = React.useState(false)
 
   const handleSubmit = async (values: Partial<BalanceType>) => {
+    console.log({ values })
     setSubmitting(true)
-    if (values.type === 'partial') {
-      //const userSections = staffUser?.sectionsAssigned
-      // values.sections = userSections
-      console.log({ values })
-    }
+
     return await onSubmit(values)
       .then(console.log)
       .catch(() => {
@@ -65,29 +62,15 @@ const FormBalanceE = ({
             text=" Puedes escoger entre hacer un balance general o seleccionar una persona
         del staff"
           />
-          {/* SELECT BALANCE TYPE , PARTIAL OR FULL. FULL ARE DEFAULT SELECTED */}
 
-          {/* <View style={[styles.input]}>
-            <SelectBalanceType2
-              balanceType={{
-                type: values.type,
-                userId: values.userId
-              }}
-              setBalanceType={(balance) => {
-                setValues((values) => ({ ...values, ...balance }), false)
-              }}
-            />
-          </View> */}
           <View style={[styles.input]}>
             <SelectStoreSection
               value={values.type}
               setValue={(value) => {
-                console.log(value)
-                setValues({ ...values, ...value })
+                setValues((prevValues) => ({ ...prevValues, ...value }))
               }}
             />
           </View>
-
           <Text style={[gStyles.h2, { marginBottom: 0 }]}>Fechas</Text>
           <TextInfo
             type="info"

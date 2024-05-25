@@ -7,6 +7,7 @@ export type BalanceOrders = {
   ordersDelivered?: string[]
   ordersRenewed?: string[]
   ordersCancelled?: string[]
+  ordersInRent?: string[]
   assignedOrdersDelivered?: string[]
 }
 export type BalanceBase = {
@@ -14,6 +15,7 @@ export type BalanceBase = {
   type: 'partial' | 'full'
   userId?: string
   sections?: string[]
+  section?: string
   fromDate: Date
   toDate: Date
   payments: PaymentType[]

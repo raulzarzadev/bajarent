@@ -84,8 +84,6 @@ export const balanceOrders = async ({
     ])
   }
 
-  console.log({ assignedOrdersDelivered })
-
   /* ******************************************** 
              FILTER BY USER               
    *******************************************rz */
@@ -122,3 +120,97 @@ export const balanceOrders = async ({
     assignedOrdersDelivered: assignedOrdersDelivered.map((o) => o.id)
   }
 }
+
+export const calculateSectionBalance = async ({
+  section,
+  fromDate,
+  toDate,
+  storeId,
+  type
+}: {
+  storeId: string
+} & Pick<BalanceType, 'section' | 'fromDate' | 'toDate' | 'type'>) => {
+  console.log({ balanceType: type })
+  if (type === 'partial') {
+    const ordersInRent = await ServiceOrders.findMany([
+      where('status', '==', order_status.DELIVERED),
+      where('storeId', '==', storeId),
+      where('assignToSection', '==', section)
+    ])
+
+    const oldRenewed = await ServiceOrders.findMany([
+      where('status', '==', order_status.RENEWED),
+      where('storeId', '==', storeId),
+      where('assignToSection', '==', section),
+      where('renewedAt', '>=', fromDate),
+      where('renewedAt', '<=', toDate)
+    ])
+    const ordersRenewed = oldRenewed.map((o) => o.renewedTo)
+
+    const ordersPickup = await ServiceOrders.findMany([
+      where('status', 'in', [order_status.PICKED_UP]),
+      where('storeId', '==', storeId),
+      where('assignToSection', '==', section),
+      where('pickedUpAt', '>=', fromDate),
+      where('pickedUpAt', '<=', toDate)
+    ])
+    const ordersDelivered = await ServiceOrders.findMany([
+      where('assignToSection', '==', section),
+      where('deliveredAt', '>=', fromDate),
+      where('deliveredAt', '<=', toDate)
+    ])
+    const ordersCancelled = await ServiceOrders.findMany([
+      where('assignToSection', '==', section),
+      where('cancelledAt', '>=', fromDate),
+      where('cancelledAt', '<=', toDate)
+    ])
+    return {
+      ordersPickup,
+      ordersDelivered,
+      ordersRenewed,
+      ordersInRent,
+      ordersCancelled,
+      ordersCreated: []
+    }
+  } else if (type === 'full') {
+    const ordersInRent = await ServiceOrders.findMany([
+      where('status', '==', order_status.DELIVERED),
+      where('storeId', '==', storeId)
+    ])
+
+    const oldRenewed = await ServiceOrders.findMany([
+      where('status', 'in', [order_status.RENEWED]),
+      where('storeId', '==', storeId),
+      where('renewedAt', '>=', fromDate),
+      where('renewedAt', '<=', toDate)
+    ])
+    const ordersRenewed = oldRenewed.map((o) => o.renewedTo)
+
+    const ordersPickup = await ServiceOrders.findMany([
+      where('status', 'in', [order_status.PICKED_UP]),
+      where('storeId', '==', storeId),
+      where('pickedUpAt', '>=', fromDate),
+      where('pickedUpAt', '<=', toDate)
+    ])
+    const ordersDelivered = await ServiceOrders.findMany([
+      where('storeId', '==', storeId),
+      where('deliveredAt', '>=', fromDate),
+      where('deliveredAt', '<=', toDate)
+    ])
+    const ordersCancelled = await ServiceOrders.findMany([
+      where('storeId', '==', storeId),
+      where('cancelledAt', '>=', fromDate),
+      where('cancelledAt', '<=', toDate)
+    ])
+    return {
+      ordersPickup,
+      ordersDelivered,
+      ordersRenewed,
+      ordersInRent,
+      ordersCancelled,
+      ordersCreated: []
+    }
+  }
+}
+
+export type SectionBalance = typeof calculateSectionBalance

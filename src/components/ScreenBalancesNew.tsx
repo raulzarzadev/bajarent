@@ -7,7 +7,7 @@ import asDate from '../libs/utils-date'
 import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
-import { balanceOrders } from '../libs/balance'
+import { calculateSectionBalance } from '../libs/balance'
 import { useAuth } from '../contexts/authContext'
 import { gStyles } from '../styles'
 
@@ -32,7 +32,16 @@ const ScreenBalancesNew = ({ navigation }) => {
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
       const payments = await getBalancePayments(values)
-      const orders = await balanceOrders({ values, storeId })
+
+      //const orders = await balanceOrders({ values, storeId })
+      const orders = await calculateSectionBalance({
+        storeId,
+        fromDate: values.fromDate,
+        toDate: values.toDate,
+        section: values.section,
+        type: values.type
+      })
+
       setBalance({
         ...values,
         payments,
@@ -56,7 +65,7 @@ const ScreenBalancesNew = ({ navigation }) => {
     setBalance(undefined)
   }
   if (!storeId || !store || !user) return <Text>Cargando...</Text>
-
+  console.log({ balance })
   return (
     <ScrollView>
       <View style={gStyles.container}>
