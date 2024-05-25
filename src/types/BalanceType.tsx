@@ -12,6 +12,7 @@ export type BalanceBase = {
   storeId: string
   type: 'partial' | 'full'
   userId?: string
+  sections?: string[]
   fromDate: Date
   toDate: Date
   payments: PaymentType[]

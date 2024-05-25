@@ -66,6 +66,17 @@ export const balanceOrders = async ({
     where('cancelledAt', '<=', values.toDate),
     where('status', '==', order_status.CANCELLED)
   ])
+
+  let assignedOrders = []
+  if (values.sections?.length > 0) {
+    assignedOrders = await ServiceOrders.findMany([
+      where('assignToSection', 'in', values.sections),
+      where('status', 'in', [order_status.DELIVERED])
+    ])
+  }
+
+  console.log({ assignedOrders })
+
   /* ******************************************** 
              FILTER BY USER               
    *******************************************rz */

@@ -148,13 +148,15 @@ const SelectBalanceType2 = ({
   setBalanceType: (balanceUser: BalanceUser) => void
   balanceType: BalanceUser
 }) => {
-  const { staff } = useStore()
+  const { staff, storeSections } = useStore()
   const options = useMemo(() => {
     return [
       { label: 'Completo', value: 'full' },
       ...staff.map((user) => ({ label: user.name, value: user.userId }))
     ]
   }, [staff])
+
+  console.log({ staff })
 
   return (
     <View>
