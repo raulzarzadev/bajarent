@@ -1,16 +1,28 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
-import OrderType from '../types/OrderType'
+import OrderType, { order_type } from '../types/OrderType'
 import theme, { STATUS_COLOR, colors } from '../theme'
 import ClientName from './ClientName'
 import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
+import { translateTime } from '../libs/expireDate'
+import { useStore } from '../contexts/storeContext'
+import CurrencyAmount from './CurrencyAmount'
+import { useEmployee } from '../contexts/employeeContext'
 
 const RowOrder = ({ item: order }: { item: OrderType }) => {
+  const { employee } = useEmployee()
+  const { payments, staff } = useStore()
+  const orderPayments = payments.filter((p) => p.orderId === order.id)
+  const orderTotal = orderPayments?.reduce((acc, p) => acc + p.amount, 0)
+  const showTotal = employee.permissions.order.showOrderTotal
+
+  const showTime = employee.permissions.order.showOrderTime
   const fields: {
     field: string
     width: ViewStyle['width']
     component: ReactNode
+    hide?: boolean
   }[] = [
     {
       field: 'folio',
@@ -52,8 +64,30 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
       )
     },
     {
+      field: 'items',
+      width: '10%',
+      component: (
+        <View>
+          <>
+            {showTime && order.type === order_type.RENT && (
+              <Text style={{ textAlign: 'center' }}>
+                {translateTime(order?.items?.[0]?.priceSelected?.time, {
+                  shortLabel: true
+                })}
+              </Text>
+            )}
+            {showTotal && (
+              <Text style={{ textAlign: 'center' }}>
+                <CurrencyAmount amount={orderTotal} />
+              </Text>
+            )}
+          </>
+        </View>
+      )
+    },
+    {
       field: 'status',
-      width: '50%',
+      width: '40%',
       component: (
         <View>
           <OrderDirectives order={order} />
@@ -63,7 +97,7 @@ const RowOrder = ({ item: order }: { item: OrderType }) => {
   ]
   return (
     <View style={[styles.container]}>
-      {fields.map(({ field, component, width }) => (
+      {fields.map(({ field, component, width, hide }) => (
         <View key={field} style={{ width }}>
           {component}
         </View>

@@ -14,6 +14,7 @@ export default function useOrders({ ids = [] }: { ids: string[] }) {
   }, [ids, storeId])
   const fetchOrders = async () => {
     try {
+      debugger
       const reports = await ServiceComments.getReportsUnsolved(storeId)
       const promises = ids?.map(async (id) => {
         const order = await ServiceOrders.get(id)

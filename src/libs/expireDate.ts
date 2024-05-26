@@ -142,7 +142,10 @@ export const addCustomTime = ({
   return null
 }
 
-export const translateTime = (time: TimePriceType) => {
+export const translateTime = (
+  time: TimePriceType,
+  ops?: { shortLabel: boolean }
+) => {
   const [amount, unit] = time?.split(' ') || ['', '']
   const units = {
     second: 'segundo',
@@ -153,7 +156,19 @@ export const translateTime = (time: TimePriceType) => {
     month: 'mes', //<-- this is meses
     year: 'año'
   }
+  const shortUnits = {
+    second: 's',
+    minute: 'm',
+    hour: 'h',
+    day: 'd',
+    week: 'S',
+    month: 'M', //<-- this is meses
+    year: 'A'
+  }
   let unitCount = amount === '1' ? units[unit] : units[unit] + 's'
   unit === 'month' && (unitCount = 'meses')
+  if (ops?.shortLabel) {
+    return `${amount}${shortUnits[unit]}`
+  }
   return `${amount} ${unitCount}`
 }
