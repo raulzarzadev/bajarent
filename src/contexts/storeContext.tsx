@@ -79,7 +79,13 @@ const StoreContextProvider = ({ children }) => {
           staff.map(async ({ userId, ...rest }) => {
             const user = await ServiceUsers.get(userId)
             const { name, phone, email } = user
-            return { ...rest, name, phone, email, userId: user.id }
+            return {
+              ...rest,
+              name: name || rest?.position,
+              phone,
+              email,
+              userId: user.id
+            }
           })
         )
         const ownerIsNotStaff = [...staffUserInfo]?.find(
