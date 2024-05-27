@@ -325,7 +325,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const filterExpiredRents = [
       where('type', '==', TypeOrder.RENT),
       where('status', '==', order_status.DELIVERED),
-      where('expireAt', '<', new Date())
+      //* get orders that are expired today don't meter the hours
+      where('expireAt', '<', new Date(new Date().setHours(23, 59, 59, 999)))
     ]
     if (getBySections) {
       filterRentPending.push(where('assignToSection', 'in', sections))
