@@ -205,7 +205,11 @@ const ModalOrders = ({
             //@ts-ignore
             navigate('StackOrders', {
               screen: 'ScreenOrders',
-              params: { orders: ordersIds, title: modalTitle }
+              params: {
+                orders: ordersIds,
+                title: modalTitle,
+                showRentData: true
+              }
             })
           }}
           fullWidth={false}

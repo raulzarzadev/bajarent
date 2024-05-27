@@ -147,6 +147,7 @@ export const translateTime = (
   ops?: { shortLabel: boolean }
 ) => {
   const [amount, unit] = time?.split(' ') || ['', '']
+  if (!time) return ''
   const units = {
     second: 'segundo',
     minute: 'minuto',

@@ -14,13 +14,11 @@ export default function useOrders({ ids = [] }: { ids: string[] }) {
   }, [ids, storeId])
   const fetchOrders = async () => {
     try {
-      debugger
       const reports = await ServiceComments.getReportsUnsolved(storeId)
       const promises = ids?.map(async (id) => {
         const order = await ServiceOrders.get(id)
         return order
       })
-
       const res = await Promise.all(promises)
       const formattedOrders = formatOrders({ orders: res, reports })
       setOrders(formattedOrders)

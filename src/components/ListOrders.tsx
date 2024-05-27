@@ -9,7 +9,9 @@ const ListOrders = ({
   orders = [],
   defaultOrdersIds,
   sideButtons = [],
-  collectionSearch
+  collectionSearch,
+  showTime,
+  showTotal
 }: {
   orders: OrderType[]
   defaultOrdersIds?: string[]
@@ -18,6 +20,8 @@ const ListOrders = ({
     collectionName: string
     fields: string[]
   }
+  showTime?: boolean
+  showTotal?: boolean
 }) => {
   const { navigate } = useNavigation()
   return (
@@ -43,7 +47,9 @@ const ListOrders = ({
         { key: 'type', label: 'Tipo' }
       ]}
       data={orders}
-      ComponentRow={RowOrder}
+      ComponentRow={({ item }) => (
+        <RowOrder item={item} showTime={showTime} showTotal={showTotal} />
+      )}
       filters={[
         { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },

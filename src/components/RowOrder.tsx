@@ -10,14 +10,19 @@ import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import { useEmployee } from '../contexts/employeeContext'
 
-const RowOrder = ({ item: order }: { item: OrderType }) => {
-  const { employee } = useEmployee()
-  const { payments, staff } = useStore()
+const RowOrder = ({
+  item: order,
+  showTime,
+  showTotal
+}: {
+  item: OrderType
+  showTime?: boolean
+  showTotal?: boolean
+}) => {
+  const { payments } = useStore()
   const orderPayments = payments.filter((p) => p.orderId === order.id)
   const orderTotal = orderPayments?.reduce((acc, p) => acc + p.amount, 0)
-  const showTotal = employee.permissions.order.showOrderTotal
 
-  const showTime = employee.permissions.order.showOrderTime
   const fields: {
     field: string
     width: ViewStyle['width']

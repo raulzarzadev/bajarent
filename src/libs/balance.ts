@@ -203,11 +203,11 @@ export const calculateSectionBalance = async ({
       where('cancelledAt', '<=', toDate)
     ])
     return {
-      ordersPickup,
-      ordersDelivered,
       ordersRenewed,
-      ordersInRent,
-      ordersCancelled,
+      ordersPickup: ordersPickup.map((o) => o.id),
+      ordersDelivered: ordersDelivered.map((o) => o.id),
+      ordersInRent: ordersInRent.map((o) => o.id),
+      ordersCancelled: ordersCancelled.map((o) => o.id),
       ordersCreated: []
     }
   }
