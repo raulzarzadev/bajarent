@@ -296,7 +296,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return await this.findMany([
       where('storeId', '==', storeId),
       where('type', '==', TypeOrder.RENT),
-      where('status', 'in', [order_status.DELIVERED])
+      where('status', '==', order_status.DELIVERED)
     ])
   }
 
@@ -324,7 +324,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ]
     const filterExpiredRents = [
       where('type', '==', TypeOrder.RENT),
-      where('status', 'in', [order_status.DELIVERED]),
+      where('status', '==', order_status.DELIVERED),
       where('expireAt', '<', new Date())
     ]
     if (getBySections) {

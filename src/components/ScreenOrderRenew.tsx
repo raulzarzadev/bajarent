@@ -1,6 +1,5 @@
 import { ActivityIndicator } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { useStore } from '../contexts/storeContext'
 import FormOrder from './FormOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
@@ -18,6 +17,7 @@ const ScreenOrderRenew = ({ route }) => {
     getFullOrderData(orderId).then((order) => setOriginalOrder(order))
   }, [orderId])
   const newOrder: Partial<OrderType> = {
+    note: originalOrder.note || '',
     storeId: originalOrder?.storeId || '',
     assignToSection: originalOrder?.assignToSection || '',
     assignToStaff: originalOrder?.assignToStaff || '',

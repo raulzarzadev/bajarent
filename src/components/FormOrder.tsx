@@ -365,8 +365,8 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
     note: (
       <InputValueFormik
         name={'note'}
-        placeholder="Nota"
-        helperText={'Numero de nota o referencia externa'}
+        placeholder="Contrato"
+        helperText={'Numero de nota o contrato '}
       />
     ),
 
