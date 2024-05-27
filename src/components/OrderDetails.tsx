@@ -1,4 +1,4 @@
-import { Text, View, Image, Linking } from 'react-native'
+import { Text, View, Image, Linking, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
@@ -24,6 +24,8 @@ import { translateTime } from '../libs/expireDate'
 import { OrderDirectivesE } from './OrderDirectives'
 import Button from './Button'
 import LinkLocation from './LinkLocation'
+import { useNavigation } from '@react-navigation/native'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -358,6 +360,8 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
 }
 
 export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
+  const { navigate } = useNavigation()
+  const { orders, consolidatedOrders } = useOrdersCtx()
   return (
     <View>
       <SpanMetadata
@@ -375,7 +379,41 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
           marginBottom: 8
         }}
       >
-        <View></View>
+        <View>
+          {order?.renewedTo && (
+            <Text>
+              Renovada con:{' '}
+              <Pressable
+                onPress={() => {
+                  //@ts-ignore
+                  navigate('OrderDetails', { orderId: order?.renewedTo })
+                }}
+              >
+                <Text>
+                  {consolidatedOrders.orders[order.renewedTo].folio} -{' '}
+                  {consolidatedOrders.orders[order.renewedTo].note || ''}
+                </Text>
+              </Pressable>
+            </Text>
+          )}
+          {order?.renewedFrom && (
+            <Text>
+              Renovada de:{' '}
+              <Pressable
+                onPress={() => {
+                  //@ts-ignore
+
+                  navigate('OrderDetails', { orderId: order?.renewedFrom })
+                }}
+              >
+                <Text>
+                  {consolidatedOrders.orders[order.renewedFrom].folio} -{' '}
+                  {consolidatedOrders.orders[order.renewedFrom].note || ''}
+                </Text>
+              </Pressable>
+            </Text>
+          )}
+        </View>
         <View>
           <Text style={{ textAlign: 'center' }}>
             <P bold size="lg">
@@ -386,7 +424,7 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
           {!!order?.note && (
             <Text style={{ textAlign: 'center' }}>
               <P bold size="lg">
-                Nota:{' '}
+                Contrato:{' '}
               </P>
               <P size="lg">{order?.note}</P>
             </Text>
