@@ -361,7 +361,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
 
 export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
   const { navigate } = useNavigation()
-  const { orders, consolidatedOrders } = useOrdersCtx()
+  const { consolidatedOrders } = useOrdersCtx()
   return (
     <View>
       <SpanMetadata
@@ -390,8 +390,8 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
                 }}
               >
                 <Text>
-                  {consolidatedOrders.orders[order.renewedTo].folio} -{' '}
-                  {consolidatedOrders.orders[order.renewedTo].note || ''}
+                  {consolidatedOrders?.orders?.[order.renewedTo]?.folio} -{' '}
+                  {consolidatedOrders?.orders?.[order.renewedTo]?.note || ''}
                 </Text>
               </Pressable>
             </Text>
@@ -407,8 +407,8 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
                 }}
               >
                 <Text>
-                  {consolidatedOrders.orders[order.renewedFrom].folio} -{' '}
-                  {consolidatedOrders.orders[order.renewedFrom].note || ''}
+                  {consolidatedOrders?.orders?.[order.renewedFrom]?.folio} -{' '}
+                  {consolidatedOrders?.orders?.[order.renewedFrom]?.note || ''}
                 </Text>
               </Pressable>
             </Text>
