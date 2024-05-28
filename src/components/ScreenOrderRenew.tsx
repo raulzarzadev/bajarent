@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/authContext'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useEffect, useState } from 'react'
 import { orderExpireAt } from '../libs/orders'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
@@ -17,7 +18,7 @@ const ScreenOrderRenew = ({ route }) => {
     getFullOrderData(orderId).then((order) => setOriginalOrder(order))
   }, [orderId])
   const newOrder: Partial<OrderType> = {
-    note: originalOrder.note || '',
+    note: originalOrder?.note || '',
     storeId: originalOrder?.storeId || '',
     assignToSection: originalOrder?.assignToSection || '',
     assignToStaff: originalOrder?.assignToStaff || '',
@@ -108,5 +109,11 @@ const ScreenOrderRenew = ({ route }) => {
     />
   )
 }
+
+export const ScreenOrderRenewE = (props) => (
+  <ErrorBoundary componentName="ScreenOrderRenew">
+    <ScreenOrderRenew {...props} />
+  </ErrorBoundary>
+)
 
 export default ScreenOrderRenew
