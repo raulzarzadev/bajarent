@@ -319,8 +319,16 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
 
   useEffect(() => {
     if (!sheetRow) return
-    const [note, name, phone, neighborhood, address, references, number, date] =
-      sheetRow?.split('\t') || []
+    const [
+      note = '',
+      name = '',
+      phone = '',
+      neighborhood = '',
+      address = '',
+      references = '',
+      number = '',
+      date = ''
+    ] = sheetRow?.split('\t') || []
 
     //const scheduledAt = date && new Date(asDate(date)?.setHours(9))
     const scheduledAt = new Date(date || new Date()) //*<--- FIXME: this is a temporal fix, can't format some dates with 0s from excel
