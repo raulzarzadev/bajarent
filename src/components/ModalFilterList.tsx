@@ -147,6 +147,8 @@ function ModalFilterList<T>({
     return dictionary(value as Labels).toUpperCase()
   }
 
+  const [searchValue, setSearchValue] = useState('')
+
   return (
     <View>
       <View
@@ -157,7 +159,9 @@ function ModalFilterList<T>({
         <InputTextStyled
           style={{ width: '100%', marginLeft: 4 }}
           placeholder="Buscar..."
+          value={searchValue}
           onChangeText={(e) => {
+            setSearchValue(e)
             handleDebounceSearch(e)
           }}
         />
@@ -201,6 +205,7 @@ function ModalFilterList<T>({
                 color="secondary"
                 onPress={() => {
                   cleanFilter()
+                  setSearchValue('')
                   setCustomFilterSelected(false)
                 }}
                 justIcon

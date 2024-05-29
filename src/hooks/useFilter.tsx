@@ -23,6 +23,7 @@ export default function useFilter<T extends { id?: string }>({
     setFilteredBy('')
     setFilteredData(data)
     setFiltersBy([])
+    search('')
   }
 
   const filterBy = (
