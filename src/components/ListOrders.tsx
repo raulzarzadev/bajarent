@@ -38,8 +38,8 @@ const ListOrders = ({
       }}
       sortFields={[
         //{ key: 'priority', label: 'Prioridad' },
-        { key: 'note', label: 'Nota' },
         { key: 'folio', label: 'Folio' },
+        { key: 'note', label: 'Contrato' },
         { key: 'fullName', label: 'Nombre' },
         { key: 'neighborhood', label: 'Colonia' },
         { key: 'status', label: 'Status' },
