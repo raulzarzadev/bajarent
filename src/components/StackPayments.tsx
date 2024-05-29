@@ -23,14 +23,6 @@ function StackPayments() {
         })}
         component={ScreenPayments}
       />
-
-      <Stack.Screen
-        name="ScreenPaymentsDetails"
-        options={{
-          title: 'Detalles de pago'
-        }}
-        component={ScreenPaymentsDetails}
-      />
     </Stack.Navigator>
   )
 }

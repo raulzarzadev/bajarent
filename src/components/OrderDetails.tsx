@@ -26,6 +26,8 @@ import Button from './Button'
 import LinkLocation from './LinkLocation'
 import { useNavigation } from '@react-navigation/native'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import dictionary from '../dictionary'
+import SpanUser from './SpanUser'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -330,7 +332,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
         <ErrorBoundary componentName="ModalPayment">
           <View
             style={{
-              maxWidth: 190,
+              maxWidth: '100%',
               marginHorizontal: 'auto',
               marginVertical: 16,
               marginTop: 8
@@ -343,11 +345,17 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginVertical: 6
+                  marginVertical: 6,
+                  flexWrap: 'wrap',
+                  justifyContent: 'center'
                 }}
               >
-                <Text style={{ marginRight: 8 }}>
+                <SpanUser userId={payment.createdBy} />
+                <Text style={{ marginHorizontal: 4 }}>
                   {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
+                </Text>
+                <Text style={{ marginHorizontal: 4 }}>
+                  {dictionary(payment.method)}
                 </Text>
                 <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
               </View>

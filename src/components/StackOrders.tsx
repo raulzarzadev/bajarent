@@ -9,6 +9,7 @@ import MyStaffLabel from './MyStaffLabel'
 import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenReports from './ScreenReports'
 import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
+import { StackPaymentsE } from './StackPayments'
 
 const Stack = createStackNavigator()
 function StackOrders() {
@@ -92,6 +93,15 @@ function StackOrders() {
           title: 'Ordenes consolidadas'
         }}
         component={ScreenOrdersConsolidated}
+      />
+
+      <Stack.Screen
+        name="StackPayments"
+        options={{
+          title: 'Pagos',
+          headerShown: false
+        }}
+        component={StackPaymentsE}
       />
     </Stack.Navigator>
   )
