@@ -206,7 +206,7 @@ const TabOrders = () => {
     <View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button
-          label="Todas"
+          label="Consolidadas"
           onPress={() => {
             //@ts-ignore
             navigate('StackOrders', {
