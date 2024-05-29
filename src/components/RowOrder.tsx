@@ -9,6 +9,7 @@ import { translateTime } from '../libs/expireDate'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import { useEmployee } from '../contexts/employeeContext'
+import dictionary from '../dictionary'
 
 const RowOrder = ({
   item: order,
@@ -22,6 +23,9 @@ const RowOrder = ({
   const { payments } = useStore()
   const orderPayments = payments.filter((p) => p.orderId === order.id)
   const orderTotal = orderPayments?.reduce((acc, p) => acc + p.amount, 0)
+  const paymentsMethods = Array.from(
+    new Set(orderPayments.map((p) => dictionary(p.method)[0]))
+  )
 
   const fields: {
     field: string
@@ -31,7 +35,7 @@ const RowOrder = ({
   }[] = [
     {
       field: 'folio',
-      width: '30%',
+      width: '25%',
       component: (
         <View>
           <View style={{ flexDirection: 'row' }}>
@@ -70,21 +74,35 @@ const RowOrder = ({
     },
     {
       field: 'items',
-      width: '10%',
+      width: '15%',
       component: (
         <View>
           <>
             {showTime && order.type === order_type.RENT && (
-              <Text style={{ textAlign: 'center' }}>
-                {translateTime(order?.items?.[0]?.priceSelected?.time, {
-                  shortLabel: true
-                })}
-              </Text>
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+              >
+                <Text style={{ textAlign: 'center' }}>
+                  {translateTime(order?.items?.[0]?.priceSelected?.time, {
+                    shortLabel: true
+                  })}
+                </Text>
+              </View>
             )}
             {showTotal && (
-              <Text style={{ textAlign: 'center' }}>
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+              >
+                {paymentsMethods.map((method) => (
+                  <Text
+                    key={method}
+                    style={{ textTransform: 'uppercase', fontWeight: 'bold' }}
+                  >
+                    {method}
+                  </Text>
+                ))}
                 <CurrencyAmount amount={orderTotal} />
-              </Text>
+              </View>
             )}
           </>
         </View>

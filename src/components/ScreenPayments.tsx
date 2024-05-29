@@ -19,10 +19,16 @@ export default function ScreenPayments({ navigation, route }) {
       setFullPayments(payments)
     }
   }, [payments])
-  const paymentsWithOrderData = fullPayments.map((p) => ({
-    ...p,
-    orderFolio: consolidatedOrders.orders?.[p.orderId]?.folio as number //* This is the line that is causing the error
-  }))
+  const paymentsWithOrderData = fullPayments.map((p) => {
+    const consolidateOrder = consolidatedOrders.orders?.[p.orderId]
+    console.log({ consolidateOrder })
+    return {
+      ...p,
+      orderFolio: consolidateOrder?.folio as number, //* This is the line that is causing the error
+      orderName: consolidateOrder?.name as string,
+      orderNote: consolidateOrder?.note as string
+    }
+  })
   return (
     <ScrollView>
       <PaymentsList

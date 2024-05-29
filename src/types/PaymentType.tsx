@@ -9,6 +9,8 @@ export type PaymentBase = {
   reference?: string
   clientName?: string
   orderFolio?: number
+  orderName?: string
+  orderNote?: string
 }
 
 type PaymentType = PaymentBase & BaseType
