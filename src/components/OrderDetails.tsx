@@ -310,7 +310,7 @@ const ItemDates = ({
           <DateCell label="Iniciado" date={startedAt} showTime labelBold />
         )}
         {!!expireAt && !!startedAt && (
-          <DateCell label="Expira" date={expireAt} showTime labelBold />
+          <DateCell label="Vence" date={expireAt} showTime labelBold />
         )}
       </View>
     </>

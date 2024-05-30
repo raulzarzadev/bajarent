@@ -187,7 +187,7 @@ const FormSelectItem = ({
           {!!amount && <CurrencyAmount amount={amount} style={gStyles.h1} />}
           {!!amount && shouldExpireAt && (
             <View style={{ alignItems: 'center', alignContent: 'center' }}>
-              <Text>Expira:</Text>
+              <Text>Vence:</Text>
               <DateCell date={shouldExpireAt} />
             </View>
           )}
