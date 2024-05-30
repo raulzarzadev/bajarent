@@ -55,6 +55,7 @@ type OrderBase = {
   isExpired?: boolean
 
   expiresToday?: boolean
+  expiresTomorrow?: boolean
 
   comments: CommentType[]
 

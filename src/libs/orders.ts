@@ -1,4 +1,4 @@
-import { isBefore, isToday } from 'date-fns'
+import { isBefore, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
 import OrderType, { order_status } from '../types/OrderType'
 import { expireDate2 } from './expireDate'
@@ -54,7 +54,8 @@ export const formatOrder = ({ order, comments = [] }) => {
       hasNotSolvedReports: reportsNotSolved,
       isExpired,
       expireAt,
-      expiresToday
+      expiresToday,
+      expiresTomorrow: isTomorrow(asDate(expireAt))
     }
   }
   if (order?.type === 'REPAIR') {

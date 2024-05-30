@@ -44,7 +44,8 @@ const ListOrders = ({
         { key: 'neighborhood', label: 'Colonia' },
         { key: 'status', label: 'Status' },
         { key: 'assignToSection', label: 'Area' },
-        { key: 'type', label: 'Tipo' }
+        { key: 'type', label: 'Tipo' },
+        { key: 'expireAt', label: 'Vencimiento' }
       ]}
       data={orders}
       ComponentRow={({ item }) => (
@@ -63,6 +64,11 @@ const ListOrders = ({
         {
           field: 'isExpired',
           label: 'Vencidas ',
+          boolean: true
+        },
+        {
+          field: 'expiresTomorrow',
+          label: 'Vence mañana ',
           boolean: true
         }
       ]}
