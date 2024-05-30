@@ -38,30 +38,20 @@ const ListMovements = () => {
     <List
       ComponentRow={({ item }) => <CommentRow comment={item} viewOrder />}
       data={data}
-      filters={[{ field: 'type', label: 'Tipo' }]}
+      filters={[
+        { field: 'type', label: 'Tipo' },
+        {
+          field: 'orderType',
+          label: 'Tipo de orden'
+        },
+        {
+          field: 'createdByName',
+          label: 'Usuario'
+        }
+      ]}
       defaultSortBy={'createdAt'}
       defaultOrder="des"
     />
-  )
-}
-
-const RowMovement = ({ item }: { item: MovementType }) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        marginVertical: 4,
-        backgroundColor: colors.lightGray,
-        padding: 8,
-        width: '100%',
-        borderRadius: 4,
-        justifyContent: 'space-between'
-      }}
-    >
-      <Text>{item.type}</Text>
-      <Text>{item.title}</Text>
-      <View>{item?.content}</View>
-    </View>
   )
 }
 
