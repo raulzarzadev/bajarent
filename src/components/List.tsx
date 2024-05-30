@@ -114,7 +114,9 @@ function MyList<T extends { id: string }>({
       <View
         style={{
           //margin: 'auto',
-          maxWidth: '100%'
+          width: '100%',
+          maxWidth: 600,
+          margin: 'auto'
         }}
       >
         <View>

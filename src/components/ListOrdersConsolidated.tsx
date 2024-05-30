@@ -87,10 +87,10 @@ const ListOrdersConsolidated = () => {
               field: 'assignedSection',
               label: 'Area'
             },
-            {
-              field: 'expireAt',
-              label: 'Vencimiento'
-            },
+            // {
+            //   field: 'expireAt',
+            //   label: 'Vencimiento'
+            // },
 
             {
               field: 'neighborhood',
@@ -110,10 +110,10 @@ const ListOrdersConsolidated = () => {
               key: 'status',
               label: 'Status'
             },
-            {
-              key: 'expireAt',
-              label: 'Vencimiento'
-            },
+            // {
+            //   key: 'expireAt',
+            //   label: 'Vencimiento'
+            // },
             {
               key: 'folio',
               label: 'Folio'
@@ -158,15 +158,15 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
         </Text>
       )
     },
-    {
-      //field: order.expireAt,
-      width: 60,
-      component: (
-        <Text style={styles.cell} numberOfLines={1}>
-          {dateFormat(asDate(order.expireAt), 'dd/MM/yyyy')}
-        </Text>
-      )
-    },
+    // {
+    //   //field: order.expireAt,
+    //   width: 60,
+    //   component: (
+    //     <Text style={styles.cell} numberOfLines={1}>
+    //       {dateFormat(asDate(order.expireAt), 'dd/MM/yyyy')}
+    //     </Text>
+    //   )
+    // },
     {
       //field: `${order.folio}`,
       width: 50,

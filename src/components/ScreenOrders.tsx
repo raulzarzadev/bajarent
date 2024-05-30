@@ -3,6 +3,7 @@ import ListOrders from './ListOrders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import useOrders from '../hooks/useOrders'
 import { useState } from 'react'
+import { ScrollView } from 'react-native'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
@@ -23,37 +24,35 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     setTimeout(() => setDisabled(false), 4000)
   }
   return (
-    <>
-      <ListOrders
-        orders={hasOrderList ? preOrders : orders}
-        //defaultOrdersIds={filtered}
-        collectionSearch={{
-          collectionName: 'orders',
-          fields: [
-            'folio',
-            'note',
-            'fullName',
-            'name',
-            'neighborhood',
-            'status',
-            'phone'
-          ]
-        }}
-        showTime={showRentData}
-        showTotal={showRentData}
-        sideButtons={[
-          {
-            icon: 'refresh',
-            label: '',
-            onPress: () => {
-              handleRefresh()
-            },
-            visible: true,
-            disabled: disabled
-          }
-        ]}
-      />
-    </>
+    <ListOrders
+      orders={hasOrderList ? preOrders : orders}
+      //defaultOrdersIds={filtered}
+      collectionSearch={{
+        collectionName: 'orders',
+        fields: [
+          'folio',
+          'note',
+          'fullName',
+          'name',
+          'neighborhood',
+          'status',
+          'phone'
+        ]
+      }}
+      showTime={showRentData}
+      showTotal={showRentData}
+      sideButtons={[
+        {
+          icon: 'refresh',
+          label: '',
+          onPress: () => {
+            handleRefresh()
+          },
+          visible: true,
+          disabled: disabled
+        }
+      ]}
+    />
   )
 }
 
