@@ -77,7 +77,8 @@ const BottomAppBar = () => {
         name="NewOrder"
         component={ScreenNewOrder}
         options={{
-          title: 'Nueva Orden'
+          title: 'Nueva Orden',
+          tabBarButton: () => null
         }}
       />
 
