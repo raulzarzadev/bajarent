@@ -26,6 +26,9 @@ import {
   writeBatch
 } from 'firebase/firestore'
 
+export type GetItemsOps = {
+  justRefs?: boolean
+}
 export class FirebaseCRUD {
   static uploadFile(
     files: FileList | null,
@@ -247,7 +250,7 @@ export class FirebaseCRUD {
    * * get all documents in a collection implementing filters
    * @param filters: where(itemField,'==','value')
    */
-  async getItems(filters: QueryConstraint[]) {
+  async getItems(filters: QueryConstraint[], ops?: GetItemsOps) {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
@@ -260,6 +263,10 @@ export class FirebaseCRUD {
     //   console.log('docs from server')
     //   querySnapshot = await getDocsFromServer(q)
     // }
+    if (ops?.justRefs) {
+      console.log('just refs')
+      return querySnapshot.docs.map((doc) => doc.ref)
+    }
 
     const res: any[] = []
     querySnapshot.forEach((doc) => {

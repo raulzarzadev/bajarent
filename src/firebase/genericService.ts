@@ -1,6 +1,6 @@
 import { QueryConstraint, where } from 'firebase/firestore'
 import { storage } from './auth'
-import { FirebaseCRUD } from './firebase.CRUD'
+import { FirebaseCRUD, GetItemsOps } from './firebase.CRUD'
 import { db } from './main'
 
 type CreateItem<T> = Partial<T>
@@ -51,8 +51,8 @@ export class FirebaseGenericService<T extends Identifiable> {
     return await this.itemCRUD.getItems(filters).then((items) => items[0])
   }
 
-  async findMany(filters: QueryConstraint[] = []) {
-    return await this.itemCRUD.getItems(filters)
+  async findMany(filters: QueryConstraint[] = [], ops?: GetItemsOps) {
+    return await this.itemCRUD.getItems(filters, ops)
   }
 
   async deleteMany(filters: QueryConstraint[] = []) {

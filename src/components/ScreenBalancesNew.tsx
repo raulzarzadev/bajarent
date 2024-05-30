@@ -76,8 +76,8 @@ const ScreenBalancesNew = ({ navigation }) => {
       setBalance({
         ...values,
         payments,
-        ...orders,
-        paidOrders: paidOrders.map((o) => o.id)
+        ...orders
+        // paidOrders: paidOrders.map((o) => o.id)
       })
     } catch (error) {
       console.error(error)
