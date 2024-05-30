@@ -203,7 +203,11 @@ export const CommentRow = ({
               color={theme.primary}
               onPress={() =>
                 // @ts-ignore
-                navigate('OrderDetails', { orderId: comment.orderId })
+                //navigate('OrderDetails', { orderId: comment.orderId })
+                navigate('StackOrders', {
+                  screen: 'OrderDetails',
+                  params: { orderId: comment.orderId }
+                })
               }
             ></Chip>
           )}
@@ -214,7 +218,11 @@ export const CommentRow = ({
               title="Ver orden"
               onPress={() =>
                 // @ts-ignore
-                navigate('OrderDetails', { orderId: comment.orderId })
+                //navigate('OrderDetails', { orderId: comment.orderId })
+                navigate('StackOrders', {
+                  screen: 'OrderDetails',
+                  params: { orderId: comment.orderId }
+                })
               }
             ></Chip>
           )}
