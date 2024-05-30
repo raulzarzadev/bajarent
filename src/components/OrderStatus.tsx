@@ -3,6 +3,8 @@ import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
 import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
+import { isTomorrow } from 'date-fns'
+import asDate from '../libs/utils-date'
 
 const OrderStatus = ({
   order,
@@ -14,7 +16,7 @@ const OrderStatus = ({
   chipSize?: Size
 }) => {
   if (!order) return <Text>Orden no encontrada</Text>
-
+  const isRent = order.type === 'RENT'
   const isReported = order?.hasNotSolvedReports
   const isDelivered = order?.status === order_status.DELIVERED
 
@@ -32,6 +34,7 @@ const OrderStatus = ({
   const rentAuthorized = order.type === 'RENT' && isAuthorized
   const repairAuthorized = order.type === 'REPAIR' && isAuthorized
   const saleAuthorized = order.type === 'SALE' && isAuthorized
+  const expireTomorrow = isRent && isTomorrow(asDate(order?.expireAt))
   const isRenewed =
     order.type === 'RENT' &&
     (order.isRenewed || order?.status === order_status.RENEWED)
@@ -140,6 +143,14 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={'Reporte'}
           color={theme.error}
+          size={chipSize}
+        />
+      )}
+      {expireTomorrow && (
+        <Chip
+          style={[chipStyles]}
+          title={'VM'}
+          color={theme.success}
           size={chipSize}
         />
       )}
