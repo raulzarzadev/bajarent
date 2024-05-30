@@ -10,6 +10,8 @@ import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
+import { addDays } from 'date-fns'
+import { expireDate2 } from '../libs/expireDate'
 
 type Type = OrderType
 
@@ -308,6 +310,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       reports = []
     }: { sections: string[]; getBySections: boolean; reports: CommentType[] }
   ) {
+    const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
+    const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
+    console.log({ TOMORROW_ALL_DAY })
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),
       where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
@@ -326,7 +331,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('type', '==', TypeOrder.RENT),
       where('status', '==', order_status.DELIVERED),
       //* get orders that are expired today don't meter the hours
-      where('expireAt', '<', new Date(new Date().setHours(23, 59, 59, 999)))
+      where('expireAt', '<', TOMORROW_ALL_DAY)
     ]
     if (getBySections) {
       filterRentPending.push(where('assignToSection', 'in', sections))

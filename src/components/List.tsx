@@ -111,7 +111,12 @@ function MyList<T extends { id: string }>({
   const [loading, setLoading] = useState(false)
   return (
     <ScrollView style={{ flex: 1 }}>
-      <View style={{ margin: 'auto', maxWidth: '100%' }}>
+      <View
+        style={{
+          //margin: 'auto',
+          maxWidth: '100%'
+        }}
+      >
         <View>
           {/* SEARCH FILTER AND SIDE BUTTONS   */}
           <View
@@ -198,6 +203,8 @@ function MyList<T extends { id: string }>({
             <Text style={{ textAlign: 'center', marginRight: 4 }}>
               {filteredData.length} coincidencias
             </Text>
+          </View>
+          <View style={{}}>
             <Pagination
               currentPage={currentPage}
               handleNextPage={handleNextPage}
@@ -274,7 +281,7 @@ function MyList<T extends { id: string }>({
               data={sortedData.slice(startIndex, endIndex)}
               renderItem={({ item }) => {
                 return (
-                  <>
+                  <View style={{ width: '100%' }}>
                     <View style={{ flexDirection: 'row' }}>
                       {multiSelect && (
                         <InputCheckbox
@@ -298,14 +305,14 @@ function MyList<T extends { id: string }>({
                         <ComponentRow item={item} />
                       </Pressable>
                     </View>
-                  </>
+                  </View>
                 )
               }}
             ></FlatList>
 
             <View
               style={{
-                alignSelf: 'flex-end',
+                alignSelf: 'center',
                 marginBottom: 16,
                 marginTop: 4,
                 marginRight: 4

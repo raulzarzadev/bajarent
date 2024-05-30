@@ -70,11 +70,18 @@ export const OrdersContextProvider = ({
   useEffect(() => {
     //* Consolidate orders it useful to search in all orders
     if (viewAllOrders) {
-      ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
-        setConsolidatedOrders(res[0])
-      })
+      // ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
+      //   setConsolidatedOrders(res[0])
+      // })
+      handleGetConsolidates()
     }
   }, [viewAllOrders])
+
+  const handleGetConsolidates = () => {
+    ServiceConsolidatedOrders.getByStore(storeId).then((res) => {
+      setConsolidatedOrders(res[0])
+    })
+  }
 
   useEffect(() => {
     if (employee) {
@@ -91,6 +98,7 @@ export const OrdersContextProvider = ({
 
   const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
+    handleGetConsolidates()
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
     console.log({ typeOfOrders })
     if (typeOfOrders === 'all') {
@@ -133,21 +141,6 @@ export const OrdersContextProvider = ({
       {children}
     </OrdersContext.Provider>
   )
-}
-
-const unsolvedOrders = async (
-  storeId: string,
-  ops?: { sections?: string[] }
-) => {
-  const sections = ops?.sections || []
-  const reported = await ServiceOrders.getReported(storeId, { sections })
-  const pending = await ServiceOrders.getPending(storeId, { sections })
-  const expired = await ServiceOrders.getExpired(storeId, { sections })
-  const repairs = await ServiceOrders.getRepairsUnsolved(storeId, { sections })
-  const unsolved = [...pending, ...expired, ...repairs].filter(
-    ({ id }) => !reported.some((r) => r.orderId === id)
-  )
-  return [...unsolved, ...reported]
 }
 
 export const useOrdersCtx = () => useContext(OrdersContext)

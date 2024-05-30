@@ -13,10 +13,11 @@ import TextInfo from './TextInfo'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
+import asDate, { dateFormat } from '../libs/utils-date'
 type OrderWithId = ConsolidatedOrderType & { id: string }
 
 const ListOrdersConsolidated = () => {
-  const { consolidatedOrders } = useOrdersCtx()
+  const { consolidatedOrders, handleRefresh } = useOrdersCtx()
   const { storeId, storeSections } = useStore()
   const { navigate } = useNavigation()
   const orders = consolidatedOrders?.orders || {}
@@ -33,84 +34,97 @@ const ListOrdersConsolidated = () => {
   const [disabled, setDisabled] = useState(false)
 
   const handleConsolidate = () => {
+    handleRefresh()
     setDisabled(true)
-    ServiceConsolidatedOrders.consolidate(storeId).then((res) => {
-      console.log({ res })
-    })
-    setTimeout(() => {
-      setDisabled(false)
-    }, 10000) // 10 seconds
-    console.log('Consolidar')
+    ServiceConsolidatedOrders.consolidate(storeId)
+      .then((res) => {
+        console.log({ res })
+      })
+      .finally(() => {
+        setDisabled(false)
+      })
   }
 
   return (
     <ScrollView>
-      <View style={[gStyles.container]}>
-        <TextInfo text="Estas ordenes se generan de forma manual, al hacer click en el logo de guardar"></TextInfo>
-        <TextInfo text="Te ayudaran a buscar mas rapido ordenes especificas. "></TextInfo>
-      </View>
-      <List
-        sideButtons={[
-          {
-            icon: 'save',
-            label: 'Consolidar',
-            onPress: () => {
-              handleConsolidate()
+      <View style={gStyles.container}>
+        <View>
+          <TextInfo text="Estas ordenes se generan de forma manual, al hacer click en el logo de guardar"></TextInfo>
+          <TextInfo text="Te ayudaran a buscar mas rapido ordenes especificas. "></TextInfo>
+        </View>
+        <List
+          rowsPerPage={20}
+          sideButtons={[
+            {
+              icon: 'save',
+              label: 'Consolidar',
+              onPress: () => {
+                handleConsolidate()
+              },
+              disabled,
+              visible: true
+            }
+          ]}
+          onPressRow={(orderId) => {
+            //@ts-ignore
+            navigate('StackOrders', {
+              screen: 'OrderDetails',
+              params: { orderId }
+            })
+          }}
+          data={data}
+          ComponentRow={({ item }) => <ComponentRow item={item} />}
+          filters={[
+            {
+              field: 'type',
+              label: 'Tipo'
             },
-            disabled,
-            visible: true
-          }
-        ]}
-        onPressRow={(orderId) => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'OrderDetails',
-            params: { orderId }
-          })
-        }}
-        data={data}
-        ComponentRow={({ item }) => <ComponentRow item={item} />}
-        filters={[
-          {
-            field: 'type',
-            label: 'Tipo'
-          },
-          {
-            field: 'status',
-            label: 'Estatus'
-          },
-          {
-            field: 'assignedSection',
-            label: 'Area'
-          },
-          {
-            field: 'neighborhood',
-            label: 'Colonia'
-          }
-        ]}
-        sortFields={[
-          {
-            key: 'name',
-            label: 'Nombre'
-          },
-          {
-            key: 'type',
-            label: 'Tipo'
-          },
-          {
-            key: 'status',
-            label: 'Status'
-          },
-          {
-            key: 'folio',
-            label: 'Folio'
-          },
-          {
-            key: 'note',
-            label: 'Nota'
-          }
-        ]}
-      />
+            {
+              field: 'status',
+              label: 'Estatus'
+            },
+            {
+              field: 'assignedSection',
+              label: 'Area'
+            },
+            {
+              field: 'expireAt',
+              label: 'Vencimiento'
+            },
+
+            {
+              field: 'neighborhood',
+              label: 'Colonia'
+            }
+          ]}
+          sortFields={[
+            {
+              key: 'name',
+              label: 'Nombre'
+            },
+            {
+              key: 'type',
+              label: 'Tipo'
+            },
+            {
+              key: 'status',
+              label: 'Status'
+            },
+            {
+              key: 'expireAt',
+              label: 'Vencimiento'
+            },
+            {
+              key: 'folio',
+              label: 'Folio'
+            },
+            {
+              key: 'note',
+              label: 'Contrato'
+            }
+          ]}
+        />
+      </View>
     </ScrollView>
   )
 }
@@ -118,8 +132,8 @@ const ListOrdersConsolidated = () => {
 const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
   const fields: ListRowField[] = [
     {
-      field: order.name,
-      width: '30%',
+      // field: order.name,
+      width: 'rest',
       component: (
         <Text style={styles.cell} numberOfLines={1}>
           {order.name}
@@ -127,7 +141,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       )
     },
     {
-      field: order.type,
+      //field: order.type,
       width: '20%',
       component: (
         <Text style={styles.cell} numberOfLines={1}>
@@ -136,7 +150,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       )
     },
     {
-      field: order.status,
+      //field: order.status,
       width: '20%',
       component: (
         <Text style={styles.cell} numberOfLines={1}>
@@ -145,8 +159,17 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       )
     },
     {
-      field: `${order.folio}`,
-      width: '20%',
+      //field: order.expireAt,
+      width: 60,
+      component: (
+        <Text style={styles.cell} numberOfLines={1}>
+          {dateFormat(asDate(order.expireAt), 'dd/MM/yyyy')}
+        </Text>
+      )
+    },
+    {
+      //field: `${order.folio}`,
+      width: 50,
       component: (
         <Text style={styles.cell} numberOfLines={1}>
           {order.folio}
@@ -154,8 +177,8 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       )
     },
     {
-      field: order.note,
-      width: '10%',
+      //field: order.note,
+      width: 50,
       component: (
         <Text style={styles.cell} numberOfLines={1}>
           {order.note}

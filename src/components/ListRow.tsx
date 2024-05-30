@@ -2,8 +2,8 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
 import theme from '../theme'
 export type ListRowField = {
-  field: string
-  width: ViewStyle['width']
+  //field: string
+  width: ViewStyle['width'] | 'rest'
   component: ReactNode
 }
 
@@ -16,11 +16,19 @@ const ListRow = ({
 }) => {
   return (
     <View style={[styles.container, style]}>
-      {fields.map(({ field, component, width }, i) => (
-        <View key={i} style={{ width }}>
-          {component}
-        </View>
-      ))}
+      {fields.map(({ component, width }, i) => {
+        let style = {}
+        if (width === 'rest') {
+          style = { flex: 1 }
+        } else {
+          style = { width }
+        }
+        return (
+          <View key={i} style={style}>
+            {component}
+          </View>
+        )
+      })}
     </View>
   )
 }
