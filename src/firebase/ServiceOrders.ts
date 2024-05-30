@@ -11,7 +11,6 @@ import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
 import { addDays } from 'date-fns'
-import { expireDate2 } from '../libs/expireDate'
 
 type Type = OrderType
 
@@ -312,7 +311,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   ) {
     const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
     const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
-    console.log({ TOMORROW_ALL_DAY })
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),
       where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
@@ -371,64 +369,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     //*  *** 3 *** add reported orders to unsolved orders
     return [...removeReportedFromUnsolved, ...reportedOrders]
   }
-
-  // async getAllUnsolved(storeId) {
-  //   const rentPending = await this.findMany([
-  //     where('storeId', '==', storeId),
-  //     where('type', '==', TypeOrder.RENT),
-  //     where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
-  //   ])
-  //   const repairs = await this.findMany([
-  //     where('storeId', '==', storeId),
-  //     where('type', '==', TypeOrder.REPAIR),
-  //     where('status', 'in', [
-  //       order_status.PENDING,
-  //       order_status.AUTHORIZED,
-  //       order_status.REPAIRING,
-  //       order_status.REPAIRED,
-  //       order_status.PICKED_UP
-  //     ])
-  //   ])
-  //   const expiredRents = await this.findMany([
-  //     where('storeId', '==', storeId),
-  //     where('type', '==', TypeOrder.RENT),
-  //     where('status', 'in', [order_status.DELIVERED]),
-  //     where('expireAt', '<', new Date())
-  //   ])
-  //   return [...rentPending, ...repairs, ...expiredRents]
-  // }
-  // async getBySectionsUnsolved(sections: string[] = []) {
-  //   if (sections?.length < 0) {
-  //     console.log('no sections are provided')
-  //     return []
-  //   }
-  //   //* should we get expired rents
-  //   const expiredRents = await this.findMany([
-  //     where('type', '==', TypeOrder.RENT),
-  //     where('assignToSection', 'in', sections),
-  //     where('status', 'in', [order_status.DELIVERED]),
-  //     where('expireAt', '<', new Date())
-  //   ])
-  //   const rents = await this.findMany([
-  //     where('type', '==', TypeOrder.RENT),
-  //     where('assignToSection', 'in', sections),
-  //     where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
-  //   ])
-  //   const repairs = await this.findMany([
-  //     where('type', '==', TypeOrder.REPAIR),
-  //     where('assignToSection', 'in', sections),
-  //     where('status', 'in', [
-  //       order_status.PENDING,
-  //       order_status.AUTHORIZED,
-  //       order_status.REPAIRING,
-  //       order_status.REPAIRED,
-  //       order_status.PICKED_UP
-  //     ])
-  //   ])
-  //   return [...rents, ...repairs, ...expiredRents]
-  // }
-
-  // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
   }
