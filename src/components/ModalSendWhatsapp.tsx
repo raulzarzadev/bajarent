@@ -10,6 +10,7 @@ import dictionary from '../dictionary'
 import asDate, { dateFormat } from '../libs/utils-date'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useStore } from '../contexts/storeContext'
+import InputRadios from './InputRadios'
 
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
@@ -22,18 +23,21 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     {
       type: 'collection',
       content: `
-      Estimado cliente de *${store?.name}* 
-      Si renta vence el dia de mañana. 
-      Para evitar recargos favor de enviar el comprovante de deposito, transferencia, o estar en el domicilio para el repartidor pase por el efectivo
-
-      ${store?.bankInfo?.map((bank) => {
-        return `Banco: ${bank.bank}
-        Cuenta clabe: ${bank.clabe}
+      Estimado cliente de *${store?.name}*,
+      Su RENTA vence el día de mañana. 
+      Para evitar recargos, favor de enviar el comprobante de depósito, transferencia, o estar en el domicilio para que el repartidor pase por el efectivo.
+      \n${store?.bankInfo
+        ?.map((bank) => {
+          return `*${bank.bank}*\n${bank.clabe}
         `
-      })}
-      Orden: ${order?.folio}
-      Cliente: ${order?.fullName}
-      ${orderPeriod(order)}
+        })
+        .join('\n')}
+        \nOrden: ${order?.folio || ''}
+        \nCliente: ${order?.fullName || ''}
+        \n${orderPeriod(order)}
+        \nPara cualquier duda o aclaración estamos a sus órdenes al \n teléfono\n${
+          store?.phone
+        } o al \nwhatsapp\n ${store?.mobile || ''}
       `
     },
     {
@@ -50,22 +54,16 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     }
   ]
 
-  const [message, setMessage] = useState('')
   const handleGetOrderInfo = () => {
     getFullOrderData(orderId).then((order) => {
-      const orderStatusMessage = `
-      *${store?.name}*
-      Tipo: ${dictionary(order?.type)}
-      Order: *${order?.folio}*
-      Status: ${dictionary(order?.status)}
-      ${order?.hasNotSolvedReports ? 'Reportes activos: *Si*' : 'Sin reportes'}
-      ${orderPeriod(order)}
-      ${orderPayments({ order })}
-      `
-      setMessage(orderStatusMessage)
       setOrder(order)
+      setMessage(messages.find((m) => m.type === messageType)?.content)
     })
   }
+  const [messageType, setMessageType] = useState<'collection' | 'orderStatus'>()
+  const [message, setMessage] = useState<string>()
+  // messages.find((m) => m.type === messageType)?.content
+
   return (
     <View>
       <Button
@@ -78,7 +76,18 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
         icon="whatsapp"
       ></Button>
       <StyledModal {...modal}>
-        <Text>{message}</Text>
+        <InputRadios
+          options={[
+            { label: 'Cobranza', value: 'collection' },
+            { label: 'Status', value: 'orderStatus' }
+          ]}
+          value={messageType}
+          setValue={(value) => {
+            setMessageType(value)
+            setMessage(messages.find((m) => m.type === value)?.content || '')
+          }}
+        />
+        {/* <Text>{message}</Text> */}
         {invalidPhone && (
           <Text
             style={[
@@ -118,18 +127,14 @@ const orderPeriod = (order: Partial<OrderType>): string => {
     )} al ${dateFormat(asDate(order.expireAt), 'dd/MM/yy')}`
   }
 
-  if (order.type === order_type.REPAIR) {
-    return `
-  Marca: ${order.itemBrand || ''}
-  Serie: ${order.itemSerial || ''}
-  Problema: ${order.description || ''}
-
-  ${
-    order.repairInfo
-      ? `
-  ${order.repairInfo || ''}
-  $${order.repairTotal || 0}
-  `
+  if (order?.type === order_type.REPAIR) {
+    return `Marca: ${order?.itemBrand || ''}\nSerie: ${
+      order?.itemSerial || ''
+    }\nProblema: ${order?.description || ''}
+  \n${
+    order?.repairInfo
+      ? `\n${order?.repairInfo || ''}
+      \n$${order?.repairTotal || 0}`
       : ''
   }`
   }
