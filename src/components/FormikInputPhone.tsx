@@ -2,7 +2,13 @@ import React, { useMemo } from 'react'
 import { useField } from 'formik'
 import PhoneInput from './InputPhone'
 
-const InputPhoneFormik = ({ name }) => {
+const FormikInputPhone = ({
+  name,
+  helperText
+}: {
+  name: string
+  helperText?: string
+}) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [])
 
@@ -15,9 +21,9 @@ const InputPhoneFormik = ({ name }) => {
         helpers.setValue(value)
         helpers.setTouched(true)
       }}
-      helperText={meta.error && meta.touched ? meta.error : undefined}
+      helperText={meta.error && meta.touched ? meta.error : helperText}
     />
   )
 }
 
-export default InputPhoneFormik
+export default FormikInputPhone

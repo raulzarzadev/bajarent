@@ -14,6 +14,13 @@ export type BaseStoreType = {
   allowStaff?: boolean
   img?: string
   marketVisible?: boolean
+  phone?: string
+  mobile?: string
+  address?: string
+  coords?: {
+    lat: number
+    lon: number
+  }
   orderTypes?: Record<TypeOrderKey, boolean>
   orderFields?: Record<TypeOrderKey, FormOrderFields[]>
   bankInfo?: {
