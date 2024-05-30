@@ -86,8 +86,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
             setMessageType(value)
             setMessage(messages.find((m) => m.type === value)?.content || '')
           }}
+          layout="row"
         />
-        {/* <Text>{message}</Text> */}
+        <Text>{message}</Text>
         {invalidPhone && (
           <Text
             style={[
@@ -99,7 +100,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
           </Text>
         )}
         <Button
-          disabled={invalidPhone}
+          disabled={invalidPhone || !message}
           label="Enviar"
           onPress={() => {
             Linking.openURL(
