@@ -4,10 +4,8 @@ import { Formik } from 'formik'
 import FormikInputValue from './InputValueFormik'
 import Button from './Button'
 import StoreType from '../types/StoreType'
-import { TypeOrderKeys, order_type } from '../types/OrderType'
-import dictionary from '../dictionary'
 import FormikCheckbox from './FormikCheckbox'
-import { gSpace, gStyles } from '../styles'
+import { gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
 import { FormOrderFields } from './FormOrder'
 import ErrorBoundary from './ErrorBoundary'
@@ -30,8 +28,6 @@ const FormStore = ({
         setSubmitting(false)
       })
   }
-  const oldOrdersTypes = Object.keys(order_type)
-  const ordersTypes = TypeOrderKeys
 
   return (
     <Formik
@@ -42,6 +38,8 @@ const FormStore = ({
     >
       {({ handleSubmit, values }) => (
         <View>
+          <FormikInputImage name="img" label="Portada " />
+
           <View style={styles.input}>
             <FormikInputValue name={'name'} placeholder="Nombre" />
           </View>
@@ -56,8 +54,6 @@ const FormStore = ({
               helperText="No debe modificarse una vez creado, (agrega - para separar palabras)"
             />
           </View>
-
-          <FormikInputImage name="img" label="Portada " />
 
           <Text style={gStyles.h3}>Visibilidad</Text>
           <Text style={gStyles.helper}>

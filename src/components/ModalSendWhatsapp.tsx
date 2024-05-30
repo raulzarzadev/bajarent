@@ -16,9 +16,41 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const [order, setOrder] = useState<OrderType>()
   const phone = order?.phone
   const invalidPhone = !phone || phone?.length < 10
+  const { store } = useStore()
+
+  const messages = [
+    {
+      type: 'collection',
+      content: `
+      Estimado cliente de *${store?.name}* 
+      Si renta vence el dia de mañana. 
+      Para evitar recargos favor de enviar el comprovante de deposito, transferencia, o estar en el domicilio para el repartidor pase por el efectivo
+
+      ${store?.bankInfo?.map((bank) => {
+        return `Banco: ${bank.bank}
+        Cuenta clabe: ${bank.clabe}
+        `
+      })}
+      Orden: ${order?.folio}
+      Cliente: ${order?.fullName}
+      ${orderPeriod(order)}
+      `
+    },
+    {
+      type: 'orderStatus',
+      content: `
+      *${store?.name}*
+      Tipo: ${dictionary(order?.type)}
+      Order: *${order?.folio}*
+      Status: ${dictionary(order?.status)}
+      ${order?.hasNotSolvedReports ? 'Reportes activos: *Si*' : 'Sin reportes'}
+      ${orderPeriod(order)}
+      ${orderPayments({ order })}
+      `
+    }
+  ]
 
   const [message, setMessage] = useState('')
-  const { store } = useStore()
   const handleGetOrderInfo = () => {
     getFullOrderData(orderId).then((order) => {
       const orderStatusMessage = `

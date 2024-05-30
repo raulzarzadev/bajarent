@@ -16,6 +16,10 @@ export type BaseStoreType = {
   marketVisible?: boolean
   orderTypes?: Record<TypeOrderKey, boolean>
   orderFields?: Record<TypeOrderKey, FormOrderFields[]>
+  bankInfo?: {
+    bank: string
+    clabe: string
+  }[]
 }
 
 type StoreType = BaseType & BaseStoreType

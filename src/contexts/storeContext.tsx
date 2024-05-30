@@ -78,13 +78,15 @@ const StoreContextProvider = ({ children }) => {
         const staffUserInfo = await Promise.all(
           staff.map(async ({ userId, ...rest }) => {
             const user = await ServiceUsers.get(userId)
-            const { name, phone, email } = user
+            const name = user?.name || ''
+            const phone = user?.phone || ''
+            const email = user?.email || ''
             return {
               ...rest,
               name: name || rest?.position,
               phone,
               email,
-              userId: user.id
+              userId: user?.id || ''
             }
           })
         )

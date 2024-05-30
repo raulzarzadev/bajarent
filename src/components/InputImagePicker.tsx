@@ -3,7 +3,7 @@ import { Image, View, Platform, Pressable, Text } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { uploadFile } from '../firebase/files'
 import Icon from './Icon'
-import theme from '../theme'
+import theme, { colors } from '../theme'
 import Button from './Button'
 
 export default function InputImagePicker({
@@ -57,7 +57,9 @@ export default function InputImagePicker({
       style={{
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        minHeight: 50,
+        backgroundColor: colors.white
       }}
     >
       {progress === -1 && <Text>Error al subir archivo</Text>}
@@ -86,20 +88,16 @@ export default function InputImagePicker({
           <Icon icon="addImage" />
         </View>
       </Pressable> */}
-      <View style={{ marginVertical: 4 }}>
-        <Button
-          onPress={pickImage}
-          label={label}
-          icon="addImage"
-          size="small"
-        />
-      </View>
+
       {!!image && (
         <Image
           source={{ uri: image }}
           style={{ width: '100%', minHeight: 200 }}
         />
       )}
+      <View style={{ position: 'absolute', bottom: 4 }}>
+        <Button onPress={pickImage} label={label} icon="addImage" size="xs" />
+      </View>
     </View>
   )
 }
