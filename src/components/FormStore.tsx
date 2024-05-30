@@ -57,14 +57,14 @@ const FormStore = ({
             />
           </View>
 
-          <Text style={gStyles.h3}>Télefono fijo</Text>
+          <Text style={gStyles.h3}>Teléfono fijo</Text>
           <View style={styles.input}>
             <FormikInputPhone
               name={'phone'}
               helperText="Numero de telefono principal"
             />
           </View>
-          <Text style={gStyles.h3}>Télefono celular</Text>
+          <Text style={gStyles.h3}>Teléfono celular</Text>
           <View style={styles.input}>
             <FormikInputPhone
               name={'mobile'}
