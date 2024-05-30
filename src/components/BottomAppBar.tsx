@@ -7,6 +7,7 @@ import ScreenComponents from './ScreenComponents'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
 import { useAuth } from '../contexts/authContext'
+import ScreenNewOrder from './ScreenOrderNew'
 
 const Tab = createBottomTabNavigator()
 
@@ -70,6 +71,14 @@ const BottomAppBar = () => {
           // tabBarButton:
           //   !canSeeOrders || !isAuthenticated ? () => null : undefined
         })}
+      />
+
+      <Tab.Screen
+        name="NewOrder"
+        component={ScreenNewOrder}
+        options={{
+          title: 'Nueva Orden'
+        }}
       />
 
       <Tab.Screen

@@ -39,13 +39,13 @@ function StackOrders() {
         }}
         component={ScreenOrderDetail}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="NewOrder"
         options={{
           title: 'Nueva Orden'
         }}
         component={ScreenNewOrder}
-      />
+      /> */}
 
       <Stack.Screen
         name="EditOrder"
