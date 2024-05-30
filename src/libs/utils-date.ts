@@ -51,7 +51,8 @@ const customLocale = {
       xHours: 'h',
       xDays: 'd',
       xWeeks: 'S',
-      xMonths: 'M'
+      xMonths: 'M',
+      xYears: 'A'
     }
     const unit = units[token]
     if (!unit) {
