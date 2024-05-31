@@ -83,7 +83,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   
   
  
-  📍 Altamirano 2365, ent. Márquez y Pineda, Col. Centro, La Paz BCS, México.`
+  📍 ${store.address}`
 
   const repair = `Estimado ${order?.fullName} cliente de ${store?.name}
 
@@ -101,7 +101,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   📞 ${store?.phone}
   📱 ${store?.mobile} Whatsapp
   
-  📍 Altamirano 2365, ent. Márquez y Pineda, Col. Centro, La Paz BCS, México.`
+  📍 ${store.address}`
 
   const messages = [
     {
