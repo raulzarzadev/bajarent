@@ -200,8 +200,8 @@ export const calculateSectionBalance = async ({
         where('storeId', '==', storeId),
         where('renewedAt', '>=', fromDate),
         where('renewedAt', '<=', toDate)
-      ],
-      { justRefs: true }
+      ]
+      // { justRefs: true } //*<- its necesary to get the renewedTo data
     )
     const ordersRenewed = oldRenewed.map((o) => o.renewedTo)
 
