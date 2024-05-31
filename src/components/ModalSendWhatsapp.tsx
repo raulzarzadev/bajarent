@@ -31,6 +31,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   ${store?.bankInfo.map(({ bank, clabe }) => {
     return `🏦 ${bank} ${clabe}`
   })}
+  🏦 SPIN/OXXO 4217470038523789 
 
   Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
   
@@ -53,6 +54,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   ${store?.bankInfo?.map(({ bank, clabe }) => {
     return `🏦 ${bank} ${clabe}`
   })}
+  🏦 SPIN/OXXO 4217470038523789 
   
   Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
   
@@ -60,11 +62,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   📞 ${store?.phone}
   📱 ${store?.mobile} 
   
+
+
   En caso de no querer continuar con el servicio 😞 favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
         
   De antemano le agradecemos su atención 🙏🏼`
 
-  const payment = `Estimado Raúl Zarza cliente de Lavarenta
+  const payment = `Estimado ${order.fullName} cliente de ${store.name}
 
   Su Comprobante de RENTA de lavadora  
   📄 Contrato ${order?.folio}  
@@ -76,6 +80,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
   📞 ${store?.phone}
   📱 ${store?.mobile} Whatsapp
+  
   
  
   📍 Altamirano 2365, ent. Márquez y Pineda, Col. Centro, La Paz BCS, México.`
