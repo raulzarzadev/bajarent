@@ -27,6 +27,7 @@ export type BaseStoreType = {
     bank: string
     clabe: string
   }[]
+  accountHolder?: string
 }
 
 type StoreType = BaseType & BaseStoreType

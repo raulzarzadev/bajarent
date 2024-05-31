@@ -26,12 +26,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   } ${item?.categoryName ? `de ${item?.categoryName}` : ''}: *${order?.folio}* `
   const BANK_INFO = `Favor de transferir 💸  únicamente a cualquiera de las siguientes cuentas a nombre de ${
     store?.name
-  } y/o Humberto Avila:
+  } y/o ${store?.accountHolder || ''}:
   \n${store?.bankInfo
     .map(({ bank, clabe }) => {
+      if (!bank) return ''
       return `🏦 ${bank} ${clabe}\n`
     })
-    .join('')} \n🏦 SPIN/OXXO 4217470038523789 
+    .join('')} 
 `
   const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
 📞 ${store?.phone}
@@ -48,7 +49,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
 
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
   const PAYMENTS = `Pagos: ${orderPayments({ order })}`
+
   //******** MESSAGES
+
   const RENT_EXPIRE_SOON = `${WELCOME}
   \n${ORDER_TYPE}  vence el día de mañana 😔.
   \n*Para renovar*
@@ -73,25 +76,26 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${RENT_PERIOD}
   \n${PAYMENTS}
   \n${CONTACTS}
-  📍 ${store?.address || ''}`
+  \n📍 ${store?.address || ''}`
 
   const REPAIR_RECEIPT = `
-  ${WELCOME}
-  ${ORDER_TYPE}
-  📆Fecha ${
+  \n${WELCOME}
+  \n${ORDER_TYPE}
+  \n📆Fecha ${
     order?.pickedUpAt
       ? dateFormat(asDate(order?.pickedUpAt), 'dd MMMM yyyy')
       : ''
   }
-  🔧 *Información del aparato*
+  \n🔧 *Información del aparato*
   🛠️ Marca: ${order?.itemBrand || ''}
   #️⃣ Serie: ${order?.itemSerial || ''} 
   🧾 Falla: ${order?.description || ''}
   💲 Cotización:  $${order?.repairTotal || 0}
   🗓️ Garantía 1 Mes
-  ${PAYMENTS}
-  ${CONTACTS}
-  📍 ${store?.address || ''}`
+  
+  \n${PAYMENTS}
+  \n${CONTACTS}
+  \n📍 ${store?.address || ''}`
 
   const messages = [
     {
