@@ -51,11 +51,12 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     store?.name
   } y/o Humberto Avila:
   
-  ${store?.bankInfo?.map(({ bank, clabe }) => {
-    return `🏦 ${bank} ${clabe}`
-  })}
-  🏦 SPIN/OXXO 4217470038523789 
-  
+  \n${store?.bankInfo
+    .map(({ bank, clabe }) => {
+      return `🏦 ${bank} ${clabe}\n`
+    })
+    .join('')} \n🏦 SPIN/OXXO 4217470038523789 
+
   Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
   
   Cualquier aclaración favor de comunicarse a los teléfonos:
