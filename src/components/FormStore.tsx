@@ -10,6 +10,7 @@ import FormikInputImage from './FormikInputImage'
 import { FormOrderFields } from './FormOrder'
 import ErrorBoundary from './ErrorBoundary'
 import FormikInputPhone from './FormikInputPhone'
+import InputLocationFormik from './InputLocationFormik'
 
 const FormStore = ({
   defaultValues,
@@ -54,7 +55,15 @@ const FormStore = ({
               name={'link'}
               placeholder="Nombre unico"
               helperText="No debe modificarse una vez creado, (agrega - para separar palabras)"
+              disabled
             />
+          </View>
+
+          <View style={styles.input}>
+            <FormikInputValue name={'address'} placeholder="Dirección" />
+          </View>
+          <View style={styles.input}>
+            <InputLocationFormik name={'location'} />
           </View>
 
           <Text style={gStyles.h3}>Teléfono fijo</Text>
@@ -71,6 +80,13 @@ const FormStore = ({
               helperText="Numero de telefono movil (whatsapp)"
             />
           </View>
+
+          <Text style={gStyles.h2}>Información bancaria</Text>
+          <Text style={gStyles.h3}>Titular </Text>
+          <View style={styles.input}>
+            <FormikInputValue name={'accountHolder'} placeholder="Titular" />
+          </View>
+
           <Text style={gStyles.h3}>Cuenta principal</Text>
           <View style={styles.input}>
             <FormikInputValue name={'bankInfo.0.bank'} placeholder="Banco" />
@@ -88,6 +104,16 @@ const FormStore = ({
           <View style={styles.input}>
             <FormikInputValue
               name={'bankInfo.1.clabe'}
+              placeholder="Cuenta clabe"
+            />
+          </View>
+          <Text style={gStyles.h3}>Cuenta secundaria</Text>
+          <View style={styles.input}>
+            <FormikInputValue name={'bankInfo.2.bank'} placeholder="Banco" />
+          </View>
+          <View style={styles.input}>
+            <FormikInputValue
+              name={'bankInfo.2.clabe'}
               placeholder="Cuenta clabe"
             />
           </View>

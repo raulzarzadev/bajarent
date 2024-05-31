@@ -10,6 +10,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { useNavigation } from '@react-navigation/native'
 import { colors } from '../theme'
 import SpanCopy from './SpanCopy'
+import LinkLocation from './LinkLocation'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useNavigation()
@@ -45,6 +46,18 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       </View>
       <BadgesStore />
       <P>{store?.description}</P>
+      <Text style={gStyles.h3}>Dirección</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={[gStyles.p, gStyles.tCenter]}>{store?.address} </Text>
+
+        {store?.location && <LinkLocation location={store?.location} />}
+      </View>
       <Text style={gStyles.h3}>Teléfonos</Text>
       {store?.phone && (
         <SpanCopy

@@ -17,10 +17,11 @@ export type BaseStoreType = {
   phone?: string
   mobile?: string
   address?: string
-  coords?: {
-    lat: number
-    lon: number
-  }
+  // coords?: {
+  //   lat: number
+  //   lon: number
+  // }
+  location?: string
   orderTypes?: Record<TypeOrderKey, boolean>
   orderFields?: Record<TypeOrderKey, FormOrderFields[]>
   bankInfo?: {
