@@ -68,14 +68,14 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
         
   De antemano le agradecemos su atención 🙏🏼`
 
-  const payment = `Estimado ${order.fullName} cliente de ${store.name}
+  const payment = `Estimado ${order?.fullName} cliente de ${store.name}
 
   Su Comprobante de RENTA de lavadora  
   📄 Contrato ${order?.folio}  
   💲 Monto pagado $${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}
   🗓️ Periodo contratado ${translateTime(order?.items?.[0]?.priceSelected?.time)}
-  ⏳ Vigencia de jueves 30/05/24
-  🔚 Vencimiento jueves 06/06/24
+  ⏳ Inicio: ${orderStringDates(order).deliveredAt}
+  🔚 Vencimiento ${orderStringDates(order).expireAt}
   
   Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
   📞 ${store?.phone}
@@ -184,7 +184,12 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     </View>
   )
 }
-
+const orderStringDates = (order, format = 'DDDD dd MMM YY') => {
+  return {
+    expireAt: dateFormat(asDate(order?.expireAt)) || '',
+    deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
+  }
+}
 const orderPeriod = (order: Partial<OrderType>): string => {
   const res = ''
   //* if is rent should return the period
