@@ -21,9 +21,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const item = order?.items?.[0]
   //*********  MEMES
   const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
-  const ORDER_TYPE = `Su contrato📄 de ${dictionary(order?.type)} de ${
-    item?.categoryName
-  }: *${order?.folio}* `
+  const ORDER_TYPE = `Su contrato📄 de ${
+    dictionary(order?.type)?.toUpperCase() || ''
+  } ${item?.categoryName ? `de ${item?.categoryName}` : ''}: *${order?.folio}* `
   const BANK_INFO = `Favor de transferir 💸  únicamente a cualquiera de las siguientes cuentas a nombre de ${
     store?.name
   } y/o Humberto Avila:
@@ -84,10 +84,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       : ''
   }
   🔧 *Información del aparato*
-  🛠️ Marca: ${order?.itemBrand}
+  🛠️ Marca: ${order?.itemBrand || ''}
   #️⃣ Serie: ${order?.itemSerial || ''} 
   🧾 Falla: ${order?.description || ''}
-  💲 Cotización  $${order?.repairTotal || 0}
+  💲 Cotización:  $${order?.repairTotal || 0}
   🗓️ Garantía 1 Mes
   ${PAYMENTS}
   ${CONTACTS}
@@ -123,6 +123,17 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   >()
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
+  let options = []
+  if (order?.type === order_type.RENT) {
+    options = [
+      { label: 'Vence mañana', value: 'upcomingExpire' },
+      { label: 'Vence hoy', value: 'expireToday' },
+      { label: 'Recibo', value: 'receipt-rent' }
+    ]
+  }
+  if (order?.type === order_type.REPAIR) {
+    options = [{ label: 'Recibo', value: 'receipt-repair' }]
+  }
 
   return (
     <View>
@@ -137,12 +148,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       ></Button>
       <StyledModal {...modal}>
         <InputRadios
-          options={[
-            { label: 'Vence mañana', value: 'upcomingExpire' },
-            { label: 'Vence hoy', value: 'expireToday' },
-            { label: 'Compobante Renta', value: 'receipt-rent' },
-            { label: 'Compobante Reparación', value: 'receipt-repair' }
-          ]}
+          options={options}
           value={messageType}
           setValue={(value) => {
             setMessageType(value)
