@@ -91,10 +91,14 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
 
   Su Comprobante de REPARACION de lavadora  
   📄 Contrato ${order?.folio}
-  📆 Fecha ${dateFormat(asDate(order?.deliveredAt), 'dd MMMM yyyy')}
+  📆 Fecha ${
+    order?.deliveredAt
+      ? dateFormat(asDate(order?.deliveredAt), 'dd MMMM yyyy')
+      : ''
+  }
   🛠️ Marca de aparato ${order?.itemBrand}
-  #️⃣ Serie ${order?.itemSerial} 
-  🧾 ${order?.description}
+  #️⃣ Serie ${order?.itemSerial || ''} 
+  🧾 ${order?.description || ''}
   💲 Monto pagado $0
   🗓️ Garantía 1 Mes
   
@@ -186,7 +190,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     </View>
   )
 }
-const orderStringDates = (order, format = 'DDDD dd MMM yy') => {
+const orderStringDates = (order, format = ' dd MMM yy') => {
   return {
     expireAt: dateFormat(asDate(order?.expireAt)) || '',
     deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
