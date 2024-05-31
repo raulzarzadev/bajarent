@@ -18,13 +18,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const phone = order?.phone
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
-  const upcomingExpire = `Estimado ${order?.fullName} cliente de ${store?.name}
-
-  Su contrato ${
-    order?.folio
-  } 📄 de RENTA de lavadora  vence el día de mañana 😔. 
-  
-  Para renovarlo 😊 favor de transferir 💸  únicamente a cualquiera de las siguientes 3 cuentas a nombre de ${
+  const item = order?.items?.[0]
+  //*********  MEMES
+  const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
+  const ORDER_TYPE = `Su contrato📄 de ${dictionary(order?.type)} de ${
+    item?.categoryName
+  }: *${order?.folio}* `
+  const BANK_INFO = `Favor de transferir 💸  únicamente a cualquiera de las siguientes cuentas a nombre de ${
     store?.name
   } y/o Humberto Avila:
   \n${store?.bankInfo
@@ -32,69 +32,55 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       return `🏦 ${bank} ${clabe}\n`
     })
     .join('')} \n🏦 SPIN/OXXO 4217470038523789 
+`
+  const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
+📞 ${store?.phone}
+📱 ${store?.mobile} Whatsapp `
 
-  Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
-  
-  Cualquier aclaración favor de comunicarse a los teléfonos:
-  📞 ${store?.phone}
-  📱 ${store?.mobile} 
-  
-  En caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
-        
-  De antemano le agradecemos su atención 🙏🏼`
+  const AGRADECIMIENTOS = `De antemano le agradecemos su atención 🙏🏼`
 
-  const expireToday = `Estimado ${order?.fullName} cliente de ${store?.name}
-
-  Su contrato ${order?.folio} 📄 de RENTA de lavadora *VENCE HOY* 😔. 
-  
-  Para renovarlo 😊 favor de transferir 💸  únicamente a cualquiera de las siguientes  cuentas a nombre de ${
-    store?.name
-  } y/o Humberto Avila:
-  
-  \n${store?.bankInfo
-    .map(({ bank, clabe }) => {
-      return `🏦 ${bank} ${clabe}\n`
-    })
-    .join('')} \n🏦 SPIN/OXXO 4217470038523789 
-
-  Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
-  
-  Cualquier aclaración favor de comunicarse a los teléfonos:
-  📞 ${store?.phone}
-  📱 ${store?.mobile} 
-  
-
-
-  En caso de no querer continuar con el servicio 😞 favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
-        
-  De antemano le agradecemos su atención 🙏🏼`
-
-  const payment = `Estimado ${order?.fullName} cliente de ${store.name}
-
-  Su Comprobante de RENTA de lavadora  
-  📄 Contrato ${order?.folio}  
-  💲 Monto pagado $${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}
-  🗓️ Periodo contratado ${
+  const RENT_PERIOD = `Periodo contratado: ${
     translateTime(order?.items?.[0]?.priceSelected?.time) || ''
   }
+  
   ⏳ Inicio: ${orderStringDates(order).deliveredAt}
-  🔚 Vencimiento: ${orderStringDates(order).expireAt}
-  
-  Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
-  📞 ${store?.phone}
-  📱 ${store?.mobile} Whatsapp
-  
-  
- 
+  🔚 Vencimiento: ${orderStringDates(order).expireAt}`
+
+  const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
+  const PAYMENTS = `Pagos: ${orderPayments({ order })}`
+  //******** MESSAGES
+  const RENT_EXPIRE_SOON = `${WELCOME}
+  \n${ORDER_TYPE}  vence el día de mañana 😔.
+  \n*Para renovar*
+  \n${BANK_INFO}
+  \nEnviar su comprobante al Whatsapp y esperar confirmación 👌🏼
+  \n${CONTACTS}
+  \nEn caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
+  \n${AGRADECIMIENTOS}
+  `
+  const RENT_EXPIRE_TODAY = `${WELCOME}
+  \n${ORDER_TYPE}   *VENCE HOY* 😔. 
+  \n*Para renovar*
+  \n${BANK_INFO}
+  \nEnviar su comprobante al Whatsapp y esperar confirmación 👌🏼
+  \nEn caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
+  \n${CONTACTS}
+  \n${AGRADECIMIENTOS}
+  `
+
+  const RENT_RECEIPT = `${WELCOME}
+  \n${ORDER_TYPE}
+  \n${RENT_PERIOD}
+  \n${PAYMENTS}
+  \n${CONTACTS}
   📍 ${store?.address || ''}`
 
-  const repair = `Estimado ${order?.fullName} cliente de ${store?.name || ''}
-
-  Su comprobante de REPARACION de lavadora  
-  📄 Contrato ${order?.folio}
-  📆 Fecha ${
-    order?.deliveredAt
-      ? dateFormat(asDate(order?.deliveredAt), 'dd MMMM yyyy')
+  const REPAIR_RECEIPT = `
+  ${WELCOME}
+  ${ORDER_TYPE}
+  📆Fecha ${
+    order?.pickedUpAt
+      ? dateFormat(asDate(order?.pickedUpAt), 'dd MMMM yyyy')
       : ''
   }
   🔧 *Información del aparato*
@@ -103,30 +89,26 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   🧾 Falla: ${order?.description || ''}
   💲 Cotización  $${order?.repairTotal || 0}
   🗓️ Garantía 1 Mes
-  
-  
-  Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
-  📞 ${store?.phone}
-  📱 ${store?.mobile} Whatsapp
-  
+  ${PAYMENTS}
+  ${CONTACTS}
   📍 ${store?.address || ''}`
 
   const messages = [
     {
       type: 'upcomingExpire',
-      content: upcomingExpire
+      content: RENT_EXPIRE_SOON
     },
     {
       type: 'expireToday',
-      content: expireToday
+      content: RENT_EXPIRE_TODAY
     },
     {
       type: 'receipt-rent',
-      content: payment
+      content: RENT_RECEIPT
     },
     {
       type: 'receipt-repair',
-      content: repair
+      content: REPAIR_RECEIPT
     }
   ]
 
