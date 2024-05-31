@@ -27,11 +27,11 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   Para renovarlo 😊 favor de transferir 💸  únicamente a cualquiera de las siguientes 3 cuentas a nombre de ${
     store?.name
   } y/o Humberto Avila:
-  
-  ${store?.bankInfo.map(({ bank, clabe }) => {
-    return `🏦 ${bank} ${clabe}`
-  })}
-  🏦 SPIN/OXXO 4217470038523789 
+  \n${store?.bankInfo
+    .map(({ bank, clabe }) => {
+      return `🏦 ${bank} ${clabe}\n`
+    })
+    .join('')} \n🏦 SPIN/OXXO 4217470038523789 
 
   Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
   
@@ -77,7 +77,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     translateTime(order?.items?.[0]?.priceSelected?.time) || ''
   }
   ⏳ Inicio: ${orderStringDates(order).deliveredAt}
-  🔚 Vencimiento ${orderStringDates(order).expireAt}
+  🔚 Vencimiento: ${orderStringDates(order).expireAt}
   
   Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
   📞 ${store?.phone}
@@ -89,17 +89,18 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
 
   const repair = `Estimado ${order?.fullName} cliente de ${store?.name || ''}
 
-  Su Comprobante de REPARACION de lavadora  
+  Su comprobante de REPARACION de lavadora  
   📄 Contrato ${order?.folio}
   📆 Fecha ${
     order?.deliveredAt
       ? dateFormat(asDate(order?.deliveredAt), 'dd MMMM yyyy')
       : ''
   }
-  🛠️ Marca de aparato ${order?.itemBrand}
-  #️⃣ Serie ${order?.itemSerial || ''} 
-  🧾 ${order?.description || ''}
-  💲 Monto pagado $0
+  🔧 *Información del aparato*
+  🛠️ Marca: ${order?.itemBrand}
+  #️⃣ Serie: ${order?.itemSerial || ''} 
+  🧾 Falla: ${order?.description || ''}
+  💲 Cotización  $${order?.repairTotal || 0}
   🗓️ Garantía 1 Mes
   
   
@@ -190,9 +191,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     </View>
   )
 }
-const orderStringDates = (order, format = ' dd MMM yy') => {
+const orderStringDates = (order, format = 'EEEE dd MMMM yy') => {
   return {
-    expireAt: dateFormat(asDate(order?.expireAt)) || '',
+    expireAt: dateFormat(asDate(order?.expireAt), format) || '',
     deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
   }
 }
