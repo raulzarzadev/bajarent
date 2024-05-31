@@ -73,7 +73,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   Su Comprobante de RENTA de lavadora  
   📄 Contrato ${order?.folio}  
   💲 Monto pagado $${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}
-  🗓️ Periodo contratado ${translateTime(order?.items?.[0]?.priceSelected?.time)}
+  🗓️ Periodo contratado ${
+    translateTime(order?.items?.[0]?.priceSelected?.time) || ''
+  }
   ⏳ Inicio: ${orderStringDates(order).deliveredAt}
   🔚 Vencimiento ${orderStringDates(order).expireAt}
   
@@ -83,9 +85,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   
   
  
-  📍 ${store.address}`
+  📍 ${store?.address || ''}`
 
-  const repair = `Estimado ${order?.fullName} cliente de ${store?.name}
+  const repair = `Estimado ${order?.fullName} cliente de ${store?.name || ''}
 
   Su Comprobante de REPARACION de lavadora  
   📄 Contrato ${order?.folio}
@@ -101,7 +103,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   📞 ${store?.phone}
   📱 ${store?.mobile} Whatsapp
   
-  📍 ${store.address}`
+  📍 ${store?.address || ''}`
 
   const messages = [
     {
