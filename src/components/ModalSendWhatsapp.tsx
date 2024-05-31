@@ -186,7 +186,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     </View>
   )
 }
-const orderStringDates = (order, format = 'DDDD dd MMM YY') => {
+const orderStringDates = (order, format = 'DDDD dd MMM yy') => {
   return {
     expireAt: dateFormat(asDate(order?.expireAt)) || '',
     deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
