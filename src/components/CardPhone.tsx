@@ -1,6 +1,7 @@
 import { Linking, View } from 'react-native'
 import P from './P'
 import Button from './Button'
+
 const CardPhone = ({ phone }) => {
   const formatPhoneNumber = (phone: string): string => {
     // Remove any non-digit characters from the phone number

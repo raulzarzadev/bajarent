@@ -104,9 +104,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
           label="Enviar"
           onPress={() => {
             Linking.openURL(
-              `whatsapp://send?text=${encodeURIComponent(
-                message
-              )}&phone=${phone}`
+              `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
             )
           }}
         ></Button>
