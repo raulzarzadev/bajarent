@@ -11,46 +11,109 @@ import asDate, { dateFormat } from '../libs/utils-date'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useStore } from '../contexts/storeContext'
 import InputRadios from './InputRadios'
-
+import { translateTime } from '../libs/expireDate'
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   const [order, setOrder] = useState<OrderType>()
   const phone = order?.phone
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
+  const upcomingExpire = `Estimado ${order?.fullName} cliente de ${store?.name}
+
+  Su contrato ${
+    order?.folio
+  } 📄 de RENTA de lavadora  vence el día de mañana 😔. 
+  
+  Para renovarlo 😊 favor de transferir 💸  únicamente a cualquiera de las siguientes 3 cuentas a nombre de ${
+    store?.name
+  } y/o Humberto Avila:
+  
+  ${store?.bankInfo.map(({ bank, clabe }) => {
+    return `🏦 ${bank} ${clabe}`
+  })}
+
+  Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
+  
+  Cualquier aclaración favor de comunicarse a los teléfonos:
+  📞 ${store?.phone}
+  📱 ${store?.mobile} 
+  
+  En caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
+        
+  De antemano le agradecemos su atención 🙏🏼`
+
+  const expireToday = `Estimado ${order?.fullName} cliente de ${store?.name}
+
+  Su contrato ${order?.folio} 📄 de RENTA de lavadora *VENCE HOY* 😔. 
+  
+  Para renovarlo 😊 favor de transferir 💸  únicamente a cualquiera de las siguientes  cuentas a nombre de ${
+    store?.name
+  } y/o Humberto Avila:
+  
+  ${store?.bankInfo?.map(({ bank, clabe }) => {
+    return `🏦 ${bank} ${clabe}`
+  })}
+  
+  Enviar su comprobante al whatsapp ${store?.mobile} y esperar confirmación 👌🏼
+  
+  Cualquier aclaración favor de comunicarse a los teléfonos:
+  📞 ${store?.phone}
+  📱 ${store?.mobile} 
+  
+  En caso de no querer continuar con el servicio 😞 favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
+        
+  De antemano le agradecemos su atención 🙏🏼`
+
+  const payment = `Estimado Raúl Zarza cliente de Lavarenta
+
+  Su Comprobante de RENTA de lavadora  
+  📄 Contrato ${order?.folio}  
+  💲 Monto pagado $${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}
+  🗓️ Periodo contratado ${translateTime(order?.items?.[0]?.priceSelected?.time)}
+  ⏳ Vigencia de jueves 30/05/24
+  🔚 Vencimiento jueves 06/06/24
+  
+  Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
+  📞 ${store?.phone}
+  📱 ${store?.mobile} Whatsapp
+  
+ 
+  📍 Altamirano 2365, ent. Márquez y Pineda, Col. Centro, La Paz BCS, México.`
+
+  const repair = `Estimado ${order?.fullName} cliente de ${store?.name}
+
+  Su Comprobante de REPARACION de lavadora  
+  📄 Contrato ${order?.folio}
+  📆 Fecha ${dateFormat(asDate(order?.deliveredAt), 'dd MMMM yyyy')}
+  🛠️ Marca de aparato ${order?.itemBrand}
+  #️⃣ Serie ${order?.itemSerial} 
+  🧾 ${order?.description}
+  💲 Monto pagado $0
+  🗓️ Garantía 1 Mes
+  
+  
+  Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
+  📞 ${store?.phone}
+  📱 ${store?.mobile} Whatsapp
+  
+  📍 Altamirano 2365, ent. Márquez y Pineda, Col. Centro, La Paz BCS, México.`
 
   const messages = [
     {
-      type: 'collection',
-      content: `
-      Estimado cliente de *${store?.name}*,
-      Su RENTA vence el día de mañana. 
-      Para evitar recargos, favor de enviar el comprobante de depósito, transferencia, o estar en el domicilio para que el repartidor pase por el efectivo.
-      \n${store?.bankInfo
-        ?.map((bank) => {
-          return `*${bank.bank}*\n${bank.clabe}
-        `
-        })
-        .join('\n')}
-        \nOrden: ${order?.folio || ''}
-        \nCliente: ${order?.fullName || ''}
-        \n${orderPeriod(order)}
-        \nPara cualquier duda o aclaración estamos a sus órdenes al \n teléfono\n${
-          store?.phone
-        } o al \nwhatsapp\n ${store?.mobile || ''}
-      `
+      type: 'upcomingExpire',
+      content: upcomingExpire
     },
     {
-      type: 'orderStatus',
-      content: `
-      *${store?.name}*
-      Tipo: ${dictionary(order?.type)}
-      Order: *${order?.folio}*
-      Status: ${dictionary(order?.status)}
-      ${order?.hasNotSolvedReports ? 'Reportes activos: *Si*' : 'Sin reportes'}
-      ${orderPeriod(order)}
-      ${orderPayments({ order })}
-      `
+      type: 'expireToday',
+      content: expireToday
+    },
+    {
+      type: 'receipt-rent',
+      content: payment
+    },
+    {
+      type: 'receipt-repair',
+      content: repair
     }
   ]
 
@@ -60,7 +123,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       setMessage(messages.find((m) => m.type === messageType)?.content)
     })
   }
-  const [messageType, setMessageType] = useState<'collection' | 'orderStatus'>()
+  const [messageType, setMessageType] = useState<
+    'upcomingExpire' | 'expireToday' | 'receipt-rent' | 'receipt-repair'
+  >()
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
 
@@ -78,8 +143,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       <StyledModal {...modal}>
         <InputRadios
           options={[
-            { label: 'Cobranza', value: 'collection' },
-            { label: 'Status', value: 'orderStatus' }
+            { label: 'Vence mañana', value: 'upcomingExpire' },
+            { label: 'Vence hoy', value: 'expireToday' },
+            { label: 'Compobante Renta', value: 'receipt-rent' },
+            { label: 'Compobante Reparación', value: 'receipt-repair' }
           ]}
           value={messageType}
           setValue={(value) => {
