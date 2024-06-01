@@ -12,6 +12,7 @@ import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useStore } from '../contexts/storeContext'
 import InputRadios from './InputRadios'
 import { translateTime } from '../libs/expireDate'
+import SpanCopy from './SpanCopy'
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   const [order, setOrder] = useState<OrderType>()
@@ -161,6 +162,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
           layout="row"
         />
         <Text>{message}</Text>
+
         {invalidPhone && (
           <Text
             style={[
@@ -171,6 +173,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
             Numero de telefono invalido
           </Text>
         )}
+        {message && <SpanCopy label={'Copiar'} copyValue={message} />}
         <Button
           disabled={invalidPhone || !message}
           label="Enviar"
