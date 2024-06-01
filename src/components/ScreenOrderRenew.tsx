@@ -70,7 +70,7 @@ const ScreenOrderRenew = ({ route }) => {
         renewedOrder.expireAt = expiredAt
         // @ts-ignore
         return await ServiceOrders.createSerialOrder(renewedOrder)
-          .then((newOrderId) => {
+          .then(async (newOrderId) => {
             if (newOrderId)
               // @ts-ignore
               navigate('OrderDetails', { orderId: newOrderId || '' })
@@ -82,12 +82,14 @@ const ScreenOrderRenew = ({ route }) => {
               renewedBy: user?.id // *<--- which order should have this prop? the new one or the original one?
             })
 
+            const newOrder = await ServiceOrders.get(newOrderId)
+
             // * Add comment to the new order
             ServiceOrders.addComment({
               storeId: order.storeId,
               orderId: newOrderId || '',
               type: 'comment',
-              content: `Renovación de orden No. ${originalOrder.folio} `
+              content: `Renovada de ${originalOrder.folio} `
             })
               .then(() => {})
               .catch(console.error)
@@ -96,7 +98,7 @@ const ScreenOrderRenew = ({ route }) => {
               storeId: order.storeId,
               orderId,
               type: 'comment',
-              content: `Orden renovada `
+              content: `Renovada con No. ${newOrder?.folio}`
             })
               .then(() => {
                 // @ts-ignore
