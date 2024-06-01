@@ -69,16 +69,18 @@ const ScreenOrderRenew = ({ route }) => {
         const expiredAt = orderExpireAt({ order: renewedOrder })
         renewedOrder.expireAt = expiredAt
         // @ts-ignore
-        await ServiceOrders.createSerialOrder(renewedOrder)
+        return await ServiceOrders.createSerialOrder(renewedOrder)
           .then((newOrderId) => {
             if (newOrderId)
-              //* update the ORIGINAL order status
-              ServiceOrders.update(orderId, {
-                status: order_status.RENEWED,
-                renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
-                renewedTo: newOrderId,
-                renewedBy: user?.id // *<--- which order should have this prop? the new one or the original one?
-              })
+              // @ts-ignore
+              navigate('OrderDetails', { orderId: newOrderId || '' })
+            //* update the ORIGINAL order status
+            ServiceOrders.update(orderId, {
+              status: order_status.RENEWED,
+              renewedAt: new Date(), // *<--- which order should have this prop? the new one or the original one?
+              renewedTo: newOrderId,
+              renewedBy: user?.id // *<--- which order should have this prop? the new one or the original one?
+            })
 
             // * Add comment to the new order
             ServiceOrders.addComment({
@@ -87,10 +89,7 @@ const ScreenOrderRenew = ({ route }) => {
               type: 'comment',
               content: `Renovación de orden No. ${originalOrder.folio} `
             })
-              .then(() => {
-                // @ts-ignore
-                navigate('OrderDetails', { orderId: newOrderId || '' })
-              })
+              .then(() => {})
               .catch(console.error)
             // * Add comment to the original order
             ServiceOrders.addComment({
