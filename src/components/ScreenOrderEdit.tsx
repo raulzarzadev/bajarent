@@ -41,7 +41,7 @@ const ScreenOrderEdit = ({ route, navigation }) => {
             values[key] = normalized.trim()
           }
         })
-        ServiceOrders.update(orderId, values)
+        return ServiceOrders.update(orderId, values)
           .then((res) => {
             // console.log(res)
             navigation.goBack()
