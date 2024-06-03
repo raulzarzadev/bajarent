@@ -6,12 +6,10 @@ import DateCell from './DateCell'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import CurrencyAmount from './CurrencyAmount'
+import { payments_amount } from '../libs/payments'
 
 const RowBalance = ({ item }: { item: BalanceType }) => {
-  const balanceTotal = item?.payments?.reduce(
-    (acc, payment) => acc + payment?.amount || 0,
-    0
-  )
+  const balanceTotal = payments_amount(item?.payments).total
   const fields: {
     field: string
     width: ViewStyle['width']

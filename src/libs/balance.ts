@@ -2,20 +2,10 @@ import { where } from 'firebase/firestore'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
 import { order_status } from '../types/OrderType'
-import { payment_methods } from '../types/PaymentType'
+import { payments_amount } from './payments'
 
 export const balanceTotals = (balance: BalanceType) => {
-  return balance?.payments?.reduce(
-    (acc, p) => {
-      const amount = p?.amount || 0
-      acc.total += amount
-      if (p.method === payment_methods.CASH) acc.cash += amount
-      if (p.method === payment_methods.CARD) acc.card += amount
-      if (p.method === payment_methods.TRANSFER) acc.transfers += amount
-      return acc
-    },
-    { total: 0, cash: 0, card: 0, transfers: 0 }
-  )
+  return payments_amount(balance.payments)
 }
 
 export const balanceOrders = async ({

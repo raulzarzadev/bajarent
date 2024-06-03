@@ -5,10 +5,16 @@ import dictionary from '../dictionary'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import { PaymentTypeList } from './PaymentsList'
+import { colors } from '../theme'
 
 const PaymentRow = ({ item }: { item: PaymentTypeList }) => {
   return (
-    <View style={styles.row}>
+    <View
+      style={[
+        styles.row,
+        item.canceled && { backgroundColor: colors.lightGray, opacity: 0.4 }
+      ]}
+    >
       <View style={{ width: 80 }}>
         <Text>
           {item?.orderFolio || ''}-{item?.orderNote || ''}
@@ -34,6 +40,9 @@ const PaymentRow = ({ item }: { item: PaymentTypeList }) => {
       </View>
       <View style={{ width: 80 }}>
         <CurrencyAmount amount={item?.amount} />
+        <Text style={[gStyles.helper, gStyles.tCenter]}>
+          {item?.canceled && 'Cancelado'}
+        </Text>
       </View>
     </View>
   )

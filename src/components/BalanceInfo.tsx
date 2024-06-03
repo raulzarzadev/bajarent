@@ -9,21 +9,14 @@ import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
-import { balanceTotals } from '../libs/balance'
 import { useNavigation } from '@react-navigation/native'
 
 import Icon from './Icon'
+import { payments_amount } from '../libs/payments'
+import BalanceAmounts from './BalanceAmounts'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
-  const data = balanceTotals(balance)
-  const total = data?.total
-
-  const cashPayments = balance?.payments.filter((p) => p.method === 'cash')
-  const cardPayments = balance?.payments.filter((p) => p.method === 'card')
-  const transferPayments = balance?.payments.filter(
-    (p) => p.method === 'transfer'
-  )
   return (
     <View style={{ justifyContent: 'center' }}>
       <SpanMetadata {...balance} hidden={hideMetadata} />
@@ -59,42 +52,8 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
       {/* 
           BALANCE AMOUNTS
        */}
-      <View
-        style={{
-          width: 180,
-          marginVertical: gSpace(2),
-          marginHorizontal: 'auto'
-        }}
-      >
-        <View style={styles.totals}>
-          <View style={styles.row}>
-            <LinkPayments payments={cashPayments} title={'Efectivo'} />
-          </View>
-          <View style={styles.row}>
-            <LinkPayments
-              payments={transferPayments}
-              title={'Transferencias'}
-            />
-          </View>
-          <View style={styles.row}>
-            <LinkPayments payments={cardPayments} title={'Tarjetas'} />
-          </View>
-          {/* <View style={styles.row}>
-            <LinkPayments payments={[]} title={'Retiros'} />
-          </View> */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end'
-            }}
-          >
-            {/* <Text style={[gStyles.h3, { marginRight: 8 }]}>Total</Text> */}
-            <LinkPayments payments={balance?.payments} title={'Total'} />
-            {/* <CurrencyAmount style={gStyles.h1} amount={total} /> */}
-          </View>
-        </View>
-      </View>
+      <BalanceAmounts payments={balance.payments} />
+
       {/* 
           BALANCE ORDERS
        */}
@@ -108,11 +67,6 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
             flexWrap: 'wrap'
           }}
         >
-          {/* <ModalOrders
-            modalTitle="Creadas"
-            buttonLabel="Creadas"
-            ordersIds={balance?.ordersCreated}
-          /> */}
           <ModalOrders
             modalTitle="Pagadas"
             buttonLabel="Pagadas"
@@ -146,33 +100,6 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
         </View>
       </View>
     </View>
-  )
-}
-
-const LinkPayments = ({ title, payments = [] }) => {
-  const amount = payments?.reduce((acc, p) => acc + (p?.amount || 0), 0)
-  const ids = payments.map(({ id }) => id)
-  const { navigate } = useNavigation()
-  return (
-    <>
-      <Pressable
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackPayments', {
-            screen: 'ScreenPayments',
-            params: {
-              title,
-              payments: ids
-            }
-          })
-        }}
-      >
-        <Text style={[styles.label, { textDecorationLine: 'underline' }]}>
-          {title}:{' '}
-        </Text>
-      </Pressable>
-      <CurrencyAmount style={styles.amount} amount={amount} />
-    </>
   )
 }
 
@@ -226,24 +153,3 @@ export default function BalanceInfo(props: BalanceInfoProps) {
     </ErrorBoundary>
   )
 }
-
-const styles = StyleSheet.create({
-  totals: {
-    justifyContent: 'flex-end',
-    flex: 1,
-    margin: 'auto',
-    marginBottom: 8
-  },
-  row: {
-    flexDirection: 'row',
-    marginVertical: 2
-  },
-  label: {
-    width: 100,
-    textAlign: 'right'
-  },
-  amount: {
-    textAlign: 'right',
-    width: 70
-  }
-})

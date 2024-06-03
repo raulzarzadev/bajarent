@@ -16,7 +16,7 @@ export const gStyles = StyleSheet.create({
   h2: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 4,
+    //marginBottom: 4,
     alignItems: 'center',
     textAlign: 'center'
   },

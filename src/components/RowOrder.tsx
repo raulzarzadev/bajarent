@@ -8,8 +8,8 @@ import OrderDirectives from './OrderDirectives'
 import { translateTime } from '../libs/expireDate'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
-import { useEmployee } from '../contexts/employeeContext'
 import dictionary from '../dictionary'
+import { payments_amount } from '../libs/payments'
 
 const RowOrder = ({
   item: order,
@@ -22,7 +22,7 @@ const RowOrder = ({
 }) => {
   const { payments } = useStore()
   const orderPayments = payments.filter((p) => p.orderId === order.id)
-  const orderTotal = orderPayments?.reduce((acc, p) => acc + p.amount, 0)
+  const orderTotal = payments_amount(orderPayments).total
   const paymentsMethods = Array.from(
     new Set(orderPayments.map((p) => dictionary(p.method)[0]))
   )
