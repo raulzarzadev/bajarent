@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from 'react'
-import List from './List'
+import List, { LoadingList } from './List'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
 import { CommentRow, CommentType } from './ListComments'
@@ -33,7 +33,7 @@ const ListMovements = () => {
   }, [orders])
 
   return (
-    <List
+    <LoadingList
       ComponentRow={({ item }) => <CommentRow comment={item} viewOrder />}
       data={data}
       filters={[

@@ -24,10 +24,20 @@ const ScreenStore = (props) => {
 
   return (
     <ScrollView>
-      {!!user && <StoreDetailsE store={store} {...props} />}
+      {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
       {!!user && (canViewCashbox || canViewSections || canViewOrders) && (
         <Tabs
           tabs={[
+            {
+              title: 'Información',
+              content: <StoreDetailsE store={store} {...props} />,
+              show: true
+            },
+            {
+              title: 'Ordenes',
+              content: <TabOrders />,
+              show: canViewOrders
+            },
             {
               title: 'Caja',
               content: <TabCashbox />,
@@ -42,11 +52,6 @@ const ScreenStore = (props) => {
               title: 'Areas',
               content: <TabAreas />,
               show: canViewSections
-            },
-            {
-              title: 'Ordenes',
-              content: <TabOrders />,
-              show: canViewOrders
             },
             {
               title: 'Artículos',
