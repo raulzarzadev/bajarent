@@ -31,7 +31,7 @@ function PaymentsList({
       ComponentRow={PaymentRow}
       sortFields={sortFields}
       defaultSortBy="date"
-      defaultOrder="asc"
+      defaultOrder="des"
       onPressRow={(id) => {
         onPressRow?.(id)
       }}

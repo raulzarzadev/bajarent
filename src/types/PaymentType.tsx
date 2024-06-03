@@ -11,6 +11,10 @@ export type PaymentBase = {
   orderFolio?: number
   orderName?: string
   orderNote?: string
+  canceled?: boolean
+  canceledBy?: string
+  canceledAt?: Date
+  canceledReason?: string
 }
 
 type PaymentType = PaymentBase & BaseType

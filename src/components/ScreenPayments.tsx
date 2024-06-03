@@ -20,7 +20,7 @@ export default function ScreenPayments({ navigation, route }) {
     }
   }, [payments])
   const paymentsWithOrderData = fullPayments.map((p) => {
-    const consolidateOrder = consolidatedOrders.orders?.[p.orderId]
+    const consolidateOrder = consolidatedOrders?.orders?.[p.orderId]
     return {
       ...p,
       orderFolio: consolidateOrder?.folio as number, //* This is the line that is causing the error

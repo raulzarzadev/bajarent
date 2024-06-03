@@ -1,33 +1,30 @@
-import { ActivityIndicator, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
-import Button from './Button'
-import OrderType from '../types/OrderType'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderDirectives from './OrderDirectives'
+import ButtonConfirm from './ButtonConfirm'
+import { ServicePayments } from '../firebase/ServicePayments'
+import InputTextStyled from './InputTextStyled'
+import { useAuth } from '../contexts/authContext'
+import SpanUser from './SpanUser'
+import { dateFormat, fromNow } from '../libs/utils-date'
+import { colors } from '../theme'
+import Loading from './Loading'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
   const { payments, staff } = useStore()
   const payment = payments?.find((p) => p?.id === id)
-  const [order, setOrder] = useState<OrderType>()
-  useEffect(() => {
-    ServiceOrders.get(payment?.orderId).then((order) => {
-      console.log({ order })
-      if (order) {
-        setOrder(order)
-      } else {
-        setOrder(null)
-      }
-    })
-  }, [payment?.orderId])
+  const { user } = useAuth()
   const userName =
     staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
+  const [reason, setReason] = useState('')
+  const isCanceled = payment?.canceled
+  if (!payment) return <Loading />
   return (
     <View style={gStyles.container}>
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
@@ -46,7 +43,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
         <Text
           style={[gStyles.helper, { textAlign: 'center', marginVertical: 8 }]}
         >
-          {payment?.reference}
+          Referencia: {payment?.reference}
         </Text>
       )}
 
@@ -64,8 +61,60 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           </Text>
         </View>
       )}
+      {isCanceled && (
+        <View
+          style={{
+            borderColor: colors.red,
+            borderWidth: 1,
+            borderRadius: 8,
+            marginVertical: 8
+          }}
+        >
+          <Text
+            style={{ color: 'red', textAlign: 'center', marginVertical: 8 }}
+          >
+            Este pago ha sido cancelado
+          </Text>
+          <Text style={{ textAlign: 'center' }}>
+            Fecha: {dateFormat(payment?.canceledAt, 'dd MMM yy HH:mm')}{' '}
+            {fromNow(payment?.canceledAt)}
+          </Text>
+          <Text style={{ textAlign: 'center' }}>
+            Motivo: {payment?.canceledReason}
+          </Text>
+          <Text style={{ textAlign: 'center' }}>
+            Autor: <SpanUser userId={payment.canceledBy} />
+          </Text>
+        </View>
+      )}
+      <ButtonConfirm
+        openDisabled={isCanceled}
+        openLabel="Cancelar pago"
+        modalTitle="Cancelar pago"
+        openColor="error"
+        openVariant="outline"
+        confirmLabel="Cancelar"
+        confirmColor="error"
+        text="¿Estás seguro de que deseas cancelar este pago?"
+        handleConfirm={async () => {
+          return ServicePayments.update(payment?.id, {
+            canceled: true,
+            canceledReason: reason,
+            canceledAt: new Date(),
+            canceledBy: user?.id
+          }).then(() => {
+            navigation.goBack()
+          })
+        }}
+      >
+        <InputTextStyled
+          placeholder="Motivo"
+          onChangeText={setReason}
+          value={reason}
+        />
+      </ButtonConfirm>
 
-      <View style={{ justifyContent: 'center', margin: 'auto' }}>
+      {/* <View style={{ justifyContent: 'center', margin: 'auto' }}>
         {order === undefined && <ActivityIndicator />}
         {order === null && <Text>Orden no encontrada</Text>}
         {!!order && <OrderDirectives order={order} />}
@@ -79,7 +128,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           }}
           label="Ver orden"
         ></Button>
-      </View>
+      </View> */}
     </View>
   )
 }

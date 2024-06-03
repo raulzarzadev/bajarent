@@ -23,6 +23,14 @@ function StackPayments() {
         })}
         component={ScreenPayments}
       />
+      <Stack.Screen
+        name="ScreenPaymentsDetails"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Pagos'
+        })}
+        component={ScreenPaymentsDetails}
+      />
     </Stack.Navigator>
   )
 }

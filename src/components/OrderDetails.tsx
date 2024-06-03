@@ -307,6 +307,7 @@ const ItemDates = ({
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
   const [payments, setPayments] = useState<PaymentType[]>([])
+  const { navigate } = useNavigation()
   useEffect(() => {
     if (orderId) {
       ServicePayments.listenByOrder(orderId, setPayments)
@@ -328,7 +329,14 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
           >
             <Text style={gStyles.h3}>Pagos</Text>
             {payments?.map((payment) => (
-              <View
+              <Pressable
+                onPress={() => {
+                  console.log({ payment })
+                  navigate('StackPayments', {
+                    screen: 'ScreenPaymentsDetails',
+                    params: { id: payment.id }
+                  })
+                }}
                 key={payment.id}
                 style={{
                   flexDirection: 'row',
@@ -346,7 +354,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                   {dictionary(payment.method)}
                 </Text>
                 <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
-              </View>
+              </Pressable>
             ))}
           </View>
         </ErrorBoundary>
