@@ -203,14 +203,14 @@ export const CommentRow = ({
                   handleToggleSolveReport(comment?.id, comment?.solved)
                 }
                 justIcon
-                size="small"
+                size="xs"
               />
             </View>
             {isAdmin || isOwner ? (
               <View style={{ marginHorizontal: 8 }}>
                 <ButtonConfirm
                   openColor="error"
-                  openSize="small"
+                  openSize="xs"
                   justIcon
                   icon="delete"
                   confirmColor="error"
