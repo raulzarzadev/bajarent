@@ -14,7 +14,7 @@ export default function useFilter<T extends { id?: string }>({
   collectionSearch?: CollectionSearch
 }) {
   const { reports } = useOrdersCtx()
-  const [filteredData, setFilteredData] = useState<T[]>([])
+  const [filteredData, setFilteredData] = useState<T[]>([...data])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
   )
@@ -25,6 +25,7 @@ export default function useFilter<T extends { id?: string }>({
     setFiltersBy([])
     search('')
   }
+  console.log({ data })
 
   const filterBy = (
     field = 'status',
@@ -135,9 +136,9 @@ export default function useFilter<T extends { id?: string }>({
     // }
   }
 
-  useEffect(() => {
-    search(searchValue)
-  }, [data])
+  // useEffect(() => {
+  //   search(searchValue)
+  // }, [data])
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
     return data.filter((order) => {

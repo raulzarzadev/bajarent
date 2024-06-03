@@ -61,7 +61,7 @@ function MyList<T extends { id: string }>({
   rowsPerPage = 10,
   collectionSearch
 }: ListPops<T>) {
-  const [filteredData, setFilteredData] = useState<T[]>([])
+  const [filteredData, setFilteredData] = useState<T[]>([...data])
 
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
     data: filteredData,

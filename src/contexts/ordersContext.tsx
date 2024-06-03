@@ -48,7 +48,7 @@ export const OrdersContextProvider = ({
     //permissions
   } = useEmployee()
   const { storeId, store } = useAuth()
-  const [orders, setOrders] = useState<OrderType[]>([])
+  const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
   )

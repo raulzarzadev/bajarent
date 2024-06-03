@@ -3,7 +3,9 @@ import ListOrders from './ListOrders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import useOrders from '../hooks/useOrders'
 import { useState } from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
+import Loading from './Loading'
+import { gStyles } from '../styles'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
@@ -23,6 +25,24 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     refreshPreOrders()
     setTimeout(() => setDisabled(false), 4000)
   }
+
+  if (orders === undefined)
+    return (
+      <View
+        style={[
+          gStyles.container,
+          { flexDirection: 'column', justifyContent: 'center' }
+        ]}
+      >
+        <Text
+          style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
+        >
+          Cargando ordenes
+        </Text>
+        <Loading />
+      </View>
+    )
+  if (orders.length === 0) return <Text>No hay ordenes</Text>
   return (
     <ListOrders
       orders={hasOrderList ? preOrders : orders}
