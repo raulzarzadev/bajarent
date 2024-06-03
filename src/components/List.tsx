@@ -21,6 +21,7 @@ import InputCheckbox from './InputCheckbox'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Loading from './Loading'
+import { gStyles } from '../styles'
 
 // const windowHeight = Dimensions.get('window').height
 // const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
@@ -399,4 +400,40 @@ export default function <T extends { id: string }>(props: ListPops<T>) {
       <MyList {...props}></MyList>
     </ErrorBoundary>
   )
+}
+export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
+  return (
+    <ErrorBoundary componentName="MyList">
+      <MyList {...props}></MyList>
+    </ErrorBoundary>
+  )
+}
+
+export const LoadingList = <T extends { id: string }>(props: ListPops<T>) => {
+  const data = props.data
+  if (data === undefined)
+    return (
+      <View
+        style={[
+          gStyles.container,
+          { flexDirection: 'column', justifyContent: 'center' }
+        ]}
+      >
+        <Text
+          style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
+        >
+          Cargando datos
+        </Text>
+        <Loading />
+      </View>
+    )
+  if (data.length === 0)
+    return (
+      <Text
+        style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
+      >
+        No hay datos
+      </Text>
+    )
+  return <ListE {...props} />
 }

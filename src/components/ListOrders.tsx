@@ -1,12 +1,12 @@
 import React from 'react'
-import List, { ListSideButton } from './List'
+import { ListSideButton, LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
 import RowOrder from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 
 const ListOrders = ({
-  orders = [],
+  orders,
   defaultOrdersIds,
   sideButtons = [],
   collectionSearch,
@@ -25,7 +25,7 @@ const ListOrders = ({
 }) => {
   const { navigate } = useNavigation()
   return (
-    <List
+    <LoadingList
       sideButtons={sideButtons}
       preFilteredIds={defaultOrdersIds}
       defaultSortBy="folio"
