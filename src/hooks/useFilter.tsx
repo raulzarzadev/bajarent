@@ -19,12 +19,6 @@ export default function useFilter<T extends { id?: string }>({
     'status'
   )
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
-  const handleClearFilters = () => {
-    setFilteredBy('')
-    setFilteredData(data)
-    setFiltersBy([])
-    search('')
-  }
 
   const filterBy = (
     field = 'status',
@@ -53,10 +47,10 @@ export default function useFilter<T extends { id?: string }>({
 
     //* If the same filter exist, remove it
     if (sameExist) {
-      const handleClearFilters = [...filters].filter(
+      const cleanedFilters = [...filters].filter(
         (a) => !(a.field === field && a.value === value)
       )
-      filters = handleClearFilters
+      filters = cleanedFilters
       setFiltersBy(filters)
       const res = filterDataByFields(data, filters)
       setFilteredData(res)
@@ -65,10 +59,8 @@ export default function useFilter<T extends { id?: string }>({
 
     //* If a similar filter exist, replace it
     if (similarExist) {
-      const handleClearFilters = [...filters].filter(
-        (a) => !(a.field === field)
-      )
-      filters = [...handleClearFilters, { field, value }]
+      const cleanedFilters = [...filters].filter((a) => !(a.field === field))
+      filters = [...cleanedFilters, { field, value }]
       setFiltersBy(filters)
       const res = filterDataByFields(data, filters)
       setFilteredData(res)
@@ -119,25 +111,7 @@ export default function useFilter<T extends { id?: string }>({
     } else {
       setFilteredData([...res])
     }
-
-    // console.log({ res })
-    // if (collectionSearch?.collectionName === 'orders') {
-    //   ServiceOrders.search(
-    //     collectionSearch?.fields,
-    //     value,
-    //     res.map(({ id }) => id)
-    //   ).then((res) => {
-    //     const orders = formatOrders({ orders: res, reports })
-    //     setFilteredData([...res, ...orders])
-    //   })
-    // } else {
-    //   setFilteredData(res)
-    // }
   }
-
-  // useEffect(() => {
-  //   search(searchValue)
-  // }, [data])
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
     return data.filter((order) => {
@@ -146,7 +120,14 @@ export default function useFilter<T extends { id?: string }>({
       })
     })
   }
+  const handleClearFilters = () => {
+    setFilteredData([...data])
+    setFilteredBy('')
+    setFiltersBy([])
+    setSearchValue('')
+  }
 
+  console.log({ filteredData })
   return {
     filteredData,
     filteredBy,

@@ -52,6 +52,7 @@ function ModalFilterList<T>({
     data,
     collectionSearch
   })
+  console.log({ filteredData })
 
   useEffect(() => {
     setData?.(filteredData)
