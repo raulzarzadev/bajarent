@@ -41,11 +41,17 @@ function ModalFilterList<T>({
   const { storeSections, staff } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
 
-  const { filterBy, cleanFilter, filteredData, filtersBy, search } =
-    useFilter<T>({
-      data,
-      collectionSearch
-    })
+  const {
+    filterBy,
+    cleanFilter,
+    filteredData,
+    filtersBy,
+    search,
+    searchValue
+  } = useFilter<T>({
+    data,
+    collectionSearch
+  })
 
   useEffect(() => {
     setData?.(filteredData)
@@ -147,8 +153,6 @@ function ModalFilterList<T>({
     return dictionary(value as Labels).toUpperCase()
   }
 
-  const [searchValue, setSearchValue] = useState('')
-
   return (
     <View>
       <View
@@ -161,7 +165,6 @@ function ModalFilterList<T>({
           placeholder="Buscar..."
           value={searchValue}
           onChangeText={(e) => {
-            setSearchValue(e)
             handleDebounceSearch(e)
           }}
         />
@@ -205,7 +208,7 @@ function ModalFilterList<T>({
                 color="secondary"
                 onPress={() => {
                   cleanFilter()
-                  setSearchValue('')
+
                   setCustomFilterSelected(false)
                 }}
                 justIcon

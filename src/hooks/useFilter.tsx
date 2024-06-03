@@ -145,5 +145,13 @@ export default function useFilter<T extends { id?: string }>({
     })
   }
 
-  return { filteredData, filteredBy, cleanFilter, filterBy, search, filtersBy }
+  return {
+    filteredData,
+    filteredBy,
+    cleanFilter,
+    filterBy,
+    search,
+    filtersBy,
+    searchValue
+  }
 }
