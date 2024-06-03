@@ -79,11 +79,6 @@ const OrderActions = ({
 
   const deliveryModal = useModal({ title: 'Confirmar datos de entrega' })
 
-  // const { orders } = useStore()
-  // const order = orders.find((o) => o.id === orderId)
-  // const { orders } = useOrdersCtx()
-  // const order = orders.find((o) => o.id === orderId)
-
   const { order } = useOrder({ orderId })
 
   // #region ACTIONS

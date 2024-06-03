@@ -1,10 +1,8 @@
 import { View, ScrollView, ActivityIndicator } from 'react-native'
 import OrderDetails from './OrderDetails'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import { useEffect, useState } from 'react'
 import { listenFullOrderData } from '../contexts/libs/getFullOrderData'
 import OrderType from '../types/OrderType'
-import { formatOrder } from '../libs/orders'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params

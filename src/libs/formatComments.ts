@@ -7,7 +7,7 @@ import StaffType from '../types/StaffType'
 export default function formatComments({
   comments,
   staff,
-  orders,
+  orders = [],
   payments = []
 }: {
   comments: CommentType[]

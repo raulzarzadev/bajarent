@@ -52,7 +52,7 @@ const RowReport = ({ item }) => {
   const [order, setOrder] = useState<OrderType>()
   const { orders } = useOrdersCtx()
   useEffect(() => {
-    const order = orders.find((order) => order.id === item.orderId)
+    const order = orders?.find((order) => order.id === item.orderId)
     setOrder(order)
     if (!order) {
       ServiceOrders.get(item.orderId).then((res) => setOrder(res))

@@ -75,7 +75,7 @@ const StoreNumbersRow = () => {
     (order) => order.status === order_status.AUTHORIZED
   )
 
-  const ordersExpired = orders.filter((o) => o.isExpired)
+  const ordersExpired = orders?.filter((o) => o.isExpired)
 
   const currentFolio = store?.currentFolio
   return (

@@ -13,7 +13,6 @@ import TextInfo from './TextInfo'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
-import asDate, { dateFormat } from '../libs/utils-date'
 type OrderWithId = ConsolidatedOrderType & { id: string }
 
 const ListOrdersConsolidated = () => {
