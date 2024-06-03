@@ -20,13 +20,11 @@ const ScreenStore = (props) => {
   const canViewOrders = isAdmin || isOwner
   const canViewSections = isAdmin || isOwner
   const canViewCashbox = isAdmin || isOwner
-  const canViewStoreNumbers = isAdmin || isOwner
   const canViewMovements = isAdmin || isOwner
 
   return (
     <ScrollView>
       {!!user && <StoreDetailsE store={store} {...props} />}
-      {!!user && canViewStoreNumbers && <StoreNumbersRow {...props} />}
       {!!user && (canViewCashbox || canViewSections || canViewOrders) && (
         <Tabs
           tabs={[
@@ -204,6 +202,7 @@ const TabOrders = () => {
   const { navigate } = useNavigation()
   return (
     <View>
+      {<StoreNumbersRow />}
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button
           label="Consolidadas"
@@ -222,6 +221,7 @@ const TabOrders = () => {
             //@ts-ignore
             navigate('ScreenOrdersConfig')
           }}
+          icon="settings"
           variant="ghost"
         />
       </View>
