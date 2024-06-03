@@ -7,12 +7,18 @@ import { gStyles } from '../styles'
 import theme from '../theme'
 import OrderType, { order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
-import asDate, { dateFormat } from '../libs/utils-date'
+import asDate, {
+  dateFormat,
+  fromNow,
+  isAfterTomorrow,
+  isBeforeYesterday
+} from '../libs/utils-date'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useStore } from '../contexts/storeContext'
 import InputRadios from './InputRadios'
 import { translateTime } from '../libs/expireDate'
 import SpanCopy from './SpanCopy'
+import { isToday, isTomorrow } from 'date-fns'
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   const [order, setOrder] = useState<OrderType>()
@@ -53,22 +59,35 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
 
   //******** MESSAGES
 
-  const RENT_EXPIRE_SOON = `${WELCOME}
-  \n${ORDER_TYPE}  vence el día de mañana 😔.
+  const expireDateString = (order) => {
+    const date = asDate(order?.expireAt)
+
+    if (isToday(date)) {
+      return '*VENCE HOY* 😔.'
+    }
+    if (isTomorrow(date)) {
+      return '*VENCE MAÑANA* 😔.'
+    }
+    if (isAfterTomorrow(date)) {
+      return `VENCE EL ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
+        date
+      )})`
+    }
+    if (isBeforeYesterday(date)) {
+      return `VENCIÓ el ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
+        date
+      )})`
+    }
+    return ''
+  }
+
+  const RENT_EXPIRE_DATE = `${WELCOME}
+  \n${ORDER_TYPE}  ${expireDateString(order)}.
   \n*Para renovar*
   \n${BANK_INFO}
-  \nEnviar su comprobante al Whatsapp y esperar confirmación 👌🏼
+  \nEnviar su comprobante al Whatsapp  ${store.mobile} y esperar confirmación 👌🏼
   \n${CONTACTS}
   \nEn caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
-  \n${AGRADECIMIENTOS}
-  `
-  const RENT_EXPIRE_TODAY = `${WELCOME}
-  \n${ORDER_TYPE}   *VENCE HOY* 😔. 
-  \n*Para renovar*
-  \n${BANK_INFO}
-  \nEnviar su comprobante al Whatsapp y esperar confirmación 👌🏼
-  \nEn caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
-  \n${CONTACTS}
   \n${AGRADECIMIENTOS}
   `
 
@@ -97,16 +116,18 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${PAYMENTS}
   \n${CONTACTS}
   \n📍 ${store?.address || ''}`
+  type MessageType = 'expireAt' | 'receipt-rent' | 'receipt-repair'
 
-  const messages = [
-    {
-      type: 'upcomingExpire',
-      content: RENT_EXPIRE_SOON
-    },
-    {
-      type: 'expireToday',
-      content: RENT_EXPIRE_TODAY
-    },
+  const messages: { type: MessageType; content: string }[] = [
+    // {
+    //   type: 'upcomingExpire',
+    //   content: RENT_EXPIRE_SOON
+    // },
+    // {
+    //   type: 'expireToday',
+    //   content: RENT_EXPIRE_TODAY
+    // },
+
     {
       type: 'receipt-rent',
       content: RENT_RECEIPT
@@ -114,6 +135,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     {
       type: 'receipt-repair',
       content: REPAIR_RECEIPT
+    },
+    {
+      type: 'expireAt',
+      content: RENT_EXPIRE_DATE
     }
   ]
 
@@ -123,16 +148,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       setMessage(messages.find((m) => m.type === messageType)?.content)
     })
   }
-  const [messageType, setMessageType] = useState<
-    'upcomingExpire' | 'expireToday' | 'receipt-rent' | 'receipt-repair'
-  >()
+  const [messageType, setMessageType] = useState<MessageType>()
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
   let options = []
   if (order?.type === order_type.RENT) {
     options = [
-      { label: 'Vence mañana', value: 'upcomingExpire' },
-      { label: 'Vence hoy', value: 'expireToday' },
+      { label: 'Vencimiento', value: 'expireAt' },
       { label: 'Recibo', value: 'receipt-rent' }
     ]
   }
@@ -221,9 +243,11 @@ const orderPeriod = (order: Partial<OrderType>): string => {
 }
 const orderPayments = ({ order }: { order: OrderType }) => {
   let res = ''
+  const payments = order?.payments
+  if (payments?.length == 0) return '*Sin pagos*'
   if (order?.payments?.length > 0) {
     res += `
-  *Pagos:* \n`
+  \n`
     order.payments.forEach((p) => {
       res += `${new Intl.NumberFormat('es-MX', {
         style: 'currency',

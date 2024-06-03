@@ -4,6 +4,8 @@ import {
   endOfWeek,
   format as fnsFormat,
   formatDistanceToNowStrict,
+  isAfter,
+  isBefore,
   isWithinInterval,
   startOfWeek,
   subWeeks
@@ -125,3 +127,14 @@ export const months = [
   'noviembre',
   'diciembre'
 ]
+
+export function isAfterTomorrow(date: Date): boolean {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return isAfter(date, tomorrow)
+}
+export function isBeforeYesterday(date: Date): boolean {
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  return isBefore(date, yesterday)
+}
