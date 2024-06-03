@@ -15,6 +15,8 @@ import { FormattedComment } from '../types/CommentType'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
+import ButtonConfirm from './ButtonConfirm'
+import { useEmployee } from '../contexts/employeeContext'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -163,7 +165,9 @@ export const CommentRow = ({
   const commentCreatedBy =
     staff.find((s) => s.userId === comment?.createdBy)?.name ||
     comment?.createdByName
-
+  const {
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
   return (
     <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
       <View style={{ justifyContent: 'space-between' }}>
@@ -182,18 +186,44 @@ export const CommentRow = ({
             />
           )}
 
-          <View style={{ marginHorizontal: 4 }}>
-            <Button
-              disabled={disabled}
-              icon="done"
-              color={comment?.solved ? 'success' : 'primary'}
-              variant={comment?.solved ? 'filled' : 'outline'}
-              onPress={() =>
-                handleToggleSolveReport(comment?.id, comment?.solved)
-              }
-              justIcon
-              size="xs"
-            />
+          <View
+            style={{
+              marginHorizontal: 4,
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
+          >
+            <View style={{ marginHorizontal: 8 }}>
+              <Button
+                disabled={disabled}
+                icon="done"
+                color={comment?.solved ? 'success' : 'primary'}
+                variant={comment?.solved ? 'filled' : 'outline'}
+                onPress={() =>
+                  handleToggleSolveReport(comment?.id, comment?.solved)
+                }
+                justIcon
+                size="small"
+              />
+            </View>
+            {isAdmin || isOwner ? (
+              <View style={{ marginHorizontal: 8 }}>
+                <ButtonConfirm
+                  openColor="error"
+                  openSize="small"
+                  justIcon
+                  icon="delete"
+                  confirmColor="error"
+                  openVariant="ghost"
+                  text="¿Estás seguro de eliminar este comentario?"
+                  handleConfirm={async () => {
+                    return ServiceComments.delete(comment?.id).then(() => {
+                      refetch?.({ id: comment?.id })
+                    })
+                  }}
+                />
+              </View>
+            ) : null}
           </View>
           {viewOrder && comment?.orderFolio && (
             <Chip
