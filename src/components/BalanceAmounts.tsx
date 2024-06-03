@@ -59,7 +59,7 @@ const BalanceAmounts = ({ payments }: { payments: PaymentType[] }) => {
             />
           </View>
         </View>
-        {canceledPayments.length && (
+        {!!canceledPayments.length && (
           <View style={styles.row}>
             <LinkPayments
               paymentsIds={canceledPayments.map(({ id }) => id)}
