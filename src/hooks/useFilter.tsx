@@ -19,7 +19,7 @@ export default function useFilter<T extends { id?: string }>({
     'status'
   )
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
-  const cleanFilter = () => {
+  const handleClearFilters = () => {
     setFilteredBy('')
     setFilteredData(data)
     setFiltersBy([])
@@ -53,10 +53,10 @@ export default function useFilter<T extends { id?: string }>({
 
     //* If the same filter exist, remove it
     if (sameExist) {
-      const cleanFilter = [...filters].filter(
+      const handleClearFilters = [...filters].filter(
         (a) => !(a.field === field && a.value === value)
       )
-      filters = cleanFilter
+      filters = handleClearFilters
       setFiltersBy(filters)
       const res = filterDataByFields(data, filters)
       setFilteredData(res)
@@ -65,8 +65,10 @@ export default function useFilter<T extends { id?: string }>({
 
     //* If a similar filter exist, replace it
     if (similarExist) {
-      const cleanFilter = [...filters].filter((a) => !(a.field === field))
-      filters = [...cleanFilter, { field, value }]
+      const handleClearFilters = [...filters].filter(
+        (a) => !(a.field === field)
+      )
+      filters = [...handleClearFilters, { field, value }]
       setFiltersBy(filters)
       const res = filterDataByFields(data, filters)
       setFilteredData(res)
@@ -148,7 +150,7 @@ export default function useFilter<T extends { id?: string }>({
   return {
     filteredData,
     filteredBy,
-    cleanFilter,
+    handleClearFilters,
     filterBy,
     search,
     filtersBy,

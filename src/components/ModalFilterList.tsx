@@ -43,7 +43,7 @@ function ModalFilterList<T>({
 
   const {
     filterBy,
-    cleanFilter,
+    handleClearFilters,
     filteredData,
     filtersBy,
     search,
@@ -207,8 +207,7 @@ function ModalFilterList<T>({
                 variant="ghost"
                 color="secondary"
                 onPress={() => {
-                  cleanFilter()
-
+                  handleClearFilters()
                   setCustomFilterSelected(false)
                 }}
                 justIcon
