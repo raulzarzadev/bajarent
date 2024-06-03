@@ -87,11 +87,14 @@ export enum permissions_store {
   canDeleteBalances,
   canSaveBalances,
   canViewCashbox,
-  canViewItems
+  canViewItems,
+  canEditStaff
 }
 
 export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
-export type PermissionsStore = Record<keyof typeof permissions_store, boolean>
+export type PermissionsStore = Partial<
+  Record<keyof typeof permissions_store, boolean>
+>
 
 export type StaffPermissions = {
   isOwner?: boolean

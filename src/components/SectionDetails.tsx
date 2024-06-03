@@ -12,11 +12,14 @@ import Tabs from './Tabs'
 import ListOrders from './ListOrders'
 import ErrorBoundary from './ErrorBoundary'
 import TextInfo from './TextInfo'
+import { useEmployee } from '../contexts/employeeContext'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
   const navigation = useNavigation()
-
+  const {
+    permissions: { canEditStaff }
+  } = useEmployee()
   const handleRemoveStaff = (staffId: string) => {
     ServiceSections.removeStaff(section?.id, staffId)
       .then((res) => console.log(res))
@@ -28,7 +31,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   )
   const orders = []
   const reports = []
-
+  const canEditSection = canEditStaff
   return (
     <View>
       <View
@@ -54,6 +57,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
               })
               .catch((e) => console.log(e))
           }}
+          openDisabled={!canEditSection}
           text={`¿Desea eliminar esta area?`}
         />
 
@@ -68,6 +72,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
               sectionId: section?.id
             })
           }}
+          disabled={!canEditSection}
         ></ButtonIcon>
       </View>
 
@@ -78,7 +83,6 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
             content: (
               <>
                 <TextInfo text="Descarta o edita staff que ya pertenece a esta AREA" />
-
                 <ListStaff
                   staff={staffSection}
                   sectionId={section.id}

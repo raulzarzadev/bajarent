@@ -11,21 +11,27 @@ import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
+import ListStaff from './ListStaff2'
+import { useStore } from '../contexts/storeContext'
+import StackStaff from './StackStaff'
+import { ScreenStaffE } from './ScreenStaff'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
   const {
-    permissions: { isAdmin, isOwner }
+    permissions: { isAdmin, isOwner, orders, store: storePermissions }
   } = useEmployee()
-  const canViewOrders = isAdmin || isOwner
-  const canViewSections = isAdmin || isOwner
-  const canViewCashbox = isAdmin || isOwner
-  const canViewMovements = isAdmin || isOwner
+  const canViewSections = true
+  const canViewOrders = isAdmin || isOwner || orders.canViewAll
+  const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
+  const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
+  const canViewItems = isAdmin || isOwner || storePermissions.canViewItems
 
+  //&& (canViewCashbox || canViewSections || canViewOrders)
   return (
     <ScrollView>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
-      {!!user && (canViewCashbox || canViewSections || canViewOrders) && (
+      {!!user && (
         <Tabs
           tabs={[
             {
@@ -49,14 +55,14 @@ const ScreenStore = (props) => {
               show: canViewMovements
             },
             {
-              title: 'Areas',
-              content: <TabAreas />,
+              title: 'Staff',
+              content: <TabAreas {...props} />,
               show: canViewSections
             },
             {
               title: 'Artículos',
               content: <TabItems />,
-              show: true
+              show: canViewItems
             }
           ]}
         />
@@ -167,30 +173,23 @@ const TabCashbox = () => {
   )
 }
 
-const TabAreas = () => {
+const TabAreas = (props) => {
   const { navigate } = useNavigation()
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-      <Button
-        label="Areas"
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackSections')
-        }}
-        variant="ghost"
-        disabled={false}
-        icon={'components'}
-      />
-      <Button
-        label="Staff"
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackStaff')
-        }}
-        icon={'orders'}
-        variant="ghost"
-        disabled={false}
-      />
+    <View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Button
+          label="Areas"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackSections')
+          }}
+          variant="ghost"
+          disabled={false}
+          icon={'components'}
+        />
+      </View>
+      <ScreenStaffE {...props} />
     </View>
   )
 }
@@ -205,6 +204,9 @@ const TabItems = () => {
 
 const TabOrders = () => {
   const { navigate } = useNavigation()
+  const {
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
   return (
     <View>
       {<StoreNumbersRow />}
@@ -220,15 +222,17 @@ const TabOrders = () => {
           }}
           variant="ghost"
         />
-        <Button
-          label="Configurar"
-          onPress={() => {
-            //@ts-ignore
-            navigate('ScreenOrdersConfig')
-          }}
-          icon="settings"
-          variant="ghost"
-        />
+        {isAdmin || isOwner ? (
+          <Button
+            label="Configurar"
+            onPress={() => {
+              //@ts-ignore
+              navigate('ScreenOrdersConfig')
+            }}
+            icon="settings"
+            variant="ghost"
+          />
+        ) : null}
       </View>
     </View>
   )

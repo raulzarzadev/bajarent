@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import List from './List'
+import List, { LoadingList } from './List'
 import ListRow, { ListRowField } from './ListRow'
 import {
   ConsolidatedOrderType,
@@ -51,7 +51,7 @@ const ListOrdersConsolidated = () => {
           <TextInfo text="Estas ordenes se generan de forma manual, al hacer click en el logo de guardar"></TextInfo>
           <TextInfo text="Te ayudaran a buscar mas rapido ordenes especificas. "></TextInfo>
         </View>
-        <List
+        <LoadingList
           rowsPerPage={20}
           sideButtons={[
             {

@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import List from './List'
+import List, { LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
 import StaffType from '../types/StaffType'
 import Button from './Button'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ListStaff = ({
   staff = [],
@@ -23,9 +24,14 @@ const ListStaff = ({
   handleEdit?: (rowId: string) => void
 }) => {
   const { navigate } = useNavigation()
+  const {
+    permissions: { canEditStaff }
+  } = useEmployee()
+
+  const disableAdd = !canEditStaff
   return (
     <View>
-      <List
+      <LoadingList
         ComponentRow={({ item }) => (
           <StaffRow
             staff={item}
@@ -50,7 +56,8 @@ const ListStaff = ({
               })
             },
             label: 'Add',
-            visible: showNewStaff ? true : false
+            visible: showNewStaff ? true : false,
+            disabled: disableAdd
           }
         ]}
       />
@@ -69,6 +76,9 @@ const StaffRow = ({
   handleSubtract?: (rowId: string) => void
   handleEdit?: (rowId: string) => void
 }) => {
+  const {
+    permissions: { canEditStaff }
+  } = useEmployee()
   return (
     <View
       style={{
@@ -90,6 +100,7 @@ const StaffRow = ({
               console.log('add')
               handleAdd?.(staff?.id)
             }}
+            disabled={!canEditStaff}
           />
         </View>
       )}
@@ -103,6 +114,7 @@ const StaffRow = ({
               console.log('edit')
               handleEdit?.(staff?.id)
             }}
+            disabled={!canEditStaff}
           />
         </View>
       )}
@@ -117,6 +129,7 @@ const StaffRow = ({
               console.log('delete')
               handleSubtract?.(staff?.id)
             }}
+            disabled={!canEditStaff}
           />
         </View>
       )}

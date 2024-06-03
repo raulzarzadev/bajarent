@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import LinkLocation from './LinkLocation'
-import List from './List'
+import List, { LoadingList } from './List'
 import OrderType, { order_status } from '../types/OrderType'
 import ListRow, { ListRowField } from './ListRow'
 import { ItemMap, ItemMapE } from './ItemsMap'
@@ -32,7 +32,7 @@ const ScreenItemsMap = () => {
   return (
     <ScrollView>
       <ItemMapE orders={locatedOrders} />
-      <List
+      <LoadingList
         sortFields={[
           { key: 'fullName', label: 'Nombre' },
           { key: 'itemSerial', label: 'Serie' },
@@ -49,12 +49,10 @@ const ScreenItemsMap = () => {
 const OrderLocationRow = ({ order }: { order: OrderType }) => {
   const fields: ListRowField[] = [
     {
-      field: order.fullName,
       width: '20%',
       component: <Text>{order.fullName}</Text>
     },
     {
-      field: order.location,
       width: '20%',
       component: (
         <Text numberOfLines={2} style={{ fontSize: 12 }}>
@@ -63,17 +61,14 @@ const OrderLocationRow = ({ order }: { order: OrderType }) => {
       )
     },
     {
-      field: order.itemSerial,
       width: '20%',
       component: <Text>{order.itemSerial}</Text>
     },
     {
-      field: order.itemBrand,
       width: '20%',
       component: <Text>{order.itemBrand}</Text>
     },
     {
-      field: order.location,
       width: '20%',
       component: <LinkLocation location={order.location} />
     }

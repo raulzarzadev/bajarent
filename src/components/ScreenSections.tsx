@@ -13,12 +13,17 @@ import theme from '../theme'
 import { gSpace, gStyles } from '../styles'
 import StaffRow from './StaffRow'
 import Loading from './Loading'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenSections = ({ navigation }) => {
   const { storeSections, store } = useStore()
+  const {
+    permissions: { canEditStaff }
+  } = useEmployee()
   const handlePressRow = (sectionId) => {
     navigation.navigate('ScreenSectionsDetails', { sectionId })
   }
+  const createSection = !!canEditStaff
   if (!store) return <Loading />
   return (
     <ScrollView style={{ width: '100%' }}>
@@ -43,6 +48,7 @@ const ScreenSections = ({ navigation }) => {
               icon="add"
               justIcon
               size="small"
+              disabled={!createSection}
             ></Button>
           </View>
         </View>

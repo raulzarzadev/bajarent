@@ -10,6 +10,7 @@ export type EmployeeContextType = {
     isOwner: boolean
     orders: StaffType['permissions']['order']
     store: StaffType['permissions']['store']
+    canEditStaff?: boolean
   }
 }
 
@@ -56,7 +57,9 @@ export const EmployeeContextProvider = ({ children }) => {
         isAdmin: !!isAdmin,
         isOwner: isOwner,
         orders: employee?.permissions?.order || {},
-        store: employee?.permissions?.store || {}
+        store: employee?.permissions?.store || {},
+        canEditStaff:
+          !!employee?.permissions?.store?.canEditStaff || isOwner || isAdmin
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections]

@@ -15,7 +15,6 @@ import TextInfo from './TextInfo'
 const ScreenStaff = ({ navigation }) => {
   const { store } = useAuth()
   const { staff } = useStore()
-  // const staff = store?.staff || []
   const modal = useModal({ title: 'Eliminar empleado' })
 
   const [staffId, setStaffId] = useState('')
@@ -51,6 +50,7 @@ const ScreenStaff = ({ navigation }) => {
               })
             }
           }
+
           // hideActions
         />
         <StyledModal {...modal}>
