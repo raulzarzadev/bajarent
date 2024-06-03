@@ -25,7 +25,6 @@ export default function useFilter<T extends { id?: string }>({
     setFiltersBy([])
     search('')
   }
-  console.log({ data })
 
   const filterBy = (
     field = 'status',

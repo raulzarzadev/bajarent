@@ -127,10 +127,10 @@ const StoreNumbersRow = () => {
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {
-            screen: 'ScreenReports',
+            screen: 'ScreenOrders',
             params: {
               title: 'Reportes',
-              orders: reports.map(({ id }) => id)
+              orders: reports.map(({ id, orderId }) => orderId)
             }
           })
         }}

@@ -410,7 +410,8 @@ export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
 }
 
 export const LoadingList = <T extends { id: string }>(props: ListPops<T>) => {
-  const data = props.data
+  console.log({ data: props?.data })
+  const data = props?.data
   if (data === undefined)
     return (
       <View
