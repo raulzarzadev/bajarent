@@ -127,7 +127,6 @@ export default function useFilter<T extends { id?: string }>({
     setSearchValue('')
   }
 
-  console.log({ filteredData })
   return {
     filteredData,
     filteredBy,

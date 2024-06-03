@@ -52,7 +52,6 @@ function ModalFilterList<T>({
     data,
     collectionSearch
   })
-  console.log({ filteredData })
 
   useEffect(() => {
     setData?.(filteredData)
@@ -68,6 +67,12 @@ function ModalFilterList<T>({
   }, [preFilteredIds])
 
   const isFilterSelected = (field, value) => {
+    const isBoolean = value === 'true' || value === 'false'
+    if (isBoolean) {
+      return filtersBy.some(
+        (a) => a.field === field && a.value === (value === 'true')
+      )
+    }
     if (field === 'status' && value === 'REPORTED') {
       return filtersBy.some((a) => a.field === 'hasNotSolvedReports' && a.value)
     }
