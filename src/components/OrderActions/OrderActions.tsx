@@ -30,6 +30,7 @@ import InputValueFormik from '../InputValueFormik'
 import FormikSelectCategories from '../FormikSelectCategories'
 import useOrder from '../../hooks/useFullOrder'
 import { orderExpireAt } from '../../libs/orders'
+import FormikInputImage from '../FormikInputImage'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -85,18 +86,26 @@ const OrderActions = ({
 
   const actions_fns = {
     [acts.DELIVER]: async (
-      values?: Pick<OrderType, 'location' | 'itemSerial' | 'items' | 'note'>
+      values?: Pick<
+        OrderType,
+        'location' | 'itemSerial' | 'items' | 'note' | 'imageID' | 'imageHouse'
+      >
     ) => {
       const location = values?.location || ''
       const itemSerial = values?.itemSerial || ''
       const items = values?.items || []
       const note = values?.note || ''
+      const imageID = values?.imageID || ''
+      const imageHouse = values?.imageHouse || ''
+
       try {
         await ServiceOrders.update(orderId, {
           location,
           itemSerial,
           items,
-          note
+          note,
+          imageID,
+          imageHouse
         })
         const expireAt = orderExpireAt({
           order: { ...order, deliveredAt: new Date() }
@@ -451,6 +460,16 @@ const OrderActions = ({
                     name={'location'}
                     helperText={'Ubicación con link o coordenadas'}
                   />
+                </View>
+                <View style={{ marginVertical: 8 }}>
+                  <FormikInputImage
+                    name="imageID"
+                    label="Subir identificación"
+                  />
+                </View>
+
+                <View style={{ marginVertical: 8 }}>
+                  <FormikInputImage name="imageHouse" label="Subir fachada " />
                 </View>
 
                 <View style={{ marginVertical: 8 }}>

@@ -28,6 +28,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
+import OrderImages from './OrderImages'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -56,20 +57,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         <ClientName order={order} style={gStyles.h1} />
       </View>
       <CardPhone phone={order?.phone} />
-      <View>
-        {!!order?.imageID && (
-          <Image
-            source={{ uri: order?.imageID }}
-            style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
-          />
-        )}
-        {!!order?.imageID && (
-          <Image
-            source={{ uri: order?.imageHouse }}
-            style={{ width: '100%', minHeight: 150, marginVertical: 2 }}
-          />
-        )}
-      </View>
+      <OrderImages order={order} />
 
       <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />

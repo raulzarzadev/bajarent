@@ -59,7 +59,7 @@ export default function InputImagePicker({
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: 50,
-        backgroundColor: colors.white
+        backgroundColor: colors.transparent
       }}
     >
       {progress === -1 && <Text>Error al subir archivo</Text>}
