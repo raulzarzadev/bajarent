@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import OrderType, { order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
-import theme from '../theme'
+import theme, { colors } from '../theme'
 import { dateFormat } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
 import OrderComments from './OrderComments'
@@ -338,13 +338,19 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                   })
                 }}
                 key={payment.id}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 6,
-                  flexWrap: 'wrap',
-                  justifyContent: 'center'
-                }}
+                style={[
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 6,
+                    flexWrap: 'wrap',
+                    justifyContent: 'center'
+                  },
+                  payment?.canceled && {
+                    backgroundColor: colors.lightGray,
+                    opacity: 0.4
+                  }
+                ]}
               >
                 <SpanUser userId={payment.createdBy} />
                 <Text style={{ marginHorizontal: 4 }}>
@@ -354,6 +360,9 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                   {dictionary(payment.method)}
                 </Text>
                 <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
+                {payment?.canceled && (
+                  <Text style={{ marginHorizontal: 4 }}>Cancelado</Text>
+                )}
               </Pressable>
             ))}
           </View>

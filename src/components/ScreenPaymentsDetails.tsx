@@ -14,6 +14,7 @@ import SpanUser from './SpanUser'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { colors } from '../theme'
 import Loading from './Loading'
+import Button from './Button'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
@@ -61,6 +62,16 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           </Text>
         </View>
       )}
+      <Button
+        variant="ghost"
+        onPress={() => {
+          navigation.navigate('StackOrders', {
+            screen: 'OrderDetails',
+            params: { orderId: payment?.orderId }
+          })
+        }}
+        label="Ver ordern"
+      />
       {isCanceled && (
         <View
           style={{
