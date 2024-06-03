@@ -206,24 +206,6 @@ export const CommentRow = ({
                 size="xs"
               />
             </View>
-            {isAdmin || isOwner ? (
-              <View style={{ marginHorizontal: 8 }}>
-                <ButtonConfirm
-                  openColor="error"
-                  openSize="xs"
-                  justIcon
-                  icon="delete"
-                  confirmColor="error"
-                  openVariant="ghost"
-                  text="¿Estás seguro de eliminar este comentario?"
-                  handleConfirm={async () => {
-                    return ServiceComments.delete(comment?.id).then(() => {
-                      refetch?.({ id: comment?.id })
-                    })
-                  }}
-                />
-              </View>
-            ) : null}
           </View>
           {viewOrder && comment?.orderFolio && (
             <Chip
@@ -255,6 +237,24 @@ export const CommentRow = ({
               }
             ></Chip>
           )}
+          {isAdmin || isOwner ? (
+            <View style={{ marginHorizontal: 8 }}>
+              <ButtonConfirm
+                openColor="error"
+                openSize="xs"
+                justIcon
+                icon="delete"
+                confirmColor="error"
+                openVariant="ghost"
+                text="¿Estás seguro de eliminar este comentario?"
+                handleConfirm={async () => {
+                  return ServiceComments.delete(comment?.id).then(() => {
+                    refetch?.({ id: comment?.id })
+                  })
+                }}
+              />
+            </View>
+          ) : null}
         </View>
       </View>
       <Text
