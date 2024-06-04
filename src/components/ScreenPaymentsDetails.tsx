@@ -70,7 +70,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
             params: { orderId: payment?.orderId }
           })
         }}
-        label="Ver ordern"
+        label="Ver orden"
       />
       {isCanceled && (
         <View
