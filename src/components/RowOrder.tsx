@@ -18,7 +18,9 @@ export type RowOrderProps = {
 }
 const RowOrder = ({ item: order, showTime, showTotal }: RowOrderProps) => {
   const { payments } = useStore()
-  const orderPayments = payments.filter((p) => p.orderId === order.id)
+  const orderPayments = payments.filter(
+    (p) => p?.orderId && p?.orderId === order?.id
+  )
   const orderTotal = payments_amount(orderPayments).total
   const paymentsMethods = Array.from(
     new Set(orderPayments.map((p) => dictionary(p.method)[0]))
