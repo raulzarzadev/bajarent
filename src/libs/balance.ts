@@ -1,7 +1,7 @@
 import { where } from 'firebase/firestore'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
-import { order_status } from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
 import { payments_amount } from './payments'
 import { ServiceComments } from '../firebase/ServiceComments'
 
@@ -150,7 +150,8 @@ export const calculateSectionBalance = async ({
       [
         where('status', '==', order_status.DELIVERED),
         where('storeId', '==', storeId),
-        where('assignToSection', '==', section)
+        where('assignToSection', '==', section),
+        where('type', '==', order_type.RENT)
       ],
       { justRefs: true }
     )
@@ -204,7 +205,8 @@ export const calculateSectionBalance = async ({
     const ordersInRent = await ServiceOrders.findMany(
       [
         where('status', '==', order_status.DELIVERED),
-        where('storeId', '==', storeId)
+        where('storeId', '==', storeId),
+        where('type', '==', order_type.RENT)
       ],
       { justRefs: true }
     )
