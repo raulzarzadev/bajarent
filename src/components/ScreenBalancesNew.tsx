@@ -24,14 +24,6 @@ const ScreenBalancesNew = ({ navigation }) => {
    //* Is necessary get the orders from the section to define section payments           
      *******************************************rz */
 
-    //FIXME: The thing is getting info from context, not from the server
-
-    // //* 1.- Filter payments by date
-    // const paymentsByDate = storePayments.filter(
-    //   (p) =>
-    //     asDate(p.createdAt).getTime() >= asDate(fromDate).getTime() &&
-    //     asDate(p.createdAt).getTime() <= asDate(toDate).getTime()
-    // )
     // //* 1.- Filter payments by date from server
 
     const paymentsByDate = await ServicePayments.findMany([
@@ -66,15 +58,7 @@ const ScreenBalancesNew = ({ navigation }) => {
   }
 
   const handleCalculateBalance = async (values: BalanceType) => {
-    console.log(
-      'toDate',
-      dateFormat(asDate(values.toDate), 'dd MMM yyyy HH:mm')
-    )
-    console.log(dateFormat(new Date(), 'dd MMM yyyy HH:mm'))
-
     try {
-      //const payments = await getBalancePayments(values)
-      //console.log('balanceType', values.type)
       const { payments, paidOrders } = await getSectionPayments({
         section: values.section,
         fromDate: values.fromDate,
