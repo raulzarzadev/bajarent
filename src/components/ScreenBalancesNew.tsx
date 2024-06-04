@@ -3,7 +3,7 @@ import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType } from '../types/BalanceType'
-import asDate from '../libs/utils-date'
+import asDate, { dateFormat } from '../libs/utils-date'
 import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
@@ -11,6 +11,8 @@ import { calculateSectionBalance } from '../libs/balance'
 import { useAuth } from '../contexts/authContext'
 import { gStyles } from '../styles'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ServicePayments } from '../firebase/ServicePayments'
+import { where } from 'firebase/firestore'
 
 const ScreenBalancesNew = ({ navigation }) => {
   const { payments: storePayments, storeId, orders, store } = useStore()
@@ -22,12 +24,21 @@ const ScreenBalancesNew = ({ navigation }) => {
    //* Is necessary get the orders from the section to define section payments           
      *******************************************rz */
 
-    //* 1.- Filter payments by date
-    const paymentsByDate = storePayments.filter(
-      (p) =>
-        asDate(p.createdAt).getTime() >= asDate(fromDate).getTime() &&
-        asDate(p.createdAt).getTime() <= asDate(toDate).getTime()
-    )
+    //FIXME: The thing is getting info from context, not from the server
+
+    // //* 1.- Filter payments by date
+    // const paymentsByDate = storePayments.filter(
+    //   (p) =>
+    //     asDate(p.createdAt).getTime() >= asDate(fromDate).getTime() &&
+    //     asDate(p.createdAt).getTime() <= asDate(toDate).getTime()
+    // )
+    // //* 1.- Filter payments by date from server
+
+    const paymentsByDate = await ServicePayments.findMany([
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', fromDate),
+      where('createdAt', '<=', toDate)
+    ])
     //* 2.- Find orders from payments, remove duplicates
     const paymentOrders = Array.from(
       new Set(paymentsByDate.map((p) => p.orderId))
@@ -55,6 +66,12 @@ const ScreenBalancesNew = ({ navigation }) => {
   }
 
   const handleCalculateBalance = async (values: BalanceType) => {
+    console.log(
+      'toDate',
+      dateFormat(asDate(values.toDate), 'dd MMM yyyy HH:mm')
+    )
+    console.log(dateFormat(new Date(), 'dd MMM yyyy HH:mm'))
+
     try {
       //const payments = await getBalancePayments(values)
       //console.log('balanceType', values.type)
