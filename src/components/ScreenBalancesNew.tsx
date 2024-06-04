@@ -3,7 +3,6 @@ import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType } from '../types/BalanceType'
-import asDate, { dateFormat } from '../libs/utils-date'
 import BalanceInfo from './BalanceInfo'
 import Button from './Button'
 import { ServiceBalances } from '../firebase/ServiceBalances'
@@ -15,7 +14,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
 
 const ScreenBalancesNew = ({ navigation }) => {
-  const { payments: storePayments, storeId, orders, store } = useStore()
+  const { storeId, store } = useStore()
   const { user } = useAuth()
   const [balance, setBalance] = React.useState<BalanceType>()
 
