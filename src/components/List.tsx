@@ -8,7 +8,7 @@ import {
   //   Dimensions
 } from 'react-native'
 import useSort from '../hooks/useSort'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Icon, { IconName } from './Icon'
 
 import ErrorBoundary from './ErrorBoundary'
@@ -22,6 +22,11 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Loading from './Loading'
 import { gStyles } from '../styles'
+import { ServiceStaff } from '../firebase/ServiceStaff'
+import { pl } from 'react-native-paper-dates'
+import { useEmployee } from '../contexts/employeeContext'
+import { Divider } from 'react-native-elements'
+import { getItem, setItem } from '../libs/storage'
 
 // const windowHeight = Dimensions.get('window').height
 // const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
@@ -46,6 +51,7 @@ export type ListPops<T extends { id: string }> = {
   rowsPerPage?: number
   ComponentMultiActions?: FC<{ ids: string[] }>
   collectionSearch?: CollectionSearch
+  listType?: 'orders'
 }
 
 function MyList<T extends { id: string }>({
@@ -60,7 +66,8 @@ function MyList<T extends { id: string }>({
   preFilteredIds,
   sideButtons = [],
   rowsPerPage = 10,
-  collectionSearch
+  collectionSearch,
+  listType
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([...data])
 
@@ -110,6 +117,66 @@ function MyList<T extends { id: string }>({
 
   const multiSelectActionsModal = useModal({ title: 'Acciones' })
   const [loading, setLoading] = useState(false)
+
+  //* PIN ROWS
+  const { employee } = useEmployee()
+
+  const [pinnedRows, setPinnedRows] = useState<string[]>([])
+
+  // const handleUnpinRow = (id: string) => {
+  //   console.log('unpin', id)
+  //   ServiceStaff.unpinRow(employee.id, id)
+  //     .then(() => {
+  //       console.log('unPinned', id)
+  //       // setPinnedRows(pinnedRows.filter((rowId) => rowId !== id))
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error unpinning row', error)
+  //     })
+  // }
+
+  // const handlePinRow = (id: string) => {
+  //   ServiceStaff.pinRow(employee.id, { id, type: listType })
+  //     .then(() => {
+  //       console.log('Pinned', id)
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error pinning row', error)
+  //     })
+  // }
+
+  // useEffect(() => {
+  //   if (employee.pinnedRows) {
+  //     const pinnedRows = Object.keys(employee.pinnedRows)
+  //     setPinnedRows(pinnedRows)
+  //   }
+  // }, [employee.pinnedRows])
+
+  useEffect(() => {
+    ;(async () => {
+      const storedPinnedRows = await getItem('pinnedRows')
+      if (storedPinnedRows) {
+        setPinnedRows(JSON.parse(storedPinnedRows))
+      }
+    })()
+  }, [])
+
+  const handleUnpinRow = (id: string) => {
+    setPinnedRows((prevPinnedRows) => {
+      const newPinnedRows = prevPinnedRows.filter((rowId) => rowId !== id)
+      setItem('pinnedRows', JSON.stringify(newPinnedRows))
+      return newPinnedRows
+    })
+  }
+
+  const handlePinRow = (id: string) => {
+    setPinnedRows((prevPinnedRows) => {
+      const newPinnedRows = [...prevPinnedRows, id]
+      setItem('pinnedRows', JSON.stringify(newPinnedRows))
+      return newPinnedRows
+    })
+  }
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <View
@@ -120,6 +187,29 @@ function MyList<T extends { id: string }>({
           margin: 'auto'
         }}
       >
+        <FlatList
+          data={pinnedRows}
+          renderItem={({ item }) => (
+            <View style={{}}>
+              <ComponentRow item={data.find(({ id }) => id === item)} />
+              <Button
+                icon={'unPin'}
+                justIcon
+                onPress={() => {
+                  handleUnpinRow(item)
+                }}
+                variant="ghost"
+                size="small"
+                color="error"
+                buttonStyles={{
+                  position: 'absolute',
+                  right: 4,
+                  top: 4
+                }}
+              ></Button>
+            </View>
+          )}
+        />
         <View>
           {/* SEARCH FILTER AND SIDE BUTTONS   */}
           <View
@@ -278,6 +368,7 @@ function MyList<T extends { id: string }>({
           </View>
         )}
         {loading && <Loading />}
+
         {!loading && (
           <>
             <FlatList
@@ -306,6 +397,36 @@ function MyList<T extends { id: string }>({
                         }}
                       >
                         <ComponentRow item={item} />
+                        {!pinnedRows.includes(item.id) ? (
+                          <Button
+                            icon={'pin'}
+                            justIcon
+                            onPress={() => handlePinRow(item.id)}
+                            variant="ghost"
+                            size="small"
+                            buttonStyles={{
+                              position: 'absolute',
+                              right: 4,
+                              top: 4
+                            }}
+                          ></Button>
+                        ) : (
+                          <Button
+                            icon={'unPin'}
+                            justIcon
+                            onPress={() => {
+                              handleUnpinRow(item.id)
+                            }}
+                            variant="ghost"
+                            size="small"
+                            color="error"
+                            buttonStyles={{
+                              position: 'absolute',
+                              right: 4,
+                              top: 4
+                            }}
+                          ></Button>
+                        )}
                       </Pressable>
                     </View>
                   </View>

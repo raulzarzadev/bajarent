@@ -28,6 +28,13 @@ export enum staff_permissions {
 export type StaffPermissionType = {
   [K in keyof typeof staff_permissions]: boolean | FieldValue
 }
+export type PinnedRow = {
+  type: string
+  id: string
+}
+export type StaffPinnedRow = {
+  [id: string]: PinnedRow
+}
 
 export type old_StaffPermissionType = StaffPermissionType
 export type BaseStaffType = {
@@ -43,6 +50,7 @@ export type BaseStaffType = {
   store?: Partial<StoreType>
   permissions?: StaffPermissions
   predefinedPermission?: string
+  pinnedRows?: StaffPinnedRow
   /**
    * @deprecated use permissions.isOwner instead
    */

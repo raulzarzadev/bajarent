@@ -63,6 +63,17 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
     return stores
   }
 
+  async pinRow(staffId: string, { type, id }) {
+    return await this.update(staffId, {
+      [`pinnedRows.${id}`]: { type, id }
+    })
+  }
+  async unpinRow(staffId: string, id: string) {
+    return await this.update(staffId, {
+      [`pinnedRows.${id}`]: deleteField()
+    })
+  }
+
   async deleteOldPermissions(staffId: string) {
     return await this.update(staffId, {
       canAssignOrder: deleteField(),

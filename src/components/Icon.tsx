@@ -29,6 +29,7 @@ import {
   MdOutlineArrowForward,
   MdOutlineRemoveRedEye
 } from 'react-icons/md'
+import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 
 import {
   IoPersonOutline,
@@ -123,7 +124,9 @@ const icons = {
   refresh: MdOutlineRefresh,
   copy: MdCopyAll,
   arrowForward: MdOutlineArrowForward,
-  openEye: MdOutlineRemoveRedEye
+  openEye: MdOutlineRemoveRedEye,
+  pin: RiPushpinLine,
+  unPin: RiUnpinLine
 } as const
 
 export type IconName = keyof typeof icons
