@@ -156,7 +156,11 @@ function MyList<T extends { id: string }>({
     ;(async () => {
       const storedPinnedRows = await getItem('pinnedRows')
       if (storedPinnedRows) {
-        setPinnedRows(JSON.parse(storedPinnedRows))
+        const items = JSON.parse(storedPinnedRows)
+        const validItems = items.filter((id) =>
+          data.find((row) => row.id === id)
+        )
+        setPinnedRows(validItems)
       }
     })()
   }, [])
