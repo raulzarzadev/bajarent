@@ -22,10 +22,6 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Loading from './Loading'
 import { gStyles } from '../styles'
-import { ServiceStaff } from '../firebase/ServiceStaff'
-import { pl } from 'react-native-paper-dates'
-import { useEmployee } from '../contexts/employeeContext'
-import { Divider } from 'react-native-elements'
 import { getItem, setItem } from '../libs/storage'
 
 // const windowHeight = Dimensions.get('window').height
@@ -51,7 +47,6 @@ export type ListPops<T extends { id: string }> = {
   rowsPerPage?: number
   ComponentMultiActions?: FC<{ ids: string[] }>
   collectionSearch?: CollectionSearch
-  listType?: 'orders'
 }
 
 function MyList<T extends { id: string }>({
@@ -66,8 +61,7 @@ function MyList<T extends { id: string }>({
   preFilteredIds,
   sideButtons = [],
   rowsPerPage = 10,
-  collectionSearch,
-  listType
+  collectionSearch
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>([...data])
 
@@ -119,38 +113,8 @@ function MyList<T extends { id: string }>({
   const [loading, setLoading] = useState(false)
 
   //* PIN ROWS
-  const { employee } = useEmployee()
 
   const [pinnedRows, setPinnedRows] = useState<string[]>([])
-
-  // const handleUnpinRow = (id: string) => {
-  //   console.log('unpin', id)
-  //   ServiceStaff.unpinRow(employee.id, id)
-  //     .then(() => {
-  //       console.log('unPinned', id)
-  //       // setPinnedRows(pinnedRows.filter((rowId) => rowId !== id))
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error unpinning row', error)
-  //     })
-  // }
-
-  // const handlePinRow = (id: string) => {
-  //   ServiceStaff.pinRow(employee.id, { id, type: listType })
-  //     .then(() => {
-  //       console.log('Pinned', id)
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error pinning row', error)
-  //     })
-  // }
-
-  // useEffect(() => {
-  //   if (employee.pinnedRows) {
-  //     const pinnedRows = Object.keys(employee.pinnedRows)
-  //     setPinnedRows(pinnedRows)
-  //   }
-  // }, [employee.pinnedRows])
 
   useEffect(() => {
     ;(async () => {

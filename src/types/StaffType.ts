@@ -50,7 +50,6 @@ export type BaseStaffType = {
   store?: Partial<StoreType>
   permissions?: StaffPermissions
   predefinedPermission?: string
-  pinnedRows?: StaffPinnedRow
   /**
    * @deprecated use permissions.isOwner instead
    */
