@@ -39,11 +39,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       if (!bank) return ''
       return `🏦 ${bank} ${clabe}\n`
     })
-    .join('')} 
+    .join('')}`
+
+  const PHONES = `📞 ${store?.phone}
+📱 ${store?.mobile} Whatsapp`
+
+  const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:\n${PHONES}
 `
-  const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:
-📞 ${store?.phone}
-📱 ${store?.mobile} Whatsapp `
 
   const AGRADECIMIENTOS = `De antemano le agradecemos su atención 🙏🏼`
 
@@ -56,7 +58,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
 
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
   const PAYMENTS = `Pagos: ${orderPayments({ order })}`
-
+  const ADDRESS = `📍${store?.address ? `Dirección: ${store.address}` : ''}`
   //******** MESSAGES
 
   const expireDateString = (order) => {
@@ -86,8 +88,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n*Para renovar*
   \n${BANK_INFO}
   \nEnviar su comprobante al Whatsapp  ${store.mobile} y esperar confirmación 👌🏼
+  \nEn caso de *NO CONTINUAR* con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
   \n${CONTACTS}
-  \nEn caso de no querer continuar con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
+  \n${ADDRESS}
   \n${AGRADECIMIENTOS}
   `
 
@@ -96,7 +99,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${RENT_PERIOD}
   \n${PAYMENTS}
   \n${CONTACTS}
-  \n📍 ${store?.address || ''}`
+  \n${ADDRESS}`
 
   const REPAIR_RECEIPT = `
   \n${WELCOME}
@@ -115,8 +118,22 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   
   \n${PAYMENTS}
   \n${CONTACTS}
-  \n📍 ${store?.address || ''}`
-  type MessageType = 'expireAt' | 'receipt-rent' | 'receipt-repair'
+  \n${ADDRESS}
+  \n${AGRADECIMIENTOS}`
+
+  type MessageType =
+    | 'expireAt'
+    | 'receipt-rent'
+    | 'receipt-repair'
+    | 'not-found'
+
+  const CLIENT_NOT_FOUND = `${WELCOME}
+  \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
+  \nResponde este mensaje o póngase en contacto a lo teléfonos :
+  \n${PHONES}
+  \n${ADDRESS}
+  \n${AGRADECIMIENTOS}
+  `
 
   const messages: { type: MessageType; content: string }[] = [
     // {
@@ -127,7 +144,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     //   type: 'expireToday',
     //   content: RENT_EXPIRE_TODAY
     // },
-
+    {
+      type: 'not-found',
+      content: CLIENT_NOT_FOUND
+    },
     {
       type: 'receipt-rent',
       content: RENT_RECEIPT
@@ -155,11 +175,15 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   if (order?.type === order_type.RENT) {
     options = [
       { label: 'Vencimiento', value: 'expireAt' },
-      { label: 'Recibo', value: 'receipt-rent' }
+      { label: 'Recibo', value: 'receipt-rent' },
+      { label: 'No encontrado', value: 'not-found' }
     ]
   }
   if (order?.type === order_type.REPAIR) {
-    options = [{ label: 'Recibo', value: 'receipt-repair' }]
+    options = [
+      { label: 'Recibo', value: 'receipt-repair' },
+      { label: 'No encontrado', value: 'not-found' }
+    ]
   }
 
   return (
