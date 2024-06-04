@@ -9,6 +9,7 @@ export type BalanceOrders = {
   ordersCancelled?: string[]
   ordersInRent?: string[]
   paidOrders?: string[]
+  ordersReportedSolved?: string[]
   assignedOrdersDelivered?: string[]
 }
 export type BalanceBase = {

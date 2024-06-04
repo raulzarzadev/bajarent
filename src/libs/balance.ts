@@ -3,6 +3,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
 import { order_status } from '../types/OrderType'
 import { payments_amount } from './payments'
+import { ServiceComments } from '../firebase/ServiceComments'
 
 export const balanceTotals = (balance: BalanceType) => {
   return payments_amount(balance.payments)
@@ -120,7 +121,30 @@ export const calculateSectionBalance = async ({
 }: {
   storeId: string
 } & Pick<BalanceType, 'section' | 'fromDate' | 'toDate' | 'type'>) => {
-  console.log({ balanceType: type })
+  //console.log({ balanceType: type })
+  const reportsUnsolved = await ServiceComments.findMany(
+    [
+      where('storeId', '==', storeId),
+      where('type', '==', 'report'),
+      where('solved', '==', true),
+      where('solvedAt', '>=', fromDate),
+      where('solvedAt', '<=', toDate)
+    ]
+    // { justRefs: true }
+  )
+  const ordersIdsWithSolvedReports = Array.from(
+    new Set(reportsUnsolved.map((r) => r.orderId))
+  )
+  console.log({ reportsUnsolved })
+
+  const ordersWithSolvedReports = await ServiceOrders.getList(
+    ordersIdsWithSolvedReports
+  )
+
+  const reportedOrdersSolvedBySection = ordersWithSolvedReports.filter(
+    (o) => section === o.assignToSection
+  )
+
   if (type === 'partial') {
     const ordersInRent = await ServiceOrders.findMany(
       [
@@ -173,6 +197,7 @@ export const calculateSectionBalance = async ({
       ordersDelivered: ordersDelivered.map((o) => o.id),
       ordersInRent: ordersInRent.map((o) => o.id),
       ordersCancelled: ordersCancelled.map((o) => o.id),
+      ordersReportedSolved: reportedOrdersSolvedBySection.map((o) => o.id),
       ordersCreated: []
     }
   } else if (type === 'full') {
@@ -227,6 +252,7 @@ export const calculateSectionBalance = async ({
       ordersDelivered: ordersDelivered.map((o) => o.id),
       ordersInRent: ordersInRent.map((o) => o.id),
       ordersCancelled: ordersCancelled.map((o) => o.id),
+      ordersReportedSolved: ordersWithSolvedReports.map((o) => o.id),
       ordersCreated: []
     }
   }

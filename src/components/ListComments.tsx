@@ -17,6 +17,7 @@ import useModal from '../hooks/useModal'
 import Icon from './Icon'
 import ButtonConfirm from './ButtonConfirm'
 import { useEmployee } from '../contexts/employeeContext'
+import { useAuth } from '../contexts/authContext'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -144,11 +145,14 @@ export const CommentRow = ({
   const { navigate } = useNavigation()
   const [disabled, setDisabled] = React.useState(false)
   const { staff } = useStore()
+  const { user } = useAuth()
 
   const handleToggleSolveReport = async (commentId, solved) => {
     setDisabled(true)
     await ServiceComments.update(commentId, {
-      solved: !solved
+      solved: !solved,
+      solvedAt: !solved ? new Date() : null,
+      solvedBy: !solved ? user?.id : null
     })
       .then((res) => {
         // console.log(res)

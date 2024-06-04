@@ -141,6 +141,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       cb
     )
   }
+  getSolvedReports(storeId: string) {
+    const filters = [
+      where('storeId', '==', storeId),
+      where('type', '==', 'report'),
+      where('solved', '==', true)
+    ]
+
+    return this.findMany(filters)
+  }
 }
 
 export const ServiceComments = new ServiceOrdersClass()

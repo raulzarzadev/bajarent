@@ -209,7 +209,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ])
   }
 
-  getList(ids: string[], ops: { sections?: string[] } = {}) {
+  getList(ids: string[], ops: { sections?: string[] } = {}): Promise<Type[]> {
     const sections = ops?.sections || []
     if (!ids || ids?.length === 0) return Promise.resolve([])
     const filters = [where(documentId(), 'in', ids)]

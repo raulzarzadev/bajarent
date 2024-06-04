@@ -57,7 +57,7 @@ const ScreenBalancesNew = ({ navigation }) => {
   const handleCalculateBalance = async (values: BalanceType) => {
     try {
       //const payments = await getBalancePayments(values)
-      console.log('balanceType', values.type)
+      //console.log('balanceType', values.type)
       const { payments, paidOrders } = await getSectionPayments({
         section: values.section,
         fromDate: values.fromDate,

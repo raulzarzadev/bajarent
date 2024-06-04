@@ -68,27 +68,40 @@ const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
           }}
         >
           <ModalOrders
-            modalTitle="Pagadas"
-            buttonLabel="Pagadas"
-            ordersIds={balance?.paidOrders}
-          />
-          <ModalOrders
-            modalTitle=" Rentas"
+            modalTitle="Rentas"
             buttonLabel="Rentas"
             ordersIds={balance?.ordersDelivered}
           />
           <ModalOrders
-            modalTitle=" Recogidas"
-            buttonLabel="Recogidas"
-            ordersIds={balance?.ordersPickup}
-          />
-          <ModalOrders
-            modalTitle=" Renovadas"
+            modalTitle="Renovadas"
             buttonLabel="Renovadas"
             ordersIds={balance?.ordersRenewed}
           />
           <ModalOrders
-            modalTitle=" Canceladas"
+            modalTitle="Pagadas"
+            buttonLabel="Pagadas"
+            ordersIds={balance?.paidOrders}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            flexWrap: 'wrap'
+          }}
+        >
+          <ModalOrders
+            modalTitle="Reportes atendidos"
+            buttonLabel="Reportes"
+            ordersIds={balance?.ordersReportedSolved}
+          />
+          <ModalOrders
+            modalTitle="Recogidas"
+            buttonLabel="Recogidas"
+            ordersIds={balance?.ordersPickup}
+          />
+          <ModalOrders
+            modalTitle="Canceladas"
             buttonLabel="Canceladas"
             ordersIds={balance?.ordersCancelled}
           />
