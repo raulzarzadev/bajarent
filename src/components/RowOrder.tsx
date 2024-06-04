@@ -10,16 +10,13 @@ import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import { payments_amount } from '../libs/payments'
-
-const RowOrder = ({
-  item: order,
-  showTime,
-  showTotal
-}: {
+import ErrorBoundary from './ErrorBoundary'
+export type RowOrderProps = {
   item: OrderType
   showTime?: boolean
   showTotal?: boolean
-}) => {
+}
+const RowOrder = ({ item: order, showTime, showTotal }: RowOrderProps) => {
   const { payments } = useStore()
   const orderPayments = payments.filter((p) => p.orderId === order.id)
   const orderTotal = payments_amount(orderPayments).total
@@ -150,3 +147,9 @@ const styles = StyleSheet.create({
     backgroundColor: STATUS_COLOR.PENDING
   }
 })
+
+export const RowOrderE = (props: RowOrderProps) => (
+  <ErrorBoundary componentName="RowOrder">
+    <RowOrder {...props} />
+  </ErrorBoundary>
+)

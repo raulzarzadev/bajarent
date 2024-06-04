@@ -1,7 +1,7 @@
 import React from 'react'
 import { ListSideButton, LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
-import RowOrder from './RowOrder'
+import RowOrder, { RowOrderE } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 
@@ -26,7 +26,6 @@ const ListOrders = ({
   const { navigate } = useNavigation()
   return (
     <LoadingList
-      listType="orders"
       sideButtons={sideButtons}
       preFilteredIds={defaultOrdersIds}
       defaultSortBy="folio"
@@ -50,7 +49,7 @@ const ListOrders = ({
       ]}
       data={orders}
       ComponentRow={({ item }) => (
-        <RowOrder item={item} showTime={showTime} showTotal={showTotal} />
+        <RowOrderE item={item} showTime={showTime} showTotal={showTotal} />
       )}
       filters={[
         { field: 'assignToSection', label: 'Area' },

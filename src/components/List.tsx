@@ -104,7 +104,7 @@ function MyList<T extends { id: string }>({
     if (selectAll) {
       setSelectedRows([])
     } else {
-      setSelectedRows(sortedData.map((row) => row.id))
+      setSelectedRows(sortedData.map((row) => row?.id))
     }
     setSelectAll(!selectAll)
   }
@@ -120,9 +120,9 @@ function MyList<T extends { id: string }>({
     ;(async () => {
       const storedPinnedRows = await getItem('pinnedRows')
       if (storedPinnedRows) {
-        const items = JSON.parse(storedPinnedRows)
-        const validItems = items.filter((id) =>
-          data.find((row) => row.id === id)
+        const items = JSON.parse(storedPinnedRows || '[]')
+        const validItems = items?.filter((id) =>
+          data?.find((row) => row?.id === id)
         )
         setPinnedRows(validItems)
       }
@@ -132,7 +132,7 @@ function MyList<T extends { id: string }>({
   const handleUnpinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
       const newPinnedRows = prevPinnedRows.filter((rowId) => rowId !== id)
-      setItem('pinnedRows', JSON.stringify(newPinnedRows))
+      setItem('pinnedRows', JSON.stringify(newPinnedRows || []))
       return newPinnedRows
     })
   }
@@ -140,7 +140,7 @@ function MyList<T extends { id: string }>({
   const handlePinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
       const newPinnedRows = [...prevPinnedRows, id]
-      setItem('pinnedRows', JSON.stringify(newPinnedRows))
+      setItem('pinnedRows', JSON.stringify(newPinnedRows || []))
       return newPinnedRows
     })
   }
