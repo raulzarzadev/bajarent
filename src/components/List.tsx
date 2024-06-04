@@ -155,6 +155,9 @@ function MyList<T extends { id: string }>({
           margin: 'auto'
         }}
       >
+        {pinnedRows.length > 0 && (
+          <Text style={gStyles.h2}>Fijadas {pinnedRows.length || 0}</Text>
+        )}
         <FlatList
           data={pinnedRows}
           renderItem={({ item }) => (
@@ -167,7 +170,6 @@ function MyList<T extends { id: string }>({
                   handleUnpinRow(item)
                 }}
                 variant="ghost"
-                size="small"
                 color="error"
                 buttonStyles={{
                   position: 'absolute',
@@ -371,7 +373,6 @@ function MyList<T extends { id: string }>({
                             justIcon
                             onPress={() => handlePinRow(item.id)}
                             variant="ghost"
-                            size="small"
                             buttonStyles={{
                               position: 'absolute',
                               right: 4,
@@ -386,7 +387,6 @@ function MyList<T extends { id: string }>({
                               handleUnpinRow(item.id)
                             }}
                             variant="ghost"
-                            size="small"
                             color="error"
                             buttonStyles={{
                               position: 'absolute',
