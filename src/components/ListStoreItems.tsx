@@ -50,8 +50,7 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         padding: 4,
         borderRadius: 5,
         borderWidth: 1,
-        width: '100%',
-        marginVertical: 2
+        width: '100%'
       }}
       fields={[
         { width: '15%', component: <Text>{item.number}</Text> },
@@ -117,6 +116,42 @@ const storeItems: StoreType['items'] = {
     id: 'item5',
     number: '6',
     serial: 'QRST7890'
+  },
+  item6: {
+    status: 'stock',
+    brand: 'hp',
+    category: 'printer',
+    assignedSection: '97531',
+    id: 'item6',
+    number: '7',
+    serial: 'UVWX1234'
+  },
+  item7: {
+    status: 'sold',
+    brand: 'canon',
+    category: 'camera',
+    assignedSection: '86420',
+    id: 'item7',
+    number: '8',
+    serial: 'YZAB5678'
+  },
+  item8: {
+    status: 'stock',
+    brand: 'lenovo',
+    category: 'tablet',
+    assignedSection: '75319',
+    id: 'item8',
+    number: '9',
+    serial: 'CDEF9012'
+  },
+  item9: {
+    status: 'available',
+    brand: 'lg',
+    category: 'monitor',
+    assignedSection: '64208',
+    id: 'item9',
+    number: '10',
+    serial: 'GHIJ3456'
   }
 }
 

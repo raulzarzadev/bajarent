@@ -168,20 +168,13 @@ function MyList<T extends { id: string }>({
           renderItem={({ item }) => (
             <View style={{}}>
               <ComponentRow item={data.find(({ id }) => id === item)} />
-              <Button
-                icon={'unPin'}
-                justIcon
-                onPress={() => {
+              {/* ***************** ******* ***** UNPIN BUTTON  */}
+              <PinButton
+                handlePin={() => {
                   handleUnpinRow(item)
                 }}
-                variant="ghost"
-                color="error"
-                buttonStyles={{
-                  position: 'absolute',
-                  right: 4,
-                  top: 4
-                }}
-              ></Button>
+                unpin={true}
+              />
             </View>
           )}
         />
@@ -372,34 +365,24 @@ function MyList<T extends { id: string }>({
                         }}
                       >
                         <ComponentRow item={item} />
+
+                        {/* ***************** ******* ***** PIN BUTTON  */}
                         {!pinnedRows.includes(item.id) ? (
-                          <Button
-                            icon={'pin'}
-                            justIcon
-                            onPress={() => handlePinRow(item.id)}
-                            variant="ghost"
-                            buttonStyles={{
-                              position: 'absolute',
-                              right: 4,
-                              top: 4
+                          <PinButton
+                            handlePin={() => {
+                              handlePinRow(item.id)
                             }}
-                          ></Button>
+                          />
                         ) : (
-                          <Button
-                            icon={'unPin'}
-                            justIcon
-                            onPress={() => {
+                          <PinButton
+                            handlePin={() => {
                               handleUnpinRow(item.id)
                             }}
-                            variant="ghost"
-                            color="error"
-                            buttonStyles={{
-                              position: 'absolute',
-                              right: 4,
-                              top: 4
-                            }}
-                          ></Button>
+                            unpin={true}
+                          />
                         )}
+
+                        {/* ***************** ******* ***** PIN BUTTON  */}
                       </Pressable>
                     </View>
                   </View>
@@ -426,6 +409,24 @@ function MyList<T extends { id: string }>({
         )}
       </View>
     </ScrollView>
+  )
+}
+
+const PinButton = ({ handlePin, unpin = false }) => {
+  return (
+    <Button
+      icon={unpin ? 'unPin' : 'pin'}
+      justIcon
+      onPress={() => handlePin()}
+      color={unpin ? 'error' : 'primary'}
+      variant="ghost"
+      size="small"
+      buttonStyles={{
+        position: 'absolute',
+        right: 4,
+        top: 4
+      }}
+    />
   )
 }
 
