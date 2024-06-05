@@ -63,7 +63,7 @@ function MyList<T extends { id: string }>({
   rowsPerPage = 10,
   collectionSearch
 }: ListPops<T>) {
-  const [filteredData, setFilteredData] = useState<T[]>([...data])
+  const [filteredData, setFilteredData] = useState<T[]>(undefined)
 
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
     data: filteredData,
@@ -114,6 +114,10 @@ function MyList<T extends { id: string }>({
 
   //* PIN ROWS
 
+  useEffect(() => {
+    setFilteredData(data)
+  }, [data])
+
   const [pinnedRows, setPinnedRows] = useState<string[]>([])
 
   useEffect(() => {
@@ -144,6 +148,7 @@ function MyList<T extends { id: string }>({
       return newPinnedRows
     })
   }
+  if (!data) return <Loading />
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -264,7 +269,7 @@ function MyList<T extends { id: string }>({
               )}
             </View>
             <Text style={{ textAlign: 'center', marginRight: 4 }}>
-              {filteredData.length} coincidencias
+              {filteredData?.length} coincidencias
             </Text>
           </View>
           <View style={{}}>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { order_status } from '../types/OrderType'
 
 export default function useSort<T>({
-  data,
+  data = [],
   defaultSortBy = '',
   defaultOrder = 'asc'
 }: {

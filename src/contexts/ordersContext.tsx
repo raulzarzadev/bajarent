@@ -99,7 +99,6 @@ export const OrdersContextProvider = ({
   const handleGetOrders = async () => {
     handleGetConsolidates()
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
-    //console.log({ typeOfOrders })
     if (typeOfOrders === 'all') {
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
