@@ -23,6 +23,7 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
   helperTextColor?: 'error' | 'primary' | 'black' | 'white'
   type?: 'number' | 'text'
   containerStyle?: ViewStyle
+  label?: string
 }
 const InputTextStyled = ({
   disabled,
@@ -31,6 +32,7 @@ const InputTextStyled = ({
   type = 'text',
   value: defValue,
   containerStyle,
+  label,
   ...props
 }: InputTextProps): JSX.Element => {
   const [value, setValue] = useState<string | number>()
@@ -39,6 +41,7 @@ const InputTextStyled = ({
   }, [defValue])
   return (
     <View style={containerStyle}>
+      {label && <Text>{label}</Text>}
       <TextInput
         {...props}
         value={String(value || '')}

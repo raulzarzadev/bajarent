@@ -15,7 +15,7 @@ const FormItem = ({
   values: Partial<ItemType>
   onSubmit?: (values: ItemType) => Promise<any> | void
 }) => {
-  const { store, categories } = useStore()
+  const { store, categories, storeSections } = useStore()
 
   const defaultValues: Partial<ItemType> = { ...values }
   const handleSubmit = async (values: ItemType) => {
@@ -28,6 +28,10 @@ const FormItem = ({
     label: category.name,
     value: category.id
   }))
+  const sectionsOps = storeSections?.map((section) => ({
+    label: section.name,
+    value: section.id
+  }))
 
   return (
     <Formik
@@ -39,19 +43,40 @@ const FormItem = ({
       {({ handleSubmit }) => (
         <View>
           <View style={styles.input}>
-            <FormikInputValue name={'number'} placeholder="Numero" />
+            <FormikInputValue
+              label="Numero"
+              name={'number'}
+              placeholder="Numero"
+            />
           </View>
           <View style={styles.input}>
-            <FormikInputValue name={'serial'} placeholder="No. serie" />
+            <FormikInputValue
+              label="No. de serie"
+              name={'serial'}
+              placeholder="No. serie"
+            />
           </View>
           <View style={styles.input}>
-            <FormikInputValue name={'brand'} placeholder="Marca" />
+            <FormikInputValue
+              label="Marca"
+              name={'brand'}
+              placeholder="Marca"
+            />
           </View>
           <View style={styles.input}>
             <FormikInputSelect
+              label="Categoria"
               name={'category'}
               options={categoriesOps}
               placeholder="Seleccionar categoria"
+            />
+          </View>
+          <View style={styles.input}>
+            <FormikInputSelect
+              label="Area asignada"
+              name={'assignedSection'}
+              options={sectionsOps}
+              placeholder="Seleccionar area asignada"
             />
           </View>
 
