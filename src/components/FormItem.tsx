@@ -79,8 +79,9 @@ const FormItem = ({
               placeholder="Seleccionar area asignada"
             />
           </View>
-
-          <Button onPress={handleSubmit} label={'Guardar'} />
+          <View style={[{ marginTop: 16 }]}>
+            <Button onPress={handleSubmit} label={'Guardar'} />
+          </View>
         </View>
       )}
     </Formik>
