@@ -12,7 +12,7 @@ const FormItem = ({
   onSubmit,
   values = {}
 }: {
-  values: Partial<ItemType>
+  values?: Partial<ItemType>
   onSubmit?: (values: ItemType) => Promise<any> | void
 }) => {
   const { store, categories, storeSections } = useStore()
