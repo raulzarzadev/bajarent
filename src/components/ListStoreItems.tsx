@@ -10,7 +10,7 @@ import { useStore } from '../contexts/storeContext'
 const ListStoreItems = () => {
   const { navigate } = useNavigation()
   const { store } = useStore()
-  const items = Object.values(store?.items)
+  const items = Object.values(store?.items || {})
 
   return (
     <View>
