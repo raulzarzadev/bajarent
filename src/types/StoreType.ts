@@ -1,8 +1,12 @@
 import { FormOrderFields } from '../components/FormOrder'
 import BaseType from './BaseType'
+import ItemType from './ItemType'
 import { TypeOrderKey, order_type } from './OrderType'
 import { SectionType } from './SectionType'
 import StaffType from './StaffType'
+export type StoreItems = {
+  [key: string]: Partial<ItemType>
+}
 
 export type BaseStoreType = {
   name: string
@@ -29,6 +33,7 @@ export type BaseStoreType = {
     clabe: string
   }[]
   accountHolder?: string
+  items?: StoreItems
 }
 
 type StoreType = BaseType & BaseStoreType

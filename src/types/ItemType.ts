@@ -16,6 +16,7 @@ export type ItemBase = {
    * @description category id
    */
   category: CategoryType['id']
+  assignedSection?: string
 }
 
 type ItemType = BaseType & ItemBase
