@@ -2,7 +2,7 @@ import { where } from 'firebase/firestore'
 import StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStaff } from './ServiceStaff'
-class ServiceStoresClass extends FirebaseGenericService<StoreType> {
+export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   constructor() {
     super('stores')
   }

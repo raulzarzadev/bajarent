@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StackOrders from './StackOrders'
 import StackProfile from './StackProfile'
-import StackStore from './StackStore'
+import StackStore, { StackStoreE } from './StackStore'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import Icon, { IconName } from './Icon'
@@ -52,7 +52,7 @@ const BottomAppBar = () => {
     >
       <Tab.Screen
         name="Store"
-        component={StackStore}
+        component={StackStoreE}
         options={{
           title: 'Tienda ',
           headerShown: false,

@@ -5,11 +5,13 @@ import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
 import ListRow from './ListRow'
 import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
 
 const ListStoreItems = () => {
   const { navigate } = useNavigation()
-  const items = Object.values(storeItems)
-  console.log({ items })
+  const { store } = useStore()
+  const items = Object.values(store?.items)
+
   return (
     <View>
       <ListE
@@ -27,7 +29,7 @@ const ListStoreItems = () => {
             icon: 'add',
             onPress() {
               // @ts-ignore
-              navigate('ScreenItem')
+              navigate('ScreenItemNew')
             },
             label: 'Agregar',
             visible: true
@@ -35,6 +37,10 @@ const ListStoreItems = () => {
         ]}
         data={items.map((item) => ({ ...item, id: item.id }))}
         filters={[]}
+        onPressRow={(rowId) => {
+          // @ts-ignore
+          navigate('ScreenItemsDetails', { id: rowId })
+        }}
         ComponentRow={({ item }) => {
           return <RowItem item={item} />
         }}
@@ -50,11 +56,12 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         padding: 4,
         borderRadius: 5,
         borderWidth: 1,
-        width: '100%'
+        width: '100%',
+        marginVertical: 2
       }}
       fields={[
         { width: '15%', component: <Text>{item.number}</Text> },
-        { width: '30%', component: <Text>{item.category}</Text> },
+        { width: '30%', component: <Text>{item.categoryName}</Text> },
         { width: '25%', component: <Text>{item.brand}</Text> },
         { width: '30%', component: <Text>{item.serial}</Text> }
       ]}
@@ -152,6 +159,15 @@ const storeItems: StoreType['items'] = {
     id: 'item9',
     number: '10',
     serial: 'GHIJ3456'
+  },
+  item10: {
+    status: 'maintenance',
+    brand: 'samsung',
+    category: 'microwave',
+    assignedSection: '53197',
+    id: 'item10',
+    number: '11',
+    serial: 'KLMN7890'
   }
 }
 

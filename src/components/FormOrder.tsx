@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
-import InputValueFormik from './InputValueFormik'
+import InputValueFormik from './FormikInputValue'
 import OrderType, { TypeOrder, order_type } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './FormikInputPhone'

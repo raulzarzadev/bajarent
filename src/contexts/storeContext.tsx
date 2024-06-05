@@ -112,6 +112,16 @@ const StoreContextProvider = ({ children }) => {
       .map((section) => section.id)
     return { ...staff, sectionsAssigned }
   })
+
+  let items = {}
+  for (let key in store?.items) {
+    console.log({ key })
+    const item = store?.items[key]
+    item.categoryName =
+      categories.find((cat) => cat.id === item.category)?.name || ''
+    items[key] = item
+  }
+
   return (
     <StoreContext.Provider
       value={{

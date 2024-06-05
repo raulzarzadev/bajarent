@@ -3,7 +3,7 @@ import React from 'react'
 import StyledTextInput, { InputTextProps } from './InputTextStyled'
 import { useField } from 'formik'
 
-const InputValueFormik = ({
+const FormikInputValue = ({
   name,
   helperText,
   ...props
@@ -19,6 +19,6 @@ const InputValueFormik = ({
   )
 }
 
-export default InputValueFormik
+export default FormikInputValue
 
 const styles = StyleSheet.create({})

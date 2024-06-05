@@ -13,6 +13,10 @@ import { StackBalancesE } from './StackBalances'
 import StackOrders from './StackOrders'
 import { StackPaymentsE } from './StackPayments'
 import ScreenItemsMap from './ScreenItemsMap'
+import ErrorBoundary from './ErrorBoundary'
+import ScreenItemNew from './ScreenItemNew'
+import ScreenItemsDetails from './ScreenItemsDetails'
+import ScreenItemEdit, { ScreenItemEditE } from './ScreenItemEdit'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -125,14 +129,6 @@ function StackStore() {
                  MORE SCREENS                 
        *******************************************rz */}
 
-      {/* ITEMS */}
-      <Stack.Screen
-        name="Items"
-        options={{
-          title: 'Artículos'
-        }}
-        component={ScreenItems}
-      />
       {/* CATEGORIES */}
 
       <Stack.Screen
@@ -156,7 +152,44 @@ function StackStore() {
           title: 'Mapa'
         }}
       />
+
+      {/* ITEMS */}
+      <Stack.Screen
+        name="Items"
+        options={{
+          title: 'Artículos'
+        }}
+        component={ScreenItems}
+      />
+
+      <Stack.Screen
+        name="ScreenItemNew"
+        options={{
+          title: 'Nuevo artículo'
+        }}
+        component={ScreenItemNew}
+      />
+      <Stack.Screen
+        name="ScreenItemsDetails"
+        options={{
+          title: 'Detalles de artículo'
+        }}
+        component={ScreenItemsDetails}
+      />
+
+      <Stack.Screen
+        name="ScreenItemEdit"
+        options={{
+          title: 'Editar artículo'
+        }}
+        component={ScreenItemEditE}
+      />
     </Stack.Navigator>
   )
 }
 export default StackStore
+export const StackStoreE = (props) => (
+  <ErrorBoundary componentName="StackStore">
+    <StackStore {...props} />
+  </ErrorBoundary>
+)
