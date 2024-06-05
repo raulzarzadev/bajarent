@@ -115,10 +115,11 @@ const StoreContextProvider = ({ children }) => {
 
   let items = {}
   for (let key in store?.items) {
-    console.log({ key })
     const item = store?.items[key]
     item.categoryName =
       categories.find((cat) => cat.id === item.category)?.name || ''
+    item.assignedSectionName =
+      sections.find((sec) => sec.id === item.assignedSection)?.name || ''
     items[key] = item
   }
 

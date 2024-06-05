@@ -49,6 +49,10 @@ const ItemDetails = ({ item }: { item: ItemType }) => {
       </Text>
       <Text>No.de serie: {item.serial}</Text>
       <Text>Marca: {item.brand}</Text>
+      <Text>
+        Area asignada:
+        {item.assignedSectionName}
+      </Text>
     </View>
   )
 }
