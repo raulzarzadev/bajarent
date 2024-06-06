@@ -33,7 +33,6 @@ const ListOrdersConsolidated = () => {
   const [disabled, setDisabled] = useState(false)
 
   const handleConsolidate = () => {
-    handleRefresh()
     setDisabled(true)
     ServiceConsolidatedOrders.consolidate(storeId)
       .then((res) => {
@@ -41,6 +40,7 @@ const ListOrdersConsolidated = () => {
       })
       .finally(() => {
         setDisabled(false)
+        handleRefresh()
       })
   }
 
