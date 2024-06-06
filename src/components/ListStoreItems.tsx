@@ -36,7 +36,18 @@ const ListStoreItems = () => {
           }
         ]}
         data={items.map((item) => ({ ...item, id: item.id }))}
-        filters={[]}
+        filters={[
+          { field: 'assignedSectionName', label: 'Sección' },
+          { field: 'categoryName', label: 'Categoría' },
+          { field: 'brand', label: 'Marca' }
+        ]}
+        sortFields={[
+          { key: 'number', label: 'Número' },
+          { key: 'categoryName', label: 'Categoría' },
+          { key: 'assignedSectionName', label: 'Sección' },
+          { key: 'brand', label: 'Marca' },
+          { key: 'serial', label: 'Serial' }
+        ]}
         onPressRow={(rowId) => {
           // @ts-ignore
           navigate('ScreenItemsDetails', { id: rowId })
@@ -60,10 +71,11 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         marginVertical: 2
       }}
       fields={[
-        { width: '15%', component: <Text>{item.number}</Text> },
-        { width: '30%', component: <Text>{item.categoryName}</Text> },
-        { width: '25%', component: <Text>{item.brand}</Text> },
-        { width: '30%', component: <Text>{item.serial}</Text> }
+        { width: '20%', component: <Text>{item.number}</Text> },
+        { width: '20%', component: <Text>{item.categoryName}</Text> },
+        { width: '20%', component: <Text>{item.assignedSectionName}</Text> },
+        { width: '20%', component: <Text>{item.brand}</Text> },
+        { width: '20%', component: <Text>{item.serial}</Text> }
       ]}
     />
   )
