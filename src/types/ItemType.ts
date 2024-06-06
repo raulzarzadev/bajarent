@@ -19,6 +19,8 @@ export type ItemBase = {
   assignedSection?: string
   categoryName?: string
   assignedSectionName?: string
+  currentOrderId?: string
+  currentLocation?: string
 }
 
 type ItemType = BaseType & ItemBase

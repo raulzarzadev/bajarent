@@ -1,7 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
-import InputValueFormik from './FormikInputValue'
 import OrderType, { order_type } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './FormikInputPhone'
@@ -19,6 +18,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
+import FormikInputValue from './FormikInputValue'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
@@ -102,7 +102,7 @@ const FormOrder = ({
               />
             </View>
             <View style={[styles.item]}>
-              <InputValueFormik
+              <FormikInputValue
                 name={'fullName'}
                 placeholder="Nombre completo"
                 helperText={!values.fullName && 'Nombre es requerido'}
@@ -117,19 +117,19 @@ const FormOrder = ({
                   <InputLocationFormik name={'location'} />
                 </View>
                 <View style={[styles.item]}>
-                  <InputValueFormik
+                  <FormikInputValue
                     name={'neighborhood'}
                     placeholder="Colonia"
                   />
                 </View>
                 <View style={[styles.item]}>
-                  <InputValueFormik
+                  <FormikInputValue
                     name={'address'}
                     placeholder="Dirección completa ( calle, numero, entre calles)"
                   />
                 </View>
                 <View style={[styles.item]}>
-                  <InputValueFormik
+                  <FormikInputValue
                     name={'references'}
                     placeholder="Referencias de la casa"
                   />
@@ -153,17 +153,17 @@ const FormOrder = ({
                     . Reembolsable si se realiza la reparación
                   </Text>
 
-                  <InputValueFormik
+                  <FormikInputValue
                     name={'description'}
                     placeholder="Describe la falla"
                     helperText="Ejemplo: Lavadora no lava, hace ruido."
                   />
-                  <InputValueFormik
+                  <FormikInputValue
                     name={'itemBrand'}
                     placeholder="Marca"
                     helperText="Ejemplo: Mytag"
                   />
-                  <InputValueFormik
+                  <FormikInputValue
                     name={'itemSerial'}
                     placeholder="Numero de serie"
                   />

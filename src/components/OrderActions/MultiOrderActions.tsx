@@ -6,13 +6,20 @@ import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
 import { onDelete, onSetStatuses } from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
+import OrderType from '../../types/OrderType'
+import { ItemMap } from '../ItemsMap'
+import {
+  createItemsFromOrders,
+  formatItemsMaps,
+  formatOrderItemsMaps
+} from '../../libs/maps'
 
 const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
   const { storeId, user } = useAuth()
   const {
     permissions: { orders: permissionsOrder, isOwner, isAdmin }
   } = useEmployee()
-  const { handleRefresh } = useOrdersCtx()
+  const { handleRefresh, orders } = useOrdersCtx()
 
   const [loading, setLoading] = React.useState(false)
 
@@ -48,6 +55,15 @@ const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
     })
     timeOut()
   }
+
+  // const handleCreateItem = async () => {
+  //   setLoading(true)
+  //   const items = createItemsFromOrders(
+  //     orders.filter((o) => ordersIds.includes(o.id))
+  //   )
+  //   console.log({ items })
+  //   timeOut()
+  // }
   const buttons = [
     canCancel && (
       <Button
@@ -77,6 +93,14 @@ const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
       color="neutral"
       disabled={loading}
     />
+    // <Button
+    //   onPress={() => handleCreateItem()}
+    //   label="Crear item"
+    //   icon="save"
+    //   variant="outline"
+    //   color="neutral"
+    //   disabled={loading}
+    // />
   ]
   return (
     <View

@@ -9,6 +9,7 @@ import theme, { colors } from '../theme'
 import LinkLocation from './LinkLocation'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
+import { formatItemsMaps } from '../libs/maps'
 const INITIAL_POSITION = [24.145708, -110.311002]
 const LAVARENTA_COORD = [24.150635, -110.316583]
 
@@ -168,46 +169,6 @@ export const ItemMapE = (props: ItemsMapProps) => {
     <ErrorBoundary componentName="Map">
       <ItemsMap {...props} />
     </ErrorBoundary>
-  )
-}
-
-const isCoordinates = (str: string): boolean => {
-  const regex = /^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$/
-  return regex.test(str)
-}
-
-const getCoordinates = async (location): Promise<[number, number]> | null => {
-  const isLocationCoordinates = isCoordinates(location)
-  const isShortUrl = location.match(/^https:\/\/\S+/)
-  if (isLocationCoordinates) {
-    const coords = location?.split(',')
-    return [parseFloat(coords[0]), parseFloat(coords[1])]
-  } else if (isShortUrl) {
-    console.log('is a url', { isShortUrl })
-    //const coords = await getCoordinatesFromShortUrl(location)
-    return null
-  } else {
-    return null
-  }
-}
-const formatItemsMaps = async (orders: OrderType[]): Promise<ItemMap[]> => {
-  return await Promise.all(
-    orders?.map(async (item) => {
-      let coords = await getCoordinates(item.location)
-      return {
-        itemId: item.id,
-        clientName: item.fullName,
-        orderFilo: item.folio,
-        coords,
-        label: `${item.folio}`,
-        iconColor: (() => {
-          if (item.isExpired) return theme.success
-          if (item.status === order_status.AUTHORIZED) return theme.warning
-          if (item.hasNotSolvedReports) return theme.error
-          return colors.transparent
-        })()
-      }
-    })
   )
 }
 
