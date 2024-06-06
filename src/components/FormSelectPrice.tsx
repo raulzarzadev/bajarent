@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { PriceType } from '../types/PriceType'
 import P from './P'
-import theme from '../theme'
+import theme, { colors } from '../theme'
 import CurrencyAmount from './CurrencyAmount'
 const FormSelectPrice = ({
   prices,
@@ -70,7 +70,7 @@ export const CardPrice = ({
       style={[
         styles.price,
         style,
-        { borderColor: selected ? theme.black : 'transparent' }
+        { backgroundColor: selected ? theme.primary : colors.white }
       ]}
     >
       <Text style={{ textAlign: 'center', marginBottom: 4 }}>
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.primary,
     borderRadius: 8,
     // borderColor: theme.secondary,
-    borderColor: 'black',
-    borderWidth: 2,
+    // borderColor: 'black',
+    //borderWidth: 2,
     shadowColor: theme.black,
     shadowOffset: {
       width: 2,
