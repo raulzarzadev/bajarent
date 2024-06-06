@@ -7,12 +7,10 @@ import ErrorBoundary from './ErrorBoundary'
 import OrderType, { order_status } from '../types/OrderType'
 import theme, { colors } from '../theme'
 import LinkLocation from './LinkLocation'
-import axios from 'axios'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 const INITIAL_POSITION = [24.145708, -110.311002]
 const LAVARENTA_COORD = [24.150635, -110.316583]
-axios.defaults.withCredentials = true
 
 export type ItemMap = {
   itemId: string
@@ -24,7 +22,8 @@ export type ItemMap = {
 }
 export type ItemsMapProps = {
   //items: ItemMap[]
-  orders: OrderType[]
+  orders?: OrderType[]
+  items?: ItemMap[]
 }
 const SvgIcon = ({ color }) => (
   <svg
@@ -56,22 +55,25 @@ const customSvgIcon = (color) =>
     popupAnchor: [0, -12] // point from which the popup should open relative to the iconAnchor
   })
 
-export default function ItemsMap({ orders = [] }: ItemsMapProps) {
+export default function ItemsMap({ orders = [], items = [] }: ItemsMapProps) {
   const { navigate } = useNavigation()
-  const [items, setItems] = useState([])
+  const [_items, _setItems] = useState([])
   useEffect(() => {
-    formatItemsMaps(orders).then((res) => {
-      setItems(res)
-    })
+    if (orders?.length > 0) {
+      formatItemsMaps(orders).then((res) => {
+        _setItems(res)
+      })
+    } else if (items?.length > 0) {
+      _setItems(items)
+    }
   }, [orders])
+
   return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: 'row' }}>
-        <MarkerInfo label="Vencidas" color={theme.success} />
-        <MarkerInfo label="Reportes" color={theme.error} />
-        <MarkerInfo label="Pedidos" color={theme.warning} />
-        <MarkerInfo label="En renta" color={theme.transparent} />
-      </View>
+    <View
+      style={{
+        position: 'relative'
+      }}
+    >
       <MapContainer
         style={styles.map}
         //@ts-ignore
@@ -85,7 +87,7 @@ export default function ItemsMap({ orders = [] }: ItemsMapProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
 
-        {items?.map((item) => {
+        {_items?.map((item) => {
           if (!item.coords) return null
           return (
             <Marker
@@ -126,6 +128,19 @@ export default function ItemsMap({ orders = [] }: ItemsMapProps) {
           )
         })}
       </MapContainer>
+      <View
+        style={{
+          flexDirection: 'row',
+          position: 'absolute',
+          zIndex: 9999,
+          right: 16
+        }}
+      >
+        <MarkerInfo label="Vencidas" color={theme.success} />
+        <MarkerInfo label="Reportes" color={theme.error} />
+        <MarkerInfo label="Pedidos" color={theme.warning} />
+        <MarkerInfo label="En renta" color={theme.transparent} />
+      </View>
     </View>
   )
 }
@@ -208,6 +223,9 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     //height: 700,
+    //height: '100vh',
+    height: '100%',
+
     maxWidth: 1200,
     margin: 'auto',
     aspectRatio: 16 / 12

@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
@@ -12,6 +18,8 @@ import { formatOrders } from '../libs/orders'
 import { ServiceComments } from '../firebase/ServiceComments'
 
 const ScreenItemsMap = () => {
+  const screenWidth = useWindowDimensions().width
+  const isScreenWidthGreaterThan500 = screenWidth > 700
   const [locatedOrders, setLocatedOrders] = useState<OrderType[]>([])
   const { storeId } = useStore()
   useEffect(() => {
@@ -31,17 +39,43 @@ const ScreenItemsMap = () => {
 
   return (
     <ScrollView>
-      <ItemMapE orders={locatedOrders} />
-      <LoadingList
-        sortFields={[
-          { key: 'fullName', label: 'Nombre' },
-          { key: 'itemSerial', label: 'Serie' },
-          { key: 'itemBrand', label: 'Marca' }
-        ]}
-        ComponentRow={({ item }) => <OrderLocationRow order={item} />}
-        filters={[]}
-        data={locatedOrders}
-      />
+      <View
+        style={{
+          flexDirection: isScreenWidthGreaterThan500 ? 'row' : 'column'
+        }}
+      >
+        <View
+          style={{
+            width: isScreenWidthGreaterThan500 ? 300 : 500,
+            margin: 'auto'
+          }}
+        >
+          <LoadingList
+            sortFields={[
+              { key: 'fullName', label: 'Nombre' },
+              { key: 'itemSerial', label: 'Serie' },
+              { key: 'itemBrand', label: 'Marca' }
+            ]}
+            ComponentRow={({ item }) => <OrderLocationRow order={item} />}
+            filters={[]}
+            data={locatedOrders}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <ItemMapE orders={locatedOrders} />
+        </View>
+        {/*         
+        <LoadingList
+          sortFields={[
+            { key: 'fullName', label: 'Nombre' },
+            { key: 'itemSerial', label: 'Serie' },
+            { key: 'itemBrand', label: 'Marca' }
+          ]}
+          ComponentRow={({ item }) => <OrderLocationRow order={item} />}
+          filters={[]}
+          data={locatedOrders}
+        /> */}
+      </View>
     </ScrollView>
   )
 }
