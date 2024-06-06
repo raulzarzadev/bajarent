@@ -110,7 +110,6 @@ function MyList<T extends { id: string }>({
   }
 
   const multiSelectActionsModal = useModal({ title: 'Acciones' })
-  const [loading, setLoading] = useState(false)
 
   //* PIN ROWS
 
@@ -331,78 +330,73 @@ function MyList<T extends { id: string }>({
             />
           </View>
         )}
-        {loading && <Loading />}
 
-        {!loading && (
-          <>
-            <FlatList
-              data={sortedData.slice(startIndex, endIndex)}
-              renderItem={({ item }) => {
-                return (
-                  <View style={{ width: '100%' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      {multiSelect && (
-                        <InputCheckbox
-                          label=""
-                          setValue={() => {
-                            handleSelectRow(item?.id)
-                          }}
-                          value={selectedRows.includes(item?.id)}
-                        />
-                      )}
-                      <Pressable
-                        style={{ flex: 1 }}
-                        onPress={() => {
-                          if (multiSelect) {
-                            handleSelectRow(item.id)
-                          } else {
-                            onPressRow && onPressRow(item?.id)
-                          }
+        <FlatList
+          data={sortedData.slice(startIndex, endIndex)}
+          renderItem={({ item }) => {
+            return (
+              <View style={{ width: '100%' }}>
+                <View style={{ flexDirection: 'row' }}>
+                  {multiSelect && (
+                    <InputCheckbox
+                      label=""
+                      setValue={() => {
+                        handleSelectRow(item?.id)
+                      }}
+                      value={selectedRows.includes(item?.id)}
+                    />
+                  )}
+                  <Pressable
+                    style={{ flex: 1 }}
+                    onPress={() => {
+                      if (multiSelect) {
+                        handleSelectRow(item.id)
+                      } else {
+                        onPressRow && onPressRow(item?.id)
+                      }
+                    }}
+                  >
+                    <ComponentRow item={item} />
+
+                    {/* ***************** ******* ***** PIN BUTTON  */}
+                    {!pinnedRows.includes(item?.id) ? (
+                      <PinButton
+                        handlePin={() => {
+                          handlePinRow(item?.id)
                         }}
-                      >
-                        <ComponentRow item={item} />
+                      />
+                    ) : (
+                      <PinButton
+                        handlePin={() => {
+                          handleUnpinRow(item?.id)
+                        }}
+                        unpin={true}
+                      />
+                    )}
 
-                        {/* ***************** ******* ***** PIN BUTTON  */}
-                        {!pinnedRows.includes(item?.id) ? (
-                          <PinButton
-                            handlePin={() => {
-                              handlePinRow(item?.id)
-                            }}
-                          />
-                        ) : (
-                          <PinButton
-                            handlePin={() => {
-                              handleUnpinRow(item?.id)
-                            }}
-                            unpin={true}
-                          />
-                        )}
+                    {/* ***************** ******* ***** PIN BUTTON  */}
+                  </Pressable>
+                </View>
+              </View>
+            )
+          }}
+        ></FlatList>
 
-                        {/* ***************** ******* ***** PIN BUTTON  */}
-                      </Pressable>
-                    </View>
-                  </View>
-                )
-              }}
-            ></FlatList>
-
-            <View
-              style={{
-                alignSelf: 'center',
-                marginBottom: 16,
-                marginTop: 4,
-                marginRight: 4
-              }}
-            >
-              <Pagination
-                currentPage={currentPage}
-                handleNextPage={handleNextPage}
-                handlePrevPage={handlePrevPage}
-                totalPages={totalPages}
-              />
-            </View>
-          </>
-        )}
+        <View
+          style={{
+            alignSelf: 'center',
+            marginBottom: 16,
+            marginTop: 4,
+            marginRight: 4
+          }}
+        >
+          <Pagination
+            currentPage={currentPage}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+            totalPages={totalPages}
+          />
+        </View>
       </View>
     </ScrollView>
   )
