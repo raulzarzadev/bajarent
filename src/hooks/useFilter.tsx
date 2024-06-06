@@ -77,15 +77,14 @@ export default function useFilter<T extends { id?: string }>({
   const [searchValue, setSearchValue] = useState('')
   const search = async (value: string) => {
     setSearchValue(value)
-
+    const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
     if (!value) {
       //<-- Apply filters if exist to keep current selection
-      const res = filterDataByFields(data, filtersBy)
-      setFilteredData(res)
+      setFilteredData(filteredData)
       return
     }
 
-    const res = [...data].filter((order) => {
+    const res = [...filteredData].filter((order) => {
       return Object.values(order).some((val) => {
         if (typeof val === 'string') {
           return val.toLowerCase().includes(value.toLowerCase())
