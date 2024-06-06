@@ -19,7 +19,8 @@ const ButtonConfirm = ({
   confirmVariant,
   confirmColor,
   openSize,
-  openDisabled
+  openDisabled,
+  onOpen
 }: {
   openLabel?: string
   modalTitle?: string
@@ -32,9 +33,10 @@ const ButtonConfirm = ({
   openColor?: ButtonProps['color']
   confirmVariant?: ButtonProps['variant']
   confirmColor?: ButtonProps['color']
-  text: string
+  text?: string
   openSize?: ButtonProps['size']
   openDisabled?: ButtonProps['disabled']
+  onOpen?: () => void
 }) => {
   const modal = useModal({ title: modalTitle })
   const [sending, setSending] = React.useState(false)
@@ -45,7 +47,10 @@ const ButtonConfirm = ({
           icon={icon}
           color={openColor}
           variant={openVariant}
-          onPress={modal.toggleOpen}
+          onPress={() => {
+            if (onOpen) onOpen()
+            modal.toggleOpen()
+          }}
           size={openSize}
           disabled={openDisabled}
         ></ButtonIcon>
@@ -53,7 +58,10 @@ const ButtonConfirm = ({
         <Button
           color={openColor}
           variant={openVariant}
-          onPress={modal.toggleOpen}
+          onPress={() => {
+            if (onOpen) onOpen()
+            modal.toggleOpen()
+          }}
           label={openLabel}
           icon={icon}
           size={openSize}
@@ -61,7 +69,7 @@ const ButtonConfirm = ({
         ></Button>
       )}
       <StyledModal {...modal}>
-        {text && (
+        {!!text && (
           <Text style={{ textAlign: 'center', marginVertical: 18 }}>
             {text}
           </Text>
