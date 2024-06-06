@@ -7,9 +7,11 @@ import ErrorBoundary from './ErrorBoundary'
 import ItemType from '../types/ItemType'
 import Loading from './Loading'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { useNavigation } from '@react-navigation/native'
 
 const ScreenItemEdit = ({ route }) => {
   const itemId = route?.params?.id
+  const { goBack } = useNavigation()
   const { store, storeId } = useStore()
   const items = store?.items
   const [item, setItem] = useState<Partial<ItemType>>()
@@ -31,6 +33,7 @@ const ScreenItemEdit = ({ route }) => {
       <FormItem
         values={item}
         onSubmit={(values) => {
+          goBack()
           return handleUpdateItem(values)
         }}
       />

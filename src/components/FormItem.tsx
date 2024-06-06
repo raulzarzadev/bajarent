@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Formik } from 'formik'
 import Button from './Button'
 import FormikInputValue from './FormikInputValue'
@@ -19,8 +19,15 @@ const FormItem = ({
 
   const defaultValues: Partial<ItemType> = { ...values }
   const handleSubmit = async (values: ItemType) => {
+    setDisabled(true)
     if (onSubmit) {
-      await onSubmit(values)
+      try {
+        await onSubmit(values)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setDisabled(false)
+      }
     }
   }
 
@@ -32,6 +39,8 @@ const FormItem = ({
     label: section.name,
     value: section.id
   }))
+
+  const [disabled, setDisabled] = useState(false)
 
   return (
     <Formik
@@ -80,7 +89,11 @@ const FormItem = ({
             />
           </View>
           <View style={[{ marginTop: 16 }]}>
-            <Button onPress={handleSubmit} label={'Guardar'} />
+            <Button
+              onPress={handleSubmit}
+              label={'Guardar'}
+              disabled={disabled}
+            />
           </View>
         </View>
       )}
