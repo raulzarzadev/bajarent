@@ -152,35 +152,39 @@ const ItemRow = ({
   onPressDelete: () => void
 }) => {
   return (
-    <View
-      style={{
-        width: '100%',
-        marginVertical: gSpace(2),
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        maxWidth: 320,
-        marginHorizontal: 'auto',
-        alignItems: 'center',
-        backgroundColor: theme.neutral,
-        paddingHorizontal: gSpace(2),
-        paddingVertical: gSpace(1),
-        borderRadius: gSpace(2)
-      }}
-    >
-      <View>
-        <Button
-          icon="sub"
-          color="error"
-          justIcon
-          onPress={onPressDelete}
-          size="small"
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          // width: '100%',
+          flex: 1,
+          marginVertical: gSpace(2),
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          //maxWidth: 320,
+          marginHorizontal: 'auto',
+          alignItems: 'center',
+          backgroundColor: theme.info,
+          paddingHorizontal: gSpace(2),
+          paddingVertical: gSpace(1),
+          borderRadius: gSpace(2),
+          marginRight: gSpace(2)
+        }}
+      >
+        <Text style={{ fontWeight: 'bold' }}>{item?.categoryName}</Text>
+        <Text style={{ alignItems: 'center' }}>
+          {item.priceSelected?.title}
+        </Text>
+        <CurrencyAmount
+          style={{ fontWeight: 'bold' }}
+          amount={item.priceSelected?.amount}
         />
       </View>
-      <Text style={{ fontWeight: 'bold' }}>{item?.categoryName}</Text>
-      <Text style={{ alignItems: 'center' }}>{item.priceSelected?.title}</Text>
-      <CurrencyAmount
-        style={{ fontWeight: 'bold' }}
-        amount={item.priceSelected?.amount}
+      <Button
+        icon="sub"
+        color="error"
+        justIcon
+        onPress={onPressDelete}
+        size="small"
       />
     </View>
   )
