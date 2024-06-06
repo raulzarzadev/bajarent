@@ -13,9 +13,10 @@ import ListOrders from './ListOrders'
 import ErrorBoundary from './ErrorBoundary'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
+import ListStoreItems from './ListStoreItems'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
-  const { staff } = useStore()
+  const { staff, store } = useStore()
   const navigation = useNavigation()
   const {
     permissions: { canEditStaff }
@@ -32,6 +33,9 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   const orders = []
   const reports = []
   const canEditSection = canEditStaff
+  const storeItems = Object.values(store?.items || {})
+  const sectionItems =
+    storeItems?.filter((i) => i?.assignedSection === section?.id) || []
   return (
     <View>
       <View
@@ -102,15 +106,20 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
             show: true
           },
           {
-            title: 'Orders',
-            content: <ListOrders orders={orders} />,
-            show: true
-          },
-          {
-            title: 'Reports',
-            content: <ListOrders orders={reports} />,
+            title: 'Artículos',
+            content: <ListStoreItems items={sectionItems} />,
             show: true
           }
+          // {
+          //   title: 'Orders',
+          //   content: <ListOrders orders={orders} />,
+          //   show: true
+          // },
+          // {
+          //   title: 'Reports',
+          //   content: <ListOrders orders={reports} />,
+          //   show: true
+          // }
         ]}
       />
     </View>

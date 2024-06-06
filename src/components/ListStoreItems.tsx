@@ -5,12 +5,9 @@ import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
 import ListRow from './ListRow'
 import { useNavigation } from '@react-navigation/native'
-import { useStore } from '../contexts/storeContext'
 
-const ListStoreItems = () => {
+const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const { navigate } = useNavigation()
-  const { store } = useStore()
-  const items = Object.values(store?.items || {})
 
   return (
     <View>
