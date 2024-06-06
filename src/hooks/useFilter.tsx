@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CollectionSearch } from '../components/ModalFilterList'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
@@ -120,12 +120,18 @@ export default function useFilter<T extends { id?: string }>({
       })
     })
   }
+
   const handleClearFilters = () => {
     setFilteredData([...data])
     setFilteredBy('')
     setFiltersBy([])
     setSearchValue('')
   }
+
+  useEffect(() => {
+    const res = filterDataByFields(data, filtersBy)
+    setFilteredData(res)
+  }, [data])
 
   return {
     filteredData,

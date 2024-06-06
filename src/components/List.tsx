@@ -113,9 +113,9 @@ function MyList<T extends { id: string }>({
 
   //* PIN ROWS
 
-  useEffect(() => {
-    setFilteredData(data)
-  }, [data])
+  // useEffect(() => {
+  //   setFilteredData(data)
+  // }, [data])
 
   const [pinnedRows, setPinnedRows] = useState<string[]>([])
 
