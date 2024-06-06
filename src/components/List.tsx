@@ -211,12 +211,8 @@ function MyList<T extends { id: string }>({
               preFilteredIds={preFilteredIds}
               data={data}
               setData={(data) => {
-                setLoading(true)
-                setTimeout(() => {
-                  setCurrentPage(1)
-                  setFilteredData(data)
-                  setLoading(false)
-                }, 1000)
+                setFilteredData(data)
+                setCurrentPage(1)
               }}
               filters={filters}
             />
@@ -367,16 +363,16 @@ function MyList<T extends { id: string }>({
                         <ComponentRow item={item} />
 
                         {/* ***************** ******* ***** PIN BUTTON  */}
-                        {!pinnedRows.includes(item.id) ? (
+                        {!pinnedRows.includes(item?.id) ? (
                           <PinButton
                             handlePin={() => {
-                              handlePinRow(item.id)
+                              handlePinRow(item?.id)
                             }}
                           />
                         ) : (
                           <PinButton
                             handlePin={() => {
-                              handleUnpinRow(item.id)
+                              handleUnpinRow(item?.id)
                             }}
                             unpin={true}
                           />
@@ -522,13 +518,13 @@ export const LoadingList = <T extends { id: string }>(props: ListPops<T>) => {
         <Loading />
       </View>
     )
-  if (data.length === 0)
-    return (
-      <Text
-        style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
-      >
-        No hay datos
-      </Text>
-    )
+  // if (data.length === 0)
+  //   return (
+  //     <Text
+  //       style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
+  //     >
+  //       No hay datos
+  //     </Text>
+  //   )
   return <ListE {...props} />
 }
