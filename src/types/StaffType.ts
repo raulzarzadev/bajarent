@@ -86,8 +86,7 @@ export enum permissions_orders {
   canUnAuthorize,
   canExtend,
   showOrderTotal,
-  showOrderTime,
-  canCancelPayments
+  showOrderTime
 }
 export enum permissions_store {
   canCreateBalance,
@@ -96,7 +95,8 @@ export enum permissions_store {
   canSaveBalances,
   canViewCashbox,
   canViewItems,
-  canEditStaff
+  canEditStaff,
+  canCancelPayments
 }
 
 export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
