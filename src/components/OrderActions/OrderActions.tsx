@@ -308,10 +308,15 @@ const OrderActions = ({
   /* ******************************************** 
              REPAIR FLOW               
    *******************************************rz */
+  const modalPickUpRepair = useModal({ title: 'Recoger reparación' })
+  const handlePickupRepair = () => {
+    modalPickUpRepair.toggleOpen()
+    //actions_fns[acts.PICKUP]()
+  }
   const REPAIR_FLOW = [
     {
       label: 'Pickup',
-      action: actions_fns[acts.PICKUP],
+      action: handlePickupRepair,
       status: order_status.PICKED_UP,
       disabled: !canPickupRepair || !employeeCanPickup
     },
@@ -416,6 +421,86 @@ const OrderActions = ({
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
         {/* <OrderStatus order={order} chipSize={'sm'} /> */}
       </View>
+      <StyledModal {...modalPickUpRepair}>
+        <View>
+          <Formik
+            initialValues={{ ...order }}
+            onSubmit={async (values) => {
+              await ServiceOrders.update(orderId, { ...values })
+                .then(console.log)
+                .catch(console.error)
+              await actions_fns[acts.PICKUP]()
+
+              modalPickUpRepair.setOpen(false)
+            }}
+            validate={(values: OrderType) => {
+              const errors: Partial<OrderType> = {}
+              if (!values.location) errors.location = 'Ubicación requerida'
+              if (
+                !values.itemSerial &&
+                (values.type === 'RENT' || values.type === 'REPAIR')
+              )
+                errors.itemSerial = 'No. de serie es requerido'
+              return errors
+            }}
+          >
+            {({ errors, handleSubmit, isSubmitting }) => {
+              return (
+                <View>
+                  <View style={{ marginVertical: 8 }}>
+                    <InputValueFormik
+                      name={'note'}
+                      placeholder="Nota"
+                      helperText={'Numero de nota o referencia externa'}
+                    />
+                  </View>
+                  <View style={{ marginVertical: 8 }}>
+                    <InputValueFormik
+                      name={'itemSerial'}
+                      placeholder="No. de serie"
+                      helperText={'Numero de serie'}
+                    />
+                  </View>
+                  <View style={{ marginVertical: 8 }}>
+                    <InputValueFormik
+                      name={'itemBrand'}
+                      placeholder="Marca"
+                      helperText={'Marca del articulo'}
+                    />
+                  </View>
+                  <View style={{ marginVertical: 8 }}>
+                    <InputLocationFormik
+                      name={'location'}
+                      helperText={'Ubicación con link o coordenadas'}
+                    />
+                  </View>
+
+                  <View style={{ marginVertical: 8 }}>
+                    <FormikInputImage
+                      name="imageHouse"
+                      label="Subir fachada "
+                    />
+                  </View>
+
+                  <Button
+                    disabled={Object.keys(errors).length > 0 || isSubmitting}
+                    label="Recoger"
+                    onPress={() => {
+                      handleSubmit()
+                    }}
+                  />
+                </View>
+              )
+            }}
+          </Formik>
+          {/* <Button
+            label="Recoger"
+            onPress={() => {
+              actions_fns[acts.PICKUP]()
+            }}
+          /> */}
+        </View>
+      </StyledModal>
 
       <StyledModal {...deliveryModal}>
         <Formik
