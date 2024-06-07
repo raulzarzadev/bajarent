@@ -27,7 +27,7 @@ function StackPayments() {
         name="ScreenPaymentsDetails"
         options={({ route }) => ({
           //@ts-ignore
-          title: route?.params?.title || 'Pagos'
+          title: route?.params?.title || 'Detalles de pago'
         })}
         component={ScreenPaymentsDetails}
       />

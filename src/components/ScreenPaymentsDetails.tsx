@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
 import DateCell from './DateCell'
@@ -15,11 +15,20 @@ import { dateFormat, fromNow } from '../libs/utils-date'
 import { colors } from '../theme'
 import Loading from './Loading'
 import Button from './Button'
+import { useEmployee } from '../contexts/employeeContext'
+import PaymentType from '../types/PaymentType'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
-  const { payments, staff } = useStore()
-  const payment = payments?.find((p) => p?.id === id)
+  const { staff } = useStore()
+  const { permissions } = useEmployee()
+  const canCancelPayments = permissions?.canCancelPayments
+  const [payment, setPayment] = useState<PaymentType>()
+  useEffect(() => {
+    ServicePayments.get(id).then((p) => {
+      setPayment(p)
+    })
+  })
   const { user } = useAuth()
   const userName =
     staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
@@ -99,7 +108,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
         </View>
       )}
       <ButtonConfirm
-        openDisabled={isCanceled}
+        openDisabled={isCanceled || !canCancelPayments}
         openLabel="Cancelar pago"
         modalTitle="Cancelar pago"
         openColor="error"

@@ -331,6 +331,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
             {payments?.map((payment) => (
               <Pressable
                 onPress={() => {
+                  console.log(payment.id)
                   //@ts-ignore
                   navigate('StackPayments', {
                     screen: 'ScreenPaymentsDetails',
