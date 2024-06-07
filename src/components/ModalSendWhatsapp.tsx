@@ -127,6 +127,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     | 'receipt-repair'
     | 'not-found'
     | 'repair-picked-up'
+    | 'rent-quality-survey'
 
   const CLIENT_NOT_FOUND = `${WELCOME}
   \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
@@ -153,6 +154,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${CONTACTS}
   \n${ADDRESS}
   \n${AGRADECIMIENTOS}`
+
+  const QUALITY_SURVEY = `${WELCOME}
+  \nAyudanos a mejorar el servicio con esta breve encuesta.
+  \nhttps://forms.gle/1kBa9yeZyP9rc6YeA
+  \n${AGRADECIMIENTOS}
+  \n${CONTACTS}
+  `
 
   const messages: { type: MessageType; content: string }[] = [
     // {
@@ -182,6 +190,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     {
       type: 'repair-picked-up',
       content: REPAIR_PICKED_UP
+    },
+    {
+      type: 'rent-quality-survey',
+      content: QUALITY_SURVEY
     }
   ]
 
@@ -199,7 +211,8 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     options = [
       { label: 'Vencimiento', value: 'expireAt' },
       { label: 'Recibo', value: 'receipt-rent' },
-      { label: 'No encontrado', value: 'not-found' }
+      { label: 'No encontrado', value: 'not-found' },
+      { label: 'Encuesta', value: 'rent-quality-survey' }
     ]
   }
   if (order?.type === order_type.REPAIR) {
