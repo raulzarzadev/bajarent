@@ -1,4 +1,4 @@
-import { where, documentId } from 'firebase/firestore'
+import { where, documentId, limit, orderBy } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import PaymentType from '../types/PaymentType'
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
@@ -26,6 +26,14 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       where('storeId', '==', storeId),
       where('createdAt', '>=', new Date().setHours(0, 0, 0, 0)),
       where('createdAt', '<=', new Date().setHours(23, 59, 59, 999))
+    ])
+  }
+
+  async getLast(storeId: string, { count = 10 }) {
+    return this.getItems([
+      where('storeId', '==', storeId),
+      limit(count),
+      orderBy('createdAt', 'desc')
     ])
   }
 

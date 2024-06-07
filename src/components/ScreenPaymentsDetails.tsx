@@ -107,32 +107,34 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           </Text>
         </View>
       )}
-      <ButtonConfirm
-        openDisabled={isCanceled || !canCancelPayments}
-        openLabel="Cancelar pago"
-        modalTitle="Cancelar pago"
-        openColor="error"
-        openVariant="outline"
-        confirmLabel="Cancelar"
-        confirmColor="error"
-        text="¿Estás seguro de que deseas cancelar este pago?"
-        handleConfirm={async () => {
-          return ServicePayments.update(payment?.id, {
-            canceled: true,
-            canceledReason: reason,
-            canceledAt: new Date(),
-            canceledBy: user?.id
-          }).then(() => {
-            navigation.goBack()
-          })
-        }}
-      >
-        <InputTextStyled
-          placeholder="Motivo"
-          onChangeText={setReason}
-          value={reason}
-        />
-      </ButtonConfirm>
+      {canCancelPayments && (
+        <ButtonConfirm
+          openDisabled={isCanceled}
+          openLabel="Cancelar pago"
+          modalTitle="Cancelar pago"
+          openColor="error"
+          openVariant="outline"
+          confirmLabel="Cancelar"
+          confirmColor="error"
+          text="¿Estás seguro de que deseas cancelar este pago?"
+          handleConfirm={async () => {
+            return ServicePayments.update(payment?.id, {
+              canceled: true,
+              canceledReason: reason,
+              canceledAt: new Date(),
+              canceledBy: user?.id
+            }).then(() => {
+              navigation.goBack()
+            })
+          }}
+        >
+          <InputTextStyled
+            placeholder="Motivo"
+            onChangeText={setReason}
+            value={reason}
+          />
+        </ButtonConfirm>
+      )}
 
       {/* <View style={{ justifyContent: 'center', margin: 'auto' }}>
         {order === undefined && <ActivityIndicator />}

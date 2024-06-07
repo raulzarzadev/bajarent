@@ -47,6 +47,7 @@ export type ListPops<T extends { id: string }> = {
   rowsPerPage?: number
   ComponentMultiActions?: FC<{ ids: string[] }>
   collectionSearch?: CollectionSearch
+  onFetchMore?: () => void
 }
 
 function MyList<T extends { id: string }>({
@@ -61,7 +62,8 @@ function MyList<T extends { id: string }>({
   preFilteredIds,
   sideButtons = [],
   rowsPerPage = 10,
-  collectionSearch
+  collectionSearch,
+  onFetchMore
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
 
@@ -381,6 +383,17 @@ function MyList<T extends { id: string }>({
             )
           }}
         ></FlatList>
+        <View>
+          {onFetchMore && (
+            <Button
+              label="cargar mas"
+              variant="ghost"
+              onPress={() => {
+                onFetchMore()
+              }}
+            ></Button>
+          )}
+        </View>
 
         <View
           style={{

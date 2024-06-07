@@ -4,13 +4,22 @@ import PaymentsList from './PaymentsList'
 import { useStore } from '../contexts/storeContext'
 import PaymentType from '../types/PaymentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import { ServicePayments } from '../firebase/ServicePayments'
 
 export default function ScreenPayments({ navigation, route }) {
-  const { payments } = useStore()
+  const [payments, setPayments] = useState<PaymentType[]>([])
+  const { storeId } = useStore()
   const { consolidatedOrders } = useOrdersCtx()
   const preList = route?.params?.payments || null
-
+  const [count, setCount] = useState(10)
   const [fullPayments, setFullPayments] = useState<PaymentType[]>([])
+  useEffect(() => {
+    if (storeId)
+      ServicePayments.getLast(storeId, { count }).then((p) => {
+        setPayments(p)
+      })
+  }, [count, storeId])
+
   useEffect(() => {
     if (preList) {
       const filteredPayments = payments.filter(({ id }) => preList.includes(id))
@@ -34,6 +43,10 @@ export default function ScreenPayments({ navigation, route }) {
         payments={paymentsWithOrderData}
         onPressRow={(paymentId) => {
           navigation.navigate('ScreenPaymentsDetails', { id: paymentId })
+        }}
+        onFetchMore={() => {
+          setCount((count) => count + 10)
+          console.log('fetch more')
         }}
       />
     </ScrollView>

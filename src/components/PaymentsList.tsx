@@ -6,10 +6,12 @@ import PaymentRow from './PaymentRow'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 function PaymentsList({
   payments,
-  onPressRow
+  onPressRow,
+  onFetchMore
 }: {
   payments: PaymentTypeList[]
   onPressRow?: (paymentId: string) => void
+  onFetchMore?: () => void
 }) {
   const sortFields = [
     { key: 'orderFolio', label: 'Folio' },
@@ -49,6 +51,7 @@ function PaymentsList({
           label: 'Método'
         }
       ]}
+      onFetchMore={onFetchMore}
     />
   )
 }
