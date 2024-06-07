@@ -28,7 +28,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const item = order?.items?.[0]
   //*********  MEMES
   const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
-  const ORDER_TYPE = `Su contrato📄 de ${
+  const ORDER_TYPE = `Su servicio📄 de ${
     dictionary(order?.type)?.toUpperCase() || ''
   } ${item?.categoryName ? `de ${item?.categoryName}` : ''}: *${order?.folio}* `
   const BANK_INFO = `Favor de transferir 💸  únicamente a cualquiera de las siguientes cuentas a nombre de ${
@@ -112,7 +112,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n🔧 *Información del aparato*
   🛠️ Marca: ${order?.itemBrand || ''}
   #️⃣ Serie: ${order?.itemSerial || ''} 
-  🧾 Falla: ${order?.description || ''}
+  🧾 Falla: ${order?.repairInfo || ''}
   💲 Cotización:  $${order?.repairTotal || 0}
   🗓️ Garantía 1 Mes
   
@@ -126,6 +126,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     | 'receipt-rent'
     | 'receipt-repair'
     | 'not-found'
+    | 'repair-picked-up'
 
   const CLIENT_NOT_FOUND = `${WELCOME}
   \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
@@ -134,6 +135,24 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${ADDRESS}
   \n${AGRADECIMIENTOS}
   `
+
+  const REPAIR_PICKED_UP = `
+  \n${WELCOME}
+  \n${ORDER_TYPE}
+  \n📆Fecha ${
+    order?.pickedUpAt
+      ? dateFormat(asDate(order?.pickedUpAt), 'dd MMMM yyyy')
+      : ''
+  }
+  \n🔧 *Información del aparato*
+  🛠️ Marca: ${order?.itemBrand || ''}
+  #️⃣ Serie: ${order?.itemSerial || ''} 
+  🧾 Falla: ${order?.repairInfo || ''}
+  💲 Cotización:  $${order?.repairTotal || 0}
+  
+  \n${CONTACTS}
+  \n${ADDRESS}
+  \n${AGRADECIMIENTOS}`
 
   const messages: { type: MessageType; content: string }[] = [
     // {
@@ -159,6 +178,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     {
       type: 'expireAt',
       content: RENT_EXPIRE_DATE
+    },
+    {
+      type: 'repair-picked-up',
+      content: REPAIR_PICKED_UP
     }
   ]
 
@@ -182,7 +205,8 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   if (order?.type === order_type.REPAIR) {
     options = [
       { label: 'Recibo', value: 'receipt-repair' },
-      { label: 'No encontrado', value: 'not-found' }
+      { label: 'No encontrado', value: 'not-found' },
+      { label: 'Recogido', value: 'repair-picked-up' }
     ]
   }
 
