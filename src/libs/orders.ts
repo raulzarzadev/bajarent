@@ -106,18 +106,11 @@ export const orderExpireAt = ({
 }: {
   order: Partial<OrderType>
 }): Date | null => {
-  //* if is rent and is delivered or renewed calculate expire date, else return null
   let expireAt = null
-
-  const { status } = order
-  if (
-    [
-      order_status.CANCELLED,
-      order_status.AUTHORIZED,
-      order_status.PENDING
-    ].includes(status)
-  )
+  //* if order is not RENT, return null
+  if (order.type !== 'RENT') {
     return null
+  }
 
   const orderItemsExpireDate = order?.items?.map((item) => {
     const expireAt = expireDate2({
@@ -136,6 +129,7 @@ export const orderExpireAt = ({
     })[0].expireAt
   } else {
     //* if order has no items, use the order expire date
+    console.log('order has no items')
     //*******  show expire as null
     expireAt = null
   }
