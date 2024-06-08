@@ -9,6 +9,7 @@ import InputRadios from './InputRadios'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
 import { ServicePayments } from '../firebase/ServicePayments'
+import FormPayment from './FormPayment'
 
 export type ModalPaymentProps = {
   orderId: string
@@ -33,47 +34,15 @@ export const ModalPayment = ({
   const label = 'Registrar pago'
 
   const modal = useModal({ title: label })
-  // const { updatePayments } = useStore()
-  const [method, setMethod] = useState<PaymentType['method']>(
-    payment?.method || 'cash'
-  )
-  const [reference, setReference] = useState(payment?.reference || '')
 
-  const [amount, setAmount] = useState(payment?.amount || 0)
-  const [saving, setSaving] = useState(false)
-
-  const handleSavePayment = async () => {
-    setSaving(true)
+  const handleSavePayment = async ({ values }) => {
+    console.log({ values })
     await ServicePayments.create({
-      amount,
-      method,
-      storeId,
-      orderId,
-      reference,
-      date: new Date()
+      ...values
     })
-      .then((res) => {
-        // updatePayments()
-        resetForm()
-      })
-      .finally(() => {
-        setSaving(false)
-      })
+      .then(console.log)
+      .catch(console.error)
   }
-
-  const resetForm = () => {
-    modal.toggleOpen()
-    setSaving(false)
-    setAmount(0)
-    setReference('')
-    setMethod('cash')
-  }
-
-  const methods = Object.values(payment_methods).map((method) => ({
-    label:
-      dictionary(method).charAt(0).toUpperCase() + dictionary(method).slice(1),
-    value: method
-  }))
 
   return (
     <>
@@ -86,44 +55,17 @@ export const ModalPayment = ({
         {label}
       </Button>
       <StyledModal {...modal}>
-        <View style={styles.repairItemForm}>
-          <InputRadios
-            layout="row"
-            value={method}
-            options={methods}
-            setValue={(value) => {
-              setMethod(value as PaymentType['method'])
-            }}
-          />
-        </View>
-
-        <View style={styles.repairItemForm}>
-          <InputTextStyled
-            type="number"
-            value={amount}
-            keyboardType="numeric"
-            placeholder="Total $ "
-            onChangeText={(value) => {
-              setAmount(parseFloat(value) || 0)
-            }}
-          ></InputTextStyled>
-        </View>
-        {method === 'transfer' && (
-          <View style={styles.repairItemForm}>
-            <InputTextStyled
-              value={reference}
-              placeholder="Referencia "
-              onChangeText={(value) => {
-                setReference(value)
-              }}
-            ></InputTextStyled>
-          </View>
-        )}
-        <View style={styles.repairItemForm}>
-          <Button disabled={saving} onPress={handleSavePayment} color="success">
-            {payment ? 'Guardar' : 'Editar'}
-          </Button>
-        </View>
+        <FormPayment
+          values={payment}
+          onSubmit={async (values) => {
+            modal.toggleOpen()
+            try {
+              return await handleSavePayment({ values })
+            } catch (error) {
+              console.error({ error })
+            }
+          }}
+        />
       </StyledModal>
     </>
   )
