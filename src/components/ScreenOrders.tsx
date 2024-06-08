@@ -9,6 +9,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
   const hasOrderList = !!route?.params?.orders
   const showRentData = !!route?.params?.showRentData
+
   const { orders, handleRefresh: refreshOrders } = useOrdersCtx()
 
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({

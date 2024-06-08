@@ -306,11 +306,21 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     {
       sections = [],
       getBySections = false,
+      getExpireTomorrow = false,
       reports = []
-    }: { sections: string[]; getBySections: boolean; reports: CommentType[] }
+    }: {
+      sections: string[]
+      getBySections: boolean
+      reports: CommentType[]
+      getExpireTomorrow?: boolean
+    }
   ) {
-    const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
-    const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
+    // const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
+    // const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
+    const TODAY = new Date()
+    const TOMORROW = addDays(new Date(), 1)
+    const DAY_AFTER_TOMORROW = addDays(new Date(), 2)
+
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),
       where('status', 'in', [order_status.PENDING, order_status.AUTHORIZED])
@@ -327,10 +337,17 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ]
     const filterExpiredRents = [
       where('type', '==', TypeOrder.RENT),
-      where('status', '==', order_status.DELIVERED),
+      where('status', '==', order_status.DELIVERED)
       //* get orders that are expired today don't meter the hours
-      where('expireAt', '<', TOMORROW_ALL_DAY)
     ]
+
+    //* SET FILTERS TO EXPIRE AT
+    if (getExpireTomorrow) {
+      filterExpiredRents.push(where('expireAt', '<=', DAY_AFTER_TOMORROW))
+    } else {
+      filterExpiredRents.push(where('expireAt', '<=', TOMORROW))
+    }
+
     if (getBySections) {
       filterRentPending.push(where('assignToSection', 'in', sections))
       filterRepairs.push(where('assignToSection', 'in', sections))
