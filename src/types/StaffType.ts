@@ -86,7 +86,8 @@ export enum permissions_orders {
   canUnAuthorize,
   canExtend,
   showOrderTotal,
-  showOrderTime
+  showOrderTime,
+  getExpireTomorrow
 }
 export enum permissions_store {
   canCreateBalance,

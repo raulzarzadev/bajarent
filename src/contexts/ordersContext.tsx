@@ -98,11 +98,13 @@ export const OrdersContextProvider = ({
   const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
     handleGetConsolidates()
+    const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
+
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
     if (typeOfOrders === 'all') {
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
-        { getBySections: false, sections: [], reports, getExpireTomorrow: true }
+        { getBySections: false, sections: [], reports, getExpireTomorrow }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
@@ -115,7 +117,7 @@ export const OrdersContextProvider = ({
         getBySections: true,
         sections: employee.sectionsAssigned,
         reports,
-        getExpireTomorrow: true
+        getExpireTomorrow
       })
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)
