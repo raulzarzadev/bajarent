@@ -43,8 +43,9 @@ export const formatOrder = ({ order, comments = [] }) => {
     ({ type, solved }) => type === 'report' && !solved
   )
   if (order?.type === 'RENT') {
-    const expireAt = orderExpireAt({ order })
+    const expireAt = order.expireAt
     const expireToday = isToday(asDate(expireAt))
+    // const expireAt = orderExpireAt({ order })
     const isExpired =
       !!expireAt && (isBefore(asDate(expireAt), new Date()) || expireToday)
     const expiresToday = expireToday

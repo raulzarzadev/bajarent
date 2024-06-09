@@ -4,6 +4,8 @@ import StoreType from './StoreType'
 import { CommentType } from './CommentType'
 import PaymentType from './PaymentType'
 import { TimePriceType } from './PriceType'
+import { ExtendReason } from '../firebase/ServiceOrders'
+import UserType from './UserType'
 
 type OrderBase = {
   type: TypeOfOrderType
@@ -109,6 +111,19 @@ type OrderBase = {
   priority?: number
 
   sheetRow?: string //* for google sheet row and lavarenta format
+
+  extensions?: Record<
+    string,
+    {
+      id: string
+      time: TimePriceType
+      reason: ExtendReason
+      startAt: Date
+      expireAt: Date
+      createdAt: Date
+      createdBy: UserType['id']
+    }
+  >
 
   /* ******************************************** 
              Extend expire feature               

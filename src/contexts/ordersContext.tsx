@@ -102,7 +102,7 @@ export const OrdersContextProvider = ({
     if (typeOfOrders === 'all') {
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
-        { getBySections: false, sections: [], reports }
+        { getBySections: false, sections: [], reports, getExpireTomorrow: true }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
@@ -114,7 +114,8 @@ export const OrdersContextProvider = ({
       const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
         getBySections: true,
         sections: employee.sectionsAssigned,
-        reports
+        reports,
+        getExpireTomorrow: true
       })
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)

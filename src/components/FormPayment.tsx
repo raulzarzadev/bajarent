@@ -25,11 +25,15 @@ const FormPayment = ({
       dictionary(method).charAt(0).toUpperCase() + dictionary(method).slice(1),
     value: method
   }))
+  const [submitting, setSubmitting] = React.useState(false)
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={async (values) => {
-        return await onSubmit(values)
+        setSubmitting(true)
+        await onSubmit(values)
+        setSubmitting(false)
+        return
       }}
     >
       {({ handleSubmit, values, isSubmitting, setSubmitting }) => {
@@ -54,7 +58,7 @@ const FormPayment = ({
             )}
             <View style={styles.repairItemForm}>
               <Button
-                disabled={isSubmitting}
+                disabled={submitting || isSubmitting}
                 onPress={async () => {
                   handleSubmit()
                 }}

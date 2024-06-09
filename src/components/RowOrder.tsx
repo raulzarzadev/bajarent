@@ -38,16 +38,6 @@ const RowOrder = ({ item: order, showTime, showTotal }: RowOrderProps) => {
       component: (
         <View>
           <View style={{ flexDirection: 'row' }}>
-            {/* {!order?.statuses && (
-              <View
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: 9999,
-                  backgroundColor: colors.amber
-                }}
-              />
-            )} */}
             <Text style={{ textAlign: 'center', flex: 1 }} numberOfLines={1}>
               {order?.folio}
               {!!order?.note && (

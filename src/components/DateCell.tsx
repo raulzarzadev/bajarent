@@ -8,12 +8,14 @@ const DateCell = ({
   date,
   label,
   showTime,
-  labelBold
+  labelBold,
+  showTimeAgo = true
 }: {
   label?: string
   date: Date | Timestamp | number | string
   showTime?: boolean
   labelBold?: boolean
+  showTimeAgo?: boolean
 }) => {
   return (
     <View>
@@ -30,7 +32,9 @@ const DateCell = ({
           {dateFormat(asDate(date), 'HH:mm')}
         </Text>
       )}
-      <Text style={[gStyles.tCenter]}>{fromNow(asDate(date))}</Text>
+      {showTimeAgo && (
+        <Text style={[gStyles.tCenter]}>{fromNow(asDate(date))}</Text>
+      )}
     </View>
   )
 }

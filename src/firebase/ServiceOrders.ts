@@ -11,6 +11,10 @@ import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
 import { addDays } from 'date-fns'
+import { createUUID } from '../libs/createId'
+import { auth } from './auth'
+import { expireDate2 } from '../libs/expireDate'
+import { PriceType } from '../types/PriceType'
 
 type Type = OrderType
 
@@ -386,9 +390,42 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     //*  *** 3 *** add reported orders to unsolved orders
     return [...removeReportedFromUnsolved, ...reportedOrders]
   }
+
+  onExtend = async ({
+    orderId,
+    reason,
+    time,
+    startAt,
+    items
+  }: {
+    orderId: string
+    reason: ExtendReason
+    time: PriceType['time']
+    startAt: Date
+    items: OrderType['items']
+  }) => {
+    const userId = auth.currentUser?.uid
+    const uuid = createUUID()
+    const expireAt = expireDate2({ startedAt: startAt, price: { time } })
+    return await this.update(orderId, {
+      items, //* <--- modify the new order items
+      expireAt, //* <--- modify the new order expire date
+      [`extensions.${uuid}`]: {
+        id: uuid,
+        time,
+        reason,
+        startAt,
+        expireAt,
+        createdAt: new Date(),
+        createdBy: userId
+      }
+    })
+  }
   async customMethod() {
     // Implementa tu método personalizado
   }
 }
+
+export type ExtendReason = 'renew' | 'report'
 
 export const ServiceOrders = new ServiceOrdersClass()

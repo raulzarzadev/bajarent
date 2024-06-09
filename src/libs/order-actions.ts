@@ -1,9 +1,14 @@
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import { ServiceComments } from '../firebase/ServiceComments'
-import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
+import { ServicePayments } from '../firebase/ServicePayments'
 import { CommentType } from '../types/CommentType'
-import { order_status } from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
+import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
+import StoreType from '../types/StoreType'
+import { createId2, createUUID } from './createId'
+import { expireDate2 } from './expireDate'
 
 export const onComment = async ({
   orderId,
@@ -155,6 +160,40 @@ export const onExtend = async (
   })
     .then(() => {})
     .catch(console.error)
+}
+
+export const onExtend_V2 = async ({
+  orderId,
+  time,
+  reason,
+  startAt,
+  items
+}: {
+  orderId: string
+  time: TimePriceType
+  reason: ExtendReason
+  startAt: Date
+  items: OrderType['items']
+}) => {
+  return await ServiceOrders.onExtend({
+    orderId,
+    time,
+    reason,
+    startAt,
+    items
+  })
+}
+
+export const onPay = async ({
+  orderId,
+  payment,
+  storeId
+}: {
+  orderId: OrderType['id']
+  storeId: StoreType['id']
+  payment: PaymentType
+}) => {
+  return await ServicePayments.create({ orderId, storeId, ...payment })
 }
 
 export const onSetStatuses = async ({ orderId }) => {
