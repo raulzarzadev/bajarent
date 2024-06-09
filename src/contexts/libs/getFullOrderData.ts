@@ -19,12 +19,9 @@ export const listenFullOrderData = async (
   cb: CallableFunction
 ) => {
   ServiceOrders.listen(orderId, async (order) => {
-    console.log({ orderExpireAt: dateFormat(asDate(order.expireAt)) })
-
     const payments = await ServicePayments.getByOrder(orderId)
     await ServiceComments.listenOrderReports(orderId, (reports) => {
       const formattedOrder = formatOrder({ comments: reports, order })
-      console.log({ orderExpire2: dateFormat(asDate(formattedOrder.expireAt)) })
       cb({ ...formattedOrder, payments, comments: reports })
     })
   })
