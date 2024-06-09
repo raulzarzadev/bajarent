@@ -64,7 +64,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     })
   }
   const [addPay, setAddPay] = useState(true)
-  const modalPayment = useModal({ title: 'Pago' })
+  const modalPayment = useModal({ title: 'Pago de renovación' })
   const handleSubmitPayment = async ({ payment }) => {
     console.log('first save the renew')
     await onExtend({
@@ -75,7 +75,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     })
       .then(console.log)
       .catch(console.error)
-    onPay({
+    await onPay({
       storeId: order.storeId,
       orderId: order.id,
       payment
@@ -83,8 +83,8 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       .then(console.log)
       .catch(console.error)
       .finally(() => {
-        modalPayment.toggleOpen()
         goBack()
+        modalPayment.toggleOpen()
         setSubmitting(false)
       })
   }
