@@ -108,7 +108,7 @@ const OrderActions = ({
           imageHouse
         })
         const expireAt = orderExpireAt({
-          order: { ...order, deliveredAt: new Date() }
+          order: { ...order, deliveredAt: new Date(), items }
         })
         await onDelivery({
           orderId,
