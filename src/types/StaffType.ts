@@ -85,8 +85,8 @@ export enum permissions_orders {
   canUndo,
   canUnAuthorize,
   canExtend,
-  showOrderTotal,
-  showOrderTime,
+  // showOrderTotal,
+  // showOrderTime,
   getExpireTomorrow
 }
 export enum permissions_store {

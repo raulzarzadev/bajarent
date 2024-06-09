@@ -105,6 +105,9 @@ const labels = {
   canReorder: 'Pedir de nuevo',
   canUnAuthorize: 'Desautorizar',
   canUndo: 'Deshacer',
+  showOrderTotal: 'Monto total',
+  showOrderTime: 'Tiempo',
+  getExpireTomorrow: 'Vence mañana',
   /* ********************************************
    * PERMISSIONS STORE V2
    *******************************************rz */
@@ -112,6 +115,12 @@ const labels = {
   canViewBalances: 'Ver balances',
   canDeleteBalances: 'Eliminar balances',
   canSaveBalances: 'Guardar balances',
+  canEditStaff: 'Editar staff',
+  canCancelPayments: 'Cancelar pagos',
+
+  /* ********************************************
+   * OTHERS
+   *******************************************rz */
   type: 'Tipo',
   fullName: 'Nombre',
   phone: 'Teléfono',
