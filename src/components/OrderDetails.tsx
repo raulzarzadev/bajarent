@@ -416,6 +416,12 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
     return () => {}
   }, [orderId])
 
+  const sortByCreatedAt = (a: PaymentType, b: PaymentType) => {
+    return asDate(a.createdAt).getTime() < asDate(b.createdAt).getTime()
+      ? 1
+      : -1
+  }
+
   return (
     <View>
       {payments?.length > 0 && (
@@ -429,7 +435,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
             }}
           >
             <Text style={gStyles.h3}>Pagos</Text>
-            {payments?.map((payment) => (
+            {payments.sort(sortByCreatedAt)?.map((payment) => (
               <Pressable
                 onPress={() => {
                   //@ts-ignore
