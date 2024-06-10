@@ -28,7 +28,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
     ServicePayments.get(id).then((p) => {
       setPayment(p)
     })
-  })
+  }, [id])
   const { user } = useAuth()
   const userName =
     staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
