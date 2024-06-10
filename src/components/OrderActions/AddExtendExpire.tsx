@@ -5,10 +5,11 @@ import StyledModal from '../StyledModal'
 import { View } from 'react-native'
 import InputTextStyled from '../InputTextStyled'
 import InputCount from '../InputCount'
-import { onComment, onExtend } from '../../libs/order-actions'
+import { onComment, onExtend, onExtend_V2 } from '../../libs/order-actions'
 import InputRadios from '../InputRadios'
 import { TimeType } from '../../types/PriceType'
 import { translateTime } from '../../libs/expireDate'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const AddExtendExpire = ({
   orderId,
@@ -22,24 +23,31 @@ const AddExtendExpire = ({
   const [reason, setReason] = useState('')
   const [disabled, setDisabled] = useState(false)
   const [unit, setUnit] = useState<TimeType>('day')
+
   const handleExtend = async () => {
+    const order = await ServiceOrders.get(orderId)
     setDisabled(true)
-    try {
-      await onExtend(orderId, { time: `${count} ${unit}`, reason })
-      await onComment({
-        orderId,
-        storeId,
-        content: `Extendio por ${translateTime(
-          `${count} ${unit}`
-        )}. Motivo: ${reason}`,
-        type: 'comment'
-      }).catch(console.error)
-      setDisabled(false)
-      modal.toggleOpen()
-    } catch (error) {
-      setDisabled(false)
-      console.log(error)
-    }
+    await onExtend_V2({
+      items: order.items,
+      orderId: order.id,
+      startAt: order.expireAt,
+      time: `${count} ${unit}`,
+      reason: 'extension'
+    })
+      .then(console.log)
+      .catch(console.error)
+    await onComment({
+      orderId,
+      storeId,
+      content: `Extendio por ${translateTime(
+        `${count} ${unit}`
+      )}. Motivo: ${reason}`,
+      type: 'comment'
+    })
+      .then(console.log)
+      .catch(console.error)
+    setDisabled(false)
+    modal.toggleOpen()
   }
 
   const timeOptions: { label: string; value: TimeType }[] = [

@@ -256,7 +256,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
 
       <Totals items={order.items} />
       {order?.extensions ? (
-        <ItemsExtensions order={order} />
+        <OrderExtensions order={order} />
       ) : (
         <View style={{ marginTop: gSpace(3) }}>
           <ItemDates
@@ -271,7 +271,7 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const ItemsExtensions = ({ order }: { order: Partial<OrderType> }) => {
+const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
   const extensionsObj = order?.extensions || {}
   const extensions = Object.values(extensionsObj).sort((a, b) => {
     return asDate(a.createdAt).getTime() < asDate(b.createdAt).getTime()
@@ -340,7 +340,7 @@ const ItemsExtensions = ({ order }: { order: Partial<OrderType> }) => {
                   width: 'rest',
                   component: (
                     <View>
-                      <Text>{reason}</Text>
+                      <Text>{dictionary(reason)}</Text>
                       <Text numberOfLines={1}>{translateTime(time)}</Text>
                     </View>
                   )
