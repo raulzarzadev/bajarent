@@ -277,11 +277,16 @@ const orderStringDates = (
   if (order?.extensions) {
     const lastExtension = Object.values(order?.extensions || {})?.sort(
       (a, b) => {
-        return asDate(a.startAt).getTime() > asDate(b.expireAt).getTime()
-          ? 1
-          : -1
+        return asDate(a.createdAt).getTime() > asDate(b.createdAt).getTime()
+          ? -1
+          : 1
       }
     )[0]
+    console.log(
+      Object.values(order?.extensions || {}).map((e) =>
+        dateFormat(asDate(e.startAt), format)
+      )
+    )
     console.log({ lastExtension })
     return {
       expireAt: dateFormat(asDate(lastExtension?.expireAt), format) || '',
