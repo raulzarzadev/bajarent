@@ -57,7 +57,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   🔚 Vencimiento: ${orderStringDates(order).expireAt}`
 
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
-  const PAYMENTS = `Pagos: ${orderPayments({ order })}`
+  const PAYMENTS = ` ${orderPayments({ order })}`
   const ADDRESS = `📍${store?.address ? `Dirección: ${store.address}` : ''}`
   //******** MESSAGES
 
@@ -270,54 +270,57 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     </View>
   )
 }
-const orderStringDates = (order, format = 'EEEE dd MMMM yy') => {
+const orderStringDates = (
+  order: Partial<OrderType>,
+  format = 'EEEE dd MMMM yy'
+) => {
+  if (order?.extensions) {
+    const lastExtension = Object.values(order?.extensions || {})?.sort(
+      (a, b) => {
+        return asDate(a.startAt).getTime() > asDate(b.expireAt).getTime()
+          ? 1
+          : -1
+      }
+    )[0]
+    console.log({ lastExtension })
+    return {
+      expireAt: dateFormat(asDate(lastExtension?.expireAt), format) || '',
+      deliveredAt: dateFormat(asDate(lastExtension?.startAt), format) || ''
+    }
+  }
   return {
     expireAt: dateFormat(asDate(order?.expireAt), format) || '',
     deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
   }
 }
-const orderPeriod = (order: Partial<OrderType>): string => {
-  const res = ''
-  //* if is rent should return the period
-  if (
-    order?.type === order_type.RENT ||
-    order?.type === order_type.STORE_RENT
-  ) {
-    return `Periodo:  ${dateFormat(
-      asDate(order.deliveredAt),
-      'dd/MM/yy'
-    )} al ${dateFormat(asDate(order.expireAt), 'dd/MM/yy')}`
-  }
 
-  if (order?.type === order_type.REPAIR) {
-    return `Marca: ${order?.itemBrand || ''}\nSerie: ${
-      order?.itemSerial || ''
-    }\nProblema: ${order?.description || ''}
-  \n${
-    order?.repairInfo
-      ? `\n${order?.repairInfo || ''}
-      \n$${order?.repairTotal || 0}`
-      : ''
-  }`
-  }
-  return res
-}
 const orderPayments = ({ order }: { order: OrderType }) => {
   let res = ''
   const payments = order?.payments
   if (payments?.length == 0) return '*Sin pagos*'
   if (order?.payments?.length > 0) {
-    res += `
-  \n`
-    order.payments.forEach((p) => {
-      res += `${new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: 'MXN'
-      }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
-        asDate(p.createdAt),
-        'dd/MMM/yy HH:mm'
-      )} \n`
-    })
+    const lastPayment = payments.sort((a, b) => {
+      return asDate(a.createdAt) > asDate(b.createdAt) ? -1 : 1
+    })[0]
+
+    res += `\nÚltimo pago: ${new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN'
+    }).format(lastPayment.amount)} ${dictionary(
+      lastPayment.method
+    )} ${dateFormat(asDate(lastPayment.createdAt), 'dd/MMM/yy HH:mm')}`
+
+    //   res += `
+    // \n`
+    //   order.payments.forEach((p) => {
+    //     res += `${new Intl.NumberFormat('es-MX', {
+    //       style: 'currency',
+    //       currency: 'MXN'
+    //     }).format(p.amount)} ${dictionary(p.method)} ${dateFormat(
+    //       asDate(p.createdAt),
+    //       'dd/MMM/yy HH:mm'
+    //     )} \n`
+    //   })
   }
   return res
 }
