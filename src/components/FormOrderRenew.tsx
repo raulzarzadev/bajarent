@@ -33,16 +33,6 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       modalPayment.toggleOpen()
     } else {
       setSubmitting(true)
-      if (!order?.extensions) {
-        //* Add the original order to extends list
-        await onExtend_V2({
-          items: order.items,
-          orderId: order.id,
-          startAt: order.deliveredAt,
-          time: order.items[0].priceSelected.time,
-          reason: 'original'
-        })
-      }
       await onExtend({
         items: values.items,
         time: values.items[0].priceSelected.time,
@@ -73,16 +63,6 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const [addPay, setAddPay] = useState(true)
   const modalPayment = useModal({ title: 'Pago de renovación' })
   const handleSubmitPayment = async ({ payment }) => {
-    if (!order?.extensions) {
-      //* Add the original order to extends list
-      await onExtend_V2({
-        items: order.items,
-        orderId: order.id,
-        startAt: order.deliveredAt,
-        time: order.items[0].priceSelected.time,
-        reason: 'original'
-      })
-    }
     await onExtend({
       items: newItems,
       time: newItems[0].priceSelected.time,

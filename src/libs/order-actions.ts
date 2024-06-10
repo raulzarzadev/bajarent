@@ -175,6 +175,18 @@ export const onExtend_V2 = async ({
   startAt: Date
   items: OrderType['items']
 }) => {
+  //********* Add the original order to extends list if it does't have  extensions
+  const order = await ServiceOrders.get(orderId)
+  if (!order?.extensions) {
+    await ServiceOrders.onExtend({
+      items: order.items,
+      orderId: order.id,
+      startAt: order.deliveredAt,
+      time: order.items[0].priceSelected.time,
+      reason: 'original'
+    })
+  }
+
   return await ServiceOrders.onExtend({
     orderId,
     time,

@@ -407,6 +407,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const userId = auth.currentUser?.uid
     const uuid = createUUID()
     const expireAt = expireDate2({ startedAt: startAt, price: { time } })
+
     return await this.update(orderId, {
       items, //* <--- modify the new order items
       expireAt, //* <--- modify the new order expire date
