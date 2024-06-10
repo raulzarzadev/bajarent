@@ -82,7 +82,7 @@ const OrderActions = ({
   const deliveryModal = useModal({ title: 'Confirmar datos de entrega' })
 
   // const { order } = useOrder({ orderId })
-  const [order, setOrder] = useState<Partial<OrderType>>()
+  const [order, setOrder] = useState<OrderType>()
   const [touchedPickedUp, setTouchedPickedUp] = useState(false)
 
   useEffect(() => {
