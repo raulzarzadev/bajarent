@@ -13,6 +13,7 @@ import useModal from '../hooks/useModal'
 import PaymentType from '../types/PaymentType'
 import { onExtend_V2, onPay } from '../libs/order-actions'
 import { useNavigation } from '@react-navigation/native'
+import FormikInputImage from './FormikInputImage'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
@@ -84,6 +85,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
         setSubmitting(false)
       })
   }
+
   return (
     <View>
       <Formik
