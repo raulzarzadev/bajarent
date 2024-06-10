@@ -166,10 +166,13 @@ export const translateTime = (
     month: 'M', //<-- this is meses
     year: 'A'
   }
-  let unitCount = amount === '1' ? units[unit] : units[unit] + 's'
-  unit === 'month' && (unitCount = 'meses')
-  if (ops?.shortLabel) {
-    return `${amount}${shortUnits[unit]}`
+  const amountNumber = parseInt(amount)
+  let unitCount = amountNumber === 1 ? units[unit] : units[unit] + 's'
+  if (unit === 'month') {
+    return `${amountNumber} ${amountNumber === 1 ? 'mes' : 'meses'}`
   }
-  return `${amount} ${unitCount}`
+  if (ops?.shortLabel) {
+    return `${amountNumber}${shortUnits[unit]}`
+  }
+  return `${amountNumber} ${unitCount}`
 }
