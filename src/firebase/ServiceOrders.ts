@@ -426,6 +426,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 }
 
-export type ExtendReason = 'renew' | 'report'
+export type ExtendReason = 'renew' | 'report' | 'original'
 
 export const ServiceOrders = new ServiceOrdersClass()
