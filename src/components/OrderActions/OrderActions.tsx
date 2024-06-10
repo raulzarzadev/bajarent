@@ -28,9 +28,10 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import InputLocationFormik from '../InputLocationFormik'
 import InputValueFormik from '../FormikInputValue'
 import FormikSelectCategories from '../FormikSelectCategories'
-import useOrder from '../../hooks/useFullOrder'
 import { orderExpireAt } from '../../libs/orders'
 import FormikInputImage from '../FormikInputImage'
+import { useEffect, useState } from 'react'
+import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -80,7 +81,13 @@ const OrderActions = ({
 
   const deliveryModal = useModal({ title: 'Confirmar datos de entrega' })
 
-  const { order } = useOrder({ orderId })
+  // const { order } = useOrder({ orderId })
+  const [order, setOrder] = useState<Partial<OrderType>>()
+  const [touchedPickedUp, setTouchedPickedUp] = useState(false)
+
+  useEffect(() => {
+    getFullOrderData(orderId).then(setOrder)
+  }, [orderId])
 
   // #region ACTIONS
 
@@ -124,6 +131,9 @@ const OrderActions = ({
       try {
         await onPickup({ orderId, userId })
         await onOrderComment({ content: 'Recogida' })
+        if (touchedPickedUp) {
+          await getFullOrderData(orderId).then(setOrder)
+        }
       } catch (error) {
         console.log(error)
       }
@@ -415,7 +425,6 @@ const OrderActions = ({
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
   // #region COMPONENT
-
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
@@ -426,6 +435,7 @@ const OrderActions = ({
           <Formik
             initialValues={{ ...order }}
             onSubmit={async (values) => {
+              console.log({ values })
               await ServiceOrders.update(orderId, { ...values })
                 .then(console.log)
                 .catch(console.error)
@@ -444,7 +454,7 @@ const OrderActions = ({
               return errors
             }}
           >
-            {({ errors, handleSubmit, isSubmitting }) => {
+            {({ errors, handleSubmit, isSubmitting, dirty }) => {
               return (
                 <View>
                   <View style={{ marginVertical: 8 }}>
@@ -485,8 +495,13 @@ const OrderActions = ({
                   <Button
                     disabled={Object.keys(errors).length > 0 || isSubmitting}
                     label="Recoger"
-                    onPress={() => {
+                    onPress={async () => {
                       handleSubmit()
+                      console.log({ dirty })
+                      if (dirty) {
+                        setTouchedPickedUp(true)
+                        console.log('touched')
+                      }
                     }}
                   />
                 </View>
