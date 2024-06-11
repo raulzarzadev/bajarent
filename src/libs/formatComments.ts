@@ -31,7 +31,7 @@ export default function formatComments({
   const paymentsFormatted: FormattedComment[] = payments?.map((payment) => {
     const createdBy = staff?.find((st) => st.userId === payment.createdBy)
     const order = orders?.find((ord) => ord.id === payment.orderId)
-    const paymentAmount = payment?.amount || 0
+    const paymentAmount = parseFloat(`${payment?.amount || 0}`)
     return {
       createdByName: createdBy?.name || '',
       orderFolio: order?.folio,
