@@ -37,8 +37,10 @@ export const ModalPayment = ({
 
   const handleSavePayment = async ({ values }) => {
     console.log({ values })
+    const amount = parseFloat(values.amount || 0)
     await ServicePayments.create({
-      ...values
+      ...values,
+      amount
     })
       .then(console.log)
       .catch(console.error)
