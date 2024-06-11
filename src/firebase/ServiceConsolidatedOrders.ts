@@ -44,7 +44,7 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
 //#region FUNCTIONS
 const formatConsolidateOrder = (order: OrderType): Partial<OrderType> => {
   return {
-    fullName: order?.fullName,
+    fullName: order?.fullName || '',
     phone: order?.phone || '',
     email: order?.email || '',
     id: order?.id || '',
