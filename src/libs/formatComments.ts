@@ -31,13 +31,14 @@ export default function formatComments({
   const paymentsFormatted: FormattedComment[] = payments?.map((payment) => {
     const createdBy = staff?.find((st) => st.userId === payment.createdBy)
     const order = orders?.find((ord) => ord.id === payment.orderId)
+    const paymentAmount = payment?.amount || 0
     return {
       createdByName: createdBy?.name || '',
       orderFolio: order?.folio,
       orderName: order?.fullName,
       orderStatus: order?.status,
       orderType: order?.type,
-      content: `${dictionary(payment.method)} $${payment.amount.toFixed(2)}`,
+      content: `${dictionary(payment.method)} $${paymentAmount?.toFixed(2)}`,
       type: 'payment',
       id: payment?.id,
       orderId: payment?.orderId,
