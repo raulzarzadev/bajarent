@@ -19,6 +19,7 @@ const BottomAppBar = () => {
   const showStoreButton = !!store
   return (
     <Tab.Navigator
+      initialRouteName="Profile"
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {

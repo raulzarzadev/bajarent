@@ -11,9 +11,6 @@ import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
-import ListStaff from './ListStaff2'
-import { useStore } from '../contexts/storeContext'
-import StackStaff from './StackStaff'
 import { ScreenStaffE } from './ScreenStaff'
 
 const ScreenStore = (props) => {
