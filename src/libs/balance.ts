@@ -1,9 +1,10 @@
-import { where } from 'firebase/firestore'
+import { or, where } from 'firebase/firestore'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { BalanceOrders, BalanceType } from '../types/BalanceType'
-import { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import { payments_amount } from './payments'
 import { ServiceComments } from '../firebase/ServiceComments'
+import asDate from './utils-date'
 
 export const balanceTotals = (balance: BalanceType) => {
   return payments_amount(balance.payments)
@@ -145,118 +146,75 @@ export const calculateSectionBalance = async ({
     (o) => section === o.assignToSection
   )
 
+  const inRentFilters = [
+    where('status', '==', order_status.DELIVERED),
+    where('storeId', '==', storeId),
+    where('type', '==', order_type.RENT)
+  ]
+
+  const pickedUpFilters = [
+    where('status', 'in', [order_status.PICKED_UP]),
+    where('storeId', '==', storeId),
+    where('pickedUpAt', '>=', fromDate),
+    where('pickedUpAt', '<=', toDate)
+  ]
+
+  const deliveredFilters = [
+    where('storeId', '==', storeId),
+    where('deliveredAt', '>=', fromDate),
+    where('deliveredAt', '<=', toDate)
+  ]
+  const canceledFilters = [
+    where('storeId', '==', storeId),
+    where('cancelledAt', '>=', fromDate),
+    where('cancelledAt', '<=', toDate)
+  ]
+
   if (type === 'partial') {
-    const ordersInRent = await ServiceOrders.findMany(
-      [
-        where('status', '==', order_status.DELIVERED),
-        where('storeId', '==', storeId),
-        where('assignToSection', '==', section),
-        where('type', '==', order_type.RENT)
-      ],
-      { justRefs: true }
-    )
+    inRentFilters.push(where('assignToSection', '==', section))
+    pickedUpFilters.push(where('assignToSection', '==', section))
+    deliveredFilters.push(where('assignToSection', '==', section))
+    canceledFilters.push(where('assignToSection', '==', section))
+  }
 
-    const oldRenewed = await ServiceOrders.findMany(
-      [
-        where('status', '==', order_status.RENEWED),
-        where('storeId', '==', storeId),
-        where('assignToSection', '==', section),
-        where('renewedAt', '>=', fromDate),
-        where('renewedAt', '<=', toDate)
-      ]
-      // { justRefs: true }
-    )
-    const ordersRenewed = oldRenewed.map((o) => o.renewedTo)
+  const ordersInRent: Partial<OrderType>[] = await ServiceOrders.findMany(
+    inRentFilters
+    // { justRefs: true }
+  )
+  const ordersPickup = await ServiceOrders.findMany(pickedUpFilters, {
+    justRefs: true
+  })
+  const ordersDelivered = await ServiceOrders.findMany(deliveredFilters, {
+    justRefs: true
+  })
+  const ordersCancelled = await ServiceOrders.findMany(canceledFilters, {
+    justRefs: true
+  })
 
-    const ordersPickup = await ServiceOrders.findMany(
-      [
-        where('status', 'in', [order_status.PICKED_UP]),
-        where('storeId', '==', storeId),
-        where('assignToSection', '==', section),
-        where('pickedUpAt', '>=', fromDate),
-        where('pickedUpAt', '<=', toDate)
-      ],
-      { justRefs: true }
+  const ordersRenewed = ordersInRent.filter((o) => {
+    const renews = Object.values(o.extensions || {}).filter(
+      (e) => e.reason === 'renew'
     )
-    const ordersDelivered = await ServiceOrders.findMany(
-      [
-        where('assignToSection', '==', section),
-        where('deliveredAt', '>=', fromDate),
-        where('deliveredAt', '<=', toDate)
-      ],
-      { justRefs: true }
-    )
-    const ordersCancelled = await ServiceOrders.findMany([
-      where('assignToSection', '==', section),
-      where('cancelledAt', '>=', fromDate),
-      where('cancelledAt', '<=', toDate)
-    ])
+    // .sort((a, b) =>
+    //   asDate(a.createdAt).getTime() > asDate(b.createdAt).getTime() ? -1 : 1
+    // )
+    const renewsInDate = renews.filter((r) => {
+      return (
+        asDate(r.createdAt).getTime() >= asDate(fromDate).getTime() &&
+        asDate(r.createdAt).getTime() <= asDate(toDate).getTime()
+      )
+    })
+    return renewsInDate.length > 0
+  })
 
-    return {
-      ordersRenewed,
-      ordersPickup: ordersPickup.map((o) => o.id),
-      ordersDelivered: ordersDelivered.map((o) => o.id),
-      ordersInRent: ordersInRent.map((o) => o.id),
-      ordersCancelled: ordersCancelled.map((o) => o.id),
-      ordersReportedSolved: reportedOrdersSolvedBySection.map((o) => o.id),
-      ordersCreated: []
-    }
-  } else if (type === 'full') {
-    const ordersInRent = await ServiceOrders.findMany(
-      [
-        where('status', '==', order_status.DELIVERED),
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.RENT)
-      ],
-      { justRefs: true }
-    )
-
-    const oldRenewed = await ServiceOrders.findMany(
-      [
-        where('status', 'in', [order_status.RENEWED]),
-        where('storeId', '==', storeId),
-        where('renewedAt', '>=', fromDate),
-        where('renewedAt', '<=', toDate)
-      ]
-      // { justRefs: true } //*<- its necesary to get the renewedTo data
-    )
-    const ordersRenewed = oldRenewed.map((o) => o.renewedTo)
-
-    const ordersPickup = await ServiceOrders.findMany(
-      [
-        where('status', 'in', [order_status.PICKED_UP]),
-        where('storeId', '==', storeId),
-        where('pickedUpAt', '>=', fromDate),
-        where('pickedUpAt', '<=', toDate)
-      ],
-      { justRefs: true }
-    )
-    const ordersDelivered = await ServiceOrders.findMany(
-      [
-        where('storeId', '==', storeId),
-        where('deliveredAt', '>=', fromDate),
-        where('deliveredAt', '<=', toDate)
-      ],
-      { justRefs: true }
-    )
-    const ordersCancelled = await ServiceOrders.findMany(
-      [
-        where('storeId', '==', storeId),
-        where('cancelledAt', '>=', fromDate),
-        where('cancelledAt', '<=', toDate)
-      ],
-      { justRefs: true }
-    )
-
-    return {
-      ordersRenewed,
-      ordersPickup: ordersPickup.map((o) => o.id),
-      ordersDelivered: ordersDelivered.map((o) => o.id),
-      ordersInRent: ordersInRent.map((o) => o.id),
-      ordersCancelled: ordersCancelled.map((o) => o.id),
-      ordersReportedSolved: ordersWithSolvedReports.map((o) => o.id),
-      ordersCreated: []
-    }
+  return {
+    ordersRenewed: ordersRenewed.map((o) => o.id),
+    ordersPickup: ordersPickup.map((o) => o.id),
+    ordersDelivered: ordersDelivered.map((o) => o.id),
+    ordersInRent: ordersInRent.map((o) => o.id),
+    ordersCancelled: ordersCancelled.map((o) => o.id),
+    ordersReportedSolved: reportedOrdersSolvedBySection.map((o) => o.id),
+    ordersCreated: []
   }
 }
 
