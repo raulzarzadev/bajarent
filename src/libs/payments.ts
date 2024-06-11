@@ -3,11 +3,11 @@ import PaymentType, { payment_methods } from '../types/PaymentType'
 export const payments_amount = (payments: PaymentType[]) => {
   return payments?.reduce(
     (acc, p) => {
+      const amount = parseFloat(`${p?.amount || 0}`)
       if (p.canceled) {
-        acc.canceled += p.amount
+        acc.canceled += amount
         return acc
       }
-      const amount = p?.amount || 0
       acc.total += amount
       if (p.method === payment_methods.CASH) acc.cash += amount
       if (p.method === payment_methods.CARD) acc.card += amount
