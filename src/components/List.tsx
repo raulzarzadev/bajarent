@@ -115,10 +115,6 @@ function MyList<T extends { id: string }>({
 
   //* PIN ROWS
 
-  // useEffect(() => {
-  //   setFilteredData(data)
-  // }, [data])
-
   const [pinnedRows, setPinnedRows] = useState<string[]>([])
 
   useEffect(() => {
@@ -168,7 +164,13 @@ function MyList<T extends { id: string }>({
           data={pinnedRows}
           renderItem={({ item }) => (
             <View style={{}}>
-              <ComponentRow item={data.find(({ id }) => id === item)} />
+              <Pressable
+                onPress={() => {
+                  onPressRow && onPressRow(item)
+                }}
+              >
+                <ComponentRow item={data.find(({ id }) => id === item)} />
+              </Pressable>
               {/* ***************** ******* ***** UNPIN BUTTON  */}
               <PinButton
                 handlePin={() => {
@@ -423,7 +425,7 @@ const PinButton = ({ handlePin, unpin = false }) => {
       onPress={() => handlePin()}
       color={unpin ? 'error' : 'primary'}
       variant="ghost"
-      size="small"
+      size="medium"
       buttonStyles={{
         position: 'absolute',
         right: 8,

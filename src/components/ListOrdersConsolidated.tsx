@@ -13,6 +13,7 @@ import TextInfo from './TextInfo'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
+import OrderDirectives from './OrderDirectives'
 type OrderWithId = ConsolidatedOrderType & { id: string }
 
 const ListOrdersConsolidated = () => {
@@ -22,10 +23,10 @@ const ListOrdersConsolidated = () => {
   const orders = consolidatedOrders?.orders || {}
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedSection =
-      storeSections.find((section) => section.id === order.assignedSection)
+      storeSections.find((section) => section.id === order.assignToSection)
         ?.name || null
     return {
-      id: order.orderId,
+      id: order.id,
       ...order,
       assignedSection
     }
@@ -83,7 +84,7 @@ const ListOrdersConsolidated = () => {
               label: 'Estatus'
             },
             {
-              field: 'assignedSection',
+              field: 'assignToSection',
               label: 'Area'
             },
             // {
@@ -109,10 +110,10 @@ const ListOrdersConsolidated = () => {
               key: 'status',
               label: 'Status'
             },
-            // {
-            //   key: 'expireAt',
-            //   label: 'Vencimiento'
-            // },
+            {
+              key: 'expireAt',
+              label: 'Vencimiento'
+            },
             {
               key: 'folio',
               label: 'Folio'
@@ -135,13 +136,13 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       width: 'rest',
       component: (
         <Text style={styles.cell} numberOfLines={1}>
-          {order.name}
+          {order.fullName}
         </Text>
       )
     },
     {
       //field: order.type,
-      width: '20%',
+      width: 50,
       component: (
         <Text style={styles.cell} numberOfLines={1}>
           {dictionary(order.type)}
@@ -150,11 +151,14 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     },
     {
       //field: order.status,
-      width: '20%',
+      width: 200,
       component: (
-        <Text style={styles.cell} numberOfLines={1}>
-          {dictionary(order.status)}
-        </Text>
+        <View>
+          {/* <Text style={styles.cell} numberOfLines={1}>
+            {dictionary(order.status)}
+          </Text> */}
+          <OrderDirectives order={order} />
+        </View>
       )
     },
     // {

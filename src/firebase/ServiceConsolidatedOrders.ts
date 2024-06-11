@@ -42,24 +42,24 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
 }
 
 //#region FUNCTIONS
-const formatConsolidateOrder = (order: OrderType) => {
+const formatConsolidateOrder = (order: OrderType): Partial<OrderType> => {
   return {
-    name: order?.fullName || '',
+    fullName: order?.fullName,
     phone: order?.phone || '',
     email: order?.email || '',
-    orderId: order?.id || '',
-    status: order?.status || '',
-    folio: order?.folio || '',
+    id: order?.id || '',
+    status: order?.status,
+    folio: order?.folio || 0,
     note: order?.note || '',
     address: order?.address || '',
-    type: order?.type || '',
+    type: order?.type,
     references: order?.references || '',
     location: order?.location || '',
-    items: order?.items || '',
+    items: order?.items || [],
     neighborhood: order?.neighborhood || '',
-    assignedSection: order?.assignToSection || '',
-    expireAt: order?.expireAt || '',
-    createdAt: order?.createdAt || ''
+    assignToSection: order?.assignToSection || '',
+    expireAt: order?.expireAt || null,
+    createdAt: order?.createdAt
   }
 }
 

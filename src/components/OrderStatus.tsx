@@ -3,6 +3,8 @@ import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
 import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
+import { isBefore, isToday } from 'date-fns'
+import asDate from '../libs/utils-date'
 
 const OrderStatus = ({
   order,
@@ -17,8 +19,9 @@ const OrderStatus = ({
   const isRent = order.type === 'RENT'
   const isReported = order?.hasNotSolvedReports
   const isDelivered = order?.status === order_status.DELIVERED
-
-  const isExpired = order?.isExpired && isDelivered
+  const expireToday = isToday(asDate(order?.expireAt))
+  const expired = isBefore(asDate(order?.expireAt), new Date())
+  const isExpired = (order?.isExpired || expireToday || expired) && isDelivered
 
   const isCancelled = order?.status === order_status.CANCELLED
   const isAuthorized = order?.status === order_status.AUTHORIZED
@@ -36,6 +39,8 @@ const OrderStatus = ({
   const isRenewed =
     order.type === 'RENT' &&
     (order.isRenewed || order?.status === order_status.RENEWED)
+
+  const NullExpireAt = !order?.expireAt && order.type === 'RENT'
   return (
     <>
       {isRenewed && (
@@ -149,6 +154,14 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={'VM'}
           color={theme.success}
+          size={chipSize}
+        />
+      )}
+      {NullExpireAt && (
+        <Chip
+          style={[chipStyles]}
+          title={'SF'}
+          color={theme.error}
           size={chipSize}
         />
       )}

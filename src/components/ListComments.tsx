@@ -207,7 +207,7 @@ export const CommentRow = ({
                   handleToggleSolveReport(comment?.id, comment?.solved)
                 }
                 justIcon
-                size="xs"
+                size="small"
               />
             </View>
           </View>
