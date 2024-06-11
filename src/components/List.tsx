@@ -426,8 +426,8 @@ const PinButton = ({ handlePin, unpin = false }) => {
       size="small"
       buttonStyles={{
         position: 'absolute',
-        right: 4,
-        top: 4
+        right: 8,
+        top: 8
       }}
     />
   )
