@@ -5,27 +5,14 @@ import theme, { STATUS_COLOR, colors } from '../theme'
 import ClientName from './ClientName'
 import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
-import { translateTime } from '../libs/expireDate'
-import { useStore } from '../contexts/storeContext'
-import CurrencyAmount from './CurrencyAmount'
-import dictionary from '../dictionary'
-import { payments_amount } from '../libs/payments'
 import ErrorBoundary from './ErrorBoundary'
 export type RowOrderProps = {
   item: OrderType
   showTime?: boolean
   showTotal?: boolean
+  showTodayAmount?: boolean
 }
-const RowOrder = ({ item: order, showTime, showTotal }: RowOrderProps) => {
-  const { payments } = useStore()
-  const orderPayments = payments.filter(
-    (p) => p?.orderId && p?.orderId === order?.id
-  )
-  const orderTotal = payments_amount(orderPayments).total
-  const paymentsMethods = Array.from(
-    new Set(orderPayments.map((p) => dictionary(p.method)[0]))
-  )
-
+const RowOrder = ({ item: order }: RowOrderProps) => {
   const fields: {
     field: string
     width: ViewStyle['width']
@@ -66,34 +53,7 @@ const RowOrder = ({ item: order, showTime, showTotal }: RowOrderProps) => {
       width: '15%',
       component: (
         <View>
-          <>
-            {showTime && order.type === order_type.RENT && (
-              <View
-                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
-              >
-                <Text style={{ textAlign: 'center' }}>
-                  {translateTime(order?.items?.[0]?.priceSelected?.time, {
-                    shortLabel: true
-                  })}
-                </Text>
-              </View>
-            )}
-            {showTotal && (
-              <View
-                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
-              >
-                {paymentsMethods.map((method) => (
-                  <Text
-                    key={method}
-                    style={{ textTransform: 'uppercase', fontWeight: 'bold' }}
-                  >
-                    {method}
-                  </Text>
-                ))}
-                <CurrencyAmount amount={orderTotal} />
-              </View>
-            )}
-          </>
+          <></>
         </View>
       )
     },

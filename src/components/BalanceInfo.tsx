@@ -1,18 +1,16 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
 import ErrorBoundary from './ErrorBoundary'
 import { gSpace, gStyles } from '../styles'
 import Button from './Button'
-import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import SpanMetadata from './SpanMetadata'
 import { useNavigation } from '@react-navigation/native'
 
 import Icon from './Icon'
-import { payments_amount } from '../libs/payments'
 import BalanceAmounts from './BalanceAmounts'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
@@ -147,8 +145,7 @@ const ModalOrders = ({
               screen: 'ScreenOrders',
               params: {
                 orders: ordersIds,
-                title: modalTitle,
-                showRentData: true
+                title: modalTitle
               }
             })
           }}

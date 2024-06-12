@@ -8,8 +8,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
 
   const hasOrderList = !!route?.params?.orders
-  const showRentData = !!route?.params?.showRentData
-
   const { orders, handleRefresh: refreshOrders } = useOrdersCtx()
 
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
@@ -27,7 +25,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   return (
     <ListOrders
       orders={hasOrderList ? preOrders : orders}
-      //defaultOrdersIds={filtered}
       collectionSearch={{
         collectionName: 'orders',
         fields: [
@@ -40,8 +37,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
           'phone'
         ]
       }}
-      showTime={showRentData}
-      showTotal={showRentData}
       sideButtons={[
         {
           icon: 'refresh',
