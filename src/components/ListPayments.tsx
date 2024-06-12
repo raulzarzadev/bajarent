@@ -4,7 +4,7 @@ import { LoadingList } from './List'
 import PaymentRow from './PaymentRow'
 
 export type PaymentTypeList = PaymentType & { createdByName?: string }
-function PaymentsList({
+function ListPayments({
   payments,
   onPressRow,
   onFetchMore
@@ -57,4 +57,4 @@ function PaymentsList({
   )
 }
 
-export default PaymentsList
+export default ListPayments

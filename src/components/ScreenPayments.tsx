@@ -1,6 +1,6 @@
 import { ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import PaymentsList from './PaymentsList'
+import PaymentsList from './ListPayments'
 import { useStore } from '../contexts/storeContext'
 import PaymentType from '../types/PaymentType'
 import { useOrdersCtx } from '../contexts/ordersContext'

@@ -4,10 +4,10 @@ import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
-import { PaymentTypeList } from './PaymentsList'
+import { PaymentTypeList } from './ListPayments'
 import { colors } from '../theme'
 
-const PaymentRow = ({ item }: { item: PaymentTypeList }) => {
+const RowPayment = ({ item }: { item: PaymentTypeList }) => {
   return (
     <View
       style={[
@@ -21,7 +21,7 @@ const PaymentRow = ({ item }: { item: PaymentTypeList }) => {
         </Text>
         <Text numberOfLines={2}>{item?.orderName || ''}</Text>
       </View>
-      <DateCell date={item?.date} />
+      <DateCell date={item?.createdAt} />
       <View style={{ width: 80 }}>
         <Text
           numberOfLines={1}
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default PaymentRow
+export default RowPayment
