@@ -31,7 +31,7 @@ export type OrdersContextType = {
   fetchTypeOrders?: FetchTypeOrders
   setFetchTypeOrders?: (fetchType: FetchTypeOrders) => void
   orderTypeOptions?: OrderTypeOption[]
-  handleRefresh?: () => void
+  handleRefresh?: () => Promise<void> | void
   reports?: CommentType[]
   consolidatedOrders?: ConsolidatedStoreOrdersType
 }
@@ -76,8 +76,8 @@ export const OrdersContextProvider = ({
     }
   }, [viewAllOrders])
 
-  const handleGetConsolidates = () => {
-    ServiceConsolidatedOrders.getByStore(storeId).then((res) => {
+  const handleGetConsolidates = async () => {
+    return await ServiceConsolidatedOrders.getByStore(storeId).then((res) => {
       setConsolidatedOrders(res[0])
     })
   }
@@ -97,7 +97,7 @@ export const OrdersContextProvider = ({
 
   const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
-    handleGetConsolidates()
+    await handleGetConsolidates()
     const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
 
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'

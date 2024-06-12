@@ -33,16 +33,18 @@ const ListOrdersConsolidated = () => {
   })
   const [disabled, setDisabled] = useState(false)
 
-  const handleConsolidate = () => {
+  const handleConsolidate = async () => {
     setDisabled(true)
-    ServiceConsolidatedOrders.consolidate(storeId)
+    await ServiceConsolidatedOrders.consolidate(storeId)
       .then((res) => {
         console.log({ res })
       })
-      .finally(() => {
-        setDisabled(false)
-        handleRefresh()
+      .catch((err) => {
+        console.error(err)
       })
+
+    await handleRefresh()
+    setDisabled(false)
   }
 
   return (
@@ -58,8 +60,8 @@ const ListOrdersConsolidated = () => {
             {
               icon: 'save',
               label: 'Consolidar',
-              onPress: () => {
-                handleConsolidate()
+              onPress: async () => {
+                await handleConsolidate()
               },
               disabled,
               visible: true
