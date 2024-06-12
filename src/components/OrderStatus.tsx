@@ -40,7 +40,10 @@ const OrderStatus = ({
     order.type === 'RENT' &&
     (order.isRenewed || order?.status === order_status.RENEWED)
 
-  const NullExpireAt = !order?.expireAt && order.type === 'RENT'
+  const NullExpireAt =
+    !order?.expireAt &&
+    order.type === 'RENT' &&
+    order.status === order_status.DELIVERED
   return (
     <>
       {isRenewed && (
