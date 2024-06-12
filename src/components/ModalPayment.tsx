@@ -1,12 +1,9 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet } from 'react-native'
+import React from 'react'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Button from './Button'
-import InputTextStyled from './InputTextStyled'
-import PaymentType, { PaymentBase, payment_methods } from '../types/PaymentType'
-import InputRadios from './InputRadios'
-import dictionary from '../dictionary'
+import { PaymentBase } from '../types/PaymentType'
 import ErrorBoundary from './ErrorBoundary'
 import { ServicePayments } from '../firebase/ServicePayments'
 import FormPayment from './FormPayment'
@@ -36,9 +33,8 @@ export const ModalPayment = ({
   const modal = useModal({ title: label })
 
   const handleSavePayment = async ({ values }) => {
-    console.log({ values })
     const amount = parseFloat(values.amount || 0)
-    await ServicePayments.create({
+    await ServicePayments.orderPayment({
       ...values,
       amount
     })

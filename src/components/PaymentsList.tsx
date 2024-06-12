@@ -1,6 +1,6 @@
 import { useStore } from '../contexts/storeContext'
 import PaymentType from '../types/PaymentType'
-import List, { LoadingList } from './List'
+import { LoadingList } from './List'
 import PaymentRow from './PaymentRow'
 
 export type PaymentTypeList = PaymentType & { createdByName?: string }
@@ -25,6 +25,7 @@ function PaymentsList({
   return (
     <LoadingList
       data={payments.map((payment) => {
+        payment.amount = parseFloat(`${payment.amount || 0}`) || 0
         payment.createdByName =
           staff.find((s) => s.userId === payment.createdBy)?.name ||
           'sin nombre'

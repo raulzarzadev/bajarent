@@ -6,6 +6,17 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     super('payments')
   }
 
+  async orderPayment(payment: PaymentType) {
+    return this.create({
+      ...payment,
+      orderId: payment.orderId,
+      storeId: payment.storeId,
+      method: payment.method,
+      reference: payment.reference,
+      amount: parseFloat(`${payment.amount || 0}`)
+    })
+  }
+
   async getByStore(storeId: string) {
     return this.getItems([where('storeId', '==', storeId)])
   }

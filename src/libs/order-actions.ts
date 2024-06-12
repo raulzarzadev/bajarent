@@ -1,5 +1,4 @@
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
-import { ServiceComments } from '../firebase/ServiceComments'
 import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { CommentType } from '../types/CommentType'
@@ -7,8 +6,6 @@ import OrderType, { order_status } from '../types/OrderType'
 import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
 import StoreType from '../types/StoreType'
-import { createId2, createUUID } from './createId'
-import { expireDate2 } from './expireDate'
 
 export const onComment = async ({
   orderId,
@@ -205,7 +202,7 @@ export const onPay = async ({
   storeId: StoreType['id']
   payment: PaymentType
 }) => {
-  return await ServicePayments.create({ orderId, storeId, ...payment })
+  return await ServicePayments.orderPayment({ orderId, storeId, ...payment })
 }
 
 export const onSetStatuses = async ({ orderId }) => {

@@ -33,7 +33,7 @@ export default function ScreenPayments({ navigation, route }) {
     return {
       ...p,
       orderFolio: consolidateOrder?.folio as number, //* This is the line that is causing the error
-      orderName: consolidateOrder?.name as string,
+      orderName: consolidateOrder?.fullName as string,
       orderNote: consolidateOrder?.note as string
     }
   })

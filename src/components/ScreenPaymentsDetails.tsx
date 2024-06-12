@@ -37,6 +37,16 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
   if (!payment) return <Loading />
   return (
     <View style={gStyles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: 16
+        }}
+      >
+        <Text style={gStyles.helper}>Id: {payment.id}</Text>
+        <Text style={gStyles.helper}>Orden: {payment.orderId}</Text>
+      </View>
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
       {!!payment?.method && (
         <Text
