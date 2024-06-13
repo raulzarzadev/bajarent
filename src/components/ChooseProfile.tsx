@@ -1,6 +1,5 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gStyles } from '../styles'
 import Icon, { IconName } from './Icon'

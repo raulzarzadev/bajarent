@@ -128,8 +128,7 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   useEffect(() => {
-    const res = filterDataByFields(data, filtersBy)
-    setFilteredData(res)
+    search(searchValue)
   }, [data])
 
   return {
