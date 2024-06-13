@@ -34,8 +34,8 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         <Chip
           style={styles.chip}
           title={sectionName}
-          color={theme?.primary}
-          titleColor={theme.white}
+          color={theme?.base}
+          titleColor={theme.secondary}
           size="sm"
         ></Chip>
       )}
