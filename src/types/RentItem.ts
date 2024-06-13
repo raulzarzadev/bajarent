@@ -22,6 +22,11 @@ export type CategoryBase = {
     imageId?: boolean
     scheduledAt?: boolean
   }
+  orderType?: {
+    repair?: boolean
+    rent?: boolean
+    sale?: boolean
+  }
 }
 
 export type CategoryType = CategoryBase & BaseType
