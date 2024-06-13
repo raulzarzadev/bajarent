@@ -1,5 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenOrders from './ScreenOrders'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenAssignOrder from './ScreenAssignOrder'
@@ -10,7 +9,7 @@ import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { StackPaymentsE } from './StackPayments'
 
 const Stack = createStackNavigator()
-function StackOrders() {
+function StackConsolidated() {
   return (
     <Stack.Navigator
       screenOptions={(props) => {
@@ -22,12 +21,12 @@ function StackOrders() {
       }}
     >
       <Stack.Screen
-        name="ScreenOrders"
+        name="Orders"
         options={({ route }) => ({
           //@ts-ignore
-          title: route?.params?.title || 'Mis ordenes' //*<-- Title change if is from pedidos, reportes, balance details and more
+          title: route?.params?.title || 'Ordenes consolidadas' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
-        component={ScreenOrders}
+        component={ScreenOrdersConsolidated}
       />
 
       <Stack.Screen
@@ -91,4 +90,4 @@ function StackOrders() {
     </Stack.Navigator>
   )
 }
-export default StackOrders
+export default StackConsolidated

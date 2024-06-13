@@ -1,8 +1,8 @@
 import React from 'react'
-import ListOrdersConsolidated from './ListOrdersConsolidated'
+import { ListOrdersConsolidatedE } from './ListOrdersConsolidated'
 
 const ScreenOrdersConsolidated = () => {
-  return <ListOrdersConsolidated />
+  return <ListOrdersConsolidatedE />
 }
 
 export default ScreenOrdersConsolidated

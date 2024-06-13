@@ -89,7 +89,7 @@ const labels = {
    * PERMISSIONS ORDERS V2
    *******************************************rz */
   canCreate: 'Crear', // Added meaning in Spanish
-  canViewAll: 'Ordenes',
+  canViewAll: 'Consolidadas',
   canViewMy: 'Mis ordenes',
   canEdit: 'Editar',
   canDelete: 'Eliminar',

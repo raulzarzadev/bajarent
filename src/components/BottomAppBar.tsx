@@ -8,15 +8,20 @@ import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
 import { useAuth } from '../contexts/authContext'
 import ScreenNewOrder from './ScreenOrderNew'
+import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
+import { useEmployee } from '../contexts/employeeContext'
+import StackConsolidated from './StackConsolidated'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { store } = useAuth()
+  const { permissions } = useEmployee()
 
   const showProfileButton = true
   const showOrdersButton = !!store
   const showStoreButton = !!store
+  const showConsolidated = permissions.orders.canViewAll
   return (
     <Tab.Navigator
       //initialRouteName="StackOrders"
@@ -30,7 +35,8 @@ const BottomAppBar = () => {
               NewOrder: 'add',
               Components: 'components',
               MyOrders: 'myOrders',
-              StackOrders: 'orders'
+              StackOrders: 'orders',
+              StackConsolidated: 'orders'
             }
             return (
               <Icon
@@ -63,11 +69,23 @@ const BottomAppBar = () => {
       />
 
       <Tab.Screen
+        name="StackConsolidated"
+        component={StackConsolidated}
+        options={({ route }) => ({
+          headerShown: false,
+          title: 'Consolidadas',
+          tabBarButton: showConsolidated ? undefined : () => null
+          // tabBarButton:
+          //   !canSeeOrders || !isAuthenticated ? () => null : undefined
+        })}
+      />
+
+      <Tab.Screen
         name="StackOrders"
         component={StackOrders}
         options={({ route }) => ({
           headerShown: false,
-          title: 'Ordenes',
+          title: 'Mis Ordenes',
           tabBarButton: showOrdersButton ? undefined : () => null
           // tabBarButton:
           //   !canSeeOrders || !isAuthenticated ? () => null : undefined

@@ -14,6 +14,8 @@ import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
 import OrderDirectives from './OrderDirectives'
+import asDate, { fromNow } from '../libs/utils-date'
+import ErrorBoundary from './ErrorBoundary'
 type OrderWithId = ConsolidatedOrderType & { id: string }
 
 const ListOrdersConsolidated = () => {
@@ -50,10 +52,13 @@ const ListOrdersConsolidated = () => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <View>
+        {/* <View>
           <TextInfo text="Estas ordenes se generan de forma manual, al hacer click en el logo de guardar"></TextInfo>
           <TextInfo text="Te ayudaran a buscar mas rapido ordenes especificas. "></TextInfo>
-        </View>
+        </View> */}
+        <Text style={[gStyles.helper, gStyles.tCenter]}>
+          Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
+        </Text>
         <LoadingList
           rowsPerPage={20}
           sideButtons={[
@@ -68,8 +73,9 @@ const ListOrdersConsolidated = () => {
             }
           ]}
           onPressRow={(orderId) => {
+            console.log({ orderId })
             //@ts-ignore
-            navigate('StackOrders', {
+            navigate('StackConsolidated', {
               screen: 'OrderDetails',
               params: { orderId }
             })
@@ -217,5 +223,11 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
+
+export const ListOrdersConsolidatedE = (props) => (
+  <ErrorBoundary componentName="ListOrdersConsolidated">
+    <ListOrdersConsolidated {...props} />
+  </ErrorBoundary>
+)
 
 export default ListOrdersConsolidated
