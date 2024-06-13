@@ -8,6 +8,7 @@ import { ExtendReason } from '../firebase/ServiceOrders'
 import UserType from './UserType'
 
 type OrderBase = {
+  colorLabel?: string
   type: TypeOfOrderType
 
   note: string

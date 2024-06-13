@@ -40,7 +40,9 @@ export const colors = {
   emerald: '#10b981',
   lightPink: '#f9a8d4',
   lightPurple: '#d6bcfa'
-}
+} as const
+
+export type BasicColors = keyof typeof colors
 
 const theme: Theme = {
   primary: colors.blue,

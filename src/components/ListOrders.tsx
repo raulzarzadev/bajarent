@@ -41,7 +41,8 @@ const ListOrders = ({
         { key: 'status', label: 'Status' },
         { key: 'assignToSection', label: 'Area' },
         { key: 'type', label: 'Tipo' },
-        { key: 'expireAt', label: 'Vencimiento' }
+        { key: 'expireAt', label: 'Vencimiento' },
+        { key: 'colorLabel', label: 'Color' }
       ]}
       data={orders}
       ComponentRow={({ item }) => (
@@ -56,6 +57,8 @@ const ListOrders = ({
         { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },
         { field: 'status', label: 'Status' },
+
+        { field: 'colorLabel', label: 'Color' },
         {
           field: 'hasNotSolvedReports',
           label: 'Reportes ',

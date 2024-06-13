@@ -4,7 +4,7 @@ import useFilter from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import Chip from './Chip'
-import theme, { ORDER_TYPE_COLOR, STATUS_COLOR } from '../theme'
+import theme, { ORDER_TYPE_COLOR, STATUS_COLOR, colors } from '../theme'
 import dictionary, { Labels } from '../dictionary'
 import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
@@ -140,6 +140,10 @@ function ModalFilterList<T>({
       )
     }
 
+    if (field === 'colorLabel') {
+      return value
+    }
+
     return theme.info
   }
 
@@ -149,6 +153,14 @@ function ModalFilterList<T>({
       const res = storeSections.find((a) => a.id === value)?.name || ''
 
       return dictionary(res as Labels).toUpperCase()
+    }
+    if (field === 'colorLabel') {
+      const res = Object.entries(colors).map(([key, value]) => ({
+        color: value,
+        label: key
+      }))
+      const color = res.find((a) => a.color === value)?.label || ''
+      return dictionary(color as Labels).toUpperCase()
     }
     //* this is useful for payments table to find staff name
     if (field === 'userId') {
@@ -250,7 +262,9 @@ function ModalFilterList<T>({
 
         {filters?.map(({ field, label, boolean }, i) => (
           <View key={i}>
-            <Text style={[gStyles.h3]}>{label}</Text>
+            <Text style={[gStyles.h3, { marginBottom: 0, marginTop: 6 }]}>
+              {label}
+            </Text>
             <View style={styles.filters}>
               {Object.keys(createFieldFilters(field as string, boolean)).map(
                 (value) => {
@@ -258,6 +272,7 @@ function ModalFilterList<T>({
                   if (value === 'undefined') return null
                   const title = chipLabel(field as string, value) //<-- avoid shows empty chips
                   if (!title) return null
+
                   return (
                     <Chip
                       color={chipColor(field as string, value)}

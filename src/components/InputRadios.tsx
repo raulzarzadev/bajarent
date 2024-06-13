@@ -5,6 +5,7 @@ import RadioGroup from 'react-native-radio-buttons-group'
 export type InputRadioOption<T = string> = {
   label: string
   value: T
+  color?: string
 }
 
 type InputRadiosProps<T = string> = {
