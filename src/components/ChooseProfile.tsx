@@ -1,17 +1,21 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import theme from '../theme'
 import { gStyles } from '../styles'
-import Icon from './Icon'
+import Icon, { IconName } from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import StoreType from '../types/StoreType'
 import { useAuth } from '../contexts/authContext'
 
 const ChooseProfile = () => {
   const { navigate } = useNavigation()
-  const { stores: userStores, storeId: storeSelected } = useAuth()
-
+  const {
+    stores: userStores = [],
+    storeId: storeSelected,
+    user,
+    handleSetStoreId
+  } = useAuth()
   const sortUserStore = (userStores, storeSelected) => {
     let res = []
     const selectedStore = userStores?.find(
@@ -27,33 +31,49 @@ const ChooseProfile = () => {
     return res
   }
 
-  const [userStoresSorted, setUserStoresSorted] = React.useState(userStores)
+  const [userStoresSorted, setUserStoresSorted] =
+    React.useState<Partial<StoreType>[]>(userStores)
 
   useEffect(() => {
     const sortedUserStores = sortUserStore(userStores, storeSelected)
     setUserStoresSorted(sortedUserStores)
   }, [userStores])
 
-  const handleCreateStore = () => {
-    // @ts-ignore
-    navigate('CreateStore')
+  const [stores, setStores] = useState(userStoresSorted)
+
+  const [storeSelectedId, setStoreSelectedId] = useState()
+  const handleSelectStore = (id) => {
+    if (id === 'createStore') {
+      // @ts-ignore
+      navigate('CreateStore')
+      return
+    }
+    setStoreSelectedId(id) //* <-- component state
+    handleSetStoreId(id) //* <-- context state
   }
 
-  const stores =
-    [
-      ...userStoresSorted,
-      { createStore: true, handleCreateStore, disabled: false }
-    ] || []
+  useEffect(() => {
+    const showStores = userStoresSorted
+    if (user.canCreateStore) {
+      showStores.push({ id: 'createStore', name: 'Crear tienda' })
+    }
+    setStores(showStores)
+  }, [user.canCreateStore, userStoresSorted])
 
   return (
-    <View style={{ margin: 'auto', maxWidth: 500 }}>
+    <View style={{}}>
       <Text>Selecciona una tienda</Text>
       <FlatList
         ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
         horizontal
         data={stores}
         renderItem={({ item: store }) => (
-          <SquareStore store={store as StoreType & { createStore: boolean }} />
+          <SquareStore
+            selected={storeSelectedId}
+            store={store}
+            onClickStore={handleSelectStore}
+            icon={store.id === 'createStore' ? 'add' : undefined}
+          />
         )}
       />
     </View>
@@ -61,60 +81,39 @@ const ChooseProfile = () => {
 }
 
 const SquareStore = ({
-  store
+  store,
+  onClickStore,
+  selected,
+  icon
 }: {
-  store: StoreType & { createStore: boolean }
+  store: StoreType
+  selected?: boolean
+  onClickStore: (id: string) => void
+  icon?: IconName
 }) => {
-  const { navigate } = useNavigation()
-  const { storeId: storeSelected, handleSetStoreId } = useStore()
-  const handleCreateStore = () => {
-    // @ts-ignore
-    navigate('CreateStore')
-  }
-  const storeIsSelected = storeSelected && store?.id === storeSelected
   return (
     <Pressable
       role="button"
-      key={'createStore'}
-      testID={store?.createStore ? 'createStoreButton' : 'storeButton'}
-      is-selected={storeIsSelected}
+      is-selected={selected}
       onPress={() => {
-        if (store.createStore) handleCreateStore()
-        if (!store.createStore) {
-          if (storeIsSelected) {
-            handleSetStoreId('')
-          } else {
-            handleSetStoreId(store.id)
-          }
-        }
+        onClickStore(store?.id)
       }}
       style={[
         styles.store,
         {
-          backgroundColor: storeIsSelected ? theme.info : theme.white
+          backgroundColor: selected ? theme.info : theme.white
         }
-        //store.disabled && { opacity: 0.2, backgroundColor: '#444' }
       ]}
     >
-      {store.createStore && (
-        <>
-          <Text style={[gStyles.h2, { marginBottom: 0 }]}>Crear tieda</Text>
-          <View style={{ justifyContent: 'center', margin: 'auto' }}>
-            <Icon icon="add" size={35} color={theme.black} />
-          </View>
-        </>
-      )}
-      {!store.createStore && (
-        <Text
-          numberOfLines={2}
-          style={[
-            gStyles.h3,
-            { color: storeIsSelected ? theme.white : theme.black }
-          ]}
-        >
-          {store.name}
-        </Text>
-      )}
+      <Text
+        numberOfLines={2}
+        style={[gStyles.h3, { color: selected ? theme.white : theme.black }]}
+      >
+        {store.name}
+      </Text>
+      <View style={{ justifyContent: 'center', margin: 'auto' }}>
+        {icon && <Icon icon={icon} />}
+      </View>
     </Pressable>
   )
 }
