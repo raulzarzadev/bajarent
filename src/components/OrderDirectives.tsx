@@ -1,11 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType from '../types/OrderType'
+import OrderType, { IconOrderType } from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
+import Icon from './Icon'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   const { storeSections } = useStore()
@@ -22,6 +23,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         flexWrap: 'wrap'
       }}
     >
+      {IconOrderType[order?.type]}
       <Chip
         style={styles.chip}
         title={dictionary(order?.type)?.toUpperCase()}
@@ -29,7 +31,6 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         titleColor={theme.black}
         size="sm"
       ></Chip>
-      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       {!!sectionName && (
         <Chip
           style={styles.chip}
@@ -39,6 +40,8 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
           size="sm"
         ></Chip>
       )}
+      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
+
       {/* <OrderAssignedTo
         orderId={order?.id}
         chipStyles={styles.chip}

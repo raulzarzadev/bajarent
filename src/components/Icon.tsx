@@ -30,6 +30,8 @@ import {
   MdOutlineRemoveRedEye
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
+import { IoKeyOutline } from 'react-icons/io5'
+import { IoPricetagsOutline } from 'react-icons/io5'
 
 import {
   IoPersonOutline,
@@ -47,6 +49,7 @@ import { GrFormSubtract } from 'react-icons/gr'
 import { TiPhone } from 'react-icons/ti'
 import { BsWhatsapp } from 'react-icons/bs'
 import { RiImageAddLine } from 'react-icons/ri'
+import { IoHammerOutline } from 'react-icons/io5'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -126,7 +129,10 @@ const icons = {
   arrowForward: MdOutlineArrowForward,
   openEye: MdOutlineRemoveRedEye,
   pin: RiPushpinLine,
-  unPin: RiUnpinLine
+  unPin: RiUnpinLine,
+  rent: IoKeyOutline,
+  repair: IoHammerOutline,
+  sale: IoPricetagsOutline
 } as const
 
 export type IconName = keyof typeof icons

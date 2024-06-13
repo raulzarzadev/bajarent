@@ -213,6 +213,18 @@ export enum TypeOrder {
   REPAIR = 'REPAIR'
 }
 
+export const IconOrderType = {
+  [TypeOrder.RENT]: '📦',
+  [TypeOrder.SALE]: '💰',
+  [TypeOrder.REPAIR]: '🔧'
+}
+
+// export const IconOrderType = {
+//   [TypeOrder.RENT]: Icon({ icon: 'rent' }),
+//   [TypeOrder.SALE]: Icon({ icon: 'money' }),
+//   [TypeOrder.REPAIR]: Icon({ icon: 'repair' })
+// }
+
 export const TypeOrderKeys = Object.keys(TypeOrder).filter((a) =>
   isNaN(Number(a))
 )
