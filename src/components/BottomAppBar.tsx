@@ -19,7 +19,7 @@ const BottomAppBar = () => {
   const showStoreButton = !!store
   return (
     <Tab.Navigator
-      initialRouteName="Profile"
+      //initialRouteName="StackOrders"
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
