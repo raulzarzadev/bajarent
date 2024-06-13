@@ -29,7 +29,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
       }}
     >
       <ChooseLabel colorLabel={order.colorLabel} orderId={order.id} />
-      {ICON ? <Text>{ICON}</Text> : null}
+      {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <Chip
         style={[styles.chip]}
         title={`${dictionary(order?.type)?.toUpperCase()}`}
@@ -62,6 +62,7 @@ const ChooseLabel = ({ colorLabel, orderId }) => {
     { label: 'Rojo', value: colors.red, color: colors.red },
     { label: 'Azul', value: colors.blue, color: colors.blue },
     { label: 'Verde', value: colors.green, color: colors.green },
+    { label: 'Amarillo', value: colors.yellow, color: colors.yellow },
     { label: 'sin', value: '' }
   ]
   useEffect(() => {
