@@ -44,6 +44,14 @@ const FormCategoryA = ({
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
           <View style={styles.input}>
+            <Text>Visible para tipo de orden: </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <FormikCheckbox name={'orderType.rent'} label={'Renta'} />
+              <FormikCheckbox name={'orderType.repair'} label={'Reparación'} />
+              <FormikCheckbox name={'orderType.sale'} label={'Venta'} />
+            </View>
+          </View>
+          <View style={styles.input}>
             <FormikInputImage name="img" label="Imagen " />
           </View>
 
