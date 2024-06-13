@@ -41,7 +41,7 @@ const ChooseProfile = () => {
 
   const [stores, setStores] = useState(userStoresSorted)
 
-  const [storeSelectedId, setStoreSelectedId] = useState()
+  const [storeSelectedId, setStoreSelectedId] = useState<string>()
   const handleSelectStore = (id) => {
     if (id === 'createStore') {
       // @ts-ignore
@@ -51,6 +51,9 @@ const ChooseProfile = () => {
     setStoreSelectedId(id) //* <-- component state
     handleSetStoreId(id) //* <-- context state
   }
+  useEffect(() => {
+    setStoreSelectedId(storeSelected)
+  }, [storeSelected])
 
   useEffect(() => {
     const showStores = userStoresSorted
@@ -62,14 +65,29 @@ const ChooseProfile = () => {
 
   return (
     <View style={{}}>
-      <Text>Selecciona una tienda</Text>
+      <Text
+        style={{
+          width: '100%',
+          maxWidth: 500,
+          margin: 'auto',
+          textAlign: 'left'
+        }}
+      >
+        Selecciona una tienda
+      </Text>
       <FlatList
+        style={{
+          maxWidth: 500,
+          margin: 'auto',
+          paddingHorizontal: 16,
+          paddingVertical: 12
+        }}
         ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
         horizontal
         data={stores}
         renderItem={({ item: store }) => (
           <SquareStore
-            selected={storeSelectedId}
+            selected={storeSelectedId === store.id}
             store={store}
             onClickStore={handleSelectStore}
             icon={store.id === 'createStore' ? 'add' : undefined}
@@ -86,7 +104,7 @@ const SquareStore = ({
   selected,
   icon
 }: {
-  store: StoreType
+  store: Partial<StoreType>
   selected?: boolean
   onClickStore: (id: string) => void
   icon?: IconName
