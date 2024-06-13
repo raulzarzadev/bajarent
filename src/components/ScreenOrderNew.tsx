@@ -44,8 +44,12 @@ const ScreenOrderNew = ({ navigation }) => {
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       (orderId) => {
         if (orderId) {
-          navigation.navigate('Orders')
-          navigation.navigate('OrderDetails', { orderId })
+          navigation.navigate('StackOrders', {
+            screen: 'Orders',
+            params: { orderId }
+          })
+          // navigation.navigate('Orders')
+          // navigation.navigate('OrderDetails', { orderId })
         }
       }
     )
