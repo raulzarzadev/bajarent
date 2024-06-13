@@ -3,6 +3,7 @@ import OrderDetails from './OrderDetails'
 import { useEffect, useState } from 'react'
 import { listenFullOrderData } from '../contexts/libs/getFullOrderData'
 import OrderType from '../types/OrderType'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params
@@ -37,5 +38,11 @@ const ScreenOrderDetail = ({ route }) => {
     </ScrollView>
   )
 }
+
+export const ScreenOrderDetailE = (props) => (
+  <ErrorBoundary componentName="ScreenOrderDetail">
+    <ScreenOrderDetail {...props} />
+  </ErrorBoundary>
+)
 
 export default ScreenOrderDetail

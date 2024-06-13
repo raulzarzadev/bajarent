@@ -48,8 +48,9 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   return (
     <View>
       <OrderMetadata order={order} />
-
-      <OrderDirectivesE order={order} />
+      <View style={{ justifyContent: 'center', margin: 'auto' }}>
+        <OrderDirectivesE order={order} />
+      </View>
       <View
         style={{
           padding: 4

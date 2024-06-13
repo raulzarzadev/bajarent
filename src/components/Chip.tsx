@@ -1,6 +1,8 @@
 import { ViewStyle } from 'react-native'
 import React from 'react'
 import { ChipProps, Chip as RNEChip } from 'react-native-elements'
+import { IconOrderType } from '../types/OrderType'
+import Icon from './Icon'
 export type Size = 'xs' | 'sm' | 'md' | 'lg'
 const Chip = ({
   title = '',

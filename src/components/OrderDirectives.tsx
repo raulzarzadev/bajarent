@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
 import OrderType, { IconOrderType } from '../types/OrderType'
 import dictionary from '../dictionary'
@@ -13,20 +13,20 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   const sectionName = storeSections?.find(
     ({ id }) => id === order?.assignToSection
   )?.name
-
+  const ICON = IconOrderType[order?.type]
   return (
     <View
       style={{
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        // //  justifyContent: 'flex-start',
         alignItems: 'center',
         flexWrap: 'wrap'
       }}
     >
-      {IconOrderType[order?.type]}
+      {ICON ? <Text>{ICON}</Text> : null}
       <Chip
-        style={styles.chip}
-        title={dictionary(order?.type)?.toUpperCase()}
+        style={[styles.chip, { marginLeft: 6 }]}
+        title={`${dictionary(order?.type)?.toUpperCase()}`}
         color={theme?.info}
         titleColor={theme.black}
         size="sm"

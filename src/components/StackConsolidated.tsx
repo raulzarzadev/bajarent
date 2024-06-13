@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenOrderDetail from './ScreenOrderDetail'
+import ScreenOrderDetail, { ScreenOrderDetailE } from './ScreenOrderDetail'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenAssignOrder from './ScreenAssignOrder'
 import ScreenOrderRenew from './ScreenOrderRenew2'
@@ -34,7 +34,7 @@ function StackConsolidated() {
         options={{
           title: 'Detalle de  orden'
         }}
-        component={ScreenOrderDetail}
+        component={ScreenOrderDetailE}
       />
 
       <Stack.Screen
