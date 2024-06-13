@@ -96,20 +96,21 @@ export default function useFilter<T extends { id?: string }>({
         return false
       })
     })
+    setFilteredData([...res])
 
-    if (collectionSearch?.collectionName === 'orders') {
-      const avoidIds = res.map(({ id }) => id)
-      const orders = await ServiceOrders.search(
-        collectionSearch?.fields,
-        value,
-        avoidIds
-      ).then((res) => {
-        return formatOrders({ orders: res, reports })
-      })
-      setFilteredData([...orders, ...res])
-    } else {
-      setFilteredData([...res])
-    }
+    // if (collectionSearch?.collectionName === 'orders') {
+    //   const avoidIds = res.map(({ id }) => id)
+    //   const orders = await ServiceOrders.search(
+    //     collectionSearch?.fields,
+    //     value,
+    //     avoidIds
+    //   ).then((res) => {
+    //     return formatOrders({ orders: res, reports })
+    //   })
+    //   setFilteredData([...orders, ...res])
+    // } else {
+    //   setFilteredData([...res])
+    // }
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
