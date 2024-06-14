@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from './Icon'
 import InputDate from './InputDate'
@@ -32,7 +32,7 @@ function FIlterByDate<T>({
 
   const [fromDate, setFromDate] = useState<Date>(new Date())
   const [toDate, setToDate] = useState<Date>(new Date())
-
+  const pickedDatesAsRow = Dimensions.get('window').width > 500
   return (
     <View>
       {dateFilters.length > 0 && (
@@ -52,7 +52,7 @@ function FIlterByDate<T>({
 
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: pickedDatesAsRow ? 'row' : 'column',
               justifyContent: 'space-around',
               alignItems: 'center'
             }}
@@ -60,7 +60,7 @@ function FIlterByDate<T>({
             {!!dateFieldSelected && (
               <>
                 {/* SELECT PERIOD OF TIME */}
-                <View style={{ justifyContent: 'center' }}>
+                <View style={{ justifyContent: 'center', marginVertical: 4 }}>
                   <InputDate
                     format="E dd/MMM"
                     //withTime
@@ -71,10 +71,12 @@ function FIlterByDate<T>({
                     }}
                   />
                 </View>
-                <View style={{ alignSelf: 'center' }}>
-                  <Icon icon="rowRight" />
-                </View>
-                <View style={{ justifyContent: 'center' }}>
+                {pickedDatesAsRow && (
+                  <View style={{ alignSelf: 'center' }}>
+                    <Icon icon="rowRight" />
+                  </View>
+                )}
+                <View style={{ justifyContent: 'center', marginVertical: 4 }}>
                   <InputDate
                     //withTime
                     format="E dd/MMM"
@@ -86,11 +88,12 @@ function FIlterByDate<T>({
                   />
                 </View>
                 <Button
-                  justIcon
                   icon="search"
                   onPress={() => {
                     onSubmit(dateFieldSelected, { fromDate, toDate })
                   }}
+                  size="small"
+                  label={!pickedDatesAsRow ? 'Buscar' : ''}
                 ></Button>
               </>
             )}
