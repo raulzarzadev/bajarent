@@ -48,17 +48,15 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
 //#region FUNCTIONS
 const formatConsolidateOrder = (
   order: OrderType
-): Omit<Partial<OrderType>, 'createdAt' | 'expireAt'> & {
+): Omit<
+  Partial<OrderType>,
+  'createdAt' | 'expireAt' | 'pickedUpAt' | 'deliveredAt'
+> & {
   createdAt: string | null
   expireAt: string | null
+  pickedUpAt: string | null
+  deliveredAt: string | null
 } => {
-  if (order?.expireAt) {
-    console.log({
-      expireAt: order.expireAt,
-      date: asDate(order?.expireAt),
-      string: asDate(order?.expireAt).toISOString()
-    })
-  }
   return {
     fullName: order?.fullName || '',
     phone: order?.phone || '',
@@ -75,7 +73,14 @@ const formatConsolidateOrder = (
     neighborhood: order?.neighborhood || '',
     assignToSection: order?.assignToSection || '',
     expireAt: order?.expireAt ? asDate(order?.expireAt).toISOString() : null,
-    createdAt: order?.createdAt ? asDate(order?.createdAt).toISOString() : null
+    createdAt: order?.createdAt ? asDate(order?.createdAt).toISOString() : null,
+    pickedUpAt: order?.pickedUpAt
+      ? asDate(order?.pickedUpAt).toISOString()
+      : null,
+    deliveredAt: order?.deliveredAt
+      ? asDate(order?.deliveredAt).toISOString()
+      : null,
+    colorLabel: order?.colorLabel || ''
   }
 }
 

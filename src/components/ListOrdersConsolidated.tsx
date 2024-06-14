@@ -27,7 +27,6 @@ const ListOrdersConsolidated = () => {
   const orders: Record<string, Partial<ConsolidatedOrderType>> = JSON.parse(
     consolidatedOrders?.stringJSON || '{}'
   )
-  console.log({ orders })
 
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedToSection =
@@ -110,6 +109,26 @@ const ListOrdersConsolidated = () => {
             {
               field: 'neighborhood',
               label: 'Colonia'
+            },
+            {
+              field: 'createdAt',
+              label: 'Creación',
+              isDate: true
+            },
+            {
+              field: 'expireAt',
+              label: 'Vencimiento',
+              isDate: true
+            },
+            {
+              field: 'deliveredAt',
+              label: 'Entregada',
+              isDate: true
+            },
+            {
+              field: 'pickedUpAt',
+              label: 'Recogida',
+              isDate: true
             }
           ]}
           sortFields={[

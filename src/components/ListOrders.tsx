@@ -76,6 +76,26 @@ const ListOrders = ({
           label: 'Vence mañana ',
           boolean: true
         }
+        // {
+        //   field: 'createdAt',
+        //   label: 'Creación',
+        //   isDate: true
+        // },
+        // {
+        //   field: 'expireAt',
+        //   label: 'Vencimiento',
+        //   isDate: true
+        // },
+        // {
+        //   field: 'deliveredAt',
+        //   label: 'Entrega',
+        //   isDate: true
+        // },
+        // {
+        //   field: 'pickedUpAt',
+        //   label: 'Fecha de recolección',
+        //   isDate: true
+        // }
       ]}
       ComponentMultiActions={({ ids }) => {
         return <MultiOrderActions ordersIds={ids} />

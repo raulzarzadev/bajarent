@@ -13,6 +13,7 @@ import { formatDate } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
+import FIlterByDate from './FIlterByDate'
 export type CollectionSearch = {
   collectionName: string
   fields: string[]
@@ -21,6 +22,7 @@ export type FilterListType<T> = {
   field: keyof T
   label: string
   boolean?: boolean
+  isDate?: boolean
 }
 
 export type ModalFilterOrdersProps<T> = {
@@ -47,7 +49,8 @@ function ModalFilterList<T>({
     filteredData,
     filtersBy,
     search,
-    searchValue
+    searchValue,
+    filterByDates
   } = useFilter<T>({
     data,
     collectionSearch
@@ -91,6 +94,8 @@ function ModalFilterList<T>({
     }, 1000)
   }
 
+  const [filedDates, setFieldDates] = useState<string[]>([])
+
   const createFieldFilters = (
     field: string,
     isBoolean?: boolean
@@ -100,6 +105,11 @@ function ModalFilterList<T>({
       if (isBoolean) {
         currField = currField ? 'true' : 'false'
       }
+
+      // if (isDate) {
+      //   setFieldDates((filedDates) => [...filedDates, currField])
+      //   return acc
+      // }
 
       //* Avoid invalid fields
       if (!currField || currField === 'undefined') return acc
@@ -234,6 +244,7 @@ function ModalFilterList<T>({
             </View>
           )}
         </View>
+
         {!!preFilteredIds?.length && (
           <View style={{ justifyContent: 'center' }}>
             <Chip
@@ -259,52 +270,62 @@ function ModalFilterList<T>({
             />
           </View>
         )}
+        <FIlterByDate
+          filters={filters}
+          onSubmit={(field, dates) => {
+            filterByDates(field as string, dates)
+          }}
+        />
 
-        {filters?.map(({ field, label, boolean }, i) => (
-          <View key={i}>
-            <Text style={[gStyles.h3, { marginBottom: 0, marginTop: 6 }]}>
-              {label}
-            </Text>
-            <View style={styles.filters}>
-              {Object.keys(createFieldFilters(field as string, boolean)).map(
-                (value) => {
-                  if (!value) return null
-                  if (value === 'undefined') return null
-                  const title = chipLabel(field as string, value) //<-- avoid shows empty chips
-                  if (!title) return null
+        {filters
+          .filter((f) => !f.isDate) //* <-- avoid show date filters
+          ?.map(({ field, label, boolean }, i) => {
+            return (
+              <View key={i}>
+                <Text style={[gStyles.h3, { marginBottom: 0, marginTop: 6 }]}>
+                  {label}
+                </Text>
+                <View style={styles.filters}>
+                  {Object.keys(
+                    createFieldFilters(field as string, boolean)
+                  ).map((value) => {
+                    if (!value) return null
+                    if (value === 'undefined') return null
+                    const title = chipLabel(field as string, value) //<-- avoid shows empty chips
+                    if (!title) return null
 
-                  return (
-                    <Chip
-                      color={chipColor(field as string, value)}
-                      title={title}
-                      key={value}
-                      size="sm"
-                      onPress={() => {
-                        if (value === 'REPORTED') {
-                          filterBy('isReported', true)
-                          return
-                        }
-                        if (boolean) {
-                          filterBy(field as string, value === 'true')
-                          return
-                        }
-                        filterBy(field as string, value)
-                      }}
-                      style={{
-                        margin: 4,
-                        borderWidth: 4,
-                        borderColor: isFilterSelected(field, value)
-                          ? theme.black
-                          : 'transparent'
-                        // backgroundColor:
-                      }}
-                    />
-                  )
-                }
-              )}
-            </View>
-          </View>
-        ))}
+                    return (
+                      <Chip
+                        color={chipColor(field as string, value)}
+                        title={title}
+                        key={value}
+                        size="sm"
+                        onPress={() => {
+                          if (value === 'REPORTED') {
+                            filterBy('isReported', true)
+                            return
+                          }
+                          if (boolean) {
+                            filterBy(field as string, value === 'true')
+                            return
+                          }
+                          filterBy(field as string, value)
+                        }}
+                        style={{
+                          margin: 4,
+                          borderWidth: 4,
+                          borderColor: isFilterSelected(field, value)
+                            ? theme.black
+                            : 'transparent'
+                          // backgroundColor:
+                        }}
+                      />
+                    )
+                  })}
+                </View>
+              </View>
+            )
+          })}
       </StyledModal>
     </View>
   )
