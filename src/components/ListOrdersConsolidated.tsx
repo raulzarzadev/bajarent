@@ -16,21 +16,27 @@ import { colors } from '../theme'
 import OrderDirectives from './OrderDirectives'
 import asDate, { fromNow } from '../libs/utils-date'
 import ErrorBoundary from './ErrorBoundary'
-type OrderWithId = ConsolidatedOrderType & { id: string }
+import OrderType from '../types/OrderType'
+type OrderWithId = Partial<ConsolidatedOrderType> & { id: string }
 
 const ListOrdersConsolidated = () => {
   const { consolidatedOrders, handleRefresh } = useOrdersCtx()
   const { storeId, storeSections } = useStore()
   const { navigate } = useNavigation()
-  const orders = consolidatedOrders?.orders || {}
+  //const orders = consolidatedOrders?.orders || {}
+  const orders: Record<string, Partial<ConsolidatedOrderType>> = JSON.parse(
+    consolidatedOrders?.stringJSON || '{}'
+  )
+  console.log({ orders })
+
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
-    const assignedSection =
+    const assignedToSection =
       storeSections.find((section) => section.id === order.assignToSection)
         ?.name || null
     return {
       id: order.id,
       ...order,
-      assignedSection
+      assignedToSection
     }
   })
   const [disabled, setDisabled] = useState(false)

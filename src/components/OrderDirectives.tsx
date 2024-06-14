@@ -12,8 +12,13 @@ import useModal from '../hooks/useModal'
 import InputRadios from './InputRadios'
 import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
-const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
+const OrderDirectives = ({
+  order
+}: {
+  order: Partial<OrderType> | Partial<ConsolidatedOrderType>
+}) => {
   const { storeSections } = useStore()
   const sectionName = storeSections?.find(
     ({ id }) => id === order?.assignToSection

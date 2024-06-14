@@ -76,6 +76,8 @@ export const OrdersContextProvider = ({
     }
   }, [viewAllOrders])
 
+  console.log({ consolidatedOrders })
+
   const handleGetConsolidates = async () => {
     return await ServiceConsolidatedOrders.getByStore(storeId).then((res) => {
       setConsolidatedOrders(res[0])

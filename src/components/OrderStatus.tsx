@@ -5,13 +5,14 @@ import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
 import { isBefore, isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 const OrderStatus = ({
   order,
   chipStyles,
   chipSize
 }: {
-  order?: Partial<OrderType>
+  order?: Partial<OrderType> | Partial<ConsolidatedOrderType>
   chipStyles?: ViewStyle
   chipSize?: Size
 }) => {
