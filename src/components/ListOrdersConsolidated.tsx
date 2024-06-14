@@ -187,7 +187,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     // },
     {
       //field: `${order.folio}`,
-      width: 30,
+      width: 45,
       component: (
         <View style={{ flexDirection: 'column', alignItems: 'center' }}>
           <Text style={styles.cell} numberOfLines={1}>
