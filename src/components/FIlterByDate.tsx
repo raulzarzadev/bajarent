@@ -46,7 +46,7 @@ function FIlterByDate<T>({
             }))}
             value={dateFieldSelected as string}
             setValue={(value) => {
-              setDateFieldSelected(value)
+              setDateFieldSelected(value as keyof T | '')
             }}
           />
 
