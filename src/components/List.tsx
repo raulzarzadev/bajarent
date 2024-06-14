@@ -167,7 +167,7 @@ function MyList<T extends { id: string }>({
             <FlatList
               data={pinnedRows}
               renderItem={({ item }) => (
-                <View style={{ width: '100%' }}>
+                <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
                   <Pressable
                     style={{ flexDirection: 'row', flex: 1 }}
                     onPress={() => {
@@ -175,13 +175,13 @@ function MyList<T extends { id: string }>({
                     }}
                   >
                     <ComponentRow item={data.find(({ id }) => id === item)} />
-                    <PinButton
-                      handlePin={() => {
-                        handleUnpinRow(item)
-                      }}
-                      unpin={true}
-                    />
                   </Pressable>
+                  <PinButton
+                    handlePin={() => {
+                      handleUnpinRow(item)
+                    }}
+                    unpin={true}
+                  />
                   {/* ***************** ******* ***** UNPIN BUTTON  */}
                 </View>
               )}
@@ -346,52 +346,49 @@ function MyList<T extends { id: string }>({
           data={sortedData.slice(startIndex, endIndex)}
           renderItem={({ item }) => {
             return (
-              <View style={{ width: '100%' }}>
-                <View style={{ flexDirection: 'row' }}>
-                  {multiSelect && (
-                    <InputCheckbox
-                      label=""
-                      setValue={() => {
-                        handleSelectRow(item?.id)
-                      }}
-                      value={selectedRows.includes(item?.id)}
-                    />
-                  )}
-                  <Pressable
-                    style={{ flex: 1, flexDirection: 'row' }}
-                    onPress={() => {
-                      if (multiSelect) {
-                        handleSelectRow(item.id)
-                      } else {
-                        onPressRow && onPressRow(item?.id)
-                      }
+              <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
+                {multiSelect && (
+                  <InputCheckbox
+                    label=""
+                    setValue={() => {
+                      handleSelectRow(item?.id)
                     }}
-                  >
-                    <ComponentRow item={item} />
-
-                    {pinRows && (
-                      <>
-                        {/* ***************** ******* ***** PIN BUTTON  */}
-                        {!pinnedRows.includes(item?.id) ? (
-                          <PinButton
-                            handlePin={() => {
-                              handlePinRow(item?.id)
-                            }}
-                          />
-                        ) : (
-                          <PinButton
-                            handlePin={() => {
-                              handleUnpinRow(item?.id)
-                            }}
-                            unpin={true}
-                          />
-                        )}
-
-                        {/* ***************** ******* ***** PIN BUTTON  */}
-                      </>
+                    value={selectedRows.includes(item?.id)}
+                  />
+                )}
+                <Pressable
+                  style={{ flex: 1, flexDirection: 'row' }}
+                  onPress={() => {
+                    if (multiSelect) {
+                      handleSelectRow(item.id)
+                    } else {
+                      onPressRow && onPressRow(item?.id)
+                    }
+                  }}
+                >
+                  <ComponentRow item={item} />
+                </Pressable>
+                {pinRows && (
+                  <>
+                    {/* ***************** ******* ***** PIN BUTTON  */}
+                    {!pinnedRows.includes(item?.id) ? (
+                      <PinButton
+                        handlePin={() => {
+                          handlePinRow(item?.id)
+                        }}
+                      />
+                    ) : (
+                      <PinButton
+                        handlePin={() => {
+                          handleUnpinRow(item?.id)
+                        }}
+                        unpin={true}
+                      />
                     )}
-                  </Pressable>
-                </View>
+
+                    {/* ***************** ******* ***** PIN BUTTON  */}
+                  </>
+                )}
               </View>
             )
           }}
