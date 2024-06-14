@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.neutral,
     width: '100%',
-    maxWidth: 500,
+    // maxWidth: 500,
     marginHorizontal: 'auto'
   }
 })

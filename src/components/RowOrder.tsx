@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React, { ReactNode } from 'react'
-import OrderType, { order_type } from '../types/OrderType'
-import theme, { STATUS_COLOR, colors } from '../theme'
+import { Text, View } from 'react-native'
+import React from 'react'
+import OrderType from '../types/OrderType'
 import ClientName from './ClientName'
 import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
+import ListRow, { ListRowField } from './ListRow'
 export type RowOrderProps = {
   item: OrderType
   showTime?: boolean
@@ -13,23 +13,15 @@ export type RowOrderProps = {
   showTodayAmount?: boolean
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
-  const fields: {
-    field: string
-    width: ViewStyle['width']
-    component: ReactNode
-    hide?: boolean
-  }[] = [
+  const fields: ListRowField[] = [
     {
-      field: 'folio',
-      width: '25%',
+      width: 100,
       component: (
         <View>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ textAlign: 'center', flex: 1 }} numberOfLines={1}>
               {order?.folio}
-              {!!order?.note && (
-                <Text style={gStyles.helper}> - {order?.note}</Text>
-              )}
+              {!!order?.note && <Text>-{order?.note}</Text>}
             </Text>
           </View>
           <Text style={{ textAlign: 'center' }} numberOfLines={1}>
@@ -40,26 +32,26 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
     },
 
     {
-      field: 'neighborhood',
-      width: '20%',
+      width: 50,
       component: (
         <View>
-          <Text numberOfLines={2}>{order?.neighborhood}</Text>
+          <Text style={gStyles.helper} numberOfLines={2}>
+            {order?.neighborhood}
+          </Text>
         </View>
       )
     },
+    // {
+    //   field: 'items',
+    //   width: '15%',
+    //   component: (
+    //     <View>
+    //       <></>
+    //     </View>
+    //   )
+    // },
     {
-      field: 'items',
-      width: '15%',
-      component: (
-        <View>
-          <></>
-        </View>
-      )
-    },
-    {
-      field: 'status',
-      width: '40%',
+      width: 'rest',
       component: (
         <View>
           <OrderDirectives order={order} />
@@ -67,38 +59,10 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
       )
     }
   ]
-  return (
-    <View style={[styles.container]}>
-      {fields.map(({ field, component, width, hide }) => (
-        <View key={field} style={{ width }}>
-          {component}
-        </View>
-      ))}
-    </View>
-  )
+  return <ListRow fields={fields} style={{ marginVertical: 2, padding: 1 }} />
 }
 
 export default RowOrder
-
-const styles = StyleSheet.create({
-  //
-  text: {
-    width: '33%',
-    textAlign: 'center',
-    alignSelf: 'center'
-  },
-  container: {
-    flex: 1,
-    padding: 4,
-    marginVertical: 4,
-    borderRadius: 6,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    borderWidth: 1,
-    borderColor: theme.neutral,
-    backgroundColor: STATUS_COLOR.PENDING
-  }
-})
 
 export const RowOrderE = (props: RowOrderProps) => (
   <ErrorBoundary componentName="RowOrder">
