@@ -1,24 +1,28 @@
-import { ScrollView } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import PaymentsList from './ListPayments'
+import ListPayments from './ListPayments'
 import { useStore } from '../contexts/storeContext'
 import PaymentType from '../types/PaymentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { ServicePayments } from '../firebase/ServicePayments'
+import { gStyles } from '../styles'
 
+const COUNT_DAYS = 2
 export default function ScreenPayments({ navigation, route }) {
   const [payments, setPayments] = useState<PaymentType[]>([])
   const { storeId } = useStore()
   const { consolidatedOrders } = useOrdersCtx()
   const preList = route?.params?.payments || null
   const [count, setCount] = useState(10)
+  const [days, setDays] = useState(COUNT_DAYS)
   const [fullPayments, setFullPayments] = useState<PaymentType[]>([])
   useEffect(() => {
     if (storeId)
-      ServicePayments.getLast(storeId, { count }).then((p) => {
+      ServicePayments.getLast(storeId, { count, days }).then((p) => {
+        console.log({ p })
         setPayments(p)
       })
-  }, [count, storeId])
+  }, [count, storeId, days])
 
   useEffect(() => {
     if (preList) {
@@ -39,15 +43,16 @@ export default function ScreenPayments({ navigation, route }) {
   })
   return (
     <ScrollView>
-      <PaymentsList
+      <Text style={gStyles.h2}>Ultimos {days} días</Text>
+      <ListPayments
         payments={paymentsWithOrderData}
         onPressRow={(paymentId) => {
           navigation.navigate('ScreenPaymentsDetails', { id: paymentId })
         }}
         onFetchMore={() => {
-          setCount((count) => count + 10)
-          console.log('fetch more')
+          setDays((count) => count + COUNT_DAYS)
         }}
+        onFetchMoreCount={`${COUNT_DAYS} días`}
       />
     </ScrollView>
   )

@@ -7,15 +7,17 @@ export type PaymentTypeList = PaymentType & { createdByName?: string }
 function ListPayments({
   payments,
   onPressRow,
-  onFetchMore
+  onFetchMore,
+  onFetchMoreCount
 }: {
   payments: PaymentTypeList[]
   onPressRow?: (paymentId: string) => void
   onFetchMore?: () => void
+  onFetchMoreCount?: string
 }) {
   const sortFields = [
     { key: 'orderFolio', label: 'Folio' },
-    { key: 'date', label: 'Fecha' },
+    { key: 'createdAt', label: 'Fecha' },
     { key: 'amount', label: 'Cantidad' },
     { key: 'method', label: 'Método' },
     { key: 'reference', label: 'Referencia' },
@@ -33,7 +35,7 @@ function ListPayments({
       })}
       ComponentRow={PaymentRow}
       sortFields={sortFields}
-      defaultSortBy="date"
+      defaultSortBy="createdAt"
       defaultOrder="des"
       onPressRow={(id) => {
         onPressRow?.(id)
@@ -51,7 +53,13 @@ function ListPayments({
           field: 'method',
           label: 'Método'
         }
+        // {
+        //   field: 'createdAt',
+        //   label: 'Creado',
+        //   isDate: true
+        // }
       ]}
+      onFetchMoreCount={onFetchMoreCount}
       onFetchMore={onFetchMore}
     />
   )

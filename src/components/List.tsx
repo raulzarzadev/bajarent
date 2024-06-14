@@ -49,6 +49,7 @@ export type ListPops<T extends { id: string }> = {
   collectionSearch?: CollectionSearch
   onFetchMore?: () => void
   pinRows?: boolean
+  onFetchMoreCount?: string
 }
 
 function MyList<T extends { id: string }>({
@@ -65,7 +66,8 @@ function MyList<T extends { id: string }>({
   rowsPerPage = 10,
   collectionSearch,
   onFetchMore,
-  pinRows
+  pinRows,
+  onFetchMoreCount
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
 
@@ -396,7 +398,7 @@ function MyList<T extends { id: string }>({
         <View>
           {onFetchMore && (
             <Button
-              label="cargar mas"
+              label={`Cargar ${onFetchMoreCount || ''} mas`}
               variant="ghost"
               onPress={() => {
                 onFetchMore()

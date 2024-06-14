@@ -1,6 +1,7 @@
 import { where, documentId, limit, orderBy } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import PaymentType from '../types/PaymentType'
+import { addDays, subDays } from 'date-fns'
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   constructor() {
     super('payments')
@@ -40,7 +41,21 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     ])
   }
 
-  async getLast(storeId: string, { count = 10 }) {
+  async getLast(storeId: string, { count = 10, days = 0 }) {
+    if (days) {
+      console.log({ days })
+      return this.getItems([
+        where('storeId', '==', storeId),
+        where(
+          'createdAt',
+          '>=',
+          new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
+        ),
+        // where('createdAt', '<=', new Date().setHours(23, 59, 59, 999)),
+        // limit(count),
+        orderBy('createdAt', 'desc')
+      ])
+    }
     return this.getItems([
       where('storeId', '==', storeId),
       limit(count),
