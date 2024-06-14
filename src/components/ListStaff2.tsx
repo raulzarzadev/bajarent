@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import StaffType from '../types/StaffType'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
+import ListRow, { ListRowField } from './ListRow'
 
 const ListStaff = ({
   staff = [],
@@ -79,62 +80,57 @@ const StaffRow = ({
   const {
     permissions: { canEditStaff }
   } = useEmployee()
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginVertical: 8
-      }}
-    >
-      <Text>{staff?.name}</Text>
-      <Text>{staff?.position}</Text>
-      {handleAdd && (
-        <View>
-          <Button
-            size="small"
-            icon="add"
-            color="info"
-            justIcon
-            onPress={() => {
-              console.log('add')
-              handleAdd?.(staff?.id)
-            }}
-            disabled={!canEditStaff}
-          />
+
+  const fields: ListRowField[] = [
+    { component: <Text>{staff?.name}</Text>, width: 120 },
+    { component: <Text>{staff?.position}</Text>, width: 120 },
+    {
+      component: (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+          {handleSubtract && (
+            <Button
+              size="small"
+              icon="sub"
+              color="error"
+              justIcon
+              onPress={() => {
+                console.log('delete')
+                handleSubtract?.(staff?.id)
+              }}
+              disabled={!canEditStaff}
+            />
+          )}
+          {handleEdit && (
+            <Button
+              size="small"
+              icon="edit"
+              justIcon
+              onPress={() => {
+                console.log('edit')
+                handleEdit?.(staff?.id)
+              }}
+              disabled={!canEditStaff}
+            />
+          )}
+          {handleAdd && (
+            <Button
+              size="small"
+              icon="add"
+              color="info"
+              justIcon
+              onPress={() => {
+                console.log('add')
+                handleAdd?.(staff?.id)
+              }}
+              disabled={!canEditStaff}
+            />
+          )}
         </View>
-      )}
-      {handleEdit && (
-        <View>
-          <Button
-            size="small"
-            icon="edit"
-            justIcon
-            onPress={() => {
-              console.log('edit')
-              handleEdit?.(staff?.id)
-            }}
-            disabled={!canEditStaff}
-          />
-        </View>
-      )}
-      {handleSubtract && (
-        <View>
-          <Button
-            size="small"
-            icon="sub"
-            color="error"
-            justIcon
-            onPress={() => {
-              console.log('delete')
-              handleSubtract?.(staff?.id)
-            }}
-            disabled={!canEditStaff}
-          />
-        </View>
-      )}
-    </View>
-  )
+      ),
+      width: 'rest'
+    }
+  ]
+  return <ListRow fields={fields} style={{ marginVertical: 2 }} />
 }
 
 export default ListStaff

@@ -22,6 +22,7 @@ const ListOrders = ({
   const { navigate } = useNavigation()
   return (
     <LoadingList
+      pinRows={true}
       sideButtons={sideButtons}
       preFilteredIds={defaultOrdersIds}
       defaultSortBy="folio"

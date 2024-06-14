@@ -57,7 +57,7 @@ const ListOrdersConsolidated = () => {
 
   return (
     <ScrollView>
-      <View style={gStyles.container}>
+      <View>
         {/* <View>
           <TextInfo text="Estas ordenes se generan de forma manual, al hacer click en el logo de guardar"></TextInfo>
           <TextInfo text="Te ayudaran a buscar mas rapido ordenes especificas. "></TextInfo>
@@ -66,6 +66,7 @@ const ListOrdersConsolidated = () => {
           Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
         </Text>
         <LoadingList
+          pinRows={true}
           rowsPerPage={20}
           sideButtons={[
             {
@@ -147,7 +148,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
   const fields: ListRowField[] = [
     {
       // field: order.name,
-      width: 'rest',
+      width: 120,
       component: (
         <Text style={styles.cell} numberOfLines={1}>
           {order.fullName}
@@ -165,7 +166,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     },
     {
       //field: order.status,
-      width: 200,
+      width: 'rest',
       component: (
         <View>
           {/* <Text style={styles.cell} numberOfLines={1}>
@@ -186,22 +187,27 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     // },
     {
       //field: `${order.folio}`,
-      width: 50,
+      width: 30,
       component: (
-        <Text style={styles.cell} numberOfLines={1}>
-          {order.folio}
-        </Text>
-      )
-    },
-    {
-      //field: order.note,
-      width: 50,
-      component: (
-        <Text style={styles.cell} numberOfLines={1}>
-          {order.note}
-        </Text>
+        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+          <Text style={styles.cell} numberOfLines={1}>
+            {order.folio}
+          </Text>
+          <Text style={styles.cell} numberOfLines={1}>
+            {order.note}
+          </Text>
+        </View>
       )
     }
+    // {
+    //   //field: order.note,
+    //   width: 30,
+    //   component: (
+    //     <Text style={styles.cell} numberOfLines={1}>
+    //       {order.note}
+    //     </Text>
+    //   )
+    // }
     // {
     //   field: order.neighborhood,
     //   width: '10%',
@@ -218,6 +224,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       fields={fields}
       style={{
         marginVertical: 2,
+        padding: 2,
         borderColor: 'transparent',
         backgroundColor: colors.white
       }}
