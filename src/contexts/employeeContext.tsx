@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import StaffType from '../types/StaffType'
 import { useAuth } from './authContext'
 import { useStore } from './storeContext'
+import ItemType from '../types/ItemType'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -13,6 +14,7 @@ export type EmployeeContextType = {
     canEditStaff?: boolean
     canCancelPayments?: boolean
   }
+  items: Partial<ItemType>[]
 }
 
 const EmployeeContext = createContext<EmployeeContextType>({
@@ -23,7 +25,7 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
-  const { store, staff, storeSections } = useStore()
+  const { store, staff, storeSections, items: storeItems } = useStore()
 
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
@@ -48,6 +50,15 @@ export const EmployeeContextProvider = ({ children }) => {
     }
   }, [staff])
 
+  const [items, setItems] = useState<Partial<ItemType>[]>([])
+
+  useEffect(() => {
+    const employeeItemCategories = storeItems.filter((item) =>
+      employee?.sectionsAssigned?.includes(item?.assignedSection)
+    )
+    setItems(employeeItemCategories)
+  }, [employee, storeItems])
+
   const value = useMemo(
     () => ({
       employee: employee
@@ -65,7 +76,8 @@ export const EmployeeContextProvider = ({ children }) => {
           !!employee?.permissions?.store?.canCancelPayments ||
           isOwner ||
           isAdmin
-      }
+      },
+      items
     }),
     [employee, isAdmin, isOwner, store, assignedSections]
   )

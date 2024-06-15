@@ -18,7 +18,7 @@ import dictionary from '../../dictionary'
 import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
 import { useEmployee } from '../../contexts/employeeContext'
-import { gSpace } from '../../styles'
+import { gSpace, gStyles } from '../../styles'
 import { CommentType } from '../ListComments'
 import ErrorBoundary from '../ErrorBoundary'
 import StyledModal from '../StyledModal'
@@ -91,7 +91,9 @@ const OrderActions = ({
   const [touchedPickedUp, setTouchedPickedUp] = useState(false)
 
   useEffect(() => {
-    getFullOrderData(orderId).then(setOrder)
+    getFullOrderData(orderId).then((order) => {
+      setOrder(order)
+    })
   }, [orderId])
 
   // #region ACTIONS
@@ -448,6 +450,8 @@ const OrderActions = ({
       .catch(console.error)
   }
 
+  console.log({ order })
+
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
@@ -593,6 +597,12 @@ const OrderActions = ({
                   <FormikSelectCategories name="items" selectPrice />
                 </View>
 
+                {Object.entries(errors).map(([field, message]) => (
+                  <Text key={field} style={gStyles.helperError}>
+                    *{message as string}
+                  </Text>
+                ))}
+
                 <Button
                   disabled={Object.keys(errors).length > 0 || isSubmitting}
                   label="Entregar"
@@ -610,10 +620,6 @@ const OrderActions = ({
         <View>
           <Text>Asegurate de que recoges el siguiente articulo:</Text>
           {order?.items?.map((item, index) => {
-            delete item.id
-            delete item.priceSelectedId
-            delete item.priceSelected
-            delete item.priceQty
             return (
               <View style={{ marginTop: 8 }} key={index}>
                 <FormItemPickUp
@@ -623,10 +629,16 @@ const OrderActions = ({
                     serial: order.itemSerial
                   }}
                   onChange={(values) => {
-                    console.log({ values })
                     const newItems = []
                     newItems[index] = { ...values }
-                    setNewItems(newItems)
+                    const cleanItems = newItems.map((i) => {
+                      delete i.id
+                      delete i.priceSelectedId
+                      delete i.priceSelected
+                      delete i.priceQty
+                      return i
+                    })
+                    setNewItems(cleanItems)
                   }}
                 />
               </View>
