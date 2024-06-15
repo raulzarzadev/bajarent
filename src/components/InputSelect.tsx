@@ -27,10 +27,9 @@ const InputSelect = ({
       style={{
         inputWeb: [
           gStyles.inputStyle,
-          { backgroundColor: 'transparent', color: theme.placeholder }
-        ],
-
-        ...style
+          { backgroundColor: 'transparent', color: theme.placeholder },
+          style
+        ]
       }}
       onValueChange={onChangeValue}
       items={options}

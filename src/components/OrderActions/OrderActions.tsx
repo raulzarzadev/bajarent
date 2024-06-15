@@ -35,6 +35,8 @@ import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
 import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
 import ItemType from '../../types/ItemType'
 import InputTextStyled from '../InputTextStyled'
+import FormItem from '../FormItem'
+import FormItemPickUp from './FormItemPickUp'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -432,31 +434,18 @@ const OrderActions = ({
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
   // #region COMPONENT
-  const [itemNumbers, setItemsNumbers] = useState<{ number: string }[]>([])
-  const handleCreateItems = async ({
-    items
-  }: {
-    items: OrderType['items']
-  }) => {
-    await items.forEach(async (item, index) => {
-      const newItem: Partial<ItemType> = {
-        category: item?.categoryName || null,
-        categoryName: item?.categoryName || null,
-        brand: item?.brand || null,
-        serial: item?.serial || null,
-        assignedSection: order?.assignToSection || null,
-        currentLocation: order?.location || null,
-        number: itemNumbers?.[index]?.number || '',
-        status: 'available'
-      }
-      console.log({ newItem })
+
+  const [newItems, setNewItems] = useState<OrderType['items']>([])
+
+  const handleCreateItems = async () => {
+    const itemsPromises = newItems?.map(async (item, index) => {
       return await ServiceStoreItems.itemCreate(storeId, {
-        item: newItem
+        item: item
       })
-        .then(console.log)
-        .catch(console.error)
     })
-    return
+    return await Promise.all(itemsPromises)
+      .then(console.log)
+      .catch(console.error)
   }
 
   return (
@@ -620,29 +609,37 @@ const OrderActions = ({
       <StyledModal {...modalPickUpRent}>
         <View>
           <Text>Asegurate de que recoges el siguiente articulo:</Text>
-          {order?.items?.map((item, index) => (
-            <View key={index}>
-              <Text>Tipo: {item?.categoryName}</Text>
-              <Text>Marca: {item?.brand}</Text>
-              <Text>Serie: {item?.serial}</Text>
-              <InputTextStyled
-                value={itemNumbers[index]?.number || ''}
-                onChangeText={(value) => {
-                  const newItems = [...itemNumbers]
-                  newItems[index] = { number: value }
-                  setItemsNumbers(newItems)
-                }}
-              />
-            </View>
-          ))}
+          {order?.items?.map((item, index) => {
+            delete item.id
+            delete item.priceSelectedId
+            delete item.priceSelected
+            delete item.priceQty
+            return (
+              <View style={{ marginTop: 8 }} key={index}>
+                <FormItemPickUp
+                  item={{
+                    ...item,
+                    assignedSection: order?.assignToSection || '',
+                    serial: order.itemSerial
+                  }}
+                  onChange={(values) => {
+                    console.log({ values })
+                    const newItems = []
+                    newItems[index] = { ...values }
+                    setNewItems(newItems)
+                  }}
+                />
+              </View>
+            )
+          })}
         </View>
         <Button
           label="Recoger"
           onPress={() => {
-            console.log('crear item')
-            handleCreateItems({ items: order?.items || [] })
-            console.log('pickup')
+            handleCreateItems()
+
             actions_fns[acts.PICKUP]()
+
             // modalPickUpRent.setOpen(false)
           }}
         ></Button>
