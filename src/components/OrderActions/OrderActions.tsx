@@ -440,7 +440,7 @@ const OrderActions = ({
   const handleCreateItems = async () => {
     const itemsPromises = newItems?.map(async (item, index) => {
       return await ServiceStoreItems.itemCreate(storeId, {
-        item: item
+        item: { ...item, status: 'pickedUp' }
       })
     })
     return await Promise.all(itemsPromises)

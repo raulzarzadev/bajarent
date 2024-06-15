@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 import { Formik } from 'formik'
 import Button from './Button'
 import FormikInputValue from './FormikInputValue'
-import ItemType from '../types/ItemType'
+import ItemType, { ItemStatuses } from '../types/ItemType'
 import FormikSelectCategories from './FormikSelectCategories'
 import FormikInputSelect from './FormikInputSelect'
 import { useStore } from '../contexts/storeContext'
+import dictionary, { asCapitalize } from '../dictionary'
 
 const FormItem = ({
   onSubmit,
@@ -41,7 +42,11 @@ const FormItem = ({
   }))
 
   const [disabled, setDisabled] = useState(false)
-
+  const itemStatuses = Object.keys(ItemStatuses)
+  const itemStatusOptions = Object.values(itemStatuses).map((status) => ({
+    label: asCapitalize(dictionary(status)),
+    value: status
+  }))
   return (
     <Formik
       initialValues={{ ...defaultValues }}
@@ -51,6 +56,11 @@ const FormItem = ({
     >
       {({ handleSubmit }) => (
         <View>
+          <FormikInputSelect
+            placeholder="Seleccionar estado"
+            name={'status'}
+            options={itemStatusOptions}
+          />
           <View style={styles.input}>
             <FormikInputValue
               label="Numero"

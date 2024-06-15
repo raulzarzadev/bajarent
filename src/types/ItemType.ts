@@ -1,11 +1,15 @@
 import BaseType from './BaseType'
 import { CategoryType } from './RentItem'
-export type ItemStatus =
-  | 'available'
-  | 'rented'
-  | 'maintenance'
-  | 'sold'
-  | 'stock'
+
+export enum ItemStatuses {
+  available = 'available',
+  rented = 'rented',
+  maintenance = 'maintenance',
+  sold = 'sold',
+  stock = 'stock',
+  pickedUp = 'pickedUp'
+}
+export type ItemStatus = keyof typeof ItemStatuses
 
 export type ItemBase = {
   number: string

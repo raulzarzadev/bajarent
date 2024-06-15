@@ -169,6 +169,11 @@ const labels = {
   emerald: 'esmeralda',
   lightPink: 'rosa claro',
   lightPurple: 'morado claro',
+  rented: 'en renta',
+  maintenance: 'en mantenimiento',
+  sold: 'vendido',
+  stock: 'en bodega',
+  pickedUp: 'recogido',
   ' ': '',
   '': ''
 } as const
@@ -185,6 +190,10 @@ const dictionary = (value: Labels) => {
   if (!labels[value] || value === ' ') return value
   const lowerValue = value.toLowerCase()
   return labels_lowercase[lowerValue]
+}
+
+export const asCapitalize = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 export default dictionary

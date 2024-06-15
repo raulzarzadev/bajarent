@@ -8,6 +8,7 @@ import { ServiceStoreItems } from './ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import DocMetadata from '../components/DocMetadata'
+import dictionary, { asCapitalize } from '../dictionary'
 
 const ItemDetails = ({ item }: { item: ItemType }) => {
   const { storeId, categories } = useStore()
@@ -45,6 +46,9 @@ const ItemDetails = ({ item }: { item: ItemType }) => {
         />
       </View>
       <Text style={gStyles.h2}>Numero: {item.number}</Text>
+      <Text style={[gStyles.tCenter, { marginVertical: 6 }]}>
+        <Text style={gStyles.h3}>{asCapitalize(dictionary(item.status))}</Text>
+      </Text>
       <Text>
         Categoria:
         {item.categoryName}
