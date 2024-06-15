@@ -18,7 +18,7 @@ import dictionary from '../../dictionary'
 import ProgressBar from '../ProgressBar'
 import OrderCommonActions from './OrderCommonActions'
 import { useEmployee } from '../../contexts/employeeContext'
-import { gSpace } from '../../styles'
+import { gSpace, gStyles } from '../../styles'
 import { CommentType } from '../ListComments'
 import ErrorBoundary from '../ErrorBoundary'
 import StyledModal from '../StyledModal'
@@ -575,6 +575,12 @@ const OrderActions = ({
                 <View style={{ marginVertical: 8 }}>
                   <FormikSelectCategories name="items" selectPrice />
                 </View>
+
+                {Object.entries(errors).map(([field, message]) => (
+                  <Text key={field} style={gStyles.helperError}>
+                    *{message as string}
+                  </Text>
+                ))}
 
                 <Button
                   disabled={Object.keys(errors).length > 0 || isSubmitting}
