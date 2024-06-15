@@ -7,6 +7,7 @@ import ButtonConfirm from '../components/ButtonConfirm'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
+import DocMetadata from '../components/DocMetadata'
 
 const ItemDetails = ({ item }: { item: ItemType }) => {
   const { storeId, categories } = useStore()
@@ -18,6 +19,7 @@ const ItemDetails = ({ item }: { item: ItemType }) => {
 
   return (
     <View>
+      <DocMetadata item={item} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ButtonConfirm
           text="¿Estas seguro de eliminar este item?"

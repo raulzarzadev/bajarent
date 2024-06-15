@@ -6,7 +6,7 @@ import StoreType from '../types/StoreType'
 import { getAuth } from 'firebase/auth'
 
 class ServiceStoreItemsClass extends ServiceStoresClass {
-  async itemCreate(storeId, { item }: { item: ItemType }) {
+  async itemCreate(storeId, { item }: { item: Partial<ItemType> }) {
     const currentUser = getAuth().currentUser
 
     const createdBy = currentUser?.uid || ''

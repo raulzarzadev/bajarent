@@ -32,6 +32,9 @@ import { orderExpireAt } from '../../libs/orders'
 import FormikInputImage from '../FormikInputImage'
 import { useEffect, useState } from 'react'
 import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
+import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
+import ItemType from '../../types/ItemType'
+import InputTextStyled from '../InputTextStyled'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -300,6 +303,10 @@ const OrderActions = ({
   /* ******************************************** 
              RENT FLOW               
    *******************************************rz */
+  const modalPickUpRent = useModal({ title: 'Recoger renta' })
+  const handlePickUpRent = () => {
+    modalPickUpRent.toggleOpen()
+  }
   const RENT_FLOW = [
     {
       label: 'Deliver',
@@ -309,7 +316,7 @@ const OrderActions = ({
     },
     {
       label: 'Pickup',
-      action: actions_fns[acts.PICKUP],
+      action: handlePickUpRent,
       status: order_status.PICKED_UP,
       disabled: !canPickupRent || !employeeCanPickup
     }
@@ -425,6 +432,33 @@ const OrderActions = ({
   const showPendingButton =
     orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
   // #region COMPONENT
+  const [itemNumbers, setItemsNumbers] = useState<{ number: string }[]>([])
+  const handleCreateItems = async ({
+    items
+  }: {
+    items: OrderType['items']
+  }) => {
+    await items.forEach(async (item, index) => {
+      const newItem: Partial<ItemType> = {
+        category: item?.categoryName || null,
+        categoryName: item?.categoryName || null,
+        brand: item?.brand || null,
+        serial: item?.serial || null,
+        assignedSection: order?.assignToSection || null,
+        currentLocation: order?.location || null,
+        number: itemNumbers?.[index]?.number || '',
+        status: 'available'
+      }
+      console.log({ newItem })
+      return await ServiceStoreItems.itemCreate(storeId, {
+        item: newItem
+      })
+        .then(console.log)
+        .catch(console.error)
+    })
+    return
+  }
+
   return (
     <View>
       <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
@@ -508,12 +542,6 @@ const OrderActions = ({
               )
             }}
           </Formik>
-          {/* <Button
-            label="Recoger"
-            onPress={() => {
-              actions_fns[acts.PICKUP]()
-            }}
-          /> */}
         </View>
       </StyledModal>
 
@@ -587,6 +615,37 @@ const OrderActions = ({
             )
           }}
         </Formik>
+      </StyledModal>
+
+      <StyledModal {...modalPickUpRent}>
+        <View>
+          <Text>Asegurate de que recoges el siguiente articulo:</Text>
+          {order?.items?.map((item, index) => (
+            <View key={index}>
+              <Text>Tipo: {item?.categoryName}</Text>
+              <Text>Marca: {item?.brand}</Text>
+              <Text>Serie: {item?.serial}</Text>
+              <InputTextStyled
+                value={itemNumbers[index]?.number || ''}
+                onChangeText={(value) => {
+                  const newItems = [...itemNumbers]
+                  newItems[index] = { number: value }
+                  setItemsNumbers(newItems)
+                }}
+              />
+            </View>
+          ))}
+        </View>
+        <Button
+          label="Recoger"
+          onPress={() => {
+            console.log('crear item')
+            handleCreateItems({ items: order?.items || [] })
+            console.log('pickup')
+            actions_fns[acts.PICKUP]()
+            // modalPickUpRent.setOpen(false)
+          }}
+        ></Button>
       </StyledModal>
       {/* 
       // #region FLOW 
