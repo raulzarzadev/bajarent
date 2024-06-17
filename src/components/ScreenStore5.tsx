@@ -13,6 +13,10 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
 import BusinessStatus from './BusinessStatus'
+import { fromNow } from '../libs/utils-date'
+import { useState } from 'react'
+import { ServiceBalances } from '../firebase/ServiceBalances'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -149,6 +153,33 @@ const StoreNumbersRow = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
+  const { storeId } = useStore()
+  const handleUpdateStoreStatus = async () => {
+    await ServiceBalances.createV2(storeId)
+      .then((res) => {
+        console.log({ res })
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }
+  const [balance, setBalance] = useState({
+    sections: [
+      {
+        cancelled: [],
+        delivered: [],
+        inStock: [],
+        pickedUp: [],
+        rented: [],
+        renewed: [],
+        reports: [],
+        pending: [],
+        section: 'Total'
+      }
+    ],
+    createdAt: new Date()
+  })
+
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -169,7 +200,39 @@ const TabCashbox = () => {
           variant="ghost"
         />
       </View>
-      <BusinessStatus />
+
+      <Text style={gStyles.h1}>Cuentas de hoy</Text>
+      <Text style={[gStyles.helper, gStyles.tCenter]}>
+        Última actualizacion {fromNow(balance.createdAt)}
+      </Text>
+      <View style={{ margin: 'auto', marginVertical: 6 }}>
+        <Button
+          size="small"
+          fullWidth={false}
+          label="Actualizar"
+          icon="refresh"
+          onPress={() => {
+            handleUpdateStoreStatus()
+          }}
+        />
+      </View>
+      <BusinessStatus
+        balance={{
+          sections: [
+            {
+              cancelled: [],
+              delivered: [],
+              inStock: [],
+              pickedUp: [],
+              rented: [],
+              renewed: [],
+              reports: [],
+              pending: [],
+              section: 'Total'
+            }
+          ]
+        }}
+      />
     </ScrollView>
   )
 }

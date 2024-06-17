@@ -1,19 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import ListRow, { ListRowField } from './ListRow'
-import { BalanceType } from '../types/BalanceType'
+import { BalanceRowType, BalanceType } from '../types/BalanceType'
 import { gStyles } from '../styles'
-export type BalanceRowType = {
-  section: string
-  pending: string[]
-  delivered: string[]
-  renewed: string[]
-  reports: string[]
-  cancelled: string[]
-  pickedUp: string[]
-  rented: string[]
-  inStock: string[]
-}
+
 export type BalanceType_V2 = {
   sections: BalanceRowType[]
 }
@@ -79,6 +69,7 @@ const BusinessStatus = ({ balance }: { balance: BalanceType_V2 }) => {
       {/* ROWS */}
       {balance?.sections?.map((balanceRow: BalanceRowType) => (
         <ListRow
+          key={balanceRow.section}
           fields={table.map(({ width, field }) => ({
             component: <Text>{balanceRow[field]}</Text>,
             width

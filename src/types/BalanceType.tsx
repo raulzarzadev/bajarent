@@ -27,6 +27,22 @@ export type BalanceBase = {
   totalTransfer: number
 } & BalanceOrders
 
+export type Balance_V2 = {
+  sections: BalanceRowType[]
+  storeId: string
+}
+export type BalanceRowType = {
+  section: string
+  pending: string[]
+  delivered: string[]
+  renewed: string[]
+  reports: string[]
+  cancelled: string[]
+  pickedUp: string[]
+  rented: string[]
+  inStock: string[]
+}
+export type BalanceType2 = Balance_V2 & BaseType
 // & ({ type: 'partial'; userId: string } | { type: 'full' })
 
 export type BalanceType = BalanceBase & BaseType
