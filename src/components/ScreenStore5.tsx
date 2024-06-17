@@ -169,7 +169,7 @@ const TabCashbox = () => {
           variant="ghost"
         />
       </View>
-      {/* <BusinessStatus /> */}
+      <BusinessStatus />
     </ScrollView>
   )
 }
