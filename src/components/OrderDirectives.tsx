@@ -6,14 +6,12 @@ import theme, { colors } from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
-import Icon from './Icon'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import InputRadios from './InputRadios'
 import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
-import asDate from '../libs/utils-date'
 import { currentRentPeriod } from '../libs/orders'
 
 const OrderDirectives = ({
@@ -25,7 +23,10 @@ const OrderDirectives = ({
   const sectionName = storeSections?.find(
     ({ id }) => id === order?.assignToSection
   )?.name
+  const assignedButSectionNotExist = !sectionName && order?.assignToSection
+  // order?.assignToSection
   const ICON = IconOrderType[order?.type]
+
   return (
     <View
       style={{
@@ -51,6 +52,15 @@ const OrderDirectives = ({
         <Chip
           style={styles.chip}
           title={sectionName}
+          color={theme?.base}
+          titleColor={theme.secondary}
+          size="sm"
+        ></Chip>
+      )}
+      {assignedButSectionNotExist && (
+        <Chip
+          style={styles.chip}
+          title={'SE'}
           color={theme?.base}
           titleColor={theme.secondary}
           size="sm"

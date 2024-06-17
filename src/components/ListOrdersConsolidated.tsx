@@ -35,7 +35,8 @@ const ListOrdersConsolidated = () => {
     return {
       id: order.id,
       ...order,
-      assignedToSection
+      assignToSection: assignedToSection
+      //  assignedToSection
     }
   })
   const [disabled, setDisabled] = useState(false)
@@ -65,6 +66,7 @@ const ListOrdersConsolidated = () => {
           Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
         </Text>
         <LoadingList
+          data={data}
           pinRows={true}
           rowsPerPage={20}
           sideButtons={[
@@ -86,7 +88,6 @@ const ListOrdersConsolidated = () => {
               params: { orderId }
             })
           }}
-          data={data}
           ComponentRow={({ item }) => <ComponentRow item={item} />}
           filters={[
             {
@@ -133,12 +134,28 @@ const ListOrdersConsolidated = () => {
           ]}
           sortFields={[
             {
+              key: 'folio',
+              label: 'Folio'
+            },
+            {
+              key: 'note',
+              label: 'Contrato'
+            },
+            {
               key: 'name',
               label: 'Nombre'
             },
             {
+              key: 'neighborhood',
+              label: 'Colonia'
+            },
+            {
               key: 'type',
               label: 'Tipo'
+            },
+            {
+              key: 'assignToSection',
+              label: 'Area'
             },
             {
               key: 'status',
@@ -147,14 +164,6 @@ const ListOrdersConsolidated = () => {
             {
               key: 'expireAt',
               label: 'Vencimiento'
-            },
-            {
-              key: 'folio',
-              label: 'Folio'
-            },
-            {
-              key: 'note',
-              label: 'Contrato'
             }
           ]}
         />
@@ -166,77 +175,37 @@ const ListOrdersConsolidated = () => {
 const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
   const fields: ListRowField[] = [
     {
-      // field: order.name,
       width: 120,
       component: (
-        <Text style={styles.cell} numberOfLines={1}>
-          {order.fullName}
-        </Text>
+        <View>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
+          >
+            <Text style={{ textAlign: 'center' }} numberOfLines={1}>
+              {order?.folio}
+            </Text>
+            <Text style={{ textAlign: 'center' }} numberOfLines={1}>
+              {order?.note}
+            </Text>
+          </View>
+          <Text style={styles.cell} numberOfLines={1}>
+            {order?.fullName}
+          </Text>
+        </View>
       )
     },
     {
-      //field: order.type,
       width: 50,
       component: (
         <Text style={styles.cell} numberOfLines={1}>
-          {dictionary(order.type)}
+          {order?.neighborhood}
         </Text>
       )
     },
     {
-      //field: order.status,
       width: 'rest',
-      component: (
-        <View>
-          {/* <Text style={styles.cell} numberOfLines={1}>
-            {dictionary(order.status)}
-          </Text> */}
-          <OrderDirectives order={order} />
-        </View>
-      )
-    },
-    // {
-    //   //field: order.expireAt,
-    //   width: 60,
-    //   component: (
-    //     <Text style={styles.cell} numberOfLines={1}>
-    //       {dateFormat(asDate(order.expireAt), 'dd/MM/yyyy')}
-    //     </Text>
-    //   )
-    // },
-    {
-      //field: `${order.folio}`,
-      width: 45,
-      component: (
-        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-          <Text style={styles.cell} numberOfLines={1}>
-            {order.folio}
-          </Text>
-          <Text style={styles.cell} numberOfLines={1}>
-            {order.note}
-          </Text>
-        </View>
-      )
+      component: <OrderDirectives order={order} />
     }
-    // {
-    //   //field: order.note,
-    //   width: 30,
-    //   component: (
-    //     <Text style={styles.cell} numberOfLines={1}>
-    //       {order.note}
-    //     </Text>
-    //   )
-    // }
-    // {
-    //   field: order.neighborhood,
-    //   width: '10%',
-    //   component: <Text numberOfLines={1}>{order.neighborhood}</Text>
-    // }
-    // {
-    //   field: order.phone,
-    //   width: '20%',
-    //   component: <Text numberOfLines={1}>{order.neighborhood}</Text>
-    // }
   ]
   return (
     <ListRow
