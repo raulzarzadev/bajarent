@@ -99,7 +99,7 @@ function MyList<T extends { id: string }>({
   }
   const handleSelectRow = (id: string) => {
     if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter((rowId) => rowId !== id))
+      setSelectedRows(selectedRows?.filter((rowId) => rowId !== id))
     } else {
       setSelectedRows([...selectedRows, id])
     }

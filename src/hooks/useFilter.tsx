@@ -89,7 +89,7 @@ export default function useFilter<T extends { id?: string }>({
       filters = [...filtersBy, { field, value }]
       const res = filterDataByFields(
         filteredData,
-        filters.filter((a) => a.field !== 'dates')
+        filters?.filter((a) => a.field !== 'dates')
       )
       setFilteredData(res)
       return
@@ -142,9 +142,9 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
-    return data.filter((order) => {
-      return filters.every((filter) => {
-        return order[filter.field] === filter.value
+    return data?.filter((order) => {
+      return filters?.every((filter) => {
+        return order?.[filter?.field] === filter?.value
       })
     })
   }

@@ -45,7 +45,7 @@ const ListOrders = ({
         { key: 'expireAt', label: 'Vencimiento' },
         { key: 'colorLabel', label: 'Color' }
       ]}
-      data={orders.filter((order) => !!order)}
+      data={orders?.filter((order) => !!order)}
       ComponentRow={({ item }) => (
         <RowOrderE
           item={item}

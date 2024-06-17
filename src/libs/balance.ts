@@ -191,7 +191,7 @@ export const calculateSectionBalance = async ({
     justRefs: true
   })
 
-  const ordersRenewed = ordersInRent.filter((o) => {
+  const ordersRenewed = ordersInRent?.filter((o) => {
     const renews = Object.values(o.extensions || {}).filter(
       (e) => e.reason === 'renew'
     )

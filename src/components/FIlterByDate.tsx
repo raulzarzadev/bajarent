@@ -8,7 +8,7 @@ import { FilterListType } from './ModalFilterList'
 import InputRadios from './InputRadios'
 
 function FIlterByDate<T>({
-  filters,
+  filters = [],
   onSubmit
 }: {
   filters: FilterListType<T>[]
@@ -18,7 +18,7 @@ function FIlterByDate<T>({
   ) => void
 }) {
   useEffect(() => {
-    const dateFiltersValues = filters.filter((f) => f.isDate)
+    const dateFiltersValues = filters?.filter((f) => f.isDate)
     setDateFilters(
       dateFiltersValues.map((f) => ({ label: f.label, field: f.field }))
     )

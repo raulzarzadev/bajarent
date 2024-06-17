@@ -26,7 +26,7 @@ export default function StatsOrders({ view }: { view: string }) {
   )
 }
 const Last7DaysStats = ({ orders }: { orders: OrderType[] }) => {
-  const last7Days = orders.filter((c) => {
+  const last7Days = orders?.filter((c) => {
     const date = asDate(c.createdAt)
     const today = new Date()
     const last7 = new Date(today.setDate(today.getDate() - 7))
@@ -71,7 +71,7 @@ const Last7DaysStats = ({ orders }: { orders: OrderType[] }) => {
   )
 }
 const Last30DaysStats = ({ orders }: { orders: OrderType[] }) => {
-  const last30Days = orders.filter((c) => {
+  const last30Days = orders?.filter((c) => {
     const date = asDate(c.createdAt)
     const today = new Date()
     const last30 = new Date(today.setDate(today.getDate() - 30))
