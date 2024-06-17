@@ -4,7 +4,7 @@ import Chip, { Size } from './Chip'
 import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
 import { isBefore, isToday } from 'date-fns'
-import asDate from '../libs/utils-date'
+import asDate, { fromNow } from '../libs/utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 const OrderStatus = ({
@@ -23,6 +23,10 @@ const OrderStatus = ({
   const expireToday = isToday(asDate(order?.expireAt))
   const expired = isBefore(asDate(order?.expireAt), new Date())
   const isExpired = (order?.isExpired || expireToday || expired) && isDelivered
+  const expiresTomorrow = isRent && order.expiresTomorrow
+  const expireLabel = expireToday
+    ? 'Vence hoy'
+    : `venció ${fromNow(asDate(order?.expireAt))}`
 
   const isCancelled = order?.status === order_status.CANCELLED
   const isAuthorized = order?.status === order_status.AUTHORIZED
@@ -36,7 +40,6 @@ const OrderStatus = ({
   const rentAuthorized = order.type === 'RENT' && isAuthorized
   const repairAuthorized = order.type === 'REPAIR' && isAuthorized
   const saleAuthorized = order.type === 'SALE' && isAuthorized
-  const expiresTomorrow = isRent && order.expiresTomorrow
   const isRenewed =
     order.type === 'RENT' &&
     (order.isRenewed || order?.status === order_status.RENEWED)
@@ -45,6 +48,7 @@ const OrderStatus = ({
     !order?.expireAt &&
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
+
   return (
     <>
       {isRenewed && (
@@ -140,7 +144,7 @@ const OrderStatus = ({
       {isExpired && (
         <Chip
           style={[chipStyles]}
-          title={'Vencida'}
+          title={`${expireLabel || ''}`}
           color={theme.success}
           size={chipSize}
         />

@@ -1,8 +1,9 @@
 import { isBefore, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
 import OrderType, { order_status } from '../types/OrderType'
-import { expireDate2 } from './expireDate'
+import { expireDate2, translateTime } from './expireDate'
 import asDate from './utils-date'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 export const formatOrders = ({
   orders,
@@ -159,4 +160,27 @@ export const filterActiveOrders = (orders: OrderType[]) => {
       return [order_status.AUTHORIZED].includes(o.status)
     }
   })
+}
+
+export const currentRentPeriod = (
+  order: Partial<OrderType> | Partial<ConsolidatedOrderType>,
+  props?: { shortLabel?: boolean }
+) => {
+  const shortLabel = props?.shortLabel || false
+  if (order.type === 'RENT') {
+    const hasExtensions = Object.values(order.extensions || {}).sort(
+      (a, b) => asDate(a.startAt).getTime() - asDate(b.expireAt).getTime()
+    )
+    if (hasExtensions.length) {
+      //* <--------- already has extensions
+      const lastExtension = hasExtensions[0]
+      return translateTime(lastExtension.time, { shortLabel })
+    } else {
+      //* <--------- use items to detereminate the expire date
+      return translateTime(order?.items?.[0]?.priceSelected?.time, {
+        shortLabel
+      })
+    }
+  }
+  return ''
 }

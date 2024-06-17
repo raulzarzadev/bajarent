@@ -168,11 +168,11 @@ export const translateTime = (
   }
   const amountNumber = parseInt(amount)
   let unitCount = amountNumber === 1 ? units[unit] : units[unit] + 's'
-  if (unit === 'month') {
-    return `${amountNumber} ${amountNumber === 1 ? 'mes' : 'meses'}`
-  }
   if (ops?.shortLabel) {
     return `${amountNumber}${shortUnits[unit]}`
+  }
+  if (unit === 'month') {
+    return `${amountNumber} ${amountNumber === 1 ? 'mes' : 'meses'}`
   }
   return `${amountNumber} ${unitCount}`
 }

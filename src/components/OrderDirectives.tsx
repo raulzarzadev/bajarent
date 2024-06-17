@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType, { IconOrderType } from '../types/OrderType'
+import OrderType, { IconOrderType, order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme, { colors } from '../theme'
 import Chip from './Chip'
@@ -13,6 +13,8 @@ import InputRadios from './InputRadios'
 import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
+import asDate from '../libs/utils-date'
+import { currentRentPeriod } from '../libs/orders'
 
 const OrderDirectives = ({
   order
@@ -24,6 +26,7 @@ const OrderDirectives = ({
     ({ id }) => id === order?.assignToSection
   )?.name
   const ICON = IconOrderType[order?.type]
+
   return (
     <View
       style={{
@@ -37,7 +40,10 @@ const OrderDirectives = ({
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <Chip
         style={[styles.chip]}
-        title={`${dictionary(order?.type)?.toUpperCase()}`}
+        title={`${dictionary(order?.type)?.toUpperCase()} ${currentRentPeriod(
+          order,
+          { shortLabel: true }
+        )}`}
         color={theme?.info}
         titleColor={theme.black}
         size="sm"
@@ -109,7 +115,7 @@ const ChooseLabel = ({ colorLabel, orderId }) => {
 const styles = StyleSheet.create({
   chip: {
     margin: 2,
-    maxWidth: 105
+    maxWidth: 108
   }
 })
 
