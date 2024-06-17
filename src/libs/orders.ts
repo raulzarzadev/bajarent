@@ -123,7 +123,6 @@ export const orderExpireAt = ({
       //* put the last extension first
       (a, b) => asDate(b.createdAt)?.getTime() - asDate(a.createdAt)?.getTime()
     )
-    console.log({ expireExtensions })
     return expireExtensions?.[0]?.expireAt || null
   }
   const orderItemsExpireDate = order?.items?.map((item) => {
