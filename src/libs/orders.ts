@@ -167,14 +167,14 @@ export const currentRentPeriod = (
   props?: { shortLabel?: boolean }
 ) => {
   const shortLabel = props?.shortLabel || false
-  if (order.type === 'RENT') {
-    const hasExtensions = Object.values(order.extensions || {}).sort(
-      (a, b) => asDate(a.startAt).getTime() - asDate(b.expireAt).getTime()
+  if (order?.type === 'RENT') {
+    const hasExtensions = Object.values(order?.extensions || {}).sort(
+      (a, b) => asDate(a?.startAt).getTime() - asDate(b?.expireAt).getTime()
     )
-    if (hasExtensions.length) {
+    if (hasExtensions?.length) {
       //* <--------- already has extensions
       const lastExtension = hasExtensions[0]
-      return translateTime(lastExtension.time, { shortLabel })
+      return translateTime(lastExtension?.time, { shortLabel })
     } else {
       //* <--------- use items to detereminate the expire date
       return translateTime(order?.items?.[0]?.priceSelected?.time, {
