@@ -37,6 +37,10 @@ import ItemType from '../../types/ItemType'
 import InputTextStyled from '../InputTextStyled'
 import FormItem from '../FormItem'
 import FormItemPickUp from './FormItemPickUp'
+import { useStore } from '../../contexts/storeContext'
+import { ServiceStores } from '../../firebase/ServiceStore'
+import { onDeliveryItems } from './libs/order_actions'
+import { onCreateItem, onPickUpItem } from '../../libs/item_actions'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -68,6 +72,7 @@ const OrderActions = ({
 }: OrderActionsType) => {
   const { permissions } = useEmployee()
   const { user } = useAuth()
+  const { items: storeItems } = useStore()
   const userId = user?.id
 
   // #region  ACTIONS FUNCTIONS
@@ -311,6 +316,7 @@ const OrderActions = ({
   const handlePickUpRent = () => {
     modalPickUpRent.toggleOpen()
   }
+
   const RENT_FLOW = [
     {
       label: 'Deliver',
@@ -439,15 +445,46 @@ const OrderActions = ({
 
   const [newItems, setNewItems] = useState<OrderType['items']>([])
 
-  const handleCreateItems = async () => {
-    const itemsPromises = newItems?.map(async (item, index) => {
-      return await ServiceStoreItems.itemCreate(storeId, {
-        item: { ...item, status: 'pickedUp' }
-      })
-    })
-    return await Promise.all(itemsPromises)
+  const handleCollectItems = async () => {
+    await handleCreateItemsIfNecessary({ items: newItems }) //* this will create items that not exists
       .then(console.log)
       .catch(console.error)
+
+    await handlePickUpItems({ itemsIds: newItems.map((i) => i.id) }) //* update items as picked up
+      .then(console.log)
+      .catch(console.error)
+    // actions_fns[acts.PICKUP]()
+
+    // modalPickUpRent.setOpen(false)
+  }
+
+  const handlePickUpItems = async ({ itemsIds }: { itemsIds: string[] }) => {
+    itemsIds.map(async (itemId) => {
+      return await onPickUpItem({ itemId, storeId })
+    })
+    return await Promise.all(itemsIds)
+  }
+
+  const handleCreateItemsIfNecessary = async ({
+    items
+  }: {
+    items: OrderType['items']
+  }) => {
+    const itemsNotExists = items?.filter((item) => {
+      return !storeItems?.find((storeItem) => storeItem.id === item.id)
+    })
+
+    itemsNotExists?.map(async (item) => {
+      return await onCreateItem({
+        storeId,
+        itemId: item.id,
+        item
+      })
+    })
+
+    return await Promise.all(itemsNotExists)
+
+    //* just create items that not exists
   }
 
   console.log({ order })
@@ -467,7 +504,6 @@ const OrderActions = ({
                 .then(console.log)
                 .catch(console.error)
               await actions_fns[acts.PICKUP]()
-
               modalPickUpRepair.setOpen(false)
             }}
             validate={(values: OrderType) => {
@@ -632,7 +668,6 @@ const OrderActions = ({
                     const newItems = []
                     newItems[index] = { ...values }
                     const cleanItems = newItems.map((i) => {
-                      delete i.id
                       delete i.priceSelectedId
                       delete i.priceSelected
                       delete i.priceQty
@@ -648,11 +683,7 @@ const OrderActions = ({
         <Button
           label="Recoger"
           onPress={() => {
-            handleCreateItems()
-
-            actions_fns[acts.PICKUP]()
-
-            // modalPickUpRent.setOpen(false)
+            handleCollectItems()
           }}
         ></Button>
       </StyledModal>

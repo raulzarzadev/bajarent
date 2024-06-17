@@ -27,6 +27,7 @@ export type ItemSelected = {
   id?: string
   brand?: string
   serial?: string
+  number?: string
   // priceId?: string
   // timestamp?: Date
 }

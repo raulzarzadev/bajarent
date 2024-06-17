@@ -1,3 +1,4 @@
+import { ServiceStores } from '../../../firebase/ServiceStore'
 import {
   onAuthorize,
   onCancel,

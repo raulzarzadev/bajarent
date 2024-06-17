@@ -4,18 +4,20 @@ import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
 import Button from '../components/Button'
 import ButtonConfirm from '../components/ButtonConfirm'
-import { ServiceStoreItems } from './ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import DocMetadata from '../components/DocMetadata'
 import dictionary, { asCapitalize } from '../dictionary'
+import { onDeleteItem } from '../libs/item_actions'
 
 const ItemDetails = ({ item }: { item: ItemType }) => {
-  const { storeId, categories } = useStore()
+  const { storeId } = useStore()
   const { goBack, navigate } = useNavigation()
   const handleDelete = async () => {
     goBack()
-    return await ServiceStoreItems.itemDelete(storeId, item.id)
+    await onDeleteItem({ storeId, itemId: item.id })
+      .then(console.log)
+      .catch(console.error)
   }
 
   return (

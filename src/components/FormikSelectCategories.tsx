@@ -18,6 +18,7 @@ import Totals from './ItemsTotals'
 import { useEmployee } from '../contexts/employeeContext'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import ItemType from '../types/ItemType'
+import { RowItem } from './OrderDetails'
 
 const FormikSelectCategories = ({
   name,
@@ -132,11 +133,15 @@ const FormikSelectCategories = ({
           <View style={{ justifyContent: 'center' }}>
             <Button
               onPress={() => {
+                const itemData = employeeItems.find(
+                  (item) => item.id === itemSelected
+                )
                 const newItem = {
                   id: itemSelected || uidGenerator(),
                   categoryName: category?.name || '',
                   priceSelectedId: price?.id || null,
-                  priceSelected: price || null
+                  priceSelected: price || null,
+                  number: itemData.number || 'SN'
                 }
                 helpers.setValue([...items, newItem])
                 modal.toggleOpen()
@@ -186,7 +191,21 @@ const ItemRow = ({
 }) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <View
+      <RowItem
+        item={item}
+        style={{
+          marginVertical: gSpace(2),
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: theme.info,
+          paddingHorizontal: gSpace(2),
+          paddingVertical: gSpace(1),
+          borderRadius: gSpace(2),
+          marginRight: gSpace(2)
+        }}
+      />
+      {/* <View
         style={{
           // width: '100%',
           flex: 1,
@@ -203,6 +222,7 @@ const ItemRow = ({
           marginRight: gSpace(2)
         }}
       >
+        <Text style={{ fontWeight: 'bold' }}>{item?.number || 'SN'}</Text>
         <Text style={{ fontWeight: 'bold' }}>{item?.categoryName}</Text>
         <Text style={{ alignItems: 'center' }}>
           {item.priceSelected?.title}
@@ -211,7 +231,7 @@ const ItemRow = ({
           style={{ fontWeight: 'bold' }}
           amount={item.priceSelected?.amount}
         />
-      </View>
+      </View> */}
       <Button
         icon="sub"
         color="error"
