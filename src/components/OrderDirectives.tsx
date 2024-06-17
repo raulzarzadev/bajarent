@@ -19,14 +19,6 @@ const OrderDirectives = ({
 }: {
   order: Partial<OrderType> | Partial<ConsolidatedOrderType>
 }) => {
-  const { storeSections } = useStore()
-  const sectionName = storeSections?.find(
-    ({ id }) => id === order?.assignToSection
-  )?.name
-  const assignedButSectionNotExist = !sectionName && order?.assignToSection
-  // order?.assignToSection
-  const ICON = IconOrderType[order?.type]
-
   return (
     <View
       style={{
@@ -48,24 +40,16 @@ const OrderDirectives = ({
         titleColor={theme.black}
         size="sm"
       ></Chip>
-      {!!sectionName && (
+      {!!order.assignToSection && (
         <Chip
           style={styles.chip}
-          title={sectionName}
+          title={order.assignToSectionName || 'NA'}
           color={theme?.base}
           titleColor={theme.secondary}
           size="sm"
         ></Chip>
       )}
-      {assignedButSectionNotExist && (
-        <Chip
-          style={styles.chip}
-          title={'SE'}
-          color={theme?.base}
-          titleColor={theme.secondary}
-          size="sm"
-        ></Chip>
-      )}
+
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       {/* <OrderAssignedTo
         orderId={order?.id}

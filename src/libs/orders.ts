@@ -43,6 +43,7 @@ export const formatOrder = ({ order, comments = [] }) => {
   const reportsNotSolved = orderComments?.some(
     ({ type, solved }) => type === 'report' && !solved
   )
+
   if (order?.type === 'RENT') {
     const expireAt = order.expireAt
     const expireToday = isToday(asDate(expireAt))
@@ -50,8 +51,10 @@ export const formatOrder = ({ order, comments = [] }) => {
     const isExpired =
       !!expireAt && (isBefore(asDate(expireAt), new Date()) || expireToday)
     const expiresToday = expireToday
+
     return {
       ...order,
+
       comments: orderComments,
       hasNotSolvedReports: reportsNotSolved,
       isExpired,
@@ -63,6 +66,7 @@ export const formatOrder = ({ order, comments = [] }) => {
   if (order?.type === 'REPAIR') {
     return {
       ...order,
+
       comments: orderComments,
       expireAt: null,
       hasNotSolvedReports: reportsNotSolved
@@ -71,6 +75,7 @@ export const formatOrder = ({ order, comments = [] }) => {
   if (order?.type === 'SALE') {
     return {
       ...order,
+
       comments: orderComments,
       expireAt: null,
       hasNotSolvedReports: reportsNotSolved

@@ -35,7 +35,7 @@ const ListOrdersConsolidated = () => {
     return {
       id: order.id,
       ...order,
-      assignToSection: assignedToSection
+      assignToSectionName: assignedToSection
       //  assignedToSection
     }
   })

@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import RowOrder, { RowOrderE } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
+import { useStore } from '../contexts/storeContext'
 
 const ListOrders = ({
   orders,
@@ -20,8 +21,23 @@ const ListOrders = ({
   }
 }) => {
   const { navigate } = useNavigation()
+  const { storeSections } = useStore()
+  const formatOrders = orders
+    ?.map((o) => {
+      const assignedToSection =
+        storeSections.find((section) => section.id === o.assignToSection)
+          ?.name || null
+      return {
+        id: o.id,
+        ...o,
+        assignToSectionName: assignedToSection
+        //  assignedToSection
+      }
+    })
+    ?.filter((order) => !!order)
   return (
     <LoadingList
+      data={formatOrders}
       pinRows={true}
       sideButtons={sideButtons}
       preFilteredIds={defaultOrdersIds}
@@ -45,7 +61,6 @@ const ListOrders = ({
         { key: 'expireAt', label: 'Vencimiento' },
         { key: 'colorLabel', label: 'Color' }
       ]}
-      data={orders?.filter((order) => !!order)}
       ComponentRow={({ item }) => (
         <RowOrderE
           item={item}
