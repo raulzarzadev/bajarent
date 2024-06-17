@@ -36,7 +36,7 @@ const OrderDirectives = ({
         flexWrap: 'wrap'
       }}
     >
-      <ChooseLabel colorLabel={order.colorLabel} orderId={order.id} />
+      <ChooseLabel colorLabel={order?.colorLabel} orderId={order.id} />
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <Chip
         style={[styles.chip]}
