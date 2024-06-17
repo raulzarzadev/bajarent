@@ -118,7 +118,14 @@ export const orderExpireAt = ({
   if (order.type !== 'RENT') {
     return null
   }
-
+  if (order.extensions) {
+    const expireExtensions = Object.values(order?.extensions || {}).sort(
+      //* put the last extension first
+      (a, b) => asDate(b.createdAt)?.getTime() - asDate(a.createdAt)?.getTime()
+    )
+    console.log({ expireExtensions })
+    return expireExtensions?.[0]?.expireAt || null
+  }
   const orderItemsExpireDate = order?.items?.map((item) => {
     const expireAt = expireDate2({
       startedAt: order.deliveredAt || order.scheduledAt,
