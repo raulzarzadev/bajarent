@@ -278,7 +278,7 @@ function ModalFilterList<T>({
         />
 
         {filters
-          .filter((f) => !f.isDate) //* <-- avoid show date filters
+          ?.filter((f) => !f.isDate) //* <-- avoid show date filters
           ?.map(({ field, label, boolean }, i) => {
             return (
               <View key={i}>
