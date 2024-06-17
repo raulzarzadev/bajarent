@@ -280,6 +280,7 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
       : -1
   })
   const expireAt = order?.expireAt
+  // FIXME: some times extensions are not created properly
   return (
     <View style={{ padding: 4 }}>
       {!!expireAt && (

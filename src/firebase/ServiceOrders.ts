@@ -347,9 +347,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 
     //* SET FILTERS TO EXPIRE AT
     if (getExpireTomorrow) {
-      filterExpiredRents.push(where('expireAt', '<=', DAY_AFTER_TOMORROW))
-    } else {
       filterExpiredRents.push(where('expireAt', '<=', TOMORROW))
+    } else {
+      filterExpiredRents.push(where('expireAt', '<=', TODAY))
     }
 
     if (getBySections) {
