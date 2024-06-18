@@ -7,13 +7,11 @@ export type PaymentTypeList = PaymentType & { createdByName?: string }
 function ListPayments({
   payments,
   onPressRow,
-  onFetchMore,
-  onFetchMoreCount
+  onRefresh
 }: {
   payments: PaymentTypeList[]
   onPressRow?: (paymentId: string) => void
-  onFetchMore?: () => void
-  onFetchMoreCount?: string
+  onRefresh?: () => void
 }) {
   const sortFields = [
     { key: 'orderFolio', label: 'Folio' },
@@ -40,6 +38,14 @@ function ListPayments({
       onPressRow={(id) => {
         onPressRow?.(id)
       }}
+      sideButtons={[
+        {
+          icon: 'refresh',
+          label: 'Recargar',
+          onPress: onRefresh,
+          visible: true
+        }
+      ]}
       filters={[
         // {
         //   field: 'date',

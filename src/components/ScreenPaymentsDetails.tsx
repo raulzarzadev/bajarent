@@ -19,25 +19,22 @@ import { useEmployee } from '../contexts/employeeContext'
 import PaymentType from '../types/PaymentType'
 import SpanMetadata from './SpanMetadata'
 import PaymentVerify from './PaymentVerify'
-import { usePayments } from '../contexts/paymentsContext'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
   const { staff } = useStore()
   const { permissions } = useEmployee()
-  const { payments, handleSetPayments } = usePayments()
   const canCancelPayments = permissions?.canCancelPayments
   const [payment, setPayment] = useState<PaymentType>()
   useEffect(() => {
-    setPayment(payments.find((p) => p.id === id))
+    handleGetPayment()
   }, [id])
-  const handleGetPayment = () => {
-    handleSetPayments()
-    // ServicePayments.get(id).then((p) => {
-    //   setPayment(p)
-    // })
-  }
   const { user } = useAuth()
+
+  const handleGetPayment = () => {
+    ServicePayments.get(id).then((res) => setPayment(res))
+  }
+
   const userName =
     staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
   const [reason, setReason] = useState('')
