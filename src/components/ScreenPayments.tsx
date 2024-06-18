@@ -1,6 +1,5 @@
 import { ScrollView, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import ListPayments from './ListPayments'
 import { useStore } from '../contexts/storeContext'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { ServicePayments } from '../firebase/ServicePayments'
@@ -96,7 +95,14 @@ export default function ScreenPayments({ navigation, route }) {
             'sin nombre'
           return payment
         })}
-        ComponentRow={PaymentRow}
+        ComponentRow={({ item }) => (
+          <PaymentRow
+            item={item}
+            onVerified={() => {
+              handleGetPayments()
+            }}
+          />
+        )}
         sortFields={sortFields}
         defaultSortBy="createdAt"
         defaultOrder="des"

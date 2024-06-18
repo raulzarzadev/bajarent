@@ -4,11 +4,17 @@ import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
-import { PaymentTypeList } from './ListPayments'
 import { colors } from '../theme'
 import PaymentVerify from './PaymentVerify'
-
-const RowPayment = ({ item }: { item: PaymentTypeList }) => {
+import PaymentType from '../types/PaymentType'
+export type PaymentTypeList = PaymentType & { createdByName?: string }
+const RowPayment = ({
+  item,
+  onVerified
+}: {
+  item: PaymentTypeList
+  onVerified?: () => void
+}) => {
   return (
     <View
       style={[
@@ -42,7 +48,7 @@ const RowPayment = ({ item }: { item: PaymentTypeList }) => {
       <View style={{ width: 80 }}>
         {typeof item?.verified === 'boolean' && (
           <View style={{ margin: 'auto' }}>
-            <PaymentVerify payment={item} />
+            <PaymentVerify payment={item} onVerified={onVerified} />
           </View>
         )}
         <CurrencyAmount amount={item?.amount} />
