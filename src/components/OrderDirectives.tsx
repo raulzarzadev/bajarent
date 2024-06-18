@@ -108,7 +108,7 @@ const ChooseLabel = ({ colorLabel, orderId }) => {
 const styles = StyleSheet.create({
   chip: {
     margin: 2,
-    maxWidth: 108
+    maxWidth: 120
   }
 })
 
