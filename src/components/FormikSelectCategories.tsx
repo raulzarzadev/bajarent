@@ -141,7 +141,7 @@ const FormikSelectCategories = ({
                   categoryName: category?.name || '',
                   priceSelectedId: price?.id || null,
                   priceSelected: price || null,
-                  number: itemData.number || 'SN'
+                  number: itemData?.number || 'SN'
                 }
                 helpers.setValue([...items, newItem])
                 modal.toggleOpen()

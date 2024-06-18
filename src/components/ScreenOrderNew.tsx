@@ -5,6 +5,7 @@ import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
+import { ListAssignedItemsE } from './ListAssignedItems'
 //
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
@@ -54,7 +55,11 @@ const ScreenOrderNew = ({ navigation }) => {
       }
     )
   }
-  return <FormOrder onSubmit={handleSubmit} />
+  return (
+    <>
+      <FormOrder onSubmit={handleSubmit} />
+    </>
+  )
 }
 
 export default ScreenOrderNew

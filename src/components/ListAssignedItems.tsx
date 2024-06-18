@@ -9,29 +9,27 @@ import theme, { colors } from '../theme'
 import { CategoryType } from '../types/RentItem'
 
 export type ListAssignedItemsProps = {
-  categoryId: CategoryType['id']
+  categoryId?: CategoryType['id']
   onPressItem?: (itemId: string) => void
   itemSelected?: string
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
-  const categoryId = props.categoryId
-  const onPressItem = props.onPressItem
-  const itemSelected = props.itemSelected
+  const categoryId = props?.categoryId
+  const onPressItem = props?.onPressItem
+  const itemSelected = props?.itemSelected
   const { employee } = useEmployee()
-  const { store } = useStore()
-  const items = Object.values(store?.items || {})
+  const { items } = useStore()
   const employeeSections = employee?.sectionsAssigned || []
-  const sectionItems = items.filter((item) =>
-    employeeSections.includes(item.assignedSection)
-  )
-  // const availableItems = sectionItems.filter(
-  //   (item) => item.status === 'available' || item.status === 'pickedUp'
-  // )
-  const [availableItems, setAvailableItems] = React.useState(sectionItems)
+
+  const [availableItems, setAvailableItems] = React.useState([])
   useEffect(() => {
+    const sectionItems = items.filter((item) =>
+      employeeSections.includes(item.assignedSection)
+    )
     const availableItems = sectionItems.filter(
       (item) => item.status === 'available' || item.status === 'pickedUp'
     )
+    console.log({ availableItems })
     if (categoryId) {
       const categoryItems = availableItems.filter(
         (item) => item.category === categoryId
@@ -40,7 +38,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
     } else {
       setAvailableItems(availableItems)
     }
-  }, [categoryId])
+  }, [categoryId, items])
   return (
     <View>
       {availableItems.length > 0 && (

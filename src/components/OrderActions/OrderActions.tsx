@@ -32,15 +32,9 @@ import { orderExpireAt } from '../../libs/orders'
 import FormikInputImage from '../FormikInputImage'
 import { useEffect, useState } from 'react'
 import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
-import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
-import ItemType from '../../types/ItemType'
-import InputTextStyled from '../InputTextStyled'
-import FormItem from '../FormItem'
 import FormItemPickUp from './FormItemPickUp'
 import { useStore } from '../../contexts/storeContext'
-import { ServiceStores } from '../../firebase/ServiceStore'
-import { onDeliveryItems } from './libs/order_actions'
-import { onCreateItem, onPickUpItem } from '../../libs/item_actions'
+import { onCreateItem, onPickUpItem, onRentItem } from '../../libs/item_actions'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -453,9 +447,9 @@ const OrderActions = ({
     await handlePickUpItems({ itemsIds: newItems.map((i) => i.id) }) //* update items as picked up
       .then(console.log)
       .catch(console.error)
-    // actions_fns[acts.PICKUP]()
+    actions_fns[acts.PICKUP]()
 
-    // modalPickUpRent.setOpen(false)
+    modalPickUpRent.setOpen(false)
   }
 
   const handlePickUpItems = async ({ itemsIds }: { itemsIds: string[] }) => {
@@ -485,6 +479,22 @@ const OrderActions = ({
     return await Promise.all(itemsNotExists)
 
     //* just create items that not exists
+  }
+
+  const onRentItems = async ({ itemIds }: { itemIds: string[] }) => {
+    deliveryModal.setOpen(false)
+    itemIds.map(async (itemId) => {
+      return await onRentItem({ itemId, storeId })
+    })
+    return await Promise.all(itemIds)
+  }
+
+  const handleDeliveryOrder = async (values) => {
+    await onRentItems({ itemIds: values.items.map((i) => i.id) })
+
+    await actions_fns[acts.DELIVER]({
+      ...values
+    })
   }
 
   console.log({ order })
@@ -578,11 +588,7 @@ const OrderActions = ({
         <Formik
           initialValues={{ ...order }}
           onSubmit={async (values) => {
-            await actions_fns[acts.DELIVER]({
-              ...values
-            })
-
-            deliveryModal.setOpen(false)
+            handleDeliveryOrder(values)
           }}
           validate={(values: OrderType) => {
             const errors: Partial<OrderType> = {}

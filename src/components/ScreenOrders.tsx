@@ -25,7 +25,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
   return (
     <>
-      <ListAssignedItemsE />
       <ListOrders
         orders={hasOrderList ? preOrders : orders}
         collectionSearch={{

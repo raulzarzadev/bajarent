@@ -22,6 +22,7 @@ import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
+import { ListAssignedItemsE } from './ListAssignedItems'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -246,6 +247,7 @@ const FormOrderA = ({
                   label="Tipo de orden"
                   disabled={isRenew}
                 />
+
                 <FormFields
                   fields={getOrderFields(
                     store?.orderFields?.[values.type] as OrderFields,
