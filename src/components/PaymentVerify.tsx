@@ -5,6 +5,7 @@ import SpanMetadata from './SpanMetadata'
 import ButtonConfirm from './ButtonConfirm'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
 
 const PaymentVerify = ({
   payment,
@@ -17,6 +18,9 @@ const PaymentVerify = ({
   onVerified?: () => void
   disabled?: boolean
 }) => {
+  const {
+    permissions: { canValidatePayments }
+  } = useEmployee()
   const paymentId = payment?.id
   const isVerified = payment?.verified
   const verifiedBy = payment?.verifiedBy
@@ -49,7 +53,7 @@ const PaymentVerify = ({
         {showData && <Text style={{ marginRight: 8 }}>¿Pago verificado?</Text>}
         {isVerified ? (
           <ButtonConfirm
-            openDisabled={disabled}
+            openDisabled={!canValidatePayments}
             openSize="xs"
             modalTitle="Invalidar pago"
             openVariant="filled"
@@ -66,7 +70,7 @@ const PaymentVerify = ({
           />
         ) : (
           <ButtonConfirm
-            openDisabled={disabled}
+            openDisabled={!canValidatePayments}
             openSize="xs"
             modalTitle="Verifcar pago"
             openVariant="ghost"

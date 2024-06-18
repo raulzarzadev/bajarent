@@ -31,6 +31,7 @@ import SpanUser from './SpanUser'
 import OrderImages from './OrderImages'
 import OrderExtensions from './OrderExtensions'
 import Icon from './Icon'
+import PaymentVerify from './PaymentVerify'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -378,12 +379,9 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                 {payment?.canceled && (
                   <Text style={{ marginHorizontal: 4 }}>Cancelado</Text>
                 )}
-                {payment?.verified === true && (
-                  <Icon icon="done" color={colors.green} />
-                )}
-                {payment?.verified === false && (
-                  <Icon icon="done" color={colors.gray} />
-                )}
+                <View style={{ marginLeft: 4 }}>
+                  <PaymentVerify payment={payment} />
+                </View>
               </Pressable>
             ))}
           </View>

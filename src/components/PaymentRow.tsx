@@ -42,7 +42,7 @@ const RowPayment = ({ item }: { item: PaymentTypeList }) => {
       <View style={{ width: 80 }}>
         {typeof item?.verified === 'boolean' && (
           <View style={{ margin: 'auto' }}>
-            <PaymentVerify payment={item} disabled />
+            <PaymentVerify payment={item} />
           </View>
         )}
         <CurrencyAmount amount={item?.amount} />

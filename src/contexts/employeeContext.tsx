@@ -12,6 +12,7 @@ export type EmployeeContextType = {
     store: StaffType['permissions']['store']
     canEditStaff?: boolean
     canCancelPayments?: boolean
+    canValidatePayments?: boolean
   }
 }
 
@@ -64,7 +65,11 @@ export const EmployeeContextProvider = ({ children }) => {
         canCancelPayments:
           !!employee?.permissions?.store?.canCancelPayments ||
           isOwner ||
-          isAdmin
+          isAdmin,
+        canValidatePayments:
+          isAdmin ||
+          isOwner ||
+          !!employee?.permissions?.store?.canValidatePayments
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections]
