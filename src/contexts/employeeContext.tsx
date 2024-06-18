@@ -13,13 +13,15 @@ export type EmployeeContextType = {
     store: StaffType['permissions']['store']
     canEditStaff?: boolean
     canCancelPayments?: boolean
+    canValidatePayments?: boolean
   }
   items: Partial<ItemType>[]
 }
 
 const EmployeeContext = createContext<EmployeeContextType>({
   employee: null,
-  permissions: { isAdmin: false, isOwner: false, orders: {}, store: {} }
+  permissions: { isAdmin: false, isOwner: false, orders: {}, store: {} },
+  items: []
 })
 
 let em = 0
@@ -61,6 +63,7 @@ export const EmployeeContextProvider = ({ children }) => {
 
   const value = useMemo(
     () => ({
+      items,
       employee: employee
         ? { ...employee, sectionsAssigned: assignedSections }
         : undefined,
@@ -75,9 +78,12 @@ export const EmployeeContextProvider = ({ children }) => {
         canCancelPayments:
           !!employee?.permissions?.store?.canCancelPayments ||
           isOwner ||
-          isAdmin
-      },
-      items
+          isAdmin,
+        canValidatePayments:
+          isAdmin ||
+          isOwner ||
+          !!employee?.permissions?.store?.canValidatePayments
+      }
     }),
     [employee, isAdmin, isOwner, store, assignedSections]
   )

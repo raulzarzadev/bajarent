@@ -1,24 +1,24 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType, { IconOrderType } from '../types/OrderType'
+import OrderType, { IconOrderType, order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme, { colors } from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
-import Icon from './Icon'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import InputRadios from './InputRadios'
 import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
+import { currentRentPeriod } from '../libs/orders'
 
-const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
-  const { storeSections } = useStore()
-  const sectionName = storeSections?.find(
-    ({ id }) => id === order?.assignToSection
-  )?.name
-  const ICON = IconOrderType[order?.type]
+const OrderDirectives = ({
+  order
+}: {
+  order: Partial<OrderType> | Partial<ConsolidatedOrderType>
+}) => {
   return (
     <View
       style={{
@@ -28,24 +28,28 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         flexWrap: 'wrap'
       }}
     >
-      <ChooseLabel colorLabel={order.colorLabel} orderId={order.id} />
+      <ChooseLabel colorLabel={order?.colorLabel} orderId={order?.id} />
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <Chip
         style={[styles.chip]}
-        title={`${dictionary(order?.type)?.toUpperCase()}`}
+        title={`${dictionary(order?.type)?.toUpperCase()} ${currentRentPeriod(
+          order,
+          { shortLabel: true }
+        )}`}
         color={theme?.info}
         titleColor={theme.black}
         size="sm"
       ></Chip>
-      {!!sectionName && (
+      {!!order.assignToSection && (
         <Chip
           style={styles.chip}
-          title={sectionName}
+          title={order.assignToSectionName || 'NA'}
           color={theme?.base}
           titleColor={theme.secondary}
           size="sm"
         ></Chip>
       )}
+
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       {/* <OrderAssignedTo
         orderId={order?.id}
@@ -104,7 +108,7 @@ const ChooseLabel = ({ colorLabel, orderId }) => {
 const styles = StyleSheet.create({
   chip: {
     margin: 2,
-    maxWidth: 105
+    maxWidth: 120
   }
 })
 

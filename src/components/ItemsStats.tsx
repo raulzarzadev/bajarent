@@ -19,7 +19,7 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
   //* delivered
   //* and is not yet picked up
   //* is already delivered
-  const itemsActive = items.filter(
+  const itemsActive = items?.filter(
     (i) =>
       orders_should_expire.includes(i.orderType) &&
       (i.orderStatus === order_status.DELIVERED ||
@@ -29,7 +29,7 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
   //* ITEMS FINISHED
   //* An item finished is an item that has been
   //* pickup
-  const itemsFinished = items.filter(
+  const itemsFinished = items?.filter(
     (i) =>
       orders_should_expire.includes(i.orderType) &&
       i.orderStatus === order_status.PICKUP
@@ -39,7 +39,7 @@ const ItemsStats = ({ orders }: { orders: OrderType[] }) => {
   //* An item delivered is an item that has been
   //* delivered
   //*
-  const itemsDelivered = items.filter(
+  const itemsDelivered = items?.filter(
     (i) => orders_should_expire.includes(i.orderType) && !!i.deliveredAt
   )
 

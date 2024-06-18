@@ -10,7 +10,7 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 
 const StaffPermissions = ({ staff }: { staff: StaffType }) => {
   const permissions = Object.keys(staff_permissions)
-  const allowedPermissions = permissions.filter(
+  const allowedPermissions = permissions?.filter(
     (permission) => staff?.[permission]
   )
 

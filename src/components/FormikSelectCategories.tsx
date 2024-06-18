@@ -18,7 +18,7 @@ import Totals from './ItemsTotals'
 import { useEmployee } from '../contexts/employeeContext'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import ItemType from '../types/ItemType'
-import { RowItem } from './OrderDetails'
+import RowItem from './RowItem'
 
 const FormikSelectCategories = ({
   name,

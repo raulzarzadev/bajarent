@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import RowOrder, { RowOrderE } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
+import { useStore } from '../contexts/storeContext'
 
 const ListOrders = ({
   orders,
@@ -20,8 +21,24 @@ const ListOrders = ({
   }
 }) => {
   const { navigate } = useNavigation()
+  const { storeSections } = useStore()
+  const formatOrders = orders
+    ?.map((o) => {
+      const assignedToSection =
+        storeSections.find((section) => section.id === o.assignToSection)
+          ?.name || null
+      return {
+        id: o.id,
+        ...o,
+        assignToSectionName: assignedToSection
+        //  assignedToSection
+      }
+    })
+    ?.filter((order) => !!order)
   return (
     <LoadingList
+      data={formatOrders}
+      pinRows={true}
       sideButtons={sideButtons}
       preFilteredIds={defaultOrdersIds}
       defaultSortBy="folio"
@@ -44,7 +61,6 @@ const ListOrders = ({
         { key: 'expireAt', label: 'Vencimiento' },
         { key: 'colorLabel', label: 'Color' }
       ]}
-      data={orders}
       ComponentRow={({ item }) => (
         <RowOrderE
           item={item}
@@ -75,6 +91,26 @@ const ListOrders = ({
           label: 'Vence mañana ',
           boolean: true
         }
+        // {
+        //   field: 'createdAt',
+        //   label: 'Creación',
+        //   isDate: true
+        // },
+        // {
+        //   field: 'expireAt',
+        //   label: 'Vencimiento',
+        //   isDate: true
+        // },
+        // {
+        //   field: 'deliveredAt',
+        //   label: 'Entrega',
+        //   isDate: true
+        // },
+        // {
+        //   field: 'pickedUpAt',
+        //   label: 'Fecha de recolección',
+        //   isDate: true
+        // }
       ]}
       ComponentMultiActions={({ ids }) => {
         return <MultiOrderActions ordersIds={ids} />

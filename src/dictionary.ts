@@ -117,6 +117,7 @@ const labels = {
   canSaveBalances: 'Guardar balances',
   canEditStaff: 'Editar staff',
   canCancelPayments: 'Cancelar pagos',
+  canValidatePayments: 'Validar pagos',
 
   /* ********************************************
    * OTHERS

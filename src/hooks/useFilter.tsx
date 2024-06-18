@@ -3,6 +3,7 @@ import { CollectionSearch } from '../components/ModalFilterList'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import asDate from '../libs/utils-date'
 
 export type Filter = { field: string; value: string | number | boolean }
 
@@ -19,6 +20,22 @@ export default function useFilter<T extends { id?: string }>({
     'status'
   )
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
+
+  const filterByDates = (
+    field: string,
+    dates: { fromDate: Date; toDate: Date }
+  ) => {
+    console.log({ field, dates })
+    const res = [...data].filter((o) => {
+      const orderTime = asDate(o?.[field])?.getTime()
+      const fromTime = asDate(dates?.fromDate)?.getTime()
+      const toTime = asDate(dates?.toDate)?.getTime()
+      return orderTime >= fromTime && orderTime <= toTime
+    })
+    handleClearFilters()
+    setFiltersBy([{ field: 'dates', value: 'Custom Filter' }])
+    setFilteredData(res)
+  }
 
   const filterBy = (
     field = 'status',
@@ -63,6 +80,17 @@ export default function useFilter<T extends { id?: string }>({
       filters = [...cleanedFilters, { field, value }]
       setFiltersBy(filters)
       const res = filterDataByFields(data, filters)
+      setFilteredData(res)
+      return
+    }
+    const isFilteredByDates = filtersBy.some((a) => a.field === 'dates')
+    if (isFilteredByDates) {
+      console.log({ isFilteredByDates })
+      filters = [...filtersBy, { field, value }]
+      const res = filterDataByFields(
+        filteredData,
+        filters?.filter((a) => a.field !== 'dates')
+      )
       setFilteredData(res)
       return
     }
@@ -114,9 +142,9 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
-    return data.filter((order) => {
-      return filters.every((filter) => {
-        return order[filter.field] === filter.value
+    return data?.filter((order) => {
+      return filters?.every((filter) => {
+        return order?.[filter?.field] === filter?.value
       })
     })
   }
@@ -136,6 +164,7 @@ export default function useFilter<T extends { id?: string }>({
     filteredData,
     filteredBy,
     handleClearFilters,
+    filterByDates,
     filterBy,
     search,
     filtersBy,

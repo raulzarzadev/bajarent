@@ -46,7 +46,7 @@ const ScreenBalancesNew = ({ navigation }) => {
     }
     //* 3.- Set orders with payments
     const ordersWithPayments = sectionOrders.map((o) => {
-      const orderPayments = paymentsByDate.filter((p) => p.orderId === o.id)
+      const orderPayments = paymentsByDate?.filter((p) => p.orderId === o.id)
       return { ...o, payments: orderPayments }
     })
 

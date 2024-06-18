@@ -15,6 +15,10 @@ export type PaymentBase = {
   canceledBy?: string
   canceledAt?: Date
   canceledReason?: string
+
+  verified?: boolean
+  verifiedAt?: Date
+  verifiedBy?: string
 }
 
 type PaymentType = PaymentBase & BaseType

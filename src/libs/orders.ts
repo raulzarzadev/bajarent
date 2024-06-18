@@ -1,8 +1,9 @@
 import { isBefore, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
 import OrderType, { order_status } from '../types/OrderType'
-import { expireDate2 } from './expireDate'
+import { expireDate2, translateTime } from './expireDate'
 import asDate from './utils-date'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 export const formatOrders = ({
   orders,
@@ -42,6 +43,7 @@ export const formatOrder = ({ order, comments = [] }) => {
   const reportsNotSolved = orderComments?.some(
     ({ type, solved }) => type === 'report' && !solved
   )
+
   if (order?.type === 'RENT') {
     const expireAt = order.expireAt
     const expireToday = isToday(asDate(expireAt))
@@ -49,8 +51,10 @@ export const formatOrder = ({ order, comments = [] }) => {
     const isExpired =
       !!expireAt && (isBefore(asDate(expireAt), new Date()) || expireToday)
     const expiresToday = expireToday
+
     return {
       ...order,
+
       comments: orderComments,
       hasNotSolvedReports: reportsNotSolved,
       isExpired,
@@ -62,6 +66,7 @@ export const formatOrder = ({ order, comments = [] }) => {
   if (order?.type === 'REPAIR') {
     return {
       ...order,
+
       comments: orderComments,
       expireAt: null,
       hasNotSolvedReports: reportsNotSolved
@@ -70,6 +75,7 @@ export const formatOrder = ({ order, comments = [] }) => {
   if (order?.type === 'SALE') {
     return {
       ...order,
+
       comments: orderComments,
       expireAt: null,
       hasNotSolvedReports: reportsNotSolved
@@ -112,7 +118,13 @@ export const orderExpireAt = ({
   if (order.type !== 'RENT') {
     return null
   }
-
+  if (order.extensions) {
+    const expireExtensions = Object.values(order?.extensions || {}).sort(
+      //* put the last extension first
+      (a, b) => asDate(b.createdAt)?.getTime() - asDate(a.createdAt)?.getTime()
+    )
+    return expireExtensions?.[0]?.expireAt || null
+  }
   const orderItemsExpireDate = order?.items?.map((item) => {
     const expireAt = expireDate2({
       startedAt: order.deliveredAt || order.scheduledAt,
@@ -159,4 +171,27 @@ export const filterActiveOrders = (orders: OrderType[]) => {
       return [order_status.AUTHORIZED].includes(o.status)
     }
   })
+}
+
+export const currentRentPeriod = (
+  order: Partial<OrderType> | Partial<ConsolidatedOrderType>,
+  props?: { shortLabel?: boolean }
+) => {
+  const shortLabel = props?.shortLabel || false
+  if (order?.type === 'RENT') {
+    const hasExtensions = Object.values(order?.extensions || {}).sort(
+      (a, b) => asDate(a?.startAt)?.getTime() - asDate(b?.expireAt)?.getTime()
+    )
+    if (hasExtensions?.length) {
+      //* <--------- already has extensions
+      const lastExtension = hasExtensions[0]
+      return translateTime(lastExtension?.time, { shortLabel })
+    } else {
+      //* <--------- use items to detereminate the expire date
+      return translateTime(order?.items?.[0]?.priceSelected?.time, {
+        shortLabel
+      })
+    }
+  }
+  return ''
 }

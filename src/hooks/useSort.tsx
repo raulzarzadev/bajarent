@@ -28,34 +28,6 @@ export default function useSort<T>({
       let aField = a?.[field] || ''
       let bField = b?.[field] || ''
 
-      const statusAreIn = () => {
-        const omitSortPriorityStatus = [
-          order_status.RENEWED,
-          order_status.DELIVERED,
-          order_status.REPAIR_DELIVERED,
-          order_status.CANCELLED,
-          order_status.PICKUP
-        ]
-        return (
-          // @ts-ignore
-          omitSortPriorityStatus.includes(a?.status) &&
-          // @ts-ignore
-          omitSortPriorityStatus.includes(b?.status)
-        )
-      }
-
-      // if field is "priority" and omit if status of the order renewed, canceled, delivered, repair delivered
-      if (field === 'priority' && !statusAreIn()) {
-        //* add a default value to put the orders without priority at the end
-        aField = parseInt(`${aField}` || '9999')
-        bField = parseInt(`${bField}` || '9999')
-        //* orders
-        if (aField < bField) return order === 'asc' ? -1 : 1
-        if (aField > bField) return order === 'asc' ? 1 : -1
-        return 0
-      }
-
-      // if field is a Date or Timestamp, convert it to a number
       if (aField instanceof Date && aField instanceof Timestamp) {
         aField = aField.toDate().getTime()
         bField = bField.toDate().getTime()

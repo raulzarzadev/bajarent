@@ -8,9 +8,15 @@ const CurrencyAmount = ({
   amount: number
   style?: TextStyle
 }) => {
+  const _amount = parseFloat(`${amount}`)
+  const isNumber = typeof _amount === 'number'
+  if (!isNumber) {
+    console.error('NaN')
+    return <Text style={[style]}>$0.00</Text>
+  }
   return (
     <Text style={[style]} numberOfLines={1}>
-      {amount?.toLocaleString('es-MX', {
+      {_amount?.toLocaleString('es-MX', {
         style: 'currency',
         currency: 'MXN'
       })}

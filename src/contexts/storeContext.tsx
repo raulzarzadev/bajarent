@@ -12,7 +12,6 @@ import { ServiceSections } from '../firebase/ServiceSections'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
-import { ServicePayments } from '../firebase/ServicePayments'
 import ItemType from '../types/ItemType'
 
 export type StoreContextType = {
@@ -21,7 +20,7 @@ export type StoreContextType = {
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
   orders?: OrderType[]
-  items: ItemType[]
+  items: Partial<ItemType>[]
   comments?: CommentType[]
   staff?: StoreType['staff']
   myStaffId?: string
@@ -101,7 +100,7 @@ const StoreContextProvider = ({ children }) => {
 
         setStaff(staffUserInfo)
       })
-      ServicePayments.getByStore(store.id).then((res) => setPayments(res))
+      // ServicePayments.getByStore(store.id).then((res) => setPayments(res))
     }
   }, [store])
 

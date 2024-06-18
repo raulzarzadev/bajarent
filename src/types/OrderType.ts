@@ -65,6 +65,7 @@ type OrderBase = {
   hasNotSolvedReports?: boolean
 
   assignToSection?: string
+  assignToSectionName?: string
   assignToStaff?: string
 
   /**

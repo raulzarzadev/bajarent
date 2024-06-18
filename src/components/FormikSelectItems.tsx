@@ -32,7 +32,7 @@ const FormikSelectItems = ({
   const [_items, _setItems] = useState([...items])
 
   const handleRemoveItem = (id: string) => {
-    const newItems = _items.filter((item) => item.id !== id)
+    const newItems = _items?.filter((item) => item.id !== id)
     _setItems(newItems)
     setItems(newItems)
   }

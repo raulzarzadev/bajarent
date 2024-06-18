@@ -17,6 +17,8 @@ import Loading from './Loading'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
 import PaymentType from '../types/PaymentType'
+import SpanMetadata from './SpanMetadata'
+import PaymentVerify from './PaymentVerify'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
@@ -25,16 +27,21 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
   const canCancelPayments = permissions?.canCancelPayments
   const [payment, setPayment] = useState<PaymentType>()
   useEffect(() => {
-    ServicePayments.get(id).then((p) => {
-      setPayment(p)
-    })
+    handleGetPayment()
   }, [id])
   const { user } = useAuth()
+
+  const handleGetPayment = () => {
+    ServicePayments.get(id).then((res) => setPayment(res))
+  }
+
   const userName =
     staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
   const [reason, setReason] = useState('')
   const isCanceled = payment?.canceled
+
   if (!payment) return <Loading />
+
   return (
     <View style={gStyles.container}>
       <View
@@ -44,10 +51,15 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           marginBottom: 16
         }}
       >
-        <Text style={gStyles.helper}>Id: {payment.id}</Text>
-        <Text style={gStyles.helper}>Orden: {payment.orderId}</Text>
+        <SpanMetadata
+          createdAt={payment.createdAt}
+          createdBy={payment.createdBy}
+          id={payment.id}
+          orderId={payment.orderId}
+        />
       </View>
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
+
       {!!payment?.method && (
         <Text
           style={{
@@ -81,6 +93,9 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           </Text>
         </View>
       )}
+
+      <PaymentVerify payment={payment} showData onVerified={handleGetPayment} />
+
       <Button
         variant="ghost"
         onPress={() => {

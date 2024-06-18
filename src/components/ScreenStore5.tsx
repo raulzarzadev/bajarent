@@ -12,6 +12,7 @@ import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
+import BusinessStatus from './BusinessStatus'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -149,24 +150,27 @@ const StoreNumbersRow = () => {
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-      <Button
-        label="Cortes"
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackBalances')
-        }}
-        variant="ghost"
-      />
-      <Button
-        label="Pagos"
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackPayments')
-        }}
-        variant="ghost"
-      />
-    </View>
+    <ScrollView>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+        <Button
+          label="Cortes"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackBalances')
+          }}
+          variant="ghost"
+        />
+        <Button
+          label="Pagos"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackPayments')
+          }}
+          variant="ghost"
+        />
+      </View>
+      {/* <BusinessStatus /> */}
+    </ScrollView>
   )
 }
 
