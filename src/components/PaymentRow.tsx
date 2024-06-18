@@ -6,6 +6,7 @@ import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import { PaymentTypeList } from './ListPayments'
 import { colors } from '../theme'
+import PaymentVerify from './PaymentVerify'
 
 const RowPayment = ({ item }: { item: PaymentTypeList }) => {
   return (
@@ -39,6 +40,11 @@ const RowPayment = ({ item }: { item: PaymentTypeList }) => {
         <Text>{item?.createdByName}</Text>
       </View>
       <View style={{ width: 80 }}>
+        {typeof item?.verified === 'boolean' && (
+          <View style={{ margin: 'auto' }}>
+            <PaymentVerify payment={item} disabled />
+          </View>
+        )}
         <CurrencyAmount amount={item?.amount} />
         <Text style={[gStyles.helper, gStyles.tCenter]}>
           {item?.canceled && 'Cancelado'}

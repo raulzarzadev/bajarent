@@ -30,6 +30,7 @@ import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import OrderImages from './OrderImages'
 import OrderExtensions from './OrderExtensions'
+import Icon from './Icon'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -376,6 +377,12 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                 <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
                 {payment?.canceled && (
                   <Text style={{ marginHorizontal: 4 }}>Cancelado</Text>
+                )}
+                {payment?.verified === true && (
+                  <Icon icon="done" color={colors.green} />
+                )}
+                {payment?.verified === false && (
+                  <Icon icon="done" color={colors.gray} />
                 )}
               </Pressable>
             ))}

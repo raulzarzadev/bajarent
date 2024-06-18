@@ -59,8 +59,6 @@ function ListPayments({
         //   isDate: true
         // }
       ]}
-      onFetchMoreCount={onFetchMoreCount}
-      onFetchMore={onFetchMore}
     />
   )
 }

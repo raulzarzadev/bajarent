@@ -10,19 +10,21 @@ const SpanMetadata = ({
   createdBy,
   id,
   hidden,
-  orderId
+  orderId,
+  layout = 'row'
 }: {
   createdAt: Date | Timestamp
   createdBy: string
-  id: string
+  id?: string
   hidden?: boolean
   orderId?: string
+  layout?: 'row' | 'column'
 }) => {
   if (hidden) return null
   return (
     <View
       style={{
-        flexDirection: 'row',
+        flexDirection: layout,
         justifyContent: 'space-evenly',
         alignItems: 'center',
         flexWrap: 'wrap',
@@ -37,7 +39,7 @@ const SpanMetadata = ({
         <SpanUser userId={createdBy} />
       </Text>
       <View>
-        <Text style={gStyles.helper}>id:{id}</Text>
+        {id && <Text style={gStyles.helper}>id:{id}</Text>}
         {orderId && <Text style={gStyles.helper}> oId:{orderId}</Text>}
       </View>
     </View>

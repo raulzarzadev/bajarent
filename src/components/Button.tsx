@@ -111,7 +111,7 @@ const ButtonX: React.FC<ButtonProps> = ({
             baseStyles.text,
             textColor,
             textStyles,
-            disabled && { color: 'black' },
+            disabled && baseStyles.disabled,
             { textTransform: 'uppercase' }
           ]}
         >
@@ -124,7 +124,7 @@ const ButtonX: React.FC<ButtonProps> = ({
             baseStyles.text,
             textColor,
             textStyles,
-            disabled && { color: 'black' }
+            disabled && baseStyles.disabled
           ]}
         >
           {children?.toUpperCase()}
@@ -161,8 +161,8 @@ const baseStyles = StyleSheet.create({
     fontWeight: 'bold'
   },
   disabled: {
-    backgroundColor: 'gray',
-    opacity: 0.3,
+    //backgroundColor,
+    opacity: 0.4,
     borderColor: 'transparent'
   }
 })

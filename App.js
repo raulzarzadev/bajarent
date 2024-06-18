@@ -9,6 +9,7 @@ import { ThemeProvider } from './src/contexts/themeContext'
 import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { OrdersContextProvider } from './src/contexts/ordersContext'
 import ErrorBoundary from './src/components/ErrorBoundary'
+import { PaymentsProvider } from './src/contexts/paymentsContext'
 
 export default function App() {
   const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
@@ -46,16 +47,21 @@ export default function App() {
         <StoreContextProvider>
           <EmployeeContextProvider>
             <OrdersContextProvider>
-              <ThemeProvider>
-                <NavigationContainer
-                  initialState={initialState}
-                  onStateChange={(state) => {
-                    AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-                  }}
-                >
-                  <BottomAppBarE />
-                </NavigationContainer>
-              </ThemeProvider>
+              <PaymentsProvider>
+                <ThemeProvider>
+                  <NavigationContainer
+                    initialState={initialState}
+                    onStateChange={(state) => {
+                      AsyncStorage.setItem(
+                        PERSISTENCE_KEY,
+                        JSON.stringify(state)
+                      )
+                    }}
+                  >
+                    <BottomAppBarE />
+                  </NavigationContainer>
+                </ThemeProvider>
+              </PaymentsProvider>
             </OrdersContextProvider>
           </EmployeeContextProvider>
         </StoreContextProvider>

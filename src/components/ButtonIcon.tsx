@@ -13,7 +13,8 @@ const ButtonIcon = (props: ButtonProps & IconButtonProps) => {
   const sizes = {
     small: 20,
     medium: 25,
-    large: 30
+    large: 30,
+    xs: 15
   }
   return (
     <Button
