@@ -17,6 +17,7 @@ import Loading from './Loading'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
 import PaymentType from '../types/PaymentType'
+import SpanMetadata from './SpanMetadata'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
@@ -44,8 +45,12 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           marginBottom: 16
         }}
       >
-        <Text style={gStyles.helper}>Id: {payment.id}</Text>
-        <Text style={gStyles.helper}>Orden: {payment.orderId}</Text>
+        <SpanMetadata
+          createdAt={payment.createdAt}
+          createdBy={payment.createdBy}
+          id={payment.id}
+          orderId={payment.orderId}
+        />
       </View>
       <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
       {!!payment?.method && (

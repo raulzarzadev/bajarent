@@ -9,12 +9,14 @@ const SpanMetadata = ({
   createdAt,
   createdBy,
   id,
-  hidden
+  hidden,
+  orderId
 }: {
   createdAt: Date | Timestamp
   createdBy: string
   id: string
   hidden?: boolean
+  orderId?: string
 }) => {
   if (hidden) return null
   return (
@@ -23,16 +25,21 @@ const SpanMetadata = ({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        width: '100%'
       }}
     >
       <Text style={gStyles.helper}>
         {` ${dateFormat(createdAt, 'dd/MMM/yy HH:mm')} ${fromNow(createdAt)} `}
       </Text>
+
       <Text style={[gStyles.helper, { textAlign: 'center' }]}>
         <SpanUser userId={createdBy} />
       </Text>
-      <Text style={gStyles.helper}> {id}</Text>
+      <View>
+        <Text style={gStyles.helper}>id:{id}</Text>
+        {orderId && <Text style={gStyles.helper}> oId:{orderId}</Text>}
+      </View>
     </View>
   )
 }
