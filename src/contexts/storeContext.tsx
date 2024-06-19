@@ -30,6 +30,7 @@ export type StoreContextType = {
   handleSetMyStaffId?: (staffId: string) => any
   storeSections?: SectionType[]
   payments?: PaymentType[]
+  handleSetPayments?: (payments: PaymentType[]) => void
   categories?: Partial<CategoryType>[]
   updateUserStores?: () => any
   allComments?: FormattedComment[]
@@ -100,7 +101,7 @@ const StoreContextProvider = ({ children }) => {
 
         setStaff(staffUserInfo)
       })
-      ServicePayments.getByStore(store.id).then((res) => setPayments(res))
+      // ServicePayments.getByStore(store.id).then((res) => setPayments(res))
     }
   }, [store])
 
@@ -123,6 +124,10 @@ const StoreContextProvider = ({ children }) => {
     items[key] = item
   }
 
+  const handleSetPayments = (payments: PaymentType[]) => {
+    setPayments(payments)
+  }
+
   return (
     <StoreContext.Provider
       value={{
@@ -134,6 +139,7 @@ const StoreContextProvider = ({ children }) => {
         userStores: stores,
         storeSections: sections,
         payments,
+        handleSetPayments,
 
         /**
          * @deprecated

@@ -29,7 +29,9 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import OrderImages from './OrderImages'
-import ListRow from './ListRow'
+import OrderExtensions from './OrderExtensions'
+import Icon from './Icon'
+import PaymentVerify from './PaymentVerify'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -272,101 +274,6 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
-  const extensionsObj = order?.extensions || {}
-  const extensions = Object.values(extensionsObj).sort((a, b) => {
-    return asDate(a.createdAt).getTime() < asDate(b.createdAt).getTime()
-      ? 1
-      : -1
-  })
-  const expireAt = order?.expireAt
-  // FIXME: some times extensions are not created properly
-  return (
-    <View style={{ padding: 4 }}>
-      {!!expireAt && (
-        <DateCell label="Vence" date={expireAt} showTime labelBold />
-      )}
-      <Text style={gStyles.h3}>Extenciones </Text>
-      <ListRow
-        fields={[
-          {
-            width: 100,
-            component: <Text style={gStyles.tBold}>Creación</Text>
-          },
-          {
-            width: 'rest',
-            component: <Text style={gStyles.tBold}>Tipo</Text>
-          },
-          {
-            width: 80,
-            component: <Text style={gStyles.tBold}>Comienza</Text>
-          },
-          {
-            width: 80,
-            component: <Text style={gStyles.tBold}>Termina</Text>
-          }
-        ]}
-      />
-      {extensions.map(
-        ({
-          startAt,
-          expireAt,
-          createdBy,
-          createdAt,
-          id = 'id',
-          reason,
-          time
-        }) => (
-          <View
-            key={id}
-            style={{
-              flexDirection: 'row',
-              marginVertical: 4,
-              justifyContent: 'space-around'
-            }}
-          >
-            <ListRow
-              fields={[
-                {
-                  width: 100,
-                  component: (
-                    <View>
-                      <SpanUser userId={createdBy} />
-                      <Text>
-                        {dateFormat(asDate(createdAt), 'ddMMM HH:mm')}
-                      </Text>
-                    </View>
-                  )
-                },
-                {
-                  width: 'rest',
-                  component: (
-                    <View>
-                      <Text>{dictionary(reason)}</Text>
-                      <Text numberOfLines={1}>{translateTime(time)}</Text>
-                    </View>
-                  )
-                },
-                {
-                  width: 80,
-                  component: (
-                    <DateCell date={startAt} showTimeAgo={false} showTime />
-                  )
-                },
-                {
-                  width: 80,
-                  component: (
-                    <DateCell date={expireAt} showTimeAgo={false} showTime />
-                  )
-                }
-              ]}
-            />
-          </View>
-        )
-      )}
-    </View>
-  )
-}
 const ItemDates = ({
   scheduledAt,
   expireAt,
@@ -472,6 +379,9 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                 {payment?.canceled && (
                   <Text style={{ marginHorizontal: 4 }}>Cancelado</Text>
                 )}
+                <View style={{ marginLeft: 4 }}>
+                  <PaymentVerify payment={payment} />
+                </View>
               </Pressable>
             ))}
           </View>

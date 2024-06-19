@@ -31,6 +31,20 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   }
   list = async (list: string[] = []) => {
     if (!list.length) return []
+    const MAX_BATCH_SIZE = 30 // Ajustar según las limitaciones de la base de datos/API
+    const batches = []
+    for (let i = 0; i < list.length; i += MAX_BATCH_SIZE) {
+      batches.push(list.slice(i, i + MAX_BATCH_SIZE))
+    }
+    const results = []
+    for (const batch of batches) {
+      const batchResults = await this.getItems([
+        where(documentId(), 'in', batch)
+      ])
+      results.push(...batchResults)
+    }
+    return results
+    if (!list.length) return []
     return this.getItems([where(documentId(), 'in', list)])
   }
   async getToday(storeId: string) {
