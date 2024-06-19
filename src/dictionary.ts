@@ -170,6 +170,7 @@ const labels = {
   emerald: 'esmeralda',
   lightPink: 'rosa claro',
   lightPurple: 'morado claro',
+  important: 'importante',
   ' ': '',
   '': ''
 } as const

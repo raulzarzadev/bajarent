@@ -1,6 +1,6 @@
 import { FlatList, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import theme from '../theme'
+import theme, { colors } from '../theme'
 import P from './P'
 import { ServiceComments } from '../firebase/ServiceComments'
 import StyledTextInput from './InputTextStyled'
@@ -8,10 +8,11 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import InputCheckbox from './InputCheckbox'
 import { gSpace } from '../styles'
-import { CommentRow } from './ListComments'
+import { CommentRow, CommentType } from './ListComments'
 import { FormattedComment } from '../types/CommentType'
 import formatComments from '../libs/formatComments'
 import asDate from '../libs/utils-date'
+import InputRadios from './InputRadios'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { orders, staff } = useStore()
@@ -58,22 +59,21 @@ const InputComment = ({
   updateComments?: () => void
 }) => {
   const [content, setContent] = useState('')
-  const [isReport, setIsReport] = useState(false)
   const [saving, setSaving] = useState(false)
   const { storeId } = useStore()
-  const handleToggleIsReport = () => setIsReport(!isReport)
-
+  const [commentType, setCommentType] = useState<CommentType['type']>('comment')
   const reset = () => {
     setContent('')
-    setIsReport(false)
+    setCommentType('comment')
   }
   const handleAddComment = async () => {
     setSaving(true)
+
     await ServiceComments.create({
       orderId,
       storeId,
       content,
-      type: isReport ? 'report' : 'comment'
+      type: commentType
     })
       .then((res) => {
         reset()
@@ -106,16 +106,43 @@ const InputComment = ({
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            marginRight: gSpace(2)
+            marginRight: gSpace(2),
+            flexDirection: 'row'
           }}
         >
+          <InputRadios
+            value={commentType}
+            layout="row"
+            setValue={(value) => {
+              setCommentType(value)
+            }}
+            options={[
+              {
+                label: 'Importante',
+                color: colors.yellow,
+                value: 'important'
+              },
+              {
+                label: 'Reporte',
+                color: colors.red,
+                value: 'report'
+              }
+            ]}
+          />
+          {/* <InputCheckbox
+            label="Importante"
+            setValue={handleToggleIsImportant}
+            value={isImportant}
+            color={theme.warning}
+            style={{ justifyContent: 'flex-end', marginRight: 6 }}
+          />
           <InputCheckbox
             label="Reporte"
             setValue={handleToggleIsReport}
             value={isReport}
             color={theme.error}
             style={{ justifyContent: 'flex-end' }}
-          />
+          /> */}
         </View>
 
         <Button

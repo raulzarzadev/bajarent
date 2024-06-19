@@ -189,6 +189,15 @@ export const CommentRow = ({
               size="xs"
             />
           )}
+          {comment?.type === 'important' && (
+            <Chip
+              disabled={disabled}
+              title={dictionary(comment?.type)}
+              color={theme.warning}
+              titleColor={theme.neutral}
+              size="xs"
+            />
+          )}
 
           <View
             style={{

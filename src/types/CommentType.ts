@@ -7,7 +7,7 @@ export type CommentBase = {
   orderId: string
   storeId: string
 
-  type: 'report' | 'comment' | 'payment'
+  type: 'report' | 'comment' | 'payment' | 'important'
   status?: 'open' | 'close' | 'hidden'
   content: string
 
