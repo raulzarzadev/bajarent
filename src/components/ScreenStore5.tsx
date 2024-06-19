@@ -162,7 +162,7 @@ const TabCashbox = () => {
   useEffect(() => {
     ServiceBalances.getLast(storeId).then((res) => {
       console.log({ res })
-      setBalance(res[0])
+      setBalance(res[0] || null)
     })
   }, [])
   const handleUpdateStoreStatus = async () => {
@@ -175,7 +175,7 @@ const TabCashbox = () => {
         console.log(err)
       })
   }
-  if (!balance) return <Loading />
+  if (balance === undefined) return <Loading />
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
