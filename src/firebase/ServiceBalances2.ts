@@ -2,7 +2,7 @@ import { limit, orderBy, where } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import { BalanceType2 } from '../types/BalanceType'
 import { ServiceOrders } from './ServiceOrders'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import asDate from '../libs/utils-date'
 import { isToday } from 'date-fns'
 import { isRenewedToday } from '../libs/orders'
@@ -28,7 +28,8 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 
   createV2 = async (storeId: string): Promise<Partial<BalanceType2>> => {
     const orders = await ServiceOrders.findMany([
-      where('storeId', '==', storeId)
+      where('storeId', '==', storeId),
+      where('type', '==', order_type.RENT)
     ])
 
     const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
