@@ -89,13 +89,14 @@ export const OrdersContextProvider = ({
   }, [employee])
 
   useEffect(() => {
-    if (store)
+    if (store) {
       ServiceComments.listenReportsUnsolved(storeId, (reports) => {
         setReports(reports)
       })
-    ServiceComments.listenImportantUnsolved(storeId, (reports) => {
-      setImportant(reports)
-    })
+      ServiceComments.listenImportantUnsolved(storeId, (reports) => {
+        setImportant(reports)
+      })
+    }
   }, [store])
 
   const viewMyOrders = employee?.permissions?.order?.canViewMy
@@ -107,7 +108,12 @@ export const OrdersContextProvider = ({
     if (typeOfOrders === 'all') {
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
-        { getBySections: false, sections: [], reports, getExpireTomorrow }
+        {
+          getBySections: false,
+          sections: [],
+          reports: [...reports, ...important],
+          getExpireTomorrow
+        }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
@@ -119,7 +125,7 @@ export const OrdersContextProvider = ({
       const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
         getBySections: true,
         sections: employee.sectionsAssigned,
-        reports,
+        reports: [...reports, ...important],
         getExpireTomorrow
       })
       const formatted = formatOrders({ orders, reports: reports })

@@ -376,7 +376,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const ordersWithReportsIds = Array.from(
       new Set(
         reports
-          .filter(({ type }) => type === 'report')
+          .filter(({ type }) => type === 'report' || type === 'important')
           .map(({ orderId }) => orderId)
       )
     )
