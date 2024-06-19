@@ -101,6 +101,16 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       cb
     )
   }
+  listenImportantUnsolved(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('type', '==', 'important'),
+        where('solved', '==', false)
+      ],
+      cb
+    )
+  }
 
   getReportsUnsolved(storeId: string) {
     return this.findMany([

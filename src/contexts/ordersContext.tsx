@@ -59,7 +59,7 @@ export const OrdersContextProvider = ({
     !!employee?.permissions?.isOwner
 
   const [reports, setReports] = useState<CommentType[]>([])
-
+  const [important, setImportant] = useState<CommentType[]>([])
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
 
@@ -93,6 +93,9 @@ export const OrdersContextProvider = ({
       ServiceComments.listenReportsUnsolved(storeId, (reports) => {
         setReports(reports)
       })
+    ServiceComments.listenImportantUnsolved(storeId, (reports) => {
+      setImportant(reports)
+    })
   }, [store])
 
   const viewMyOrders = employee?.permissions?.order?.canViewMy
@@ -108,7 +111,7 @@ export const OrdersContextProvider = ({
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
-        reports: reports
+        reports: [...reports, ...important]
       })
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {

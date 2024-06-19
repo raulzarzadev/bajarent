@@ -19,6 +19,10 @@ const OrderStatus = ({
   if (!order) return <Text>Orden no encontrada</Text>
   const isRent = order.type === 'RENT'
   const isReported = order?.hasNotSolvedReports
+  const hasImportantComments = order.comments?.some(
+    (comment) => comment.type === 'important' && !comment.solved
+  )
+
   const isDelivered = order?.status === order_status.DELIVERED
   const expireToday = isToday(asDate(order?.expireAt))
   const expired = isBefore(asDate(order?.expireAt), new Date())
@@ -154,6 +158,14 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={'Reporte'}
           color={theme.error}
+          size={chipSize}
+        />
+      )}
+      {hasImportantComments && (
+        <Chip
+          style={[chipStyles]}
+          title={'!'}
+          color={theme.warning}
           size={chipSize}
         />
       )}
