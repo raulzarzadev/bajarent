@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import { SectionDetailsE } from './SectionDetails'
@@ -10,9 +10,11 @@ const ScreenSectionsDetails = ({ route }) => {
   const section = storeSections.find((s) => s.id === sectionId)
   if (!section) return <Loading />
   return (
-    <View style={styles.container}>
-      <SectionDetailsE section={section} />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <SectionDetailsE section={section} />
+      </View>
+    </ScrollView>
   )
 }
 
