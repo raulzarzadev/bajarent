@@ -1,13 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import ListRow, { ListRowField } from './ListRow'
-import { BalanceRowType, BalanceType } from '../types/BalanceType'
+import { BalanceRowType, BalanceType2 } from '../types/BalanceType'
 import { gStyles } from '../styles'
+import { useStore } from '../contexts/storeContext'
 
-export type BalanceType_V2 = {
-  sections: BalanceRowType[]
-}
-const BusinessStatus = ({ balance }: { balance: BalanceType_V2 }) => {
+const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
+  const { storeSections } = useStore()
   const table: {
     field: keyof BalanceRowType
     label: string
@@ -20,32 +19,32 @@ const BusinessStatus = ({ balance }: { balance: BalanceType_V2 }) => {
       width: 'rest'
     },
     {
-      field: 'delivered',
+      field: 'deliveredToday',
       label: 'ENTREGADAS',
       width: 'rest'
     },
     {
-      field: 'renewed',
+      field: 'renewedToday',
       label: 'RENOVADAS',
       width: 'rest'
     },
     {
-      field: 'reports',
+      field: 'reported',
       label: 'REPORTE',
       width: 'rest'
     },
     {
-      field: 'cancelled',
+      field: 'cancelledToday',
       label: 'CANCELADAS',
       width: 'rest'
     },
     {
-      field: 'pickedUp',
+      field: 'pickedUpToday',
       label: 'RECOGIDAS',
       width: 'rest'
     },
     {
-      field: 'rented',
+      field: 'inRent',
       label: 'EN RENTA',
       width: 'rest'
     },
@@ -56,7 +55,7 @@ const BusinessStatus = ({ balance }: { balance: BalanceType_V2 }) => {
     }
   ]
   return (
-    <View>
+    <View style={{ padding: 6 }}>
       {/* HEADER */}
       <ListRow
         fields={table.map(({ label, width }) => ({
@@ -69,11 +68,38 @@ const BusinessStatus = ({ balance }: { balance: BalanceType_V2 }) => {
       {/* ROWS */}
       {balance?.sections?.map((balanceRow: BalanceRowType) => (
         <ListRow
+          style={{ marginVertical: 4 }}
           key={balanceRow.section}
-          fields={table.map(({ width, field }) => ({
-            component: <Text>{balanceRow[field]}</Text>,
-            width
-          }))}
+          fields={table.map(({ width, field }) => {
+            const label = () => {
+              if (field === 'section') {
+                if (balanceRow[field] === 'all') {
+                  return 'Todas'
+                }
+                if (balanceRow[field] === 'withoutSection') {
+                  return 'Sin area'
+                }
+                return (
+                  storeSections.find((s) => s.id === balanceRow[field])?.name ||
+                  'Sin Nombre'
+                )
+              }
+
+              if (field === 'reported') {
+                const reports = balanceRow['reported']?.length || 0
+                const solved = balanceRow['solvedToday']?.length || 0
+                return `${solved}/${reports}`
+              }
+
+              if (Array.isArray(balanceRow[field])) {
+                return balanceRow[field].length
+              }
+            }
+            return {
+              component: <Text>{label()}</Text>,
+              width
+            }
+          })}
         />
       ))}
     </View>

@@ -13,10 +13,12 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
 import BusinessStatus from './BusinessStatus'
-import { fromNow } from '../libs/utils-date'
-import { useState } from 'react'
-import { ServiceBalances } from '../firebase/ServiceBalances'
+import asDate, { fromNow } from '../libs/utils-date'
+import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
+import { BalanceType2, Balance_V2 } from '../types/BalanceType'
+import { ServiceBalances } from '../firebase/ServiceBalances2'
+import Loading from './Loading'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -154,32 +156,26 @@ const StoreNumbersRow = () => {
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   const { storeId } = useStore()
+
+  const [balance, setBalance] = useState<Partial<BalanceType2>>()
+
+  useEffect(() => {
+    ServiceBalances.getLast(storeId).then((res) => {
+      console.log({ res })
+      setBalance(res[0])
+    })
+  }, [])
   const handleUpdateStoreStatus = async () => {
     await ServiceBalances.createV2(storeId)
       .then((res) => {
         console.log({ res })
+        setBalance(res)
       })
       .catch((err) => {
-        console.log({ err })
+        console.log(err)
       })
   }
-  const [balance, setBalance] = useState({
-    sections: [
-      {
-        cancelled: [],
-        delivered: [],
-        inStock: [],
-        pickedUp: [],
-        rented: [],
-        renewed: [],
-        reports: [],
-        pending: [],
-        section: 'Total'
-      }
-    ],
-    createdAt: new Date()
-  })
-
+  if (!balance) return <Loading />
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -203,7 +199,7 @@ const TabCashbox = () => {
 
       <Text style={gStyles.h1}>Cuentas de hoy</Text>
       <Text style={[gStyles.helper, gStyles.tCenter]}>
-        Última actualizacion {fromNow(balance.createdAt)}
+        Última actualizacion {fromNow(asDate(balance?.createdAt))}
       </Text>
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
@@ -216,23 +212,7 @@ const TabCashbox = () => {
           }}
         />
       </View>
-      <BusinessStatus
-        balance={{
-          sections: [
-            {
-              cancelled: [],
-              delivered: [],
-              inStock: [],
-              pickedUp: [],
-              rented: [],
-              renewed: [],
-              reports: [],
-              pending: [],
-              section: 'Total'
-            }
-          ]
-        }}
-      />
+      <BusinessStatus balance={balance} />
     </ScrollView>
   )
 }

@@ -189,3 +189,13 @@ export const currentRentPeriod = (
   }
   return ''
 }
+
+export const isRenewedToday = (order: Partial<OrderType>): boolean => {
+  const lastExtension = Object.values(order?.extensions || {})
+    .filter((e) => e.reason === 'renew')
+    .sort(
+      (a, b) =>
+        asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
+    )[0]
+  return isToday(asDate(lastExtension?.createdAt))
+}
