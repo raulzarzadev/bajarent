@@ -321,8 +321,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   ) {
     // const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
     // const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
-    const TODAY = new Date()
-    const TOMORROW = addDays(new Date(), 1)
+    const TODAY = new Date(new Date().setHours(23, 59, 59, 999))
+    const TOMORROW = addDays(TODAY, 1)
     const DAY_AFTER_TOMORROW = addDays(new Date(), 2)
 
     const filterRentPending = [
