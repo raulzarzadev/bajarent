@@ -19,6 +19,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import PaymentType from '../types/PaymentType'
 import SpanMetadata from './SpanMetadata'
 import PaymentVerify from './PaymentVerify'
+import ImagePreview from './ImagePreview'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
@@ -92,12 +93,15 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           </Text>
         </View>
       )}
-      {!!payment?.image && (
+      {/* {!!payment?.image && (
         <Image
           source={{ uri: payment?.image }}
           style={{ flex: 1, minHeight: 150, marginVertical: 2 }}
         />
-      )}
+      )} */}
+      <View style={{ justifyContent: 'center', margin: 'auto' }}>
+        <ImagePreview image={payment?.image} title="Comprobante" />
+      </View>
 
       <PaymentVerify payment={payment} showData onVerified={handleGetPayment} />
 
