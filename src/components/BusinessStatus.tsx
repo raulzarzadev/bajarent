@@ -24,6 +24,11 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
       width: 'rest'
     },
     {
+      field: 'pickedUpToday',
+      label: 'RECOGIDAS',
+      width: 'rest'
+    },
+    {
       field: 'renewedToday',
       label: 'RENOVADAS',
       width: 'rest'
@@ -36,11 +41,6 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
     {
       field: 'cancelledToday',
       label: 'CANCELADAS',
-      width: 'rest'
-    },
-    {
-      field: 'pickedUpToday',
-      label: 'RECOGIDAS',
       width: 'rest'
     },
     {
@@ -60,7 +60,12 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
       <ListRow
         fields={table.map(({ label, width }) => ({
           component: (
-            <Text style={[gStyles.tBold, gStyles.helper]}>{label}</Text>
+            <Text
+              numberOfLines={1}
+              style={[gStyles.tBold, gStyles.helper, gStyles.tCenter]}
+            >
+              {label}
+            </Text>
           ),
           width
         }))}
@@ -96,7 +101,7 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
               }
             }
             return {
-              component: <Text>{label()}</Text>,
+              component: <Text style={[gStyles.tCenter]}>{label()}</Text>,
               width
             }
           })}
