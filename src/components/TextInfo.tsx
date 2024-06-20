@@ -4,7 +4,7 @@ import Icon, { IconName } from './Icon'
 import theme, { colors } from '../theme'
 import { gStyles } from '../styles'
 
-export type TextIconType = 'info' | 'error' | 'success'
+export type TextIconType = 'info' | 'error' | 'success' | 'warning'
 export type TextInfoProps = {
   type?: TextIconType
   text: string
@@ -13,7 +13,14 @@ const TextInfo = ({ type = 'info', text }: TextInfoProps) => {
   const icons: Record<TextIconType, IconName> = {
     info: 'info',
     error: 'cancel',
-    success: 'done'
+    success: 'done',
+    warning: 'warning'
+  }
+  const textColor: Record<TextIconType, string> = {
+    info: colors.darkGray,
+    error: colors.white,
+    success: colors.white,
+    warning: colors.darkGray
   }
   return (
     <View
@@ -27,11 +34,11 @@ const TextInfo = ({ type = 'info', text }: TextInfoProps) => {
         borderRadius: 4
       }}
     >
-      <Icon icon={icons[type]} color={colors.white} size={22} />
+      <Icon icon={icons[type]} color={textColor[type]} size={22} />
       <Text
         style={[
           gStyles.helper,
-          { color: colors.white, fontWeight: 'bold', marginLeft: 8 }
+          { color: textColor[type], fontWeight: 'bold', marginLeft: 8 }
         ]}
       >
         {text}

@@ -22,6 +22,7 @@ import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
+import TextInfo from './TextInfo'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -361,14 +362,19 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       />
     ),
     sheetRow: (
-      <InputTextStyled
-        onChangeText={(text) => setSheetRow(text)}
-        placeholder="Fila de excel"
-        value={values.sheetRow}
-        helperText={
-          'Una fila de una hoja de excel (No.nota, nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
-        }
-      />
+      <>
+        <TextInfo
+          type="warning"
+          text="Fila de excel. Las celdas deben estar en el siguiente orden | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | No.Casa | Fecha |"
+        ></TextInfo>
+        <InputTextStyled
+          onChangeText={(text) => setSheetRow(text)}
+          placeholder="Fila de excel"
+          value={values.sheetRow}
+          helperText={'Fila de excel'}
+          style={{ borderColor: theme.warning, borderWidth: 2 }}
+        />
+      </>
     ),
     note: (
       <InputValueFormik

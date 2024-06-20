@@ -17,6 +17,10 @@ const TextInfos = () => {
         text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quisquam."
         type="success"
       />
+      <TextInfo
+        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quisquam."
+        type="warning"
+      />
     </View>
   )
 }
