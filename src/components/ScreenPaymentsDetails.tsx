@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
@@ -72,9 +72,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
         </Text>
       )}
       {!!payment?.reference && (
-        <Text
-          style={[gStyles.helper, { textAlign: 'center', marginVertical: 8 }]}
-        >
+        <Text style={[{ textAlign: 'center', marginVertical: 8 }]}>
           Referencia: {payment?.reference}
         </Text>
       )}
@@ -84,6 +82,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           <DateCell date={payment?.createdAt} />
         </Text>
       )}
+
       {!!payment?.createdBy && (
         <View style={{ justifyContent: 'center' }}>
           <Text
@@ -92,6 +91,12 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
             Cobrado por: <Text>{userName}</Text>
           </Text>
         </View>
+      )}
+      {!!payment?.image && (
+        <Image
+          source={{ uri: payment?.image }}
+          style={{ flex: 1, minHeight: 150, marginVertical: 2 }}
+        />
       )}
 
       <PaymentVerify payment={payment} showData onVerified={handleGetPayment} />

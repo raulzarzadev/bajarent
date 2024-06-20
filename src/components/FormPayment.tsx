@@ -6,6 +6,7 @@ import PaymentType, { payment_methods } from '../types/PaymentType'
 import dictionary from '../dictionary'
 import Button from './Button'
 import FormikInputValue from './FormikInputValue'
+import FormikInputImage from './FormikInputImage'
 
 const FormPayment = ({
   onSubmit,
@@ -54,6 +55,7 @@ const FormPayment = ({
             {values.method === 'transfer' && (
               <View style={styles.repairItemForm}>
                 <FormikInputValue name="reference" placeholder="Referencia" />
+                <FormikInputImage name="image" />
               </View>
             )}
             <View style={styles.repairItemForm}>
