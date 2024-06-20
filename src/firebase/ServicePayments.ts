@@ -62,7 +62,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
         where(
           'createdAt',
           '>=',
-          new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
+          new Date(subDays(new Date(), days).setHours(23, 59, 59, 999))
         ),
 
         orderBy('createdAt', 'desc')
