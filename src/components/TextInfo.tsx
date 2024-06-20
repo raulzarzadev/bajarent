@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Icon, { IconName } from './Icon'
 import theme, { colors } from '../theme'
@@ -22,27 +22,37 @@ const TextInfo = ({ type = 'info', text }: TextInfoProps) => {
     success: colors.white,
     warning: colors.darkGray
   }
+  const [visible, setVisible] = React.useState(false)
+
   return (
     <View
       style={{
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        flexDirection: 'row',
+        //justifyContent: 'flex-start',
+        margin: 'auto',
+
         marginVertical: 4,
         backgroundColor: theme?.[type],
         padding: 4,
-        borderRadius: 4
+        borderRadius: 4,
+        width: visible ? 'auto' : 30
       }}
     >
-      <Icon icon={icons[type]} color={textColor[type]} size={22} />
-      <Text
-        style={[
-          gStyles.helper,
-          { color: textColor[type], fontWeight: 'bold', marginLeft: 8 }
-        ]}
+      <Pressable
+        style={{ alignItems: 'center', flexDirection: 'row' }}
+        onPress={() => setVisible(!visible)}
       >
-        {text}
-      </Text>
+        <Icon icon={icons[type]} color={textColor[type]} size={22} />
+
+        <Text
+          style={[
+            gStyles.helper,
+            { color: textColor[type], fontWeight: 'bold', marginLeft: 8 },
+            { display: visible ? 'flex' : 'none' }
+          ]}
+        >
+          {text}
+        </Text>
+      </Pressable>
     </View>
   )
 }

@@ -451,10 +451,13 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       />
     ),
     hasDelivered: (
-      <FormikCheckbox
-        name="hasDelivered"
-        label="Entregada en la fecha programada"
-      />
+      <>
+        <TextInfo text="Entregada. Útil para ingresar antiguas ordenes al sistema. No recomendable si es un cliente nuevo"></TextInfo>
+        <FormikCheckbox
+          name="hasDelivered"
+          label="Entregada en la fecha programada"
+        />
+      </>
     ),
     repairDescription: (
       <InputValueFormik

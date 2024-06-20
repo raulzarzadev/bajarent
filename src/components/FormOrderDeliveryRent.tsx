@@ -19,6 +19,7 @@ import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import FormikInputValue from './FormikInputValue'
+import TextInfo from './TextInfo'
 
 const initialValues: Partial<OrderType> = {
   firstName: '',
