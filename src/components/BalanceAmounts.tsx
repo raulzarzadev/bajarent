@@ -5,12 +5,13 @@ import { payments_amount } from '../libs/payments'
 import { gSpace, gStyles } from '../styles'
 import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
-
-const BalanceAmounts = ({ payments }: { payments: PaymentType[] }) => {
-  const cashPayments = payments.filter((p) => p.method === 'cash')
-  const cardPayments = payments.filter((p) => p.method === 'card')
-  const transferPayments = payments.filter((p) => p.method === 'transfer')
-  const canceledPayments = payments.filter((p) => p.canceled)
+import ErrorBoundary from './ErrorBoundary'
+export type BalanceAmountsProps = { payments: PaymentType[] }
+const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
+  const cashPayments = payments?.filter((p) => p.method === 'cash')
+  const cardPayments = payments?.filter((p) => p.method === 'card')
+  const transferPayments = payments?.filter((p) => p.method === 'transfer')
+  const canceledPayments = payments?.filter((p) => p.canceled)
   const { total, canceled, card, cash, transfers } = payments_amount(payments)
   return (
     <View>
@@ -122,6 +123,12 @@ const LinkPayments = ({
 }
 
 export default BalanceAmounts
+
+export const BalanceAmountsE = (props: BalanceAmountsProps) => (
+  <ErrorBoundary componentName="BalanceAmounts">
+    <BalanceAmounts {...props} />
+  </ErrorBoundary>
+)
 
 const styles = StyleSheet.create({
   totals: {

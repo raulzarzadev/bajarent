@@ -12,12 +12,11 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
 import { useNavigation } from '@react-navigation/native'
-import PaymentType from '../types/PaymentType'
-import CurrencyAmount from './CurrencyAmount'
-import { payments_amount } from '../libs/payments'
-import BalanceAmounts from './BalanceAmounts'
+import { BalanceAmountsE } from './BalanceAmounts'
+import ErrorBoundary from './ErrorBoundary'
 
-const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
+export type BusinessStatusProps = { balance: Partial<BalanceType2> }
+const BusinessStatus = ({ balance }: BusinessStatusProps) => {
   const { storeSections } = useStore()
   const table: {
     field: keyof BalanceRowType
@@ -209,7 +208,7 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
               <View>
                 <Text style={gStyles.h3}>Pagos</Text>
               </View>
-              <BalanceAmounts payments={balanceRow.payments} />
+              <BalanceAmountsE payments={balanceRow.payments} />
             </View>
           )}
         </>
@@ -218,17 +217,29 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
   )
 }
 
+export const BusinessStatusE = (props: BusinessStatusProps) => (
+  <ErrorBoundary componentName="BusinessStatus">
+    <BusinessStatus {...props} />
+  </ErrorBoundary>
+)
+
+export const CellOrdersE = (props: CellOrdersProps) => (
+  <ErrorBoundary componentName="CellOrders">
+    <CellOrders {...props} />
+  </ErrorBoundary>
+)
+export type CellOrdersProps = {
+  label: string
+  sections: BalanceType2['sections']
+  field: BalanceRowKeyType
+  sectionSelected: string
+}
 const CellOrders = ({
   label,
   sections,
   field,
   sectionSelected
-}: {
-  label: string
-  sections: BalanceType2['sections']
-  field: BalanceRowKeyType
-  sectionSelected: string
-}) => {
+}: CellOrdersProps) => {
   const { consolidatedOrders } = useOrdersCtx()
   const { navigate } = useNavigation()
   const section = sections?.find((s) => s.section === sectionSelected)

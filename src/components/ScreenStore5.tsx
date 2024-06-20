@@ -12,7 +12,7 @@ import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
-import BusinessStatus from './BusinessStatus'
+import BusinessStatus, { BusinessStatusE } from './BusinessStatus'
 import asDate, { fromNow } from '../libs/utils-date'
 import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
@@ -212,7 +212,7 @@ const TabCashbox = () => {
           }}
         />
       </View>
-      <BusinessStatus balance={balance} />
+      <BusinessStatusE balance={balance} />
     </ScrollView>
   )
 }
