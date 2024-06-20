@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native'
 import PaymentType from '../types/PaymentType'
 import CurrencyAmount from './CurrencyAmount'
 import { payments_amount } from '../libs/payments'
+import BalanceAmounts from './BalanceAmounts'
 
 const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
   const { storeSections } = useStore()
@@ -208,30 +209,11 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
               <View>
                 <Text style={gStyles.h3}>Pagos</Text>
               </View>
-              <PaymentRow label="Total" payments={balanceRow.payments} />
+              <BalanceAmounts payments={balanceRow.payments} />
             </View>
           )}
         </>
       ))}
-    </View>
-  )
-}
-
-const PaymentRow = ({
-  label = 'Pago',
-  payments = []
-}: {
-  label: string
-  payments: PaymentType[]
-}) => {
-  return (
-    <View>
-      <Text>
-        {label} {payments?.length || 0}
-      </Text>
-      <Text>
-        <CurrencyAmount amount={payments_amount(payments).total} />
-      </Text>
     </View>
   )
 }
