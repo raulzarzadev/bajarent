@@ -49,6 +49,9 @@ export type BalanceRowType = {
   reported?: string[]
   solvedToday?: string[]
 }
+
+export type BalanceRowKeyType = keyof BalanceRowType
+
 export type BalanceType2 = Balance_V2 & BaseType
 // & ({ type: 'partial'; userId: string } | { type: 'full' })
 
