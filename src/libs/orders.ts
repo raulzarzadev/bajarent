@@ -180,7 +180,7 @@ export const currentRentPeriod = (
   const shortLabel = props?.shortLabel || false
   if (order?.type === 'RENT') {
     const hasExtensions = Object.values(order?.extensions || {}).sort(
-      (a, b) => asDate(a?.startAt)?.getTime() - asDate(b?.expireAt)?.getTime()
+      (a, b) => asDate(b?.startAt)?.getTime() - asDate(a?.expireAt)?.getTime()
     )
     if (hasExtensions?.length) {
       //* <--------- already has extensions
