@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Dimensions, Text, View } from 'react-native'
 import React from 'react'
 import OrderType from '../types/OrderType'
 import ClientName from './ClientName'
@@ -13,9 +13,10 @@ export type RowOrderProps = {
   showTodayAmount?: boolean
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
+  const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
-      width: 100,
+      width: bigScreen ? 'rest' : 100,
       component: (
         <View>
           <View style={{ flexDirection: 'row' }}>
@@ -51,7 +52,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
     //   )
     // },
     {
-      width: 'rest',
+      width: bigScreen ? 300 : 'rest',
       component: (
         <View>
           <OrderDirectives order={order} />
