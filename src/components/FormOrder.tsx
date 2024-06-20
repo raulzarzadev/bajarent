@@ -34,8 +34,8 @@ const getOrderFields = (
   //* add extra ops config at the really first of the form
   const extraOps = [
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
-    'note', //*<- kind of external reference
-    'sheetRow' //*<- you can paste a google sheet row to get the data much more easy
+    'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
+    'note' //*<- kind of external reference
   ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
 
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
@@ -50,6 +50,7 @@ const getOrderFields = (
     ?.filter((field) => fields?.[field])
     //* clear extra ops because are already included at the first of the form
     ?.filter((field) => !extraOps.includes(field))
+
   addedFields = extraFieldsAllowed
   return [
     ...extraOps,
@@ -365,7 +366,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       <>
         <TextInfo
           type="warning"
-          text="Fila de excel. Las celdas deben estar en el siguiente orden | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | No.Casa | Fecha |"
+          text="Fila de excel. Las celdas deben estar en el siguiente orden | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | No.Casa | Fecha programada |"
         ></TextInfo>
         <InputTextStyled
           onChangeText={(text) => setSheetRow(text)}
