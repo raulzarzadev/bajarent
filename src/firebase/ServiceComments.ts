@@ -145,7 +145,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.listenMany(
       [
         where('orderId', '==', orderId),
-        where('type', '==', 'report'),
+        where('type', 'in', ['report', 'important']),
         where('solved', '==', false)
       ],
       cb

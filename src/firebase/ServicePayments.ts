@@ -57,7 +57,6 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
 
   async getLast(storeId: string, { count = 10, days = 0 }) {
     if (days) {
-      console.log({ days })
       return this.getItems([
         where('storeId', '==', storeId),
         where(
@@ -65,8 +64,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
           '>=',
           new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
         ),
-        // where('createdAt', '<=', new Date().setHours(23, 59, 59, 999)),
-        // limit(count),
+
         orderBy('createdAt', 'desc')
       ])
     }
