@@ -8,6 +8,8 @@ import { isToday } from 'date-fns'
 import { isRenewedToday } from '../libs/orders'
 import { ServiceComments } from './ServiceComments'
 import { CommentType } from '../types/CommentType'
+import { getBalancePayments } from '../libs/balance'
+import PaymentType from '../types/PaymentType'
 
 class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
   constructor() {
@@ -27,47 +29,66 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
   }
 
   createV2 = async (storeId: string): Promise<Partial<BalanceType2>> => {
-    const orders = await ServiceOrders.findMany([
-      where('storeId', '==', storeId),
-      where('type', '==', order_type.RENT)
-    ])
+    try {
+      const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))
+      const TODAY_NIGHT = new Date(new Date().setHours(23, 59, 59, 999))
 
-    const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+      const orders = await ServiceOrders.findMany([
+        where('storeId', '==', storeId),
+        where('type', '==', order_type.RENT)
+      ])
 
-    const reportsSolvedToday = await ServiceComments.findMany([
-      where('type', '==', 'report'),
-      where('solved', '==', true),
-      where('solvedAt', '>=', new Date(new Date().setHours(0, 0, 0, 0))),
-      where('solvedAt', '<=', new Date(new Date().setHours(23, 59, 59, 999)))
-    ])
+      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
 
-    const groupedBySections = groupOrdersBySection({
-      orders,
-      reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])]
-    })
-    const newBalance = {
-      sections: groupedBySections,
-      storeId
-    }
+      const reportsSolvedToday = await ServiceComments.findMany([
+        where('type', '==', 'report'),
+        where('solved', '==', true),
+        where('solvedAt', '>=', TODAY_MORNING),
+        where('solvedAt', '<=', TODAY_NIGHT)
+      ])
 
-    return new Promise(async (resolve) => {
-      await this.create({ ...newBalance })
-        .then((res) => {
-          this.get(res.res.id).then((res) => {
-            resolve(res)
+      const { payments } = await getBalancePayments({
+        storeId,
+        fromDate: TODAY_MORNING,
+        toDate: TODAY_NIGHT,
+        section: [],
+        type: 'full'
+      })
+
+      const groupedBySections = groupOrdersBySection({
+        orders,
+        reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])],
+        payments
+      })
+      const newBalance = {
+        sections: groupedBySections,
+        storeId
+      }
+
+      return new Promise(async (resolve) => {
+        console.log({ newBalance })
+        await this.create({ ...newBalance })
+          .then((res) => {
+            this.get(res.res.id).then((res) => {
+              resolve({ ...res })
+            })
           })
-        })
-        .catch((err) => console.log({ err }))
-    })
+          .catch((err) => console.log({ err }))
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 
 const groupOrdersBySection = ({
   orders,
-  reports
+  reports,
+  payments
 }: {
   orders: Partial<OrderType>[]
   reports: Partial<CommentType>[]
+  payments: PaymentType[]
 }): Partial<BalanceType2['sections']> => {
   const res = {
     all: [],
@@ -132,20 +153,30 @@ const groupOrdersBySection = ({
           isToday(asDate(order?.cancelledAt))
       )
 
+      const paidOrders = payments
+        .filter((p) => orders.find((o) => o.id === p.orderId))
+        .map(({ orderId }) => orderId)
+
       const getJustIds = (arr: Partial<OrderType>[]): OrderType['id'][] => {
         return arr.map(({ id }) => id)
       }
 
+      const sectionPayments = payments.filter((p) =>
+        orders.find((o) => o.id === p.orderId)
+      )
+
       return {
         cancelledToday: getJustIds(cancelledToday),
         deliveredToday: getJustIds(deliveredToday),
-        pickedUpToday: getJustIds(deliveredToday),
+        pickedUpToday: getJustIds(pickedUpToday),
         section: key,
         inRent: getJustIds(inRent),
         renewedToday: getJustIds(renewedToday),
         reported: getJustIds(reported),
         pending: getJustIds(pending),
-        solvedToday: getJustIds(removeDuplicates(solvedToday))
+        solvedToday: getJustIds(removeDuplicates(solvedToday)),
+        paidToday: paidOrders,
+        payments: sectionPayments
       }
     }
   )

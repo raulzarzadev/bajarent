@@ -12,6 +12,9 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
 import { useNavigation } from '@react-navigation/native'
+import PaymentType from '../types/PaymentType'
+import CurrencyAmount from './CurrencyAmount'
+import { payments_amount } from '../libs/payments'
 
 const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
   const { storeSections } = useStore()
@@ -21,24 +24,26 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
     width: ListRowField['width']
   }[] = [
     { field: 'section', label: 'AREA', width: 'rest' },
-    {
-      field: 'pending',
-      label: 'PEDIDOS',
-      width: 'rest'
-    },
+
     {
       field: 'deliveredToday',
       label: 'ENTREGADAS',
       width: 'rest'
     },
-    {
-      field: 'pickedUpToday',
-      label: 'RECOGIDAS',
-      width: 'rest'
-    },
+
     {
       field: 'renewedToday',
       label: 'RENOVADAS',
+      width: 'rest'
+    },
+    {
+      field: 'paidToday',
+      label: 'PAGADAS',
+      width: 'rest'
+    },
+    {
+      field: 'pickedUpToday',
+      label: 'RECOGIDAS',
       width: 'rest'
     },
     {
@@ -170,6 +175,12 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
                   sections={balance.sections}
                 />
                 <CellOrders
+                  label={'Pagadas'}
+                  field="paidToday"
+                  sectionSelected={balanceRow.section}
+                  sections={balance.sections}
+                />
+                <CellOrders
                   label={'Recogidas'}
                   field="pickedUpToday"
                   sectionSelected={balanceRow.section}
@@ -194,10 +205,33 @@ const BusinessStatus = ({ balance }: { balance: Partial<BalanceType2> }) => {
                   sections={balance.sections}
                 />
               </View>
+              <View>
+                <Text style={gStyles.h3}>Pagos</Text>
+              </View>
+              <PaymentRow label="Total" payments={balanceRow.payments} />
             </View>
           )}
         </>
       ))}
+    </View>
+  )
+}
+
+const PaymentRow = ({
+  label = 'Pago',
+  payments = []
+}: {
+  label: string
+  payments: PaymentType[]
+}) => {
+  return (
+    <View>
+      <Text>
+        {label} {payments?.length || 0}
+      </Text>
+      <Text>
+        <CurrencyAmount amount={payments_amount(payments).total} />
+      </Text>
     </View>
   )
 }

@@ -5,6 +5,7 @@ import OrderType, { order_status, order_type } from '../types/OrderType'
 import { payments_amount } from './payments'
 import { ServiceComments } from '../firebase/ServiceComments'
 import asDate from './utils-date'
+import { ServicePayments } from '../firebase/ServicePayments'
 
 export const balanceTotals = (balance: BalanceType) => {
   return payments_amount(balance.payments)
@@ -215,6 +216,53 @@ export const calculateSectionBalance = async ({
     ordersCancelled: ordersCancelled.map((o) => o.id),
     ordersReportedSolved: reportedOrdersSolvedBySection.map((o) => o.id),
     ordersCreated: []
+  }
+}
+
+export const getBalancePayments = async ({
+  section,
+  fromDate,
+  toDate,
+  type,
+  storeId
+}) => {
+  /* ******************************************** 
+ //* Is necessary get the orders from the section to define section payments           
+   *******************************************rz */
+
+  // //* 1.- Filter payments by date from server
+  try {
+    const paymentsByDate = await ServicePayments.findMany([
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', fromDate),
+      where('createdAt', '<=', toDate)
+    ])
+    //* 2.- Find orders from payments, remove duplicates
+    const paymentOrders = Array.from(
+      new Set(paymentsByDate.map((p) => p.orderId))
+    )
+
+    let sectionOrders = []
+    if (type === 'partial') {
+      sectionOrders = await ServiceOrders.getList(paymentOrders, {
+        sections: [section]
+      })
+    }
+    if (type === 'full') {
+      sectionOrders = await ServiceOrders.getList(paymentOrders)
+    }
+    //* 3.- Set orders with payments
+    const ordersWithPayments = sectionOrders.map((o) => {
+      const orderPayments = paymentsByDate?.filter((p) => p.orderId === o.id)
+      return { ...o, payments: orderPayments }
+    })
+
+    //* 3.- Need paid orders and payments in dates
+    const paidOrders = ordersWithPayments
+    const payments = ordersWithPayments.map((o) => o.payments).flat()
+    return { paidOrders, payments }
+  } catch (e) {
+    console.error(e)
   }
 }
 

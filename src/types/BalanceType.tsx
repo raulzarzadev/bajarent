@@ -48,6 +48,8 @@ export type BalanceRowType = {
   renewedToday?: string[]
   reported?: string[]
   solvedToday?: string[]
+  paidToday?: string[]
+  payments?: PaymentType[]
 }
 
 export type BalanceRowKeyType = keyof BalanceRowType
