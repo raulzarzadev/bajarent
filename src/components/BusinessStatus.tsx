@@ -96,9 +96,8 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       />
       {/* ROWS */}
       {balance?.sections?.map((balanceRow: BalanceRowType) => (
-        <>
+        <View key={balanceRow.section}>
           <Pressable
-            key={balanceRow.section}
             onPress={() => {
               handleSelectRow(balanceRow.section)
             }}
@@ -211,7 +210,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
               <BalanceAmountsE payments={balanceRow.payments} />
             </View>
           )}
-        </>
+        </View>
       ))}
     </View>
   )

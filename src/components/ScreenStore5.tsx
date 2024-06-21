@@ -161,12 +161,11 @@ const TabCashbox = () => {
 
   useEffect(() => {
     ServiceBalances.getLast(storeId).then((res) => {
-      console.log({ res })
       setBalance(res[0] || null)
     })
   }, [])
   const handleUpdateStoreStatus = async () => {
-    await ServiceBalances.createV2(storeId)
+    return await ServiceBalances.createV2(storeId)
       .then((res) => {
         console.log({ res })
         setBalance(res)
@@ -175,6 +174,7 @@ const TabCashbox = () => {
         console.log(err)
       })
   }
+  const [updating, setUpdating] = useState(false)
   if (balance === undefined) return <Loading />
   return (
     <ScrollView>
@@ -203,12 +203,15 @@ const TabCashbox = () => {
       </Text>
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
+          disabled={updating}
           size="small"
           fullWidth={false}
           label="Actualizar"
           icon="refresh"
-          onPress={() => {
-            handleUpdateStoreStatus()
+          onPress={async () => {
+            setUpdating(true)
+            await handleUpdateStoreStatus()
+            setUpdating(false)
           }}
         />
       </View>
