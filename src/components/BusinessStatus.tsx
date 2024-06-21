@@ -14,6 +14,7 @@ import { currentRentPeriod } from '../libs/orders'
 import { useNavigation } from '@react-navigation/native'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
+import useSort from '../hooks/useSort'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -23,7 +24,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
     label: string
     width: ListRowField['width']
   }[] = [
-    { field: 'section', label: 'AREA', width: 'rest' },
+    { field: 'section', label: 'AREA', width: 100 },
 
     {
       field: 'deliveredToday',
