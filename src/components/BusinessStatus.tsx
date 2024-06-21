@@ -264,6 +264,7 @@ const CellOrders = ({
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ marginHorizontal: 4 }}>
                 {order?.folio}
+                {' - '}
                 {order?.note}
               </Text>
               <Text style={{ marginHorizontal: 4 }}>{order?.fullName}</Text>
