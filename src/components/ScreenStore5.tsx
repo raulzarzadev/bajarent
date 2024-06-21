@@ -12,7 +12,13 @@ import { gSpace, gStyles } from '../styles'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
-import BusinessStatus from './BusinessStatus'
+import BusinessStatus, { BusinessStatusE } from './BusinessStatus'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
+import { useEffect, useState } from 'react'
+import { useStore } from '../contexts/storeContext'
+import { BalanceType2, Balance_V2 } from '../types/BalanceType'
+import { ServiceBalances } from '../firebase/ServiceBalances2'
+import Loading from './Loading'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -149,6 +155,27 @@ const StoreNumbersRow = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
+  const { storeId } = useStore()
+
+  const [balance, setBalance] = useState<Partial<BalanceType2>>()
+
+  useEffect(() => {
+    ServiceBalances.getLast(storeId).then((res) => {
+      setBalance(res[0] || null)
+    })
+  }, [])
+  const handleUpdateStoreStatus = async () => {
+    return await ServiceBalances.createV2(storeId)
+      .then((res) => {
+        console.log({ res })
+        setBalance(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+  const [updating, setUpdating] = useState(false)
+  if (balance === undefined) return <Loading />
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -169,7 +196,28 @@ const TabCashbox = () => {
           variant="ghost"
         />
       </View>
-      {/* <BusinessStatus /> */}
+
+      <Text style={gStyles.h1}>Cuentas de hoy</Text>
+      <Text style={[gStyles.helper, gStyles.tCenter]}>
+        Última actualizacion{' '}
+        {dateFormat(asDate(balance.createdAt), 'ddMMM HH:mm')}{' '}
+        {fromNow(asDate(balance?.createdAt))}
+      </Text>
+      <View style={{ margin: 'auto', marginVertical: 6 }}>
+        <Button
+          disabled={updating}
+          size="small"
+          fullWidth={false}
+          label="Actualizar"
+          icon="refresh"
+          onPress={async () => {
+            setUpdating(true)
+            await handleUpdateStoreStatus()
+            setUpdating(false)
+          }}
+        />
+      </View>
+      <BusinessStatusE balance={balance} />
     </ScrollView>
   )
 }

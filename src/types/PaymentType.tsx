@@ -19,6 +19,8 @@ export type PaymentBase = {
   verified?: boolean
   verifiedAt?: Date
   verifiedBy?: string
+
+  image?: string
 }
 
 type PaymentType = PaymentBase & BaseType

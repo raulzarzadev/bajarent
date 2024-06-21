@@ -22,7 +22,7 @@ import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
-import { ListAssignedItemsE } from './ListAssignedItems'
+import TextInfo from './TextInfo'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -34,8 +34,8 @@ const getOrderFields = (
   //* add extra ops config at the really first of the form
   const extraOps = [
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
-    'note', //*<- kind of external reference
-    'sheetRow' //*<- you can paste a google sheet row to get the data much more easy
+    'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
+    'note' //*<- kind of external reference
   ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
 
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
@@ -50,6 +50,7 @@ const getOrderFields = (
     ?.filter((field) => fields?.[field])
     //* clear extra ops because are already included at the first of the form
     ?.filter((field) => !extraOps.includes(field))
+
   addedFields = extraFieldsAllowed
   return [
     ...extraOps,
@@ -363,14 +364,19 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       />
     ),
     sheetRow: (
-      <InputTextStyled
-        onChangeText={(text) => setSheetRow(text)}
-        placeholder="Fila de excel"
-        value={values.sheetRow}
-        helperText={
-          'Una fila de una hoja de excel (No.nota, nombre, telefono, colonia, dirección, referencias, No.Casa, fecha) '
-        }
-      />
+      <>
+        <TextInfo
+          type="warning"
+          text="Fila de excel. Las celdas deben estar en el siguiente orden | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | No.Casa | Fecha programada |"
+        ></TextInfo>
+        <InputTextStyled
+          onChangeText={(text) => setSheetRow(text)}
+          placeholder="Fila de excel"
+          value={values.sheetRow}
+          helperText={'Fila de excel'}
+          style={{ borderColor: theme.warning, borderWidth: 2 }}
+        />
+      </>
     ),
     note: (
       <InputValueFormik
@@ -447,10 +453,13 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
       />
     ),
     hasDelivered: (
-      <FormikCheckbox
-        name="hasDelivered"
-        label="Entregada en la fecha programada"
-      />
+      <>
+        <TextInfo text="Entregada. Útil para ingresar antiguas ordenes al sistema. No recomendable si es un cliente nuevo"></TextInfo>
+        <FormikCheckbox
+          name="hasDelivered"
+          label="Entregada en la fecha programada"
+        />
+      </>
     ),
     repairDescription: (
       <InputValueFormik

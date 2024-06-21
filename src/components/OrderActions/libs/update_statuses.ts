@@ -1,6 +1,7 @@
 import { isAfter, isBefore } from 'date-fns'
 import OrderType from '../../../types/OrderType'
 import { orderExpireAt } from '../../../libs/orders'
+import asDate from '../../../libs/utils-date'
 
 export const handleSetStatuses = ({
   order
@@ -20,7 +21,7 @@ export const handleSetStatuses = ({
   const isAuthorized = order?.status === 'AUTHORIZED'
   order = {
     ...order,
-    expireAt
+    expireAt: asDate(expireAt)
   }
   return {
     order,

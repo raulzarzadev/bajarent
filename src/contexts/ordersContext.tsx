@@ -59,7 +59,7 @@ export const OrdersContextProvider = ({
     !!employee?.permissions?.isOwner
 
   const [reports, setReports] = useState<CommentType[]>([])
-
+  const [important, setImportant] = useState<CommentType[]>([])
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
 
@@ -89,10 +89,14 @@ export const OrdersContextProvider = ({
   }, [employee])
 
   useEffect(() => {
-    if (store)
+    if (store) {
       ServiceComments.listenReportsUnsolved(storeId, (reports) => {
         setReports(reports)
       })
+      ServiceComments.listenImportantUnsolved(storeId, (reports) => {
+        setImportant(reports)
+      })
+    }
   }, [store])
 
   const viewMyOrders = employee?.permissions?.order?.canViewMy
@@ -104,11 +108,16 @@ export const OrdersContextProvider = ({
     if (typeOfOrders === 'all') {
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
-        { getBySections: false, sections: [], reports, getExpireTomorrow }
+        {
+          getBySections: false,
+          sections: [],
+          reports: [...reports, ...important],
+          getExpireTomorrow
+        }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
-        reports: reports
+        reports: [...reports, ...important]
       })
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {
@@ -116,7 +125,7 @@ export const OrdersContextProvider = ({
       const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
         getBySections: true,
         sections: employee.sectionsAssigned,
-        reports,
+        reports: [...reports, ...important],
         getExpireTomorrow
       })
       const formatted = formatOrders({ orders, reports: reports })

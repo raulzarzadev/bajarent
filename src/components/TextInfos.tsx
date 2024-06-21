@@ -10,12 +10,16 @@ const TextInfos = () => {
         type="error"
       />
       <TextInfo
-        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quisquam."
+        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quisquam. adipisicing elit. Quasi"
         type="info"
       />
       <TextInfo
         text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quisquam."
         type="success"
+      />
+      <TextInfo
+        text="Lorem ipsum dolor sit amet consectetur View"
+        type="warning"
       />
     </View>
   )

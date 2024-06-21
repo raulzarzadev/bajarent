@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
@@ -19,6 +19,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import PaymentType from '../types/PaymentType'
 import SpanMetadata from './SpanMetadata'
 import PaymentVerify from './PaymentVerify'
+import ImagePreview from './ImagePreview'
 
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
@@ -72,9 +73,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
         </Text>
       )}
       {!!payment?.reference && (
-        <Text
-          style={[gStyles.helper, { textAlign: 'center', marginVertical: 8 }]}
-        >
+        <Text style={[{ textAlign: 'center', marginVertical: 8 }]}>
           Referencia: {payment?.reference}
         </Text>
       )}
@@ -84,6 +83,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           <DateCell date={payment?.createdAt} />
         </Text>
       )}
+
       {!!payment?.createdBy && (
         <View style={{ justifyContent: 'center' }}>
           <Text
@@ -93,6 +93,15 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
           </Text>
         </View>
       )}
+      {/* {!!payment?.image && (
+        <Image
+          source={{ uri: payment?.image }}
+          style={{ flex: 1, minHeight: 150, marginVertical: 2 }}
+        />
+      )} */}
+      <View style={{ justifyContent: 'center', margin: 'auto' }}>
+        <ImagePreview image={payment?.image} title="Comprobante" />
+      </View>
 
       <PaymentVerify payment={payment} showData onVerified={handleGetPayment} />
 

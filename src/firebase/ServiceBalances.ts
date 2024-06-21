@@ -1,6 +1,7 @@
 import { where } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import { BalanceType } from '../types/BalanceType'
+
 class ServiceBalancesClass extends FirebaseGenericService<BalanceType> {
   constructor() {
     super('balances')

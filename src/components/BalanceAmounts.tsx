@@ -5,12 +5,13 @@ import { payments_amount } from '../libs/payments'
 import { gSpace, gStyles } from '../styles'
 import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
-
-const BalanceAmounts = ({ payments }: { payments: PaymentType[] }) => {
-  const cashPayments = payments.filter((p) => p.method === 'cash')
-  const cardPayments = payments.filter((p) => p.method === 'card')
-  const transferPayments = payments.filter((p) => p.method === 'transfer')
-  const canceledPayments = payments.filter((p) => p.canceled)
+import ErrorBoundary from './ErrorBoundary'
+export type BalanceAmountsProps = { payments: PaymentType[] }
+const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
+  const cashPayments = payments?.filter((p) => p.method === 'cash')
+  const cardPayments = payments?.filter((p) => p.method === 'card')
+  const transferPayments = payments?.filter((p) => p.method === 'transfer')
+  const canceledPayments = payments?.filter((p) => p.canceled)
   const { total, canceled, card, cash, transfers } = payments_amount(payments)
   return (
     <View>
@@ -81,17 +82,7 @@ const LinkPayments = ({
 }) => {
   const { navigate } = useNavigation()
   return (
-    <View
-      style={[
-        { flexDirection: 'row' },
-        isTotal && {
-          borderWidth: 1,
-          borderColor: 'black',
-          borderRadius: 5,
-          padding: 5
-        }
-      ]}
-    >
+    <View style={[{ flexDirection: 'row' }]}>
       <Pressable
         onPress={() => {
           //@ts-ignore
@@ -104,9 +95,27 @@ const LinkPayments = ({
           })
         }}
       >
-        <Text style={[styles.label, { textDecorationLine: 'underline' }]}>
-          {title}:{' '}
-        </Text>
+        <View
+          style={[
+            { marginRight: 4, flexDirection: 'row', alignItems: 'flex-end' }
+          ]}
+        >
+          <Text
+            style={{
+              width: 120,
+              textDecorationLine: 'underline',
+              textAlign: 'right'
+            }}
+          >
+            {title}
+          </Text>
+          <Text
+            style={[
+              gStyles.helper,
+              { width: 20, textAlign: 'center', textAlignVertical: 'bottom' }
+            ]}
+          >{`(${paymentsIds?.length})`}</Text>
+        </View>
       </Pressable>
       <CurrencyAmount style={styles.amount} amount={amount} />
     </View>
@@ -114,6 +123,12 @@ const LinkPayments = ({
 }
 
 export default BalanceAmounts
+
+export const BalanceAmountsE = (props: BalanceAmountsProps) => (
+  <ErrorBoundary componentName="BalanceAmounts">
+    <BalanceAmounts {...props} />
+  </ErrorBoundary>
+)
 
 const styles = StyleSheet.create({
   totals: {
@@ -127,11 +142,11 @@ const styles = StyleSheet.create({
     marginVertical: 2
   },
   label: {
-    width: 100,
+    width: 140,
     textAlign: 'right'
   },
   amount: {
-    textAlign: 'right',
-    width: 70
+    textAlign: 'left',
+    width: 140
   }
 })

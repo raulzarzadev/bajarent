@@ -175,6 +175,7 @@ const labels = {
   sold: 'vendido',
   stock: 'en bodega',
   pickedUp: 'recogido',
+  important: 'importante',
   ' ': '',
   '': ''
 } as const

@@ -278,7 +278,7 @@ function ModalFilterList<T>({
         />
 
         {filters
-          ?.filter((f) => !f.isDate) //* <-- avoid show date filters
+          ?.filter((f) => !f?.isDate) //* <-- avoid show date filters
           ?.map(({ field, label, boolean }, i) => {
             return (
               <View key={i}>
@@ -332,6 +332,14 @@ function ModalFilterList<T>({
 }
 
 export default function <T>(props: ModalFilterOrdersProps<T>) {
+  return (
+    <ErrorBoundary componentName="ModalFilterList">
+      <ModalFilterList {...props} />
+    </ErrorBoundary>
+  )
+}
+
+export function ModalFilterListE<T>(props: ModalFilterOrdersProps<T>) {
   return (
     <ErrorBoundary componentName="ModalFilterList">
       <ModalFilterList {...props} />

@@ -180,7 +180,7 @@ export const currentRentPeriod = (
   const shortLabel = props?.shortLabel || false
   if (order?.type === 'RENT') {
     const hasExtensions = Object.values(order?.extensions || {}).sort(
-      (a, b) => asDate(a?.startAt)?.getTime() - asDate(b?.expireAt)?.getTime()
+      (a, b) => asDate(b?.startAt)?.getTime() - asDate(a?.expireAt)?.getTime()
     )
     if (hasExtensions?.length) {
       //* <--------- already has extensions
@@ -194,4 +194,14 @@ export const currentRentPeriod = (
     }
   }
   return ''
+}
+
+export const isRenewedToday = (order: Partial<OrderType>): boolean => {
+  const lastExtension = Object.values(order?.extensions || {})
+    .filter((e) => e.reason === 'renew')
+    .sort(
+      (a, b) =>
+        asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
+    )[0]
+  return isToday(asDate(lastExtension?.createdAt))
 }

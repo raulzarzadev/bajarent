@@ -321,9 +321,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   ) {
     // const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
     // const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
+    // To work properly this should find in all day and tomorrow all day new Date(new Date().setHours(23, 59, 59, 999))
     const TODAY = new Date(new Date().setHours(23, 59, 59, 999))
     const TOMORROW = addDays(TODAY, 1)
-    const DAY_AFTER_TOMORROW = addDays(new Date(), 2)
+    const DAY_AFTER_TOMORROW = addDays(TODAY, 2)
 
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),
@@ -375,7 +376,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const ordersWithReportsIds = Array.from(
       new Set(
         reports
-          .filter(({ type }) => type === 'report')
+          .filter(({ type }) => type === 'report' || type === 'important')
           .map(({ orderId }) => orderId)
       )
     )
