@@ -118,7 +118,6 @@ const groupOrdersBySection = ({
       const reportedSolvedToday = reports.filter(
         (r) => r.solved === true && isToday(asDate(r.solvedAt))
       )
-      console.log({ reportedSolvedToday })
       const removeDuplicates = (arr: Partial<OrderType>[]) => {
         const map = new Map()
         arr.forEach((item) => {
