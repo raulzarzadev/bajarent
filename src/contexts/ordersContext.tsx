@@ -72,9 +72,16 @@ export const OrdersContextProvider = ({
       // ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
       //   setConsolidatedOrders(res[0])
       // })
-      handleGetConsolidates()
+      // handleGetConsolidates()
+      handleListenConsolidate()
     }
   }, [viewAllOrders])
+
+  const handleListenConsolidate = () => {
+    ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
+      setConsolidatedOrders(res[0])
+    })
+  }
   const handleGetConsolidates = async () => {
     return await ServiceConsolidatedOrders.getByStore(storeId).then((res) => {
       const orders = JSON.parse(res[0]?.stringJSON || '{}')

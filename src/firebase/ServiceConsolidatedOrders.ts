@@ -11,20 +11,6 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     super('consolidatedOrders')
   }
 
-  async consolidate(storeId: string) {
-    console.log({ storeId })
-    const storeOrders = await ServiceOrders.getByStore(storeId)
-    console.log({ storeOrders })
-    const mapOrders = formatConsolidateOrders(storeOrders)
-    console.log({ mapOrders })
-    return this.create({
-      storeId,
-      orders: {},
-      stringJSON: JSON.stringify(mapOrders),
-      ordersCount: storeOrders.length
-    })
-  }
-
   async getByStore(storeId: string) {
     return this.findMany([
       where('storeId', '==', storeId),
@@ -37,6 +23,20 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
       [where('storeId', '==', storeId), orderBy('createdAt', 'desc'), limit(1)],
       cb
     )
+  }
+
+  async consolidate(storeId: string) {
+    console.log({ storeId })
+    const storeOrders = await ServiceOrders.getByStore(storeId)
+    console.log({ storeOrders })
+    const mapOrders = formatConsolidateOrders(storeOrders)
+    console.log({ mapOrders })
+    return this.create({
+      storeId,
+      orders: {},
+      stringJSON: JSON.stringify(mapOrders),
+      ordersCount: storeOrders.length
+    })
   }
 
   // Agrega tus métodos aquí

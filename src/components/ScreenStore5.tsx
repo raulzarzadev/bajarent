@@ -19,6 +19,7 @@ import { useStore } from '../contexts/storeContext'
 import { BalanceType2, Balance_V2 } from '../types/BalanceType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
+import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -156,6 +157,7 @@ const StoreNumbersRow = () => {
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   const { storeId } = useStore()
+  const { consolidatedOrders } = useOrdersCtx()
 
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
@@ -165,6 +167,7 @@ const TabCashbox = () => {
     })
   }, [])
   const handleUpdateStoreStatus = async () => {
+    await ServiceConsolidatedOrders.consolidate(storeId)
     return await ServiceBalances.createV2(storeId)
       .then((res) => {
         console.log({ res })
