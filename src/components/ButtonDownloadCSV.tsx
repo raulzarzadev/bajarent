@@ -8,10 +8,11 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { where } from 'firebase/firestore'
 import { json2csv } from 'json-2-csv'
 import asDate, { dateFormat } from '../libs/utils-date'
-import OrderType from '../types/OrderType'
+import OrderType, { order_type } from '../types/OrderType'
 import { getUserName } from './SpanUser'
 import { pick } from 'cypress/types/lodash'
 import { currentRentPeriod } from '../libs/orders'
+import dictionary from '../dictionary'
 
 const ButtonDownloadCSV = () => {
   const { storeId, staff } = useStore()
@@ -23,54 +24,26 @@ const ButtonDownloadCSV = () => {
       where('type', '==', 'RENT'),
       where('status', '==', 'DELIVERED')
     ]).then((rents) => {
-      console.log({ rents })
-      const formatRentsToCSV = (rents) => {
-        const formatDate = (date) =>
-          date ? dateFormat(asDate(date), 'yyyy-MM-dd HH:mm:ss') : ''
-        const formatUser = (userId) => getUserName(staff, userId) || ''
-        return rents.map((rent: Partial<OrderType>) => {
-          return {
-            folio: rent?.folio || '',
-            note: rent?.note || '',
-            fullName: rent?.fullName || '',
-            // status: rent?.status || '',
-            //type: rent?.type || '',
-            //email: rent?.email || '',
-            phone: rent?.phone || '',
-            street: rent?.street || '',
-            neighborhood: rent?.neighborhood || '',
-            location: rent?.location || '',
-            time: currentRentPeriod(rent) || '',
-            // items:
-            //   rent?.items?.map((item) => item.categoryName).join(', ') ||
-            //   '' ||
-            //   '',
-            deliveredAt: formatDate(rent.deliveredAt) || '',
-            expireAt: formatDate(rent.expireAt) || '',
-            // pickedUpAt: formatDate(rent.pickedUpAt) || '',
-            // pickedUpBy: formatUser(rent.pickedUpBy) || '',
-            deliveredBy: formatUser(rent.deliveredBy) || '',
-            createdBy: formatUser(rent.createdBy) || '',
-            createdAt: formatDate(rent.createdAt) || ''
-          }
-        })
-      }
-      const res = json2csv(formatRentsToCSV(rents))
-
-      // Convertir la cadena CSV en un Blob
-      const csvBlob = new Blob([res], { type: 'text/csv;charset=utf-8;' })
-
-      // Crear un URL para el Blob
-      const csvUrl = URL.createObjectURL(csvBlob)
-
-      // Crear un elemento <a> temporal para simular un clic de descarga
-      const downloadLink = document.createElement('a')
-      downloadLink.href = csvUrl
-      downloadLink.setAttribute('download', 'rents.csv') // Nombre del archivo a descargar
-      document.body.appendChild(downloadLink) // Necesario para que funcione en Firefox
-      downloadLink.click()
-      document.body.removeChild(downloadLink) // Limpiar el DOM
-      // aqui deberia mostrar un prompt en la pantalla para descargar el archivo
+      const res = json2csv(formatRentsToCSV(rents, staff))
+      downloadLink({ res, fileName: 'rentas-activas' })
+    })
+  }
+  const handleDownloadAllRents = () => {
+    ServiceOrders.findMany([
+      where('storeId', '==', storeId),
+      where('type', '==', 'RENT')
+    ]).then((rents) => {
+      const res = json2csv(formatRentsToCSV(rents, staff))
+      downloadLink({ res, fileName: 'todas-las-rentas' })
+    })
+  }
+  const handleDownloadRepairs = () => {
+    ServiceOrders.findMany([
+      where('storeId', '==', storeId),
+      where('type', '==', order_type.REPAIR)
+    ]).then((rents) => {
+      const res = json2csv(formatRentsToCSV(rents, staff))
+      downloadLink({ res, fileName: 'reparaciones' })
     })
   }
   return (
@@ -83,16 +56,86 @@ const ButtonDownloadCSV = () => {
         }}
       />
       <StyledModal {...modal}>
-        <Button
-          label="Rentas ⏰"
-          onPress={() => {
-            console.log('rentas')
-            handleDownloadRents()
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            flexWrap: 'wrap'
           }}
-        ></Button>
+        >
+          <Button
+            buttonStyles={{ margin: 10 }}
+            label="Rentas activas ⏰"
+            onPress={() => {
+              handleDownloadRents()
+            }}
+          ></Button>
+          <Button
+            buttonStyles={{ margin: 10 }}
+            label="Todas las rentas ⏰"
+            onPress={() => {
+              handleDownloadAllRents()
+            }}
+          ></Button>
+          <Button
+            buttonStyles={{ margin: 10 }}
+            label="Reparaciónes ⏰"
+            onPress={() => {
+              handleDownloadRepairs()
+            }}
+          ></Button>
+        </View>
       </StyledModal>
     </View>
   )
+}
+const downloadLink = ({ res, fileName = 'download' }) => {
+  // Convertir la cadena CSV en un Blob
+  const csvBlob = new Blob([res], { type: 'text/csv;charset=utf-8;' })
+
+  // Crear un URL para el Blob
+  const csvUrl = URL.createObjectURL(csvBlob)
+
+  // Crear un elemento <a> temporal para simular un clic de descarga
+  const downloadLink = document.createElement('a')
+  downloadLink.href = csvUrl
+  downloadLink.setAttribute('download', `${fileName}.csv`) // Nombre del archivo a descargar
+  document.body.appendChild(downloadLink) // Necesario para que funcione en Firefox
+  downloadLink.click()
+  document.body.removeChild(downloadLink) // Limpiar el DOM
+  // aqui deberia mostrar un prompt en la pantalla para descargar el archivo
+}
+
+const formatRentsToCSV = (rents, staff) => {
+  const formatDate = (date) =>
+    date ? dateFormat(asDate(date), 'yyyy-MM-dd HH:mm:ss') : ''
+  const formatUser = (userId) => getUserName(staff, userId) || ''
+  return rents.map((rent: Partial<OrderType>) => {
+    return {
+      type: dictionary(rent?.type) || '',
+      status: dictionary(rent?.status) || '',
+      folio: rent?.folio || '',
+      note: rent?.note || '',
+      fullName: rent?.fullName || '',
+      //email: rent?.email || '',
+      phone: rent?.phone || '',
+      street: rent?.street || '',
+      neighborhood: rent?.neighborhood || '',
+      location: rent?.location || '',
+      time: currentRentPeriod(rent) || '',
+      // items:
+      //   rent?.items?.map((item) => item.categoryName).join(', ') ||
+      //   '' ||
+      //   '',
+      deliveredAt: formatDate(rent.deliveredAt) || '',
+      expireAt: formatDate(rent.expireAt) || '',
+      // pickedUpAt: formatDate(rent.pickedUpAt) || '',
+      // pickedUpBy: formatUser(rent.pickedUpBy) || '',
+      deliveredBy: formatUser(rent.deliveredBy) || '',
+      createdBy: formatUser(rent.createdBy) || '',
+      createdAt: formatDate(rent.createdAt) || ''
+    }
+  })
 }
 
 export default ButtonDownloadCSV
