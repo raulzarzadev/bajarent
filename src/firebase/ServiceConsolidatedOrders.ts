@@ -74,7 +74,9 @@ const formatConsolidateOrder = (
     assignToSection: order?.assignToSection || '',
     expireAt: order?.expireAt ? asDate(order?.expireAt).toISOString() : null,
     // createdAt: order?.createdAt ? asDate(order?.createdAt).toISOString() : null,
+    //@ts-ignore
     pickedUpAt: order?.pickedUpAt ? asDate(order?.pickedUpAt).getTime() : null,
+    //@ts-ignore
     deliveredAt: order?.deliveredAt
       ? asDate(order?.deliveredAt).getTime()
       : null
