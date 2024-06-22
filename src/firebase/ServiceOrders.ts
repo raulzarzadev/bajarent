@@ -3,7 +3,8 @@ import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
   TypeOrder,
-  order_status
+  order_status,
+  order_type
 } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
@@ -149,7 +150,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 
   async getByStore(storeId: string) {
-    return await this.findMany([where('storeId', '==', storeId)])
+    return await this.findMany([
+      where('storeId', '==', storeId),
+      where('type', '==', order_type.RENT)
+    ])
   }
 
   listenUnsolved(storeId: string, cb: CallableFunction) {

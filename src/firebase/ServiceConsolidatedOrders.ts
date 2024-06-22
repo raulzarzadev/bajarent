@@ -58,33 +58,31 @@ const formatConsolidateOrder = (
   deliveredAt: string | null
 } => {
   return {
+    id: order?.id || '',
     fullName: order?.fullName || '',
     phone: order?.phone || '',
     email: order?.email || '',
-    id: order?.id || '',
     status: order?.status,
     folio: order?.folio || 0,
     note: order?.note || '',
     address: order?.address || '',
     type: order?.type,
-    references: order?.references || '',
+    // references: order?.references || '',
     location: order?.location || '',
     items: order?.items || [],
     neighborhood: order?.neighborhood || '',
     assignToSection: order?.assignToSection || '',
     expireAt: order?.expireAt ? asDate(order?.expireAt).toISOString() : null,
-    createdAt: order?.createdAt ? asDate(order?.createdAt).toISOString() : null,
-    pickedUpAt: order?.pickedUpAt
-      ? asDate(order?.pickedUpAt).toISOString()
-      : null,
+    // createdAt: order?.createdAt ? asDate(order?.createdAt).toISOString() : null,
+    pickedUpAt: order?.pickedUpAt ? asDate(order?.pickedUpAt).getTime() : null,
     deliveredAt: order?.deliveredAt
-      ? asDate(order?.deliveredAt).toISOString()
-      : null,
-    colorLabel: order?.colorLabel || ''
+      ? asDate(order?.deliveredAt).getTime()
+      : null
+    // colorLabel: order?.colorLabel || ''
   }
 }
 
-const formatConsolidateOrders = (orders: OrderType[]) => {
+const eformatConsolidateOrders = (orders: OrderType[]) => {
   return orders.reduce((acc, order) => {
     acc[order.id] = formatConsolidateOrder(order)
     return acc
