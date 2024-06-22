@@ -20,6 +20,7 @@ import { BalanceType2, Balance_V2 } from '../types/BalanceType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
 import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
+import ButtonDownloadCSV from './ButtonDownloadCSV'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -262,7 +263,13 @@ const TabOrders = () => {
   return (
     <View>
       {<StoreNumbersRow />}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap'
+        }}
+      >
         <Button
           label="Consolidadas"
           onPress={() => {
@@ -275,15 +282,18 @@ const TabOrders = () => {
           variant="ghost"
         />
         {isAdmin || isOwner ? (
-          <Button
-            label="Configurar"
-            onPress={() => {
-              //@ts-ignore
-              navigate('ScreenOrdersConfig')
-            }}
-            icon="settings"
-            variant="ghost"
-          />
+          <>
+            <Button
+              label="Configurar"
+              onPress={() => {
+                //@ts-ignore
+                navigate('ScreenOrdersConfig')
+              }}
+              icon="settings"
+              variant="ghost"
+            />
+            <ButtonDownloadCSV />
+          </>
         ) : null}
       </View>
     </View>
