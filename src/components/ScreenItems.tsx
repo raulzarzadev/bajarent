@@ -127,33 +127,6 @@ const StoreCategories = () => {
       <View>
         {selected && (
           <>
-            {/* {defaultValues?.id && (
-            <View
-              style={[
-                styles.input,
-                { flexDirection: 'row', alignItems: 'center' }
-              ]}
-            >
-              <Text style={[gStyles.h3, { marginRight: 8 }]}>Precios</Text>
-              <ModalFormPrice
-                handleSubmit={async (price) => {
-                  return await createPrice(price, storeId, categoryId)
-                }}
-              />
-            </View>
-          )}
-          <View style={styles.input}>
-            <FlatList
-              horizontal
-              data={categoryPrices}
-              renderItem={({ item }) => (
-                <CardPrice
-                  style={{ marginVertical: 8, marginRight: 8 }}
-                  price={item}
-                />
-              )}
-            ></FlatList>
-          </View> */}
             <View
               style={[
                 // styles.input,

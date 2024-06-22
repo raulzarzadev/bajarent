@@ -134,7 +134,10 @@ const StoreContextProvider = ({ children }) => {
         userStores: stores,
         storeSections: sections,
         payments,
-        items: Object.values(store?.items || {}),
+        items: Object.entries(store?.items || {}).map(([key, item]) => ({
+          ...item,
+          id: key
+        })),
         /**
          * @deprecated
          */

@@ -5,8 +5,7 @@ import ListStoreItems from './ListStoreItems'
 import { useStore } from '../contexts/storeContext'
 
 const StoreItems = () => {
-  const { store } = useStore()
-  const items = Object.values(store?.items || {})
+  const { items } = useStore()
 
   return (
     <View style={{ marginTop: 16 }}>

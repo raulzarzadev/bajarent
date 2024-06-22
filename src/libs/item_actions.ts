@@ -65,15 +65,29 @@ export const onRepairingItem = async ({ storeId, itemId }) => {
 export const onCreateItem = async ({
   storeId,
   item,
-  itemId
+  itemId,
+  userId
 }: {
   storeId: string
   item: Partial<ItemType>
   itemId: string
+  userId: string
 }) => {
+  const newItem: Partial<ItemType> = {
+    id: itemId,
+    brand: item.brand || '',
+    serial: item.serial || '',
+    category: item.category || '',
+    createdAt: new Date(),
+    createdBy: userId || '',
+    status: 'available',
+    number: item.number || '',
+    assignedSection: item.assignedSection || ''
+  }
   return await ServiceStores.update(storeId, {
     //* <------------------ CREATE ITEM
-    [`items.${itemId}`]: { ...item, id: itemId }
+
+    [`items.${itemId}`]: newItem
   })
 }
 

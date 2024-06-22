@@ -434,6 +434,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
+        choseEmptyCategory
       />
     ),
     selectItemsRent: (
@@ -442,6 +443,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
+        choseEmptyCategory
       />
     ),
     selectItemsSale: (
@@ -450,6 +452,7 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
+        choseEmptyCategory
       />
     ),
     hasDelivered: (

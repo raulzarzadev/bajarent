@@ -24,12 +24,14 @@ const FormikSelectCategories = ({
   name,
   label,
   selectPrice,
-  startAt //? TODO: <--- Should be add?
+  startAt, //? TODO: <--- Should be add?
+  choseEmptyCategory //*<--- this will alow you choose category with out specific item
 }: {
   name: string
   label?: string
   selectPrice?: boolean
   startAt?: Date
+  choseEmptyCategory?: boolean
 }) => {
   const { categories } = useStore()
   const { items: employeeItems } = useEmployee()
@@ -61,7 +63,7 @@ const FormikSelectCategories = ({
     const catSelectedPrices =
       categories.find(({ id }) => category?.id === id)?.prices || []
     setCategoryPrices(catSelectedPrices)
-    setPrice(catSelectedPrices[0])
+    // setPrice(catSelectedPrices[0])
   }, [category])
 
   const [itemSelected, setItemSelected] = useState<ItemType['id']>()
@@ -93,9 +95,10 @@ const FormikSelectCategories = ({
         <StyledModal {...modal}>
           <View style={{ marginVertical: 8 }}>
             <FormChooseCategory
-              categories={true ? availableCategories : categories}
+              categories={choseEmptyCategory ? categories : availableCategories}
               setValue={(value) => {
                 const newItem = categories.find(({ id }) => id === value)
+                setItemSelected('')
                 setCategory(newItem)
               }}
               value={category?.id || ''}
@@ -138,11 +141,13 @@ const FormikSelectCategories = ({
                 )
                 const newItem = {
                   id: itemSelected || uidGenerator(),
+                  itemId: itemSelected || '',
                   categoryName: category?.name || '',
                   priceSelectedId: price?.id || null,
                   priceSelected: price || null,
                   number: itemData?.number || 'SN'
                 }
+                console.log({ newItem })
                 helpers.setValue([...items, newItem])
                 modal.toggleOpen()
               }}

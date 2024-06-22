@@ -8,11 +8,10 @@ import { gStyles } from '../styles'
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
   const [item, setItem] = useState(undefined)
-  const { store } = useStore()
-  const items = store?.items
+  const { items } = useStore()
   useEffect(() => {
     if (items) {
-      setItem(items[id])
+      setItem(items.find((item) => item.id === id) || null)
     }
   }, [route?.params?.id, items])
 

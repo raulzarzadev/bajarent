@@ -1,17 +1,45 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { ListE } from './List'
 import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
 import ListRow from './ListRow'
 import { useNavigation } from '@react-navigation/native'
+import ButtonConfirm from './ButtonConfirm'
+import { onDeleteItem } from '../libs/item_actions'
+import { useStore } from '../contexts/storeContext'
+import dictionary from '../dictionary'
 
 const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const { navigate } = useNavigation()
-
+  const { storeId, store } = useStore()
+  const [loading, setLoading] = useState(false)
+  const handleDeleteItems = async (ids: string[]) => {
+    const promises = ids.map(async (id) => {
+      setLoading(true)
+      const res = await onDeleteItem({ itemId: id, storeId })
+      return res
+    })
+    const res = await Promise.all(promises)
+    setLoading(false)
+    return res
+  }
   return (
     <View>
       <ListE
+        ComponentMultiActions={({ ids }) => (
+          <View>
+            <ButtonConfirm
+              openDisabled={loading}
+              openLabel="Eliminar"
+              openColor="error"
+              openVariant="outline"
+              icon="delete"
+              text={`Se eliminaran los ${ids?.length || 0} items seleccionados`}
+              handleConfirm={() => handleDeleteItems(ids)}
+            />
+          </View>
+        )}
         sideButtons={[
           {
             icon: 'location',
@@ -34,18 +62,21 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
         ]}
         data={items.map((item) => ({ ...item, id: item.id }))}
         filters={[
-          { field: 'assignedSectionName', label: 'Sección' },
+          { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },
-          { field: 'brand', label: 'Marca' }
+          { field: 'brand', label: 'Marca' },
+          { field: 'status', label: 'Estado' }
         ]}
         sortFields={[
           { key: 'number', label: 'Número' },
           { key: 'categoryName', label: 'Categoría' },
-          { key: 'assignedSectionName', label: 'Sección' },
+          { key: 'assignedSectionName', label: 'Area' },
           { key: 'brand', label: 'Marca' },
-          { key: 'serial', label: 'Serial' }
+          { key: 'serial', label: 'Serial' },
+          { key: 'status', label: 'Estado' }
         ]}
         onPressRow={(rowId) => {
+          console.log({ rowId })
           // @ts-ignore
           navigate('ScreenItemsDetails', { id: rowId })
         }}
@@ -71,8 +102,16 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         { width: '20%', component: <Text>{item.number}</Text> },
         { width: '20%', component: <Text>{item.categoryName}</Text> },
         { width: '20%', component: <Text>{item.assignedSectionName}</Text> },
-        { width: '20%', component: <Text>{item.brand}</Text> },
-        { width: '20%', component: <Text>{item.serial}</Text> }
+        {
+          width: '20%',
+          component: (
+            <View>
+              <Text>{item.brand}</Text>
+              <Text>{item.serial}</Text>
+            </View>
+          )
+        },
+        { width: '20%', component: <Text>{dictionary(item.status)}</Text> }
       ]}
     />
   )

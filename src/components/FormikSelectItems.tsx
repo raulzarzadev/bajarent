@@ -38,6 +38,7 @@ const FormikSelectItems = ({
   }
   const handleAddItem = (value) => {
     value.id = uidGenerator()
+    console.log({ value })
     const newItems = [..._items, value]
     _setItems(newItems)
     setItems(newItems)

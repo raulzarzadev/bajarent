@@ -41,7 +41,7 @@ const FormItemPickUp = ({
         values={values}
       />
       <InputText
-        placeholder="Serie"
+        placeholder="No. de serie"
         name="serial"
         onChange={handleChange}
         values={values}

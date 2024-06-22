@@ -35,6 +35,7 @@ import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
 import FormItemPickUp from './FormItemPickUp'
 import { useStore } from '../../contexts/storeContext'
 import { onCreateItem, onPickUpItem, onRentItem } from '../../libs/item_actions'
+import { ItemSelected } from '../FormSelectItem'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -66,7 +67,7 @@ const OrderActions = ({
 }: OrderActionsType) => {
   const { permissions } = useEmployee()
   const { user } = useAuth()
-  const { items: storeItems } = useStore()
+  const { items: storeItems, categories: storeCategories } = useStore()
   const userId = user?.id
 
   // #region  ACTIONS FUNCTIONS
@@ -464,46 +465,58 @@ const OrderActions = ({
   }: {
     items: OrderType['items']
   }) => {
-    const itemsNotExists = items?.filter((item) => {
-      return !storeItems?.find((storeItem) => storeItem.id === item.id)
-    })
-
-    itemsNotExists?.map(async (item) => {
+    items.forEach(async (item) => {
+      const itemAlreadyExists = storeItems?.find(
+        (storeItem) => storeItem.id === item.id
+      )
+      if (!!itemAlreadyExists) return
+      const categoryId = storeCategories.find(
+        (c) => c.name === item.categoryName
+      )?.id
       return await onCreateItem({
         storeId,
+        item: {
+          id: item.id,
+          assignedSection: order?.assignToSection || '',
+          serial: item.serial || '',
+          brand: item.brand || '',
+          number: item.number || '',
+          category: categoryId || '',
+          status: 'available'
+        },
         itemId: item.id,
-        item
+        userId: user?.id || ''
       })
     })
-
-    return await Promise.all(itemsNotExists)
-
-    //* just create items that not exists
   }
 
-  const onRentItems = async ({ itemIds }: { itemIds: string[] }) => {
+  const onRentItems = async ({ items }: { items: ItemSelected[] }) => {
     deliveryModal.setOpen(false)
-    itemIds.map(async (itemId) => {
+    const itemsIds = items.map((i) => i.id)
+    handleCreateItemsIfNecessary({ items })
+    const rentingItems = itemsIds.map(async (itemId) => {
       return await onRentItem({ itemId, storeId })
     })
-    return await Promise.all(itemIds)
+
+    return await Promise.all(rentingItems)
   }
 
   const handleDeliveryOrder = async (values) => {
-    await onRentItems({ itemIds: values.items.map((i) => i.id) })
+    const itemSerial = values.itemSerial || ''
+    const itemBrand = values.itemBrand || ''
+    const itemsWithOrderSerialNumber = values.items.map((item) => {
+      return { ...item, serial: itemSerial, brand: itemBrand || '' }
+    })
+    await onRentItems({ items: itemsWithOrderSerialNumber })
 
     await actions_fns[acts.DELIVER]({
       ...values
     })
   }
 
-  console.log({ order })
-
   return (
     <View>
-      <View style={{ margin: 'auto', marginVertical: gSpace(4) }}>
-        {/* <OrderStatus order={order} chipSize={'sm'} /> */}
-      </View>
+      <View style={{ margin: 'auto', marginVertical: gSpace(4) }}> </View>
       <StyledModal {...modalPickUpRepair}>
         <View>
           <Formik
@@ -757,7 +770,7 @@ const OrderActions = ({
       // #region COMMON ACTIONS 
       */}
 
-      {order?.statuses && (
+      {!!order?.statuses && (
         <Text style={{ textAlign: 'center' }}>Statuses OK</Text>
       )}
 
