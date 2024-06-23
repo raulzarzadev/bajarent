@@ -82,6 +82,7 @@ const ButtonEditClient = ({ clientId }) => {
       justIcon
       variant="ghost"
       onPress={() => {
+        //@ts-ignore
         navigate('ScreenClientEdit', { id: clientId })
       }}
     ></Button>

@@ -14,5 +14,6 @@ export type ClientBase = {
   isBlocked?: boolean
   createdBy?: string
   createdAt?: Date | Timestamp
+  status?: string
 }
 export type ClientType = ClientBase & BaseType

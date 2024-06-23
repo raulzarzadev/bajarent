@@ -44,14 +44,11 @@ const ListOrders = ({
       defaultSortBy="folio"
       defaultOrder="des"
       onPressRow={(id) => {
+        //@ts-ignore
         navigate('StackOrders', {
           screen: 'OrderDetails',
           params: { orderId: id }
         })
-        //@ts-ignore
-        /// navigate('OrderDetails', { orderId: id })
-        //@ts-ignore
-        //  navigate('OrderDetails', { orderId: id })
       }}
       sortFields={[
         //{ key: 'priority', label: 'Prioridad' },
@@ -65,14 +62,7 @@ const ListOrders = ({
         { key: 'expireAt', label: 'Vencimiento' },
         { key: 'colorLabel', label: 'Color' }
       ]}
-      ComponentRow={({ item }) => (
-        <RowOrderE
-          item={item}
-          // showTime={showTime}
-          // showTotal={showTotal}
-          // showTodayAmount={showTodayAmount}
-        />
-      )}
+      ComponentRow={({ item }) => <RowOrderE item={item} />}
       filters={[
         { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },
