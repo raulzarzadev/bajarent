@@ -360,6 +360,54 @@ export class FirebaseCRUD {
     this.listenItems([where('userId', '==', userId), ...filters], cb)
   }
 
+  // -------------------------------------------------------------> SUB COLLECTIONS
+  async createItemInCollection(
+    collectionRef: any,
+    item: object
+  ): Promise<{
+    type: string
+    ok: boolean
+    res: {
+      id: string
+    }
+  }> {
+    const newItem = {
+      ...item,
+      ...this.createItemMetadata()
+    }
+    return await addDoc(collectionRef, newItem)
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_CREATED`, {
+          id: res.id
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
+  async getItemsInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    filters = []
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    filters?: QueryConstraint[]
+  }) {
+    const ref = collection(this.db, parentCollection, parentId, subCollection)
+    const queryRef = query(ref, ...filters)
+    const querySnapshot = await getDocs(queryRef)
+    const res: any[] = []
+    querySnapshot.forEach((doc) => {
+      res.push(this.normalizeItem(doc))
+    })
+    return res
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {

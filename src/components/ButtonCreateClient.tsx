@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { ServiceStoresClients } from '../firebase/ServiceStoreClients'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { ClientType } from '../types/ClientType'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
@@ -29,11 +29,11 @@ const ButtonCreateClient = ({
   const [selectedClient, setSelectedClient] =
     React.useState<Partial<ClientType['id']>>(clientId)
 
-  React.useEffect(() => {
-    ServiceStoresClients.searchSimilarClients(storeId, client).then((res) => {
-      setClients(res)
-    })
-  }, [])
+  // React.useEffect(() => {
+  //   ServiceStoreClients.getSimilar(storeId, client).then((res) => {
+  //     setClients(res)
+  //   })
+  // }, [])
 
   const handleUpdateOrderClient = (clientId) => {
     ServiceOrders.update(orderId, {
@@ -42,13 +42,13 @@ const ButtonCreateClient = ({
   }
 
   const handleCreateClient = () => {
-    ServiceStoresClients.createStoreClient(storeId, {
+    ServiceStoreClients.add(storeId, {
       ...client
       //email: order.email
     })
-      .then((res) => {
-        setSelectedClient(res)
-        handleUpdateOrderClient(res) //* <--- update order with client id
+      .then(({ res }) => {
+        setSelectedClient(res.id)
+        handleUpdateOrderClient(res.id) //* <--- update order with client id
         //TODO? update order with client information
       })
       .catch((err) => {
@@ -68,6 +68,12 @@ const ButtonCreateClient = ({
           icon="profileAdd"
           justIcon
           openVariant="ghost"
+          onOpen={() => {
+            ServiceStoreClients.getSimilar(storeId, client).then((res) => {
+              console.log({ res })
+              setClients(res)
+            })
+          }}
           handleConfirm={async () => {
             selectedClient
               ? handleUpdateOrderClient(selectedClient)
@@ -76,28 +82,28 @@ const ButtonCreateClient = ({
           confirmColor="success"
           confirmLabel={selectedClient ? 'Asociar cliente' : 'Crear cliente'}
         >
-          {similarClientsExist && (
-            <View>
-              <Pressable
-                onPress={() => {
-                  setSelectedClient('')
-                }}
-                style={{
-                  backgroundColor: !selectedClient
-                    ? colors.lightBlue
-                    : colors.transparent,
-                  borderRadius: 8
-                }}
-              >
-                <CardClient client={client} />
-              </Pressable>
-              <TextInfo
-                defaultVisible
-                type="warning"
-                text="Hay clientes muy parecidos. Puedes crear un nuevo cliente o escojer alguno de la lista para asociarlo a esta orden."
-              ></TextInfo>
+          <View style={{ marginVertical: 8 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedClient('')
+              }}
+              style={{
+                backgroundColor: !selectedClient
+                  ? colors.lightBlue
+                  : colors.transparent,
+                borderRadius: 8
+              }}
+            >
+              <CardClient client={client} />
+            </Pressable>
 
-              {similarClientsExist && (
+            {similarClientsExist && (
+              <View>
+                <TextInfo
+                  defaultVisible
+                  type="warning"
+                  text="Hay clientes muy parecidos. Puedes crear un nuevo cliente o escojer alguno de la lista para asociarlo a esta orden."
+                ></TextInfo>
                 <ListOfSimilarClients
                   selectedClient={selectedClient}
                   clients={clients}
@@ -110,11 +116,12 @@ const ButtonCreateClient = ({
                     //  handleUpdateOrderClient(id)
                   }}
                 />
-              )}
-            </View>
-          )}
+              </View>
+            )}
+          </View>
         </ButtonConfirm>
       )}
+
       {clientAlreadyExist && (
         <Button
           variant="ghost"

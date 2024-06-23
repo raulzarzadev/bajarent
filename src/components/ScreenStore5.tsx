@@ -21,8 +21,8 @@ import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
 import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
-import { ServiceStoresClients } from '../firebase/ServiceStoreClients'
 import ListClients from './ListClients'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -166,7 +166,7 @@ const TabClients = () => {
   const { storeId } = useStore()
   const [clients, setClients] = useState([])
   useEffect(() => {
-    ServiceStoresClients.getStoreClients(storeId).then((res) => {
+    ServiceStoreClients.getActive(storeId).then((res) => {
       setClients(res)
     })
   }, [])
