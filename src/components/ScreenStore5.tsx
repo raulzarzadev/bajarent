@@ -48,9 +48,9 @@ const ScreenStore = (props) => {
               show: true
             },
             {
-              title: 'Clientes',
-              content: <TabClients />,
-              show: canViewOrders
+              title: 'Caja',
+              content: <TabCashbox />,
+              show: canViewCashbox
             },
             {
               title: 'Ordenes',
@@ -58,9 +58,9 @@ const ScreenStore = (props) => {
               show: canViewOrders
             },
             {
-              title: 'Caja',
-              content: <TabCashbox />,
-              show: canViewCashbox
+              title: 'Clientes',
+              content: <TabClients />,
+              show: canViewOrders
             },
             {
               title: 'Movimientos',
