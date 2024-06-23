@@ -424,6 +424,38 @@ export class FirebaseCRUD {
     return this.normalizeItem(docSnap)
   }
 
+  async updateItemInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    itemId,
+    itemData
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    itemId: string
+    itemData: object
+  }) {
+    const newItem = {
+      ...itemData,
+      ...this.updateItemMetadata()
+    }
+    return await updateDoc(
+      doc(this.db, parentCollection, parentId, subCollection, itemId),
+      newItem
+    )
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_UPDATED`, {
+          id: itemId
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {

@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import ClientDetails from './ClientDetails'
 import { ClientType } from '../types/ClientType'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { useStore } from '../contexts/storeContext'
-import FormClient, { FormClientE } from './FormClient'
+import { FormClientE } from './FormClient'
 import Loading from './Loading'
+import { gStyles } from '../styles'
 
 const ScreenClientEdit = (props) => {
   const [client, setClient] = useState<Partial<ClientType>>()
@@ -22,9 +22,24 @@ const ScreenClientEdit = (props) => {
   }, [storeId])
   if (!client) return <Loading />
   return (
-    <View>
-      <FormClientE client={client} />
-    </View>
+    <ScrollView>
+      <View style={gStyles.container}>
+        <FormClientE
+          client={client}
+          onSubmit={async (values) => {
+            return await ServiceStoreClients.updateItem({
+              itemData: values,
+              storeId: storeId,
+              itemId: client.id
+            })
+              .then(() => {
+                props.navigation.goBack()
+              })
+              .catch(console.error)
+          }}
+        />
+      </View>
+    </ScrollView>
   )
 }
 

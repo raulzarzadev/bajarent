@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { ClientType } from '../types/ClientType'
-import { CardClient } from './ButtonCreateClient'
+import { CardClientE } from './CardClient'
 const ClientDetails = ({ client }: { client: Partial<ClientType> }) => {
   return (
     <View>
-      <CardClient client={client} />
+      <CardClientE client={client} />
     </View>
   )
 }

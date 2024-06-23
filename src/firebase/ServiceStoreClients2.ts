@@ -56,6 +56,23 @@ export class ServiceStoreClientsClass extends FirebaseGenericService<ClientType>
     })
   }
 
+  async updateItem({
+    storeId,
+    itemId,
+    itemData
+  }: {
+    storeId: string
+    itemId: string
+    itemData: Partial<ClientType>
+  }) {
+    return this.updateInSubCollection({
+      parentId: storeId,
+      subCollection: SUB_COLLECTION,
+      itemId,
+      itemData
+    })
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

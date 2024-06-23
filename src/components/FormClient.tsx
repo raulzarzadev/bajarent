@@ -2,12 +2,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
-import FormikInputPhone, { FormikInputPhoneE } from './FormikInputPhone'
+import { FormikInputPhoneE } from './FormikInputPhone'
 import { ClientType } from '../types/ClientType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
-
-const FormClient = ({ client }: { client: Partial<ClientType> }) => {
+export type FormCLientProps = {
+  client: Partial<ClientType>
+  onSubmit: (values: Partial<ClientType>) => void | Promise<void>
+}
+const FormClient = ({ client, onSubmit }: FormCLientProps) => {
   const clientDefault: Partial<ClientType> = {
     name: '',
     phone: '',
@@ -15,11 +18,14 @@ const FormClient = ({ client }: { client: Partial<ClientType> }) => {
     address: '',
     ...client
   }
+  const [loading, setLoading] = React.useState(false)
   return (
     <View>
       <Formik
-        onSubmit={(values) => {
-          console.log(values)
+        onSubmit={async (values) => {
+          setLoading(true)
+          await onSubmit(values)
+          setLoading(false)
         }}
         initialValues={clientDefault}
       >
@@ -30,12 +36,18 @@ const FormClient = ({ client }: { client: Partial<ClientType> }) => {
               <FormikInputPhoneE name="phone" label="Teléfono" />
               <FormikInputValue name="neighborhood" label="Colonia" />
               <FormikInputValue name="address" label="Dirección" />
-              <Button
-                label="Guardar"
-                onPress={() => {
-                  handleSubmit()
-                }}
-              ></Button>
+              <View style={{ justifyContent: 'center' }}>
+                <Button
+                  disabled={loading}
+                  fullWidth={false}
+                  buttonStyles={{ marginHorizontal: 'auto', marginTop: 20 }}
+                  label="Guardar"
+                  onPress={() => {
+                    handleSubmit()
+                  }}
+                  icon="save"
+                ></Button>
+              </View>
             </View>
           )
         }}
@@ -44,7 +56,7 @@ const FormClient = ({ client }: { client: Partial<ClientType> }) => {
   )
 }
 
-export const FormClientE = (props) => (
+export const FormClientE = (props: FormCLientProps) => (
   <ErrorBoundary componentName="FormClient">
     <FormClient {...props} />
   </ErrorBoundary>

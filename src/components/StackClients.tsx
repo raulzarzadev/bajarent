@@ -5,15 +5,7 @@ import ScreenClientEdit from './ScreenClientEdit'
 const Stack = createStackNavigator()
 function StackClients() {
   return (
-    <Stack.Navigator
-    // screenOptions={() => {
-    //   return {
-    //     headerRight(props) {
-    //       return <MyStaffLabel />
-    //     }
-    //   }
-    // }}
-    >
+    <Stack.Navigator>
       <Stack.Screen
         name="ScreenClientDetails"
         options={{

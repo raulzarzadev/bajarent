@@ -6,11 +6,11 @@ import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import ButtonConfirm from './ButtonConfirm'
-import { gStyles } from '../styles'
 import ImagePreview from './ImagePreview'
 import ListRow from './ListRow'
 import TextInfo from './TextInfo'
 import { colors } from '../theme'
+import CardClient from './CardClient'
 
 const ButtonCreateClient = ({
   client,
@@ -253,21 +253,6 @@ const ListOfSimilarClients = ({
   )
 }
 
-export const CardClient = ({ client }: { client: Partial<ClientType> }) => {
-  return (
-    <View style={{ justifyContent: 'center', marginVertical: 6 }}>
-      <Text style={[gStyles.h3]}>{client?.name}</Text>
-      <Text style={[gStyles.tCenter]}>{client?.phone}</Text>
-      <Text style={[gStyles.tCenter]}>{client?.address || ''}</Text>
-      <Text style={[gStyles.tCenter]}>{client?.neighborhood || ''}</Text>
-
-      <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-        {client?.imageID && <ImagePreview image={client?.imageID} />}
-        {client?.imageHouse && <ImagePreview image={client?.imageHouse} />}
-      </View>
-    </View>
-  )
-}
 export default ButtonCreateClient
 
 const styles = StyleSheet.create({})
