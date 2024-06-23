@@ -10,7 +10,7 @@ import UserType from './UserType'
 type OrderBase = {
   colorLabel?: string
   type: TypeOfOrderType
-
+  clientId: string
   note: string
 
   folio: number

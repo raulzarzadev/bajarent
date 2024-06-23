@@ -8,8 +8,13 @@ export type TextIconType = 'info' | 'error' | 'success' | 'warning'
 export type TextInfoProps = {
   type?: TextIconType
   text: string
+  defaultVisible?: boolean
 }
-const TextInfo = ({ type = 'info', text }: TextInfoProps) => {
+const TextInfo = ({
+  type = 'info',
+  text,
+  defaultVisible = false
+}: TextInfoProps) => {
   const icons: Record<TextIconType, IconName> = {
     info: 'info',
     error: 'cancel',
@@ -22,7 +27,7 @@ const TextInfo = ({ type = 'info', text }: TextInfoProps) => {
     success: colors.white,
     warning: colors.darkGray
   }
-  const [visible, setVisible] = React.useState(false)
+  const [visible, setVisible] = React.useState(!!defaultVisible)
 
   return (
     <View
