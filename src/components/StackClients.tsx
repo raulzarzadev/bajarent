@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenClientDetails from './ScreenClientDetails'
+import ScreenClientEdit from './ScreenClientEdit'
 
 const Stack = createStackNavigator()
 function StackClients() {
@@ -19,6 +20,13 @@ function StackClients() {
           title: 'Detalles de cliente'
         }}
         component={ScreenClientDetails}
+      />
+      <Stack.Screen
+        name="ScreenClientEdit"
+        options={{
+          title: 'Editar cliente'
+        }}
+        component={ScreenClientEdit}
       />
     </Stack.Navigator>
   )

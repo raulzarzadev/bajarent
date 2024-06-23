@@ -11,7 +11,7 @@ const FormikInputValue = ({
   const [field, meta, helpers] = useField(name)
   return (
     <StyledTextInput
-      value={field.value}
+      value={field?.value}
       onChangeText={helpers.setValue}
       helperText={meta.error || helperText}
       {...props}
