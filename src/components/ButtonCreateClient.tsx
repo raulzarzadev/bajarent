@@ -115,7 +115,7 @@ const ButtonCreateClient = ({
         <Button
           variant="ghost"
           justIcon
-          icon="profile"
+          icon="profileFill"
           onPress={() => {
             //@ts-ignore
             navigate('Store', {

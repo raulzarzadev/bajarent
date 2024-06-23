@@ -10,6 +10,19 @@ const ListClients = ({ clients }: { clients: ClientType[] }) => {
   return (
     <View>
       <ListE
+        sideButtons={[
+          {
+            icon: 'add',
+            label: 'Nuevo Cliente',
+            onPress: () => {
+              //@ts-ignore
+              navigate('StackClients', {
+                screen: 'ScreenClientNew'
+              })
+            },
+            visible: true
+          }
+        ]}
         defaultOrder="asc"
         defaultSortBy="name"
         sortFields={[

@@ -7,7 +7,7 @@ import { ClientType } from '../types/ClientType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
 export type FormCLientProps = {
-  client: Partial<ClientType>
+  client?: Partial<ClientType>
   onSubmit: (values: Partial<ClientType>) => void | Promise<void>
 }
 const FormClient = ({ client, onSubmit }: FormCLientProps) => {
