@@ -29,12 +29,6 @@ const ButtonCreateClient = ({
   const [selectedClient, setSelectedClient] =
     React.useState<Partial<ClientType['id']>>(clientId)
 
-  // React.useEffect(() => {
-  //   ServiceStoreClients.getSimilar(storeId, client).then((res) => {
-  //     setClients(res)
-  //   })
-  // }, [])
-
   const handleUpdateOrderClient = (clientId) => {
     ServiceOrders.update(orderId, {
       clientId: clientId
@@ -42,18 +36,14 @@ const ButtonCreateClient = ({
   }
 
   const handleCreateClient = () => {
-    ServiceStoreClients.add(storeId, {
-      ...client
-      //email: order.email
+    ServiceStoreClients.add({
+      storeId,
+      client
+    }).then(({ res }) => {
+      setSelectedClient(res.id)
+      handleUpdateOrderClient(res.id) //* <--- update order with client id
+      //TODO? update order with client information
     })
-      .then(({ res }) => {
-        setSelectedClient(res.id)
-        handleUpdateOrderClient(res.id) //* <--- update order with client id
-        //TODO? update order with client information
-      })
-      .catch((err) => {
-        console.log({ err })
-      })
   }
 
   const clientAlreadyExist = !!clientId
@@ -70,7 +60,6 @@ const ButtonCreateClient = ({
           openVariant="ghost"
           onOpen={() => {
             ServiceStoreClients.getSimilar(storeId, client).then((res) => {
-              console.log({ res })
               setClients(res)
             })
           }}
@@ -128,7 +117,16 @@ const ButtonCreateClient = ({
           justIcon
           icon="profile"
           onPress={() => {
-            console.log('visit')
+            //@ts-ignore
+            navigate('Store', {
+              screen: 'StackClients',
+              params: {
+                screen: 'ScreenClientDetails',
+                params: {
+                  id: clientId
+                }
+              }
+            })
           }}
         />
       )}

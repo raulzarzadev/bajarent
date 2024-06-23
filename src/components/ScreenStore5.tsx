@@ -166,7 +166,7 @@ const TabClients = () => {
   const { storeId } = useStore()
   const [clients, setClients] = useState([])
   useEffect(() => {
-    ServiceStoreClients.getActive(storeId).then((res) => {
+    ServiceStoreClients.getAll(storeId).then((res) => {
       setClients(res)
     })
   }, [])

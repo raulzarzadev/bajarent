@@ -27,10 +27,9 @@ const ScreenClientEdit = (props) => {
         <FormClientE
           client={client}
           onSubmit={async (values) => {
-            return await ServiceStoreClients.update({
-              itemData: values,
-              storeId: storeId,
-              itemId: client.id
+            return await ServiceStoreClients.add({
+              client: values,
+              storeId: storeId
             })
               .then(() => {
                 props.navigation.goBack()

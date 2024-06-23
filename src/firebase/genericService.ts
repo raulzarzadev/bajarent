@@ -78,11 +78,15 @@ export class FirebaseGenericService<T extends Identifiable> {
    * @param newItem Datos del nuevo documento
    * @returns
    */
-  async createInSubCollection(
-    parentId: string,
-    subCollectionName: string,
+  async createInSubCollection({
+    parentId,
+    subCollectionName,
+    newItem
+  }: {
+    parentId: string
+    subCollectionName: string
     newItem: CreateItem<T>
-  ) {
+  }) {
     const subCollectionRef = this.getSubCollectionRef(
       parentId,
       subCollectionName
@@ -149,6 +153,22 @@ export class FirebaseGenericService<T extends Identifiable> {
       subCollection,
       itemId,
       itemData
+    })
+  }
+  deleteInSubCollection({
+    parentId,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+  }) {
+    return this.itemCRUD.deleteItemInCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      itemId
     })
   }
 }

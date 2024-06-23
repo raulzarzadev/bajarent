@@ -5,6 +5,11 @@ import { gStyles } from '../styles'
 import ImagePreview from './ImagePreview'
 import { ClientType } from '../types/ClientType'
 import ErrorBoundary from './ErrorBoundary'
+import ButtonConfirm from './ButtonConfirm'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
+import Button from './Button'
+import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
 
 export type CardClientProps = {
   client: Partial<ClientType>
@@ -18,7 +23,20 @@ export const CardClient = ({ client }: CardClientProps) => {
         id={client?.id}
         layout="row"
       />
-      <Text style={[gStyles.h3]}>{client?.name}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginVertical: 8
+        }}
+      >
+        <ButtonDeleteClient clientId={client?.id} />
+        <Text style={[gStyles.h3, { marginHorizontal: 8 }]}>
+          {client?.name}
+        </Text>
+        <ButtonEditClient clientId={client?.id} />
+      </View>
       <Text style={[gStyles.tCenter]}>{client?.phone}</Text>
       <Text style={[gStyles.tCenter]}>{client?.address || ''}</Text>
       <Text style={[gStyles.tCenter]}>{client?.neighborhood || ''}</Text>
@@ -28,6 +46,45 @@ export const CardClient = ({ client }: CardClientProps) => {
         {client?.imageHouse && <ImagePreview image={client?.imageHouse} />}
       </View>
     </View>
+  )
+}
+
+const ButtonDeleteClient = ({ clientId }) => {
+  const { storeId } = useStore()
+  return (
+    <ButtonConfirm
+      icon="delete"
+      openColor="error"
+      openVariant="ghost"
+      openLabel="Eliminar"
+      openSize="xs"
+      justIcon
+      confirmLabel="Eliminar"
+      confirmColor="error"
+      confirmVariant="outline"
+      modalTitle="Eliminar cliente"
+      handleConfirm={async () => {
+        ServiceStoreClients.delete({ itemId: clientId, storeId })
+      }}
+    ></ButtonConfirm>
+  )
+}
+
+const ButtonEditClient = ({ clientId }) => {
+  const { storeId } = useStore()
+
+  const { navigate } = useNavigation()
+  return (
+    <Button
+      size="xs"
+      icon="edit"
+      label="Editar"
+      justIcon
+      variant="ghost"
+      onPress={() => {
+        navigate('ScreenClientEdit', { id: clientId })
+      }}
+    ></Button>
   )
 }
 

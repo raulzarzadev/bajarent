@@ -6,15 +6,17 @@ import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import Loading from './Loading'
+import ButtonConfirm from './ButtonConfirm'
+import ClientsOrders from './ClientsOrders'
 
 const ScreenClientDetails = (props) => {
-  const navigate = props?.navigation?.navigate
   const [client, setClient] = useState<Partial<ClientType>>()
   const itemId = props?.route?.params?.id
+
   const { storeId } = useStore()
   useEffect(() => {
     if (storeId)
-      ServiceStoreClients.getItem({
+      ServiceStoreClients.get({
         itemId,
         storeId
       }).then((res) => {
@@ -25,27 +27,7 @@ const ScreenClientDetails = (props) => {
   return (
     <View>
       <ClientDetails client={client} />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <Button
-          size="small"
-          icon="delete"
-          color="error"
-          variant="outline"
-          label="Eliminar"
-          onPress={() => {
-            //ServiceStoreClients.deleteItem({ itemId, storeId })
-            navigate('ScreenClients')
-          }}
-        ></Button>
-        <Button
-          size="small"
-          icon="edit"
-          label="Editar"
-          onPress={() => {
-            navigate('ScreenClientEdit', { id: itemId })
-          }}
-        ></Button>
-      </View>
+      <ClientsOrders clientId={client.id} />
     </View>
   )
 }

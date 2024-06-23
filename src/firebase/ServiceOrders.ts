@@ -427,6 +427,18 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       }
     })
   }
+  async getClientOrders({ clientId, storeId }, ops?: { justIds: boolean }) {
+    const justIds = !!ops?.justIds
+    if (justIds)
+      return this.findMany(
+        [where('clientId', '==', clientId), where('storeId', '==', storeId)],
+        { justRefs: true }
+      ).then((res) => res.map(({ id }) => id))
+    return this.findMany([
+      where('clientId', '==', clientId),
+      where('storeId', '==', storeId)
+    ])
+  }
   async customMethod() {
     // Implementa tu método personalizado
   }

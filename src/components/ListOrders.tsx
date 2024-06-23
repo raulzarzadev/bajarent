@@ -44,8 +44,12 @@ const ListOrders = ({
       defaultSortBy="folio"
       defaultOrder="des"
       onPressRow={(id) => {
+        navigate('StackOrders', {
+          screen: 'OrderDetails',
+          params: { orderId: id }
+        })
         //@ts-ignore
-        navigate('OrderDetails', { orderId: id })
+        /// navigate('OrderDetails', { orderId: id })
         //@ts-ignore
         //  navigate('OrderDetails', { orderId: id })
       }}

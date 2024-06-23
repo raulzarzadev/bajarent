@@ -1,38 +1,38 @@
-import { FirebaseGenericService } from './genericService'
 import { ClientType } from '../types/ClientType'
 import { where } from 'firebase/firestore'
+import { ServiceStores } from './ServiceStore'
 
 const SUB_COLLECTION = 'clients'
-export class ServiceStoreClientsClass extends FirebaseGenericService<ClientType> {
-  constructor() {
-    super('stores')
-  }
-
-  async add(storeId: string, clientData: Partial<ClientType>) {
-    return this.createInSubCollection(storeId, SUB_COLLECTION, clientData)
+export class ServiceStoreClientsClass {
+  async add({ storeId, client }) {
+    return ServiceStores.createInSubCollection({
+      parentId: storeId,
+      newItem: client,
+      subCollectionName: SUB_COLLECTION
+    })
   }
 
   async getAll(storeId: string) {
-    return this.getItemsInCollection({
+    return ServiceStores.getItemsInCollection({
       parentId: storeId,
       subCollection: SUB_COLLECTION
     })
   }
   async getActive(storeId: string) {
-    return this.getItemsInCollection({
+    return ServiceStores.getItemsInCollection({
       parentId: storeId,
       subCollection: SUB_COLLECTION,
-      filters: [where('isActive', '==', false)]
+      filters: [where('isActive', '==', true)]
     })
   }
 
   async getSimilar(storeId: string, client: Partial<ClientType>) {
-    const similarName = this.getItemsInCollection({
+    const similarName = ServiceStores.getItemsInCollection({
       parentId: storeId,
       subCollection: SUB_COLLECTION,
       filters: [where('name', '==', client.name)]
     })
-    const similarPhone = this.getItemsInCollection({
+    const similarPhone = ServiceStores.getItemsInCollection({
       parentId: storeId,
       subCollection: SUB_COLLECTION,
       filters: [where('phone', '==', client.phone)]
@@ -48,15 +48,15 @@ export class ServiceStoreClientsClass extends FirebaseGenericService<ClientType>
     })
   }
 
-  async getItem({ storeId, itemId }: { storeId: string; itemId: string }) {
-    return this.getItemInCollection({
+  async get({ storeId, itemId }: { storeId: string; itemId: string }) {
+    return ServiceStores.getItemInCollection({
       itemId,
       parentId: storeId,
       subCollection: SUB_COLLECTION
     })
   }
 
-  async updateItem({
+  async update({
     storeId,
     itemId,
     itemData
@@ -65,11 +65,19 @@ export class ServiceStoreClientsClass extends FirebaseGenericService<ClientType>
     itemId: string
     itemData: Partial<ClientType>
   }) {
-    return this.updateInSubCollection({
+    return ServiceStores.updateInSubCollection({
       parentId: storeId,
       subCollection: SUB_COLLECTION,
       itemId,
       itemData
+    })
+  }
+
+  async delete({ storeId, itemId }: { storeId: string; itemId: string }) {
+    return ServiceStores.deleteInSubCollection({
+      parentId: storeId,
+      subCollection: SUB_COLLECTION,
+      itemId
     })
   }
 

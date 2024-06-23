@@ -456,6 +456,31 @@ export class FirebaseCRUD {
       })
   }
 
+  async deleteItemInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    itemId: string
+  }) {
+    return deleteDoc(
+      doc(this.db, parentCollection, parentId, subCollection, itemId)
+    )
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_DELETED`, {
+          id: itemId
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {
