@@ -7,6 +7,7 @@ export class ServiceStoreClientsClass extends FirebaseGenericService<ClientType>
   constructor() {
     super('stores')
   }
+
   async add(storeId: string, clientData: Partial<ClientType>) {
     return this.createInSubCollection(storeId, SUB_COLLECTION, clientData)
   }
@@ -46,6 +47,15 @@ export class ServiceStoreClientsClass extends FirebaseGenericService<ClientType>
       return unique
     })
   }
+
+  async getItem({ storeId, itemId }: { storeId: string; itemId: string }) {
+    return this.getItemInCollection({
+      itemId,
+      parentId: storeId,
+      subCollection: SUB_COLLECTION
+    })
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

@@ -114,4 +114,21 @@ export class FirebaseGenericService<T extends Identifiable> {
       filters
     })
   }
+
+  getItemInCollection({
+    parentId,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+  }) {
+    return this.itemCRUD.getItemInCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      itemId
+    })
+  }
 }

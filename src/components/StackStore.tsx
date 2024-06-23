@@ -17,6 +17,7 @@ import ErrorBoundary from './ErrorBoundary'
 import ScreenItemNew from './ScreenItemNew'
 import ScreenItemsDetails from './ScreenItemsDetails'
 import ScreenItemEdit, { ScreenItemEditE } from './ScreenItemEdit'
+import StackClients from './StackClients'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -123,6 +124,16 @@ function StackStore() {
           headerShown: false
         }}
         component={StackPaymentsE}
+      />
+
+      {/* CLIENTS */}
+      <Stack.Screen
+        name="StackClients"
+        options={{
+          title: 'Clientes',
+          headerShown: false
+        }}
+        component={StackClients}
       />
 
       {/* ******************************************** 

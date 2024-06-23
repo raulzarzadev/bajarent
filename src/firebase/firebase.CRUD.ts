@@ -408,6 +408,22 @@ export class FirebaseCRUD {
     return res
   }
 
+  async getItemInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    itemId
+  }) {
+    const ref = doc(this.db, parentCollection, parentId, subCollection, itemId)
+    const docSnap = await getDocFromCache(ref)
+    return this.normalizeItem(docSnap)
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {
@@ -493,6 +509,37 @@ export class FirebaseCRUD {
       return null
     }
   }
+
+  // createCollectionRef(
+  //   collectionName: string,
+  //   docId?: string,
+  //   subCollectionName?: string
+  // ) {
+  //   // Referencia a la colección principal
+  //   let ref = collection(this.db, collectionName)
+
+  //   // Si se proporcionan docId y subCollectionName, crear referencia a la subcolección
+  //   if (docId && subCollectionName) {
+  //     ref = collection(this.db, collectionName, docId, subCollectionName)
+  //   }
+
+  //   return ref
+  // }
+
+  // getByRef = async (ref: any) => {
+  //   const docSnap = await getDocFromCache(ref)
+  //   return this.normalizeItem(docSnap)
+  // }
+  // updateByRef = async (ref: any, data: any) => {
+  //   return await updateDoc(ref, data)
+  //     .then((res) => {
+  //       return this.formatResponse(true, 'UPDATED_BY_REF', res)
+  //     })
+  //     .catch((err) => {
+  //       console.error(err)
+  //       return this.formatResponse(false, 'UPDATED_BY_REF_ERROR', err)
+  //     })
+  // }
 
   formatResponse = (
     ok: boolean,
