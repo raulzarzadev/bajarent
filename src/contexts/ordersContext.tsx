@@ -16,6 +16,7 @@ import {
   ConsolidatedStoreOrdersType,
   ServiceConsolidatedOrders
 } from '../firebase/ServiceConsolidatedOrders'
+import { ServiceChunks } from '../firebase/ServiceChunks'
 
 export type FetchTypeOrders =
   | 'all'
@@ -83,11 +84,21 @@ export const OrdersContextProvider = ({
   //   })
   // }
   const handleGetConsolidates = async () => {
-    return await ServiceConsolidatedOrders.getByStore(storeId).then((res) => {
-      const orders = JSON.parse(res[0]?.stringJSON || '{}')
-      setConsolidatedOrders({ ...res[0], orders })
-    })
+    return await ServiceConsolidatedOrders.getByStore(storeId).then(
+      async (res) => {
+        const chunks = res[0]?.consolidatedChunks || []
+        const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
+        const chunksRes = await Promise.all(promises)
+        const orders = chunksRes.reduce((acc, chunk) => {
+          return { ...acc, ...chunk.orders }
+        }, {})
+
+        setConsolidatedOrders({ ...res[0], orders })
+      }
+    )
   }
+
+  console.log({ consolidatedOrders })
 
   useEffect(() => {
     if (employee) {

@@ -10,6 +10,7 @@ const ListClients = ({ clients }: { clients: ClientType[] }) => {
   return (
     <View>
       <ListE
+        rowsPerPage={20}
         sideButtons={[
           {
             icon: 'add',

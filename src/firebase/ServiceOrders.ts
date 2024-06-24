@@ -24,16 +24,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     super('orders')
   }
 
-  // async create(order: Type) {
-  //   if (!order.storeId) console.error('No storeId provided')
-  //   const store = await ServiceStores.get(order?.storeId)
-  //   const currentFolio = store?.currentFolio || 0
-  //   const nextFolio = currentFolio + 1
-  //   order.folio = nextFolio
-  //   ServiceStores.update(store.id, { currentFolio: nextFolio })
-  //   return super.create(order)
-  // }
-
   /**
    *
    * @param order OrderType
@@ -151,8 +141,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 
   async getByStore(storeId: string) {
     return await this.findMany([
-      where('storeId', '==', storeId),
-      where('type', '==', order_type.RENT)
+      where('storeId', '==', storeId)
+      // where('type', '==', order_type.RENT)
     ])
   }
 
