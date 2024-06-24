@@ -278,17 +278,32 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       comments: reportsNotSolved.filter(({ orderId }) => orderId === order.id)
     }))
   }
-  async search(
-    fields: string[] = [],
-    value: string | number | boolean,
-    avoidIds: string[]
-  ) {
+
+  // export type CollectionSearch = {
+  //   collectionName: string
+  //   fields: string[]
+  //   assignedSections?: 'all' | string[]
+  // }
+  async search({
+    fields,
+    value,
+    avoidIds,
+    sections
+  }: {
+    fields: string[]
+    value: string | number
+    avoidIds?: string[]
+    sections: string[] | 'all'
+  }) {
     const promises = fields.map((field) => {
       const number = parseFloat(value as string)
       //* search as number
       const filters = []
-      if (avoidIds.length > 0)
-        filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
+      // if (avoidIds.length > 0)
+      //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
+      if (sections !== 'all') {
+        filters.push(where('assignToSection', 'in', sections))
+      }
 
       if (field === 'folio')
         return this.findMany([...filters, where(field, '==', number)])

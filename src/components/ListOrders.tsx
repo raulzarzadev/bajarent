@@ -5,6 +5,7 @@ import RowOrder, { RowOrderE } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 import { useStore } from '../contexts/storeContext'
+import { CollectionSearch } from '../hooks/useFilter'
 
 const ListOrders = ({
   orders,
@@ -15,10 +16,7 @@ const ListOrders = ({
   orders: OrderType[]
   defaultOrdersIds?: string[]
   sideButtons?: ListSideButton[]
-  collectionSearch?: {
-    collectionName: string
-    fields: string[]
-  }
+  collectionSearch?: CollectionSearch
 }) => {
   const { navigate } = useNavigation()
   const { storeSections } = useStore()

@@ -3,6 +3,7 @@ import ListOrders from './ListOrders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import useOrders from '../hooks/useOrders'
 import { useState } from 'react'
+import { useEmployee } from '../contexts/employeeContext'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
@@ -22,10 +23,15 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     setTimeout(() => setDisabled(false), 4000)
   }
 
+  const { employee, permissions } = useEmployee()
+  const viewAllOrders = permissions.orders.canViewAll
+  const userSections = employee?.sectionsAssigned
+
   return (
     <ListOrders
       orders={hasOrderList ? preOrders : orders}
       collectionSearch={{
+        assignedSections: viewAllOrders ? 'all' : userSections,
         collectionName: 'orders',
         fields: [
           'folio',
