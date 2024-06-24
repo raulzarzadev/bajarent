@@ -32,7 +32,7 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     //* 2. format data
     const mapOrders = formatConsolidateOrders(storeOrders)
     //* 3. split data in chunks
-    const chunks = splitOrdersCount(100, Object.values(mapOrders))
+    const chunks = splitOrdersCount(500, Object.values(mapOrders))
     //* 4. create chunks
     const promisesChunks = chunks.map(async (chunk) => {
       const obj = chunk.reduce((acc, order) => {

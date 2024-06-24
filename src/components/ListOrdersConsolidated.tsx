@@ -56,7 +56,7 @@ const ListOrdersConsolidated = () => {
         </Text>
         <LoadingList
           data={data}
-          pinRows={true}
+          //pinRows={true}
           rowsPerPage={20}
           sideButtons={[
             {

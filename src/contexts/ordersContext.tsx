@@ -70,19 +70,10 @@ export const OrdersContextProvider = ({
   useEffect(() => {
     //* Consolidate orders it useful to search in all orders
     if (viewAllOrders) {
-      // ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
-      //   setConsolidatedOrders(res[0])
-      // })
       handleGetConsolidates()
-      // handleListenConsolidate()
     }
   }, [viewAllOrders])
 
-  // const handleListenConsolidate = () => {
-  //   ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
-  //     setConsolidatedOrders(res[0])
-  //   })
-  // }
   const handleGetConsolidates = async () => {
     return await ServiceConsolidatedOrders.getByStore(storeId).then(
       async (res) => {
@@ -97,8 +88,6 @@ export const OrdersContextProvider = ({
       }
     )
   }
-
-  console.log({ consolidatedOrders })
 
   useEffect(() => {
     if (employee) {
