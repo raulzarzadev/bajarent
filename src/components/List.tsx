@@ -162,9 +162,13 @@ function MyList<T extends { id: string }>({
   }, [pinnedRows])
 
   const getPinnedRows = async (pinnedRows: string[]) => {
-    const promises = pinnedRows.map((id) => ServiceOrders.get(id))
-    const res = await Promise.all(promises)
-    return res
+    if (collectionSearch.collectionName === 'orders') {
+      const promises = pinnedRows.map((id) => ServiceOrders.get(id))
+      const res = await Promise.all(promises)
+      return res
+    } else {
+      return []
+    }
   }
   if (!data) return <Loading />
 
