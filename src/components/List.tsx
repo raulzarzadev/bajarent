@@ -21,6 +21,8 @@ import Loading from './Loading'
 import { gStyles } from '../styles'
 import { getItem, setItem } from '../libs/storage'
 import { CollectionSearch } from '../hooks/useFilter'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { where } from 'firebase/firestore'
 
 // const windowHeight = Dimensions.get('window').height
 // const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
@@ -147,9 +149,24 @@ function MyList<T extends { id: string }>({
       return newPinnedRows
     })
   }
-  if (!data) return <Loading />
 
-  console.log({ collectionData })
+  const [pinnedRowsData, setPinnedRowsData] = useState<T[]>([])
+  useEffect(() => {
+    if (pinnedRows.length) {
+      getPinnedRows(pinnedRows).then((res) => {
+        setPinnedRowsData(res)
+      })
+    } else {
+      setPinnedRowsData([])
+    }
+  }, [pinnedRows])
+
+  const getPinnedRows = async (pinnedRows: string[]) => {
+    const promises = pinnedRows.map((id) => ServiceOrders.get(id))
+    const res = await Promise.all(promises)
+    return res
+  }
+  if (!data) return <Loading />
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -167,20 +184,20 @@ function MyList<T extends { id: string }>({
               <Text style={gStyles.h2}>Fijadas {pinnedRows.length || 0}</Text>
             )}
             <FlatList
-              data={pinnedRows}
+              data={pinnedRowsData}
               renderItem={({ item }) => (
                 <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
                   <Pressable
                     style={{ flexDirection: 'row', flex: 1 }}
                     onPress={() => {
-                      onPressRow && onPressRow(item)
+                      onPressRow && onPressRow(item.id)
                     }}
                   >
-                    <ComponentRow item={data.find(({ id }) => id === item)} />
+                    <ComponentRow item={item} />
                   </Pressable>
                   <PinButton
                     handlePin={() => {
-                      handleUnpinRow(item)
+                      handleUnpinRow(item.id)
                     }}
                     unpin={true}
                   />

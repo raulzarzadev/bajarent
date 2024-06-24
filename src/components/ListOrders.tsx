@@ -1,7 +1,7 @@
 import React from 'react'
 import { ListSideButton, LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
-import RowOrder, { RowOrderE } from './RowOrder'
+import { RowOrderE } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 import { useStore } from '../contexts/storeContext'

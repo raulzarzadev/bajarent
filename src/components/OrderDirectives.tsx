@@ -40,10 +40,10 @@ const OrderDirectives = ({
         titleColor={theme.black}
         size="sm"
       ></Chip>
-      {!!order.assignToSection && (
+      {!!order?.assignToSection && (
         <Chip
           style={styles.chip}
-          title={order.assignToSectionName || 'NA'}
+          title={order?.assignToSectionName || 'NA'}
           color={theme?.base}
           titleColor={theme.secondary}
           size="sm"
