@@ -19,6 +19,11 @@ const OrderDirectives = ({
 }: {
   order: Partial<OrderType> | Partial<ConsolidatedOrderType>
 }) => {
+  const { storeSections } = useStore()
+  const assignedSectionLabel =
+    order?.assignToSectionName ||
+    storeSections.find(({ id }) => id === order?.assignToSection)?.name ||
+    false
   return (
     <View
       style={{
@@ -40,10 +45,10 @@ const OrderDirectives = ({
         titleColor={theme.black}
         size="sm"
       ></Chip>
-      {!!order?.assignToSection && (
+      {!!assignedSectionLabel && (
         <Chip
           style={styles.chip}
-          title={order?.assignToSectionName || 'NA'}
+          title={assignedSectionLabel}
           color={theme?.base}
           titleColor={theme.secondary}
           size="sm"
