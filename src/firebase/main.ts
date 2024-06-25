@@ -5,7 +5,7 @@ import {
   persistentLocalCache,
   connectFirestoreEmulator
 } from 'firebase/firestore'
-
+import { getAnalytics } from 'firebase/analytics'
 // use persistentLocalCache always
 const USE_PERSISTANCE_CACHE = true
 export const USE_EMULATOR = false
@@ -23,3 +23,4 @@ if (USE_EMULATOR) {
   console.log('connecting to emulator')
   connectFirestoreEmulator(db, '127.0.0.1', 9098)
 }
+const analytics = getAnalytics(app)
