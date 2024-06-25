@@ -131,7 +131,7 @@ const ListOrdersConsolidated = () => {
               label: 'Contrato'
             },
             {
-              key: 'name',
+              key: 'fullName',
               label: 'Nombre'
             },
             {

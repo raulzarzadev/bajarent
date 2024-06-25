@@ -420,6 +420,34 @@ function MyList<T extends { id: string }>({
           }}
         ></FlatList>
 
+        <View>
+          {onFetchMore && (
+            <Button
+              label={`Cargar ${onFetchMoreCount || ''} mas`}
+              variant="ghost"
+              onPress={() => {
+                onFetchMore()
+              }}
+            ></Button>
+          )}
+        </View>
+
+        <View
+          style={{
+            alignSelf: 'center',
+            marginBottom: 16,
+            marginTop: 4,
+            marginRight: 4
+          }}
+        >
+          <Pagination
+            currentPage={currentPage}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+            totalPages={totalPages}
+          />
+        </View>
+
         {/* TABLE OF CUSTOM DATA */}
         {collectionData.length > 0 && (
           <>
@@ -483,33 +511,6 @@ function MyList<T extends { id: string }>({
             </View>
           </>
         )}
-        <View>
-          {onFetchMore && (
-            <Button
-              label={`Cargar ${onFetchMoreCount || ''} mas`}
-              variant="ghost"
-              onPress={() => {
-                onFetchMore()
-              }}
-            ></Button>
-          )}
-        </View>
-
-        <View
-          style={{
-            alignSelf: 'center',
-            marginBottom: 16,
-            marginTop: 4,
-            marginRight: 4
-          }}
-        >
-          <Pagination
-            currentPage={currentPage}
-            handleNextPage={handleNextPage}
-            handlePrevPage={handlePrevPage}
-            totalPages={totalPages}
-          />
-        </View>
       </View>
     </ScrollView>
   )

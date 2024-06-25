@@ -113,6 +113,7 @@ export default function useFilter<T extends { id?: string }>({
     if (!value) {
       //<-- Apply filters if exist to keep current selection
       setFilteredData(filteredData)
+      setCustomData([])
       return
     }
 
@@ -124,7 +125,6 @@ export default function useFilter<T extends { id?: string }>({
         if (typeof val === 'number' && !isNaN(Number(value))) {
           return val === parseFloat(value)
         }
-
         return false
       })
     })
@@ -139,14 +139,10 @@ export default function useFilter<T extends { id?: string }>({
       }).then((res) => {
         return formatOrders({ orders: res, reports })
       })
-      console.log({ orders, res })
 
       setCustomData([...orders.filter((o) => !res.some((r) => r.id === o.id))])
-      setFilteredData([...res])
-    } else {
-      setCustomData([])
-      setFilteredData([])
     }
+    setFilteredData([...res])
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
