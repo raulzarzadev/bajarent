@@ -18,7 +18,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
       <View
         style={{
           width: 180,
-          marginVertical: gSpace(2),
+          // marginVertical: gSpace(2),
           marginHorizontal: 'auto'
         }}
       >
