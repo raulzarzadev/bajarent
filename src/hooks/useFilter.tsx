@@ -7,7 +7,7 @@ import asDate from '../libs/utils-date'
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
   collectionName: string
-  fields: string[]
+  fields?: string[]
   assignedSections?: 'all' | string[]
 }
 export default function useFilter<T extends { id?: string }>({

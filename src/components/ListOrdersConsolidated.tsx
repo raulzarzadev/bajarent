@@ -57,6 +57,9 @@ const ListOrdersConsolidated = () => {
         </Text>
         <LoadingList
           pinRows
+          collectionSearch={{
+            collectionName: 'orders'
+          }}
           ComponentMultiActions={({ ids }) => {
             return <MultiOrderActions ordersIds={ids} data={data} />
           }}
