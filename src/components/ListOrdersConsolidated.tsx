@@ -14,6 +14,7 @@ import { colors } from '../theme'
 import OrderDirectives from './OrderDirectives'
 import asDate, { fromNow } from '../libs/utils-date'
 import ErrorBoundary from './ErrorBoundary'
+import MultiOrderActions from './OrderActions/MultiOrderActions'
 type OrderWithId = Partial<ConsolidatedOrderType> & { id: string }
 
 const ListOrdersConsolidated = () => {
@@ -55,6 +56,10 @@ const ListOrdersConsolidated = () => {
           Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
         </Text>
         <LoadingList
+          pinRows
+          ComponentMultiActions={({ ids }) => {
+            return <MultiOrderActions ordersIds={ids} data={data} />
+          }}
           data={data}
           //pinRows={true}
           rowsPerPage={20}

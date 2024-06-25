@@ -105,7 +105,7 @@ const ListOrders = ({
         // }
       ]}
       ComponentMultiActions={({ ids }) => {
-        return <MultiOrderActions ordersIds={ids} />
+        return <MultiOrderActions ordersIds={ids} data={formatOrders} />
       }}
       collectionSearch={collectionSearch}
     />
