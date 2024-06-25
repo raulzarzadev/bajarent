@@ -7,6 +7,7 @@ import { useEmployee } from '../../contexts/employeeContext'
 import { onDelete, onSetStatuses } from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
 import { gStyles } from '../../styles'
+import ButtonDeleteOrder from './ButtonDeleteOrder'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -75,16 +76,7 @@ const MultiOrderActions = ({
         disabled={loading}
       />
     ),
-    canDelete && (
-      <Button
-        onPress={() => handleDeleteOrders()}
-        label="Eliminar"
-        variant="outline"
-        color="error"
-        icon="delete"
-        disabled={loading}
-      />
-    ),
+    canDelete && <ButtonDeleteOrder orderIds={ordersIds} />,
     <Button
       onPress={() => handleUpdateStatuses()}
       label="Actualizar"

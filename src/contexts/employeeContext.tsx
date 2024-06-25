@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import StaffType from '../types/StaffType'
+import StaffType, {
+  PermissionsOrder,
+  PermissionsStore
+} from '../types/StaffType'
 import { useAuth } from './authContext'
 import { useStore } from './storeContext'
 
@@ -8,11 +11,12 @@ export type EmployeeContextType = {
   permissions: {
     isAdmin: boolean
     isOwner: boolean
-    orders: StaffType['permissions']['order']
-    store: StaffType['permissions']['store']
+    orders: Partial<PermissionsOrder>
+    store: Partial<PermissionsStore>
     canEditStaff?: boolean
     canCancelPayments?: boolean
     canValidatePayments?: boolean
+    canDeleteOrders?: boolean
   }
 }
 
@@ -69,7 +73,9 @@ export const EmployeeContextProvider = ({ children }) => {
         canValidatePayments:
           isAdmin ||
           isOwner ||
-          !!employee?.permissions?.store?.canValidatePayments
+          !!employee?.permissions?.store?.canValidatePayments,
+        canDeleteOrders:
+          isAdmin || isOwner || !!employee?.permissions?.order.canDelete
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections]

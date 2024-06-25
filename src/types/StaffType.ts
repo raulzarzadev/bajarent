@@ -46,15 +46,22 @@ export type BaseStaffType = {
   name: string
   email?: string
   phone?: string
-
+  sectionsAssigned?: string[]
   store?: Partial<StoreType>
+
+  /**
+   * @deprecated use permissions.isOwner instead
+   */
+
   permissions?: StaffPermissions
+  /**
+   * @deprecated use permissions.isOwner instead
+   */
   predefinedPermission?: string
   /**
    * @deprecated use permissions.isOwner instead
    */
   isOwner?: boolean
-  sectionsAssigned?: string[]
 }
 
 type StaffType = BaseType & BaseStaffType & StaffPermissionType
