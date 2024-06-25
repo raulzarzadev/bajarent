@@ -9,12 +9,14 @@ export default function InputImagePicker({
   label,
   value = null,
   setValue,
-  name
+  name,
+  onUploading
 }: {
   name: string
   label?: string
   value: any
   setValue: any
+  onUploading?: (progress: number) => void
 }) {
   const [image, setImage] = useState(value)
   const [progress, setProgress] = useState(null)
@@ -35,15 +37,16 @@ export default function InputImagePicker({
       setImage(uri)
       startProgress()
       // Convertir la URI de la imagen en un Blob
-      return
+
       fetch(uri)
         .then((response) => response.blob())
         .then((blob) => {
           // Pasar el Blob a uploadFile
           uploadFile(blob, name, ({ progress, downloadURL }) => {
             // console.log({ progress, downloadURL })
-            setProgress(progress)
+            onUploading?.(progress)
             if (progress < 0) return console.error('Error uploading file')
+            if (progress >= 80) setProgress(progress)
             if (downloadURL) setValue(downloadURL)
           })
         })
@@ -53,14 +56,13 @@ export default function InputImagePicker({
       // setValue(uri)
     }
   }
-  console.log({ progress })
 
   const startProgress = () => {
     let progress = 0
     const interval = setInterval(() => {
       progress += 10
       setProgress(progress)
-      if (progress >= 100) {
+      if (progress >= 80) {
         clearInterval(interval)
       }
     }, 100)
@@ -149,7 +151,7 @@ export default function InputImagePicker({
           zIndex: 1
         }}
       ></View>
-      <View style={{ position: 'absolute', bottom: 4 }}>
+      <View style={{ position: 'absolute', bottom: 4, zIndex: 10 }}>
         <Button
           onPress={() => {
             pickImage()
