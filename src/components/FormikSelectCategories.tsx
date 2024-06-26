@@ -145,9 +145,10 @@ const FormikSelectCategories = ({
                   (item) => item.id === itemSelected
                 )
                 const newItem = {
-                  id: itemSelected || uidGenerator(),
+                  id: itemSelected || uidGenerator(), //* <--- if category is empty, then the itemSelected will be the id
                   itemId: itemSelected || '',
                   categoryName: category?.name || '',
+                  serial: itemData?.serial || '',
                   priceSelectedId: price?.id || null,
                   priceSelected: price || null,
                   number: itemData?.number || 'SN'

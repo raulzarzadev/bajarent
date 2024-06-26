@@ -7,6 +7,8 @@ import { useAuth } from './authContext'
 import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { CategoryType } from '../types/RentItem'
+import { SectionType } from '../types/SectionType'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -33,7 +35,7 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
-  const { store, staff, storeSections, storeId } = useStore()
+  const { store, staff, storeSections, storeId, categories } = useStore()
 
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
@@ -66,7 +68,7 @@ export const EmployeeContextProvider = ({ children }) => {
         storeId,
         userSections: employee.sectionsAssigned || [],
         cb: (items) => {
-          setItems(items)
+          setItems(formatItems(items, categories, storeSections))
         }
       })
     }
@@ -114,4 +116,19 @@ export const EmployeeContextProvider = ({ children }) => {
 
 export const useEmployee = () => {
   return useContext(EmployeeContext)
+}
+
+const formatItems = (
+  items: Partial<ItemType>[],
+  categories: CategoryType[],
+  sections: SectionType[]
+) => {
+  return items.map((item) => ({
+    ...item,
+    id: item.id,
+    categoryName:
+      categories.find((cat) => cat.id === item.category)?.name || '',
+    assignedSectionName:
+      sections.find((sec) => sec.id === item.assignedSection)?.name || ''
+  }))
 }

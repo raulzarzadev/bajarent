@@ -36,6 +36,7 @@ import FormItemPickUp from './FormItemPickUp'
 import { useStore } from '../../contexts/storeContext'
 import { onCreateItem, onPickUpItem, onRentItem } from '../../libs/item_actions'
 import { ItemSelected } from '../FormSelectItem'
+import ModalDeliveryOrder from './ModalDeliveryOrder'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -455,7 +456,7 @@ const OrderActions = ({
 
   const handlePickUpItems = async ({ itemsIds }: { itemsIds: string[] }) => {
     itemsIds.map(async (itemId) => {
-      return await onPickUpItem({ itemId, storeId })
+      // return await onPickUpItem({ itemId, storeId })
     })
     return await Promise.all(itemsIds)
   }
@@ -473,46 +474,46 @@ const OrderActions = ({
       const categoryId = storeCategories.find(
         (c) => c.name === item.categoryName
       )?.id
-      return await onCreateItem({
-        storeId,
-        item: {
-          id: item.id,
-          assignedSection: order?.assignToSection || '',
-          serial: item.serial || '',
-          brand: item.brand || '',
-          number: item.number || '',
-          category: categoryId || '',
-          status: 'available'
-        },
-        itemId: item.id,
-        userId: user?.id || ''
-      })
+      // return await onCreateItem({
+      //   storeId,
+      //   item: {
+      //     id: item.id,
+      //     assignedSection: order?.assignToSection || '',
+      //     serial: item.serial || '',
+      //     brand: item.brand || '',
+      //     number: item.number || '',
+      //     category: categoryId || '',
+      //     status: 'available'
+      //   },
+      //   itemId: item.id,
+      //   userId: user?.id || ''
+      // })
     })
   }
 
-  const onRentItems = async ({ items }: { items: ItemSelected[] }) => {
-    deliveryModal.setOpen(false)
-    const itemsIds = items.map((i) => i.id)
-    handleCreateItemsIfNecessary({ items })
-    const rentingItems = itemsIds.map(async (itemId) => {
-      return await onRentItem({ itemId, storeId })
-    })
+  // const onRentItems = async ({ items }: { items: ItemSelected[] }) => {
+  //   deliveryModal.setOpen(false)
+  //   const itemsIds = items.map((i) => i.id)
+  //   handleCreateItemsIfNecessary({ items })
+  //   const rentingItems = itemsIds.map(async (itemId) => {
+  //     return await onRentItem({ itemId, storeId })
+  //   })
 
-    return await Promise.all(rentingItems)
-  }
+  //   return await Promise.all(rentingItems)
+  // }
 
-  const handleDeliveryOrder = async (values) => {
-    const itemSerial = values.itemSerial || ''
-    const itemBrand = values.itemBrand || ''
-    const itemsWithOrderSerialNumber = values.items.map((item) => {
-      return { ...item, serial: itemSerial, brand: itemBrand || '' }
-    })
-    await onRentItems({ items: itemsWithOrderSerialNumber })
+  // const handleDeliveryOrder = async (values) => {
+  //   const itemSerial = values.itemSerial || ''
+  //   const itemBrand = values.itemBrand || ''
+  //   const itemsWithOrderSerialNumber = values.items.map((item) => {
+  //     return { ...item, serial: itemSerial, brand: itemBrand || '' }
+  //   })
+  //   await onRentItems({ items: itemsWithOrderSerialNumber })
 
-    await actions_fns[acts.DELIVER]({
-      ...values
-    })
-  }
+  //   await actions_fns[acts.DELIVER]({
+  //     ...values
+  //   })
+  // }
 
   return (
     <View>
@@ -597,79 +598,7 @@ const OrderActions = ({
         </View>
       </StyledModal>
 
-      <StyledModal {...deliveryModal}>
-        <Formik
-          initialValues={{ ...order }}
-          onSubmit={async (values) => {
-            handleDeliveryOrder(values)
-          }}
-          validate={(values: OrderType) => {
-            const errors: Partial<OrderType> = {}
-            if (!values.location) errors.location = 'Ubicación requerida'
-            if (
-              !values.itemSerial &&
-              (values.type === 'RENT' || values.type === 'REPAIR')
-            )
-              errors.itemSerial = 'No. de serie es requerido'
-            return errors
-          }}
-        >
-          {({ errors, handleSubmit, isSubmitting }) => {
-            return (
-              <View>
-                <View style={{ marginVertical: 8 }}>
-                  <InputValueFormik
-                    name={'note'}
-                    placeholder="Nota"
-                    helperText={'Numero de nota o referencia externa'}
-                  />
-                </View>
-                <View style={{ marginVertical: 8 }}>
-                  <InputValueFormik
-                    name={'itemSerial'}
-                    placeholder="No. de serie"
-                    helperText={'Numero de serie'}
-                  />
-                </View>
-                <View style={{ marginVertical: 8 }}>
-                  <InputLocationFormik
-                    name={'location'}
-                    helperText={'Ubicación con link o coordenadas'}
-                  />
-                </View>
-                <View style={{ marginVertical: 8 }}>
-                  <FormikInputImage
-                    name="imageID"
-                    label="Subir identificación"
-                  />
-                </View>
-
-                <View style={{ marginVertical: 8 }}>
-                  <FormikInputImage name="imageHouse" label="Subir fachada " />
-                </View>
-
-                <View style={{ marginVertical: 8 }}>
-                  <FormikSelectCategories name="items" selectPrice />
-                </View>
-
-                {Object.entries(errors).map(([field, message]) => (
-                  <Text key={field} style={gStyles.helperError}>
-                    *{message as string}
-                  </Text>
-                ))}
-
-                <Button
-                  disabled={Object.keys(errors).length > 0 || isSubmitting}
-                  label="Entregar"
-                  onPress={() => {
-                    handleSubmit()
-                  }}
-                />
-              </View>
-            )
-          }}
-        </Formik>
-      </StyledModal>
+      <ModalDeliveryOrder order={order} deliveryModal={deliveryModal} />
 
       <StyledModal {...modalPickUpRent}>
         <View>
