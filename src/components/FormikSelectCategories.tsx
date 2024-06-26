@@ -35,6 +35,7 @@ const FormikSelectCategories = ({
 }) => {
   const { categories } = useStore()
   const { items: employeeItems } = useEmployee()
+  const [field, meta, helpers] = useField(name)
 
   const [availableCategories, setAvailableCategories] = useState<
     Partial<CategoryType>[]
@@ -48,7 +49,6 @@ const FormikSelectCategories = ({
     )
   }, [employeeItems])
 
-  const [field, meta, helpers] = useField(name)
   const value = field.value || []
 
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
@@ -72,7 +72,9 @@ const FormikSelectCategories = ({
   const [itemSelected, setItemSelected] = useState<ItemType['id']>()
 
   const modal = useModal({ title: 'Agregar Item' })
-
+  const handleChangeItemSelected = (items: ItemSelected[]) => {
+    helpers.setValue(items)
+  }
   return (
     <>
       <View
@@ -154,7 +156,7 @@ const FormikSelectCategories = ({
                   number: itemData?.number || 'SN'
                 }
                 console.log({ newItem })
-                helpers.setValue([...items, newItem])
+                handleChangeItemSelected([...items, newItem])
                 modal.toggleOpen()
               }}
               label="Agregar"
