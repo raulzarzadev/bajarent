@@ -189,9 +189,6 @@ const TabCashbox = () => {
     ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
       setBalance(res[0] || balance)
     })
-    // ServiceBalances.getLast(storeId).then((res) => {
-    //   setBalance(res[0] || null)
-    // })
   }, [])
 
   const handleUpdateStoreStatus = async () => {

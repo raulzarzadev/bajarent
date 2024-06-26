@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -14,7 +14,6 @@ import { currentRentPeriod } from '../libs/orders'
 import { useNavigation } from '@react-navigation/native'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
-import useSort from '../hooks/useSort'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -77,10 +76,6 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       setSelectedRow(rowId)
     }
   }
-
-  useEffect(() => {
-    console.log({ balance })
-  }, [balance])
 
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
