@@ -66,6 +66,14 @@ const FormStore = ({
             <InputLocationFormik name={'location'} />
           </View>
 
+          <View style={styles.input}>
+            <FormikInputValue
+              name={'schedule'}
+              placeholder="Horario"
+              helperText="ej. Lun - Sab 8:00am a 6:00pm"
+            />
+          </View>
+
           <Text style={gStyles.h3}>Teléfono fijo</Text>
           <View style={styles.input}>
             <FormikInputPhone

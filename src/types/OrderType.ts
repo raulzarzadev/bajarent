@@ -18,6 +18,8 @@ type OrderBase = {
 
   storeId: StoreType['id']
 
+  schedule: string
+
   firstName: string
   lastName: string
   fullName: string
