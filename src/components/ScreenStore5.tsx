@@ -186,9 +186,12 @@ const TabCashbox = () => {
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    ServiceBalances.getLast(storeId).then((res) => {
-      setBalance(res[0] || null)
+    ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
+      setBalance(res[0] || balance)
     })
+    // ServiceBalances.getLast(storeId).then((res) => {
+    //   setBalance(res[0] || null)
+    // })
   }, [])
 
   const handleUpdateStoreStatus = async () => {
@@ -205,14 +208,16 @@ const TabCashbox = () => {
   const [updating, setUpdating] = useState(false)
   const handleGetBackStatus = (balanceDate) => {
     const newDate = subDays(asDate(balanceDate), 1)
-    ServiceBalances.getLastInDate(storeId, newDate).then((res) => {
+    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
       setBalance(res[0] || balance)
     })
   }
 
+  const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
+
   const handleForwardStatus = (balanceDate) => {
     const newDate = addDays(asDate(balanceDate), 2)
-    ServiceBalances.getLastInDate(storeId, newDate).then((res) => {
+    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
       setBalance(res[0] || balance)
     })
   }
