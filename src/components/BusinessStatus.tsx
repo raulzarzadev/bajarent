@@ -206,7 +206,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                 />
               </View>
               <View>
-                <Text style={gStyles.h3}>Pagos</Text>
+                <Text style={[gStyles.h2, { marginTop: 8 }]}>Pagos</Text>
               </View>
               <BalanceAmountsE payments={balanceRow.payments} />
             </View>
@@ -244,9 +244,13 @@ const CellOrders = ({
   const { navigate } = useNavigation()
   const section = sections?.find((s) => s.section === sectionSelected)
   const orders = section?.[field] as string[]
+  if (!orders.length) return null
   return (
-    <View>
-      <Text style={gStyles.h3}>{label}</Text>
+    <View style={{ margin: 4 }}>
+      <Text style={gStyles.h3}>
+        {label}
+        <Text style={gStyles.helper}>({orders?.length || 0})</Text>
+      </Text>
       {orders?.map((orderId) => {
         const order: Partial<ConsolidatedOrderType> =
           consolidatedOrders?.orders?.[orderId]
@@ -264,8 +268,8 @@ const CellOrders = ({
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ marginHorizontal: 4 }}>
                 {order?.folio}
-                {' - '}
-                {order?.note}
+                {'-'}
+                {order?.note}{' '}
               </Text>
               <Text style={{ marginHorizontal: 4 }}>{order?.fullName}</Text>
               <Text style={{ marginHorizontal: 4 }}>

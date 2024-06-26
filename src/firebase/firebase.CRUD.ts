@@ -360,6 +360,127 @@ export class FirebaseCRUD {
     this.listenItems([where('userId', '==', userId), ...filters], cb)
   }
 
+  // -------------------------------------------------------------> SUB COLLECTIONS
+  async createItemInCollection(
+    collectionRef: any,
+    item: object
+  ): Promise<{
+    type: string
+    ok: boolean
+    res: {
+      id: string
+    }
+  }> {
+    const newItem = {
+      ...item,
+      ...this.createItemMetadata()
+    }
+    return await addDoc(collectionRef, newItem)
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_CREATED`, {
+          id: res.id
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
+  async getItemsInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    filters = []
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    filters?: QueryConstraint[]
+  }) {
+    const ref = collection(this.db, parentCollection, parentId, subCollection)
+    const queryRef = query(ref, ...filters)
+    const querySnapshot = await getDocs(queryRef)
+    const res: any[] = []
+    querySnapshot.forEach((doc) => {
+      res.push(this.normalizeItem(doc))
+    })
+    return res
+  }
+
+  async getItemInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    itemId
+  }) {
+    const ref = doc(this.db, parentCollection, parentId, subCollection, itemId)
+    const docSnap = await getDocFromCache(ref)
+    return this.normalizeItem(docSnap)
+  }
+
+  async updateItemInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    itemId,
+    itemData
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    itemId: string
+    itemData: object
+  }) {
+    const newItem = {
+      ...itemData,
+      ...this.updateItemMetadata()
+    }
+    return await updateDoc(
+      doc(this.db, parentCollection, parentId, subCollection, itemId),
+      newItem
+    )
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_UPDATED`, {
+          id: itemId
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
+  async deleteItemInCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    itemId: string
+  }) {
+    return deleteDoc(
+      doc(this.db, parentCollection, parentId, subCollection, itemId)
+    )
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_DELETED`, {
+          id: itemId
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {
@@ -445,6 +566,37 @@ export class FirebaseCRUD {
       return null
     }
   }
+
+  // createCollectionRef(
+  //   collectionName: string,
+  //   docId?: string,
+  //   subCollectionName?: string
+  // ) {
+  //   // Referencia a la colección principal
+  //   let ref = collection(this.db, collectionName)
+
+  //   // Si se proporcionan docId y subCollectionName, crear referencia a la subcolección
+  //   if (docId && subCollectionName) {
+  //     ref = collection(this.db, collectionName, docId, subCollectionName)
+  //   }
+
+  //   return ref
+  // }
+
+  // getByRef = async (ref: any) => {
+  //   const docSnap = await getDocFromCache(ref)
+  //   return this.normalizeItem(docSnap)
+  // }
+  // updateByRef = async (ref: any, data: any) => {
+  //   return await updateDoc(ref, data)
+  //     .then((res) => {
+  //       return this.formatResponse(true, 'UPDATED_BY_REF', res)
+  //     })
+  //     .catch((err) => {
+  //       console.error(err)
+  //       return this.formatResponse(false, 'UPDATED_BY_REF_ERROR', err)
+  //     })
+  // }
 
   formatResponse = (
     ok: boolean,

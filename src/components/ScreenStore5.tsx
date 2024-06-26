@@ -19,6 +19,10 @@ import { useStore } from '../contexts/storeContext'
 import { BalanceType2, Balance_V2 } from '../types/BalanceType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
+import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
+import ButtonDownloadCSV from './ButtonDownloadCSV'
+import ListClients from './ListClients'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -44,14 +48,19 @@ const ScreenStore = (props) => {
               show: true
             },
             {
+              title: 'Caja',
+              content: <TabCashbox />,
+              show: canViewCashbox
+            },
+            {
               title: 'Ordenes',
               content: <TabOrders />,
               show: canViewOrders
             },
             {
-              title: 'Caja',
-              content: <TabCashbox />,
-              show: canViewCashbox
+              title: 'Clientes',
+              content: <TabClients />,
+              show: canViewOrders
             },
             {
               title: 'Movimientos',
@@ -153,9 +162,25 @@ const StoreNumbersRow = () => {
   )
 }
 
+const TabClients = () => {
+  const { storeId } = useStore()
+  const [clients, setClients] = useState([])
+  useEffect(() => {
+    ServiceStoreClients.getAll(storeId).then((res) => {
+      setClients(res)
+    })
+  }, [])
+  return (
+    <View>
+      <ListClients clients={clients} />
+    </View>
+  )
+}
+
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   const { storeId } = useStore()
+  const { consolidatedOrders } = useOrdersCtx()
 
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
@@ -165,6 +190,7 @@ const TabCashbox = () => {
     })
   }, [])
   const handleUpdateStoreStatus = async () => {
+    await ServiceConsolidatedOrders.consolidate(storeId)
     return await ServiceBalances.createV2(storeId)
       .then((res) => {
         console.log({ res })
@@ -259,7 +285,13 @@ const TabOrders = () => {
   return (
     <View>
       {<StoreNumbersRow />}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap'
+        }}
+      >
         <Button
           label="Consolidadas"
           onPress={() => {
@@ -272,15 +304,18 @@ const TabOrders = () => {
           variant="ghost"
         />
         {isAdmin || isOwner ? (
-          <Button
-            label="Configurar"
-            onPress={() => {
-              //@ts-ignore
-              navigate('ScreenOrdersConfig')
-            }}
-            icon="settings"
-            variant="ghost"
-          />
+          <>
+            <Button
+              label="Configurar"
+              onPress={() => {
+                //@ts-ignore
+                navigate('ScreenOrdersConfig')
+              }}
+              icon="settings"
+              variant="ghost"
+            />
+            <ButtonDownloadCSV />
+          </>
         ) : null}
       </View>
     </View>

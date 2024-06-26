@@ -1,7 +1,7 @@
 import { isBefore, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
 import OrderType, { order_status } from '../types/OrderType'
-import { expireDate2, translateTime } from './expireDate'
+import { LabelRentType, expireDate2, translateTime } from './expireDate'
 import asDate from './utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
@@ -176,7 +176,7 @@ export const filterActiveOrders = (orders: OrderType[]) => {
 export const currentRentPeriod = (
   order: Partial<OrderType> | Partial<ConsolidatedOrderType>,
   props?: { shortLabel?: boolean }
-) => {
+): LabelRentType => {
   const shortLabel = props?.shortLabel || false
   if (order?.type === 'RENT') {
     const hasExtensions = Object.values(order?.extensions || {}).sort(

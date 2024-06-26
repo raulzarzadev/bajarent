@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import useFilter from '../hooks/useFilter'
+import useFilter, { CollectionSearch } from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import Chip from './Chip'
@@ -14,10 +14,7 @@ import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import FIlterByDate from './FIlterByDate'
-export type CollectionSearch = {
-  collectionName: string
-  fields: string[]
-}
+
 export type FilterListType<T> = {
   field: keyof T
   label: string
@@ -31,12 +28,14 @@ export type ModalFilterOrdersProps<T> = {
   filters?: FilterListType<T>[]
   preFilteredIds: string[]
   collectionSearch?: CollectionSearch
+  setCollectionData?: (data: T[]) => void
 }
 
 function ModalFilterList<T>({
   data,
   filters,
   setData = (data) => console.log(data),
+  setCollectionData,
   preFilteredIds,
   collectionSearch
 }: ModalFilterOrdersProps<T>) {
@@ -47,6 +46,7 @@ function ModalFilterList<T>({
     filterBy,
     handleClearFilters,
     filteredData,
+    customData,
     filtersBy,
     search,
     searchValue,
@@ -59,6 +59,10 @@ function ModalFilterList<T>({
   useEffect(() => {
     setData?.(filteredData)
   }, [filteredData])
+
+  useEffect(() => {
+    setCollectionData?.(customData)
+  }, [customData])
 
   const [customFilterSelected, setCustomFilterSelected] = useState(false)
 
@@ -93,8 +97,6 @@ function ModalFilterList<T>({
       search(e)
     }, 1000)
   }
-
-  const [filedDates, setFieldDates] = useState<string[]>([])
 
   const createFieldFilters = (
     field: string,

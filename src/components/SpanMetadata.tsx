@@ -28,7 +28,8 @@ const SpanMetadata = ({
         justifyContent: 'space-evenly',
         alignItems: 'center',
         flexWrap: 'wrap',
-        width: '100%'
+        width: '100%',
+        marginBottom: 8
       }}
     >
       <Text style={gStyles.helper}>

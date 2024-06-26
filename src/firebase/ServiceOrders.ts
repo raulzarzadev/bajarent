@@ -3,7 +3,8 @@ import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
   TypeOrder,
-  order_status
+  order_status,
+  order_type
 } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
@@ -22,16 +23,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   constructor() {
     super('orders')
   }
-
-  // async create(order: Type) {
-  //   if (!order.storeId) console.error('No storeId provided')
-  //   const store = await ServiceStores.get(order?.storeId)
-  //   const currentFolio = store?.currentFolio || 0
-  //   const nextFolio = currentFolio + 1
-  //   order.folio = nextFolio
-  //   ServiceStores.update(store.id, { currentFolio: nextFolio })
-  //   return super.create(order)
-  // }
 
   /**
    *
@@ -149,7 +140,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 
   async getByStore(storeId: string) {
-    return await this.findMany([where('storeId', '==', storeId)])
+    return await this.findMany([
+      where('storeId', '==', storeId)
+      // where('type', '==', order_type.RENT)
+    ])
   }
 
   listenUnsolved(storeId: string, cb: CallableFunction) {
@@ -274,17 +268,32 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       comments: reportsNotSolved.filter(({ orderId }) => orderId === order.id)
     }))
   }
-  async search(
-    fields: string[] = [],
-    value: string | number | boolean,
-    avoidIds: string[]
-  ) {
+
+  // export type CollectionSearch = {
+  //   collectionName: string
+  //   fields: string[]
+  //   assignedSections?: 'all' | string[]
+  // }
+  async search({
+    fields,
+    value,
+    avoidIds,
+    sections
+  }: {
+    fields: string[]
+    value: string | number
+    avoidIds?: string[]
+    sections: string[] | 'all'
+  }) {
     const promises = fields.map((field) => {
       const number = parseFloat(value as string)
       //* search as number
       const filters = []
-      if (avoidIds.length > 0)
-        filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
+      // if (avoidIds.length > 0)
+      //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
+      if (sections !== 'all') {
+        filters.push(where('assignToSection', 'in', sections))
+      }
 
       if (field === 'folio')
         return this.findMany([...filters, where(field, '==', number)])
@@ -422,6 +431,18 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         createdBy: userId
       }
     })
+  }
+  async getClientOrders({ clientId, storeId }, ops?: { justIds: boolean }) {
+    const justIds = !!ops?.justIds
+    if (justIds)
+      return this.findMany(
+        [where('clientId', '==', clientId), where('storeId', '==', storeId)],
+        { justRefs: true }
+      ).then((res) => res.map(({ id }) => id))
+    return this.findMany([
+      where('clientId', '==', clientId),
+      where('storeId', '==', storeId)
+    ])
   }
   async customMethod() {
     // Implementa tu método personalizado

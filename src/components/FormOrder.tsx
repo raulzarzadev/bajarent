@@ -257,6 +257,7 @@ const FormOrderA = ({
                   )}
                   values={values}
                   setValues={setValues}
+                  setLoading={setLoading}
                 />
 
                 <View>
@@ -297,6 +298,7 @@ type FormFieldsProps = {
     values: SetStateAction<Partial<OrderType>>,
     shouldValidate?: boolean | undefined
   ) => void
+  setLoading?: (loading: boolean) => void
 }
 
 //#region FormFields ErrorBoundary
@@ -309,7 +311,12 @@ const FormFields = (props: FormFieldsProps) => (
 
 //#region FormFields
 
-const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
+const FormFieldsA = ({
+  fields,
+  values,
+  setValues,
+  setLoading
+}: FormFieldsProps) => {
   const { categories, store } = useStore()
 
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
@@ -401,8 +408,26 @@ const FormFieldsA = ({ fields, values, setValues }: FormFieldsProps) => {
         helperText={`Ejemplo: Calle 1 #123 entre Calle 2 y Calle 3`}
       />
     ),
-    imageID: <FormikInputImage name="imageID" label="Subir identificación" />,
-    imageHouse: <FormikInputImage name="imageHouse" label="Subir fachada " />,
+    imageID: (
+      <FormikInputImage
+        name="imageID"
+        label="Subir identificación"
+        onUploading={(progress) => {
+          setLoading(true)
+          if (progress === 100) setLoading(false)
+        }}
+      />
+    ),
+    imageHouse: (
+      <FormikInputImage
+        name="imageHouse"
+        label="Subir fachada "
+        onUploading={(progress) => {
+          setLoading(true)
+          if (progress === 100) setLoading(false)
+        }}
+      />
+    ),
     neighborhood: (
       <InputValueFormik
         name={'neighborhood'}

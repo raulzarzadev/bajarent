@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
-import { CollectionSearch } from '../components/ModalFilterList'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import asDate from '../libs/utils-date'
 
 export type Filter = { field: string; value: string | number | boolean }
-
+export type CollectionSearch = {
+  collectionName: string
+  fields?: string[]
+  assignedSections?: 'all' | string[]
+}
 export default function useFilter<T extends { id?: string }>({
   data = [],
   collectionSearch
@@ -19,6 +22,7 @@ export default function useFilter<T extends { id?: string }>({
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
   )
+  const [customData, setCustomData] = useState<T[]>([])
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
 
   const filterByDates = (
@@ -109,6 +113,7 @@ export default function useFilter<T extends { id?: string }>({
     if (!value) {
       //<-- Apply filters if exist to keep current selection
       setFilteredData(filteredData)
+      setCustomData([])
       return
     }
 
@@ -120,25 +125,24 @@ export default function useFilter<T extends { id?: string }>({
         if (typeof val === 'number' && !isNaN(Number(value))) {
           return val === parseFloat(value)
         }
-
         return false
       })
     })
-    setFilteredData([...res])
 
-    // if (collectionSearch?.collectionName === 'orders') {
-    //   const avoidIds = res.map(({ id }) => id)
-    //   const orders = await ServiceOrders.search(
-    //     collectionSearch?.fields,
-    //     value,
-    //     avoidIds
-    //   ).then((res) => {
-    //     return formatOrders({ orders: res, reports })
-    //   })
-    //   setFilteredData([...orders, ...res])
-    // } else {
-    //   setFilteredData([...res])
-    // }
+    if (collectionSearch?.collectionName === 'orders') {
+      // const avoidIds = res.map(({ id }) => id)
+      const orders = await ServiceOrders.search({
+        fields: collectionSearch?.fields,
+        value,
+        //avoidIds: [],
+        sections: collectionSearch?.assignedSections
+      }).then((res) => {
+        return formatOrders({ orders: res, reports })
+      })
+
+      setCustomData([...orders.filter((o) => !res.some((r) => r.id === o.id))])
+    }
+    setFilteredData([...res])
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
@@ -162,6 +166,7 @@ export default function useFilter<T extends { id?: string }>({
 
   return {
     filteredData,
+    customData,
     filteredBy,
     handleClearFilters,
     filterByDates,

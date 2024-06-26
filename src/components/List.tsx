@@ -12,10 +12,7 @@ import { FC, useEffect, useState } from 'react'
 import Icon, { IconName } from './Icon'
 
 import ErrorBoundary from './ErrorBoundary'
-import ModalFilterList, {
-  CollectionSearch,
-  FilterListType
-} from './ModalFilterList'
+import ModalFilterList, { FilterListType } from './ModalFilterList'
 import Button from './Button'
 import InputCheckbox from './InputCheckbox'
 import StyledModal from './StyledModal'
@@ -23,6 +20,9 @@ import useModal from '../hooks/useModal'
 import Loading from './Loading'
 import { gStyles } from '../styles'
 import { getItem, setItem } from '../libs/storage'
+import { CollectionSearch } from '../hooks/useFilter'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { where } from 'firebase/firestore'
 
 // const windowHeight = Dimensions.get('window').height
 // const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
@@ -70,7 +70,7 @@ function MyList<T extends { id: string }>({
   onFetchMoreCount
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
-
+  const [collectionData, setCollectionData] = useState<T[]>([])
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
     data: filteredData,
     defaultSortBy: defaultSortBy as string,
@@ -149,6 +149,27 @@ function MyList<T extends { id: string }>({
       return newPinnedRows
     })
   }
+
+  const [pinnedRowsData, setPinnedRowsData] = useState<T[]>([])
+  useEffect(() => {
+    if (pinnedRows.length) {
+      getPinnedRows(pinnedRows).then((res) => {
+        setPinnedRowsData(res)
+      })
+    } else {
+      setPinnedRowsData([])
+    }
+  }, [pinnedRows])
+
+  const getPinnedRows = async (pinnedRows: string[]) => {
+    if (collectionSearch?.collectionName === 'orders') {
+      const promises = pinnedRows.map((id) => ServiceOrders.get(id))
+      const res = await Promise.all(promises)
+      return res
+    } else {
+      return []
+    }
+  }
   if (!data) return <Loading />
 
   return (
@@ -167,20 +188,20 @@ function MyList<T extends { id: string }>({
               <Text style={gStyles.h2}>Fijadas {pinnedRows.length || 0}</Text>
             )}
             <FlatList
-              data={pinnedRows}
+              data={pinnedRowsData}
               renderItem={({ item }) => (
                 <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
                   <Pressable
                     style={{ flexDirection: 'row', flex: 1 }}
                     onPress={() => {
-                      onPressRow && onPressRow(item)
+                      onPressRow && onPressRow(item.id)
                     }}
                   >
-                    <ComponentRow item={data.find(({ id }) => id === item)} />
+                    <ComponentRow item={item} />
                   </Pressable>
                   <PinButton
                     handlePin={() => {
-                      handleUnpinRow(item)
+                      handleUnpinRow(item.id)
                     }}
                     unpin={true}
                   />
@@ -227,6 +248,9 @@ function MyList<T extends { id: string }>({
                 setCurrentPage(1)
               }}
               filters={filters}
+              setCollectionData={(data) => {
+                setCollectionData(data)
+              }}
             />
           </View>
 
@@ -395,6 +419,7 @@ function MyList<T extends { id: string }>({
             )
           }}
         ></FlatList>
+
         <View>
           {onFetchMore && (
             <Button
@@ -422,6 +447,70 @@ function MyList<T extends { id: string }>({
             totalPages={totalPages}
           />
         </View>
+
+        {/* TABLE OF CUSTOM DATA */}
+        {collectionData.length > 0 && (
+          <>
+            <View>
+              <Text style={gStyles.h3}>Otras coincidencias</Text>
+            </View>
+            <View>
+              <FlatList
+                data={collectionData}
+                renderItem={({ item }) => {
+                  return (
+                    <View
+                      style={{ width: '100%', flexDirection: 'row', flex: 1 }}
+                    >
+                      {multiSelect && (
+                        <InputCheckbox
+                          label=""
+                          setValue={() => {
+                            handleSelectRow(item?.id)
+                          }}
+                          value={selectedRows.includes(item?.id)}
+                        />
+                      )}
+                      <Pressable
+                        style={{ flex: 1, flexDirection: 'row' }}
+                        onPress={() => {
+                          if (multiSelect) {
+                            handleSelectRow(item.id)
+                          } else {
+                            onPressRow && onPressRow(item?.id)
+                          }
+                        }}
+                      >
+                        <ComponentRow item={item} />
+                      </Pressable>
+                      {pinRows && (
+                        <>
+                          {/* ***************** ******* ***** PIN BUTTON  */}
+                          {!pinnedRows.includes(item?.id) ? (
+                            <PinButton
+                              handlePin={() => {
+                                handlePinRow(item?.id)
+                              }}
+                            />
+                          ) : (
+                            <PinButton
+                              handlePin={() => {
+                                handleUnpinRow(item?.id)
+                              }}
+                              unpin={true}
+                            />
+                          )}
+
+                          {/* ***************** ******* ***** PIN BUTTON  */}
+                        </>
+                      )}
+                    </View>
+                  )
+                }}
+              ></FlatList>
+            </View>
+          </>
+        )}
       </View>
     </ScrollView>
   )

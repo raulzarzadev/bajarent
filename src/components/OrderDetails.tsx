@@ -1,6 +1,6 @@
 import { Text, View, Image, Linking, Pressable, ViewStyle } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import OrderType, { order_type } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import P from './P'
 import CardPhone from './CardPhone'
 import theme, { colors } from '../theme'
@@ -30,12 +30,10 @@ import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import OrderImages from './OrderImages'
 import OrderExtensions from './OrderExtensions'
-import Icon from './Icon'
 import PaymentVerify from './PaymentVerify'
-import RowItem from './RowItem'
+import ButtonCreateClient from './ButtonCreateClient'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
-  console.log({ order })
   const multiItemOrder = order?.items?.length > 0
   const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
     const price = item?.priceSelected?.amount || 0
@@ -47,7 +45,6 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const singleItemAmount =
     order?.item?.priceSelected?.amount * order?.item?.priceQty
   const defaultAmount = multiItemOrder ? multiItemOrderAmount : singleItemAmount
-
   return (
     <View>
       <OrderMetadata order={order} />
@@ -56,10 +53,26 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       </View>
       <View
         style={{
-          padding: 4
+          padding: 4,
+          flexDirection: 'row',
+          justifyContent: 'center'
         }}
       >
         <ClientName order={order} style={gStyles.h1} />
+        <ButtonCreateClient
+          client={{
+            name: order?.fullName || '',
+            phone: order?.phone || '',
+            neighborhood: order?.neighborhood || '',
+            address: order?.address || '',
+            imageHouse: order?.imageHouse || null,
+            imageID: order?.imageID || null,
+            isActive: order.status === order_status.DELIVERED
+          }}
+          storeId={order.storeId}
+          orderId={order.id}
+          clientId={order.clientId}
+        />
       </View>
       <CardPhone phone={order?.phone} />
       <OrderImages order={order} />

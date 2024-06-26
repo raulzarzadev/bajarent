@@ -9,12 +9,14 @@ type PhoneInputProps = {
   stylesInput?: ViewStyle
   onChange?: (phoneNumber: string) => void
   helperText?: string
+  label?: string
 }
 export default function InputPhone({
   defaultNumber = '+52',
   stylesContainer,
   onChange = (phoneNumber: string) => console.log(phoneNumber),
-  helperText
+  helperText,
+  label
 }: // stylesInput
 PhoneInputProps) {
   const [selectedCountry, setSelectedCountry] = useState<null | ICountry>(null)
@@ -32,6 +34,7 @@ PhoneInputProps) {
 
   return (
     <View style={[{ width: '100%' }, stylesContainer]}>
+      {label && <Text style={{}}>{label}</Text>}
       <RNPhoneInput
         customMask={['## ## ## ## ##']}
         language="es"

@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import Button from '../Button'
 import { handleCancel } from './libs/order_actions'
@@ -6,15 +6,16 @@ import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
 import { onDelete, onSetStatuses } from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
-import OrderType from '../../types/OrderType'
-import { ItemMap } from '../ItemsMap'
-import {
-  createItemsFromOrders,
-  formatItemsMaps,
-  formatOrderItemsMaps
-} from '../../libs/maps'
+import { gStyles } from '../../styles'
+import ButtonDeleteOrder from './ButtonDeleteOrder'
 
-const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
+const MultiOrderActions = ({
+  ordersIds = [],
+  data
+}: {
+  ordersIds: string[]
+  data: any[]
+}) => {
   const { storeId, user } = useAuth()
   const {
     permissions: { orders: permissionsOrder, isOwner, isAdmin }
@@ -38,13 +39,6 @@ const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
     const res = ordersIds.map((id) =>
       handleCancel({ orderId: id, storeId, userId: user.id || '' })
     )
-    timeOut()
-  }
-  const handleDeleteOrders = () => {
-    setLoading(true)
-    const res = ordersIds.map(async (id) => {
-      return await onDelete({ orderId: id })
-    })
     timeOut()
   }
 
@@ -75,16 +69,7 @@ const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
         disabled={loading}
       />
     ),
-    canDelete && (
-      <Button
-        onPress={() => handleDeleteOrders()}
-        label="Eliminar"
-        variant="outline"
-        color="error"
-        icon="delete"
-        disabled={loading}
-      />
-    ),
+    canDelete && <ButtonDeleteOrder orderIds={ordersIds} />,
     <Button
       onPress={() => handleUpdateStatuses()}
       label="Actualizar"
@@ -103,26 +88,30 @@ const MultiOrderActions = ({ ordersIds = [] }: { ordersIds: string[] }) => {
     // />
   ]
   return (
-    <View
-      style={{
-        marginTop: 8,
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-around',
-        padding: 2,
-        flexWrap: 'wrap'
-      }}
-    >
-      {buttons.map(
-        (button, i) =>
-          button && (
-            <View key={i} style={{ padding: 4, width: '50%' }}>
-              {button}
-            </View>
-          )
-      )}
-      {/* To fix las element */}
-      <View style={{ flex: 1 }} />
+    <View style={{ marginTop: 8 }}>
+      <Text style={gStyles.h3}>
+        {ordersIds?.length || 0} de {data?.length}
+      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-around',
+          padding: 2,
+          flexWrap: 'wrap'
+        }}
+      >
+        {buttons.map(
+          (button, i) =>
+            button && (
+              <View key={i} style={{ padding: 4, width: '50%' }}>
+                {button}
+              </View>
+            )
+        )}
+        {/* To fix las element */}
+        <View style={{ flex: 1 }} />
+      </View>
     </View>
   )
 }

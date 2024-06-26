@@ -21,6 +21,8 @@ export type BaseStoreType = {
   phone?: string
   mobile?: string
   address?: string
+
+  schedule?: string
   // coords?: {
   //   lat: number
   //   lon: number

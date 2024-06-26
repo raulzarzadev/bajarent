@@ -1,4 +1,4 @@
-import { QueryConstraint, where } from 'firebase/firestore'
+import { QueryConstraint, collection, doc, where } from 'firebase/firestore'
 import { storage } from './auth'
 import { FirebaseCRUD, GetItemsOps } from './firebase.CRUD'
 import { db } from './main'
@@ -61,5 +61,114 @@ export class FirebaseGenericService<T extends Identifiable> {
 
   listenByStore(storeId: string, cb: CallableFunction) {
     return this.listenMany([where('storeId', '==', storeId)], cb)
+  }
+
+  // SUB_COLLECTIONS
+
+  // Paso 1: Método para obtener una referencia a una subcolección
+  getSubCollectionRef(parentId: string, subCollectionName: string) {
+    const parentDocRef = doc(db, this.COLLECTION_NAME, parentId)
+    return collection(db, parentDocRef.path, subCollectionName)
+  }
+
+  /**
+   *
+   * @param parentId Id del documento padre
+   * @param subCollectionName Nombre de la subcolección
+   * @param newItem Datos del nuevo documento
+   * @returns
+   */
+  async createInSubCollection({
+    parentId,
+    subCollectionName,
+    newItem
+  }: {
+    parentId: string
+    subCollectionName: string
+    newItem: CreateItem<T>
+  }) {
+    const subCollectionRef = this.getSubCollectionRef(
+      parentId,
+      subCollectionName
+    )
+    return await this.itemCRUD.createItemInCollection(subCollectionRef, newItem)
+  }
+
+  /**
+   *
+   * @param parentId Id del documento padre
+   * @param subCollection Nombre de la subcolección
+   * @param filters Filtros para la consulta
+   * @returns
+   */
+
+  getItemsInCollection({
+    parentId,
+    subCollection,
+    filters = []
+  }: {
+    parentId: string
+    subCollection: string
+    filters?: QueryConstraint[]
+  }) {
+    return this.itemCRUD.getItemsInCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      filters
+    })
+  }
+
+  getItemInCollection({
+    parentId,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+  }) {
+    return this.itemCRUD.getItemInCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      itemId
+    })
+  }
+
+  updateInSubCollection({
+    parentId,
+    subCollection,
+    itemId,
+    itemData
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+    itemData: CreateItem<T>
+  }) {
+    return this.itemCRUD.updateItemInCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      itemId,
+      itemData
+    })
+  }
+  deleteInSubCollection({
+    parentId,
+    subCollection,
+    itemId
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+  }) {
+    return this.itemCRUD.deleteItemInCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      itemId
+    })
   }
 }

@@ -1,10 +1,11 @@
 import React from 'react'
 import { ListSideButton, LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
-import RowOrder, { RowOrderE } from './RowOrder'
+import { RowOrderE } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 import { useStore } from '../contexts/storeContext'
+import { CollectionSearch } from '../hooks/useFilter'
 
 const ListOrders = ({
   orders,
@@ -15,10 +16,7 @@ const ListOrders = ({
   orders: OrderType[]
   defaultOrdersIds?: string[]
   sideButtons?: ListSideButton[]
-  collectionSearch?: {
-    collectionName: string
-    fields: string[]
-  }
+  collectionSearch?: CollectionSearch
 }) => {
   const { navigate } = useNavigation()
   const { storeSections } = useStore()
@@ -45,9 +43,10 @@ const ListOrders = ({
       defaultOrder="des"
       onPressRow={(id) => {
         //@ts-ignore
-        navigate('OrderDetails', { orderId: id })
-        //@ts-ignore
-        //  navigate('OrderDetails', { orderId: id })
+        navigate('StackOrders', {
+          screen: 'OrderDetails',
+          params: { orderId: id }
+        })
       }}
       sortFields={[
         //{ key: 'priority', label: 'Prioridad' },
@@ -61,14 +60,7 @@ const ListOrders = ({
         { key: 'expireAt', label: 'Vencimiento' },
         { key: 'colorLabel', label: 'Color' }
       ]}
-      ComponentRow={({ item }) => (
-        <RowOrderE
-          item={item}
-          // showTime={showTime}
-          // showTotal={showTotal}
-          // showTodayAmount={showTodayAmount}
-        />
-      )}
+      ComponentRow={({ item }) => <RowOrderE item={item} />}
       filters={[
         { field: 'assignToSection', label: 'Area' },
         { field: 'type', label: 'Tipo' },
@@ -113,7 +105,7 @@ const ListOrders = ({
         // }
       ]}
       ComponentMultiActions={({ ids }) => {
-        return <MultiOrderActions ordersIds={ids} />
+        return <MultiOrderActions ordersIds={ids} data={formatOrders} />
       }}
       collectionSearch={collectionSearch}
     />

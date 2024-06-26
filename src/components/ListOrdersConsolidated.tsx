@@ -1,32 +1,27 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import List, { LoadingList } from './List'
+import { LoadingList } from './List'
 import ListRow, { ListRowField } from './ListRow'
 import {
   ConsolidatedOrderType,
   ServiceConsolidatedOrders
 } from '../firebase/ServiceConsolidatedOrders'
-import dictionary from '../dictionary'
 import { useNavigation } from '@react-navigation/native'
 import { useOrdersCtx } from '../contexts/ordersContext'
-import TextInfo from './TextInfo'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
 import OrderDirectives from './OrderDirectives'
 import asDate, { fromNow } from '../libs/utils-date'
 import ErrorBoundary from './ErrorBoundary'
-import OrderType from '../types/OrderType'
+import MultiOrderActions from './OrderActions/MultiOrderActions'
 type OrderWithId = Partial<ConsolidatedOrderType> & { id: string }
 
 const ListOrdersConsolidated = () => {
   const { consolidatedOrders, handleRefresh } = useOrdersCtx()
   const { storeId, storeSections } = useStore()
   const { navigate } = useNavigation()
-  //const orders = consolidatedOrders?.orders || {}
-  const orders: Record<string, Partial<ConsolidatedOrderType>> = JSON.parse(
-    consolidatedOrders?.stringJSON || '{}'
-  )
+  const orders = consolidatedOrders?.orders || {}
 
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedToSection =
@@ -36,7 +31,6 @@ const ListOrdersConsolidated = () => {
       id: order.id,
       ...order,
       assignToSectionName: assignedToSection
-      //  assignedToSection
     }
   })
   const [disabled, setDisabled] = useState(false)
@@ -58,16 +52,19 @@ const ListOrdersConsolidated = () => {
   return (
     <ScrollView>
       <View>
-        {/* <View>
-          <TextInfo text="Estas ordenes se generan de forma manual, al hacer click en el logo de guardar"></TextInfo>
-          <TextInfo text="Te ayudaran a buscar mas rapido ordenes especificas. "></TextInfo>
-        </View> */}
         <Text style={[gStyles.helper, gStyles.tCenter]}>
           Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
         </Text>
         <LoadingList
+          pinRows
+          collectionSearch={{
+            collectionName: 'orders'
+          }}
+          ComponentMultiActions={({ ids }) => {
+            return <MultiOrderActions ordersIds={ids} data={data} />
+          }}
           data={data}
-          pinRows={true}
+          //pinRows={true}
           rowsPerPage={20}
           sideButtons={[
             {
@@ -142,7 +139,7 @@ const ListOrdersConsolidated = () => {
               label: 'Contrato'
             },
             {
-              key: 'name',
+              key: 'fullName',
               label: 'Nombre'
             },
             {

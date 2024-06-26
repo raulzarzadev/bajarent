@@ -14,6 +14,7 @@ import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
 import ModalSendWhatsapp from '../ModalSendWhatsapp'
+import ButtonDeleteOrder from './ButtonDeleteOrder'
 
 const OrderCommonActions = ({
   storeId,
@@ -140,21 +141,7 @@ const OrderCommonActions = ({
         icon="edit"
       />
     ),
-    canDelete && (
-      <ButtonConfirm
-        icon="delete"
-        openSize="small"
-        openColor="error"
-        openLabel="Eliminar"
-        openVariant="outline"
-        confirmColor="error"
-        confirmLabel="Eliminar"
-        text="Esta orden se eliminara de forma permanente"
-        handleConfirm={async () => {
-          handleDelete()
-        }}
-      ></ButtonConfirm>
-    ),
+    canDelete && <ButtonDeleteOrder orderId={orderId} />,
     canCancel && (
       <ButtonConfirm
         openLabel="Cancelar"

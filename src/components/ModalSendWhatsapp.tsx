@@ -59,6 +59,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
   const PAYMENTS = ` ${orderPayments({ order })}`
   const ADDRESS = `📍${store?.address ? `Dirección: ${store.address}` : ''}`
+  const SCHEDULE = store?.schedule
+    ? `🕒 Horario de atención: ${store?.schedule || ''}`
+    : ''
   //******** MESSAGES
 
   const expireDateString = (order) => {
@@ -121,6 +124,14 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${ADDRESS}
   \n${AGRADECIMIENTOS}`
 
+  const STORE_INFO = `
+  \n${store?.name}
+  \n${ADDRESS}
+  \n${SCHEDULE}
+  \n${CONTACTS}
+  \n${BANK_INFO}
+  \n${AGRADECIMIENTOS}
+  `
   type MessageType =
     | 'expireAt'
     | 'receipt-rent'
@@ -128,6 +139,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     | 'not-found'
     | 'repair-picked-up'
     | 'rent-quality-survey'
+    | 'store-info'
 
   const CLIENT_NOT_FOUND = `${WELCOME}
   \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
@@ -194,6 +206,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     {
       type: 'rent-quality-survey',
       content: QUALITY_SURVEY
+    },
+    {
+      type: 'store-info',
+      content: STORE_INFO
     }
   ]
 
@@ -212,14 +228,16 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       { label: 'Vencimiento', value: 'expireAt' },
       { label: 'Recibo', value: 'receipt-rent' },
       { label: 'No encontrado', value: 'not-found' },
-      { label: 'Encuesta', value: 'rent-quality-survey' }
+      { label: 'Encuesta', value: 'rent-quality-survey' },
+      { label: 'Información', value: 'store-info' }
     ]
   }
   if (order?.type === order_type.REPAIR) {
     options = [
       { label: 'Recibo', value: 'receipt-repair' },
       { label: 'No encontrado', value: 'not-found' },
-      { label: 'Recogido', value: 'repair-picked-up' }
+      { label: 'Recogido', value: 'repair-picked-up' },
+      { label: 'Información', value: 'store-info' }
     ]
   }
 
