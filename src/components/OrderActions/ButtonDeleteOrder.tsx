@@ -33,8 +33,6 @@ const ButtonDeleteOrder = ({
     }
   }
 
-  console.log({ canDeleteOrders })
-
   return (
     <ButtonConfirm
       icon="delete"
