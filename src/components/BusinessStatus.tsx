@@ -163,7 +163,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                 }}
               >
                 <CellOrders
-                  label={'Entregadas'}
+                  label={'Rentas'}
                   field="deliveredToday"
                   sectionSelected={balanceRow.section}
                   sections={balance.sections}
