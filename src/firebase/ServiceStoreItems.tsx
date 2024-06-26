@@ -25,6 +25,34 @@ export class ServiceStoreItemsClass {
       filters: [where('isActive', '==', true)]
     })
   }
+  async listenAvailableBySections({
+    storeId,
+    userSections = [],
+    cb
+  }: {
+    storeId: string
+    userSections: string[]
+    cb: (items: Type[]) => void
+  }) {
+    if (userSections.length) {
+      return ServiceStores.listenItemsInSubCollection({
+        parentId: storeId,
+        subCollection: SUB_COLLECTION,
+        filters: [
+          where('status', '==', 'pickedUp'),
+          where('assignedSection', 'in', userSections)
+        ],
+        cb
+      })
+    } else {
+      return ServiceStores.listenItemsInSubCollection({
+        parentId: storeId,
+        subCollection: SUB_COLLECTION,
+        filters: [where('status', '==', 'pickedUp')],
+        cb
+      })
+    }
+  }
 
   async getSimilar(storeId: string, item: Partial<Type>) {
     const similarName = ServiceStores.getItemsInCollection({

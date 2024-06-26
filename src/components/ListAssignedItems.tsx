@@ -7,6 +7,11 @@ import { gSpace, gStyles } from '../styles'
 import ItemType from '../types/ItemType'
 import theme, { colors } from '../theme'
 import { CategoryType } from '../types/RentItem'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import Button from './Button'
+import ItemActions from './ItemActions'
 
 export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']
@@ -14,50 +19,46 @@ export type ListAssignedItemsProps = {
   itemSelected?: string
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
+  const { storeId } = useStore()
   const categoryId = props?.categoryId
   const onPressItem = props?.onPressItem
   const itemSelected = props?.itemSelected
   const { employee } = useEmployee()
-  const { items } = useStore()
   const employeeSections = employee?.sectionsAssigned || []
 
   const [availableItems, setAvailableItems] = React.useState([])
   useEffect(() => {
-    const sectionItems = items.filter((item) =>
-      employeeSections.includes(item.assignedSection)
-    )
-    const availableItems = sectionItems.filter(
-      (item) => item.status === 'available' || item.status === 'pickedUp'
-    )
-    console.log({ availableItems })
-    if (categoryId) {
-      const categoryItems = availableItems.filter(
-        (item) => item.category === categoryId
-      )
-      setAvailableItems(categoryItems)
-    } else {
-      setAvailableItems(availableItems)
+    if (storeId && employeeSections.length) {
+      ServiceStoreItems.listenAvailableBySections({
+        storeId,
+        userSections: employeeSections,
+        cb: (items) => {
+          setAvailableItems(items)
+        }
+      })
     }
-  }, [categoryId, items])
+  }, [storeId, employeeSections])
+
   return (
     <View>
       {availableItems.length > 0 && (
-        <Text style={gStyles.h3}>
-          Items disponibles: {availableItems.length || 0}
+        <Text style={[gStyles.helper, gStyles.tCenter]}>
+          Items disponibles {availableItems.length || 0}
         </Text>
       )}
       <FlatList
+        style={{ margin: 'auto' }}
         horizontal
         data={availableItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Pressable
+          <RowItem
+            item={item}
+            selected={itemSelected === item.id}
             onPress={() => {
               onPressItem?.(item.id)
             }}
-          >
-            <RowItem item={item} selected={itemSelected === item.id} />
-          </Pressable>
+          />
         )}
       />
     </View>
@@ -65,10 +66,12 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
 }
 const RowItem = ({
   item,
-  selected
+  selected,
+  onPress
 }: {
   item: Partial<ItemType>
   selected?: boolean
+  onPress?: () => void
 }) => {
   const { categories } = useStore()
   const categoryName = categories.find(
@@ -77,24 +80,37 @@ const RowItem = ({
       cat.name === item.categoryName ||
       cat.name === item.category
   )?.name
+  const modal = useModal({ title: 'Item actions' })
   return (
-    <View
-      style={{
-        width: 120,
-        height: 80,
-        backgroundColor: selected ? colors.lightBlue : theme.base,
-        borderRadius: gSpace(2),
-        margin: 2,
-        padding: 4,
-        justifyContent: 'space-between'
-      }}
-    >
-      <Text numberOfLines={2} style={[gStyles.h3]}>
-        {categoryName}
-      </Text>
-      <Text style={[gStyles.tCenter]}>{item.number}</Text>
-      <Text style={[gStyles.helper, gStyles.tCenter]}>{item.serial}</Text>
-    </View>
+    <>
+      <StyledModal {...modal}>
+        <ItemActions itemId={item.id} itemSection={item.assignedSection} />
+      </StyledModal>
+      <Pressable
+        onPress={onPress}
+        onLongPress={() => {
+          modal.toggleOpen()
+        }}
+      >
+        <View
+          style={{
+            width: 120,
+            height: 60,
+            backgroundColor: selected ? colors.lightBlue : theme.base,
+            borderRadius: gSpace(2),
+            margin: 2,
+            padding: 4,
+            justifyContent: 'space-between'
+          }}
+        >
+          <Text numberOfLines={2} style={[gStyles.h3]}>
+            {categoryName}
+          </Text>
+          <Text style={[gStyles.tCenter]}>{item.number}</Text>
+          <Text style={[gStyles.helper, gStyles.tCenter]}>{item.serial}</Text>
+        </View>
+      </Pressable>
+    </>
   )
 }
 

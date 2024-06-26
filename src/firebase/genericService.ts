@@ -193,4 +193,23 @@ export class FirebaseGenericService<T extends Identifiable> {
       parentId
     })
   }
+  listenItemsInSubCollection({
+    parentId,
+    subCollection,
+    filters,
+    cb
+  }: {
+    parentId: string
+    subCollection: string
+    filters?: QueryConstraint[]
+    cb: CallableFunction
+  }) {
+    return this.itemCRUD.listenItemsInSubCollection({
+      parentCollection: this.COLLECTION_NAME,
+      parentId,
+      subCollection,
+      filters,
+      cb
+    })
+  }
 }

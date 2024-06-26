@@ -25,7 +25,7 @@ const FormikSelectCategories = ({
   label,
   selectPrice,
   startAt, //? TODO: <--- Should be add?
-  choseEmptyCategory //*<--- this will alow you choose category with out specific item
+  choseEmptyCategory = true //*<--- this will alow you choose category with out specific item
 }: {
   name: string
   label?: string
@@ -45,6 +45,7 @@ const FormikSelectCategories = ({
       )
     )
   }, [employeeItems])
+  console.log({ choseEmptyCategory })
   const [field, meta, helpers] = useField(name)
   const value = field.value || []
 
@@ -69,6 +70,7 @@ const FormikSelectCategories = ({
   const [itemSelected, setItemSelected] = useState<ItemType['id']>()
 
   const modal = useModal({ title: 'Agregar Item' })
+
   return (
     <>
       <View

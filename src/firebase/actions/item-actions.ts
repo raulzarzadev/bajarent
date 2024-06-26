@@ -67,6 +67,22 @@ export const onUpdateItem = async ({
     itemData: values
   })
 }
+export const onChangeItemSection = async ({
+  storeId,
+  itemId,
+  sectionId
+}: {
+  storeId: string
+  itemId: string
+  sectionId: string
+}) => {
+  return await ServiceStoreItems.updateField({
+    storeId,
+    itemId,
+    field: 'assignedSection',
+    value: sectionId
+  })
+}
 
 // export const onPickUpItem = async ({ storeId, itemId }) => {
 //   await onEditItemField({

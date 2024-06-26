@@ -513,6 +513,30 @@ export class FirebaseCRUD {
       })
   }
 
+  listenItemsInSubCollection({
+    parentId,
+    parentCollection,
+    subCollection,
+    filters = [],
+    cb
+  }: {
+    parentId: string
+    parentCollection: string
+    subCollection: string
+    filters?: QueryConstraint[]
+    cb: CallableFunction
+  }) {
+    const ref = collection(this.db, parentCollection, parentId, subCollection)
+    const queryRef = query(ref, ...filters)
+    onSnapshot(queryRef, (querySnapshot) => {
+      const res: any[] = []
+      querySnapshot.forEach((doc) => {
+        res.push(this.normalizeItem(doc))
+      })
+      cb(res)
+    })
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {

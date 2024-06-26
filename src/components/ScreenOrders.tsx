@@ -4,6 +4,8 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import useOrders from '../hooks/useOrders'
 import { useState } from 'react'
 import { useEmployee } from '../contexts/employeeContext'
+import { ScrollView, Text } from 'react-native'
+import { ListAssignedItemsE } from './ListAssignedItems'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
@@ -28,33 +30,43 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const userSections = employee?.sectionsAssigned
 
   return (
-    <ListOrders
-      orders={hasOrderList ? preOrders : orders}
-      collectionSearch={{
-        assignedSections: viewAllOrders ? 'all' : userSections,
-        collectionName: 'orders',
-        fields: [
-          'folio',
-          'note',
-          'fullName',
-          'name',
-          'neighborhood',
-          'status',
-          'phone'
-        ]
-      }}
-      sideButtons={[
-        {
-          icon: 'refresh',
-          label: '',
-          onPress: () => {
-            handleRefresh()
-          },
-          visible: true,
-          disabled: disabled
-        }
-      ]}
-    />
+    <ScrollView>
+      <ListAssignedItemsE
+        onPressItem={(id) => {
+          navigate('Store', {
+            screen: 'ScreenItemDetails',
+            params: { id }
+          })
+        }}
+      />
+      <ListOrders
+        orders={hasOrderList ? preOrders : orders}
+        collectionSearch={{
+          assignedSections: viewAllOrders ? 'all' : userSections,
+          collectionName: 'orders',
+          fields: [
+            'folio',
+            'note',
+            'fullName',
+            'name',
+            'neighborhood',
+            'status',
+            'phone'
+          ]
+        }}
+        sideButtons={[
+          {
+            icon: 'refresh',
+            label: '',
+            onPress: () => {
+              handleRefresh()
+            },
+            visible: true,
+            disabled: disabled
+          }
+        ]}
+      />
+    </ScrollView>
   )
 }
 
