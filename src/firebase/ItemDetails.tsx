@@ -9,33 +9,16 @@ import { useNavigation } from '@react-navigation/native'
 import DocMetadata from '../components/DocMetadata'
 import dictionary, { asCapitalize } from '../dictionary'
 import { onDeleteItem } from '../libs/item_actions'
+import ButtonDeleteItem from './ButtonDeleteItem'
 
 const ItemDetails = ({ item }: { item: ItemType }) => {
-  const { storeId } = useStore()
-  const { goBack, navigate } = useNavigation()
-  const handleDelete = async () => {
-    goBack()
-    await onDeleteItem({ storeId, itemId: item.id })
-      .then(console.log)
-      .catch(console.error)
-  }
+  const { navigate } = useNavigation()
 
   return (
     <View>
       <DocMetadata item={item} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <ButtonConfirm
-          text="¿Estas seguro de eliminar este item?"
-          handleConfirm={async () => {
-            return handleDelete()
-          }}
-          openVariant="ghost"
-          justIcon
-          openColor="error"
-          icon="delete"
-          confirmColor="error"
-          confirmLabel="Eliminar"
-        />
+        <ButtonDeleteItem itemId={item.id} />
         <Button
           onPress={() => {
             //@ts-ignore

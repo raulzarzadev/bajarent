@@ -481,6 +481,38 @@ export class FirebaseCRUD {
       })
   }
 
+  async updateFieldInSubCollection({
+    parentId,
+    subCollection,
+    itemId,
+    field,
+    value
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+    field: string
+    value: any
+  }) {
+    const ref = doc(
+      this.db,
+      this.collectionName,
+      parentId,
+      subCollection,
+      itemId
+    )
+    return await updateDoc(ref, { [field]: value })
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_UPDATED`, {
+          id: itemId
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
   // -------------------------------------------------------------> Helpers
 
   showDataFrom(querySnapshot: any, collection: string) {

@@ -7,26 +7,24 @@ import ErrorBoundary from './ErrorBoundary'
 import ItemType from '../types/ItemType'
 import Loading from './Loading'
 import { useNavigation } from '@react-navigation/native'
-import { onOverrideItem } from '../libs/item_actions'
+import { onUpdateItem } from '../firebase/actions/item-actions'
 
 const ScreenItemEdit = ({ route }) => {
   const itemId = route?.params?.id
   const { goBack } = useNavigation()
-  const { store, storeId } = useStore()
-  const items = store?.items
+  const { storeId, items } = useStore()
   const [item, setItem] = useState<Partial<ItemType>>()
   useEffect(() => {
     if (items) {
-      setItem(items[itemId] || null)
+      setItem(items.find((i) => i.id === itemId))
     }
   }, [items])
 
   const handleUpdateItem = async (values: ItemType) => {
-    await onOverrideItem({ storeId, itemId, values })
+    await onUpdateItem({ storeId, itemId, values })
       .then(console.log)
       .catch(console.error)
   }
-
   if (item === undefined) return <Loading />
 
   if (item === null) return <Text>Item not found</Text>

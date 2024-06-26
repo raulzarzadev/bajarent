@@ -18,6 +18,7 @@ export type EmployeeContextType = {
     canCancelPayments?: boolean
     canValidatePayments?: boolean
     canDeleteOrders?: boolean
+    canDeleteItems?: boolean
   }
   items: Partial<ItemType>[]
 }
@@ -59,7 +60,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
   useEffect(() => {
-    const employeeItemCategories = storeItems.filter((item) =>
+    const employeeItemCategories = storeItems?.filter((item) =>
       employee?.sectionsAssigned?.includes(item?.assignedSection)
     )
     setItems(employeeItemCategories)
@@ -88,7 +89,9 @@ export const EmployeeContextProvider = ({ children }) => {
           isOwner ||
           !!employee?.permissions?.store?.canValidatePayments,
         canDeleteOrders:
-          isAdmin || isOwner || !!employee?.permissions?.order.canDelete
+          isAdmin || isOwner || !!employee?.permissions?.order.canDelete,
+        canDeleteItems:
+          isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections]

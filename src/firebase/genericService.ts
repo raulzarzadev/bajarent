@@ -171,4 +171,26 @@ export class FirebaseGenericService<T extends Identifiable> {
       itemId
     })
   }
+
+  updateFieldInSubCollection({
+    parentId,
+    subCollection,
+    itemId,
+    field,
+    value
+  }: {
+    parentId: string
+    subCollection: string
+    itemId: string
+    field: string
+    value: any
+  }) {
+    return this.itemCRUD.updateFieldInSubCollection({
+      subCollection,
+      itemId,
+      field,
+      value,
+      parentId
+    })
+  }
 }

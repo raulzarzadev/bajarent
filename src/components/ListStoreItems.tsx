@@ -17,7 +17,6 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
       setLoading(true)
-      const res = await onDeleteItem({ itemId: id, storeId })
       return res
     })
     const res = await Promise.all(promises)

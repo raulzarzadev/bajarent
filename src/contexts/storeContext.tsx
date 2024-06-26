@@ -13,6 +13,7 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -52,6 +53,7 @@ const StoreContextProvider = ({ children }) => {
   const [sections, setSections] = useState<SectionType[]>([])
   const [staff, setStaff] = useState<StaffType[]>([])
   const [payments, setPayments] = useState<PaymentType[]>([])
+  const [storeItems, setStoreItems] = useState<Partial<ItemType>[]>(undefined)
 
   useEffect(() => {
     if (store) {
@@ -100,9 +102,25 @@ const StoreContextProvider = ({ children }) => {
 
         setStaff(staffUserInfo)
       })
-      // ServicePayments.getByStore(store.id).then((res) => setPayments(res))
     }
   }, [store])
+
+  useEffect(() => {
+    if (store && categories.length)
+      ServiceStoreItems.getAll(store.id).then((res) => {
+        setStoreItems(
+          res?.map((item) => ({
+            ...item,
+            id: item.id,
+            categoryName:
+              categories.find((cat) => cat.id === item.category)?.name || '',
+            assignedSectionName:
+              sections.find((sec) => sec.id === item.assignedSection)?.name ||
+              ''
+          })) || []
+        )
+      })
+  }, [store, categories])
 
   //#region render
 
@@ -113,15 +131,15 @@ const StoreContextProvider = ({ children }) => {
     return { ...staff, sectionsAssigned }
   })
 
-  let items = {}
-  for (let key in store?.items) {
-    const item = store?.items[key]
-    item.categoryName =
-      categories.find((cat) => cat.id === item.category)?.name || ''
-    item.assignedSectionName =
-      sections.find((sec) => sec.id === item.assignedSection)?.name || ''
-    items[key] = item
-  }
+  // let items = {}
+  // for (let key in store?.items) {
+  //   const item = store?.items[key]
+  //   item.categoryName =
+  //     categories.find((cat) => cat.id === item.category)?.name || ''
+  //   item.assignedSectionName =
+  //     sections.find((sec) => sec.id === item.assignedSection)?.name || ''
+  //   items[key] = item
+  // }
 
   return (
     <StoreContext.Provider
@@ -134,10 +152,7 @@ const StoreContextProvider = ({ children }) => {
         userStores: stores,
         storeSections: sections,
         payments,
-        items: Object.entries(store?.items || {}).map(([key, item]) => ({
-          ...item,
-          id: key
-        })),
+        items: storeItems,
         /**
          * @deprecated
          */

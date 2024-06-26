@@ -105,7 +105,8 @@ export enum permissions_store {
   canViewItems,
   canEditStaff,
   canCancelPayments,
-  canValidatePayments
+  canValidatePayments,
+  canDeleteItems
 }
 
 export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
