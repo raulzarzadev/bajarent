@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -77,6 +77,10 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       setSelectedRow(rowId)
     }
   }
+
+  useEffect(() => {
+    console.log({ balance })
+  }, [balance])
 
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
