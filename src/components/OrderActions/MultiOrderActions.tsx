@@ -41,13 +41,6 @@ const MultiOrderActions = ({
     )
     timeOut()
   }
-  const handleDeleteOrders = () => {
-    setLoading(true)
-    const res = ordersIds.map(async (id) => {
-      return await onDelete({ orderId: id })
-    })
-    timeOut()
-  }
 
   const handleUpdateStatuses = async () => {
     setLoading(true)

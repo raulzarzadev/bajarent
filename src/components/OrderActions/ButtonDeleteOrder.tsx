@@ -12,7 +12,7 @@ const ButtonDeleteOrder = ({
   orderIds?: string[]
 }) => {
   const {
-    employee: { canDeleteOrder }
+    permissions: { canDeleteOrders }
   } = useEmployee()
 
   const handleDeleteOrder = async () => {
@@ -33,10 +33,12 @@ const ButtonDeleteOrder = ({
     }
   }
 
+  console.log({ canDeleteOrders })
+
   return (
     <ButtonConfirm
       icon="delete"
-      openDisabled={!canDeleteOrder}
+      openDisabled={!canDeleteOrders}
       openSize="small"
       openColor="error"
       openLabel="Eliminar"
