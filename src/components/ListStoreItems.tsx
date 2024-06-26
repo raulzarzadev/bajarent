@@ -6,13 +6,10 @@ import ItemType from '../types/ItemType'
 import ListRow from './ListRow'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
-import { onDeleteItem } from '../libs/item_actions'
-import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 
 const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const { navigate } = useNavigation()
-  const { storeId, store } = useStore()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {

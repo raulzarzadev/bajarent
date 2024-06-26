@@ -25,6 +25,7 @@ export type ItemBase = {
   assignedSectionName?: string
   currentOrderId?: string
   currentLocation?: string
+  needFix?: boolean
 }
 
 type ItemType = BaseType & ItemBase

@@ -32,6 +32,8 @@ import {
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoKeyOutline } from 'react-icons/io5'
 import { IoPricetagsOutline } from 'react-icons/io5'
+import { HiOutlineWrenchScrewdriver } from 'react-icons/hi2'
+import { FaTruckPickup } from 'react-icons/fa6'
 
 import {
   IoPersonOutline,
@@ -50,6 +52,7 @@ import { TiPhone } from 'react-icons/ti'
 import { BsWhatsapp } from 'react-icons/bs'
 import { RiImageAddLine } from 'react-icons/ri'
 import { IoHammerOutline } from 'react-icons/io5'
+import { FaWrench } from 'react-icons/fa6'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -132,7 +135,9 @@ const icons = {
   unPin: RiUnpinLine,
   rent: IoKeyOutline,
   repair: IoHammerOutline,
-  sale: IoPricetagsOutline
+  sale: IoPricetagsOutline,
+  wrench: FaWrench,
+  truck: FaTruckPickup
 } as const
 
 export type IconName = keyof typeof icons

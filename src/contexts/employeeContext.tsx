@@ -6,6 +6,7 @@ import StaffType, {
 import { useAuth } from './authContext'
 import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -32,7 +33,7 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
-  const { store, staff, storeSections, items: storeItems } = useStore()
+  const { store, staff, storeSections, storeId } = useStore()
 
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
@@ -60,11 +61,16 @@ export const EmployeeContextProvider = ({ children }) => {
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
   useEffect(() => {
-    const employeeItemCategories = storeItems?.filter((item) =>
-      employee?.sectionsAssigned?.includes(item?.assignedSection)
-    )
-    setItems(employeeItemCategories)
-  }, [employee, storeItems])
+    if (employee) {
+      ServiceStoreItems.listenAvailableBySections({
+        storeId,
+        userSections: employee.sectionsAssigned || [],
+        cb: (items) => {
+          setItems(items)
+        }
+      })
+    }
+  }, [employee])
 
   const value = useMemo(
     () => ({
@@ -94,7 +100,7 @@ export const EmployeeContextProvider = ({ children }) => {
           isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems
       }
     }),
-    [employee, isAdmin, isOwner, store, assignedSections]
+    [employee, isAdmin, isOwner, store, assignedSections, items]
   )
 
   em++

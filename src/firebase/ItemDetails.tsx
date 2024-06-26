@@ -3,15 +3,12 @@ import React from 'react'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
 import Button from '../components/Button'
-import ButtonConfirm from '../components/ButtonConfirm'
-import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import DocMetadata from '../components/DocMetadata'
 import dictionary, { asCapitalize } from '../dictionary'
-import { onDeleteItem } from '../libs/item_actions'
 import ButtonDeleteItem from './ButtonDeleteItem'
 
-const ItemDetails = ({ item }: { item: ItemType }) => {
+const ItemDetails = ({ item }: { item: Partial<ItemType> }) => {
   const { navigate } = useNavigation()
 
   return (

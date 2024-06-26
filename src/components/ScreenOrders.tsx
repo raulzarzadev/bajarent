@@ -31,14 +31,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
   return (
     <ScrollView>
-      <ListAssignedItemsE
-        onPressItem={(id) => {
-          navigate('Store', {
-            screen: 'ScreenItemDetails',
-            params: { id }
-          })
-        }}
-      />
+      <ListAssignedItemsE />
       <ListOrders
         orders={hasOrderList ? preOrders : orders}
         collectionSearch={{

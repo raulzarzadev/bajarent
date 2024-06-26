@@ -24,9 +24,9 @@ const FormikSelectCategories = ({
   name,
   label,
   selectPrice,
-  startAt, //? TODO: <--- Should be add?
-  choseEmptyCategory = true //*<--- this will alow you choose category with out specific item
-}: {
+  startAt //? TODO: <--- Should be add?
+}: //choseEmptyCategory = true //*<--- this will alow you choose category with out specific item
+{
   name: string
   label?: string
   selectPrice?: boolean
@@ -35,9 +35,11 @@ const FormikSelectCategories = ({
 }) => {
   const { categories } = useStore()
   const { items: employeeItems } = useEmployee()
+
   const [availableCategories, setAvailableCategories] = useState<
     Partial<CategoryType>[]
   >([])
+
   useEffect(() => {
     setAvailableCategories(
       categories.filter((category) =>
@@ -45,7 +47,7 @@ const FormikSelectCategories = ({
       )
     )
   }, [employeeItems])
-  console.log({ choseEmptyCategory })
+
   const [field, meta, helpers] = useField(name)
   const value = field.value || []
 
@@ -97,7 +99,7 @@ const FormikSelectCategories = ({
         <StyledModal {...modal}>
           <View style={{ marginVertical: 8 }}>
             <FormChooseCategory
-              categories={choseEmptyCategory ? categories : availableCategories}
+              categories={availableCategories}
               setValue={(value) => {
                 const newItem = categories.find(({ id }) => id === value)
                 setItemSelected('')
@@ -106,6 +108,7 @@ const FormikSelectCategories = ({
               value={category?.id || ''}
             />
           </View>
+
           <View>
             <ListAssignedItemsE
               categoryId={category?.id}
