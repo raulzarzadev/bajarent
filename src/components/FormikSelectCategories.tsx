@@ -195,15 +195,21 @@ const ListItems = ({
   )
 }
 
-const ItemRow = ({
+export const ItemRow = ({
   item,
   onPressDelete
 }: {
   item: ItemSelected
-  onPressDelete: () => void
+  onPressDelete?: () => void
 }) => {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
       <RowItem
         item={item}
         style={{
@@ -214,44 +220,20 @@ const ItemRow = ({
           backgroundColor: theme.info,
           paddingHorizontal: gSpace(2),
           paddingVertical: gSpace(1),
-          borderRadius: gSpace(2),
-          marginRight: gSpace(2)
+          borderRadius: gSpace(2)
         }}
       />
-      {/* <View
-        style={{
-          // width: '100%',
-          flex: 1,
-          marginVertical: gSpace(2),
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          //maxWidth: 320,
-          marginHorizontal: 'auto',
-          alignItems: 'center',
-          backgroundColor: theme.info,
-          paddingHorizontal: gSpace(2),
-          paddingVertical: gSpace(1),
-          borderRadius: gSpace(2),
-          marginRight: gSpace(2)
-        }}
-      >
-        <Text style={{ fontWeight: 'bold' }}>{item?.number || 'SN'}</Text>
-        <Text style={{ fontWeight: 'bold' }}>{item?.categoryName}</Text>
-        <Text style={{ alignItems: 'center' }}>
-          {item.priceSelected?.title}
-        </Text>
-        <CurrencyAmount
-          style={{ fontWeight: 'bold' }}
-          amount={item.priceSelected?.amount}
+
+      {onPressDelete && (
+        <Button
+          buttonStyles={{ marginLeft: gSpace(2) }}
+          icon="sub"
+          color="error"
+          justIcon
+          onPress={onPressDelete}
+          size="small"
         />
-      </View> */}
-      <Button
-        icon="sub"
-        color="error"
-        justIcon
-        onPress={onPressDelete}
-        size="small"
-      />
+      )}
     </View>
   )
 }

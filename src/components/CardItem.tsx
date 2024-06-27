@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import ItemType from '../types/ItemType'
-import { gStyles } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
 
@@ -60,6 +60,23 @@ const ItemIcon = ({
       }}
     >
       <Icon icon={icon} color={iconColor} size={12} />
+    </View>
+  )
+}
+
+export const SquareItem = ({ item }: { item: Partial<ItemType> }) => {
+  return (
+    <View
+      style={{
+        width: 120,
+        height: 80,
+        backgroundColor: colors.lightBlue,
+        borderRadius: gSpace(2),
+        margin: 2,
+        padding: 4
+      }}
+    >
+      <CardItem item={item} />
     </View>
   )
 }

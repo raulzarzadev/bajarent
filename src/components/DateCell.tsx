@@ -9,16 +9,26 @@ const DateCell = ({
   label,
   showTime,
   labelBold,
-  showTimeAgo = true
+  showTimeAgo = true,
+  borderColor
 }: {
   label?: string
   date: Date | Timestamp | number | string
   showTime?: boolean
   labelBold?: boolean
   showTimeAgo?: boolean
+  borderColor?: string
 }) => {
   return (
-    <View>
+    <View
+      style={{
+        borderColor: borderColor || 'transparent',
+        borderWidth: 4,
+        borderRadius: 8,
+        padding: 2,
+        backgroundColor: borderColor
+      }}
+    >
       {label && (
         <Text style={[gStyles.tCenter, labelBold && gStyles.tBold]}>
           {label}

@@ -19,7 +19,6 @@ const ModalDeliveryOrder = ({
   deliveryModal: ReturnType<typeof useModal>
 }) => {
   const itemSerial = order?.items?.[0]?.serial || ''
-  console.log({ itemSerial })
   const handleDeliveryOrder = async (values) => {
     const itemBrand = values.itemBrand || ''
     const itemsWithOrderSerialNumber = values.items.map((item) => {

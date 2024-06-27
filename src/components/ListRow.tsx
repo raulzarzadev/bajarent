@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     borderColor: theme.neutral,
     width: '100%',
     // maxWidth: 500,
-    marginHorizontal: 'auto'
+    marginHorizontal: 'auto',
+    flexWrap: 'wrap'
   }
 })

@@ -16,34 +16,44 @@ const RowItem = ({
       component: (
         <View
           style={{
-            flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center'
           }}
         >
-          <Text style={[gStyles.tBold, { textAlign: 'center' }]}>
+          <Text
+            numberOfLines={1}
+            style={[gStyles.tBold, { textAlign: 'center', paddingRight: 4 }]}
+          >
             {item.categoryName}
           </Text>
-          {item.number && (
-            <Text
-              style={[
-                //gStyles.helper,
-                gStyles.tCenter,
-                { marginLeft: 4, alignItems: 'center' }
-              ]}
-            >
-              {item.number}
+          {item.serial && (
+            <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+              {item.serial}
             </Text>
           )}
         </View>
       ),
+      width: 'auto'
+    },
+    {
+      component: (
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Text style={[]}>{item.number}</Text>
+        </View>
+      ),
       width: 'rest'
     },
+
     {
       component: (
         <Text style={{ textAlign: 'center' }}>{item.priceSelected?.title}</Text>
       ),
-      width: 80
+      width: 70
     },
     {
       component: (

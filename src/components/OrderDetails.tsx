@@ -32,9 +32,10 @@ import OrderImages from './OrderImages'
 import OrderExtensions from './OrderExtensions'
 import PaymentVerify from './PaymentVerify'
 import ButtonCreateClient from './ButtonCreateClient'
-import RowItem from './RowItem'
+import { ItemRow } from './FormikSelectCategories'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  console.log({ order })
   const multiItemOrder = order?.items?.length > 0
   const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
     const price = item?.priceSelected?.amount || 0
@@ -81,11 +82,24 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />
       </ErrorBoundary>
-      {order?.type !== order_type.REPAIR && (
-        <ErrorBoundary componentName="ItemDetails">
-          <ItemDetails order={order} />
+      <View
+        style={{
+          marginVertical: 16,
+          paddingBottom: 16,
+          backgroundColor: theme?.base,
+          width: '100%',
+          paddingHorizontal: 4
+        }}
+      >
+        <ErrorBoundary componentName="OrderItems">
+          <OrderItems order={order} />
         </ErrorBoundary>
-      )}
+        {order?.type !== order_type.REPAIR && (
+          <ErrorBoundary componentName="OrderTotals">
+            <OrderTotals order={order} />
+          </ErrorBoundary>
+        )}
+      </View>
 
       {order?.type === order_type.REPAIR && (
         <ErrorBoundary componentName="ModalRepairQuote">
@@ -226,45 +240,21 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
-  const items = [...(order.items || [])]
-  // console.log({ item: order.item })
-  //* NOTE: not show item. These will hide older orders item. :X
-  // if (order?.item) items?.push(order.item)
+const OrderTotals = ({ order }: { order: Partial<OrderType> }) => {
   return (
-    <View
-      style={{
-        marginVertical: 16,
-        paddingVertical: 16,
-        backgroundColor: theme?.base,
-        width: '100%'
-      }}
-    >
-      <Text
-        style={[gStyles.h2, { marginVertical: gSpace(4), marginBottom: 4 }]}
-      >
-        Artículos
-      </Text>
-      {!!order?.itemSerial && (
-        <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-          serie: {order?.itemSerial}
-        </Text>
-      )}
-
-      {items?.map((item, i) => (
-        <RowItem item={item} key={item.id} />
-      ))}
-
+    <View>
       <Totals items={order.items} />
       {order?.extensions ? (
         <OrderExtensions order={order} />
       ) : (
         <View style={{ marginTop: gSpace(3) }}>
-          <ItemDates
+          <OrderDates
+            status={order.status}
             expireAt={order.expireAt}
             scheduledAt={order.scheduledAt}
             startedAt={order.deliveredAt}
             extendTime={order.extendTime}
+            pickedUp={order.pickedUpAt}
           />
         </View>
       )}
@@ -272,17 +262,37 @@ const ItemDetails = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const ItemDates = ({
+const OrderItems = ({ order }: { order: Partial<OrderType> }) => {
+  const items = order.items
+  return (
+    <View>
+      <Text style={gStyles.h3}>Artículos</Text>
+      {items?.map((item, i) => (
+        <ItemRow item={item} key={item.id} />
+      ))}
+    </View>
+  )
+}
+
+export const OrderDates = ({
+  status,
   scheduledAt,
   expireAt,
   startedAt,
-  extendTime
+  extendTime,
+  pickedUp
 }: {
+  status: OrderType['status']
   scheduledAt?: Date | Timestamp
   expireAt?: Date | Timestamp
   startedAt?: Date | Timestamp
+  /**
+   * @deprecated
+   */
   extendTime?: TimePriceType
+  pickedUp?: Date | Timestamp
 }) => {
+  console.log({ status, pickedUp })
   return (
     <>
       <Text style={[gStyles.h3]}>Fechas</Text>
@@ -305,8 +315,23 @@ const ItemDates = ({
         {!!startedAt && (
           <DateCell label="Iniciado" date={startedAt} showTime labelBold />
         )}
-        {!!expireAt && !!startedAt && (
-          <DateCell label="Vence" date={expireAt} showTime labelBold />
+        {!!expireAt && (
+          <DateCell
+            label="Vence"
+            date={expireAt}
+            showTime
+            labelBold
+            borderColor={status === order_status.DELIVERED && colors.green}
+          />
+        )}
+        {!!pickedUp && status === order_status.PICKED_UP && (
+          <DateCell
+            label="Recogida"
+            date={pickedUp}
+            showTime
+            labelBold
+            borderColor={status === order_status.PICKED_UP && colors.lightBlue}
+          />
         )}
       </View>
     </>

@@ -14,7 +14,6 @@ import { currentRentPeriod } from '../libs/orders'
 import { useNavigation } from '@react-navigation/native'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
-import useSort from '../hooks/useSort'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {

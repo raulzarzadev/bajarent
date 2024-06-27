@@ -13,6 +13,7 @@ import ButtonConfirm from './ButtonConfirm'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { deleteField } from 'firebase/firestore'
 import TextInfo from './TextInfo'
+import { OrderDates } from './OrderDetails'
 
 const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
   const extensionsObj = order?.extensions || {}
@@ -38,9 +39,13 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
 
   return (
     <View style={{ padding: 4 }}>
-      {!!expireAt && (
-        <DateCell label="Vence" date={expireAt} showTime labelBold />
-      )}
+      <OrderDates
+        status={order.status}
+        expireAt={expireAt}
+        pickedUp={order.pickedUpAt}
+        scheduledAt={order.scheduledAt}
+        startedAt={order.deliveredAt}
+      />
       <Text style={gStyles.h3}>Extenciones </Text>
       <ListRow
         fields={[

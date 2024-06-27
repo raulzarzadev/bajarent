@@ -21,7 +21,6 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
   const itemSelected = props?.itemSelected
   const { items: availableItems } = useEmployee()
-  console.log({ availableItems })
   return (
     <View>
       {availableItems.length > 0 && (
