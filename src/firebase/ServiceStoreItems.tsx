@@ -4,7 +4,7 @@ import ItemType from '../types/ItemType'
 type Type = Partial<ItemType>
 const SUB_COLLECTION = 'items'
 export class ServiceStoreItemsClass {
-  async add({ storeId, item }) {
+  async add({ storeId, item }: { storeId: string; item: Type }) {
     return ServiceStores.createInSubCollection({
       parentId: storeId,
       newItem: item,

@@ -142,6 +142,7 @@ const FormikSelectCategories = ({
           )}
           <View style={{ justifyContent: 'center' }}>
             <Button
+              buttonStyles={{ margin: 'auto' }}
               onPress={() => {
                 const itemData = employeeItems.find(
                   (item) => item.id === itemSelected
@@ -159,6 +160,7 @@ const FormikSelectCategories = ({
                 handleChangeItemSelected([...items, newItem])
                 modal.toggleOpen()
               }}
+              disabled={!itemSelected}
               label="Agregar"
               icon="add"
               size="small"
@@ -224,7 +226,7 @@ export const ItemRow = ({
         }}
       />
 
-      {onPressDelete && (
+      {!!onPressDelete && (
         <Button
           buttonStyles={{ marginLeft: gSpace(2) }}
           icon="sub"

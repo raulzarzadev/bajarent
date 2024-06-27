@@ -16,7 +16,7 @@ export const onEditItemField = async <K extends keyof Type>({
   value: ValueOfKey<ItemType, K>
 }) => {
   //* <------------------ UPDATE ITEM FIELD
-  ServiceStoreItems.updateField({
+  return ServiceStoreItems.updateField({
     field,
     value,
     storeId,
@@ -84,14 +84,24 @@ export const onChangeItemSection = async ({
   })
 }
 
-// export const onPickUpItem = async ({ storeId, itemId }) => {
-//   await onEditItemField({
-//     //* <------------------ UPDATE ITEM STATUS TO PICKED UP
-//     storeId,
-//     itemId,
-//     field: 'status',
-//     value: 'pickedUp'
-//   })
+export const onPickUpItem = async ({ storeId, itemId }) => {
+  return await onEditItemField({
+    //* <------------------ UPDATE ITEM STATUS TO PICKED UP
+    storeId,
+    itemId,
+    field: 'status',
+    value: 'pickedUp'
+  })
+}
+export const onRentItem = async ({ storeId, itemId }) => {
+  return await onEditItemField({
+    //* <------------------ UPDATE ITEM STATUS TO DELIVERED
+    storeId,
+    itemId,
+    field: 'status',
+    value: 'rented'
+  })
+}
 
 // export const onPickUpItem = async ({ storeId, itemId }) => {
 //   await onEditItemField({

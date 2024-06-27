@@ -37,6 +37,7 @@ import { useStore } from '../../contexts/storeContext'
 import { onCreateItem, onPickUpItem, onRentItem } from '../../libs/item_actions'
 import { ItemSelected } from '../FormSelectItem'
 import ModalDeliveryOrder from './ModalDeliveryOrder'
+import ModalPickupOrder from './ModalPickupOrder'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -128,7 +129,8 @@ const OrderActions = ({
         await onDelivery({
           orderId,
           userId,
-          expireAt
+          expireAt,
+          items: items
         })
         await onOrderComment({ content: 'Entregada' })
       } catch (error) {
@@ -308,7 +310,7 @@ const OrderActions = ({
   /* ******************************************** 
              RENT FLOW               
    *******************************************rz */
-  const modalPickUpRent = useModal({ title: 'Recoger renta' })
+  const modalPickUpRent = useModal({ title: 'Recoger artículos' })
   const handlePickUpRent = () => {
     modalPickUpRent.toggleOpen()
   }
@@ -435,89 +437,64 @@ const OrderActions = ({
     orderStatus !== order_status.AUTHORIZED &&
     employeeCanUndo
 
-  const showPendingButton =
-    orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
+  // const showPendingButton =
+  //   orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
   // #region COMPONENT
 
-  const [newItems, setNewItems] = useState<OrderType['items']>([])
+  //const [newItems, setNewItems] = useState<OrderType['items']>([])
 
-  const handleCollectItems = async () => {
-    await handleCreateItemsIfNecessary({ items: newItems }) //* this will create items that not exists
-      .then(console.log)
-      .catch(console.error)
+  // const handleCollectItems = async () => {
+  //   await handleCreateItemsIfNecessary({ items: newItems }) //* this will create items that not exists
+  //     .then(console.log)
+  //     .catch(console.error)
 
-    await handlePickUpItems({ itemsIds: newItems.map((i) => i.id) }) //* update items as picked up
-      .then(console.log)
-      .catch(console.error)
-    actions_fns[acts.PICKUP]()
+  //   await handlePickUpItems({ itemsIds: newItems.map((i) => i.id) }) //* update items as picked up
+  //     .then(console.log)
+  //     .catch(console.error)
+  //   actions_fns[acts.PICKUP]()
 
-    modalPickUpRent.setOpen(false)
-  }
-
-  const handlePickUpItems = async ({ itemsIds }: { itemsIds: string[] }) => {
-    itemsIds.map(async (itemId) => {
-      // return await onPickUpItem({ itemId, storeId })
-    })
-    return await Promise.all(itemsIds)
-  }
-
-  const handleCreateItemsIfNecessary = async ({
-    items
-  }: {
-    items: OrderType['items']
-  }) => {
-    items.forEach(async (item) => {
-      const itemAlreadyExists = storeItems?.find(
-        (storeItem) => storeItem.id === item.id
-      )
-      if (!!itemAlreadyExists) return
-      const categoryId = storeCategories.find(
-        (c) => c.name === item.categoryName
-      )?.id
-      // return await onCreateItem({
-      //   storeId,
-      //   item: {
-      //     id: item.id,
-      //     assignedSection: order?.assignToSection || '',
-      //     serial: item.serial || '',
-      //     brand: item.brand || '',
-      //     number: item.number || '',
-      //     category: categoryId || '',
-      //     status: 'available'
-      //   },
-      //   itemId: item.id,
-      //   userId: user?.id || ''
-      // })
-    })
-  }
-
-  // const onRentItems = async ({ items }: { items: ItemSelected[] }) => {
-  //   deliveryModal.setOpen(false)
-  //   const itemsIds = items.map((i) => i.id)
-  //   handleCreateItemsIfNecessary({ items })
-  //   const rentingItems = itemsIds.map(async (itemId) => {
-  //     return await onRentItem({ itemId, storeId })
-  //   })
-
-  //   return await Promise.all(rentingItems)
+  //   modalPickUpRent.setOpen(false)
   // }
 
-  // const handleDeliveryOrder = async (values) => {
-  //   const itemSerial = values.itemSerial || ''
-  //   const itemBrand = values.itemBrand || ''
-  //   const itemsWithOrderSerialNumber = values.items.map((item) => {
-  //     return { ...item, serial: itemSerial, brand: itemBrand || '' }
+  // const handlePickUpItems = async ({ itemsIds }: { itemsIds: string[] }) => {
+  //   itemsIds.map(async (itemId) => {
+  //     // return await onPickUpItem({ itemId, storeId })
   //   })
-  //   await onRentItems({ items: itemsWithOrderSerialNumber })
+  //   return await Promise.all(itemsIds)
+  // }
 
-  //   await actions_fns[acts.DELIVER]({
-  //     ...values
+  // const handleCreateItemsIfNecessary = async ({
+  //   items
+  // }: {
+  //   items: OrderType['items']
+  // }) => {
+  //   items.forEach(async (item) => {
+  //     const itemAlreadyExists = storeItems?.find(
+  //       (storeItem) => storeItem.id === item.id
+  //     )
+  //     if (!!itemAlreadyExists) return
+  //     const categoryId = storeCategories.find(
+  //       (c) => c.name === item.categoryName
+  //     )?.id
+  //     // return await onCreateItem({
+  //     //   storeId,
+  //     //   item: {
+  //     //     id: item.id,
+  //     //     assignedSection: order?.assignToSection || '',
+  //     //     serial: item.serial || '',
+  //     //     brand: item.brand || '',
+  //     //     number: item.number || '',
+  //     //     category: categoryId || '',
+  //     //     status: 'available'
+  //     //   },
+  //     //   itemId: item.id,
+  //     //   userId: user?.id || ''
+  //     // })
   //   })
   // }
 
   return (
     <View>
-      <View style={{ margin: 'auto', marginVertical: gSpace(4) }}> </View>
       <StyledModal {...modalPickUpRepair}>
         <View>
           <Formik
@@ -578,13 +555,11 @@ const OrderActions = ({
                       label="Subir fachada "
                     />
                   </View>
-
                   <Button
                     disabled={Object.keys(errors).length > 0 || isSubmitting}
                     label="Recoger"
                     onPress={async () => {
                       handleSubmit()
-                      console.log({ dirty })
                       if (dirty) {
                         setTouchedPickedUp(true)
                         console.log('touched')
@@ -600,41 +575,7 @@ const OrderActions = ({
 
       <ModalDeliveryOrder order={order} deliveryModal={deliveryModal} />
 
-      <StyledModal {...modalPickUpRent}>
-        <View>
-          <Text>Asegurate de que recoges el siguiente articulo:</Text>
-          {order?.items?.map((item, index) => {
-            return (
-              <View style={{ marginTop: 8 }} key={index}>
-                <FormItemPickUp
-                  item={{
-                    ...item,
-                    assignedSection: order?.assignToSection || '',
-                    serial: order.itemSerial
-                  }}
-                  onChange={(values) => {
-                    const newItems = []
-                    newItems[index] = { ...values }
-                    const cleanItems = newItems.map((i) => {
-                      delete i.priceSelectedId
-                      delete i.priceSelected
-                      delete i.priceQty
-                      return i
-                    })
-                    setNewItems(cleanItems)
-                  }}
-                />
-              </View>
-            )
-          })}
-        </View>
-        <Button
-          label="Recoger"
-          onPress={() => {
-            handleCollectItems()
-          }}
-        ></Button>
-      </StyledModal>
+      <ModalPickupOrder order={order} modal={modalPickUpRent} />
       {/* 
       // #region FLOW 
     */}

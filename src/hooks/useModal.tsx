@@ -15,4 +15,6 @@ const useModal = (props?: Modal & StyledModalProps) => {
   }
 }
 
+export type ReturnModal = ReturnType<typeof useModal>
+
 export default useModal

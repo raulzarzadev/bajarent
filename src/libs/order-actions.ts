@@ -45,18 +45,21 @@ export const onAuthorize = async ({ orderId, userId }) => {
 export const onDelivery = async ({
   orderId,
   userId,
-  expireAt
+  expireAt,
+  items
 }: {
   orderId: string
   userId: string
   expireAt: Date
+  items: OrderType['items']
 }) => {
   return await ServiceOrders.update(orderId, {
     expireAt,
     status: order_status.DELIVERED,
     deliveredAt: new Date(),
     deliveredBy: userId,
-    isDelivered: true
+    isDelivered: true,
+    items
   })
     .then(() => {
       console.log('delivery')
