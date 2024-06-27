@@ -126,6 +126,7 @@ const OrderActions = ({
         const expireAt = orderExpireAt({
           order: { ...order, deliveredAt: new Date(), items }
         })
+        console.log({ expireAt })
         await onDelivery({
           orderId,
           userId,

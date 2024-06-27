@@ -28,14 +28,16 @@ const ModalDeliveryOrder = ({
   const handleDeliveryOrder = async (values: Partial<OrderType>) => {
     deliveryModal.toggleOpen()
 
-    const expireAt = orderExpireAt({ order: values as OrderType })
-
+    const expireAt = orderExpireAt({
+      order: { ...values, deliveredAt: new Date() }
+    })
     //* delivery order
     onDelivery({
       expireAt,
       orderId: values.id,
       userId: user.id,
-      items: values.items
+      items: values.items,
+      order: values
     })
       .then((res) => console.log({ res }))
       .catch(console.error)

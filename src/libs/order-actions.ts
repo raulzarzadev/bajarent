@@ -46,14 +46,17 @@ export const onDelivery = async ({
   orderId,
   userId,
   expireAt,
-  items
+  items,
+  order
 }: {
   orderId: string
   userId: string
   expireAt: Date
   items: OrderType['items']
+  order?: Partial<OrderType>
 }) => {
   return await ServiceOrders.update(orderId, {
+    ...order,
     expireAt,
     status: order_status.DELIVERED,
     deliveredAt: new Date(),
