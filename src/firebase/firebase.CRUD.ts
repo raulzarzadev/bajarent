@@ -10,8 +10,10 @@ import { v4 as uidGenerator } from 'uuid'
 import {
   addDoc,
   collection,
+  CollectionReference,
   deleteDoc,
   doc,
+  DocumentData,
   getDocFromCache,
   getDocFromServer,
   getDocs,
@@ -386,6 +388,44 @@ export class FirebaseCRUD {
         return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
       })
   }
+  async createRefItem<T>({
+    collectionRef,
+    item
+  }: {
+    collectionRef: CollectionReference<DocumentData>
+    item?: T
+  }) {
+    const newItem = {
+      ...item,
+      ...this.createItemMetadata()
+    }
+    return await addDoc(collectionRef, newItem)
+      .then((res) =>
+        this.formatResponse(true, `${this.collectionName}_CREATED`, {
+          id: res.id
+        })
+      )
+      .catch((err) => {
+        console.error(err)
+        return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
+      })
+  }
+
+  async getRefItems({
+    collectionRef,
+    filters
+  }: {
+    collectionRef: CollectionReference<DocumentData>
+    filters?: QueryConstraint[]
+  }) {
+    const q: Query<DocumentData> = query(collectionRef, ...filters)
+    const querySnapshot = await getDocs(q)
+    const res: any[] = []
+    querySnapshot.forEach((doc) => {
+      res.push(doc)
+    })
+    return res
+  }
 
   async getItemsInCollection({
     parentId,
@@ -536,6 +576,8 @@ export class FirebaseCRUD {
       cb(res)
     })
   }
+
+  createItemInSubCollectionRef({ ref, item }) {}
 
   // -------------------------------------------------------------> Helpers
 

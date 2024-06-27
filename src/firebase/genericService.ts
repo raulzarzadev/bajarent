@@ -1,4 +1,11 @@
-import { QueryConstraint, collection, doc, where } from 'firebase/firestore'
+import {
+  CollectionReference,
+  DocumentData,
+  QueryConstraint,
+  collection,
+  doc,
+  where
+} from 'firebase/firestore'
 import { storage } from './auth'
 import { FirebaseCRUD, GetItemsOps } from './firebase.CRUD'
 import { db } from './main'
@@ -210,6 +217,33 @@ export class FirebaseGenericService<T extends Identifiable> {
       subCollection,
       filters,
       cb
+    })
+  }
+
+  //* use refs to create
+
+  createRefItem<T>({
+    collectionRef,
+    item
+  }: {
+    collectionRef: CollectionReference<DocumentData>
+    item: T
+  }) {
+    return this.itemCRUD.createRefItem({
+      collectionRef,
+      item
+    })
+  }
+  getRefItems<T>({
+    collectionRef,
+    filters
+  }: {
+    collectionRef: CollectionReference<DocumentData>
+    filters: QueryConstraint[]
+  }): Promise<T[]> {
+    return this.itemCRUD.getRefItems({
+      collectionRef,
+      filters
     })
   }
 }

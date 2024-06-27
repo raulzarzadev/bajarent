@@ -4,6 +4,7 @@ import ItemDetails from '../firebase/ItemDetails'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
@@ -24,6 +25,17 @@ const ScreenItemsDetails = ({ route }) => {
   return (
     <View style={gStyles.container}>
       <ItemDetails item={item} />
+      <ItemHistory itemId={item.id} />
+    </View>
+  )
+}
+
+const ItemHistory = ({ itemId }) => {
+  const [itemHistory, setItemHistory] = useState([])
+
+  return (
+    <View>
+      <Text style={gStyles.h3}>Item History</Text>
     </View>
   )
 }
