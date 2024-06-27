@@ -33,7 +33,11 @@ const ModalPickupOrder = ({
   const handlePickup = async () => {
     //*pickup items
     items.forEach(async (item) => {
-      const res = await onPickUpItem({ storeId, itemId: item.id })
+      const res = await onPickUpItem({
+        storeId,
+        itemId: item.id,
+        orderId: order.id
+      })
         .then(async (res) => {
           if (
             !res.ok &&
@@ -53,6 +57,7 @@ const ModalPickupOrder = ({
               },
               storeId
             })
+            //TODO: add history
           } else {
             return true
           }

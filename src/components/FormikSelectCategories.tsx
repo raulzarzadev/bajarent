@@ -19,7 +19,6 @@ import { useEmployee } from '../contexts/employeeContext'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import ItemType from '../types/ItemType'
 import RowItem from './RowItem'
-
 const FormikSelectCategories = ({
   name,
   label,
@@ -31,7 +30,6 @@ const FormikSelectCategories = ({
   label?: string
   selectPrice?: boolean
   startAt?: Date
-  choseEmptyCategory?: boolean
 }) => {
   const { categories } = useStore()
   const { items: employeeItems } = useEmployee()
@@ -41,12 +39,20 @@ const FormikSelectCategories = ({
     Partial<CategoryType>[]
   >([])
 
+  //TODO: <--- this will alow you choose category with out specific item
+  const CHOOSE_SPECIFIC_ITEM = false
+  const chooseSpecificItem = CHOOSE_SPECIFIC_ITEM
+
   useEffect(() => {
-    setAvailableCategories(
-      categories.filter((category) =>
-        employeeItems.find((item) => item.category === category?.id)
+    if (chooseSpecificItem) {
+      setAvailableCategories(
+        categories.filter((category) =>
+          employeeItems.find((item) => item.category === category?.id)
+        )
       )
-    )
+    } else {
+      setAvailableCategories(categories)
+    }
   }, [employeeItems])
 
   const value = field.value || []
@@ -128,7 +134,7 @@ const FormikSelectCategories = ({
               }}
             />
           </View>
-          {selectPrice && (
+          {!!selectPrice && (
             <View style={{ marginVertical: 8 }}>
               <FormSelectPrice
                 prices={categoryPrices}
@@ -160,7 +166,7 @@ const FormikSelectCategories = ({
                 handleChangeItemSelected([...items, newItem])
                 modal.toggleOpen()
               }}
-              disabled={!itemSelected}
+              //disabled={!itemSelected}
               label="Agregar"
               icon="add"
               size="small"

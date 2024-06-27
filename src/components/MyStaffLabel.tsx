@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
 import theme from '../theme'
 import Button from './Button'
+import { setItem } from '../libs/storage'
+import { PERSISTENCE_KEY } from '../../App'
 
 const MyStaffLabel = () => {
   const { user } = useAuth()
@@ -15,6 +17,9 @@ const MyStaffLabel = () => {
 
   const routeName = navigation.getState()?.routes?.[0]?.name
   const isProfile = routeName === 'Profile'
+  const handleClearHistory = () => {
+    setItem(PERSISTENCE_KEY, '')
+  }
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       {/* {user && <LocationStatus />} */}
@@ -53,6 +58,17 @@ const MyStaffLabel = () => {
           </Text>
         </View>
       </Pressable> */}
+      {__DEV__ && (
+        <Button
+          icon="broom"
+          onPress={() => {
+            handleClearHistory()
+          }}
+          justIcon
+          variant="outline"
+          buttonStyles={{ marginRight: 12 }}
+        ></Button>
+      )}
       {store && (
         <Button
           icon="add"

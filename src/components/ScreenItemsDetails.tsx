@@ -5,6 +5,11 @@ import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
+import ListRow from './ListRow'
+import DateCell from './DateCell'
+import SpanUser from './SpanUser'
+import dictionary from '../dictionary'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
@@ -32,10 +37,37 @@ const ScreenItemsDetails = ({ route }) => {
 
 const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState([])
-
+  const { storeId } = useStore()
+  console.log({ itemHistory })
+  useEffect(() => {
+    ServiceItemHistory.getLastEntries({
+      itemId,
+      count: 5,
+      storeId: storeId
+    }).then((res) => {
+      setItemHistory(res)
+    })
+  }, [])
   return (
     <View>
-      <Text style={gStyles.h3}>Item History</Text>
+      <Text style={gStyles.h3}>Historial</Text>
+      {itemHistory.map((entry) => (
+        <ListRow
+          key={entry.id}
+          fields={[
+            {
+              component: <DateCell date={entry.createdAt} showTime />,
+              width: 'rest'
+            },
+            {
+              component: <SpanUser userId={entry?.createdBy} />,
+              width: 'rest'
+            },
+            { component: <Text>{dictionary(entry.type)}</Text>, width: 'rest' },
+            { component: <Text>Order</Text>, width: 'rest' }
+          ]}
+        />
+      ))}
     </View>
   )
 }

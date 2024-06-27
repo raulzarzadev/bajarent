@@ -10,8 +10,8 @@ import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { OrdersContextProvider } from './src/contexts/ordersContext'
 import ErrorBoundary from './src/components/ErrorBoundary'
 
+export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {
-  const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
   const [isReady, setIsReady] = useState(!__DEV__)
 
   const [initialState, setInitialState] = useState()

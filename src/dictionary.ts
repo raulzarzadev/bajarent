@@ -176,6 +176,8 @@ const labels = {
   stock: 'en bodega',
   pickedUp: 'recogido',
   important: 'importante',
+  delivery: 'entrega',
+  pickup: 'recolección',
   ' ': '',
   '': ''
 } as const

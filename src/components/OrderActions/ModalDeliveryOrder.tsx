@@ -42,12 +42,17 @@ const ModalDeliveryOrder = ({
 
     //* delivery items
     values.items.forEach((item) => {
-      onRentItem({ storeId: values.storeId, itemId: item.id })
+      onRentItem({
+        storeId: values.storeId,
+        itemId: item.id,
+        orderId: values.id
+      })
         .then((res) => console.log({ res }))
         .catch(console.error)
     })
   }
   const correctQtyOfItems = (items = []) => {
+    return true
     const MAX_ITEMS = 1
     const MIN_ITEMS = 1
     return items.length > MAX_ITEMS || items.length < MIN_ITEMS
@@ -61,21 +66,13 @@ const ModalDeliveryOrder = ({
             handleDeliveryOrder(values)
           }}
           validate={(values: OrderType) => {
-            console.log({ values })
             const errors: Partial<OrderType> = {}
             if (!values.location) errors.location = 'Ubicación requerida'
-            // if (!values?.items?.length)
-            //   error.items = 'Es necesario al menos un artículo'
-            // if (
-            //   !values.itemSerial &&
-            //   (values.type === 'RENT' || values.type === 'REPAIR')
-            // )
-            //   errors.itemSerial = 'No. de serie es requerido'
+
             return errors
           }}
         >
           {({ errors, handleSubmit, isSubmitting, values }) => {
-            console.log({ errors })
             return (
               <View>
                 <View style={{ marginVertical: 8 }}>
@@ -85,13 +82,7 @@ const ModalDeliveryOrder = ({
                     helperText={'Numero de nota o referencia externa'}
                   />
                 </View>
-                {/* <View style={{ marginVertical: 8 }}>
-                  <FormikInputValue
-                    name={'itemSerial'}
-                    placeholder="No. de serie"
-                    helperText={'Numero de serie'}
-                  />
-                </View> */}
+
                 <View style={{ marginVertical: 8 }}>
                   <InputLocationFormik
                     name={'location'}
@@ -118,7 +109,7 @@ const ModalDeliveryOrder = ({
                     *{message as string}
                   </Text>
                 ))}
-                {correctQtyOfItems(values?.items || []) && (
+                {!correctQtyOfItems(values?.items || []) && (
                   <Text style={gStyles.helperError}>
                     *Es necesario al menos un artículo
                   </Text>
@@ -128,7 +119,7 @@ const ModalDeliveryOrder = ({
                   disabled={
                     Object.keys(errors).length > 0 ||
                     isSubmitting ||
-                    correctQtyOfItems(values?.items || [])
+                    !correctQtyOfItems(values?.items || [])
                   }
                   label="Entregar"
                   onPress={() => {

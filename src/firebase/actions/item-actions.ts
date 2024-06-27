@@ -1,4 +1,5 @@
 import ItemType from '../../types/ItemType'
+import { ItemHistoryType, ServiceItemHistory } from '../ServiceItemHistory'
 import { ServiceStoreItems } from '../ServiceStoreItems'
 
 type ValueOfKey<T, K extends keyof T> = T[K]
@@ -33,10 +34,17 @@ export const onCreateItem = async ({
   storeId: string
   item: Type
 }) => {
-  return await ServiceStoreItems.add({
+  await ServiceStoreItems.add({
     item,
     storeId
   })
+  // await onRegistryEntry({
+  //   storeId,
+  //   itemId: item.id || '',
+  //   type: 'created'
+  // })
+
+  return
 }
 
 export const onDeleteItem = async ({
@@ -60,13 +68,7 @@ export const onUpdateItem = async ({
   storeId: string
   itemId: string
   values: Type
-}) => {
-  return await ServiceStoreItems.update({
-    storeId,
-    itemId,
-    itemData: values
-  })
-}
+}) => {}
 export const onChangeItemSection = async ({
   storeId,
   itemId,
@@ -84,7 +86,13 @@ export const onChangeItemSection = async ({
   })
 }
 
-export const onPickUpItem = async ({ storeId, itemId }) => {
+export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
+  onRegistryEntry({
+    storeId,
+    itemId,
+    type: 'pickup',
+    orderId
+  })
   return await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO PICKED UP
     storeId,
@@ -93,13 +101,40 @@ export const onPickUpItem = async ({ storeId, itemId }) => {
     value: 'pickedUp'
   })
 }
-export const onRentItem = async ({ storeId, itemId }) => {
+export const onRentItem = async ({ storeId, itemId, orderId }) => {
+  onRegistryEntry({
+    storeId,
+    itemId,
+    type: 'delivery',
+    orderId
+  })
   return await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO DELIVERED
     storeId,
     itemId,
     field: 'status',
     value: 'rented'
+  })
+}
+
+export const onRegistryEntry = async ({
+  storeId,
+  itemId,
+  type,
+  orderId
+}: {
+  storeId: string
+  itemId: string
+  type: ItemHistoryType['type']
+  orderId: string
+}) => {
+  return await ServiceItemHistory.addEntry({
+    storeId,
+    itemId,
+    entry: {
+      type,
+      orderId
+    }
   })
 }
 

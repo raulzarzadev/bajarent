@@ -1,15 +1,19 @@
-import { where } from 'firebase/firestore'
+import { collection, where } from 'firebase/firestore'
 import { ServiceStores } from './ServiceStore'
 import ItemType from '../types/ItemType'
+import { ServiceItemHistory } from './ServiceItemHistory'
+import { db } from './main'
 type Type = Partial<ItemType>
 const SUB_COLLECTION = 'items'
 export class ServiceStoreItemsClass {
   async add({ storeId, item }: { storeId: string; item: Type }) {
-    return ServiceStores.createInSubCollection({
-      parentId: storeId,
-      newItem: item,
-      subCollectionName: SUB_COLLECTION
+    const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
+    await ServiceStores.createRefItem({
+      collectionRef,
+      item: item
     })
+
+    return
   }
 
   async getAll(storeId: string) {

@@ -424,7 +424,7 @@ export class FirebaseCRUD {
     querySnapshot.forEach((doc) => {
       res.push(doc)
     })
-    return res
+    return res.map((doc) => this.normalizeItem(doc))
   }
 
   async getItemsInCollection({
