@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ItemDetails from '../firebase/ItemDetails'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
 import ListRow from './ListRow'
 import DateCell from './DateCell'
 import SpanUser from './SpanUser'
 import dictionary from '../dictionary'
+import SpanOrder from './SpanOrder'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
@@ -28,17 +28,18 @@ const ScreenItemsDetails = ({ route }) => {
     return <Text>Item not found</Text>
   }
   return (
-    <View style={gStyles.container}>
-      <ItemDetails item={item} />
-      <ItemHistory itemId={item.id} />
-    </View>
+    <ScrollView>
+      <View style={gStyles.container}>
+        <ItemDetails item={item} />
+        <ItemHistory itemId={item.id} />
+      </View>
+    </ScrollView>
   )
 }
 
 const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState([])
   const { storeId } = useStore()
-  console.log({ itemHistory })
   useEffect(() => {
     ServiceItemHistory.getLastEntries({
       itemId,
@@ -63,8 +64,14 @@ const ItemHistory = ({ itemId }) => {
               component: <SpanUser userId={entry?.createdBy} />,
               width: 'rest'
             },
-            { component: <Text>{dictionary(entry.type)}</Text>, width: 'rest' },
-            { component: <Text>Order</Text>, width: 'rest' }
+            {
+              component: <Text>{dictionary(entry?.type)}</Text>,
+              width: 'rest'
+            },
+            {
+              component: <SpanOrder orderId={entry?.orderId} redirect />,
+              width: 'rest'
+            }
           ]}
         />
       ))}

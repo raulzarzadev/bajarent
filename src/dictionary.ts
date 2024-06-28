@@ -177,7 +177,7 @@ const labels = {
   pickedUp: 'recogido',
   important: 'importante',
   delivery: 'entrega',
-  pickup: 'recolección',
+  pickup: 'recoger',
   ' ': '',
   '': ''
 } as const

@@ -17,6 +17,8 @@ import {
   getDocFromCache,
   getDocFromServer,
   getDocs,
+  getDocsFromCache,
+  getDocsFromServer,
   onSnapshot,
   Query,
   query,
@@ -256,15 +258,15 @@ export class FirebaseCRUD {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
-    const querySnapshot = await getDocs(q)
-    // let querySnapshot
-    // try {
-    //   querySnapshot = await getDocsFromCache(q)
-    //   console.log('docs from cache')
-    // } catch (error) {
-    //   console.log('docs from server')
-    //   querySnapshot = await getDocsFromServer(q)
-    // }
+    //const querySnapshot = await getDocs(q)
+    let querySnapshot
+    try {
+      querySnapshot = await getDocsFromCache(q)
+      console.log('docs from cache')
+    } catch (error) {
+      console.log('docs from server')
+      querySnapshot = await getDocsFromServer(q)
+    }
     if (ops?.justRefs) {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
@@ -411,16 +413,31 @@ export class FirebaseCRUD {
       })
   }
 
-  async getRefItems({
-    collectionRef,
-    filters
-  }: {
-    collectionRef: CollectionReference<DocumentData>
-    filters?: QueryConstraint[]
-  }) {
+  async getRefItems(
+    {
+      collectionRef,
+      filters
+    }: {
+      collectionRef: CollectionReference<DocumentData>
+      filters?: QueryConstraint[]
+    },
+    ops?: GetItemsOps
+  ) {
     const q: Query<DocumentData> = query(collectionRef, ...filters)
-    const querySnapshot = await getDocs(q)
+    // const querySnapshot = await getDocs(q)
     const res: any[] = []
+    let querySnapshot
+    try {
+      querySnapshot = await getDocsFromCache(q)
+      console.log('docs from cache')
+    } catch (error) {
+      console.log('docs from server')
+      querySnapshot = await getDocsFromServer(q)
+    }
+    if (ops?.justRefs) {
+      console.log('just refs')
+      return querySnapshot.docs.map((doc) => doc.ref)
+    }
     querySnapshot.forEach((doc) => {
       res.push(doc)
     })

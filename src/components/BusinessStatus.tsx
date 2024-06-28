@@ -14,6 +14,7 @@ import { currentRentPeriod } from '../libs/orders'
 import { useNavigation } from '@react-navigation/native'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
+import SpanOrder from './SpanOrder'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -239,8 +240,6 @@ const CellOrders = ({
   field,
   sectionSelected
 }: CellOrdersProps) => {
-  const { consolidatedOrders } = useOrdersCtx()
-  const { navigate } = useNavigation()
   const section = sections?.find((s) => s.section === sectionSelected)
   const orders = section?.[field] as string[]
   if (!orders.length) return null
@@ -251,32 +250,7 @@ const CellOrders = ({
         <Text style={gStyles.helper}>({orders?.length || 0})</Text>
       </Text>
       {orders?.map((orderId) => {
-        const order: Partial<ConsolidatedOrderType> =
-          consolidatedOrders?.orders?.[orderId]
-        return (
-          <Pressable
-            key={orderId}
-            onPress={() => {
-              //@ts-ignore
-              navigate('StackOrders', {
-                screen: 'OrderDetails',
-                params: { orderId: orderId }
-              })
-            }}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ marginHorizontal: 4 }}>
-                {order?.folio}
-                {'-'}
-                {order?.note}{' '}
-              </Text>
-              <Text style={{ marginHorizontal: 4 }}>{order?.fullName}</Text>
-              <Text style={{ marginHorizontal: 4 }}>
-                {currentRentPeriod(order, { shortLabel: true })}
-              </Text>
-            </View>
-          </Pressable>
-        )
+        return <SpanOrder key={orderId} orderId={orderId} name time redirect />
       })}
     </View>
   )
