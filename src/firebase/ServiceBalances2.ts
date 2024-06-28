@@ -28,6 +28,15 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
     return this.getItems([where('storeId', '==', storeId)])
   }
 
+  async getLastInDate(storeId: string, date: Date) {
+    return this.getItems([
+      where('storeId', '==', storeId),
+      where('createdAt', '<=', date),
+      orderBy('createdAt', 'desc'),
+      limit(1)
+    ])
+  }
+
   createV2 = async (storeId: string): Promise<Partial<BalanceType2>> => {
     try {
       const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))

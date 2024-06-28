@@ -23,6 +23,7 @@ import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import ListClients from './ListClients'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
+import { addDays, subDays } from 'date-fns'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -185,10 +186,11 @@ const TabCashbox = () => {
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    ServiceBalances.getLast(storeId).then((res) => {
-      setBalance(res[0] || null)
+    ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
+      setBalance(res[0] || balance)
     })
   }, [])
+
   const handleUpdateStoreStatus = async () => {
     await ServiceConsolidatedOrders.consolidate(storeId)
     return await ServiceBalances.createV2(storeId)
@@ -201,6 +203,22 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
+  const handleGetBackStatus = (balanceDate) => {
+    const newDate = subDays(asDate(balanceDate), 1)
+    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
+      setBalance(res[0] || balance)
+    })
+  }
+
+  const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
+
+  const handleForwardStatus = (balanceDate) => {
+    const newDate = addDays(asDate(balanceDate), 2)
+    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
+      setBalance(res[0] || balance)
+    })
+  }
+
   if (balance === undefined) return <Loading />
   return (
     <ScrollView>
@@ -223,10 +241,36 @@ const TabCashbox = () => {
         />
       </View>
 
-      <Text style={gStyles.h1}>Cuentas de hoy</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          margin: 'auto'
+        }}
+      >
+        <Button
+          justIcon
+          variant="ghost"
+          icon="rowLeft"
+          label="Atras"
+          onPress={() => {
+            handleGetBackStatus(balance.createdAt)
+          }}
+        />
+        <Text style={gStyles.h1}>Cuentas de hoy</Text>
+        <Button
+          justIcon
+          variant="ghost"
+          icon="rowRight"
+          label="Adelante"
+          onPress={() => {
+            handleForwardStatus(balance.createdAt)
+          }}
+        />
+      </View>
       <Text style={[gStyles.helper, gStyles.tCenter]}>
         Última actualizacion{' '}
-        {dateFormat(asDate(balance.createdAt), 'ddMMM HH:mm')}{' '}
+        {dateFormat(asDate(balance?.createdAt), 'ddMMM HH:mm')}{' '}
         {fromNow(asDate(balance?.createdAt))}
       </Text>
       <View style={{ margin: 'auto', marginVertical: 6 }}>
