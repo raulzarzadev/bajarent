@@ -56,7 +56,7 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
             visible: true
           }
         ]}
-        data={items.map((item) => ({ ...item, id: item.id }))}
+        data={items?.map((item) => ({ ...item, id: item.id }))}
         filters={[
           { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },

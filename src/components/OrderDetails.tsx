@@ -33,6 +33,7 @@ import OrderExtensions from './OrderExtensions'
 import PaymentVerify from './PaymentVerify'
 import ButtonCreateClient from './ButtonCreateClient'
 import { ItemRow } from './FormikSelectCategories'
+import RowOrderItem from './RowOrderItem'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -268,7 +269,7 @@ const OrderItems = ({ order }: { order: Partial<OrderType> }) => {
     <View>
       <Text style={gStyles.h3}>Artículos</Text>
       {items?.map((item, i) => (
-        <ItemRow item={item} key={item.id} />
+        <RowOrderItem item={item} key={item.id} order={order} />
       ))}
     </View>
   )

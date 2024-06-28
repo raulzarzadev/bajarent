@@ -19,6 +19,10 @@ import { useEmployee } from '../contexts/employeeContext'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import ItemType from '../types/ItemType'
 import RowItem from './RowItem'
+import ButtonConfirm from './ButtonConfirm'
+import FormItem from './FormItem'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 const FormikSelectCategories = ({
   name,
   label,
@@ -176,7 +180,6 @@ const FormikSelectCategories = ({
         </StyledModal>
       </View>
       <ListItems items={items} handleRemoveItem={handleRemoveItem} />
-
       <Totals items={items} />
     </>
   )
@@ -205,11 +208,45 @@ const ListItems = ({
 
 export const ItemRow = ({
   item,
-  onPressDelete
+  onPressDelete,
+  onEdit,
+  createItem,
+  orderId
 }: {
   item: ItemSelected
   onPressDelete?: () => void
+  onEdit?: (values: ItemSelected) => void | Promise<void>
+  createItem?: boolean
+  orderId?: string
 }) => {
+  const { storeId } = useStore()
+  const [shouldCreateItem, setShouldCreateItem] = useState(false)
+  const [_item, _setItem] = useState<ItemSelected>(item)
+  useEffect(() => {
+    ServiceStoreItems.get({ itemId: item.id, storeId })
+      .then((res) => {
+        _setItem(res)
+      })
+      .catch((e) => {
+        console.log({ e })
+        setShouldCreateItem(true)
+        _setItem({ ...item })
+      })
+  }, [item.id])
+
+  console.log({
+    _item,
+    item
+  })
+
+  //@ts-ignore
+  const assignedSection = _item.assignedSection || ''
+  //@ts-ignore
+  const category = _item.category || ''
+  const brand = _item.brand || ''
+  const number = _item.number || ''
+  const serial = _item.serial || ''
+
   return (
     <View
       style={{
@@ -219,7 +256,7 @@ export const ItemRow = ({
       }}
     >
       <RowItem
-        item={item}
+        item={{ ...item, ..._item }}
         style={{
           marginVertical: gSpace(2),
           justifyContent: 'space-between',
@@ -231,7 +268,70 @@ export const ItemRow = ({
           borderRadius: gSpace(2)
         }}
       />
+      {shouldCreateItem && createItem && (
+        <ButtonConfirm
+          handleConfirm={async () => {}}
+          confirmLabel="Cerrar"
+          confirmVariant="filled"
+          openSize="small"
+          openColor="success"
+          icon="save"
+          justIcon
+          modalTitle="Crear item"
+        >
+          <View style={{ marginBottom: 8 }}>
+            <FormItem
+              values={{
+                assignedSection,
+                brand,
+                category,
+                number,
+                serial
+              }}
+              onSubmit={async (values) => {
+                //* create item
+                const res = await ServiceStoreItems.add({
+                  item: values,
+                  storeId
+                }).then(({ res }) => {
+                  if (res.id) {
+                    ServiceOrders.updateItemId({
+                      orderId: orderId,
+                      itemId: item.id,
+                      newItemId: res.id
+                    })
+                    //* update Order
+                  }
+                  console.log({ res })
+                })
 
+                console.log({ values })
+              }}
+            />
+          </View>
+        </ButtonConfirm>
+      )}
+      {!!onEdit && (
+        <ButtonConfirm
+          handleConfirm={async () => {}}
+          confirmLabel="Cerrar"
+          confirmVariant="outline"
+          openSize="small"
+          openColor="info"
+          icon="edit"
+          justIcon
+          modalTitle="Editar item"
+        >
+          <View style={{ marginBottom: 8 }}>
+            <FormItem
+              values={_item}
+              onSubmit={async (values) => {
+                return await onEdit(values)
+              }}
+            />
+          </View>
+        </ButtonConfirm>
+      )}
       {!!onPressDelete && (
         <Button
           buttonStyles={{ marginLeft: gSpace(2) }}

@@ -11,6 +11,7 @@ import { useAuth } from '../../contexts/authContext'
 import { onPickUpItem } from '../../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
 import { useStore } from '../../contexts/storeContext'
+import RowOrderItem from '../RowOrderItem'
 
 const ModalPickupOrder = ({
   modal,
@@ -32,6 +33,7 @@ const ModalPickupOrder = ({
   }
   const handlePickup = async () => {
     //*pickup items
+    modal.setOpen(false)
     items.forEach(async (item) => {
       const res = await onPickUpItem({
         storeId,
@@ -76,7 +78,45 @@ const ModalPickupOrder = ({
           defaultVisible
         />
         {items?.map((item, index) => {
-          return <ItemRow item={item} key={index} />
+          const category =
+            categories.find((cat) => cat.name === item.categoryName)?.id || ''
+          return (
+            <RowOrderItem item={item} order={order} />
+            // <ItemRow
+            //   createItem={true}
+            //   item={{
+            //     ...item,
+            //     category,
+            //     assignedSection: order?.assignToSection || '',
+            //     brand: order.itemBrand || '',
+            //     serial: item.serial || order.itemSerial || ''
+            //   }}
+            //   orderId={order.id}
+            //   key={index}
+            //   onEdit={async (item) => {
+            //     const editItem = {
+            //       id: item.id || '',
+            //       category,
+            //       number: item.number || '',
+            //       categoryName: item.categoryName || '',
+            //       brand: item.brand || order.itemBrand || '',
+            //       serial: item.serial || order.itemSerial || ''
+            //     }
+
+            //     await ServiceStoreItems.update({
+            //       itemData: editItem,
+            //       storeId,
+            //       itemId: item.id
+            //     })
+            //       .then((res) => {
+            //         console.log('item updated', res)
+            //       })
+            //       .catch(console.error)
+
+            //     return
+            //   }}
+            // />
+          )
         })}
 
         <Button

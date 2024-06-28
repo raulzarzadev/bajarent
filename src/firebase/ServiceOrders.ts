@@ -447,6 +447,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   async customMethod() {
     // Implementa tu método personalizado
   }
+
+  async updateItemId({
+    orderId,
+    itemId,
+    newItemId
+  }: {
+    orderId: string
+    itemId: string
+    newItemId: string
+  }) {
+    const items = await this.get(orderId).then((res) => res.items)
+    console.log({ items, itemId, newItemId })
+    const itemIndex = items.findIndex((item) => item.id === itemId)
+    if (itemIndex < 0) return console.error('Item not found')
+    items[itemIndex].id = newItemId
+    return await this.update(orderId, { items })
+  }
 }
 
 export type ExtendReason = 'renew' | 'report' | 'original' | 'extension'
