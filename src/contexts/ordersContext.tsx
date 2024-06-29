@@ -44,20 +44,17 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const {
-    employee
-    //permissions
-  } = useEmployee()
+  const { employee, permissions } = useEmployee()
   const { storeId, store } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
   )
 
-  const viewAllOrders =
-    !!employee?.permissions?.order?.canViewAll ||
-    !!employee?.permissions?.isAdmin ||
-    !!employee?.permissions?.isOwner
+  const viewAllOrders = permissions.canViewAllOrders
+  // !!employee?.permissions?.order?.canViewAll ||
+  // !!employee?.permissions?.isAdmin ||
+  // !!employee?.permissions?.isOwner
 
   const [reports, setReports] = useState<CommentType[]>([])
   const [important, setImportant] = useState<CommentType[]>([])

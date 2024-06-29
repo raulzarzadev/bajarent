@@ -17,6 +17,7 @@ export type EmployeeContextType = {
     canCancelPayments?: boolean
     canValidatePayments?: boolean
     canDeleteOrders?: boolean
+    canViewAllOrders?: boolean
   }
 }
 
@@ -47,11 +48,16 @@ export const EmployeeContextProvider = ({ children }) => {
       setIsAdmin(employee?.permissions?.isAdmin)
       setEmployee(employee)
       setAssignedSections(sectionsAssigned)
-    } else {
-      setEmployee(null)
-      setIsAdmin(false)
     }
   }, [staff])
+  console.log({ employee })
+  useEffect(() => {
+    if (isOwner) {
+      setEmployee({
+        ...user
+      })
+    }
+  }, [isOwner])
 
   const value = useMemo(
     () => ({
@@ -75,7 +81,9 @@ export const EmployeeContextProvider = ({ children }) => {
           isOwner ||
           !!employee?.permissions?.store?.canValidatePayments,
         canDeleteOrders:
-          isAdmin || isOwner || !!employee?.permissions?.order.canDelete
+          isAdmin || isOwner || !!employee?.permissions?.order.canDelete,
+        canViewAllOrders:
+          !!employee?.permissions?.order.canViewAll || isAdmin || isOwner
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections]

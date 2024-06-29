@@ -26,7 +26,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const { employee, permissions } = useEmployee()
   const viewAllOrders = permissions.orders.canViewAll
   const userSections = employee?.sectionsAssigned
-
   return (
     <ListOrders
       orders={hasOrderList ? preOrders : orders}

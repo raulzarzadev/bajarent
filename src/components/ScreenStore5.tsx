@@ -118,7 +118,7 @@ const StoreNumbersRow = () => {
         disabled
       />
       <Button
-        label={`Vencidas: ${ordersExpired?.length}`}
+        label={`Vencidas: ${ordersExpired?.length || 0}`}
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {
@@ -132,7 +132,7 @@ const StoreNumbersRow = () => {
         variant="ghost"
       />
       <Button
-        label={`Pedidos: ${OrdersAuthorized?.length}`}
+        label={`Pedidos: ${OrdersAuthorized?.length || 0}`}
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {

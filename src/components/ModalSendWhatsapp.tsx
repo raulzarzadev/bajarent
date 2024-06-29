@@ -35,7 +35,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     store?.name
   } y/o ${store?.accountHolder || ''}:
   \n${store?.bankInfo
-    .map(({ bank, clabe }) => {
+    ?.map(({ bank, clabe }) => {
       if (!bank) return ''
       return `🏦 ${bank} ${clabe}\n`
     })
