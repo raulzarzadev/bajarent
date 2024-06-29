@@ -18,6 +18,7 @@ export type EmployeeContextType = {
     orders: Partial<PermissionsOrder>
     store: Partial<PermissionsStore>
     canEditStaff?: boolean
+    canManageItems?: boolean
     canCancelPayments?: boolean
     canValidatePayments?: boolean
     canDeleteOrders?: boolean
@@ -99,7 +100,9 @@ export const EmployeeContextProvider = ({ children }) => {
         canDeleteOrders:
           isAdmin || isOwner || !!employee?.permissions?.order.canDelete,
         canDeleteItems:
-          isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems
+          isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems,
+        canManageItems:
+          isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections, items]

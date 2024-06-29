@@ -10,23 +10,23 @@ import { gSpace } from '../styles'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
 import { ItemSelected } from './FormSelectItem'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import ItemType from '../types/ItemType'
+import { useEmployee } from '../contexts/employeeContext'
 
 export const RowOrderItem = ({
   item,
   onPressDelete,
   onEdit,
-  createItem,
   order
 }: {
   order: Partial<OrderType>
   item: ItemSelected
   onPressDelete?: () => void
   onEdit?: (values: ItemSelected) => void | Promise<void>
-  createItem?: boolean
 }) => {
   const { storeId, categories } = useStore()
+  const { permissions } = useEmployee()
 
   const priceSelected = item.priceSelected
   const itemId = item.id
@@ -35,7 +35,10 @@ export const RowOrderItem = ({
   const [shouldCreateItem, setShouldCreateItem] = useState(false)
 
   const [_item, _setItem] = useState<ItemSelected>(undefined)
-
+  const createItem =
+    order.type === order_type.RENT &&
+    order.status === order_status.DELIVERED &&
+    permissions.canManageItems
   useEffect(() => {
     if (categories)
       ServiceStoreItems.get({ itemId: itemId, storeId })
@@ -95,7 +98,7 @@ export const RowOrderItem = ({
           borderRadius: gSpace(2)
         }}
       />
-      {shouldCreateItem && (
+      {shouldCreateItem && createItem && (
         <ButtonConfirm
           handleConfirm={async () => {}}
           confirmLabel="Cerrar"

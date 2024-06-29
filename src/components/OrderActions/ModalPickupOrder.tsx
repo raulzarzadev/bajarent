@@ -81,7 +81,7 @@ const ModalPickupOrder = ({
           const category =
             categories.find((cat) => cat.name === item.categoryName)?.id || ''
           return (
-            <RowOrderItem item={item} order={order} />
+            <RowOrderItem item={item} order={order} key={index} />
             // <ItemRow
             //   createItem={true}
             //   item={{
