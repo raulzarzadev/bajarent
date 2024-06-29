@@ -23,6 +23,7 @@ import {
   Query,
   query,
   QueryConstraint,
+  QuerySnapshot,
   setDoc,
   Timestamp,
   updateDoc,
@@ -242,9 +243,9 @@ export class FirebaseCRUD {
     let docSnap
     try {
       docSnap = await getDocFromCache(ref)
-      console.log('doc from cache')
+      console.log('cache doc')
     } catch (error) {
-      console.log('doc from server')
+      console.log('server doc')
       docSnap = await getDocFromServer(ref)
     }
     return this.normalizeItem(docSnap)
@@ -258,15 +259,27 @@ export class FirebaseCRUD {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
-    //const querySnapshot = await getDocs(q)
-    let querySnapshot
-    try {
-      querySnapshot = await getDocsFromCache(q)
-      console.log('docs from cache')
-    } catch (error) {
-      console.log('docs from server')
-      querySnapshot = await getDocsFromServer(q)
-    }
+    const querySnapshot = await getDocs(q)
+    // let querySnapshot: QuerySnapshot
+    const source = querySnapshot.metadata.fromCache
+      ? ' cache docs'
+      : 'server docs'
+    console.log(source)
+    // try { FIXME: //* <--- this is not working some times gets cache not updated
+    //   querySnapshot = await getDocsFromCache(q)
+    //   console.log('docs from cache')
+    // } catch (error) {
+    //   console.log('docs from server')
+    //   querySnapshot = await getDocsFromServer(q)
+    // }
+    // const GET_FROM_CACHE = false
+    // if (GET_FROM_CACHE) {
+    //   querySnapshot = await getDocsFromCache(q)
+    //   console.log('docs from cache')
+    // } else {
+    //   querySnapshot = await getDocsFromServer(q)
+    //   console.log('docs from server')
+    // }
     if (ops?.justRefs) {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
