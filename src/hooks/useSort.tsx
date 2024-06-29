@@ -20,7 +20,12 @@ export default function useSort<T>({
   }, [])
 
   useEffect(() => {
-    setSortedData(sortData(defaultSortBy, data, defaultOrder))
+    if (data?.length) {
+      //* this prevent infinite loop
+      setSortedData(sortData(defaultSortBy, data, defaultOrder))
+    } else {
+      setSortedData([])
+    }
   }, [data])
 
   const sortData = (field: string, data: T[], order?: 'asc' | 'des') => {
