@@ -18,7 +18,9 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
   const [sectionId, setSectionId] = React.useState<string | null>(
     itemSection || null
   )
-  const currentSection = storeSections.find(({ id }) => id === itemSection).name
+  const currentSection = storeSections.find(
+    ({ id }) => id === itemSection
+  )?.name
   const handleChangeItemSection = async () => {
     return await onChangeItemSection({
       storeId,
@@ -26,7 +28,6 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
       sectionId
     })
   }
-  console.log({ item })
   const handleMarkAsNeedFix = async () => {
     ServiceStoreItems.updateField({
       storeId,

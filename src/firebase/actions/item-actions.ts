@@ -68,7 +68,14 @@ export const onUpdateItem = async ({
   storeId: string
   itemId: string
   values: Type
-}) => {}
+}) => {
+  return await ServiceStoreItems.update({
+    storeId,
+    itemId,
+    itemData: values
+  })
+}
+
 export const onChangeItemSection = async ({
   storeId,
   itemId,

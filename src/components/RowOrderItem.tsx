@@ -85,7 +85,8 @@ export const RowOrderItem = ({
       <RowItem
         item={{
           ..._item,
-          priceSelected
+          priceSelected,
+          categoryName: item.categoryName
         }}
         style={{
           marginVertical: gSpace(2),

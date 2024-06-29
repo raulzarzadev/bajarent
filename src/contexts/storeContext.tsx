@@ -38,6 +38,7 @@ export type StoreContextType = {
   handleToggleJustActiveOrders?: () => any
   fetchOrders?: () => any
   justActiveOrders?: boolean
+  fetchItems?: () => void
 }
 
 const StoreContext = createContext<StoreContextType>({})
@@ -106,21 +107,22 @@ const StoreContextProvider = ({ children }) => {
   }, [store])
 
   useEffect(() => {
-    if (store && categories.length)
-      ServiceStoreItems.getAll(store.id).then((res) => {
-        setStoreItems(
-          res?.map((item) => ({
-            ...item,
-            id: item.id,
-            categoryName:
-              categories.find((cat) => cat.id === item.category)?.name || '',
-            assignedSectionName:
-              sections.find((sec) => sec.id === item.assignedSection)?.name ||
-              ''
-          })) || []
-        )
-      })
+    if (store && categories.length) fetchItems()
   }, [store, categories])
+
+  const fetchItems = async () => {
+    const items = await ServiceStoreItems.getAll(store.id)
+    setStoreItems(
+      items?.map((item) => ({
+        ...item,
+        id: item.id,
+        categoryName:
+          categories.find((cat) => cat.id === item.category)?.name || '',
+        assignedSectionName:
+          sections.find((sec) => sec.id === item.assignedSection)?.name || ''
+      })) || []
+    )
+  }
 
   //#region render
 
@@ -153,6 +155,7 @@ const StoreContextProvider = ({ children }) => {
         storeSections: sections,
         payments,
         items: storeItems,
+        fetchItems,
         /**
          * @deprecated
          */

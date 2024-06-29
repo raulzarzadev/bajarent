@@ -21,7 +21,7 @@ const BottomAppBar = () => {
   const showProfileButton = true
   const showOrdersButton = !!store
   const showStoreButton = !!store
-  const showConsolidated = permissions.orders.canViewAll
+  const showConsolidated = permissions.canViewAllOrders
   return (
     <Tab.Navigator
       //initialRouteName="StackOrders"

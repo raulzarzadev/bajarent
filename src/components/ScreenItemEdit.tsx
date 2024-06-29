@@ -12,7 +12,7 @@ import { onUpdateItem } from '../firebase/actions/item-actions'
 const ScreenItemEdit = ({ route }) => {
   const itemId = route?.params?.id
   const { goBack } = useNavigation()
-  const { storeId, items } = useStore()
+  const { storeId, items, fetchItems } = useStore()
   const [item, setItem] = useState<Partial<ItemType>>()
   useEffect(() => {
     if (items) {
@@ -21,9 +21,13 @@ const ScreenItemEdit = ({ route }) => {
   }, [items])
 
   const handleUpdateItem = async (values: ItemType) => {
-    await onUpdateItem({ storeId, itemId, values })
-      .then(console.log)
-      .catch(console.error)
+    return await onUpdateItem({ storeId, itemId, values })
+      .then((res) => {
+        console.log({ res })
+      })
+      .catch((e) => {
+        console.log({ e })
+      })
   }
   if (item === undefined) return <Loading />
 
@@ -33,9 +37,10 @@ const ScreenItemEdit = ({ route }) => {
       <View style={gStyles.container}>
         <FormItem
           values={item}
-          onSubmit={(values) => {
+          onSubmit={async (values) => {
+            await handleUpdateItem(values)
+            fetchItems()
             goBack()
-            return handleUpdateItem(values)
           }}
         />
       </View>
