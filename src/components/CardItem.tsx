@@ -15,18 +15,25 @@ const CardItem = ({ item }: { item: Partial<ItemType> }) => {
       <View
         style={{ height: 16, flexDirection: 'row', justifyContent: 'flex-end' }}
       >
+        {item.status === 'rented' && (
+          <ItemIcon
+            icon="home"
+            iconColor={colors.green}
+            badgeColor={colors.transparent}
+          />
+        )}
         {item.status === 'pickedUp' && (
           <ItemIcon
             icon="truck"
-            iconColor={colors.white}
-            badgeColor={colors.darkBlue}
+            iconColor={colors.darkBlue}
+            badgeColor={colors.transparent}
           />
         )}
         {item.needFix && (
           <ItemIcon
             icon="wrench"
-            iconColor={colors.white}
-            badgeColor={colors.red}
+            iconColor={colors.red}
+            badgeColor={colors.transparent}
           />
         )}
       </View>

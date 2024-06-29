@@ -28,25 +28,45 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
           Items disponibles {availableItems.length || 0}
         </Text>
       )}
-      <FlatList
-        style={{ margin: 'auto' }}
-        horizontal
-        data={availableItems}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <RowItem
-            item={item}
-            selected={itemSelected === item.id}
-            onPress={() => {
-              onPressItem?.(item.id)
-            }}
-          />
-        )}
+      <RowSectionItems
+        items={availableItems}
+        itemSelected={itemSelected}
+        onPressItem={onPressItem}
       />
     </View>
   )
 }
-const RowItem = ({
+
+export type RowSectionItemsProps = {
+  items: Partial<ItemType>[]
+  itemSelected?: string
+  onPressItem?: (itemId: string) => void
+}
+const RowSectionItems = ({
+  items,
+  itemSelected,
+  onPressItem
+}: RowSectionItemsProps) => {
+  return (
+    <FlatList
+      style={{ margin: 'auto', maxWidth: '100%', paddingBottom: 12 }}
+      horizontal
+      data={items}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <SectionItem
+          item={item}
+          selected={itemSelected === item.id}
+          onPress={() => {
+            onPressItem?.(item.id)
+          }}
+        />
+      )}
+    />
+  )
+}
+
+export const SectionItem = ({
   item,
   selected,
   onPress
@@ -74,7 +94,8 @@ const RowItem = ({
         <View
           style={{
             width: 120,
-            height: 80,
+            minHeight: 80,
+            height: '100%',
             backgroundColor: selected ? colors.lightBlue : theme.base,
             borderRadius: gSpace(2),
             margin: 2,
@@ -95,5 +116,9 @@ export const ListAssignedItemsE = (props: ListAssignedItemsProps) => (
     <ListAssignedItems {...props} />
   </ErrorBoundary>
 )
-
+export const RowSectionItemsE = (props: RowSectionItemsProps) => (
+  <ErrorBoundary componentName="RowSectionItems">
+    <RowSectionItems {...props} />
+  </ErrorBoundary>
+)
 const styles = StyleSheet.create({})

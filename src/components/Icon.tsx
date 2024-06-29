@@ -53,6 +53,7 @@ import { BsWhatsapp } from 'react-icons/bs'
 import { RiImageAddLine } from 'react-icons/ri'
 import { IoHammerOutline } from 'react-icons/io5'
 import { FaWrench } from 'react-icons/fa6'
+import { MdHome } from 'react-icons/md'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -137,7 +138,8 @@ const icons = {
   repair: IoHammerOutline,
   sale: IoPricetagsOutline,
   wrench: FaWrench,
-  truck: FaTruckPickup
+  truck: FaTruckPickup,
+  home: MdHome
 } as const
 
 export type IconName = keyof typeof icons

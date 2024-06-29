@@ -34,7 +34,7 @@ export class ServiceStoreItemsClass {
     cb
   }: {
     storeId: string
-    userSections: string[]
+    userSections?: string[]
     cb: (items: Type[]) => void
   }) {
     if (userSections.length) {
