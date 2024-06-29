@@ -118,7 +118,7 @@ const StoreNumbersRow = () => {
         disabled
       />
       <Button
-        label={`Vencidas: ${ordersExpired?.length}`}
+        label={`Vencidas: ${ordersExpired?.length || 0}`}
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {
@@ -132,7 +132,7 @@ const StoreNumbersRow = () => {
         variant="ghost"
       />
       <Button
-        label={`Pedidos: ${OrdersAuthorized?.length}`}
+        label={`Pedidos: ${OrdersAuthorized?.length || 0}`}
         onPress={() => {
           //@ts-ignore
           navigate('StackOrders', {
@@ -187,7 +187,7 @@ const TabCashbox = () => {
 
   useEffect(() => {
     ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
-      setBalance(res[0] || balance)
+      setBalance(res[0] || null)
     })
   }, [])
 
@@ -257,7 +257,7 @@ const TabCashbox = () => {
             handleGetBackStatus(balance.createdAt)
           }}
         />
-        <Text style={gStyles.h1}>Cuentas de hoy</Text>
+        <Text style={gStyles.h1}>Cuentas</Text>
         <Button
           justIcon
           variant="ghost"
@@ -268,11 +268,14 @@ const TabCashbox = () => {
           }}
         />
       </View>
-      <Text style={[gStyles.helper, gStyles.tCenter]}>
+      <Text style={gStyles.h3}>
+        {dateFormat(asDate(balance?.createdAt), 'EEEE ddMMM HH:mm')}
+      </Text>
+      {/* <Text style={[gStyles.helper, gStyles.tCenter]}>
         Última actualizacion{' '}
         {dateFormat(asDate(balance?.createdAt), 'ddMMM HH:mm')}{' '}
         {fromNow(asDate(balance?.createdAt))}
-      </Text>
+      </Text> */}
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
           disabled={updating}

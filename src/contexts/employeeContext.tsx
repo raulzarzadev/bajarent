@@ -23,6 +23,7 @@ export type EmployeeContextType = {
     canValidatePayments?: boolean
     canDeleteOrders?: boolean
     canDeleteItems?: boolean
+    canViewAllOrders?: boolean
   }
   items: Partial<ItemType>[]
 }
@@ -55,11 +56,16 @@ export const EmployeeContextProvider = ({ children }) => {
       setIsAdmin(employee?.permissions?.isAdmin)
       setEmployee(employee)
       setAssignedSections(sectionsAssigned)
-    } else {
-      setEmployee(null)
-      setIsAdmin(false)
     }
   }, [staff])
+  console.log({ employee })
+  useEffect(() => {
+    if (isOwner) {
+      setEmployee({
+        ...user
+      })
+    }
+  }, [isOwner])
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
@@ -102,7 +108,9 @@ export const EmployeeContextProvider = ({ children }) => {
         canDeleteItems:
           isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems,
         canManageItems:
-          isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
+          isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems,
+        canViewAllOrders:
+          !!employee?.permissions?.order.canViewAll || isAdmin || isOwner
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections, items]

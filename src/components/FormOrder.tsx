@@ -116,7 +116,7 @@ const FormOrderA = ({
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
-
+  console.log({ store })
   const [error, setError] = useState<string | null>(null)
 
   //* <- Define order types allowed
@@ -162,7 +162,13 @@ const FormOrderA = ({
   }
 
   if (!store) return <Loading />
-  if (!defaultType) return <Loading />
+  if (!defaultType)
+    return (
+      <TextInfo
+        defaultVisible
+        text="Primero debes configurar el tipo de ordenes en tu tienda"
+      />
+    )
   if (ordersTypesAllowed.length === 0)
     return (
       <>
