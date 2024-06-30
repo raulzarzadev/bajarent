@@ -9,13 +9,15 @@ const DateCell = ({
   label,
   showTime,
   labelBold,
-  showTimeAgo = true
+  showTimeAgo = true,
+  dateBold
 }: {
   label?: string
   date: Date | Timestamp | number | string
   showTime?: boolean
   labelBold?: boolean
   showTimeAgo?: boolean
+  dateBold?: boolean
 }) => {
   return (
     <View>
@@ -24,7 +26,7 @@ const DateCell = ({
           {label}
         </Text>
       )}
-      <Text style={[gStyles.tCenter]}>
+      <Text style={[gStyles.tCenter, dateBold && gStyles.tBold]}>
         {dateFormat(asDate(date), 'dd-MMM-yy')}
       </Text>
       {showTime && (

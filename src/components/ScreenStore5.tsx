@@ -24,6 +24,7 @@ import ButtonDownloadCSV from './ButtonDownloadCSV'
 import ListClients from './ListClients'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { addDays, subDays } from 'date-fns'
+import DateCell from './DateCell'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -213,7 +214,7 @@ const TabCashbox = () => {
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleForwardStatus = (balanceDate) => {
-    const newDate = addDays(asDate(balanceDate), 2)
+    const newDate = addDays(asDate(balanceDate), 1)
     ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
       setBalance(res[0] || balance)
     })
@@ -268,9 +269,15 @@ const TabCashbox = () => {
           }}
         />
       </View>
-      <Text style={gStyles.h3}>
-        {dateFormat(asDate(balance?.createdAt), 'EEEE ddMMM HH:mm')}
-      </Text>
+      <DateCell
+        date={balance?.createdAt}
+        showTimeAgo={false}
+        showTime={true}
+        dateBold
+      />
+      {/* <Text style={gStyles.h3}>
+        {dateFormat(asDate(balance?.createdAt), 'EEEE dd MMM HH:mm')}
+      </Text> */}
       {/* <Text style={[gStyles.helper, gStyles.tCenter]}>
         Última actualizacion{' '}
         {dateFormat(asDate(balance?.createdAt), 'ddMMM HH:mm')}{' '}
