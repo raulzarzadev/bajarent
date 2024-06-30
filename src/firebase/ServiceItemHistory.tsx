@@ -9,6 +9,7 @@ export type ItemHistoryType = {
   id: string
   type: 'pickup' | 'delivery' | 'report' | 'exchange' | 'assignment' | 'created'
   orderId?: string
+  content: string
 }
 type Type = ItemHistoryType
 export class ServiceItemHistoryClass extends FirebaseGenericService<Type> {

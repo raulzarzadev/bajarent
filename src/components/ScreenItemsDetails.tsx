@@ -49,6 +49,7 @@ const ItemHistory = ({ itemId }) => {
       setItemHistory(res)
     })
   }, [])
+  console.log({ itemHistory })
   return (
     <View>
       <Text style={gStyles.h3}>Historial</Text>

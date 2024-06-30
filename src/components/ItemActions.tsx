@@ -25,7 +25,8 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
     return await onChangeItemSection({
       storeId,
       itemId,
-      sectionId
+      sectionId,
+      sectionName: storeSections.find(({ id }) => id === sectionId)?.name
     })
   }
   const handleMarkAsNeedFix = async () => {

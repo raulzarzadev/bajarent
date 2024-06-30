@@ -1,3 +1,4 @@
+import { onComment } from '../../libs/order-actions'
 import ItemType from '../../types/ItemType'
 import { ItemHistoryType, ServiceItemHistory } from '../ServiceItemHistory'
 import { ServiceStoreItems } from '../ServiceStoreItems'
@@ -79,12 +80,20 @@ export const onUpdateItem = async ({
 export const onChangeItemSection = async ({
   storeId,
   itemId,
-  sectionId
+  sectionId,
+  sectionName
 }: {
   storeId: string
   itemId: string
   sectionId: string
+  sectionName?: string
 }) => {
+  onRegistryEntry({
+    itemId,
+    storeId,
+    type: 'assignment',
+    content: `Se asigno al area ${sectionName || sectionId}`
+  })
   return await ServiceStoreItems.updateField({
     storeId,
     itemId,
@@ -128,19 +137,22 @@ export const onRegistryEntry = async ({
   storeId,
   itemId,
   type,
-  orderId
+  orderId = '',
+  content
 }: {
   storeId: string
   itemId: string
   type: ItemHistoryType['type']
-  orderId: string
+  orderId?: string
+  content?: string
 }) => {
   return await ServiceItemHistory.addEntry({
     storeId,
     itemId,
     entry: {
       type,
-      orderId
+      orderId,
+      content
     }
   })
 }
