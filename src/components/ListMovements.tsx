@@ -11,14 +11,22 @@ import asDate from '../libs/utils-date'
 import formatComments from '../libs/formatComments'
 import { FormattedComment } from '../types/CommentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import { Text, View } from 'react-native'
+import DateCell from './DateCell'
+import HeaderDate from './HeaderDate'
+import useDebounce from '../hooks/useDebunce'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<FormattedComment[]>([])
   const { storeId } = useAuth()
   const { payments, staff } = useStore()
   const { orders } = useOrdersCtx()
+  const [date, setDate] = React.useState(new Date())
+  const handleChangeDate = (newDate: Date) => {
+    setDate(newDate)
+  }
   useEffect(() => {
-    ServiceComments.getToday(storeId).then(async (comments) => {
+    ServiceComments.getByDate(storeId, date).then(async (comments) => {
       const todayPayments = payments.filter(({ createdAt }) => {
         return isToday(asDate(createdAt))
       })
@@ -30,26 +38,33 @@ const ListMovements = () => {
       })
       setData([...movements])
     })
-  }, [orders])
+  }, [orders, date])
 
   return (
-    <LoadingList
-      ComponentRow={({ item }) => <CommentRow comment={item} viewOrder />}
-      data={data}
-      filters={[
-        { field: 'type', label: 'Tipo' },
-        {
-          field: 'orderType',
-          label: 'Tipo de orden'
-        },
-        {
-          field: 'createdByName',
-          label: 'Usuario'
-        }
-      ]}
-      defaultSortBy={'createdAt'}
-      defaultOrder="des"
-    />
+    <View>
+      <HeaderDate
+        label="Movimientos"
+        onChangeDate={handleChangeDate}
+        debounce={700}
+      />
+      <LoadingList
+        ComponentRow={({ item }) => <CommentRow comment={item} viewOrder />}
+        data={data}
+        filters={[
+          { field: 'type', label: 'Tipo' },
+          {
+            field: 'orderType',
+            label: 'Tipo de orden'
+          },
+          {
+            field: 'createdByName',
+            label: 'Usuario'
+          }
+        ]}
+        defaultSortBy={'createdAt'}
+        defaultOrder="des"
+      />
+    </View>
   )
 }
 

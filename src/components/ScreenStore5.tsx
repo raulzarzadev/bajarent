@@ -25,6 +25,7 @@ import ListClients from './ListClients'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { addDays, subDays } from 'date-fns'
 import DateCell from './DateCell'
+import HeaderDate from './HeaderDate'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -204,18 +205,11 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
-  const handleGetBackStatus = (balanceDate) => {
-    const newDate = subDays(asDate(balanceDate), 1)
-    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
-      setBalance(res[0] || balance)
-    })
-  }
 
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
-  const handleForwardStatus = (balanceDate) => {
-    const newDate = addDays(asDate(balanceDate), 1)
-    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
+  const handleChangeDate = (date: Date) => {
+    ServiceBalances.getLastInDate(storeId, endOfDay(date)).then((res) => {
       setBalance(res[0] || balance)
     })
   }
@@ -241,8 +235,14 @@ const TabCashbox = () => {
           variant="ghost"
         />
       </View>
+      <HeaderDate
+        debounce={400}
+        label="Cuentas"
+        onChangeDate={handleChangeDate}
+        documentDate={balance.createdAt}
+      />
 
-      <View
+      {/* <View
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
@@ -274,7 +274,7 @@ const TabCashbox = () => {
         showTimeAgo={false}
         showTime={true}
         dateBold
-      />
+      /> */}
       {/* <Text style={gStyles.h3}>
         {dateFormat(asDate(balance?.createdAt), 'EEEE dd MMM HH:mm')}
       </Text> */}
