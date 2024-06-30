@@ -168,10 +168,6 @@ export const CommentRow = ({
       .catch((res) => {
         //console.error(res)
       })
-      .finally(() => {
-        // refetch?.({ id: commentId })
-        // setDisabled(false)
-      })
 
     await fetchComment()
     setDisabled(false)
@@ -269,36 +265,7 @@ export const CommentRow = ({
               }
             ></Chip>
           )}
-          {/* {viewOrder && comment?.orderFolio && (
-            <Chip
-              title={`${comment?.orderFolio}  ${comment?.orderName}`}
-              size="xs"
-              color={theme.primary}
-              onPress={() =>
-                // @ts-ignore
-                //navigate('OrderDetails', { orderId: comment.orderId })
-                navigate('StackOrders', {
-                  screen: 'OrderDetails',
-                  params: { orderId: comment.orderId }
-                })
-              }
-            ></Chip>
-          )}
-          {viewOrder && !comment?.orderFolio && (
-            <Chip
-              color={theme.primary}
-              size="xs"
-              title="Ver orden"
-              onPress={() =>
-                // @ts-ignore
-                //navigate('OrderDetails', { orderId: comment.orderId })
-                navigate('StackOrders', {
-                  screen: 'OrderDetails',
-                  params: { orderId: comment.orderId }
-                })
-              }
-            ></Chip>
-          )} */}
+
           {isAdmin || isOwner ? (
             <View style={{ marginHorizontal: 8 }}>
               <ButtonConfirm
