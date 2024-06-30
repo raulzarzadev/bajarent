@@ -58,6 +58,7 @@ export const EmployeeContextProvider = ({ children }) => {
       setAssignedSections(sectionsAssigned)
     }
   }, [staff])
+
   useEffect(() => {
     if (isOwner) {
       setEmployee({

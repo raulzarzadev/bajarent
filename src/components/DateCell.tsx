@@ -10,7 +10,9 @@ const DateCell = ({
   showTime,
   labelBold,
   showTimeAgo = true,
-  borderColor
+  borderColor,
+  showDay,
+  dateBold
 }: {
   label?: string
   date: Date | Timestamp | number | string
@@ -18,6 +20,8 @@ const DateCell = ({
   labelBold?: boolean
   showTimeAgo?: boolean
   borderColor?: string
+  dateBold?: boolean
+  showDay?: boolean
 }) => {
   return (
     <View
@@ -34,9 +38,12 @@ const DateCell = ({
           {label}
         </Text>
       )}
-      <Text style={[gStyles.tCenter]}>
-        {dateFormat(asDate(date), 'dd-MMM-yy')}
+      <Text style={[gStyles.tCenter, dateBold && gStyles.tBold]}>
+        {showDay
+          ? dateFormat(asDate(date), 'EEEE dd MMM yy')
+          : dateFormat(asDate(date), 'dd MMM yy')}
       </Text>
+
       {showTime && (
         <Text style={[gStyles.tCenter, gStyles.helper]}>
           {dateFormat(asDate(date), 'HH:mm')}

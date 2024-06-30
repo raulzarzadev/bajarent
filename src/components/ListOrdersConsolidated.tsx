@@ -58,7 +58,8 @@ const ListOrdersConsolidated = () => {
         <LoadingList
           pinRows
           collectionSearch={{
-            collectionName: 'orders'
+            collectionName: 'orders',
+            fields: ['fullName', 'folio', 'status', 'neighborhood', 'note']
           }}
           ComponentMultiActions={({ ids }) => {
             return <MultiOrderActions ordersIds={ids} data={data} />

@@ -18,6 +18,7 @@ import Icon from './Icon'
 import ButtonConfirm from './ButtonConfirm'
 import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -132,10 +133,10 @@ const ListComments = ({
 }
 
 export const CommentRow = ({
-  comment,
-  viewOrder,
-  refetch
-}: // orderId
+  comment: _comment,
+  viewOrder
+}: // refetch
+// orderId
 {
   comment: FormattedComment
   viewOrder?: boolean
@@ -146,6 +147,13 @@ export const CommentRow = ({
   const [disabled, setDisabled] = React.useState(false)
   const { staff } = useStore()
   const { user } = useAuth()
+
+  const {
+    consolidatedOrders: { orders }
+  } = useOrdersCtx()
+  const order = orders[_comment?.orderId]
+
+  const [comment, setComment] = React.useState<FormattedComment>(_comment)
 
   const handleToggleSolveReport = async (commentId, solved) => {
     setDisabled(true)
@@ -160,10 +168,14 @@ export const CommentRow = ({
       .catch((res) => {
         //console.error(res)
       })
-      .finally(() => {
-        refetch?.({ id: commentId })
-        // setDisabled(false)
-      })
+
+    await fetchComment()
+    setDisabled(false)
+  }
+  const fetchComment = async () => {
+    return await ServiceComments.get(_comment.id).then((res) => {
+      setComment(res)
+    })
   }
 
   const commentCreatedBy =
@@ -172,6 +184,9 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
+
+  if (!comment) return null
+
   return (
     <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
       <View style={{ justifyContent: 'space-between' }}>
@@ -179,13 +194,15 @@ export const CommentRow = ({
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
-          <Text style={{ marginRight: 4 }}>{fromNow(comment?.createdAt)}</Text>
+          <Text style={[gStyles.helper, { marginRight: 4 }]}>
+            {fromNow(comment?.createdAt)}
+          </Text>
           {comment?.type === 'report' && (
             <Chip
               disabled={disabled}
               title={dictionary(comment?.type)}
               color={theme.error}
-              titleColor={theme.neutral}
+              titleColor={theme.white}
               size="xs"
             />
           )}
@@ -194,7 +211,7 @@ export const CommentRow = ({
               disabled={disabled}
               title={dictionary(comment?.type)}
               color={theme.warning}
-              titleColor={theme.neutral}
+              titleColor={theme.black}
               size="xs"
             />
           )}
@@ -220,14 +237,28 @@ export const CommentRow = ({
               />
             </View>
           </View>
-          {viewOrder && comment?.orderFolio && (
+          {!!order ? (
             <Chip
-              title={`${comment?.orderFolio}  ${comment?.orderName}`}
-              size="xs"
+              title={`${order?.folio}  ${order?.fullName}`}
+              size="sm"
               color={theme.primary}
+              titleColor={theme.white}
               onPress={() =>
                 // @ts-ignore
-                //navigate('OrderDetails', { orderId: comment.orderId })
+                navigate('StackOrders', {
+                  screen: 'OrderDetails',
+                  params: { orderId: comment.orderId }
+                })
+              }
+            ></Chip>
+          ) : (
+            <Chip
+              title={`ver orden`}
+              size="sm"
+              color={theme.primary}
+              titleColor={theme.white}
+              onPress={() =>
+                // @ts-ignore
                 navigate('StackOrders', {
                   screen: 'OrderDetails',
                   params: { orderId: comment.orderId }
@@ -235,21 +266,7 @@ export const CommentRow = ({
               }
             ></Chip>
           )}
-          {viewOrder && !comment?.orderFolio && (
-            <Chip
-              color={theme.primary}
-              size="xs"
-              title="Ver orden"
-              onPress={() =>
-                // @ts-ignore
-                //navigate('OrderDetails', { orderId: comment.orderId })
-                navigate('StackOrders', {
-                  screen: 'OrderDetails',
-                  params: { orderId: comment.orderId }
-                })
-              }
-            ></Chip>
-          )}
+
           {isAdmin || isOwner ? (
             <View style={{ marginHorizontal: 8 }}>
               <ButtonConfirm
@@ -261,9 +278,8 @@ export const CommentRow = ({
                 openVariant="ghost"
                 text="¿Estás seguro de eliminar este comentario?"
                 handleConfirm={async () => {
-                  return ServiceComments.delete(comment?.id).then(() => {
-                    refetch?.({ id: comment?.id })
-                  })
+                  await ServiceComments.delete(comment?.id).then(() => {})
+                  fetchComment()
                 }}
               />
             </View>
@@ -276,8 +292,7 @@ export const CommentRow = ({
             width: '100%',
             textAlign: 'left',
             paddingVertical: 3
-          },
-          gStyles.helper
+          }
         ]}
       >
         {comment?.content}

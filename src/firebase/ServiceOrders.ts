@@ -263,7 +263,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       return acc
     }, [])
     const orders = await this.getList(uniqueOrdersIds, ops)
-    return orders.map((order) => ({
+    return orders?.map((order) => ({
       ...order,
       comments: reportsNotSolved.filter(({ orderId }) => orderId === order.id)
     }))
@@ -285,13 +285,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     avoidIds?: string[]
     sections: string[] | 'all'
   }) {
-    const promises = fields.map((field) => {
+    console.log({ fields })
+    const promises = fields?.map((field) => {
       const number = parseFloat(value as string)
       //* search as number
       const filters = []
       // if (avoidIds.length > 0)
       //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
-      if (sections !== 'all') {
+      if (sections?.length > 0) {
         filters.push(where('assignToSection', 'in', sections))
       }
 
@@ -385,8 +386,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const ordersWithReportsIds = Array.from(
       new Set(
         reports
-          .filter(({ type }) => type === 'report' || type === 'important')
-          .map(({ orderId }) => orderId)
+          ?.filter(({ type }) => type === 'report' || type === 'important')
+          ?.map(({ orderId }) => orderId)
       )
     )
     //* IF is getBySection just take the reported orders by sections
@@ -438,7 +439,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       return this.findMany(
         [where('clientId', '==', clientId), where('storeId', '==', storeId)],
         { justRefs: true }
-      ).then((res) => res.map(({ id }) => id))
+      ).then((res) => res?.map(({ id }) => id))
     return this.findMany([
       where('clientId', '==', clientId),
       where('storeId', '==', storeId)

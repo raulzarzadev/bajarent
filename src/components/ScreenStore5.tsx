@@ -24,6 +24,8 @@ import ButtonDownloadCSV from './ButtonDownloadCSV'
 import ListClients from './ListClients'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { addDays, subDays } from 'date-fns'
+import DateCell from './DateCell'
+import HeaderDate from './HeaderDate'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -186,9 +188,7 @@ const TabCashbox = () => {
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
-      setBalance(res[0] || null)
-    })
+    handleGetLastBalanceInDate(new Date())
   }, [])
 
   const handleUpdateStoreStatus = async () => {
@@ -203,19 +203,12 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
-  const handleGetBackStatus = (balanceDate) => {
-    const newDate = subDays(asDate(balanceDate), 1)
-    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
-      setBalance(res[0] || balance)
-    })
-  }
 
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
-  const handleForwardStatus = (balanceDate) => {
-    const newDate = addDays(asDate(balanceDate), 2)
-    ServiceBalances.getLastInDate(storeId, endOfDay(newDate)).then((res) => {
-      setBalance(res[0] || balance)
+  const handleGetLastBalanceInDate = (date: Date) => {
+    ServiceBalances.getLastInDate(storeId, endOfDay(date)).then((res) => {
+      setBalance(res[0] || null)
     })
   }
 
@@ -240,8 +233,14 @@ const TabCashbox = () => {
           variant="ghost"
         />
       </View>
+      <HeaderDate
+        debounce={400}
+        label="Cuentas"
+        onChangeDate={handleGetLastBalanceInDate}
+        // documentDate={balance.createdAt}
+      />
 
-      <View
+      {/* <View
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
@@ -268,9 +267,15 @@ const TabCashbox = () => {
           }}
         />
       </View>
-      <Text style={gStyles.h3}>
-        {dateFormat(asDate(balance?.createdAt), 'EEEE ddMMM HH:mm')}
-      </Text>
+      <DateCell
+        date={balance?.createdAt}
+        showTimeAgo={false}
+        showTime={true}
+        dateBold
+      /> */}
+      {/* <Text style={gStyles.h3}>
+        {dateFormat(asDate(balance?.createdAt), 'EEEE dd MMM HH:mm')}
+      </Text> */}
       {/* <Text style={[gStyles.helper, gStyles.tCenter]}>
         Última actualizacion{' '}
         {dateFormat(asDate(balance?.createdAt), 'ddMMM HH:mm')}{' '}
