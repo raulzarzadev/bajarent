@@ -10,6 +10,8 @@ import { ServiceComments } from './ServiceComments'
 import { CommentType } from '../types/CommentType'
 import { getBalancePayments } from '../libs/balance'
 import PaymentType from '../types/PaymentType'
+import { ServiceStoreItems } from './ServiceStoreItems'
+import ItemType from '../types/ItemType'
 
 class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
   constructor() {
@@ -65,10 +67,13 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         type: 'full'
       })
 
+      const itemsBySections = await ServiceStoreItems.getAvailable({ storeId })
+      console.log({ itemsBySections })
       const groupedBySections = groupOrdersBySection({
         orders,
         reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])],
-        payments
+        payments,
+        items: itemsBySections
       })
       const newBalance = {
         sections: groupedBySections,
@@ -94,28 +99,40 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 const groupOrdersBySection = ({
   orders,
   reports,
-  payments
+  payments,
+  items
 }: {
   orders: Partial<OrderType>[]
   reports: Partial<CommentType>[]
   payments: PaymentType[]
+  items: Partial<ItemType>[]
 }): Partial<BalanceType2['sections']> => {
-  const res = {
+  const groupedSections = {
     all: [],
     withoutSection: []
   }
 
   orders.forEach((order) => {
     const assignToSection = order.assignToSection || 'withoutSection'
-    if (!res[assignToSection]) {
-      res[order.assignToSection] = []
+    if (!groupedSections[assignToSection]) {
+      groupedSections[order.assignToSection] = []
     }
-    res[assignToSection].push(order)
-    res.all.push(order)
+    groupedSections[assignToSection].push(order)
+    groupedSections.all.push(order)
   })
 
-  const sections = Object.entries(res).map(
-    ([key, orders]: [string, Partial<OrderType>[]]) => {
+  const sections = Object.entries(groupedSections).map(
+    ([sectionId, orders]: [string, Partial<OrderType>[]]) => {
+      // *** *** ASSIGN ITEMS TO SECTION
+      let inStock = items
+        .filter(
+          (item) => sectionId === (item.assignedSection || 'withoutSection')
+        )
+        .map(({ id }) => id)
+      if (sectionId === 'all') {
+        inStock = items.map(({ id }) => id)
+      }
+
       const pending = orders?.filter(
         (order) => order.status === order_status.AUTHORIZED
       )
@@ -178,14 +195,15 @@ const groupOrdersBySection = ({
         cancelledToday: getJustIds(cancelledToday),
         deliveredToday: getJustIds(deliveredToday),
         pickedUpToday: getJustIds(pickedUpToday),
-        section: key,
+        section: sectionId,
         inRent: getJustIds(inRent),
         renewedToday: getJustIds(renewedToday),
         reported: getJustIds(reported),
         pending: getJustIds(pending),
         solvedToday: getJustIds(removeDuplicates(solvedToday)),
         paidToday: paidOrders,
-        payments: sectionPayments
+        payments: sectionPayments,
+        inStock
       }
     }
   )

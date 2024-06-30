@@ -21,7 +21,7 @@ export type StoreContextType = {
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
   orders?: OrderType[]
-  items: Partial<ItemType>[]
+  items?: Partial<ItemType>[]
   comments?: CommentType[]
   staff?: StoreType['staff']
   myStaffId?: string

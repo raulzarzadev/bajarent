@@ -28,6 +28,32 @@ export class ServiceStoreItemsClass {
       filters: [where('isActive', '==', true)]
     })
   }
+  async getAvailable(
+    {
+      storeId,
+      sections
+    }: {
+      storeId: string
+      sections?: string[]
+    },
+    props: { justRefs?: boolean } = {}
+  ) {
+    const justRefs = props.justRefs || false
+    const filters = [where('status', '==', 'pickedUp')]
+    if (sections?.length) {
+      filters.push(where('assignedSection', 'in', sections))
+    }
+    return ServiceStores.getItemsInCollection(
+      {
+        parentId: storeId,
+        subCollection: SUB_COLLECTION,
+        filters
+      },
+      {
+        justRefs
+      }
+    )
+  }
   async listenAvailableBySections({
     storeId,
     userSections = [],
@@ -55,27 +81,6 @@ export class ServiceStoreItemsClass {
         cb
       })
     }
-  }
-
-  async getSimilar(storeId: string, item: Partial<Type>) {
-    const similarName = ServiceStores.getItemsInCollection({
-      parentId: storeId,
-      subCollection: SUB_COLLECTION
-    })
-    const similarPhone = ServiceStores.getItemsInCollection({
-      parentId: storeId,
-      subCollection: SUB_COLLECTION,
-      filters: [where('phone', '==', item.phone)]
-    })
-
-    return Promise.all([similarName, similarPhone]).then((res) => {
-      const batch = res.flat()
-      // remove duplicates
-      const unique = batch.filter(
-        (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-      )
-      return unique
-    })
   }
 
   async get({ storeId, itemId }: { storeId: string; itemId: string }) {

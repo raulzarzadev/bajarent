@@ -457,20 +457,24 @@ export class FirebaseCRUD {
     return res.map((doc) => this.normalizeItem(doc))
   }
 
-  async getItemsInCollection({
-    parentId,
-    parentCollection,
-    subCollection,
-    filters = []
-  }: {
-    parentId: string
-    parentCollection: string
-    subCollection: string
-    filters?: QueryConstraint[]
-  }) {
+  async getItemsInCollection(
+    {
+      parentId,
+      parentCollection,
+      subCollection,
+      filters = []
+    }: {
+      parentId: string
+      parentCollection: string
+      subCollection: string
+      filters?: QueryConstraint[]
+    },
+    ops?: GetItemsOps
+  ) {
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
     const querySnapshot = await getDocs(queryRef)
+    if (ops?.justRefs) return querySnapshot.docs.map((doc) => doc.ref)
     const res: any[] = []
     querySnapshot.forEach((doc) => {
       res.push(this.normalizeItem(doc))
@@ -735,6 +739,7 @@ export class FirebaseCRUD {
     ok: boolean
 
     res: {
+      code: string
       id: string
     }
   } => {

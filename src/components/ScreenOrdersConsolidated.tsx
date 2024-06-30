@@ -18,7 +18,7 @@ const ScreenOrdersConsolidated = () => {
             value: 'items'
           }
         ]}
-        setValue={setView}
+        setValue={(value) => setView(value)}
         value={view}
       />
       {view === 'orders' && <ListOrdersConsolidatedE />}

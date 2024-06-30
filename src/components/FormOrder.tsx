@@ -465,7 +465,6 @@ const FormFieldsA = ({
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
-        choseEmptyCategory
       />
     ),
     selectItemsRent: (
@@ -474,7 +473,6 @@ const FormFieldsA = ({
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
-        choseEmptyCategory
       />
     ),
     selectItemsSale: (
@@ -483,7 +481,6 @@ const FormFieldsA = ({
         label="Selecciona un artículo"
         selectPrice
         startAt={values.scheduledAt}
-        choseEmptyCategory
       />
     ),
     hasDelivered: (

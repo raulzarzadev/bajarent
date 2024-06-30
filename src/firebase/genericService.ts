@@ -109,21 +109,27 @@ export class FirebaseGenericService<T extends Identifiable> {
    * @returns
    */
 
-  getItemsInCollection({
-    parentId,
-    subCollection,
-    filters = []
-  }: {
-    parentId: string
-    subCollection: string
-    filters?: QueryConstraint[]
-  }) {
-    return this.itemCRUD.getItemsInCollection({
-      parentCollection: this.COLLECTION_NAME,
+  getItemsInCollection(
+    {
       parentId,
       subCollection,
-      filters
-    })
+      filters = []
+    }: {
+      parentId: string
+      subCollection: string
+      filters?: QueryConstraint[]
+    },
+    ops?: GetItemsOps
+  ) {
+    return this.itemCRUD.getItemsInCollection(
+      {
+        parentCollection: this.COLLECTION_NAME,
+        parentId,
+        subCollection,
+        filters
+      },
+      ops
+    )
   }
 
   getItemInCollection({

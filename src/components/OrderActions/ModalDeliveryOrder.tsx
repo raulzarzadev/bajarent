@@ -59,11 +59,12 @@ const ModalDeliveryOrder = ({
     const MIN_ITEMS = 1
     return items.length > MAX_ITEMS || items.length < MIN_ITEMS
   }
+  order.itemSerial = itemSerial
   return (
     <View>
       <StyledModal {...deliveryModal}>
         <Formik
-          initialValues={{ ...order, itemSerial }}
+          initialValues={{ ...order }}
           onSubmit={async (values) => {
             handleDeliveryOrder(values)
           }}

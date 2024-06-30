@@ -131,7 +131,7 @@ export const useEmployee = () => {
 
 const formatItems = (
   items: Partial<ItemType>[],
-  categories: CategoryType[],
+  categories: Partial<CategoryType>[],
   sections: SectionType[]
 ) => {
   return items.map((item) => ({
