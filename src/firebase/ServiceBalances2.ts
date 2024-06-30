@@ -3,7 +3,7 @@ import { FirebaseGenericService } from './genericService'
 import { BalanceType2 } from '../types/BalanceType'
 import { ServiceOrders } from './ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
-import asDate from '../libs/utils-date'
+import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isToday } from 'date-fns'
 import { isRenewedToday } from '../libs/orders'
 import { ServiceComments } from './ServiceComments'
@@ -31,7 +31,8 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
   async getLastInDate(storeId: string, date: Date) {
     return this.getItems([
       where('storeId', '==', storeId),
-      where('createdAt', '<=', date),
+      where('createdAt', '<=', endDate(date)),
+      where('createdAt', '>=', startDate(date)),
       orderBy('createdAt', 'desc'),
       limit(1)
     ])

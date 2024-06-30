@@ -138,3 +138,14 @@ export function isBeforeYesterday(date: Date): boolean {
   yesterday.setDate(yesterday.getDate() - 1)
   return isBefore(date, yesterday)
 }
+
+export function endDate(date: Date): Date {
+  const end = new Date(date)
+  end.setHours(23, 59, 59, 999)
+  return end
+}
+export function startDate(date: Date): Date {
+  const start = new Date(date)
+  start.setHours(0, 0, 0, 0)
+  return start
+}

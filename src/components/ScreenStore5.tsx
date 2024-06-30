@@ -188,9 +188,7 @@ const TabCashbox = () => {
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
-      setBalance(res[0] || null)
-    })
+    handleGetLastBalanceInDate(new Date())
   }, [])
 
   const handleUpdateStoreStatus = async () => {
@@ -208,9 +206,9 @@ const TabCashbox = () => {
 
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
-  const handleChangeDate = (date: Date) => {
+  const handleGetLastBalanceInDate = (date: Date) => {
     ServiceBalances.getLastInDate(storeId, endOfDay(date)).then((res) => {
-      setBalance(res[0] || balance)
+      setBalance(res[0] || null)
     })
   }
 
@@ -238,8 +236,8 @@ const TabCashbox = () => {
       <HeaderDate
         debounce={400}
         label="Cuentas"
-        onChangeDate={handleChangeDate}
-        documentDate={balance.createdAt}
+        onChangeDate={handleGetLastBalanceInDate}
+        // documentDate={balance.createdAt}
       />
 
       {/* <View
