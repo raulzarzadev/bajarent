@@ -177,7 +177,6 @@ export const CommentRow = ({
       setComment(res)
     })
   }
-  console.log({ comment })
 
   const commentCreatedBy =
     staff.find((s) => s.userId === comment?.createdBy)?.name ||
@@ -195,7 +194,9 @@ export const CommentRow = ({
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
-          <Text style={{ marginRight: 4 }}>{fromNow(comment?.createdAt)}</Text>
+          <Text style={[gStyles.helper, { marginRight: 4 }]}>
+            {fromNow(comment?.createdAt)}
+          </Text>
           {comment?.type === 'report' && (
             <Chip
               disabled={disabled}
@@ -291,8 +292,7 @@ export const CommentRow = ({
             width: '100%',
             textAlign: 'left',
             paddingVertical: 3
-          },
-          gStyles.helper
+          }
         ]}
       >
         {comment?.content}
