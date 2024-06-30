@@ -18,6 +18,7 @@ import Icon from './Icon'
 import ButtonConfirm from './ButtonConfirm'
 import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -132,10 +133,10 @@ const ListComments = ({
 }
 
 export const CommentRow = ({
-  comment,
-  viewOrder,
-  refetch
-}: // orderId
+  comment: _comment,
+  viewOrder
+}: // refetch
+// orderId
 {
   comment: FormattedComment
   viewOrder?: boolean
@@ -146,6 +147,13 @@ export const CommentRow = ({
   const [disabled, setDisabled] = React.useState(false)
   const { staff } = useStore()
   const { user } = useAuth()
+
+  const {
+    consolidatedOrders: { orders }
+  } = useOrdersCtx()
+  const order = orders[_comment?.orderId]
+
+  const [comment, setComment] = React.useState<FormattedComment>(_comment)
 
   const handleToggleSolveReport = async (commentId, solved) => {
     setDisabled(true)
@@ -161,10 +169,19 @@ export const CommentRow = ({
         //console.error(res)
       })
       .finally(() => {
-        refetch?.({ id: commentId })
+        // refetch?.({ id: commentId })
         // setDisabled(false)
       })
+
+    await fetchComment()
+    setDisabled(false)
   }
+  const fetchComment = async () => {
+    return await ServiceComments.get(_comment.id).then((res) => {
+      setComment(res)
+    })
+  }
+  console.log({ comment })
 
   const commentCreatedBy =
     staff.find((s) => s.userId === comment?.createdBy)?.name ||
@@ -172,6 +189,9 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
+
+  if (!comment) return null
+
   return (
     <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
       <View style={{ justifyContent: 'space-between' }}>
@@ -185,7 +205,7 @@ export const CommentRow = ({
               disabled={disabled}
               title={dictionary(comment?.type)}
               color={theme.error}
-              titleColor={theme.neutral}
+              titleColor={theme.white}
               size="xs"
             />
           )}
@@ -194,7 +214,7 @@ export const CommentRow = ({
               disabled={disabled}
               title={dictionary(comment?.type)}
               color={theme.warning}
-              titleColor={theme.neutral}
+              titleColor={theme.black}
               size="xs"
             />
           )}
@@ -220,7 +240,36 @@ export const CommentRow = ({
               />
             </View>
           </View>
-          {viewOrder && comment?.orderFolio && (
+          {!!order ? (
+            <Chip
+              title={`${order?.folio}  ${order?.fullName}`}
+              size="sm"
+              color={theme.primary}
+              titleColor={theme.white}
+              onPress={() =>
+                // @ts-ignore
+                navigate('StackOrders', {
+                  screen: 'OrderDetails',
+                  params: { orderId: comment.orderId }
+                })
+              }
+            ></Chip>
+          ) : (
+            <Chip
+              title={`ver orden`}
+              size="sm"
+              color={theme.primary}
+              titleColor={theme.white}
+              onPress={() =>
+                // @ts-ignore
+                navigate('StackOrders', {
+                  screen: 'OrderDetails',
+                  params: { orderId: comment.orderId }
+                })
+              }
+            ></Chip>
+          )}
+          {/* {viewOrder && comment?.orderFolio && (
             <Chip
               title={`${comment?.orderFolio}  ${comment?.orderName}`}
               size="xs"
@@ -249,7 +298,7 @@ export const CommentRow = ({
                 })
               }
             ></Chip>
-          )}
+          )} */}
           {isAdmin || isOwner ? (
             <View style={{ marginHorizontal: 8 }}>
               <ButtonConfirm
@@ -261,9 +310,8 @@ export const CommentRow = ({
                 openVariant="ghost"
                 text="¿Estás seguro de eliminar este comentario?"
                 handleConfirm={async () => {
-                  return ServiceComments.delete(comment?.id).then(() => {
-                    refetch?.({ id: comment?.id })
-                  })
+                  await ServiceComments.delete(comment?.id).then(() => {})
+                  fetchComment()
                 }}
               />
             </View>
