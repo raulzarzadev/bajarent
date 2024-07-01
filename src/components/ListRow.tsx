@@ -16,7 +16,7 @@ const ListRow = ({
 }) => {
   return (
     <View style={[styles.container, style]}>
-      {fields.map(({ component, width }, i) => {
+      {fields?.map(({ component, width }, i) => {
         let style = {}
         if (width === 'rest') {
           style = { flex: 1 }

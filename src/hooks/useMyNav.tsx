@@ -5,7 +5,7 @@ const useMyNav = () => {
   const toItem = ({ id }: { id: string }) => {
     //@ts-ignore
     navigate('StackItems', {
-      screen: 'ItemDetails',
+      screen: 'ScreenItemsDetails',
       params: {
         id
       }

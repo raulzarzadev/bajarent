@@ -11,6 +11,7 @@ import ScreenNewOrder from './ScreenOrderNew'
 import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
+import StackItems from './StackItems'
 
 const Tab = createBottomTabNavigator()
 
@@ -118,6 +119,15 @@ const BottomAppBar = () => {
           title: 'Componentes',
           tabBarButton: !__DEV__ ? () => null : undefined
         }}
+      />
+      <Tab.Screen
+        name="StackItems"
+        options={{
+          title: 'Items',
+          headerShown: false,
+          tabBarButton: () => null
+        }}
+        component={StackItems}
       />
     </Tab.Navigator>
   )

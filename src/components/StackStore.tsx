@@ -18,6 +18,7 @@ import ScreenItemNew from './ScreenItemNew'
 import ScreenItemsDetails from './ScreenItemsDetails'
 import ScreenItemEdit, { ScreenItemEditE } from './ScreenItemEdit'
 import StackClients from './StackClients'
+import StackItems from './StackItems'
 
 export type StackStoreNavigationProps = {
   Store: undefined
@@ -163,37 +164,14 @@ function StackStore() {
           title: 'Mapa'
         }}
       />
-
-      {/* ITEMS */}
       <Stack.Screen
-        name="Items"
+        name="StackItems"
         options={{
-          title: 'Artículos'
+          title: 'Items',
+          headerShown: false
+          //tabBarButton: () => null
         }}
-        component={ScreenItems}
-      />
-
-      <Stack.Screen
-        name="ScreenItemNew"
-        options={{
-          title: 'Nuevo artículo'
-        }}
-        component={ScreenItemNew}
-      />
-      <Stack.Screen
-        name="ScreenItemsDetails"
-        options={{
-          title: 'Detalles de artículo'
-        }}
-        component={ScreenItemsDetails}
-      />
-
-      <Stack.Screen
-        name="ScreenItemEdit"
-        options={{
-          title: 'Editar artículo'
-        }}
-        component={ScreenItemEditE}
+        component={StackItems}
       />
     </Stack.Navigator>
   )

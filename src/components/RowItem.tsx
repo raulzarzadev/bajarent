@@ -26,7 +26,7 @@ const RowItem = ({
           >
             {item.categoryName}
           </Text>
-          {item.serial && (
+          {!!item.serial && (
             <Text style={[gStyles.helper, { textAlign: 'center' }]}>
               {item.serial}
             </Text>

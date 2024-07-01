@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import RowItem from './RowItem'
 import ButtonConfirm from './ButtonConfirm'
@@ -13,6 +13,7 @@ import { ItemSelected } from './FormSelectItem'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import ItemType from '../types/ItemType'
 import { useEmployee } from '../contexts/employeeContext'
+import useMyNav from '../hooks/useMyNav'
 
 export const RowOrderItem = ({
   item,
@@ -27,7 +28,7 @@ export const RowOrderItem = ({
 }) => {
   const { storeId, categories } = useStore()
   const { permissions } = useEmployee()
-
+  const { toItem } = useMyNav()
   const priceSelected = item.priceSelected
   const itemId = item.id
   const orderId = order.id
@@ -75,7 +76,12 @@ export const RowOrderItem = ({
   console.log({ item, _item })
 
   return (
-    <View
+    <Pressable
+      onPress={() => {
+        if (!shouldCreateItem) {
+          toItem({ id: itemId })
+        }
+      }}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -165,7 +171,7 @@ export const RowOrderItem = ({
           size="small"
         />
       )}
-    </View>
+    </Pressable>
   )
 }
 
