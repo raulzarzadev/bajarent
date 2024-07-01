@@ -7,9 +7,11 @@ import ListRow from './ListRow'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import dictionary from '../dictionary'
+import useMyNav from '../hooks/useMyNav'
 
 const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const { navigate } = useNavigation()
+  const { toItem } = useMyNav()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
@@ -74,7 +76,7 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
         onPressRow={(rowId) => {
           console.log({ rowId })
           // @ts-ignore
-          navigate('ScreenItemsDetails', { id: rowId })
+          toItem({ id: rowId })
         }}
         ComponentRow={({ item }) => {
           return <RowItem item={item} />

@@ -14,6 +14,7 @@ import {
   deleteDoc,
   doc,
   DocumentData,
+  getDoc,
   getDocFromCache,
   getDocFromServer,
   getDocs,
@@ -494,7 +495,7 @@ export class FirebaseCRUD {
     itemId
   }) {
     const ref = doc(this.db, parentCollection, parentId, subCollection, itemId)
-    const docSnap = await getDocFromCache(ref)
+    const docSnap = await getDoc(ref)
     return this.normalizeItem(docSnap)
   }
 

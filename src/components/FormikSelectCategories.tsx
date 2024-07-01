@@ -240,12 +240,12 @@ export const ItemRow = ({
   })
 
   //@ts-ignore
-  const assignedSection = _item.assignedSection || ''
+  const assignedSection = _item?.assignedSection || ''
   //@ts-ignore
-  const category = _item.category || ''
-  const brand = _item.brand || ''
-  const number = _item.number || ''
-  const serial = _item.serial || ''
+  const category = _item?.category || ''
+  const brand = _item?.brand || ''
+  const number = _item?.number || ''
+  const serial = _item?.serial || ''
 
   return (
     <View
