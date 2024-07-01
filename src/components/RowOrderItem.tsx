@@ -17,6 +17,7 @@ import useMyNav from '../hooks/useMyNav'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
+import TextInfo from './TextInfo'
 
 export const RowOrderItem = ({
   item,
@@ -38,70 +39,11 @@ export const RowOrderItem = ({
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
-  const createItem =
+  const canCreateItem =
     order.type === order_type.RENT &&
     order.status === order_status.DELIVERED &&
     permissions.canManageItems
 
-  // useEffect(() => {
-  //   if (categories)
-  //     ServiceStoreItems.get({ itemId: itemId, storeId })
-  //       .then((res) => {
-  //         if (res) {
-  //           _setItem(res)
-  //           setItemAlreadyExist(true)
-  //         } else {
-  //           setItemAlreadyExist(false)
-  //         }
-  //       })
-  //       .catch((e) => {
-  //         console.log({ e })
-  //         setItemAlreadyExist(false)
-  //         // setShouldCreateItem(true)
-  //         const assignedSection = order?.assignToSection || ''
-  //         const createEcoNumber = ({ section, brand, lastNumber }) => {
-  //           let firstLetter = '' //* BRAND OF THE ITEM
-  //           let secondLetter = '' //* SECTION OF THE ITEM
-  //           let thirdLetter = '' //* INC NUMBER
-  //           const string =
-  //             storeSections.find((s) => s.id === section)?.name || 'S'
-  //           const chunks = string.split(' ')
-  //           firstLetter = brand?.[0] || 'S'
-  //           secondLetter = chunks.map((chunk) => chunk[0]).join('')
-  //           thirdLetter = lastNumber.toString(16).toUpperCase()
-  //           return `${firstLetter}${secondLetter}${thirdLetter}`.toUpperCase()
-  //         }
-  //         const n = createEcoNumber({
-  //           section: assignedSection,
-  //           brand: item.brand,
-  //           lastNumber: 0
-  //         })
-  //         console.log({ n })
-  //         const category =
-  //           categories?.find((cat) => cat?.name === item?.categoryName)?.id ||
-  //           ''
-  //         const defaultNumber = `${item?.brand?.[0] || 'S'}${item}`
-  //         const serial = item?.serial || order?.itemSerial || ''
-  //         const number = item?.number || n
-  //         const brand = item?.brand || order?.itemBrand || ''
-  //         const status: ItemType['status'] =
-  //           order.status === order_status.DELIVERED ? 'rented' : 'pickedUp'
-
-  //         const newItem = {
-  //           status,
-  //           assignedSection,
-  //           category,
-  //           categoryName: item.categoryName || '',
-  //           brand,
-  //           number,
-  //           serial
-  //         }
-  //         console.log({ newItem })
-  //         _setItem({ ...newItem })
-  //       })
-  // }, [itemId, categories])
-
-  // console.log({ item, _item })
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
       if (res) {
@@ -113,18 +55,48 @@ export const RowOrderItem = ({
       }
     })
   }, [categories])
-  console.log({ itemAlreadyExist })
   const createModal = useModal({ title: 'Crear articulo' })
-  console.log({ _item })
   return (
     <View>
       <StyledModal {...createModal}>
-        <FormItem
-          values={_item}
-          onSubmit={async (values) => {
-            return await onEdit(values)
-          }}
-        />
+        {!canCreateItem && (
+          <TextInfo text="Para crear este artículo debe ser una renta y estar entregado " />
+        )}
+        {canCreateItem && (
+          <FormItem
+            values={_item}
+            onSubmit={async (values) => {
+              //* CREATE ITEM
+              ServiceStoreItems.add({
+                item: values,
+                storeId
+              })
+                .then(({ res }) => {
+                  ServiceStoreItems.addEntry({
+                    storeId,
+                    itemId: res.id,
+                    entry: {
+                      type: 'created',
+                      content: 'Item creado',
+                      orderId: orderId || ''
+                    }
+                  })
+                    .then((res) => console.log({ res }))
+                    .catch((e) => console.log({ e }))
+                  if (res.id) {
+                    //* UPDATE ORDER WITH THE NEW ITEM
+                    ServiceOrders.updateItemId({
+                      orderId,
+                      itemId,
+                      newItemId: res.id
+                    })
+                  }
+                  console.log({ res })
+                })
+                .catch(console.error)
+            }}
+          />
+        )}
       </StyledModal>
       <Pressable
         onPress={() => {
@@ -133,7 +105,7 @@ export const RowOrderItem = ({
           } else {
             console.log('this items not exist', { itemId })
 
-            const newItem = createNewItem({
+            const newItem = formatNewItem({
               order,
               item,
               storeSections,
@@ -167,7 +139,7 @@ export const RowOrderItem = ({
             borderRadius: gSpace(2)
           }}
         />
-        {/* {shouldCreateItem && createItem && (
+        {/* {shouldcanCreateItem && canCreateItem && (
         <ButtonConfirm
           handleConfirm={async () => {}}
           confirmLabel="Cerrar"
@@ -243,7 +215,7 @@ export const RowOrderItem = ({
   )
 }
 
-const createNewItem = ({
+const formatNewItem = ({
   order,
   item,
   storeSections,

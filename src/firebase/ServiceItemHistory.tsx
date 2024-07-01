@@ -6,7 +6,7 @@ const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'
 const SUB_COLLECTION_2 = 'history'
 export type ItemHistoryType = {
-  id: string
+  id?: string //*??? why this is necessary?
   type: 'pickup' | 'delivery' | 'report' | 'exchange' | 'assignment' | 'created'
   orderId?: string
   content: string

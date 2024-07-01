@@ -1,7 +1,7 @@
 import { collection, where } from 'firebase/firestore'
 import { ServiceStores } from './ServiceStore'
 import ItemType from '../types/ItemType'
-import { ServiceItemHistory } from './ServiceItemHistory'
+import { ItemHistoryType, ServiceItemHistory } from './ServiceItemHistory'
 import { db } from './main'
 type Type = Partial<ItemType>
 const SUB_COLLECTION = 'items'
@@ -133,6 +133,22 @@ export class ServiceStoreItemsClass {
       parentId: storeId,
       subCollection: SUB_COLLECTION,
       itemId
+    })
+  }
+
+  async addEntry({
+    storeId,
+    itemId,
+    entry
+  }: {
+    storeId: string
+    itemId: string
+    entry: ItemHistoryType
+  }) {
+    return ServiceItemHistory.addEntry({
+      entry,
+      itemId,
+      storeId
     })
   }
 
