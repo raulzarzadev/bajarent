@@ -285,14 +285,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     avoidIds?: string[]
     sections: string[] | 'all'
   }) {
-    console.log({ fields })
     const promises = fields?.map((field) => {
       const number = parseFloat(value as string)
       //* search as number
       const filters = []
       // if (avoidIds.length > 0)
       //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
-      if (sections?.length > 0) {
+      if (Array.isArray(sections?.length) && sections.length > 0) {
         filters.push(where('assignToSection', 'in', sections))
       }
 
@@ -304,7 +303,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       //* search as string
       return this.findMany([...filters, where(field, '==', value)])
     })
-    return await Promise.all(promises).then((res) => res.flat())
+    return await Promise.all(promises)
+      .then((res) => res.flat())
+      .catch((e) => console.log({ e }))
   }
 
   async getRentItemsLocation(storeId: string) {
