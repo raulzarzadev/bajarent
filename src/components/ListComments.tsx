@@ -19,6 +19,7 @@ import ButtonConfirm from './ButtonConfirm'
 import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import useMyNav from '../hooks/useMyNav'
 
 export type CommentType = OrderType['comments'][number]
 
@@ -184,6 +185,7 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
+  const { toOrder } = useMyNav()
 
   if (!comment) return null
 
@@ -243,13 +245,9 @@ export const CommentRow = ({
               size="sm"
               color={theme.primary}
               titleColor={theme.white}
-              onPress={() =>
-                // @ts-ignore
-                navigate('StackOrders', {
-                  screen: 'OrderDetails',
-                  params: { orderId: comment.orderId }
-                })
-              }
+              onPress={() => {
+                toOrder({ id: order?.id })
+              }}
             ></Chip>
           ) : (
             <Chip
@@ -257,13 +255,9 @@ export const CommentRow = ({
               size="sm"
               color={theme.primary}
               titleColor={theme.white}
-              onPress={() =>
-                // @ts-ignore
-                navigate('StackOrders', {
-                  screen: 'OrderDetails',
-                  params: { orderId: comment.orderId }
-                })
-              }
+              onPress={() => {
+                toOrder({ id: order?.id })
+              }}
             ></Chip>
           )}
 

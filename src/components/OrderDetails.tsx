@@ -32,7 +32,6 @@ import OrderImages from './OrderImages'
 import OrderExtensions from './OrderExtensions'
 import PaymentVerify from './PaymentVerify'
 import ButtonCreateClient from './ButtonCreateClient'
-import { ItemRow } from './FormikSelectCategories'
 import RowOrderItem from './RowOrderItem'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
