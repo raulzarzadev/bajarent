@@ -37,7 +37,7 @@ function FIlterByDate<T>({
     <View>
       {dateFilters.length > 0 && (
         <View>
-          <Text style={gStyles.h3}>Filtrar por fechas</Text>
+          {/* <Text style={gStyles.h3}>Filtrar por fechas</Text>
           <InputRadios
             layout="row"
             options={dateFilters.map((f) => ({
@@ -48,7 +48,7 @@ function FIlterByDate<T>({
             setValue={(value) => {
               setDateFieldSelected(value as keyof T | '')
             }}
-          />
+          /> */}
 
           <View
             style={{
