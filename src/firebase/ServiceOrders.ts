@@ -210,6 +210,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   getList(ids: string[], ops: { sections?: string[] } = {}): Promise<Type[]> {
     const sections = ops?.sections || []
     if (!ids || ids?.length === 0) return Promise.resolve([])
+    if (ids.length > 30) return Promise.reject('Max 30 ids')
     const filters = [where(documentId(), 'in', ids)]
     if (sections?.length > 0)
       filters.push(where('assignToSection', 'in', sections))
