@@ -284,15 +284,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     value: string | number
     avoidIds?: string[]
     sections: string[] | 'all'
-  }) {
-    console.log({ fields })
+  }): Promise<Partial<Type>[] | void> {
     const promises = fields?.map((field) => {
       const number = parseFloat(value as string)
       //* search as number
       const filters = []
       // if (avoidIds.length > 0)
       //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
-      if (sections?.length > 0) {
+      if (Array.isArray(sections?.length) && sections.length > 0) {
         filters.push(where('assignToSection', 'in', sections))
       }
 
@@ -304,7 +303,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       //* search as string
       return this.findMany([...filters, where(field, '==', value)])
     })
-    return await Promise.all(promises).then((res) => res.flat())
+    return await Promise.all(promises)
+      .then((res) => res.flat())
+      .catch((e) => console.log({ e }))
   }
 
   async getRentItemsLocation(storeId: string) {
@@ -447,6 +448,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
   async customMethod() {
     // Implementa tu método personalizado
+  }
+
+  async updateItemId({
+    orderId,
+    itemId,
+    newItemId
+  }: {
+    orderId: string
+    itemId: string
+    newItemId: string
+  }) {
+    const items = await this.get(orderId).then((res) => res.items)
+    console.log({ items, itemId, newItemId })
+    const itemIndex = items.findIndex((item) => item.id === itemId)
+    if (itemIndex < 0) return console.error('Item not found')
+    items[itemIndex].id = newItemId
+    return await this.update(orderId, { items })
   }
 }
 

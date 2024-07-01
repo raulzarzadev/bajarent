@@ -3,6 +3,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import asDate from '../libs/utils-date'
+import OrderType from '../types/OrderType'
 
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
@@ -137,7 +138,7 @@ export default function useFilter<T extends { id?: string }>({
         //avoidIds: [],
         sections: collectionSearch?.assignedSections
       }).then((res) => {
-        return formatOrders({ orders: res, reports })
+        return formatOrders({ orders: res as Partial<OrderType>[], reports })
       })
 
       setCustomData([...orders.filter((o) => !res.some((r) => r.id === o.id))])

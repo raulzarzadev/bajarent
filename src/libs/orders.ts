@@ -10,7 +10,7 @@ export const formatOrders = ({
   reports = [],
   justActive = false
 }: {
-  orders: OrderType[]
+  orders: Partial<OrderType>[]
   reports?: CommentType[]
   justActive?: boolean
 }) => {
