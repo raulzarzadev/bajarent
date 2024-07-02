@@ -33,7 +33,6 @@ const ListItemsSections = () => {
   }, [getItems])
 
   const sections = Object.entries(groupedItems)
-  console.log({ items })
   return (
     <View>
       {/* <InputRadios

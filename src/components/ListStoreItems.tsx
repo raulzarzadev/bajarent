@@ -66,13 +66,13 @@ const ListStoreItems = () => {
             },
             label: 'Agregar',
             visible: true
-          },
-          {
-            icon: 'refresh',
-            onPress: () => fetchItems(),
-            label: 'Refrescar',
-            visible: true
           }
+          // {
+          //   icon: 'refresh',
+          //   onPress: () => fetchItems(),
+          //   label: 'Refrescar',
+          //   visible: true
+          // }
         ]}
         data={items?.map((item) => ({ ...item, id: item.id }))}
         filters={[

@@ -16,7 +16,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import ListStoreItems from './ListStoreItems'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
-  const { staff, store } = useStore()
+  const { staff } = useStore()
   const navigation = useNavigation()
   const {
     permissions: { canEditStaff }
@@ -30,12 +30,8 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   const staffSection = section?.staff?.map((staffId) =>
     staff?.find((s) => s?.id === staffId)
   )
-  const orders = []
-  const reports = []
   const canEditSection = canEditStaff
-  const storeItems = Object.values(store?.items || {})
-  const sectionItems =
-    storeItems?.filter((i) => i?.assignedSection === section?.id) || []
+
   return (
     <View>
       <View
@@ -107,7 +103,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
           },
           {
             title: 'Artículos',
-            content: <ListStoreItems items={sectionItems} />,
+            content: <ListStoreItems />,
             show: true
           }
           // {
