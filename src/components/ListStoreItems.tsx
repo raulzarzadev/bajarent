@@ -8,17 +8,26 @@ import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { useStore } from '../contexts/storeContext'
 
 const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const { navigate } = useNavigation()
   const { toItem } = useMyNav()
+  const { storeId, fetchItems } = useStore()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
-      setLoading(true)
-      return res
+      try {
+        const res = await ServiceStoreItems.delete({ itemId: id, storeId })
+        return res
+      } catch (error) {
+        console.error({ error })
+        return error
+      }
     })
     const res = await Promise.all(promises)
+    fetchItems()
     setLoading(false)
     return res
   }
@@ -34,7 +43,7 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
               openVariant="outline"
               icon="delete"
               text={`Se eliminaran los ${ids?.length || 0} items seleccionados`}
-              handleConfirm={() => handleDeleteItems(ids)}
+              handleConfirm={async () => await handleDeleteItems(ids)}
             />
           </View>
         )}
