@@ -23,6 +23,7 @@ export type BaseStoreType = {
   address?: string
 
   schedule?: string
+  currentItemNumber?: string
   // coords?: {
   //   lat: number
   //   lon: number

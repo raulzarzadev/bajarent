@@ -18,6 +18,7 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
 import TextInfo from './TextInfo'
+import { ServiceStores, sumHexDec } from '../firebase/ServiceStore'
 
 export const RowOrderItem = ({
   item,
@@ -55,18 +56,23 @@ export const RowOrderItem = ({
       }
     })
   }, [categories])
-  const createModal = useModal({ title: 'Crear articulo' })
+  const createModal = useModal({ title: 'Crear artículo' })
   return (
     <View>
       <StyledModal {...createModal}>
         {!canCreateItem && (
-          <TextInfo text="Para crear este artículo debe ser una renta y estar entregado " />
+          <TextInfo
+            defaultVisible
+            type="warning"
+            text="Para crear este artículo la orden  debe ser una renta  ⏳ y estar entregado 🏠 "
+          />
         )}
         {canCreateItem && (
           <FormItem
             values={_item}
             onSubmit={async (values) => {
               //* CREATE ITEM
+
               ServiceStoreItems.add({
                 item: values,
                 storeId
@@ -99,13 +105,13 @@ export const RowOrderItem = ({
         )}
       </StyledModal>
       <Pressable
-        onPress={() => {
+        onPress={async () => {
           if (itemAlreadyExist) {
             toItem({ id: itemId })
           } else {
             console.log('this items not exist', { itemId })
 
-            const newItem = formatNewItem({
+            const newItem = await formatNewItem({
               order,
               item,
               storeSections,
@@ -215,19 +221,24 @@ export const RowOrderItem = ({
   )
 }
 
-const formatNewItem = ({
+const formatNewItem = async ({
   order,
   item,
   storeSections,
   storeCategories
-}): Partial<ItemType> => {
+}): Promise<Partial<ItemType>> => {
   const sectionAssigned = storeSections.find(
     (s) => s.id === order.assignToSection
   )
-  const createEcoNumber = ({ section, brand, lastNumber }) => {
+  const createEcoNumber = async ({ section, brand, lastNumber }) => {
+    const currentNumber = await ServiceStores.currentItemNumber(order.storeId)
+    const nexItemNumber = sumHexDec({ hex: currentNumber || '0000', dec: 1 })
+    console.log({ currentNumber, nexItemNumber })
+    return nexItemNumber
     let firstLetter = '' //* BRAND OF THE ITEM
     let secondLetter = '' //* SECTION OF THE ITEM
     let thirdLetter = '' //* INC NUMBER
+
     const string = storeSections.find((s) => s?.id === section)?.name || 'S'
     const chunks = string.split(' ')
     firstLetter = brand?.[0] || 'S'
@@ -235,7 +246,7 @@ const formatNewItem = ({
     thirdLetter = lastNumber.toString(16).toUpperCase()
     return `${firstLetter}${secondLetter}${thirdLetter}`.toUpperCase()
   }
-  const number = createEcoNumber({
+  const number = await createEcoNumber({
     section: sectionAssigned?.id,
     brand: item?.brand,
     lastNumber: 0

@@ -7,6 +7,7 @@ import MyStaffLabel from './MyStaffLabel'
 import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { StackPaymentsE } from './StackPayments'
+import StackItems from './StackItems'
 
 const Stack = createStackNavigator()
 function StackConsolidated() {
@@ -86,6 +87,15 @@ function StackConsolidated() {
           headerShown: false
         }}
         component={StackPaymentsE}
+      />
+      <Stack.Screen
+        name="StackItems"
+        options={{
+          title: 'Items',
+          headerShown: false
+          //tabBarButton: () => null
+        }}
+        component={StackItems}
       />
     </Stack.Navigator>
   )

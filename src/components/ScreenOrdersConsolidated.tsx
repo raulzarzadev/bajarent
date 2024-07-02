@@ -14,7 +14,7 @@ const ScreenOrdersConsolidated = () => {
         options={[
           { label: 'Ordenes', value: 'orders' },
           {
-            label: 'Articulos disponibles',
+            label: 'Artículos disponibles',
             value: 'items'
           }
         ]}

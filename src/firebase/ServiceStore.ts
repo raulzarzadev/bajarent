@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore'
+import { increment, where } from 'firebase/firestore'
 import StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStaff } from './ServiceStaff'
@@ -32,11 +32,38 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
       [...asStaff, ...asOwner].find((store) => store.id === id)
     )
   }
+  async currentItemNumber(storeId: string) {
+    const store = await this.get(storeId)
+    if (!store) {
+      return
+    }
+    return store.currentItemNumber || '0000'
+  }
+
+  async incrementItemNumber({ storeId }) {
+    const store = await this.get(storeId)
+    if (!store) {
+      return
+    }
+    const valorHex = store.currentItemNumber || '0000'
+    let valorDecimal = parseInt(valorHex, 16)
+    // const newHexVal = valorDecimal.toString(16).padStart(4, '0') // Convertir de nuevo a hexadecimal y asegurar 4 dígitos
+    const newHexVal = sumHexDec({ hex: valorHex, dec: 1 })
+    await this.update(storeId, { currentItemNumber: newHexVal.toUpperCase() }) // Asumiendo que `update` es una operación asíncrona
+    return newHexVal
+  }
 
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
   }
+}
+
+export const sumHexDec = ({ hex, dec }: { hex: string; dec?: number }) => {
+  let valorDecimal1 = parseInt(hex, 16)
+  let valorDecimal = valorDecimal1 + dec // Incrementar el valor decimal directamente
+  const newHexVal = valorDecimal.toString(16).padStart(4, '0') // Convertir de nuevo a hexadecimal y asegurar 4 dígitos
+  return newHexVal
 }
 
 export const ServiceStores = new ServiceStoresClass()

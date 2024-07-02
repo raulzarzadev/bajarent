@@ -7,9 +7,11 @@ import { gStyles } from '../styles'
 import { RowSectionItemsE } from './ListAssignedItems'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import InputRadios from './InputRadios'
+import useMyNav from '../hooks/useMyNav'
 
 const ListItemsSections = () => {
   const { storeId, items, storeSections } = useStore()
+  const { toItem } = useMyNav()
   const [getItems, setGetItems] = React.useState<'all' | 'pickedUp'>('pickedUp')
   const [groupedItems, setGroupedItems] = React.useState<
     Record<string, ItemType[]>
@@ -51,7 +53,12 @@ const ListItemsSections = () => {
               {storeSections.find((s) => s.id === key)?.name || 'Sin asignar '}
               {`(${items.length})`}
             </Text>
-            <RowSectionItemsE items={items} />
+            <RowSectionItemsE
+              items={items}
+              onPressItem={(id) => {
+                toItem({ id })
+              }}
+            />
           </View>
         )
       })}

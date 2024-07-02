@@ -8,7 +8,10 @@ const SUB_COLLECTION = 'items'
 export class ServiceStoreItemsClass {
   async add({ storeId, item }: { storeId: string; item: Type }) {
     const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
-
+    item.number = await ServiceStores.incrementItemNumber({
+      storeId
+    })
+    console.log({ item })
     return await ServiceStores.createRefItem({
       collectionRef,
       item: item
