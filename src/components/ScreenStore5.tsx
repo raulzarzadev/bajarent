@@ -237,50 +237,9 @@ const TabCashbox = () => {
         debounce={400}
         label="Cuentas"
         onChangeDate={handleGetLastBalanceInDate}
-        // documentDate={balance.createdAt}
+        documentDate={balance?.createdAt}
       />
 
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          margin: 'auto'
-        }}
-      >
-        <Button
-          justIcon
-          variant="ghost"
-          icon="rowLeft"
-          label="Atras"
-          onPress={() => {
-            handleGetBackStatus(balance.createdAt)
-          }}
-        />
-        <Text style={gStyles.h1}>Cuentas</Text>
-        <Button
-          justIcon
-          variant="ghost"
-          icon="rowRight"
-          label="Adelante"
-          onPress={() => {
-            handleForwardStatus(balance.createdAt)
-          }}
-        />
-      </View>
-      <DateCell
-        date={balance?.createdAt}
-        showTimeAgo={false}
-        showTime={true}
-        dateBold
-      /> */}
-      {/* <Text style={gStyles.h3}>
-        {dateFormat(asDate(balance?.createdAt), 'EEEE dd MMM HH:mm')}
-      </Text> */}
-      {/* <Text style={[gStyles.helper, gStyles.tCenter]}>
-        Última actualizacion{' '}
-        {dateFormat(asDate(balance?.createdAt), 'ddMMM HH:mm')}{' '}
-        {fromNow(asDate(balance?.createdAt))}
-      </Text> */}
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
           disabled={updating}

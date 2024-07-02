@@ -9,7 +9,7 @@ export const gStyles = StyleSheet.create({
   h1: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 2,
     alignItems: 'center',
     textAlign: 'center'
   },

@@ -75,7 +75,12 @@ const HeaderDate = ({
         showDay
       />
       {!!documentDate && (
-        <DateCell date={documentDate} showTimeAgo={false} showTime={true} />
+        <DateCell
+          date={documentDate}
+          showTimeAgo={false}
+          showTime={true}
+          showDate={false}
+        />
       )}
     </View>
   )
