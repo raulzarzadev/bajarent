@@ -165,6 +165,8 @@ export const onChangeOrderItem = async ({
   storeId
 }) => {
   try {
+    if (!newItemId || itemId === newItemId)
+      return console.log('no new item or is the same ')
     //* get numbers
     const oldItemNumber = await ServiceStoreItems.get({ storeId, itemId }).then(
       (res) => res.number
