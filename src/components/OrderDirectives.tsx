@@ -24,6 +24,15 @@ const OrderDirectives = ({
     order?.assignToSectionName ||
     storeSections.find(({ id }) => id === order?.assignToSection)?.name ||
     false
+  const TypeIcon = (type: OrderType['type']) => {
+    if (type === order_type.RENT) return '⏳'
+    if (type === order_type.SALE) return '💰'
+    if (type === order_type.REPAIR) return '🔧'
+    return type
+  }
+  const orderType = `${TypeIcon(order.type)} ${currentRentPeriod(order, {
+    shortLabel: true
+  })}`
   return (
     <View
       style={{
@@ -37,10 +46,7 @@ const OrderDirectives = ({
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <Chip
         style={[styles.chip]}
-        title={`${dictionary(order?.type)?.toUpperCase()} ${currentRentPeriod(
-          order,
-          { shortLabel: true }
-        )}`}
+        title={orderType}
         color={theme?.info}
         titleColor={theme.black}
         size="sm"

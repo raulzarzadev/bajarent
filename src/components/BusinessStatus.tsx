@@ -220,13 +220,13 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                     hiddenList
                   />
                 </View>
-                <CellItems
+                <CellItemsE
                   items={
                     balance.sections.find((s) => s?.section === selectedRow)
                       ?.inStock
                   }
                   label="En carro"
-                ></CellItems>
+                ></CellItemsE>
                 <View>
                   <Text style={[gStyles.h2, { marginTop: 8 }]}>Pagos</Text>
                 </View>
@@ -239,8 +239,16 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
   )
 }
 
+export const CellItemsE = (props: { items: string[]; label: string }) => {
+  return (
+    <ErrorBoundary componentName="CellItems">
+      <CellItems {...props} />
+    </ErrorBoundary>
+  )
+}
+
 export const CellItems = ({
-  items,
+  items = [],
   label
 }: {
   items: string[]
@@ -251,7 +259,7 @@ export const CellItems = ({
   useEffect(() => {
     const fetchItems = async () => {
       const itemsData = await Promise.all(
-        items.map(async (itemId) => {
+        items?.map(async (itemId) => {
           return await ServiceStoreItems.get({ itemId, storeId })
         })
       )
@@ -263,16 +271,16 @@ export const CellItems = ({
     <View>
       <Text style={gStyles.h3}>
         {label}
-        <Text style={gStyles.helper}>{`(${items.length || 0})`}</Text>
+        <Text style={gStyles.helper}>{`(${items?.length || 0})`}</Text>
       </Text>
       <View>
-        {itemsData.map((i) => (
+        {itemsData.map((i, index) => (
           <View
-            key={i.id}
+            key={i?.id || index}
             style={{ flexDirection: 'row', justifyContent: 'center' }}
           >
-            <Text> {i.categoryName} </Text>
-            <Text> {i.number} </Text>
+            <Text> {i?.categoryName} </Text>
+            <Text> {i?.number} </Text>
           </View>
         ))}
       </View>
@@ -307,6 +315,7 @@ const CellOrders = ({
 }: CellOrdersProps) => {
   const section = sections?.find((s) => s.section === sectionSelected)
   const orders = section?.[field] as string[]
+  const ordersUnique = removeDuplicates(orders)
   if (!orders.length) return null
   const { navigate } = useNavigation()
   return (
@@ -325,12 +334,12 @@ const CellOrders = ({
       >
         <Text style={gStyles.h3}>
           {label}
-          <Text style={gStyles.helper}>({orders?.length || 0})</Text>
+          <Text style={gStyles.helper}>({ordersUnique?.length || 0})</Text>
         </Text>
       </Pressable>
 
       {!hiddenList &&
-        orders?.map((orderId) => {
+        ordersUnique?.map((orderId) => {
           return (
             <SpanOrder key={orderId} orderId={orderId} name time redirect />
           )
@@ -340,3 +349,4 @@ const CellOrders = ({
 }
 
 export default BusinessStatus
+const removeDuplicates = (arr: string[]) => Array.from(new Set(arr))
