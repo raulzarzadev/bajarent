@@ -9,8 +9,16 @@ import { useNavigation } from '@react-navigation/native'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
+import useMyNav from '../hooks/useMyNav'
+import InputTextStyled from './InputTextStyled'
 
-const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
+const ItemActions = ({
+  item,
+  onAction
+}: {
+  item: Partial<ItemType>
+  onAction: (action: 'details' | 'rent' | 'assign' | 'fix') => void
+}) => {
   const itemId = item?.id
   const itemSection = item?.assignedSection
   const needFix = item?.needFix
@@ -36,8 +44,22 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
       field: 'needFix',
       value: !needFix
     })
+
+    ServiceStoreItems.addEntry({
+      storeId,
+      itemId,
+      entry: {
+        type: needFix ? 'fix' : 'report',
+        content: needFix ? `Reparar: ${comment}` : `Reparada : ${comment}`
+      }
+    })
+
+    setComment('')
   }
-  const { navigate } = useNavigation()
+
+  const [comment, setComment] = React.useState('')
+
+  const { toItems, toOrders } = useMyNav()
   return (
     <View>
       <View style={{ justifyContent: 'center', margin: 'auto' }}></View>
@@ -49,12 +71,18 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
         }}
       >
         <Button
+          label="Detalles"
+          onPress={() => {
+            onAction('details')
+            toItems({ id: itemId })
+          }}
+        />
+        <Button
           label="Rentar"
           onPress={() => {
-            //@ts-ignore
-            navigate('NewOrder', {
-              itemId
-            })
+            onAction('rent')
+            toOrders({ screenNew: true })
+
             console.log('redirigir a nueva orden que incluya este item')
           }}
         />
@@ -64,6 +92,7 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
           openVariant="outline"
           confirmLabel="Cambiar"
           handleConfirm={async () => {
+            onAction('assign')
             return await handleChangeItemSection()
           }}
         >
@@ -88,9 +117,16 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
             openColor={'error'}
             openVariant={'filled'}
             handleConfirm={async () => {
+              onAction('fix')
               return await handleMarkAsNeedFix()
             }}
           >
+            <InputTextStyled
+              style={{ marginVertical: 6 }}
+              placeholder="Descripción"
+              label="Descripción"
+              onChangeText={(value) => setComment(value)}
+            ></InputTextStyled>
             <Text style={gStyles.h3}>No necesita mantenimiento</Text>
           </ButtonConfirm>
         ) : (
@@ -104,6 +140,12 @@ const ItemActions = ({ item }: { item: Partial<ItemType> }) => {
             confirmColor="error"
           >
             <Text style={gStyles.h3}>Necesita mantenimiento</Text>
+            <InputTextStyled
+              style={{ marginVertical: 6 }}
+              placeholder="Descripción"
+              label="Descripción"
+              onChangeText={(value) => setComment(value)}
+            ></InputTextStyled>
           </ButtonConfirm>
         )}
       </View>

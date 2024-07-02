@@ -1,18 +1,29 @@
 import { collection, limit, orderBy } from 'firebase/firestore'
 import { db } from './main'
 import { FirebaseGenericService } from './genericService'
+import BaseType from '../types/BaseType'
 
 const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'
 const SUB_COLLECTION_2 = 'history'
-export type ItemHistoryType = {
-  id?: string //*??? why this is necessary?
-  type: 'pickup' | 'delivery' | 'report' | 'exchange' | 'assignment' | 'created'
+export type ItemHistoryBase = {
+  type:
+    | 'pickup'
+    | 'delivery'
+    | 'report'
+    | 'exchange'
+    | 'assignment'
+    | 'created'
+    | 'fix'
   orderId?: string
   content: string
 }
+export type ItemHistoryType = ItemHistoryBase & BaseType
+
 type Type = ItemHistoryType
-export class ServiceItemHistoryClass extends FirebaseGenericService<Type> {
+export class ServiceItemHistoryClass extends FirebaseGenericService<
+  Type & { id: string } //*??? why this is necessary?
+> {
   async addEntry({
     storeId,
     itemId,

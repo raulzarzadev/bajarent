@@ -18,18 +18,30 @@ const useMyNav = () => {
       })
     }
   }
-  const toOrder = ({ id }: { id: string }) => {
-    //@ts-ignore
-    navigate('StackOrders', {
-      screen: 'OrderDetails',
-      params: {
-        orderId: id
-      }
-    })
+  const toOrders = ({
+    id,
+    screenNew
+  }: {
+    id?: string
+    screenNew?: boolean
+  }) => {
+    if (screenNew) {
+      //@ts-ignore
+      navigate('NewOrder')
+    }
+    if (id) {
+      //@ts-ignore
+      navigate('StackOrders', {
+        screen: 'OrderDetails',
+        params: {
+          orderId: id
+        }
+      })
+    }
   }
   return {
     toItems,
-    toOrder
+    toOrders
   }
 }
 

@@ -82,12 +82,16 @@ export const SectionItem = ({
         <View style={{ marginBottom: 8 }}>
           <CardItem item={item} />
         </View>
-        <ItemActions item={item} />
+        <ItemActions
+          item={item}
+          onAction={() => {
+            modal.toggleOpen()
+          }}
+        />
       </StyledModal>
 
       <Pressable
-        onPress={onPress}
-        onLongPress={() => {
+        onPress={() => {
           modal.toggleOpen()
         }}
       >

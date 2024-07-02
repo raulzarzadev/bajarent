@@ -185,7 +185,7 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
-  const { toOrder } = useMyNav()
+  const { toOrders } = useMyNav()
 
   if (!comment) return null
 
@@ -246,7 +246,7 @@ export const CommentRow = ({
               color={theme.primary}
               titleColor={theme.white}
               onPress={() => {
-                toOrder({ id: order?.id })
+                toOrders({ id: order?.id })
               }}
             ></Chip>
           ) : (
@@ -256,7 +256,7 @@ export const CommentRow = ({
               color={theme.primary}
               titleColor={theme.white}
               onPress={() => {
-                toOrder({ id: order?.id })
+                toOrders({ id: order?.id })
               }}
             ></Chip>
           )}

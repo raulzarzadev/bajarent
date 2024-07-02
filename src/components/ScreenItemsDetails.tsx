@@ -4,7 +4,10 @@ import ItemDetails from '../firebase/ItemDetails'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
-import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
+import {
+  ItemHistoryType,
+  ServiceItemHistory
+} from '../firebase/ServiceItemHistory'
 import ListRow from './ListRow'
 import DateCell from './DateCell'
 import SpanUser from './SpanUser'
@@ -38,7 +41,7 @@ const ScreenItemsDetails = ({ route }) => {
 }
 
 const ItemHistory = ({ itemId }) => {
-  const [itemHistory, setItemHistory] = useState([])
+  const [itemHistory, setItemHistory] = useState<ItemHistoryType[]>([])
   const { storeId } = useStore()
   useEffect(() => {
     ServiceItemHistory.getLastEntries({
@@ -49,7 +52,6 @@ const ItemHistory = ({ itemId }) => {
       setItemHistory(res)
     })
   }, [])
-  console.log({ itemHistory })
   return (
     <View>
       <Text style={gStyles.h3}>Historial</Text>
@@ -66,7 +68,14 @@ const ItemHistory = ({ itemId }) => {
               width: 'rest'
             },
             {
-              component: <Text>{dictionary(entry?.type)}</Text>,
+              component: (
+                <View>
+                  <Text style={[gStyles.helper, gStyles.tBold]}>
+                    {dictionary(entry?.type)}
+                  </Text>
+                  <Text style={gStyles.helper}>{entry?.content}</Text>
+                </View>
+              ),
               width: 'rest'
             },
             {

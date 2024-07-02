@@ -179,6 +179,9 @@ const labels = {
   important: 'importante',
   delivery: 'entrega',
   pickup: 'recoger',
+  fix: 'reparación',
+  assignment: 'Asignación',
+  created: 'Creada',
   ' ': '',
   '': ''
 } as const
