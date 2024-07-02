@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
 import InputRadios from './InputRadios'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
-import { useNavigation } from '@react-navigation/native'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
@@ -160,5 +159,3 @@ const ItemActions = ({
 }
 
 export default ItemActions
-
-const styles = StyleSheet.create({})

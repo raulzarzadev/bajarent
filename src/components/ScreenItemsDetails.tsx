@@ -14,16 +14,25 @@ import SpanUser from './SpanUser'
 import dictionary from '../dictionary'
 import SpanOrder from './SpanOrder'
 import { useEmployee } from '../contexts/employeeContext'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
   const [item, setItem] = useState(undefined)
+  const { storeId } = useStore()
   const { items } = useEmployee()
   useEffect(() => {
     if (items) {
-      setItem(items.find((item) => item.id === id) || null)
+      ServiceStoreItems.get({ storeId, itemId: id }).then((res) => {
+        setItem(res)
+      })
     }
-  }, [route?.params?.id, items])
+  }, [items])
+  // useEffect(() => {
+  //   if (items) {
+  //     setItem(items.find((item) => item.id === id) || null)
+  //   }
+  // }, [route?.params?.id, items])
 
   if (item === undefined) {
     return <Loading />
