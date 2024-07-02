@@ -149,9 +149,8 @@ export const CommentRow = ({
   const { staff } = useStore()
   const { user } = useAuth()
 
-  const {
-    consolidatedOrders: { orders }
-  } = useOrdersCtx()
+  const { consolidatedOrders } = useOrdersCtx()
+  const orders = consolidatedOrders?.orders || {}
   const order = orders[_comment?.orderId]
 
   const [comment, setComment] = React.useState<FormattedComment>(_comment)

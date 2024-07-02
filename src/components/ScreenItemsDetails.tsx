@@ -28,11 +28,6 @@ const ScreenItemsDetails = ({ route }) => {
       })
     }
   }, [items])
-  // useEffect(() => {
-  //   if (items) {
-  //     setItem(items.find((item) => item.id === id) || null)
-  //   }
-  // }, [route?.params?.id, items])
 
   if (item === undefined) {
     return <Loading />
