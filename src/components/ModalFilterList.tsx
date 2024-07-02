@@ -14,6 +14,7 @@ import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import FIlterByDate from './FIlterByDate'
+import { order_type } from '../types/OrderType'
 
 export type FilterListType<T> = {
   field: keyof T
@@ -161,6 +162,18 @@ function ModalFilterList<T>({
 
   const chipLabel = (field: string, value: string) => {
     //* this is useful for orders table to find section name
+
+    if (
+      field === 'type' &&
+      [order_type.RENT, order_type.SALE, order_type.REPAIR].includes(
+        value as order_type
+      )
+    ) {
+      if (value === order_type.RENT) return '⏳ RENTA'
+      if (value === order_type.SALE) return '💰 VENTA'
+      if (value === order_type.REPAIR) return '🔧 REPARACIÓN'
+    }
+
     if (field === 'assignToSection') {
       const res = storeSections.find((a) => a.id === value)?.name || ''
 
