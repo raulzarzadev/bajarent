@@ -14,6 +14,7 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { useEmployee } from './employeeContext'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -154,7 +155,13 @@ const StoreContextProvider = ({ children }) => {
         userStores: stores,
         storeSections: sections,
         payments,
+        /**
+         * @deprecated
+         */
         items: storeItems,
+        /**
+         * @deprecated
+         */
         fetchItems,
         /**
          * @deprecated

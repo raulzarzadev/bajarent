@@ -13,11 +13,12 @@ import DateCell from './DateCell'
 import SpanUser from './SpanUser'
 import dictionary from '../dictionary'
 import SpanOrder from './SpanOrder'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
   const [item, setItem] = useState(undefined)
-  const { items } = useStore()
+  const { items } = useEmployee()
   useEffect(() => {
     if (items) {
       setItem(items.find((item) => item.id === id) || null)
@@ -43,6 +44,7 @@ const ScreenItemsDetails = ({ route }) => {
 const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState<ItemHistoryType[]>([])
   const { storeId } = useStore()
+
   useEffect(() => {
     ServiceItemHistory.getLastEntries({
       itemId,
@@ -52,6 +54,7 @@ const ItemHistory = ({ itemId }) => {
       setItemHistory(res)
     })
   }, [])
+
   return (
     <View>
       <Text style={gStyles.h3}>Historial</Text>

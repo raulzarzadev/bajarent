@@ -5,12 +5,13 @@ import ListStoreItems from './ListStoreItems'
 import { useStore } from '../contexts/storeContext'
 
 const StoreItems = () => {
-  const { items } = useStore()
-
   return (
     <View style={{ marginTop: 16 }}>
-      <Text style={[gStyles.h3, { textAlign: 'left' }]}>Artículos</Text>
-      <ListStoreItems items={items} />
+      <Text style={[gStyles.h3, { textAlign: 'left' }]}>
+        Artículos disponibles
+      </Text>
+
+      <ListStoreItems />
     </View>
   )
 }

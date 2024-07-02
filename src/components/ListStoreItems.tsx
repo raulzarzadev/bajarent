@@ -10,11 +10,13 @@ import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
+import { useEmployee } from '../contexts/employeeContext'
 
-const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
+const ListStoreItems = () => {
   const { navigate } = useNavigation()
   const { toItems } = useMyNav()
-  const { storeId, fetchItems } = useStore()
+  const { storeId } = useStore()
+  const { items } = useEmployee()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
@@ -27,7 +29,7 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
       }
     })
     const res = await Promise.all(promises)
-    fetchItems()
+    // fetchItems()
     setLoading(false)
     return res
   }
@@ -63,6 +65,12 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
               toItems({ screenNew: true })
             },
             label: 'Agregar',
+            visible: true
+          },
+          {
+            icon: 'refresh',
+            onPress: () => fetchItems(),
+            label: 'Refrescar',
             visible: true
           }
         ]}
