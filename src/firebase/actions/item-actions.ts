@@ -104,12 +104,14 @@ export const onChangeItemSection = async ({
 }
 
 export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
+  //* <------------------ ADD REGISTRY ENTRY
   onRegistryEntry({
     storeId,
     itemId,
     type: 'pickup',
     orderId
   })
+
   return await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO PICKED UP
     storeId,
@@ -118,6 +120,7 @@ export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
     value: 'pickedUp'
   })
 }
+
 export const onRentItem = async ({ storeId, itemId, orderId }) => {
   onRegistryEntry({
     storeId,

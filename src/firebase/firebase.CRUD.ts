@@ -483,19 +483,26 @@ export class FirebaseCRUD {
     return res
   }
 
-  async getItemInCollection({
-    parentId,
-    parentCollection,
-    subCollection,
-    itemId
-  }: {
-    parentId: string
-    parentCollection: string
-    subCollection: string
-    itemId
-  }) {
+  async getItemInCollection(
+    {
+      parentId,
+      parentCollection,
+      subCollection,
+      itemId
+    }: {
+      parentId: string
+      parentCollection: string
+      subCollection: string
+      itemId
+    },
+    ops?: GetItemsOps
+  ) {
     const ref = doc(this.db, parentCollection, parentId, subCollection, itemId)
+
+    if (ops?.justRefs) return ref
+
     const docSnap = await getDoc(ref)
+    console.log(docSnap.metadata.fromCache ? 'cache doc' : 'server doc')
     return this.normalizeItem(docSnap)
   }
 

@@ -4,7 +4,6 @@ import StyledModal from '../StyledModal'
 import OrderType from '../../types/OrderType'
 import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
-import { ItemRow } from '../FormikSelectCategories'
 import TextInfo from '../TextInfo'
 import { onComment, onPickup } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
@@ -86,45 +85,7 @@ const ModalPickupOrder = ({
           defaultVisible
         />
         {items?.map((item, index) => {
-          const category =
-            categories.find((cat) => cat.name === item.categoryName)?.id || ''
-          return (
-            <RowOrderItem item={item} order={order} key={index} />
-            // <ItemRow
-            //   createItem={true}
-            //   item={{
-            //     ...item,
-            //     category,
-            //     assignedSection: order?.assignToSection || '',
-            //     brand: order.itemBrand || '',
-            //     serial: item.serial || order.itemSerial || ''
-            //   }}
-            //   orderId={order.id}
-            //   key={index}
-            //   onEdit={async (item) => {
-            //     const editItem = {
-            //       id: item.id || '',
-            //       category,
-            //       number: item.number || '',
-            //       categoryName: item.categoryName || '',
-            //       brand: item.brand || order.itemBrand || '',
-            //       serial: item.serial || order.itemSerial || ''
-            //     }
-
-            //     await ServiceStoreItems.update({
-            //       itemData: editItem,
-            //       storeId,
-            //       itemId: item.id
-            //     })
-            //       .then((res) => {
-            //         console.log('item updated', res)
-            //       })
-            //       .catch(console.error)
-
-            //     return
-            //   }}
-            // />
-          )
+          return <RowOrderItem item={item} order={order} key={index} />
         })}
 
         <Button

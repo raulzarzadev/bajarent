@@ -19,19 +19,24 @@ import useModal from '../hooks/useModal'
 import Icon from './Icon'
 import TextInfo from './TextInfo'
 import { ServiceStores, sumHexDec } from '../firebase/ServiceStore'
-import { ListAssignedItemsE } from './ListAssignedItems'
+
 import ModalChangeItem from './ModalChangeItem'
 
 export const RowOrderItem = ({
   item,
   onPressDelete,
   onEdit,
-  order
+  order,
+  onAction
 }: {
   order: Partial<OrderType>
   item: ItemSelected
   onPressDelete?: () => void
   onEdit?: (values: ItemSelected) => void | Promise<void>
+  onAction?: (
+    action: 'edit' | 'delete' | 'created',
+    ops?: { id: string }
+  ) => void
 }) => {
   const { storeId, categories, storeSections } = useStore()
   const { permissions } = useEmployee()
@@ -47,6 +52,10 @@ export const RowOrderItem = ({
     order.status === order_status.DELIVERED &&
     permissions.canManageItems
 
+  const isRent = order.type === order_type.RENT
+  const isDeliveredRent = order.status === order_status.DELIVERED && isRent
+  const hasPermissionsToCreateItem = permissions.canManageItems
+
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
       if (res) {
@@ -60,17 +69,6 @@ export const RowOrderItem = ({
   }, [categories])
   const createModal = useModal({ title: 'Crear artículo' })
 
-  const handleChangeItem = async () => {
-    console.log('cambiar item')
-    // const newItem = await formatNewItem({
-    //   order,
-    //   item,
-    //   storeSections,
-    //   storeCategories: categories
-    // })
-    // _setItem(newItem)
-    // createModal.toggleOpen
-  }
   return (
     <View>
       <StyledModal {...createModal}>
@@ -78,7 +76,11 @@ export const RowOrderItem = ({
           <TextInfo
             defaultVisible
             type="warning"
-            text="Para crear este artículo la orden  debe ser una renta  ⏳ y estar entregado 🏠 "
+            text={`Para crear este artículo la orden  debe  ${
+              !isRent && 'ser una renta ⏳. '
+            } ${!isDeliveredRent && 'estar entregada 🏠. '},   ${
+              !hasPermissionsToCreateItem && 'tener permisos necesarios'
+            }`}
           />
         )}
 
@@ -87,15 +89,16 @@ export const RowOrderItem = ({
             values={_item}
             onSubmit={async (values) => {
               //* CREATE ITEM
-
-              ServiceStoreItems.add({
+              return ServiceStoreItems.add({
                 item: values,
                 storeId
               })
-                .then(({ res }) => {
-                  ServiceStoreItems.addEntry({
+                .then(async ({ res }) => {
+                  const newItemId = res.id
+                  //* ADD ENTRY TO THE ITEM
+                  await ServiceStoreItems.addEntry({
                     storeId,
-                    itemId: res.id,
+                    itemId: newItemId,
                     entry: {
                       type: 'created',
                       content: 'Item creado',
@@ -104,15 +107,17 @@ export const RowOrderItem = ({
                   })
                     .then((res) => console.log({ res }))
                     .catch((e) => console.log({ e }))
-                  if (res.id) {
-                    //* UPDATE ORDER WITH THE NEW ITEM
-                    ServiceOrders.updateItemId({
-                      orderId,
-                      itemId,
-                      newItemId: res.id
-                    })
-                  }
-                  console.log({ res })
+
+                  //* UPDATE ORDER WITH THE NEW ITEM
+                  await ServiceOrders.updateItemId({
+                    orderId,
+                    itemId,
+                    newItemId: newItemId
+                  })
+                    .then((res) => console.log({ res }))
+                    .catch((e) => console.log({ e }))
+                  onAction?.('created', { id: newItemId })
+                  return
                 })
                 .catch(console.error)
             }}

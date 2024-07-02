@@ -31,13 +31,17 @@ import FormikSelectCategories from '../FormikSelectCategories'
 import { orderExpireAt } from '../../libs/orders'
 import FormikInputImage from '../FormikInputImage'
 import { useEffect, useState } from 'react'
-import { getFullOrderData } from '../../contexts/libs/getFullOrderData'
+import {
+  getFullOrderData,
+  listenFullOrderData
+} from '../../contexts/libs/getFullOrderData'
 import FormItemPickUp from './FormItemPickUp'
 import { useStore } from '../../contexts/storeContext'
 import { onCreateItem, onPickUpItem, onRentItem } from '../../libs/item_actions'
 import { ItemSelected } from '../FormSelectItem'
 import ModalDeliveryOrder from './ModalDeliveryOrder'
 import ModalPickupOrder from './ModalPickupOrder'
+import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
 
 // #region ENUM ACTIONS
 enum acts {
@@ -92,12 +96,16 @@ const OrderActions = ({
   const [order, setOrder] = useState<OrderType>()
   const [touchedPickedUp, setTouchedPickedUp] = useState(false)
 
+  // useEffect(() => {
+  //   fetchOrder()
+  // }, [orderId])
   useEffect(() => {
-    getFullOrderData(orderId).then((order) => {
-      setOrder(order)
-    })
+    if (orderId) {
+      listenFullOrderData(orderId, (order) => {
+        setOrder(order)
+      })
+    }
   }, [orderId])
-
   // #region ACTIONS
 
   const actions_fns = {
@@ -239,7 +247,7 @@ const OrderActions = ({
    *******************************************rz */
 
   const isRent = orderType === 'RENT'
-
+  const isRentDelivered = isRent && orderStatus === order_status.DELIVERED
   //****DELIVER JUST IF IS AUTH
   const canDeliverRent = isRent && orderStatus === order_status.AUTHORIZED
   //**** PICKUP JUST IF IS DELIVERED OR EXPIRED
@@ -316,6 +324,30 @@ const OrderActions = ({
     modalPickUpRent.toggleOpen()
   }
 
+  const [allItemsExists, setAllItemsExists] = useState(false)
+
+  useEffect(() => {
+    const checkAllItemsExist = async () => {
+      if (order?.items) {
+        const itemsExistencePromises = order.items.map(async (item) => {
+          const itemExist = await ServiceStoreItems.get({
+            storeId,
+            itemId: item.id
+          })
+          return !!itemExist
+        })
+
+        const itemsExistence = await Promise.all(itemsExistencePromises)
+        const allItemsExists = itemsExistence.every((exists) => exists)
+        console.log({ allItemsExists })
+        setAllItemsExists(allItemsExists)
+      }
+    }
+    checkAllItemsExist()
+  }, [order?.items])
+
+  console.log({ allItemsExists })
+
   const RENT_FLOW = [
     {
       label: 'Deliver',
@@ -327,7 +359,7 @@ const OrderActions = ({
       label: 'Pickup',
       action: handlePickUpRent,
       status: order_status.PICKED_UP,
-      disabled: !canPickupRent || !employeeCanPickup
+      disabled: !canPickupRent || !employeeCanPickup || !allItemsExists
     }
   ]
 
@@ -438,62 +470,6 @@ const OrderActions = ({
     orderStatus !== order_status.AUTHORIZED &&
     employeeCanUndo
 
-  // const showPendingButton =
-  //   orderStatus === order_status.AUTHORIZED && employeeCanUnAuthorize
-  // #region COMPONENT
-
-  //const [newItems, setNewItems] = useState<OrderType['items']>([])
-
-  // const handleCollectItems = async () => {
-  //   await handleCreateItemsIfNecessary({ items: newItems }) //* this will create items that not exists
-  //     .then(console.log)
-  //     .catch(console.error)
-
-  //   await handlePickUpItems({ itemsIds: newItems.map((i) => i.id) }) //* update items as picked up
-  //     .then(console.log)
-  //     .catch(console.error)
-  //   actions_fns[acts.PICKUP]()
-
-  //   modalPickUpRent.setOpen(false)
-  // }
-
-  // const handlePickUpItems = async ({ itemsIds }: { itemsIds: string[] }) => {
-  //   itemsIds.map(async (itemId) => {
-  //     // return await onPickUpItem({ itemId, storeId })
-  //   })
-  //   return await Promise.all(itemsIds)
-  // }
-
-  // const handleCreateItemsIfNecessary = async ({
-  //   items
-  // }: {
-  //   items: OrderType['items']
-  // }) => {
-  //   items.forEach(async (item) => {
-  //     const itemAlreadyExists = storeItems?.find(
-  //       (storeItem) => storeItem.id === item.id
-  //     )
-  //     if (!!itemAlreadyExists) return
-  //     const categoryId = storeCategories.find(
-  //       (c) => c.name === item.categoryName
-  //     )?.id
-  //     // return await onCreateItem({
-  //     //   storeId,
-  //     //   item: {
-  //     //     id: item.id,
-  //     //     assignedSection: order?.assignToSection || '',
-  //     //     serial: item.serial || '',
-  //     //     brand: item.brand || '',
-  //     //     number: item.number || '',
-  //     //     category: categoryId || '',
-  //     //     status: 'available'
-  //     //   },
-  //     //   itemId: item.id,
-  //     //   userId: user?.id || ''
-  //     // })
-  //   })
-  // }
-
   return (
     <View>
       <StyledModal {...modalPickUpRepair}>
@@ -580,6 +556,11 @@ const OrderActions = ({
       {/* 
       // #region FLOW 
     */}
+      {!allItemsExists && isRentDelivered && (
+        <Text style={[gStyles.helperError, { textAlign: 'center' }]}>
+          *Faltan artículos por crear
+        </Text>
+      )}
       <ScrollView
         horizontal
         style={{ maxWidth: '100%', marginHorizontal: 'auto' }}
