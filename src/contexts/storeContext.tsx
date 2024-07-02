@@ -123,7 +123,6 @@ const StoreContextProvider = ({ children }) => {
       })) || []
     )
   }
-  console.log({ store })
 
   //#region render
 
