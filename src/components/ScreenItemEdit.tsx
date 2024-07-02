@@ -8,6 +8,7 @@ import ItemType from '../types/ItemType'
 import Loading from './Loading'
 import { useNavigation } from '@react-navigation/native'
 import { onUpdateItem } from '../firebase/actions/item-actions'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ScreenItemEdit = ({ route }) => {
   const itemId = route?.params?.id
@@ -16,7 +17,9 @@ const ScreenItemEdit = ({ route }) => {
   const [item, setItem] = useState<Partial<ItemType>>()
   useEffect(() => {
     if (items) {
-      setItem(items.find((i) => i.id === itemId))
+      ServiceStoreItems.get({ storeId, itemId }).then((res) => {
+        setItem(res)
+      })
     }
   }, [items])
 
