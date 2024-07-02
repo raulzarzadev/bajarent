@@ -210,11 +210,21 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   getList(ids: string[], ops: { sections?: string[] } = {}): Promise<Type[]> {
     const sections = ops?.sections || []
     if (!ids || ids?.length === 0) return Promise.resolve([])
-    if (ids.length > 30) return Promise.reject('Max 30 ids')
-    const filters = [where(documentId(), 'in', ids)]
-    if (sections?.length > 0)
-      filters.push(where('assignToSection', 'in', sections))
-    return this.findMany(filters)
+    // if(ids.length>30) return Promise.reject('Max 30 ids')
+    if (ids.length > 30) {
+      const promises = [] //FIXME: this is hotfix im not sure if is the best way to do it
+      for (let i = 0; i < ids.length; i += 30) {
+        const chunk = ids.slice(i, i + 30)
+        promises.push(this.getList(chunk, ops))
+      }
+      return Promise.all(promises).then((res) => res.flat())
+    } else {
+      const filters = [where(documentId(), 'in', ids)]
+      if (sections?.length > 0)
+        filters.push(where('assignToSection', 'in', sections))
+
+      return this.findMany(filters)
+    }
   }
 
   getPending(storeId: string, ops: { sections?: string[] } = {}) {
