@@ -1,6 +1,6 @@
 import React from 'react'
 import { ListOrdersConsolidatedE } from './ListOrdersConsolidated'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import InputRadios from './InputRadios'
 import ListStoreItems from './ListStoreItems'
 import ListItemsSections from './ListItemsSections'
@@ -8,7 +8,7 @@ import ListItemsSections from './ListItemsSections'
 const ScreenOrdersConsolidated = () => {
   const [view, setView] = React.useState<'orders' | 'items'>('orders')
   return (
-    <View>
+    <ScrollView>
       <InputRadios
         layout="row"
         options={[
@@ -23,7 +23,7 @@ const ScreenOrdersConsolidated = () => {
       />
       {view === 'orders' && <ListOrdersConsolidatedE />}
       {view === 'items' && <ListItemsSections />}
-    </View>
+    </ScrollView>
   )
 }
 
