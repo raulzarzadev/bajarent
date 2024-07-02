@@ -25,6 +25,7 @@ const OrderDirectives = ({
     storeSections.find(({ id }) => id === order?.assignToSection)?.name ||
     false
   const TypeIcon = (type: OrderType['type']) => {
+    return dictionary(type) || type
     if (type === order_type.RENT) return '⏳'
     if (type === order_type.SALE) return '💰'
     if (type === order_type.REPAIR) return '🔧'

@@ -14,7 +14,7 @@ import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import FIlterByDate from './FIlterByDate'
-import { order_type } from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
 
 export type FilterListType<T> = {
   field: keyof T
@@ -169,9 +169,21 @@ function ModalFilterList<T>({
         value as order_type
       )
     ) {
-      if (value === order_type.RENT) return '⏳ RENTA'
-      if (value === order_type.SALE) return '💰 VENTA'
-      if (value === order_type.REPAIR) return '🔧 REPARACIÓN'
+      if (value === order_type.RENT) return 'RENTA ⏳ '
+      if (value === order_type.SALE) return 'VENTA 💰 '
+      if (value === order_type.REPAIR) return 'REPARACIÓN 🔧 '
+    }
+
+    if (field === 'status') {
+      if (value === order_status.DELIVERED) return 'ENTREGADO 🏠 '
+      if (value === order_status.REPAIRING) return 'REPARANDO 🛠️ '
+      if (value === order_status.REPAIRED) return 'REPARADO ✅ '
+      if (value === order_status.PICKED_UP) return 'RECOGIDO 🚛 '
+      if (value === order_status.RENEWED) return 'RENOVADO 🔄 '
+      if (value === order_status.CANCELLED) return 'CANCELADO ❌ '
+      if (value === order_status.AUTHORIZED) return 'PEDIDO 🔖 '
+      if (value === order_status.PENDING) return 'PENDIENTE'
+      if (value === order_status.REPORTED) return 'REPORTADO'
     }
 
     if (field === 'assignToSection') {
