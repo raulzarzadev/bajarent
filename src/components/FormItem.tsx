@@ -60,6 +60,7 @@ const FormItem = ({
             placeholder="Seleccionar estado"
             name={'status'}
             options={itemStatusOptions}
+            disabled
           />
           <View style={styles.input}>
             <FormikInputValue

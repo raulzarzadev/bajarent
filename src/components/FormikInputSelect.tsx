@@ -9,7 +9,15 @@ const FormikInputSelect = ({
   helperText = '',
   options = [],
   label = '',
-  placeholder = ''
+  placeholder = '',
+  disabled = false
+}: {
+  name: string
+  helperText?: string
+  options?: { label: string; value: string }[]
+  label?: string
+  placeholder?: string
+  disabled?: boolean
 }) => {
   const [field, meta, helpers] = useField(name)
 
@@ -17,6 +25,7 @@ const FormikInputSelect = ({
     <View>
       {!!label && <Text>{label}</Text>}
       <InputSelect
+        disabled={disabled}
         placeholder={placeholder}
         value={field.value || ''}
         options={options}

@@ -13,16 +13,19 @@ const InputSelect = ({
   onChangeValue,
   style,
   value,
-  placeholder = 'Seleccionar ...'
+  placeholder = 'Seleccionar ...',
+  disabled = false
 }: {
   options?: SelectOptions
   onChangeValue?: (value) => void
   value?: string
   style?: ViewStyle
   placeholder?: string
+  disabled?: boolean
 }) => {
   return (
     <RNPickerSelect
+      disabled={disabled}
       value={value}
       style={{
         inputWeb: [
