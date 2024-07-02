@@ -11,7 +11,7 @@ import useMyNav from '../hooks/useMyNav'
 
 const ListItemsSections = () => {
   const { storeId, items, storeSections } = useStore()
-  const { toItem } = useMyNav()
+  const { toItems } = useMyNav()
   const [getItems, setGetItems] = React.useState<'all' | 'pickedUp'>('pickedUp')
   const [groupedItems, setGroupedItems] = React.useState<
     Record<string, ItemType[]>
@@ -56,7 +56,7 @@ const ListItemsSections = () => {
             <RowSectionItemsE
               items={items}
               onPressItem={(id) => {
-                toItem({ id })
+                toItems({ id })
               }}
             />
           </View>

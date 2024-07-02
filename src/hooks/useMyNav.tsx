@@ -2,14 +2,21 @@ import { useNavigation } from '@react-navigation/native'
 
 const useMyNav = () => {
   const { navigate } = useNavigation()
-  const toItem = ({ id }: { id: string }) => {
-    //@ts-ignore
-    navigate('StackItems', {
-      screen: 'ScreenItemsDetails',
-      params: {
-        id
-      }
-    })
+  const toItems = ({ id, screenNew }: { id?: string; screenNew?: boolean }) => {
+    if (screenNew) {
+      //@ts-ignore
+      navigate('StackItems', {
+        screen: 'ScreenItemNew'
+      })
+    } else if (id) {
+      //@ts-ignore
+      navigate('StackItems', {
+        screen: 'ScreenItemsDetails',
+        params: {
+          id
+        }
+      })
+    }
   }
   const toOrder = ({ id }: { id: string }) => {
     //@ts-ignore
@@ -21,7 +28,7 @@ const useMyNav = () => {
     })
   }
   return {
-    toItem,
+    toItems,
     toOrder
   }
 }

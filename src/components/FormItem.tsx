@@ -63,6 +63,7 @@ const FormItem = ({
           />
           <View style={styles.input}>
             <FormikInputValue
+              disabled
               label="Numero"
               name={'number'}
               placeholder="Numero"

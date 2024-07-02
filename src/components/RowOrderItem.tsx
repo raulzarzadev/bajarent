@@ -33,7 +33,7 @@ export const RowOrderItem = ({
 }) => {
   const { storeId, categories, storeSections } = useStore()
   const { permissions } = useEmployee()
-  const { toItem } = useMyNav()
+  const { toItems } = useMyNav()
   const priceSelected = item.priceSelected
   const itemId = item.id
   const orderId = order.id
@@ -107,7 +107,7 @@ export const RowOrderItem = ({
       <Pressable
         onPress={async () => {
           if (itemAlreadyExist) {
-            toItem({ id: itemId })
+            toItems({ id: itemId })
           } else {
             console.log('this items not exist', { itemId })
 

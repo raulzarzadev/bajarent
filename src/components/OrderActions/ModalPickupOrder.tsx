@@ -6,7 +6,7 @@ import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
 import { ItemRow } from '../FormikSelectCategories'
 import TextInfo from '../TextInfo'
-import { onPickup } from '../../libs/order-actions'
+import { onComment, onPickup } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { onPickUpItem } from '../../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
@@ -68,6 +68,14 @@ const ModalPickupOrder = ({
     })
     //* pickup order
     await onPickup({ orderId, userId: user.id })
+
+    //* create movement
+    await onComment({
+      orderId: order.id,
+      content: 'Recogida',
+      storeId,
+      type: 'comment'
+    })
   }
 
   return (

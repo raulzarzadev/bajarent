@@ -13,7 +13,7 @@ import { useStore } from '../contexts/storeContext'
 
 const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
   const { navigate } = useNavigation()
-  const { toItem } = useMyNav()
+  const { toItems } = useMyNav()
   const { storeId, fetchItems } = useStore()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
@@ -60,8 +60,7 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
           {
             icon: 'add',
             onPress() {
-              // @ts-ignore
-              navigate('ScreenItemNew')
+              toItems({ screenNew: true })
             },
             label: 'Agregar',
             visible: true
@@ -85,7 +84,7 @@ const ListStoreItems = ({ items }: { items: Partial<ItemType>[] }) => {
         onPressRow={(rowId) => {
           console.log({ rowId })
           // @ts-ignore
-          toItem({ id: rowId })
+          toItems({ id: rowId })
         }}
         ComponentRow={({ item }) => {
           return <RowItem item={item} />

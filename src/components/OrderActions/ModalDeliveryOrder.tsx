@@ -10,10 +10,11 @@ import FormikInputImage from '../FormikInputImage'
 import FormikSelectCategories from '../FormikSelectCategories'
 import { gStyles } from '../../styles'
 import Button from '../Button'
-import { onDelivery } from '../../libs/order-actions'
+import { onComment, onDelivery } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { orderExpireAt } from '../../libs/orders'
 import { onRentItem } from '../../firebase/actions/item-actions'
+import { useStore } from '../../contexts/storeContext'
 
 const ModalDeliveryOrder = ({
   order,
@@ -23,7 +24,7 @@ const ModalDeliveryOrder = ({
   deliveryModal: ReturnType<typeof useModal>
 }) => {
   const { user } = useAuth()
-
+  const { storeId } = useStore()
   const itemSerial = order?.items?.[0]?.serial || ''
   const handleDeliveryOrder = async (values: Partial<OrderType>) => {
     deliveryModal.toggleOpen()
@@ -51,6 +52,14 @@ const ModalDeliveryOrder = ({
       })
         .then((res) => console.log({ res }))
         .catch(console.error)
+    })
+
+    //* create movement
+    await onComment({
+      orderId: order.id,
+      content: 'Entregada',
+      storeId,
+      type: 'comment'
     })
   }
   const correctQtyOfItems = (items = []) => {
