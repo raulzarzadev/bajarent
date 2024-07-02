@@ -182,6 +182,7 @@ const labels = {
   fix: 'reparación',
   assignment: 'Asignación',
   created: 'Creada',
+  exchange: 'cambio',
   ' ': '',
   '': ''
 } as const

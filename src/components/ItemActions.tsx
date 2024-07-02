@@ -17,7 +17,7 @@ const ItemActions = ({
   onAction
 }: {
   item: Partial<ItemType>
-  onAction: (action: 'details' | 'rent' | 'assign' | 'fix') => void
+  onAction: (action: 'details' | 'rent' | 'assign' | 'fix' | 'select') => void
 }) => {
   const itemId = item?.id
   const itemSection = item?.assignedSection
@@ -70,6 +70,12 @@ const ItemActions = ({
           flexWrap: 'wrap'
         }}
       >
+        <Button
+          label="Select"
+          onPress={() => {
+            onAction('select')
+          }}
+        />
         <Button
           label="Detalles"
           onPress={() => {

@@ -1,6 +1,7 @@
-import { onComment } from '../../libs/order-actions'
+import { onComment, onDelivery } from '../../libs/order-actions'
 import ItemType from '../../types/ItemType'
 import { ItemHistoryType, ServiceItemHistory } from '../ServiceItemHistory'
+import { ServiceOrders } from '../ServiceOrders'
 import { ServiceStoreItems } from '../ServiceStoreItems'
 
 type ValueOfKey<T, K extends keyof T> = T[K]
@@ -138,7 +139,7 @@ export const onRegistryEntry = async ({
   itemId,
   type,
   orderId = '',
-  content
+  content = ''
 }: {
   storeId: string
   itemId: string
@@ -155,6 +156,61 @@ export const onRegistryEntry = async ({
       content
     }
   })
+}
+
+export const onChangeOrderItem = async ({
+  itemId,
+  orderId,
+  newItemId,
+  storeId
+}) => {
+  try {
+    //* get numbers
+    const oldItemNumber = await ServiceStoreItems.get({ storeId, itemId }).then(
+      (res) => res.number
+    )
+    const newItemNumber = await ServiceStoreItems.get({
+      storeId,
+      itemId: newItemId
+    }).then((res) => res.number)
+    //* 1 update item id in order
+    await ServiceOrders.updateItemId({
+      orderId,
+      itemId,
+      newItemId
+    })
+
+    //* 2 update old item status to picked up
+    await onPickUpItem({ storeId, itemId, orderId })
+    //* 3 update new item  status to rented
+    await onRentItem({ storeId, itemId: newItemId, orderId })
+    //* 4 add registry entry to old item
+    await onRegistryEntry({
+      type: 'exchange',
+      itemId,
+      orderId,
+      storeId,
+      content: `Se cambio por el item ${newItemNumber}`
+    }).catch((e) => console.log('Error on registry entry', { e }))
+    //* 5 add registry entry to new item
+    await onRegistryEntry({
+      type: 'exchange',
+      itemId: newItemId,
+      orderId,
+      storeId,
+      content: `Se cambio por el item ${oldItemNumber}`
+    }).catch((e) => console.log('Error on registry entry', { e }))
+    //* 6 add registry entry to order
+
+    onComment({
+      type: 'comment',
+      storeId,
+      orderId,
+      content: `Se cambio el item ${oldItemNumber} por el item ${newItemNumber}`
+    })
+  } catch (e) {
+    console.log('Error on changing item', { e })
+  }
 }
 
 // export const onPickUpItem = async ({ storeId, itemId }) => {

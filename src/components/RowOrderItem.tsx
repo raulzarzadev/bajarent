@@ -19,6 +19,8 @@ import useModal from '../hooks/useModal'
 import Icon from './Icon'
 import TextInfo from './TextInfo'
 import { ServiceStores, sumHexDec } from '../firebase/ServiceStore'
+import { ListAssignedItemsE } from './ListAssignedItems'
+import ModalChangeItem from './ModalChangeItem'
 
 export const RowOrderItem = ({
   item,
@@ -57,6 +59,18 @@ export const RowOrderItem = ({
     })
   }, [categories])
   const createModal = useModal({ title: 'Crear artículo' })
+
+  const handleChangeItem = async () => {
+    console.log('cambiar item')
+    // const newItem = await formatNewItem({
+    //   order,
+    //   item,
+    //   storeSections,
+    //   storeCategories: categories
+    // })
+    // _setItem(newItem)
+    // createModal.toggleOpen
+  }
   return (
     <View>
       <StyledModal {...createModal}>
@@ -67,6 +81,7 @@ export const RowOrderItem = ({
             text="Para crear este artículo la orden  debe ser una renta  ⏳ y estar entregado 🏠 "
           />
         )}
+
         {canCreateItem && (
           <FormItem
             values={_item}
@@ -104,6 +119,7 @@ export const RowOrderItem = ({
           />
         )}
       </StyledModal>
+
       <Pressable
         onPress={async () => {
           if (itemAlreadyExist) {
@@ -128,6 +144,7 @@ export const RowOrderItem = ({
           justifyContent: 'center'
         }}
       >
+        {true && <ModalChangeItem itemId={itemId} orderId={orderId} />}
         <RowItem
           item={{
             ..._item,
@@ -180,6 +197,7 @@ export const RowOrderItem = ({
           </View>
         </ButtonConfirm>
       )} */}
+
         {!!itemAlreadyExist ? (
           <Icon icon="done" color={colors.blue} />
         ) : (

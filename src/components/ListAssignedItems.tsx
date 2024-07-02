@@ -84,7 +84,10 @@ export const SectionItem = ({
         </View>
         <ItemActions
           item={item}
-          onAction={() => {
+          onAction={(type) => {
+            if (type === 'select') {
+              onPress()
+            }
             modal.toggleOpen()
           }}
         />
