@@ -24,7 +24,6 @@ import {
   Query,
   query,
   QueryConstraint,
-  QuerySnapshot,
   setDoc,
   Timestamp,
   updateDoc,
@@ -472,7 +471,6 @@ export class FirebaseCRUD {
     },
     ops?: GetItemsOps
   ) {
-    console.log({ parentCollection, parentId, subCollection })
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
     const querySnapshot = await getDocs(queryRef)

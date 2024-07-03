@@ -225,16 +225,6 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
           variant="ghost"
           justIcon
         />
-        {/* {!!neighborhood ||
-        !!street ||
-        !!betweenStreets ||
-        !!address ||
-        !!address ||
-        !!references ? (
-          <ButtonSearchLocation location={location} />
-        ) : (
-          <Text>Sin dirección</Text>
-        )} */}
       </View>
     </View>
   )
@@ -292,7 +282,6 @@ export const OrderDates = ({
   extendTime?: TimePriceType
   pickedUp?: Date | Timestamp
 }) => {
-  console.log({ status, pickedUp })
   return (
     <>
       <Text style={[gStyles.h3]}>Fechas</Text>

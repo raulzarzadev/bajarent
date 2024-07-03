@@ -339,14 +339,11 @@ const OrderActions = ({
 
         const itemsExistence = await Promise.all(itemsExistencePromises)
         const allItemsExists = itemsExistence.every((exists) => exists)
-        console.log({ allItemsExists })
         setAllItemsExists(allItemsExists)
       }
     }
     checkAllItemsExist()
   }, [order?.items])
-
-  console.log({ allItemsExists })
 
   const RENT_FLOW = [
     {

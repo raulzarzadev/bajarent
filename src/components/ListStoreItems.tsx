@@ -131,8 +131,6 @@ const ListStoreItems = ({
           { key: 'status', label: 'Estado' }
         ]}
         onPressRow={(rowId) => {
-          console.log({ rowId })
-          // @ts-ignore
           toItems({ id: rowId })
         }}
         ComponentRow={({ item }) => {
