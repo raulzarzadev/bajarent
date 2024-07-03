@@ -40,13 +40,13 @@ export class ServiceStoreItemsClass {
     )
   }
 
-  async getActive(storeId: string) {
-    return ServiceStores.getItemsInCollection({
-      parentId: storeId,
-      subCollection: SUB_COLLECTION,
-      filters: [where('isActive', '==', true)]
-    })
-  }
+  // async getActive(storeId: string) {
+  //   return ServiceStores.getItemsInCollection({
+  //     parentId: storeId,
+  //     subCollection: SUB_COLLECTION,
+  //     filters: [where('isActive', '==', true)]
+  //   })
+  // }
   async getAvailable(
     {
       storeId,

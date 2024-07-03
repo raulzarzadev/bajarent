@@ -43,34 +43,36 @@ const ListStoreItems = ({
   }
   const [items, setItems] = useState<ItemType[]>([])
   useEffect(() => {
-    if (allItems) {
-      ServiceStoreItems.getAll({ storeId }).then((res) => {
-        setItems(res)
-      })
-    }
+    if (storeId) {
+      if (allItems) {
+        ServiceStoreItems.getAll({ storeId }).then((res) => {
+          setItems(res)
+        })
+      }
 
-    if (allItemsSections?.length) {
-      ServiceStoreItems.getAll({
-        storeId,
-        sections: allItemsSections
-      }).then((res) => {
-        setItems(res)
-      })
+      if (allItemsSections?.length) {
+        ServiceStoreItems.getAll({
+          storeId,
+          sections: allItemsSections
+        }).then((res) => {
+          setItems(res)
+        })
+      }
+      if (availableItemsSections?.length) {
+        ServiceStoreItems.getAvailable({
+          storeId,
+          sections: availableItemsSections
+        }).then((res) => {
+          setItems(res)
+        })
+      }
+      if (getAllAvailable) {
+        ServiceStoreItems.getAvailable({ storeId }).then((res) => {
+          setItems(res)
+        })
+      }
     }
-    if (availableItemsSections?.length) {
-      ServiceStoreItems.getAvailable({
-        storeId,
-        sections: availableItemsSections
-      }).then((res) => {
-        setItems(res)
-      })
-    }
-    if (getAllAvailable) {
-      ServiceStoreItems.getAvailable({ storeId }).then((res) => {
-        setItems(res)
-      })
-    }
-  }, [])
+  }, [storeId])
 
   return (
     <View>

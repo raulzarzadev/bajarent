@@ -112,7 +112,7 @@ const StoreContextProvider = ({ children }) => {
   }, [store, categories])
 
   const fetchItems = async () => {
-    const items = await ServiceStoreItems.getAll(store.id)
+    const items = await ServiceStoreItems.getAll({ storeId: store.id })
     setStoreItems(
       items?.map((item) => ({
         ...item,

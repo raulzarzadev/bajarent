@@ -472,10 +472,11 @@ export class FirebaseCRUD {
     },
     ops?: GetItemsOps
   ) {
+    console.log({ parentCollection, parentId, subCollection })
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
     const querySnapshot = await getDocs(queryRef)
-    if (ops?.justRefs) return querySnapshot.docs.map((doc) => doc.ref)
+    if (ops?.justRefs) return querySnapshot?.docs?.map((doc) => doc?.ref)
     const res: any[] = []
     querySnapshot.forEach((doc) => {
       res.push(this.normalizeItem(doc))
