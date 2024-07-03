@@ -1,4 +1,4 @@
-import { increment, where } from 'firebase/firestore'
+import { where } from 'firebase/firestore'
 import StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStaff } from './ServiceStaff'
@@ -45,11 +45,8 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     if (!store) {
       return
     }
-    const valorHex = store.currentItemNumber || '0000'
-    // const newHexVal = valorDecimal.toString(16).padStart(4, '0') // Convertir de nuevo a hexadecimal y asegurar 4 dígitos
-    const newHexVal = sumHexDec({ hex: valorHex, dec: 1 }).toUpperCase()
-    await this.update(storeId, { currentItemNumber: newHexVal }) // Asumiendo que `update` es una operación asíncrona
-    return newHexVal
+    const newNumber = nextItemNumber({ currentNumber: store.currentItemNumber })
+    return newNumber
   }
 
   // Agrega tus métodos aquí
@@ -58,11 +55,13 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   }
 }
 
-export const sumHexDec = ({ hex, dec }: { hex: string; dec?: number }) => {
-  let valorDecimal1 = parseInt(hex, 16)
-  let valorDecimal = valorDecimal1 + dec // Incrementar el valor decimal directamente
-  const newHexVal = valorDecimal.toString(16).padStart(4, '0') // Convertir de nuevo a hexadecimal y asegurar 4 dígitos
-  return newHexVal.toUpperCase()
+export const nextItemNumber = ({
+  currentNumber = '0000'
+}: {
+  currentNumber: string
+}) => {
+  const newValue = parseInt(currentNumber) + 1
+  return newValue.toString().padStart(5, '0')
 }
 
 export const ServiceStores = new ServiceStoresClass()

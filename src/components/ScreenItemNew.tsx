@@ -11,7 +11,7 @@ const ScreenItemNew = () => {
   const { goBack } = useNavigation()
   const { storeId, fetchItems } = useStore()
   const handleCreateItem = async (values: ItemType) => {
-    onCreateItem({ storeId, item: values })
+    return await onCreateItem({ storeId, item: values })
       .then((res) => {
         fetchItems()
         console.log({ res })

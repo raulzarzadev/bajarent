@@ -1,25 +1,30 @@
 import { collection, where } from 'firebase/firestore'
 import { ServiceStores } from './ServiceStore'
 import ItemType from '../types/ItemType'
-import {
-  ItemHistoryBase,
-  ItemHistoryType,
-  ServiceItemHistory
-} from './ServiceItemHistory'
+import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
 import { db } from './main'
-import { GetItemsOps } from './firebase.CRUD'
+import { FormattedResponse, GetItemsOps } from './firebase.CRUD'
 type Type = Partial<ItemType>
 const SUB_COLLECTION = 'items'
 export class ServiceStoreItemsClass {
   async add({ storeId, item }: { storeId: string; item: Type }) {
+    //* 1. get current number
     const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
-    item.number = await ServiceStores.incrementItemNumber({
+    const newNUmber = await ServiceStores.incrementItemNumber({
       storeId
     })
-    return await ServiceStores.createRefItem({
-      collectionRef,
-      item: item
+    console.log({ newNUmber })
+    //* 2. update item number
+    const createdItemRes = await ServiceStores.update(storeId, {
+      currentItemNumber: newNUmber
     })
+    //* 3. create item
+    await ServiceStores.createRefItem({
+      collectionRef,
+      item: { ...item, number: newNUmber }
+    })
+
+    return createdItemRes as FormattedResponse
   }
 
   async getAll(

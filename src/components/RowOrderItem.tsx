@@ -18,9 +18,11 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
 import TextInfo from './TextInfo'
-import { ServiceStores, sumHexDec } from '../firebase/ServiceStore'
+import { ServiceStores, nextItemNumber } from '../firebase/ServiceStore'
 
 import ModalChangeItem from './ModalChangeItem'
+import StoreType from '../types/StoreType'
+import { CategoryType } from '../types/RentItem'
 
 export const RowOrderItem = ({
   item,
@@ -138,7 +140,6 @@ export const RowOrderItem = ({
               storeSections,
               storeCategories: categories
             })
-            console.log({ newItem })
             _setItem(newItem)
             createModal.toggleOpen()
           }
@@ -249,31 +250,21 @@ const formatNewItem = async ({
   item,
   storeSections,
   storeCategories
+}: {
+  order: Partial<OrderType>
+  item: ItemSelected
+  storeSections: StoreType['sections']
+  storeCategories: Partial<CategoryType>[]
 }): Promise<Partial<ItemType>> => {
   const sectionAssigned = storeSections.find(
     (s) => s.id === order.assignToSection
   )
-  const createEcoNumber = async ({ section, brand, lastNumber }) => {
-    const currentNumber = await ServiceStores.currentItemNumber(order.storeId)
-    const nexItemNumber = sumHexDec({ hex: currentNumber || '0000', dec: 1 })
-    console.log({ currentNumber, nexItemNumber })
+  const createEcoNumber = async ({ storeId }) => {
+    const currentNumber = await ServiceStores.currentItemNumber(storeId)
+    const nexItemNumber = nextItemNumber({ currentNumber })
     return nexItemNumber
-    let firstLetter = '' //* BRAND OF THE ITEM
-    let secondLetter = '' //* SECTION OF THE ITEM
-    let thirdLetter = '' //* INC NUMBER
-
-    const string = storeSections.find((s) => s?.id === section)?.name || 'S'
-    const chunks = string.split(' ')
-    firstLetter = brand?.[0] || 'S'
-    secondLetter = chunks.map((chunk) => chunk[0]).join('')
-    thirdLetter = lastNumber.toString(16).toUpperCase()
-    return `${firstLetter}${secondLetter}${thirdLetter}`.toUpperCase()
   }
-  const number = await createEcoNumber({
-    section: sectionAssigned?.id,
-    brand: item?.brand,
-    lastNumber: 0
-  })
+  const number = await createEcoNumber({ storeId: order?.storeId })
   return {
     assignedSection: sectionAssigned?.id || '',
     assignedSectionName: sectionAssigned?.name || '',

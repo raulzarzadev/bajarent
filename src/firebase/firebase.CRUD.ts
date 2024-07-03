@@ -739,24 +739,21 @@ export class FirebaseCRUD {
   //     })
   // }
 
-  formatResponse = (
-    ok: boolean,
-    type: string,
-    res: any
-  ): {
-    type: string
-    ok: boolean
-
-    res: {
-      code: string
-      id: string
-    }
-  } => {
+  formatResponse = (ok: boolean, type: string, res: any): FormattedResponse => {
     if (!ok) {
       console.error(type, { type, res })
     }
     const formattedType = type?.toUpperCase()
     return { type: formattedType, ok, res }
+  }
+}
+
+export type FormattedResponse = {
+  type: string
+  ok: boolean
+  res: {
+    code: string
+    id: string
   }
 }
 
