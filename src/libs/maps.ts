@@ -89,7 +89,7 @@ export const createItemsFromOrder = (order: OrderType): ItemBase[] => {
     brand: item.brand || '',
     currentLocation: order.location || '',
     currentOrderId: order.id || '',
-    status: isRented ? 'rented' : 'stock',
+    status: isRented ? 'rented' : 'pickedUp',
     category: item.categoryName || '',
     assignedSection: order.assignToSection || ''
   }))

@@ -8,6 +8,7 @@ import FormikSelectCategories from './FormikSelectCategories'
 import FormikInputSelect from './FormikInputSelect'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
+import { useEmployee } from '../contexts/employeeContext'
 
 const FormItem = ({
   onSubmit,
@@ -17,7 +18,7 @@ const FormItem = ({
   onSubmit?: (values: ItemType) => Promise<any> | void
 }) => {
   const { store, categories, storeSections } = useStore()
-
+  const { permissions } = useEmployee()
   const defaultValues: Partial<ItemType> = { ...values }
   const handleSubmit = async (values: ItemType) => {
     setDisabled(true)
@@ -47,6 +48,7 @@ const FormItem = ({
     label: asCapitalize(dictionary(status)),
     value: status
   }))
+  const canEditItemStatus = permissions.isAdmin || permissions.isOwner
   return (
     <Formik
       initialValues={{ ...defaultValues }}
@@ -60,7 +62,7 @@ const FormItem = ({
             placeholder="Seleccionar estado"
             name={'status'}
             options={itemStatusOptions}
-            disabled
+            disabled={!canEditItemStatus}
           />
           <View style={styles.input}>
             <FormikInputValue

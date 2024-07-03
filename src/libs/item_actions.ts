@@ -54,51 +54,7 @@ export const onRentItem = async ({ storeId, itemId }) => {
   //TODO: Add log to item history
   //* <------------------ ADD LOG TO ITEM HISTORY
 }
-/**
- * @deprecated use actions/item-actions.ts instead
- */
-export const onRepairingItem = async ({ storeId, itemId }) => {
-  await onEditItemField({
-    //* <------------------ UPDATE ITEM STATUS TO REPAIRING
-    storeId,
-    itemId,
-    field: 'status',
-    value: 'maintenance'
-  })
-  //TODO: Add log to item history
-  //* <------------------ ADD LOG TO ITEM HISTORY
-}
-/**
- * @deprecated use actions/item-actions.ts instead
- */
-export const onCreateItem = async ({
-  storeId,
-  item,
-  itemId,
-  userId
-}: {
-  storeId: string
-  item: Partial<ItemType>
-  itemId: string
-  userId: string
-}) => {
-  const newItem: Partial<ItemType> = {
-    id: itemId,
-    brand: item.brand || '',
-    serial: item.serial || '',
-    category: item.category || '',
-    createdAt: new Date(),
-    createdBy: userId || '',
-    status: 'available',
-    number: item.number || '',
-    assignedSection: item.assignedSection || ''
-  }
-  return await ServiceStores.update(storeId, {
-    //* <------------------ CREATE ITEM
 
-    [`items.${itemId}`]: newItem
-  })
-}
 /**
  * @deprecated use actions/item-actions.ts instead
  */
