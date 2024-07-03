@@ -70,7 +70,7 @@ const ItemActions = ({
         }}
       >
         <Button
-          label="Select"
+          label="Selecciona"
           onPress={() => {
             onAction('select')
           }}
@@ -82,7 +82,7 @@ const ItemActions = ({
             toItems({ id: itemId })
           }}
         />
-        <Button
+        {/* <Button
           label="Rentar"
           onPress={() => {
             onAction('rent')
@@ -90,7 +90,7 @@ const ItemActions = ({
 
             console.log('redirigir a nueva orden que incluya este item')
           }}
-        />
+        /> */}
         <ButtonConfirm
           openLabel={currentSection || 'Asignar'}
           icon="swap"
