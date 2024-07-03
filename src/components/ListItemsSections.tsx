@@ -8,18 +8,18 @@ import { RowSectionItemsE } from './ListAssignedItems'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import InputRadios from './InputRadios'
 import useMyNav from '../hooks/useMyNav'
-import { useEmployee } from '../contexts/employeeContext'
+import { formatItems, useEmployee } from '../contexts/employeeContext'
 
 const ListItemsSections = () => {
-  const { storeId, storeSections } = useStore()
+  const { storeId, storeSections, categories } = useStore()
   const { items } = useEmployee()
   const { toItems } = useMyNav()
   const [getItems, setGetItems] = React.useState<'all' | 'pickedUp'>('pickedUp')
   const [groupedItems, setGroupedItems] = React.useState<
     Record<string, ItemType[]>
   >({})
+  //const formattedItems = formatItems(items, categories, storeSections)
 
-  console.log({ items })
   useEffect(() => {
     if (getItems === 'all') {
       const groupedItems = groupSectionItems(items)
@@ -28,7 +28,8 @@ const ListItemsSections = () => {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         cb: (items) => {
-          const groupedItems = groupSectionItems(items)
+          const formattedItems = formatItems(items, categories, storeSections)
+          const groupedItems = groupSectionItems(formattedItems)
           setGroupedItems(groupedItems)
         }
       })

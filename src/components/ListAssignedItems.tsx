@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { useEmployee } from '../contexts/employeeContext'
+import { formatItems, useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { gSpace, gStyles } from '../styles'
@@ -21,15 +21,17 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
   const itemSelected = props?.itemSelected
   const { items: availableItems } = useEmployee()
+  const { categories, storeSections } = useStore()
+  const formattedItems = formatItems(availableItems, categories, storeSections)
   return (
     <View>
-      {availableItems.length > 0 && (
+      {formattedItems.length > 0 && (
         <Text style={[gStyles.helper, gStyles.tCenter]}>
           Items disponibles {availableItems.length || 0}
         </Text>
       )}
       <RowSectionItems
-        items={availableItems}
+        items={formattedItems}
         itemSelected={itemSelected}
         onPressItem={onPressItem}
       />

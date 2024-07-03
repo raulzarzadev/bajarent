@@ -58,10 +58,9 @@ const ItemActions = ({
 
   const [comment, setComment] = React.useState('')
 
-  const { toItems, toOrders } = useMyNav()
+  const { toItems } = useMyNav()
   return (
     <View>
-      <View style={{ justifyContent: 'center', margin: 'auto' }}></View>
       <View
         style={{
           flexDirection: 'row',
@@ -126,13 +125,13 @@ const ItemActions = ({
               return await handleMarkAsNeedFix()
             }}
           >
+            <Text style={gStyles.h3}>Reparada</Text>
             <InputTextStyled
               style={{ marginVertical: 6 }}
               placeholder="Descripción"
               label="Descripción"
               onChangeText={(value) => setComment(value)}
             ></InputTextStyled>
-            <Text style={gStyles.h3}>No necesita mantenimiento</Text>
           </ButtonConfirm>
         ) : (
           <ButtonConfirm
@@ -144,7 +143,7 @@ const ItemActions = ({
             }}
             confirmColor="error"
           >
-            <Text style={gStyles.h3}>Necesita mantenimiento</Text>
+            <Text style={gStyles.h3}>Necesita reparación</Text>
             <InputTextStyled
               style={{ marginVertical: 6 }}
               placeholder="Descripción"

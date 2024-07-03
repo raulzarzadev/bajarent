@@ -129,7 +129,7 @@ export const useEmployee = () => {
   return useContext(EmployeeContext)
 }
 
-const formatItems = (
+export const formatItems = (
   items: Partial<ItemType>[],
   categories: Partial<CategoryType>[],
   sections: SectionType[]
