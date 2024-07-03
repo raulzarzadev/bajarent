@@ -22,12 +22,24 @@ export class ServiceStoreItemsClass {
     })
   }
 
-  async getAll(storeId: string) {
-    return ServiceStores.getItemsInCollection({
-      parentId: storeId,
-      subCollection: SUB_COLLECTION
-    })
+  async getAll(
+    { storeId, sections }: { storeId: string; sections?: string[] },
+    ops?: GetItemsOps
+  ) {
+    const filters = []
+    if (sections?.length) {
+      filters.push(where('assignedSection', 'in', sections))
+    }
+    return ServiceStores.getItemsInCollection(
+      {
+        parentId: storeId,
+        subCollection: SUB_COLLECTION,
+        filters: filters.length > 0 ? filters : undefined
+      },
+      ops
+    )
   }
+
   async getActive(storeId: string) {
     return ServiceStores.getItemsInCollection({
       parentId: storeId,
@@ -43,9 +55,8 @@ export class ServiceStoreItemsClass {
       storeId: string
       sections?: string[]
     },
-    props: { justRefs?: boolean } = {}
+    ops?: GetItemsOps
   ) {
-    const justRefs = props.justRefs || false
     const filters = [where('status', '==', 'pickedUp')]
     if (sections?.length) {
       filters.push(where('assignedSection', 'in', sections))
@@ -56,9 +67,7 @@ export class ServiceStoreItemsClass {
         subCollection: SUB_COLLECTION,
         filters
       },
-      {
-        justRefs
-      }
+      ops
     )
   }
   async listenAvailableBySections({

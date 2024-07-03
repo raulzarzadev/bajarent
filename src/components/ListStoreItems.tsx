@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ListE } from './List'
 import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
@@ -10,13 +10,21 @@ import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
-import { useEmployee } from '../contexts/employeeContext'
 
-const ListStoreItems = () => {
+const ListStoreItems = ({
+  allItemsSections,
+  allItems,
+  availableItemsSections,
+  getAllAvailable
+}: {
+  allItemsSections?: string[]
+  availableItemsSections?: string[]
+  allItems?: boolean
+  getAllAvailable?: boolean
+}) => {
   const { navigate } = useNavigation()
   const { toItems } = useMyNav()
   const { storeId } = useStore()
-  const { items } = useEmployee()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
@@ -33,6 +41,37 @@ const ListStoreItems = () => {
     setLoading(false)
     return res
   }
+  const [items, setItems] = useState<ItemType[]>([])
+  useEffect(() => {
+    if (allItems) {
+      ServiceStoreItems.getAll({ storeId }).then((res) => {
+        setItems(res)
+      })
+    }
+
+    if (allItemsSections?.length) {
+      ServiceStoreItems.getAll({
+        storeId,
+        sections: allItemsSections
+      }).then((res) => {
+        setItems(res)
+      })
+    }
+    if (availableItemsSections?.length) {
+      ServiceStoreItems.getAvailable({
+        storeId,
+        sections: availableItemsSections
+      }).then((res) => {
+        setItems(res)
+      })
+    }
+    if (getAllAvailable) {
+      ServiceStoreItems.getAvailable({ storeId }).then((res) => {
+        setItems(res)
+      })
+    }
+  }, [])
+
   return (
     <View>
       <ListE

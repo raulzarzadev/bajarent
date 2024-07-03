@@ -2,7 +2,7 @@ import React from 'react'
 import { ListOrdersConsolidatedE } from './ListOrdersConsolidated'
 import { ScrollView, View } from 'react-native'
 import InputRadios from './InputRadios'
-import ListStoreItems from './ListStoreItems'
+
 import ListItemsSections from './ListItemsSections'
 
 const ScreenOrdersConsolidated = () => {

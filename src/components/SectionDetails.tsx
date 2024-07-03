@@ -103,19 +103,9 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
           },
           {
             title: 'Artículos',
-            content: <ListStoreItems />,
+            content: <ListStoreItems allItemsSections={[section.id]} />,
             show: true
           }
-          // {
-          //   title: 'Orders',
-          //   content: <ListOrders orders={orders} />,
-          //   show: true
-          // },
-          // {
-          //   title: 'Reports',
-          //   content: <ListOrders orders={reports} />,
-          //   show: true
-          // }
         ]}
       />
     </View>
