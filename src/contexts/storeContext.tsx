@@ -14,7 +14,6 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import { useEmployee } from './employeeContext'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -125,6 +124,8 @@ const StoreContextProvider = ({ children }) => {
     )
   }
 
+  console.log({ storeItems })
+
   //#region render
 
   const staffWithSections = staff.map((staff) => {
@@ -133,16 +134,6 @@ const StoreContextProvider = ({ children }) => {
       .map((section) => section.id)
     return { ...staff, sectionsAssigned }
   })
-
-  // let items = {}
-  // for (let key in store?.items) {
-  //   const item = store?.items[key]
-  //   item.categoryName =
-  //     categories.find((cat) => cat.id === item.category)?.name || ''
-  //   item.assignedSectionName =
-  //     sections.find((sec) => sec.id === item.assignedSection)?.name || ''
-  //   items[key] = item
-  // }
 
   return (
     <StoreContext.Provider

@@ -436,21 +436,21 @@ export class FirebaseCRUD {
     },
     ops?: GetItemsOps
   ) {
-    const q: Query<DocumentData> = query(collectionRef, ...filters)
-    // const querySnapshot = await getDocs(q)
     const res: any[] = []
-    let querySnapshot
-    try {
-      querySnapshot = await getDocsFromCache(q)
-      console.log('docs from cache')
-    } catch (error) {
-      console.log('docs from server')
-      querySnapshot = await getDocsFromServer(q)
-    }
+    const q: Query<DocumentData> = query(collectionRef, ...filters)
+    const querySnapshot = await getDocs(q)
     if (ops?.justRefs) {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
     }
+    // let querySnapshot
+    // try {
+    //   querySnapshot = await getDocsFromCache(q)
+    //   console.log('docs from cache')
+    // } catch (error) {
+    //   console.log('docs from server')
+    //   querySnapshot = await getDocsFromServer(q)
+    // }
     querySnapshot.forEach((doc) => {
       res.push(doc)
     })
