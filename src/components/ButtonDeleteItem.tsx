@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import ButtonConfirm from '../components/ButtonConfirm'
-import { onDeleteItem } from './actions/item-actions'
+import ButtonConfirm from './ButtonConfirm'
+import { onDeleteItem } from '../firebase/actions/item-actions'
 import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
 
@@ -22,8 +22,8 @@ const ButtonDeleteItem = ({ itemId }) => {
       handleConfirm={async () => {
         return handleDelete()
       }}
-      openVariant="ghost"
-      justIcon
+      openVariant="outline"
+      //justIcon
       openColor="error"
       icon="delete"
       confirmColor="error"

@@ -10,13 +10,25 @@ import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
 import useMyNav from '../hooks/useMyNav'
 import InputTextStyled from './InputTextStyled'
+import ButtonDeleteItem from './ButtonDeleteItem'
+
+type Actions =
+  | 'details'
+  | 'rent'
+  | 'assign'
+  | 'fix'
+  | 'select'
+  | 'delete'
+  | 'edit'
 
 const ItemActions = ({
   item,
-  onAction
+  onAction,
+  actions = []
 }: {
   item: Partial<ItemType>
-  onAction: (action: 'details' | 'rent' | 'assign' | 'fix' | 'select') => void
+  onAction?: (action: Actions) => void
+  actions?: Array<Actions>
 }) => {
   const itemId = item?.id
   const itemSection = item?.assignedSection
@@ -59,6 +71,7 @@ const ItemActions = ({
   const [comment, setComment] = React.useState('')
 
   const { toItems } = useMyNav()
+
   return (
     <View>
       <View
@@ -68,89 +81,105 @@ const ItemActions = ({
           flexWrap: 'wrap'
         }}
       >
-        <Button
-          label="Selecciona"
-          onPress={() => {
-            onAction('select')
-          }}
-        />
-        <Button
-          label="Detalles"
-          onPress={() => {
-            onAction('details')
-            toItems({ id: itemId })
-          }}
-        />
-        {/* <Button
-          label="Rentar"
-          onPress={() => {
-            onAction('rent')
-            toOrders({ screenNew: true })
-
-            console.log('redirigir a nueva orden que incluya este item')
-          }}
-        /> */}
-        <ButtonConfirm
-          openLabel={currentSection || 'Asignar'}
-          icon="swap"
-          openVariant="outline"
-          confirmLabel="Cambiar"
-          handleConfirm={async () => {
-            onAction('assign')
-            return await handleChangeItemSection()
-          }}
-        >
-          <InputRadios
-            layout="row"
-            label="Selecciona una area"
-            setValue={(sectionId) => {
-              setSectionId(sectionId)
+        {actions.includes('delete') && <ButtonDeleteItem itemId={item.id} />}
+        {actions.includes('edit') && (
+          <Button
+            onPress={() => {
+              //@ts-ignore
+              navigate('ScreenItemEdit', { id: item.id })
             }}
-            value={sectionId}
-            options={storeSections.map(({ id, name }) => {
-              return {
-                label: name,
-                value: id
-              }
-            })}
+            variant="outline"
+            // justIcon
+            color="primary"
+            icon="edit"
           />
-        </ButtonConfirm>
-        {needFix ? (
+        )}
+        {actions?.includes('select') && (
+          <Button
+            label="Selecciona"
+            onPress={() => {
+              onAction('select')
+            }}
+          />
+        )}
+        {actions?.includes('details') && (
+          <Button
+            label="Detalles"
+            onPress={() => {
+              onAction('details')
+              toItems({ id: itemId })
+            }}
+          />
+        )}
+
+        {actions?.includes('assign') && (
           <ButtonConfirm
-            icon="wrench"
-            openColor={'error'}
-            openVariant={'filled'}
+            openLabel={currentSection || 'Asignar'}
+            icon="swap"
+            openVariant="outline"
+            confirmLabel="Cambiar"
             handleConfirm={async () => {
-              onAction('fix')
-              return await handleMarkAsNeedFix()
+              onAction('assign')
+              return await handleChangeItemSection()
             }}
           >
-            <Text style={gStyles.h3}>Reparada</Text>
-            <InputTextStyled
-              style={{ marginVertical: 6 }}
-              placeholder="Descripción"
-              label="Descripción"
-              onChangeText={(value) => setComment(value)}
-            ></InputTextStyled>
+            <InputRadios
+              layout="row"
+              label="Selecciona una area"
+              setValue={(sectionId) => {
+                setSectionId(sectionId)
+              }}
+              value={sectionId}
+              options={storeSections.map(({ id, name }) => {
+                return {
+                  label: name,
+                  value: id
+                }
+              })}
+            />
           </ButtonConfirm>
-        ) : (
-          <ButtonConfirm
-            icon="wrench"
-            openColor={'primary'}
-            openVariant={'outline'}
-            handleConfirm={async () => {
-              return await handleMarkAsNeedFix()
-            }}
-            confirmColor="error"
-          >
-            <Text style={gStyles.h3}>Necesita reparación</Text>
-            <InputTextStyled
-              style={{ marginVertical: 6 }}
-              placeholder="Descripción"
-              label="Descripción"
-              onChangeText={(value) => setComment(value)}
-            ></InputTextStyled>
-          </ButtonConfirm>
+        )}
+
+        {actions.includes('fix') && (
+          <>
+            {needFix ? (
+              <ButtonConfirm
+                icon="wrench"
+                openColor={'error'}
+                openVariant={'filled'}
+                handleConfirm={async () => {
+                  onAction('fix')
+                  return await handleMarkAsNeedFix()
+                }}
+              >
+                <Text style={gStyles.h3}>Reparada</Text>
+                <InputTextStyled
+                  style={{ marginVertical: 6 }}
+                  placeholder="Descripción"
+                  label="Descripción"
+                  onChangeText={(value) => setComment(value)}
+                ></InputTextStyled>
+              </ButtonConfirm>
+            ) : (
+              <ButtonConfirm
+                icon="wrench"
+                openColor={'primary'}
+                openVariant={'outline'}
+                handleConfirm={async () => {
+                  return await handleMarkAsNeedFix()
+                }}
+                confirmColor="error"
+              >
+                <Text style={gStyles.h3}>Necesita reparación</Text>
+                <InputTextStyled
+                  style={{ marginVertical: 6 }}
+                  placeholder="Descripción"
+                  label="Descripción"
+                  onChangeText={(value) => setComment(value)}
+                ></InputTextStyled>
+              </ButtonConfirm>
+            )}
+          </>
         )}
       </View>
     </View>

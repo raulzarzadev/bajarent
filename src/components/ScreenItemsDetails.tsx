@@ -1,6 +1,6 @@
 import { ScrollView, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import ItemDetails from '../firebase/ItemDetails'
+import { ItemDetailsE } from './ItemDetails'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
@@ -38,7 +38,7 @@ const ScreenItemsDetails = ({ route }) => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <ItemDetails item={item} />
+        <ItemDetailsE item={item} />
         <ItemHistory itemId={item.id} />
       </View>
     </ScrollView>

@@ -77,7 +77,7 @@ export const SectionItem = ({
   selected?: boolean
   onPress?: () => void
 }) => {
-  const modal = useModal({ title: `Acciones de artículos` })
+  const modal = useModal({ title: `Acciones de artículo` })
   return (
     <>
       <StyledModal {...modal}>
@@ -85,6 +85,7 @@ export const SectionItem = ({
           <CardItem item={item} />
         </View>
         <ItemActions
+          actions={['select', 'assign', 'fix', 'details']}
           item={item}
           onAction={(type) => {
             if (type === 'select') {

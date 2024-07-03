@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ItemType from '../types/ItemType'
 import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
@@ -41,10 +41,10 @@ const CardItem = ({ item }: { item: Partial<ItemType> }) => {
         {item.categoryName}
       </Text>
       <Text style={[gStyles.tCenter]}>{item.number} </Text>
-      <Text style={[gStyles.helper, gStyles.tCenter]}>{item.serial}</Text>
     </View>
   )
 }
+
 const ItemIcon = ({
   icon,
   iconColor,

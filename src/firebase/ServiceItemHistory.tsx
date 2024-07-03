@@ -1,4 +1,10 @@
-import { collection, limit, orderBy } from 'firebase/firestore'
+import {
+  QueryConstraint,
+  collection,
+  limit,
+  orderBy,
+  where
+} from 'firebase/firestore'
 import { db } from './main'
 import { FirebaseGenericService } from './genericService'
 import BaseType from '../types/BaseType'
@@ -46,7 +52,24 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
     })
   }
 
-  async getLastEntries({ count = 5, storeId, itemId }): Promise<Type[]> {
+  async getLastEntries({
+    count = 5,
+    storeId,
+    itemId,
+    type
+  }: {
+    count?: number
+    storeId: string
+    itemId: string
+    type?: Type['type']
+  }): Promise<Type[]> {
+    let filters: QueryConstraint[] = [
+      limit(count),
+      orderBy('createdAt', 'desc')
+    ]
+    if (!!type) {
+      filters.push(where('type', '==', type))
+    }
     return await this.getRefItems({
       collectionRef: collection(
         db,
@@ -56,9 +79,28 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
         itemId,
         SUB_COLLECTION_2
       ),
-      filters: [limit(count), orderBy('createdAt', 'desc')]
+      filters
     })
   }
+  async getLastFixEntry({ itemId, storeId }) {
+    const entries = await this.getRefItems({
+      collectionRef: collection(
+        db,
+        COLLECTION,
+        storeId,
+        SUB_COLLECTION,
+        itemId,
+        SUB_COLLECTION_2
+      ),
+      filters: [
+        limit(1),
+        orderBy('createdAt', 'desc'),
+        where('type', '==', 'fix')
+      ]
+    })
+    return entries[0]
+  }
+
   // async addEntry({
   //   storeId,
   //   itemId,
