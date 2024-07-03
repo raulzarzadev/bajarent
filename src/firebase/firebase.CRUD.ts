@@ -443,14 +443,8 @@ export class FirebaseCRUD {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
     }
-    // let querySnapshot
-    // try {
-    //   querySnapshot = await getDocsFromCache(q)
-    //   console.log('docs from cache')
-    // } catch (error) {
-    //   console.log('docs from server')
-    //   querySnapshot = await getDocsFromServer(q)
-    // }
+    console.log(querySnapshot.metadata.fromCache ? 'cache docs' : 'server docs')
+
     querySnapshot.forEach((doc) => {
       res.push(doc)
     })

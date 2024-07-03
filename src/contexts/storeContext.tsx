@@ -124,8 +124,6 @@ const StoreContextProvider = ({ children }) => {
     )
   }
 
-  console.log({ storeItems })
-
   //#region render
 
   const staffWithSections = staff.map((staff) => {
