@@ -13,18 +13,17 @@ export class ServiceStoreItemsClass {
     const newNUmber = await ServiceStores.incrementItemNumber({
       storeId
     })
-    console.log({ newNUmber })
     //* 2. update item number
-    const createdItemRes = await ServiceStores.update(storeId, {
+    await ServiceStores.update(storeId, {
       currentItemNumber: newNUmber
     })
     //* 3. create item
-    await ServiceStores.createRefItem({
+    const newItem = await ServiceStores.createRefItem({
       collectionRef,
       item: { ...item, number: newNUmber }
     })
 
-    return createdItemRes as FormattedResponse
+    return newItem as FormattedResponse
   }
 
   async getAll(

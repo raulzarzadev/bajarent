@@ -70,7 +70,6 @@ export const RowOrderItem = ({
     })
   }, [categories])
   const createModal = useModal({ title: 'Crear artículo' })
-
   return (
     <View>
       <StyledModal {...createModal}>
@@ -88,40 +87,52 @@ export const RowOrderItem = ({
 
         {canCreateItem && (
           <FormItem
-            values={_item}
+            values={{
+              ...formatNewItem({
+                order,
+                item,
+                storeSections,
+                storeCategories: categories
+              })
+            }}
             onSubmit={async (values) => {
               //* CREATE ITEM
-              return ServiceStoreItems.add({
+              const newItemId = await ServiceStoreItems.add({
                 item: values,
                 storeId
               })
                 .then(async ({ res }) => {
                   const newItemId = res.id
-                  //* ADD ENTRY TO THE ITEM
-                  await ServiceStoreItems.addEntry({
-                    storeId,
-                    itemId: newItemId,
-                    entry: {
-                      type: 'created',
-                      content: 'Item creado',
-                      orderId: orderId || ''
-                    }
-                  })
-                    .then((res) => console.log({ res }))
-                    .catch((e) => console.log({ e }))
-
-                  //* UPDATE ORDER WITH THE NEW ITEM
-                  await ServiceOrders.updateItemId({
-                    orderId,
-                    itemId,
-                    newItemId: newItemId
-                  })
-                    .then((res) => console.log({ res }))
-                    .catch((e) => console.log({ e }))
-                  onAction?.('created', { id: newItemId })
-                  return
+                  return newItemId
                 })
-                .catch(console.error)
+                .catch((e) => console.log({ e }))
+
+              if (newItemId) {
+                //* ADD ENTRY TO THE ITEM
+                await ServiceStoreItems.addEntry({
+                  storeId,
+                  itemId: newItemId,
+                  entry: {
+                    type: 'created',
+                    content: 'Item creado',
+                    orderId: orderId || ''
+                  }
+                })
+                  .then((res) => console.log({ res }))
+                  .catch((e) => console.log({ e }))
+
+                //* UPDATE ORDER WITH THE NEW ITEM
+                await ServiceOrders.updateItemId({
+                  orderId,
+                  itemId,
+                  newItemId: newItemId
+                })
+                  .then((res) => console.log({ res }))
+                  .catch((e) => console.log({ e }))
+                onAction?.('created', { id: newItemId })
+
+                return
+              }
             }}
           />
         )}
@@ -132,16 +143,8 @@ export const RowOrderItem = ({
           if (itemAlreadyExist) {
             toItems({ id: itemId })
           } else {
-            console.log('this items not exist', { itemId })
-
-            const newItem = await formatNewItem({
-              order,
-              item,
-              storeSections,
-              storeCategories: categories
-            })
-            _setItem(newItem)
             createModal.toggleOpen()
+            console.log('this items not exist', { itemId })
           }
         }}
         style={{
@@ -150,7 +153,9 @@ export const RowOrderItem = ({
           justifyContent: 'center'
         }}
       >
-        {true && <ModalChangeItem itemId={itemId} orderId={orderId} />}
+        {!!itemAlreadyExist && (
+          <ModalChangeItem itemId={itemId} orderId={orderId} />
+        )}
         <RowItem
           item={{
             ..._item,
@@ -245,7 +250,7 @@ export const RowOrderItem = ({
   )
 }
 
-const formatNewItem = async ({
+const formatNewItem = ({
   order,
   item,
   storeSections,
@@ -255,23 +260,23 @@ const formatNewItem = async ({
   item: ItemSelected
   storeSections: StoreType['sections']
   storeCategories: Partial<CategoryType>[]
-}): Promise<Partial<ItemType>> => {
+}): Partial<ItemType> => {
   const sectionAssigned = storeSections.find(
     (s) => s.id === order.assignToSection
   )
-  const createEcoNumber = async ({ storeId }) => {
-    const currentNumber = await ServiceStores.currentItemNumber(storeId)
-    const nexItemNumber = nextItemNumber({ currentNumber })
-    return nexItemNumber
-  }
-  const number = await createEcoNumber({ storeId: order?.storeId })
+  // const createEcoNumber = async ({ storeId }) => {
+  //   const currentNumber = await ServiceStores.currentItemNumber(storeId)
+  //   const nexItemNumber = nextItemNumber({ currentNumber })
+  //   return nexItemNumber
+  // }
+  // const number = await createEcoNumber({ storeId: order?.storeId })
   return {
     assignedSection: sectionAssigned?.id || '',
     assignedSectionName: sectionAssigned?.name || '',
     category: storeCategories.find((cat) => cat.name === item.categoryName)?.id,
     categoryName: item?.categoryName || '',
     brand: item?.brand || order?.itemBrand || '',
-    number,
+    //number:,
     serial: item?.serial || order?.itemSerial || '',
     status: order?.status === order_status.DELIVERED ? 'rented' : 'pickedUp'
   }
