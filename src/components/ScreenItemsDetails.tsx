@@ -13,22 +13,23 @@ import DateCell from './DateCell'
 import SpanUser from './SpanUser'
 import dictionary from '../dictionary'
 import SpanOrder from './SpanOrder'
-import { useEmployee } from '../contexts/employeeContext'
+import { formatItems, useEmployee } from '../contexts/employeeContext'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
   const [item, setItem] = useState(undefined)
-  const { storeId } = useStore()
-  const { items } = useEmployee()
+  const { storeId, categories, storeSections } = useStore()
+  const { employee } = useEmployee()
   useEffect(() => {
-    if (items) {
+    if (employee) {
       fetchItem()
     }
-  }, [items])
+  }, [employee])
   const fetchItem = () => {
     ServiceStoreItems.get({ storeId, itemId: id }).then((res) => {
-      setItem(res)
+      const formatted = formatItems([res], categories, storeSections)
+      setItem(formatted[0])
     })
   }
 
