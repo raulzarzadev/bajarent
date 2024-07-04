@@ -213,7 +213,7 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
-      {!!scheduledAt && (
+      {!!scheduledAt && isAuthorized && (
         <Chip
           style={[chipStyles]}
           title={scheduledLabel()}
