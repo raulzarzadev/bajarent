@@ -63,11 +63,6 @@ const OrderDirectives = ({
       )}
 
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
-      {/* <OrderAssignedTo
-        orderId={order?.id}
-        chipStyles={styles.chip}
-        chipSize={'sm'}
-      /> */}
     </View>
   )
 }

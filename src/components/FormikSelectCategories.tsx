@@ -123,6 +123,10 @@ const FormikSelectCategories = ({
           <View>
             <ListAssignedItemsE
               categoryId={category?.id}
+              itemSelected={itemSelected}
+              onPressItem={(id) => {
+                setItemSelected(id)
+              }}
               // itemSelected={itemSelected}
               // onPressItem={(id) => {
               //   if (itemSelected === id) {
