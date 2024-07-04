@@ -18,23 +18,20 @@ const ListItemsSections = () => {
   const [groupedItems, setGroupedItems] = React.useState<
     Record<string, ItemType[]>
   >({})
+
   //const formattedItems = formatItems(items, categories, storeSections)
 
   useEffect(() => {
-    if (getItems === 'all') {
-      const groupedItems = groupSectionItems(items)
-      setGroupedItems(groupedItems)
-    } else {
-      ServiceStoreItems.listenAvailableBySections({
-        storeId,
-        cb: (items) => {
-          const formattedItems = formatItems(items, categories, storeSections)
-          const groupedItems = groupSectionItems(formattedItems)
-          setGroupedItems(groupedItems)
-        }
-      })
-    }
-  }, [getItems])
+    ServiceStoreItems.listenAvailableBySections({
+      storeId,
+      userSections: 'all',
+      cb: (items) => {
+        const formattedItems = formatItems(items, categories, storeSections)
+        const groupedItems = groupSectionItems(formattedItems)
+        setGroupedItems(groupedItems)
+      }
+    })
+  }, [])
 
   const sections = Object.entries(groupedItems)
   return (
