@@ -1,21 +1,16 @@
-import { useState } from 'react'
-import useModal from '../../hooks/useModal'
 import { View } from 'react-native'
 import InputDate from '../InputDate'
 import { useOrderCtx } from '../../contexts/orderContext'
 import asDate from '../../libs/utils-date'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ModalScheduleOrder = ({ orderId = null }: { orderId: string | null }) => {
   const handleSubmit = async (date: any) => {
-    console.log({ date })
-    // try {
-    //   await ServiceOrders.update(orderId, { scheduledAt: date })
-    //   modal.toggleOpen()
-    // } catch (e) {
-    //   console.error({ e })
-    // } finally {
-    //   setLoading(false)
-    // }
+    try {
+      await ServiceOrders.update(orderId, { scheduledAt: date })
+    } catch (e) {
+      console.error({ e })
+    }
   }
   const { order } = useOrderCtx()
   return (
