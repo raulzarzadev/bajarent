@@ -36,15 +36,6 @@ const ListItemsSections = () => {
   const sections = Object.entries(groupedItems)
   return (
     <View>
-      {/* <InputRadios
-        layout="row"
-        options={[
-          { label: 'Todos', value: 'all' },
-          { label: 'Disponibles', value: 'pickedUp' }
-        ]}
-        setValue={setGetItems}
-        value={getItems}
-      /> */}
       {sections.map(([key, items]) => {
         if (items.length === 0) return null
         return (

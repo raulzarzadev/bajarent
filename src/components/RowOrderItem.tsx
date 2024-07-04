@@ -18,7 +18,6 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Icon from './Icon'
 import TextInfo from './TextInfo'
-import { ServiceStores, nextItemNumber } from '../firebase/ServiceStore'
 
 import ModalChangeItem from './ModalChangeItem'
 import StoreType from '../types/StoreType'
@@ -69,7 +68,9 @@ export const RowOrderItem = ({
       }
     })
   }, [categories])
+
   const createModal = useModal({ title: 'Crear artículo' })
+
   return (
     <View>
       <StyledModal {...createModal}>
@@ -153,9 +154,7 @@ export const RowOrderItem = ({
           justifyContent: 'center'
         }}
       >
-        {!!itemAlreadyExist && (
-          <ModalChangeItem itemId={itemId} orderId={orderId} />
-        )}
+        <ModalChangeItem itemId={itemId} orderId={orderId} />
         <RowItem
           item={{
             ..._item,

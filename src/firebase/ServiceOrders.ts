@@ -471,7 +471,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     newItemId: string
   }) {
     const items = await this.get(orderId).then((res) => res.items)
-    console.log({ items, itemId, newItemId })
     const itemIndex = items.findIndex((item) => item.id === itemId)
     if (itemIndex < 0) return console.error('Item not found')
     items[itemIndex].id = newItemId

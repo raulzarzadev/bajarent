@@ -171,9 +171,10 @@ export const onChangeOrderItem = async ({
     if (!newItemId || itemId === newItemId)
       return console.log('no new item or is the same ')
     //* get numbers
-    const oldItemNumber = await ServiceStoreItems.get({ storeId, itemId }).then(
-      (res) => res.number
+    const oldItem = await ServiceStoreItems.get({ storeId, itemId }).then(
+      (res) => res
     )
+    const oldItemNumber = oldItem?.number
     const newItemNumber = await ServiceStoreItems.get({
       storeId,
       itemId: newItemId
@@ -186,7 +187,10 @@ export const onChangeOrderItem = async ({
     })
 
     //* 2 update old item status to picked up
-    await onPickUpItem({ storeId, itemId, orderId })
+    //******* if oldItem not exist don picked up. in case of you want to assign a item to order that has not real item
+    if (oldItem) {
+      await onPickUpItem({ storeId, itemId, orderId })
+    }
     //* 3 update new item  status to rented
     await onRentItem({ storeId, itemId: newItemId, orderId })
     //* 4 add registry entry to old item
