@@ -80,10 +80,10 @@ export class ServiceStoreItemsClass {
     cb
   }: {
     storeId: string
-    userSections?: string[]
+    userSections?: string[] | 'all'
     cb: (items: Type[]) => void
   }) {
-    if (userSections.length) {
+    if (Array.isArray(userSections?.length) && userSections.length > 0) {
       return ServiceStores.listenItemsInSubCollection({
         parentId: storeId,
         subCollection: SUB_COLLECTION,
@@ -93,7 +93,8 @@ export class ServiceStoreItemsClass {
         ],
         cb
       })
-    } else {
+    }
+    if (userSections === 'all') {
       return ServiceStores.listenItemsInSubCollection({
         parentId: storeId,
         subCollection: SUB_COLLECTION,
