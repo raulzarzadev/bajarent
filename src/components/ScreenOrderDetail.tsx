@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { listenFullOrderData } from '../contexts/libs/getFullOrderData'
 import OrderType from '../types/OrderType'
 import ErrorBoundary from './ErrorBoundary'
+import { OrdersContextProvider } from '../contexts/ordersContext'
+import { OrderContext, OrderProvider } from '../contexts/orderContext'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params
@@ -33,7 +35,9 @@ const ScreenOrderDetail = ({ route }) => {
           marginTop: 12
         }}
       >
-        <OrderDetails order={order} />
+        <OrderContext.Provider value={{ order, setOrder }}>
+          <OrderDetails order={order} />
+        </OrderContext.Provider>
       </View>
     </ScrollView>
   )

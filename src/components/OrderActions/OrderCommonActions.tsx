@@ -15,6 +15,7 @@ import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
 import ModalSendWhatsapp from '../ModalSendWhatsapp'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
+import ModalScheduleOrder from './ModalScheduleOrder'
 
 const OrderCommonActions = ({
   storeId,
@@ -97,6 +98,7 @@ const OrderCommonActions = ({
   }
 
   const buttons = [
+    canAssign && <ModalScheduleOrder orderId={orderId} />,
     canAssign && <ModalAssignOrder orderId={orderId} />,
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalSendWhatsapp orderId={orderId} />,

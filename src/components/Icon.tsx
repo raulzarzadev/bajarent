@@ -1,4 +1,4 @@
-import { IoMdCalendar, IoMdSwap, IoMdAdd } from 'react-icons/io'
+import { IoMdSwap, IoMdAdd } from 'react-icons/io'
 
 import React from 'react'
 import {
@@ -32,8 +32,9 @@ import {
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoKeyOutline } from 'react-icons/io5'
 import { IoPricetagsOutline } from 'react-icons/io5'
-import { HiOutlineWrenchScrewdriver } from 'react-icons/hi2'
 import { FaTruckPickup } from 'react-icons/fa6'
+import { LuCalendarClock } from 'react-icons/lu'
+import { LuCalendar } from 'react-icons/lu'
 
 import {
   IoPersonOutline,
@@ -81,7 +82,7 @@ const icons = {
   delete: MdDeleteOutline,
   search: MdOutlineSearch,
   map: TbMapSearch,
-  calendar: IoMdCalendar,
+  calendar: LuCalendar,
   verticalDots: HiDotsVertical,
   sub: GrFormSubtract,
   phone: TiPhone,
@@ -139,7 +140,8 @@ const icons = {
   sale: IoPricetagsOutline,
   wrench: FaWrench,
   truck: FaTruckPickup,
-  home: MdHome
+  home: MdHome,
+  calendarTime: LuCalendarClock
 } as const
 
 export type IconName = keyof typeof icons

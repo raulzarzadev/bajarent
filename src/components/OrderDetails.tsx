@@ -33,6 +33,7 @@ import OrderExtensions from './OrderExtensions'
 import PaymentVerify from './PaymentVerify'
 import ButtonCreateClient from './ButtonCreateClient'
 import RowOrderItem from './RowOrderItem'
+import { OrderProvider } from '../contexts/orderContext'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
