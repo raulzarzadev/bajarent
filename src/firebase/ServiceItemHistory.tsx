@@ -12,6 +12,7 @@ import BaseType from '../types/BaseType'
 const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'
 const SUB_COLLECTION_2 = 'history'
+
 export type ItemHistoryBase = {
   type:
     | 'pickup'
@@ -52,6 +53,41 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
     })
   }
 
+  async listenLastEntries({
+    storeId,
+    itemId,
+    callback,
+    count = 5,
+    type
+  }: {
+    storeId: string
+    itemId: string
+    callback: (entries: Type[]) => void
+    count?: number
+    type?: Type['type']
+  }) {
+    let filters: QueryConstraint[] = [
+      limit(count),
+      orderBy('createdAt', 'desc')
+    ]
+    if (!!type) {
+      filters.push(where('type', '==', type))
+    }
+    const collectionRef = collection(
+      db,
+      COLLECTION,
+      storeId,
+      SUB_COLLECTION,
+      itemId,
+      SUB_COLLECTION_2
+    )
+    return this.listenRefItems({
+      cb: callback,
+      collectionRef,
+      filters
+    })
+  }
+
   async getLastEntries({
     count = 5,
     storeId,
@@ -70,15 +106,16 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
     if (!!type) {
       filters.push(where('type', '==', type))
     }
+    const collectionRef = collection(
+      db,
+      COLLECTION,
+      storeId,
+      SUB_COLLECTION,
+      itemId,
+      SUB_COLLECTION_2
+    )
     return await this.getRefItems({
-      collectionRef: collection(
-        db,
-        COLLECTION,
-        storeId,
-        SUB_COLLECTION,
-        itemId,
-        SUB_COLLECTION_2
-      ),
+      collectionRef,
       filters
     })
   }
@@ -100,24 +137,5 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
     })
     return entries[0]
   }
-
-  // async addEntry({
-  //   storeId,
-  //   itemId,
-  //   entry
-  // }: {
-  //   storeId: string
-  //   itemId: string
-  //   entry: any
-  // }) {
-  //   const historyRef = collection(
-  //     db,
-  //     COLLECTION,
-  //     storeId,
-  //     SUB_COLLECTION,
-  //     itemId,
-  //     SUB_COLLECTION_2
-  //   )
-  // }
 }
 export const ServiceItemHistory = new ServiceItemHistoryClass('stores')

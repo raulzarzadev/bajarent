@@ -23,11 +23,14 @@ const ScreenItemsDetails = ({ route }) => {
   const { items } = useEmployee()
   useEffect(() => {
     if (items) {
-      ServiceStoreItems.get({ storeId, itemId: id }).then((res) => {
-        setItem(res)
-      })
+      fetchItem()
     }
   }, [items])
+  const fetchItem = () => {
+    ServiceStoreItems.get({ storeId, itemId: id }).then((res) => {
+      setItem(res)
+    })
+  }
 
   if (item === undefined) {
     return <Loading />
@@ -38,7 +41,12 @@ const ScreenItemsDetails = ({ route }) => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <ItemDetailsE item={item} />
+        <ItemDetailsE
+          item={item}
+          onAction={() => {
+            fetchItem()
+          }}
+        />
         <ItemHistory itemId={item.id} />
       </View>
     </ScrollView>
@@ -48,20 +56,24 @@ const ScreenItemsDetails = ({ route }) => {
 const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState<ItemHistoryType[]>([])
   const { storeId } = useStore()
-
+  const COUNT_HISTORY = 3
   useEffect(() => {
-    ServiceItemHistory.getLastEntries({
+    ServiceItemHistory.listenLastEntries({
       itemId,
-      count: 5,
-      storeId: storeId
-    }).then((res) => {
-      setItemHistory(res)
+      storeId,
+      callback: (res) => {
+        setItemHistory(res)
+      },
+      count: COUNT_HISTORY
     })
   }, [])
 
   return (
     <View>
-      <Text style={gStyles.h3}>Historial</Text>
+      <Text style={gStyles.h3}>Historial </Text>
+      <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
+        (últimos{COUNT_HISTORY})
+      </Text>
       {itemHistory.map((entry) => (
         <ListRow
           key={entry.id}

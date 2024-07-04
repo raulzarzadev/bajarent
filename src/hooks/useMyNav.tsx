@@ -2,12 +2,32 @@ import { useNavigation } from '@react-navigation/native'
 
 const useMyNav = () => {
   const { navigate } = useNavigation()
-  const toItems = ({ id, screenNew }: { id?: string; screenNew?: boolean }) => {
+  const toItems = ({
+    id,
+    screenNew,
+    screenEdit
+  }: {
+    id?: string
+    screenNew?: boolean
+    screenEdit?: boolean
+  }) => {
+    if (screenEdit && id) {
+      //@ts-ignore
+      navigate('StackItems', {
+        screen: 'ScreenItemEdit',
+        params: {
+          id
+        }
+      })
+      return
+    }
+
     if (screenNew) {
       //@ts-ignore
       navigate('StackItems', {
         screen: 'ScreenItemNew'
       })
+      return
     } else if (id) {
       //@ts-ignore
       navigate('StackItems', {
@@ -16,6 +36,7 @@ const useMyNav = () => {
           id
         }
       })
+      return
     }
   }
   const toOrders = ({
@@ -28,6 +49,7 @@ const useMyNav = () => {
     if (screenNew) {
       //@ts-ignore
       navigate('NewOrder')
+      return
     }
     if (id) {
       //@ts-ignore
@@ -37,6 +59,7 @@ const useMyNav = () => {
           orderId: id
         }
       })
+      return
     }
   }
   return {

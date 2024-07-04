@@ -258,4 +258,20 @@ export class FirebaseGenericService<T extends Identifiable> {
       filters
     })
   }
+
+  listenRefItems({
+    collectionRef,
+    filters,
+    cb
+  }: {
+    collectionRef: CollectionReference<DocumentData>
+    filters: QueryConstraint[]
+    cb: CallableFunction
+  }) {
+    this.itemCRUD.listenRefItems({
+      ref: collectionRef,
+      filters,
+      cb
+    })
+  }
 }

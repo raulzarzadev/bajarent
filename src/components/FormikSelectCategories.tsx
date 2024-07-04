@@ -4,8 +4,7 @@ import { ItemSelected } from './FormSelectItem'
 import { CategoryType } from '../types/RentItem'
 import Button from './Button'
 import { FlatList, Text, View } from 'react-native'
-import CurrencyAmount from './CurrencyAmount'
-import { gSpace, gStyles } from '../styles'
+import { gSpace } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
 import theme from '../theme'
 import { useStore } from '../contexts/storeContext'
@@ -23,9 +22,9 @@ import ButtonConfirm from './ButtonConfirm'
 import FormItem from './FormItem'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+
 const FormikSelectCategories = ({
   name,
-  label,
   selectPrice,
   startAt //? TODO: <--- Should be add?
 }: //choseEmptyCategory = true //*<--- this will alow you choose category with out specific item
@@ -81,7 +80,7 @@ const FormikSelectCategories = ({
 
   const [itemSelected, setItemSelected] = useState<ItemType['id']>()
 
-  const modal = useModal({ title: 'Agregar Item' })
+  const modal = useModal({ title: 'Agregar artículo' })
   const handleChangeItemSelected = (items: ItemSelected[]) => {
     helpers.setValue(items)
   }
@@ -124,18 +123,18 @@ const FormikSelectCategories = ({
           <View>
             <ListAssignedItemsE
               categoryId={category?.id}
-              itemSelected={itemSelected}
-              onPressItem={(id) => {
-                if (itemSelected === id) {
-                  setItemSelected('')
-                } else {
-                  setItemSelected(id)
-                }
-                const itemCategory = employeeItems.find(
-                  (item) => item.id === id
-                ).category
-                setCategory(categories.find((cat) => cat.id === itemCategory))
-              }}
+              // itemSelected={itemSelected}
+              // onPressItem={(id) => {
+              //   if (itemSelected === id) {
+              //     setItemSelected('')
+              //   } else {
+              //     setItemSelected(id)
+              //   }
+              //   const itemCategory = employeeItems.find(
+              //     (item) => item.id === id
+              //   ).category
+              //   setCategory(categories.find((cat) => cat.id === itemCategory))
+              // }}
             />
           </View>
           {!!selectPrice && (

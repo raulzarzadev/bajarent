@@ -5,7 +5,13 @@ import { onDeleteItem } from '../firebase/actions/item-actions'
 import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
 
-const ButtonDeleteItem = ({ itemId }) => {
+const ButtonDeleteItem = ({
+  itemId,
+  onDeleted
+}: {
+  itemId: string
+  onDeleted?: () => void
+}) => {
   const { storeId } = useStore()
   const {
     permissions: { canDeleteItems }
@@ -14,6 +20,7 @@ const ButtonDeleteItem = ({ itemId }) => {
     await onDeleteItem({ itemId, storeId })
       .then(console.log)
       .catch(console.error)
+      .finally(onDeleted)
   }
   return (
     <ButtonConfirm

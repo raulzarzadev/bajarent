@@ -9,7 +9,13 @@ import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ItemActions from './ItemActions'
 
-const ItemDetails = ({ item }: { item: Partial<ItemType> }) => {
+const ItemDetails = ({
+  item,
+  onAction
+}: {
+  item: Partial<ItemType>
+  onAction?: () => void
+}) => {
   return (
     <View>
       <DocMetadata item={item} />
@@ -23,6 +29,9 @@ const ItemDetails = ({ item }: { item: Partial<ItemType> }) => {
         <ItemActions
           item={item}
           actions={['assign', 'fix', 'edit', 'delete']}
+          onAction={() => {
+            onAction?.()
+          }}
         />
       </View>
 
@@ -36,14 +45,25 @@ const ItemDetails = ({ item }: { item: Partial<ItemType> }) => {
         Area asignada:
         {item.assignedSectionName}
       </Text>
-      <ItemFixDetails itemId={item?.id} />
+      {item?.needFix && (
+        <View style={{ marginVertical: 12 }}>
+          <ItemFixDetails itemId={item?.id} />
+        </View>
+      )}
     </View>
   )
 }
 
-export const ItemFixDetails = ({ itemId }: { itemId: string }) => {
+export const ItemFixDetails = ({
+  itemId,
+  size = 'lg'
+}: {
+  itemId: string
+  size?: 'sm' | 'md' | 'lg'
+}) => {
   const [lastFixEntry, setLastFixEntry] = React.useState('')
   const { storeId } = useStore()
+
   useEffect(() => {
     ServiceItemHistory.getLastEntries({
       itemId,
@@ -54,17 +74,31 @@ export const ItemFixDetails = ({ itemId }: { itemId: string }) => {
       setLastFixEntry(res[0]?.content)
     })
   }, [])
+  const textSize = {
+    sm: 10,
+    md: 14,
+    lg: 18
+  }
   return (
     <View>
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: 4
+          justifyContent: 'center',
+          alignItems: 'center'
+          //marginVertical: 12
         }}
       >
-        <Text style={[gStyles.helper]}>{lastFixEntry}</Text>
+        <Text
+          numberOfLines={2}
+          style={[
+            gStyles.tError,
+            gStyles.tCenter,
+            { fontSize: textSize[size] }
+          ]}
+        >
+          {lastFixEntry}
+        </Text>
       </View>
     </View>
   )

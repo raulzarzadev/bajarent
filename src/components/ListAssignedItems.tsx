@@ -85,6 +85,7 @@ export const SectionItem = ({
           <CardItem item={item} />
         </View>
         <ItemActions
+          // FIXME: avoid select optiong
           actions={['select', 'assign', 'fix', 'details']}
           item={item}
           onAction={(type) => {

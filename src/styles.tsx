@@ -45,6 +45,9 @@ export const gStyles = StyleSheet.create({
     fontSize: 10,
     color: theme.error
   },
+  tError: {
+    color: theme.error
+  },
   tCenter: {
     textAlign: 'center'
   },

@@ -588,6 +588,25 @@ export class FirebaseCRUD {
       })
   }
 
+  listenRefItems({
+    cb,
+    ref,
+    filters
+  }: {
+    cb: CallableFunction
+    ref: CollectionReference
+    filters?: QueryConstraint[]
+  }) {
+    const q: Query<DocumentData> = query(ref, ...filters)
+    onSnapshot(q, (querySnapshot) => {
+      const res: any[] = []
+      querySnapshot.forEach((doc) => {
+        res.push(this.normalizeItem(doc))
+      })
+      cb(res)
+    })
+  }
+
   listenItemsInSubCollection({
     parentId,
     parentCollection,

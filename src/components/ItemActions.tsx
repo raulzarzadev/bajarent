@@ -61,7 +61,7 @@ const ItemActions = ({
       itemId,
       entry: {
         type: needFix ? 'fix' : 'report',
-        content: needFix ? `Reparar: ${comment}` : `Reparada : ${comment}`
+        content: needFix ? `${comment}` : `${comment}`
       }
     })
 
@@ -81,12 +81,18 @@ const ItemActions = ({
           flexWrap: 'wrap'
         }}
       >
-        {actions.includes('delete') && <ButtonDeleteItem itemId={item.id} />}
+        {actions.includes('delete') && (
+          <ButtonDeleteItem
+            itemId={item.id}
+            onDeleted={() => {
+              onAction?.('delete')
+            }}
+          />
+        )}
         {actions.includes('edit') && (
           <Button
             onPress={() => {
-              //@ts-ignore
-              navigate('ScreenItemEdit', { id: item.id })
+              toItems({ id: itemId, screenEdit: true })
             }}
             variant="outline"
             // justIcon
@@ -98,7 +104,7 @@ const ItemActions = ({
           <Button
             label="Selecciona"
             onPress={() => {
-              onAction('select')
+              onAction?.('select')
             }}
           />
         )}
@@ -106,7 +112,7 @@ const ItemActions = ({
           <Button
             label="Detalles"
             onPress={() => {
-              onAction('details')
+              onAction?.('details')
               toItems({ id: itemId })
             }}
           />
@@ -119,7 +125,7 @@ const ItemActions = ({
             openVariant="outline"
             confirmLabel="Cambiar"
             handleConfirm={async () => {
-              onAction('assign')
+              onAction?.('assign')
               return await handleChangeItemSection()
             }}
           >
@@ -148,7 +154,7 @@ const ItemActions = ({
                 openColor={'error'}
                 openVariant={'filled'}
                 handleConfirm={async () => {
-                  onAction('fix')
+                  onAction?.('fix')
                   return await handleMarkAsNeedFix()
                 }}
               >
@@ -166,6 +172,7 @@ const ItemActions = ({
                 openColor={'primary'}
                 openVariant={'outline'}
                 handleConfirm={async () => {
+                  onAction?.('fix')
                   return await handleMarkAsNeedFix()
                 }}
                 confirmColor="error"

@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import ItemType from '../types/ItemType'
 import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
+import { ItemFixDetails } from './ItemDetails'
 
 const CardItem = ({ item }: { item: Partial<ItemType> }) => {
   return (
@@ -29,7 +30,7 @@ const CardItem = ({ item }: { item: Partial<ItemType> }) => {
             badgeColor={colors.transparent}
           />
         )}
-        {item.needFix && (
+        {item?.needFix && (
           <ItemIcon
             icon="wrench"
             iconColor={colors.red}
@@ -41,6 +42,7 @@ const CardItem = ({ item }: { item: Partial<ItemType> }) => {
         {item.categoryName}
       </Text>
       <Text style={[gStyles.tCenter]}>{item.number} </Text>
+      {item?.needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
     </View>
   )
 }
