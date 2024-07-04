@@ -7,10 +7,12 @@ import { useEmployee } from '../contexts/employeeContext'
 
 const ButtonDeleteItem = ({
   itemId,
-  onDeleted
+  onDeleted,
+  disabled
 }: {
   itemId: string
   onDeleted?: () => void
+  disabled?: boolean
 }) => {
   const { storeId } = useStore()
   const {
@@ -24,7 +26,7 @@ const ButtonDeleteItem = ({
   }
   return (
     <ButtonConfirm
-      openDisabled={!canDeleteItems}
+      openDisabled={!canDeleteItems || disabled}
       text="¿Estas seguro de eliminar este item?"
       handleConfirm={async () => {
         return handleDelete()

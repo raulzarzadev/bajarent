@@ -5,6 +5,7 @@ import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
 import { db } from './main'
 import { FormattedResponse, GetItemsOps } from './firebase.CRUD'
 type Type = Partial<ItemType>
+type Field = keyof Type
 const SUB_COLLECTION = 'items'
 export class ServiceStoreItemsClass {
   async add({ storeId, item }: { storeId: string; item: Type }) {
@@ -136,7 +137,7 @@ export class ServiceStoreItemsClass {
     })
   }
 
-  async updateField({
+  async updateField<F extends Field>({
     storeId,
     itemId,
     field,
@@ -144,8 +145,8 @@ export class ServiceStoreItemsClass {
   }: {
     storeId: string
     itemId: string
-    field: string
-    value: any
+    field: F
+    value: Type[F]
   }) {
     return ServiceStores.updateFieldInSubCollection({
       parentId: storeId,

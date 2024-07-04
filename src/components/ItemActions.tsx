@@ -20,6 +20,7 @@ type Actions =
   | 'select'
   | 'delete'
   | 'edit'
+  | 'retire'
 
 const ItemActions = ({
   item,
@@ -69,9 +70,14 @@ const ItemActions = ({
   }
 
   const [comment, setComment] = React.useState('')
-
+  const [disabled, setDisabled] = React.useState(false)
   const { toItems } = useMyNav()
-
+  const retiredItem = item?.status === 'retired'
+  const rentedItem = item?.status === 'rented'
+  const disabledFix = item?.status === 'retired'
+  const disabledAssign = item?.status === 'retired'
+  const disabledDelete = item?.status === 'retired'
+  const disabledEdit = item?.status === 'retired'
   return (
     <View>
       <View
@@ -81,8 +87,37 @@ const ItemActions = ({
           flexWrap: 'wrap'
         }}
       >
+        {actions.includes('retire') && (
+          <ButtonConfirm
+            openDisabled={disabled || rentedItem}
+            icon={retiredItem ? 'upload' : 'download'}
+            openVariant={!retiredItem ? 'outline' : 'filled'}
+            text={`${retiredItem ? 'Reactivar' : 'Dar de baja'}`}
+            handleConfirm={async () => {
+              setDisabled(true)
+              await ServiceStoreItems.updateField({
+                storeId,
+                itemId,
+                field: 'status',
+                value: retiredItem ? 'pickedUp' : 'retired'
+              })
+              await ServiceStoreItems.addEntry({
+                storeId,
+                itemId,
+                entry: {
+                  type: !retiredItem ? 'retire' : 'reactivate',
+                  content: !retiredItem ? 'Dada de baja' : 'Reactivada'
+                }
+              })
+              onAction?.('retire')
+              setDisabled(false)
+              return
+            }}
+          />
+        )}
         {actions.includes('delete') && (
           <ButtonDeleteItem
+            disabled={disabled || disabledDelete}
             itemId={item.id}
             onDeleted={() => {
               onAction?.('delete')
@@ -91,6 +126,7 @@ const ItemActions = ({
         )}
         {actions.includes('edit') && (
           <Button
+            disabled={disabled || disabledEdit}
             onPress={() => {
               toItems({ id: itemId, screenEdit: true })
             }}
@@ -120,6 +156,7 @@ const ItemActions = ({
 
         {actions?.includes('assign') && (
           <ButtonConfirm
+            openDisabled={disabled || disabledAssign}
             openLabel={currentSection || 'Asignar'}
             icon="swap"
             openVariant="outline"
@@ -150,6 +187,7 @@ const ItemActions = ({
           <>
             {needFix ? (
               <ButtonConfirm
+                openDisabled={disabled || disabledFix}
                 icon="wrench"
                 openColor={'error'}
                 openVariant={'filled'}
@@ -168,6 +206,7 @@ const ItemActions = ({
               </ButtonConfirm>
             ) : (
               <ButtonConfirm
+                openDisabled={disabled || disabledFix}
                 icon="wrench"
                 openColor={'primary'}
                 openVariant={'outline'}

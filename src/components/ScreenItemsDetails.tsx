@@ -57,7 +57,7 @@ const ScreenItemsDetails = ({ route }) => {
 const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState<ItemHistoryType[]>([])
   const { storeId } = useStore()
-  const COUNT_HISTORY = 3
+  const COUNT_HISTORY = 6
   useEffect(() => {
     ServiceItemHistory.listenLastEntries({
       itemId,

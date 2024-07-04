@@ -22,6 +22,8 @@ export type ItemHistoryBase = {
     | 'assignment'
     | 'created'
     | 'fix'
+    | 'retire'
+    | 'reactivate'
   orderId?: string
   content: string
 }

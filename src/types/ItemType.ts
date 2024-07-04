@@ -7,7 +7,8 @@ export enum ItemStatuses {
   //maintenance = 'maintenance',
   //sold = 'sold',
   //stock = 'stock',
-  pickedUp = 'pickedUp'
+  pickedUp = 'pickedUp',
+  retired = 'retired'
 }
 export type ItemStatus = keyof typeof ItemStatuses
 

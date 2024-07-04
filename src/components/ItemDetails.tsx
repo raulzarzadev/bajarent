@@ -28,7 +28,7 @@ const ItemDetails = ({
       <View style={{ marginBottom: 8 }}>
         <ItemActions
           item={item}
-          actions={['assign', 'fix', 'edit', 'delete']}
+          actions={['assign', 'fix', 'edit', 'delete', 'retire']}
           onAction={() => {
             onAction?.()
           }}
