@@ -3,8 +3,18 @@ import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
 import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
-import { isBefore, isToday } from 'date-fns'
-import asDate, { fromNow } from '../libs/utils-date'
+import {
+  formatDate,
+  isBefore,
+  isToday,
+  isTomorrow,
+  isYesterday
+} from 'date-fns'
+import asDate, {
+  dateFormat,
+  fromNow,
+  isBeforeYesterday
+} from '../libs/utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 const OrderStatus = ({
@@ -52,7 +62,26 @@ const OrderStatus = ({
     !order?.expireAt &&
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
-
+  const scheduledAt = order?.scheduledAt
+  const scheduledLabel = () => {
+    const scheduledAt = order?.scheduledAt
+    if (isBeforeYesterday(asDate(scheduledAt))) {
+      return `📅 ${dateFormat(asDate(scheduledAt), '*dd/MMM')}`
+    }
+    if (isYesterday(asDate(scheduledAt))) {
+      return `📅 Ayer`
+    }
+    if (isToday(asDate(scheduledAt))) {
+      return `📅 Hoy`
+    }
+    g
+    if (isTomorrow(asDate(scheduledAt))) {
+      return `📅 Mañana`
+    }
+    if (scheduledAt) {
+      return `📅 ${dateFormat(asDate(scheduledAt), 'dd/MMM')}`
+    }
+  }
   return (
     <>
       {isRenewed && (
@@ -182,6 +211,14 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={'SF'}
           color={theme.error}
+          size={chipSize}
+        />
+      )}
+      {!!scheduledAt && (
+        <Chip
+          style={[chipStyles]}
+          title={scheduledLabel()}
+          color={colors.transparent}
           size={chipSize}
         />
       )}
