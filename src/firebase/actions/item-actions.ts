@@ -199,7 +199,7 @@ export const onChangeOrderItem = async ({
       itemId,
       orderId,
       storeId,
-      content: `Se cambio por el artículo ${newItemNumber}`
+      content: `Se cambio por el artículo ${newItemNumber || 'SA'}`
     }).catch((e) => console.log('Error on registry entry', { e }))
     //* 5 add registry entry to new item
     await onRegistryEntry({
@@ -207,7 +207,7 @@ export const onChangeOrderItem = async ({
       itemId: newItemId,
       orderId,
       storeId,
-      content: `Se cambio por el artículo ${oldItemNumber}`
+      content: `Se cambio por el artículo ${oldItemNumber || 'SA'}`
     }).catch((e) => console.log('Error on registry entry', { e }))
     //* 6 add registry entry to order
 
@@ -215,7 +215,9 @@ export const onChangeOrderItem = async ({
       type: 'comment',
       storeId,
       orderId,
-      content: `Se cambio el artículo ${oldItemNumber} por el artículo ${newItemNumber}`
+      content: `Se cambio el artículo ${
+        oldItemNumber || 'SA'
+      } por el artículo ${newItemNumber}`
     })
   } catch (e) {
     console.log('Error on changing item', { e })
