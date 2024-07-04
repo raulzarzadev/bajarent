@@ -20,11 +20,16 @@ const ItemDetails = ({
     <View>
       <DocMetadata item={item} />
 
-      <Text style={gStyles.h2}>Numero: {item.number}</Text>
+      <Text style={[gStyles.h2, { marginTop: 8 }]}>{item?.categoryName}</Text>
+      <Text style={gStyles.h3}>{item.number}</Text>
+      <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+        {item.brand || 'sin marca'} - {item.serial || 'si serie'}
+      </Text>
 
       <Text style={[gStyles.tCenter, { marginVertical: 6 }]}>
-        <Text style={gStyles.h3}>{asCapitalize(dictionary(item.status))}</Text>
+        <Text style={gStyles.h1}>{asCapitalize(dictionary(item.status))}</Text>
       </Text>
+
       <View style={{ marginBottom: 8 }}>
         <ItemActions
           item={item}
@@ -35,16 +40,6 @@ const ItemDetails = ({
         />
       </View>
 
-      <Text>
-        Categoria:
-        {item.categoryName}
-      </Text>
-      <Text>No.de serie: {item.serial}</Text>
-      <Text>Marca: {item.brand}</Text>
-      <Text>
-        Area asignada:
-        {item.assignedSectionName}
-      </Text>
       {item?.needFix && (
         <View style={{ marginVertical: 12 }}>
           <ItemFixDetails itemId={item?.id} />
