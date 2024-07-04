@@ -74,7 +74,6 @@ const OrderStatus = ({
     if (isToday(asDate(scheduledAt))) {
       return `📅 Hoy`
     }
-    g
     if (isTomorrow(asDate(scheduledAt))) {
       return `📅 Mañana`
     }
