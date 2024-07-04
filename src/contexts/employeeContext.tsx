@@ -74,7 +74,7 @@ export const EmployeeContextProvider = ({ children }) => {
     if (employee) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
-        userSections: canManageItems ? 'all' : employee.sectionsAssigned || [],
+        userSections: employee?.sectionsAssigned || [],
         cb: (items) => {
           setItems(formatItems(items, categories, storeSections))
         }
