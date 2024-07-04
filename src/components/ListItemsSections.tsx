@@ -6,20 +6,21 @@ import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
 import { RowSectionItemsE } from './ListAssignedItems'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import InputRadios from './InputRadios'
 import useMyNav from '../hooks/useMyNav'
 import { formatItems, useEmployee } from '../contexts/employeeContext'
-
-const ListItemsSections = () => {
+export type ListItemsSectionsProps = {
+  onPressItem?: (itemId: string) => void
+  itemSelected?: string
+}
+const ListItemsSections = ({
+  itemSelected,
+  onPressItem
+}: ListItemsSectionsProps) => {
   const { storeId, storeSections, categories } = useStore()
-  const { items } = useEmployee()
   const { toItems } = useMyNav()
-  const [getItems, setGetItems] = React.useState<'all' | 'pickedUp'>('pickedUp')
   const [groupedItems, setGroupedItems] = React.useState<
     Record<string, ItemType[]>
   >({})
-
-  //const formattedItems = formatItems(items, categories, storeSections)
 
   useEffect(() => {
     ServiceStoreItems.listenAvailableBySections({
@@ -36,6 +37,7 @@ const ListItemsSections = () => {
   const sections = Object.entries(groupedItems)
   return (
     <View>
+      <Text style={[gStyles.helper, gStyles.tCenter]}>Todos los artículos</Text>
       {sections.map(([key, items]) => {
         if (items.length === 0) return null
         return (
@@ -46,8 +48,13 @@ const ListItemsSections = () => {
             </Text>
             <RowSectionItemsE
               items={items}
+              itemSelected={itemSelected}
               onPressItem={(id) => {
-                toItems({ id })
+                if (onPressItem) {
+                  onPressItem?.(id)
+                } else {
+                  toItems({ id })
+                }
               }}
             />
           </View>
@@ -70,7 +77,7 @@ const groupSectionItems = (items: any) => {
   return groupedItems
 }
 
-export const ListItemsSectionsE = (props) => (
+export const ListItemsSectionsE = (props: ListItemsSectionsProps) => (
   <ErrorBoundary componentName="ListItemsSections">
     <ListItemsSections {...props} />
   </ErrorBoundary>

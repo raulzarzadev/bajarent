@@ -5,12 +5,15 @@ import { ListAssignedItemsE } from './ListAssignedItems'
 import { useStore } from '../contexts/storeContext'
 import { onChangeOrderItem } from '../firebase/actions/item-actions'
 import TextInfo from './TextInfo'
+import { ListItemsSectionsE } from './ListItemsSections'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ModalChangeItem = ({ itemId, orderId }) => {
   const { storeId } = useStore()
+  const { permissions } = useEmployee()
+  const viewAllItems = permissions.isAdmin || permissions.isOwner
   const [itemSelected, setItemSelected] = useState(undefined)
   const handleChangeItem = async () => {
-    //  console.log('Changing item', { itemId, newItemId: itemSelected, orderId })
     onChangeOrderItem({ itemId, orderId, newItemId: itemSelected, storeId })
   }
 
@@ -34,13 +37,21 @@ const ModalChangeItem = ({ itemId, orderId }) => {
             text="Sí el artículo que recojes NO existe, NO se creara uno nuevo. Asegurate de crearlo antes de cambiarlo sí es necesario"
             defaultVisible
           />
-          <ListAssignedItemsE
-            onPressItem={(e) => {
-              console.log({ e })
-              setItemSelected(e)
-            }}
-            itemSelected={itemSelected}
-          />
+          {viewAllItems ? (
+            <ListItemsSectionsE
+              onPressItem={(e) => {
+                setItemSelected(e)
+              }}
+              itemSelected={itemSelected}
+            />
+          ) : (
+            <ListAssignedItemsE
+              onPressItem={(e) => {
+                setItemSelected(e)
+              }}
+              itemSelected={itemSelected}
+            />
+          )}
         </View>
       </ButtonConfirm>
     </View>

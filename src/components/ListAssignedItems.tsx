@@ -27,7 +27,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
     <View>
       {formattedItems.length > 0 && (
         <Text style={[gStyles.helper, gStyles.tCenter]}>
-          Items disponibles {availableItems.length || 0}
+          Mis artículos disponibles {availableItems.length || 0}
         </Text>
       )}
       <RowSectionItems
