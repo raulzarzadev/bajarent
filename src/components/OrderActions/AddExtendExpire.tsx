@@ -72,7 +72,7 @@ const AddExtendExpire = ({
         label="Extender"
         onPress={modal.toggleOpen}
         size="small"
-        icon="calendar"
+        icon="calendarTime"
       />
       <StyledModal {...modal}>
         <View style={{ flexDirection: 'column' }}>

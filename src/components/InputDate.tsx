@@ -2,22 +2,27 @@ import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import Button from './Button'
+import Button, { ButtonProps } from './Button'
 import asDate, { dateFormat } from '../libs/utils-date'
+import { IconName } from './Icon'
 
 type PickerTime = { hours: number; minutes: number }
 export default function InputDate({
-  label = 'Fecha',
+  label = '',
   value = new Date(),
   setValue,
-  format = 'EEEE dd / MMM / yy',
-  withTime = false
+  format = 'EE dd / MMM / yy',
+  withTime = false,
+  icon = 'calendar',
+  size
 }: {
-  label: string
+  label?: string
+  icon?: IconName
   value: Date
   setValue: (value: Date) => void
   format?: string
   withTime?: boolean
+  size?: ButtonProps['size']
 }) {
   const nowDate = new Date()
 
@@ -61,7 +66,12 @@ export default function InputDate({
   const minutes = date?.getMinutes()
   return (
     <>
-      <Button variant="outline" onPress={() => setOpen(true)}>
+      <Button
+        variant="outline"
+        onPress={() => setOpen(true)}
+        icon={icon}
+        size={size}
+      >
         {`${label} ${!!date ? dateFormat(date, format) : ''}`}
       </Button>
       {withTime && (
