@@ -245,7 +245,7 @@ export const CommentRow = ({
               color={theme.primary}
               titleColor={theme.white}
               onPress={() => {
-                toOrders({ id: order?.id })
+                toOrders({ id: comment?.orderId })
               }}
             ></Chip>
           ) : (
@@ -255,7 +255,7 @@ export const CommentRow = ({
               color={theme.primary}
               titleColor={theme.white}
               onPress={() => {
-                toOrders({ id: order?.id })
+                toOrders({ id: comment?.orderId })
               }}
             ></Chip>
           )}
