@@ -35,7 +35,8 @@ const getOrderFields = (
   const extraOps = [
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
     'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
-    'note' //*<- kind of external reference
+    'note', //*<- kind of external reference
+    'scheduledAt'
   ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
 
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
@@ -52,12 +53,13 @@ const getOrderFields = (
     ?.filter((field) => !extraOps.includes(field))
 
   addedFields = extraFieldsAllowed
-  return [
+  const res = [
     ...extraOps,
     ...mandatoryFieldsStart,
     ...addedFields,
     ...mandatoryFieldsEnd
   ]
+  return res
 }
 const LIST_OF_FORM_ORDER_FIELDS = [
   'type',

@@ -126,7 +126,7 @@ const labels = {
   type: 'Tipo',
   fullName: 'Nombre',
   phone: 'Teléfono',
-  scheduledAt: 'Agenda',
+  scheduledAt: 'Fecha',
   address: 'Dirección',
   location: 'Ubicación',
   neighborhood: 'Colonia',

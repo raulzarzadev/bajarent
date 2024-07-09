@@ -50,7 +50,6 @@ const ListStoreItems = ({
     if (storeId) {
       if (Array.isArray(listItems) && listItems.length > 0) {
         ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
-          console.log({ res })
           setItems(res)
         })
         return
