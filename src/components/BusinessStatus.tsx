@@ -14,6 +14,8 @@ import SpanOrder from './SpanOrder'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import ItemType from '../types/ItemType'
 import { useNavigation } from '@react-navigation/native'
+import { formatItems } from '../contexts/employeeContext'
+import useMyNav from '../hooks/useMyNav'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -254,8 +256,9 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  const { storeId } = useStore()
-  const [itemsData, setItemsData] = React.useState<ItemType[]>([])
+  const { storeId, categories, storeSections } = useStore()
+  const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>([])
+  const { toItems } = useMyNav()
   useEffect(() => {
     const fetchItems = async () => {
       const itemsData = await Promise.all(
@@ -263,25 +266,35 @@ export const CellItems = ({
           return await ServiceStoreItems.get({ itemId, storeId })
         })
       )
-      setItemsData(itemsData)
+      setItemsData(formatItems(itemsData, categories, storeSections))
     }
     fetchItems()
   }, [])
   return (
     <View>
-      <Text style={gStyles.h3}>
-        {label}
-        <Text style={gStyles.helper}>{`(${items?.length || 0})`}</Text>
-      </Text>
+      <Pressable
+        onPress={() => {
+          toItems({ ids: items })
+        }}
+      >
+        <Text style={gStyles.h3}>
+          {label}
+          <Text style={gStyles.helper}>{`(${items?.length || 0})`}</Text>
+        </Text>
+      </Pressable>
       <View>
         {itemsData.map((i, index) => (
-          <View
+          <Pressable
             key={i?.id || index}
-            style={{ flexDirection: 'row', justifyContent: 'center' }}
+            onPress={() => {
+              toItems({ id: i?.id })
+            }}
           >
-            <Text> {i?.categoryName} </Text>
-            <Text> {i?.number} </Text>
-          </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text>{i?.categoryName} </Text>
+              <Text>{i?.number} </Text>
+            </View>
+          </Pressable>
         ))}
       </View>
     </View>

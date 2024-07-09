@@ -4,7 +4,7 @@ import { ListE } from './List'
 import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
 import ListRow from './ListRow'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
@@ -24,6 +24,9 @@ const ListStoreItems = ({
   getAllAvailable?: boolean
 }) => {
   const { navigate } = useNavigation()
+  const { params } = useRoute()
+  const listItems = params?.ids
+
   const { toItems } = useMyNav()
   const { storeId, categories, storeSections } = useStore()
   const [loading, setLoading] = useState(false)
@@ -42,13 +45,21 @@ const ListStoreItems = ({
     setLoading(false)
     return res
   }
-  const [items, setItems] = useState<ItemType[]>([])
+  const [items, setItems] = useState<Partial<ItemType>[]>([])
   useEffect(() => {
     if (storeId) {
+      if (Array.isArray(listItems) && listItems.length > 0) {
+        ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
+          console.log({ res })
+          setItems(res)
+        })
+        return
+      }
       if (allItems) {
         ServiceStoreItems.getAll({ storeId }).then((res) => {
           setItems(res)
         })
+        return
       }
 
       if (allItemsSections?.length) {
@@ -58,6 +69,7 @@ const ListStoreItems = ({
         }).then((res) => {
           setItems(res)
         })
+        return
       }
       if (availableItemsSections?.length) {
         ServiceStoreItems.getAvailable({
@@ -66,6 +78,7 @@ const ListStoreItems = ({
         }).then((res) => {
           setItems(res)
         })
+        return
       }
       if (getAllAvailable) {
         ServiceStoreItems.getAvailable({ storeId }).then((res) => {

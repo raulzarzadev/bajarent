@@ -181,6 +181,19 @@ export class ServiceStoreItemsClass {
     })
   }
 
+  async getList({
+    storeId,
+    ids
+  }: {
+    storeId: string
+    ids: string[]
+  }): Promise<Type[]> {
+    const ref = collection(db, 'stores', storeId, SUB_COLLECTION)
+    return await ServiceStores.getRefItems({
+      collectionRef: ref,
+      filters: [where('id', 'in', ids)]
+    })
+  }
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

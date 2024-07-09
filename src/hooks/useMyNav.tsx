@@ -5,12 +5,23 @@ const useMyNav = () => {
   const toItems = ({
     id,
     screenNew,
-    screenEdit
+    screenEdit,
+    ids
   }: {
     id?: string
     screenNew?: boolean
     screenEdit?: boolean
+    ids?: string[]
   }) => {
+    if (Array.isArray(ids) && ids.length > 0) {
+      //@ts-ignore
+      navigate('StackItems', {
+        screen: 'ScreenItems',
+        params: {
+          ids
+        }
+      })
+    }
     if (screenEdit && id) {
       //@ts-ignore
       navigate('StackItems', {
