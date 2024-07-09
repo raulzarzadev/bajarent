@@ -203,7 +203,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                     sections={balance.sections}
                   />
                   <CellOrders
-                    label={'Resueltosg'}
+                    label={'Resueltos'}
                     field="solvedToday"
                     sectionSelected={balanceRow.section}
                     sections={balance.sections}
