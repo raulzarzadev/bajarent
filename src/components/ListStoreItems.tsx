@@ -10,6 +10,7 @@ import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
+import { formatItems } from '../contexts/employeeContext'
 
 const ListStoreItems = ({
   allItemsSections,
@@ -24,7 +25,7 @@ const ListStoreItems = ({
 }) => {
   const { navigate } = useNavigation()
   const { toItems } = useMyNav()
-  const { storeId } = useStore()
+  const { storeId, categories, storeSections } = useStore()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
@@ -115,7 +116,11 @@ const ListStoreItems = ({
           //   visible: true
           // }
         ]}
-        data={items?.map((item) => ({ ...item, id: item.id }))}
+        data={formatItems(
+          items?.map((item) => ({ ...item, id: item.id })),
+          categories,
+          storeSections
+        )}
         filters={[
           { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },
