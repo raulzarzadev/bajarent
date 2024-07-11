@@ -25,6 +25,8 @@ const ListStoreItems = ({
 }) => {
   const { navigate } = useNavigation()
   const { params } = useRoute()
+
+  //@ts-ignore
   const listItems = params?.ids
 
   const { toItems } = useMyNav()

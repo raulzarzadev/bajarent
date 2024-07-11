@@ -68,7 +68,6 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       })
 
       const itemsBySections = await ServiceStoreItems.getAvailable({ storeId })
-      console.log({ itemsBySections })
       const groupedBySections = groupOrdersBySection({
         orders,
         reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])],
@@ -81,7 +80,6 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       }
 
       return new Promise(async (resolve) => {
-        console.log({ newBalance })
         await this.create({ ...newBalance })
           .then((res) => {
             this.get(res.res.id).then((res) => {

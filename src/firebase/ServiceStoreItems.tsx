@@ -1,4 +1,4 @@
-import { collection, where } from 'firebase/firestore'
+import { collection, documentId, where } from 'firebase/firestore'
 import { ServiceStores } from './ServiceStore'
 import ItemType from '../types/ItemType'
 import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
@@ -191,7 +191,7 @@ export class ServiceStoreItemsClass {
     const ref = collection(db, 'stores', storeId, SUB_COLLECTION)
     return await ServiceStores.getRefItems({
       collectionRef: ref,
-      filters: [where('id', 'in', ids)]
+      filters: [where(documentId(), 'in', ids)]
     })
   }
   // Agrega tus métodos aquí

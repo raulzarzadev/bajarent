@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import PaymentType from '../types/PaymentType'
 import { payments_amount } from '../libs/payments'
-import { gSpace, gStyles } from '../styles'
+import { gStyles } from '../styles'
 import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
@@ -17,7 +17,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   )
   const { total, canceled, card, cash, transfers, transfersNotVerified } =
     payments_amount(payments)
-  console.log({ transfersNotVerified })
+
   return (
     <View>
       <View
