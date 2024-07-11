@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect } from 'react'
 import List, { LoadingList } from './List'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
-import { CommentRow, CommentType } from './ListComments'
+import { CommentType } from './ListComments'
 import PaymentType from '../types/PaymentType'
 import CurrencyAmount from './CurrencyAmount'
 import { useStore } from '../contexts/storeContext'
@@ -15,6 +15,7 @@ import { Text, View } from 'react-native'
 import DateCell from './DateCell'
 import HeaderDate from './HeaderDate'
 import useDebounce from '../hooks/useDebunce'
+import { CommentRow } from './RowComment'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<FormattedComment[]>([])

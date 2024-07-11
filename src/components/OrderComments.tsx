@@ -8,11 +8,12 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import InputCheckbox from './InputCheckbox'
 import { gSpace } from '../styles'
-import { CommentRow, CommentType } from './ListComments'
+import { CommentType } from './ListComments'
 import { FormattedComment } from '../types/CommentType'
 import formatComments from '../libs/formatComments'
 import asDate from '../libs/utils-date'
 import InputRadios from './InputRadios'
+import { CommentRow } from './RowComment'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { orders, staff } = useStore()
