@@ -1,10 +1,6 @@
 import PaymentType, { payment_methods } from '../types/PaymentType'
 
-export const payments_amount = (
-  payments: Partial<PaymentType>[],
-  ops?: { avoidTransfersNotVerified?: boolean }
-) => {
-  const avoidTransfersNotVerified = ops?.avoidTransfersNotVerified
+export const payments_amount = (payments: Partial<PaymentType>[]) => {
   return payments?.reduce(
     (acc, p) => {
       const amount = parseFloat(`${p?.amount || 0}`)
@@ -12,11 +8,7 @@ export const payments_amount = (
         acc.canceled += amount
         return acc
       }
-      if (
-        avoidTransfersNotVerified &&
-        !p.verified &&
-        p.method === payment_methods.TRANSFER
-      ) {
+      if (!p.verified && p.method === payment_methods.TRANSFER) {
         acc.transfersNotVerified += amount
         acc.total += amount
         acc.transfers += amount

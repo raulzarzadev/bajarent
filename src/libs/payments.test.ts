@@ -61,9 +61,7 @@ describe('payments_amount', () => {
       transfersNotVerified: 30
     }
 
-    const result = payments_amount(payments, {
-      avoidTransfersNotVerified: true
-    })
+    const result = payments_amount(payments)
 
     expect(result).toEqual(expected)
   })

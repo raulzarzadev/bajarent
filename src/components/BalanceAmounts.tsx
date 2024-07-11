@@ -12,7 +12,12 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   const cardPayments = payments?.filter((p) => p.method === 'card')
   const transferPayments = payments?.filter((p) => p.method === 'transfer')
   const canceledPayments = payments?.filter((p) => p.canceled)
-  const { total, canceled, card, cash, transfers } = payments_amount(payments)
+  const notVerifiedTransfers = payments?.filter(
+    (p) => p.method === 'transfer' && !p.verified
+  )
+  const { total, canceled, card, cash, transfers, transfersNotVerified } =
+    payments_amount(payments)
+  console.log({ transfersNotVerified })
   return (
     <View>
       <View
@@ -23,27 +28,33 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
         }}
       >
         <View style={styles.totals}>
-          <View style={styles.row}>
-            <LinkPayments
-              paymentsIds={cashPayments.map(({ id }) => id)}
-              amount={cash}
-              title={'Efectivo'}
-            />
-          </View>
-          <View style={styles.row}>
-            <LinkPayments
-              paymentsIds={transferPayments.map(({ id }) => id)}
-              amount={transfers}
-              title={'Transferencias'}
-            />
-          </View>
-          <View style={styles.row}>
-            <LinkPayments
-              paymentsIds={cardPayments.map(({ id }) => id)}
-              amount={card}
-              title={'Tarjetas'}
-            />
-          </View>
+          {!!cash && (
+            <View style={styles.row}>
+              <LinkPayments
+                paymentsIds={cashPayments.map(({ id }) => id)}
+                amount={cash}
+                title={'Efectivo'}
+              />
+            </View>
+          )}
+          {!!transfers && (
+            <View style={styles.row}>
+              <LinkPayments
+                paymentsIds={transferPayments.map(({ id }) => id)}
+                amount={transfers}
+                title={'Transferencias'}
+              />
+            </View>
+          )}
+          {!!card && (
+            <View style={styles.row}>
+              <LinkPayments
+                paymentsIds={cardPayments.map(({ id }) => id)}
+                amount={card}
+                title={'Tarjetas'}
+              />
+            </View>
+          )}
 
           <View
             style={{
@@ -60,6 +71,15 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
             />
           </View>
         </View>
+        {!!transfersNotVerified && (
+          <View style={styles.row}>
+            <LinkPayments
+              paymentsIds={notVerifiedTransfers.map(({ id }) => id)}
+              amount={transfersNotVerified}
+              title={'No verificados'}
+            />
+          </View>
+        )}
         {!!canceledPayments.length && (
           <View style={styles.row}>
             <LinkPayments
