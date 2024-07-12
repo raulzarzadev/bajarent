@@ -6,6 +6,7 @@ import { payments_amount } from './payments'
 import { ServiceComments } from '../firebase/ServiceComments'
 import asDate from './utils-date'
 import { ServicePayments } from '../firebase/ServicePayments'
+import PaymentType from '../types/PaymentType'
 
 export const balanceTotals = (balance: BalanceType) => {
   return payments_amount(balance.payments)
@@ -232,24 +233,37 @@ export const getBalancePayments = async ({
 
   // //* 1.- Filter payments by date from server
   try {
-    const paymentsByDate = await ServicePayments.findMany([
-      where('storeId', '==', storeId),
-      where('createdAt', '>=', fromDate),
-      where('createdAt', '<=', toDate)
-    ])
-    //* 2.- Find orders from payments, remove duplicates
+    const paymentsByDate: PaymentType[] =
+      (await ServicePayments.findMany([
+        where('storeId', '==', storeId),
+        where('createdAt', '>=', fromDate),
+        where('createdAt', '<=', toDate)
+      ]).catch((e) => console.error({ e }))) || []
+    //* 2.- Find orders from payments, remove duplicates , remove nullish
     const paymentOrders = Array.from(
       new Set(paymentsByDate.map((p) => p.orderId))
-    )
+    ).filter((o) => !!o)
+
+    const notOrderPayments = paymentsByDate.filter((p) => !p.orderId)
 
     let sectionOrders = []
+    let sectionPayments = []
+
     if (type === 'partial') {
-      sectionOrders = await ServiceOrders.getList(paymentOrders, {
-        sections: [section]
+      notOrderPayments.forEach((p) => {
+        if (p.sectionId === section) sectionPayments.push(p)
       })
+      sectionOrders =
+        (await ServiceOrders.getList(paymentOrders, {
+          sections: [section]
+        }).catch((e) => console.error({ e }))) || []
     }
     if (type === 'full') {
-      sectionOrders = await ServiceOrders.getList(paymentOrders)
+      sectionOrders =
+        (await ServiceOrders.getList(paymentOrders).catch((e) =>
+          console.error({ e })
+        )) || []
+      sectionPayments = notOrderPayments
     }
     //* 3.- Set orders with payments
     const ordersWithPayments = sectionOrders.map((o) => {
@@ -259,8 +273,8 @@ export const getBalancePayments = async ({
 
     //* 3.- Need paid orders and payments in dates
     const paidOrders = ordersWithPayments
-    const payments = ordersWithPayments.map((o) => o.payments).flat()
-    return { paidOrders, payments }
+    const ordersPayments = ordersWithPayments.map((o) => o.payments).flat()
+    return { paidOrders, payments: [...ordersPayments, ...sectionPayments] }
   } catch (e) {
     console.error(e)
   }

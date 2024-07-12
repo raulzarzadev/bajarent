@@ -28,6 +28,7 @@ export type PaymentBase = {
   description?: string
   employeeId?: string
   type?: RetirementType['type']
+  sectionId?: string
 }
 
 type PaymentType = PaymentBase & BaseType
