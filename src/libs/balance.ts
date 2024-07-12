@@ -233,7 +233,7 @@ export const getBalancePayments = async ({
 
   // //* 1.- Filter payments by date from server
   try {
-g    const paymentsByDate: PaymentType[] =
+    const paymentsByDate: PaymentType[] =
       (await ServicePayments.findMany([
         where('storeId', '==', storeId),
         where('createdAt', '>=', fromDate),

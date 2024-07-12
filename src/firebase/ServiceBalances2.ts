@@ -57,10 +57,17 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
     )
   }
 
-  createV2 = async (storeId: string): Promise<Partial<BalanceType2>> => {
+  createV2 = async (
+    storeId: string,
+    ops?: { fromDate?: Date; toDate?: Date }
+  ): Promise<Partial<BalanceType2>> => {
+    const { fromDate, toDate } = ops || {}
     try {
       const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))
       const TODAY_NIGHT = new Date(new Date().setHours(23, 59, 59, 999))
+
+      const FROM_DATE = fromDate || TODAY_MORNING
+      const TO_DATE = toDate || TODAY_NIGHT
 
       const orders = await ServiceOrders.findMany([
         where('storeId', '==', storeId),
@@ -72,14 +79,14 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       const reportsSolvedToday = await ServiceComments.findMany([
         where('type', '==', 'report'),
         where('solved', '==', true),
-        where('solvedAt', '>=', TODAY_MORNING),
-        where('solvedAt', '<=', TODAY_NIGHT)
+        where('solvedAt', '>=', FROM_DATE),
+        where('solvedAt', '<=', TO_DATE)
       ])
 
       const { payments } = await getBalancePayments({
         storeId,
-        fromDate: TODAY_MORNING,
-        toDate: TODAY_NIGHT,
+        fromDate: FROM_DATE,
+        toDate: TO_DATE,
         section: [],
         type: 'full'
       })
