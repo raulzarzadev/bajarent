@@ -8,7 +8,6 @@ import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
 export type BalanceAmountsProps = { payments: PaymentType[] }
 const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
-  console.log({ payments })
   const cashPayments = payments?.filter((p) => p.method === 'cash')
   const cardPayments = payments?.filter((p) => p.method === 'card')
   const transferPayments = payments?.filter((p) => p.method === 'transfer')

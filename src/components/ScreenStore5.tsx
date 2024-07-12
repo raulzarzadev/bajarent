@@ -217,11 +217,13 @@ const TabCashbox = () => {
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button
-          label="Cortes"
+          label="Corte"
           icon="cashbox"
           onPress={() => {
             //@ts-ignore
-            navigate('StackBalances')
+            navigate('StackBalances', {
+              screen: 'ScreenBalancesNew'
+            })
           }}
           variant="ghost"
         />

@@ -27,7 +27,6 @@ const FormBalanceE = ({
   const [submitting, setSubmitting] = React.useState(false)
 
   const handleSubmit = async (values: Partial<BalanceType>) => {
-    console.log({ values })
     setSubmitting(true)
 
     return await onSubmit(values)
