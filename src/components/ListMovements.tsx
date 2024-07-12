@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from 'react'
-import List, { LoadingList } from './List'
+import { LoadingList } from './List'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
 import { CommentType } from './ListComments'
@@ -11,10 +11,8 @@ import asDate from '../libs/utils-date'
 import formatComments from '../libs/formatComments'
 import { FormattedComment } from '../types/CommentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
-import { Text, View } from 'react-native'
-import DateCell from './DateCell'
+import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
-import useDebounce from '../hooks/useDebunce'
 import { CommentRow } from './RowComment'
 
 const ListMovements = () => {
