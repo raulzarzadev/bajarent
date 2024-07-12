@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Chip from './Chip'
 import ButtonConfirm from './ButtonConfirm'
 import theme from '../theme'
@@ -72,42 +72,57 @@ export const CommentRow = ({
   if (!comment) return null
 
   return (
-    <View style={{ width: '100%', marginHorizontal: 'auto', maxWidth: 400 }}>
+    <View
+      style={{
+        width: '100%',
+        marginHorizontal: 'auto',
+        // maxWidth: 500,
+        marginBottom: 4
+      }}
+    >
       <View style={{ justifyContent: 'space-between' }}>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            flexWrap: 'wrap'
+          }}
+        >
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
-          <Text style={[gStyles.helper, { marginRight: 4 }]}>
-            {fromNow(comment?.createdAt)}
-          </Text>
-          {comment?.type === 'report' && (
-            <Chip
-              disabled={disabled}
-              title={dictionary(comment?.type)}
-              color={theme.error}
-              titleColor={theme.white}
-              size="xs"
-            />
-          )}
-          {comment?.type === 'important' && (
-            <Chip
-              disabled={disabled}
-              title={dictionary(comment?.type)}
-              color={theme.warning}
-              titleColor={theme.black}
-              size="xs"
-            />
-          )}
-
+          <View style={{ width: 55 }}>
+            <Text style={[gStyles.helper]}>{fromNow(comment?.createdAt)}</Text>
+          </View>
           <View
             style={{
-              marginHorizontal: 4,
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'flex-end'
             }}
           >
-            <View style={{ marginHorizontal: 8 }}>
+            {comment?.type === 'report' && (
+              <View style={styles.badge}>
+                <Chip
+                  disabled={disabled}
+                  title={dictionary(comment?.type)}
+                  color={theme.error}
+                  titleColor={theme.white}
+                  size="xs"
+                />
+              </View>
+            )}
+            {comment?.type === 'important' && (
+              <View style={styles.badge}>
+                <Chip
+                  disabled={disabled}
+                  title={dictionary(comment?.type)}
+                  color={theme.warning}
+                  titleColor={theme.black}
+                  size="xs"
+                />
+              </View>
+            )}
+            <View style={styles.badge}>
               <Button
                 disabled={disabled}
                 icon="done"
@@ -120,46 +135,49 @@ export const CommentRow = ({
                 size="small"
               />
             </View>
+            {!!order ? (
+              <View style={styles.badge}>
+                <Chip
+                  title={`${order?.folio}  ${order?.fullName}`}
+                  size="sm"
+                  color={theme.primary}
+                  titleColor={theme.white}
+                  onPress={() => {
+                    toOrders({ id: comment?.orderId })
+                  }}
+                ></Chip>
+              </View>
+            ) : (
+              <View style={styles.badge}>
+                <Chip
+                  title={`ver orden`}
+                  size="sm"
+                  color={theme.primary}
+                  titleColor={theme.white}
+                  onPress={() => {
+                    toOrders({ id: comment?.orderId })
+                  }}
+                ></Chip>
+              </View>
+            )}
+            {!!(isAdmin || isOwner) && (
+              <View style={styles.badge}>
+                <ButtonConfirm
+                  openColor="error"
+                  openSize="xs"
+                  justIcon
+                  icon="delete"
+                  confirmColor="error"
+                  openVariant="ghost"
+                  text="¿Estás seguro de eliminar este comentario?"
+                  handleConfirm={async () => {
+                    await ServiceComments.delete(comment?.id).then(() => {})
+                    fetchComment()
+                  }}
+                />
+              </View>
+            )}
           </View>
-          {!!order ? (
-            <Chip
-              title={`${order?.folio}  ${order?.fullName}`}
-              size="sm"
-              color={theme.primary}
-              titleColor={theme.white}
-              onPress={() => {
-                toOrders({ id: comment?.orderId })
-              }}
-            ></Chip>
-          ) : (
-            <Chip
-              title={`ver orden`}
-              size="sm"
-              color={theme.primary}
-              titleColor={theme.white}
-              onPress={() => {
-                toOrders({ id: comment?.orderId })
-              }}
-            ></Chip>
-          )}
-
-          {isAdmin || isOwner ? (
-            <View style={{ marginHorizontal: 8 }}>
-              <ButtonConfirm
-                openColor="error"
-                openSize="xs"
-                justIcon
-                icon="delete"
-                confirmColor="error"
-                openVariant="ghost"
-                text="¿Estás seguro de eliminar este comentario?"
-                handleConfirm={async () => {
-                  await ServiceComments.delete(comment?.id).then(() => {})
-                  fetchComment()
-                }}
-              />
-            </View>
-          ) : null}
         </View>
       </View>
       <Text
@@ -176,3 +194,9 @@ export const CommentRow = ({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    marginRight: 6
+  }
+})
