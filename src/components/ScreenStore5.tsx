@@ -235,8 +235,19 @@ const TabCashbox = () => {
         debounce={400}
         label="Cuentas"
         onChangeDate={handleGetLastBalanceInDate}
-        documentDate={balance?.createdAt}
+        // documentDate={balance?.createdAt}
       />
+      {balance?.createdAt && (
+        <View style={{ marginVertical: 8 }}>
+          <Text style={[gStyles.helper, gStyles.tCenter]}>
+            Última actalización:
+          </Text>
+          <Text style={[gStyles.tCenter]}>
+            {dateFormat(asDate(balance.createdAt), 'HH:mm')}{' '}
+            {fromNow(balance?.createdAt)}
+          </Text>
+        </View>
+      )}
 
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
