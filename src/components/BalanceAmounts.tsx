@@ -150,7 +150,7 @@ const LinkPayments = ({
           <Text
             style={[
               gStyles.helper,
-              { width: 20, textAlign: 'center', textAlignVertical: 'bottom' }
+              { width: 30, textAlign: 'center', textAlignVertical: 'bottom' }
             ]}
           >{`(${paymentsIds?.length})`}</Text>
         </View>
