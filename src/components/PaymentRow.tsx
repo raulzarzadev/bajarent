@@ -7,7 +7,7 @@ import { gStyles } from '../styles'
 import { colors } from '../theme'
 import PaymentVerify from './PaymentVerify'
 import PaymentType from '../types/PaymentType'
-import SpanUser from './SpanUser'
+import SpanStoreSection from './SpanStoreSection'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 const RowPayment = ({
   item,
@@ -31,7 +31,11 @@ const RowPayment = ({
         {isRetirement && (
           <View>
             <Text style={gStyles.helper}>{dictionary(item?.type)}</Text>
-            <SpanUser userId={item?.employeeId} />
+            {item?.sectionId && (
+              <View>
+                <SpanStoreSection sectionId={item?.sectionId} />
+              </View>
+            )}
             <Text style={gStyles.helper}>{item?.description}</Text>
           </View>
         )}

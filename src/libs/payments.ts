@@ -8,6 +8,12 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
         acc.canceled += amount
         return acc
       }
+      if (p.isRetirement) {
+        acc.total -= amount
+        acc.cash -= amount
+        acc.retirements += amount
+        return acc
+      }
       if (!p.verified && p.method === payment_methods.TRANSFER) {
         acc.transfersNotVerified += amount
         acc.total += amount
@@ -27,7 +33,8 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
       card: 0,
       transfers: 0,
       canceled: 0,
-      transfersNotVerified: 0
+      transfersNotVerified: 0,
+      retirements: 0
     }
   )
 }

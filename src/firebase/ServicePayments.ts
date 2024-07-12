@@ -81,7 +81,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       type: retirement.type,
       amount: parseFloat(`${retirement.amount || 0}`),
       description: retirement.description,
-      employeeId: retirement.employeeId,
+      sectionId: retirement.sectionId,
       method: 'cash',
       isRetirement: true,
       storeId: retirement.storeId

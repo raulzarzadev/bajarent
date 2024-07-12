@@ -12,7 +12,7 @@ export type RetirementType = {
   type: 'bonus' | 'expense'
   amount: number
   description: string
-  employeeId: string
+  sectionId: string
   storeId: string
 }
 const FormRetirement = ({
@@ -20,12 +20,12 @@ const FormRetirement = ({
 }: {
   onSubmit: (retirement: RetirementType) => Promise<any> | void
 }) => {
-  const { staff, storeId } = useStore()
+  const { storeSections, storeId } = useStore()
   const initialValues: RetirementType = {
     type: 'bonus',
     amount: 0,
     description: '',
-    employeeId: '',
+    sectionId: '',
     storeId
   }
   const [loading, setLoading] = React.useState(false)
@@ -74,12 +74,12 @@ const FormRetirement = ({
 
             <View style={styles.input}>
               <FormikInputSelect
-                name="employeeId"
-                label="Selecccionar empleado"
-                placeholder="Seleccionar empleado"
-                options={staff.map((staff) => ({
-                  label: staff.name,
-                  value: staff.id
+                name="sectionId"
+                label="Selecccionar area"
+                placeholder="Seleccionar area"
+                options={storeSections.map((section) => ({
+                  label: section.name,
+                  value: section.id
                 }))}
               />
             </View>
