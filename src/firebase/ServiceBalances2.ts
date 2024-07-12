@@ -59,7 +59,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 
   createV2 = async (
     storeId: string,
-    ops?: { fromDate?: Date; toDate?: Date }
+    ops?: { fromDate?: Date; toDate?: Date; notSave?: boolean }
   ): Promise<Partial<BalanceType2>> => {
     const { fromDate, toDate } = ops || {}
     try {
@@ -101,6 +101,10 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       const newBalance = {
         sections: groupedBySections,
         storeId
+      }
+
+      if (ops?.notSave) {
+        return newBalance
       }
 
       return new Promise(async (resolve) => {

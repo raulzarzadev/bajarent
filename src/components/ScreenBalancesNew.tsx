@@ -2,21 +2,23 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import FormBalance from './FormBalance'
 import { useStore } from '../contexts/storeContext'
-import { BalanceType } from '../types/BalanceType'
+import { BalanceType, BalanceType2 } from '../types/BalanceType'
 import BalanceInfo from './BalanceInfo'
 import Button from './Button'
-import { ServiceBalances } from '../firebase/ServiceBalances'
 import { calculateSectionBalance } from '../libs/balance'
 import { useAuth } from '../contexts/authContext'
 import { gStyles } from '../styles'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
+import { ServiceBalances } from '../firebase/ServiceBalances2'
+import BalanceAmounts, { BalanceAmountsE } from './BalanceAmounts'
+import BusinessStatus from './BusinessStatus'
 
 const ScreenBalancesNew = ({ navigation }) => {
   const { storeId, store, storeSections } = useStore()
   const { user } = useAuth()
-  const [balance, setBalance] = React.useState<BalanceType>()
+  const [balance, setBalance] = React.useState<Partial<BalanceType2>>()
 
   const getSectionPayments = async ({ section, fromDate, toDate, type }) => {
     /* ******************************************** 
@@ -61,48 +63,23 @@ const ScreenBalancesNew = ({ navigation }) => {
     return { paidOrders, payments }
   }
 
-  const handleCalculateBalance = async (values: BalanceType) => {
-    try {
-      const { payments, paidOrders } = await getSectionPayments({
-        section: values.section,
-        fromDate: values.fromDate,
-        toDate: values.toDate,
-        type: values.type
-      })
-      //const orders = await balanceOrders({ values, storeId })
-      const orders = await calculateSectionBalance({
-        storeId,
-        fromDate: values.fromDate,
-        toDate: values.toDate,
-        section: values.section,
-        type: values.type
-      }).catch((e) => console.error(e))
-
-      setBalance({
-        ...values,
-        payments,
-        ...orders,
-        paidOrders: paidOrders.map((o) => o.id)
-      })
-    } catch (error) {
-      console.error(error)
-    }
+  const handleCalculateBalance = async (values: {
+    toDate: Date
+    fromDate: Date
+  }) => {
+    ServiceBalances.createV2(storeId, {
+      fromDate: values.fromDate,
+      toDate: values.toDate,
+      notSave: true
+    }).then((res) => {
+      setBalance(res)
+    })
   }
 
-  const [saving, setSaving] = React.useState(false)
-
-  const handleSaveBalance = async () => {
-    setSaving(true)
-    balance.storeId = storeId
-    const res = await ServiceBalances.create(balance)
-    setSaving(false)
-    navigation.navigate('ScreenBalancesDetails', { id: res?.res?.id })
-  }
   const handleClear = () => {
     setBalance(undefined)
   }
   if (!storeId || !store || !user) return <Text>Cargando...</Text>
-
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -110,16 +87,16 @@ const ScreenBalancesNew = ({ navigation }) => {
           onSubmit={handleCalculateBalance}
           handleClear={handleClear}
         />
-
-        {!!balance && <BalanceInfo balance={balance} hideMetadata />}
-        {!!balance && (
-          <View style={{ maxWidth: 200, margin: 'auto', marginVertical: 8 }}>
-            <Button
-              disabled={saving}
-              label="Guardar"
-              onPress={handleSaveBalance}
-            ></Button>
-          </View>
+        {balance && (
+          <>
+            <BalanceAmountsE
+              payments={
+                balance?.sections.find((section) => section.section === 'all')
+                  .payments
+              }
+            />
+            <BusinessStatus balance={balance} />
+          </>
         )}
       </View>
     </ScrollView>

@@ -56,23 +56,6 @@ const FormBalanceE = ({
     >
       {({ handleSubmit, setValues, values }) => (
         <View style={gStyles.container}>
-          <Text style={[gStyles.h2, { marginBottom: 0 }]}>Tipo de balance</Text>
-          <TextInfo
-            type="info"
-            text=" Puedes escoger entre hacer un balance general o seleccionar una persona
-        del staff"
-          />
-
-          <View style={[styles.input]}>
-            <SelectStoreSection
-              value={values.type}
-              setValue={(value) => {
-                //FIXME: this is a hack to avoid the error
-                //@ts-ignore
-                setValues((prevValues) => ({ ...prevValues, ...value }))
-              }}
-            />
-          </View>
           <Text style={[gStyles.h2, { marginBottom: 0 }]}>Fechas</Text>
           <TextInfo
             type="info"
@@ -139,55 +122,6 @@ const FormBalanceE = ({
     </Formik>
   )
 }
-// type BalanceUser = {
-//   type: BalanceType['type']
-//   userId?: string
-//   section?: string
-// }
-
-// const SelectBalanceType2 = ({
-//   setBalanceType,
-//   balanceType
-// }: {
-//   setBalanceType: (balanceUser: BalanceUser) => void
-//   balanceType: BalanceUser
-// }) => {
-//   const { staff, storeSections } = useStore()
-//   const options = useMemo(() => {
-//     return [
-//       { label: 'Completo', value: 'full' },
-//       //...staff.map((user) => ({ label: user.name, value: user.userId }))
-//       ...storeSections.map((section) => ({
-//         label: section.name,
-//         value: section.id
-//       }))
-//     ]
-//   }, [staff])
-
-//   return (
-//     <View>
-//       <InputSelect
-//         value={balanceType.type === 'full' ? 'full' : balanceType.userId}
-//         options={options}
-//         onChangeValue={(value) => {
-//           if (value === 'full') {
-//             return setBalanceType({ type: 'full', userId: '' })
-//           } else {
-//             return setBalanceType({
-//               type: 'partial',
-//               section: value,
-//               userId: null
-//             })
-//             // setBalanceType({
-//             //   type: 'partial',
-//             //   userId: value
-//             // })
-//           }
-//         }}
-//       />
-//     </View>
-//   )
-// }
 
 export default function FormBalance(props: FormBalanceProps) {
   return (
