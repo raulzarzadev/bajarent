@@ -54,10 +54,12 @@ import { BsWhatsapp } from 'react-icons/bs'
 import { RiImageAddLine } from 'react-icons/ri'
 import { IoHammerOutline } from 'react-icons/io5'
 import { FaWrench } from 'react-icons/fa6'
-import { MdHome } from 'react-icons/md'
+import { MdHome, MdMoneyOff } from 'react-icons/md'
+import { FaCashRegister } from 'react-icons/fa'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  cashbox: FaCashRegister,
   up: FaChevronUp,
   down: FaChevronDown,
   close: MdClose,
@@ -72,6 +74,7 @@ const icons = {
   add: IoMdAdd,
   edit: MdEdit,
   money: MdAttachMoney,
+  moneyOff: MdMoneyOff,
   save: MdSave,
   location: MdLocationPin,
   locationOff: MdLocationOff,

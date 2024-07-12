@@ -28,7 +28,7 @@ export default function ScreenPayments({ navigation, route }) {
         setPayments(
           formatPaymentWithOrder({
             payments: res,
-            orders: consolidatedOrders.orders
+            orders: consolidatedOrders?.orders
           })
         )
       )
@@ -37,7 +37,7 @@ export default function ScreenPayments({ navigation, route }) {
         setPayments(
           formatPaymentWithOrder({
             payments: res,
-            orders: consolidatedOrders.orders
+            orders: consolidatedOrders?.orders
           })
         )
       )
@@ -159,7 +159,7 @@ export const formatPaymentWithOrder = ({
   orderNote: string
 })[] => {
   const paymentWithOrderData = payments?.map((p) => {
-    const consolidateOrder = orders[p.orderId]
+    const consolidateOrder = orders?.[p?.orderId]
     return {
       ...p,
       orderFolio: consolidateOrder?.folio ?? 0, // Usar ?? para proporcionar un valor predeterminado

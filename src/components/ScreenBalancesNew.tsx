@@ -14,7 +14,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
 
 const ScreenBalancesNew = ({ navigation }) => {
-  const { storeId, store } = useStore()
+  const { storeId, store, storeSections } = useStore()
   const { user } = useAuth()
   const [balance, setBalance] = React.useState<BalanceType>()
 
@@ -30,19 +30,24 @@ const ScreenBalancesNew = ({ navigation }) => {
       where('createdAt', '>=', fromDate),
       where('createdAt', '<=', toDate)
     ])
-    //* 2.- Find orders from payments, remove duplicates
+    //* 2.- Find orders from payments, remove duplicates , remove undefined
     const paymentOrders = Array.from(
       new Set(paymentsByDate.map((p) => p.orderId))
-    )
+    ).filter((o) => !!o)
+    console.log({ paymentOrders })
 
     let sectionOrders = []
     if (type === 'partial') {
-      sectionOrders = await ServiceOrders.getList(paymentOrders, {
-        sections: [section]
-      })
+      sectionOrders =
+        (await ServiceOrders.getList(paymentOrders, {
+          sections: [section]
+        }).catch((e) => console.error(e))) || []
     }
     if (type === 'full') {
-      sectionOrders = await ServiceOrders.getList(paymentOrders)
+      sectionOrders =
+        (await ServiceOrders.getList(paymentOrders).catch((e) =>
+          console.error(e)
+        )) || []
     }
     //* 3.- Set orders with payments
     const ordersWithPayments = sectionOrders.map((o) => {
@@ -71,7 +76,7 @@ const ScreenBalancesNew = ({ navigation }) => {
         toDate: values.toDate,
         section: values.section,
         type: values.type
-      })
+      }).catch((e) => console.error(e))
 
       setBalance({
         ...values,
@@ -97,7 +102,7 @@ const ScreenBalancesNew = ({ navigation }) => {
     setBalance(undefined)
   }
   if (!storeId || !store || !user) return <Text>Cargando...</Text>
-  console.log({ balance })
+
   return (
     <ScrollView>
       <View style={gStyles.container}>

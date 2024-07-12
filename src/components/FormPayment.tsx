@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
-import InputRadiosFormik from './InputRadiosFormik'
+import InputRadiosFormik from './FormikInputRadios'
 import PaymentType, { payment_methods } from '../types/PaymentType'
 import dictionary from '../dictionary'
 import Button from './Button'

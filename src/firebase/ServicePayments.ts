@@ -2,6 +2,7 @@ import { where, documentId, limit, orderBy } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import PaymentType from '../types/PaymentType'
 import { addDays, subDays } from 'date-fns'
+import { RetirementType } from '../components/FormRetirement'
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   constructor() {
     super('payments')
@@ -75,6 +76,17 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     ])
   }
 
+  async retirement(retirement: RetirementType) {
+    return this.create({
+      type: retirement.type,
+      amount: parseFloat(`${retirement.amount || 0}`),
+      description: retirement.description,
+      employeeId: retirement.employeeId,
+      method: 'cash',
+      isRetirement: true,
+      storeId: retirement.storeId
+    })
+  }
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

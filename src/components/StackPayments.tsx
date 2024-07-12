@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenPayments from './ScreenPayments'
 import ScreenPaymentsDetails from './ScreenPaymentsDetails'
+import ScreenRetirementsNew from './ScreenRetirementsNew'
 
 const Stack = createStackNavigator()
 function StackPayments() {
@@ -30,6 +31,14 @@ function StackPayments() {
           title: route?.params?.title || 'Detalles de pago'
         })}
         component={ScreenPaymentsDetails}
+      />
+      <Stack.Screen
+        name="ScreenRetirementsNew"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Retiros'
+        })}
+        component={ScreenRetirementsNew}
       />
     </Stack.Navigator>
   )

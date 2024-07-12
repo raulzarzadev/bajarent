@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useField } from 'formik'
 import InputRadios, { InputRadioOption } from './InputRadios'
 
-const InputRadiosFormik = ({
+const FormikInputRadios = ({
   name,
   options = [],
   label,
@@ -28,4 +28,4 @@ const InputRadiosFormik = ({
   )
 }
 
-export default InputRadiosFormik
+export default FormikInputRadios

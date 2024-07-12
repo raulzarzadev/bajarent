@@ -7,6 +7,7 @@ import { gStyles } from '../styles'
 import { colors } from '../theme'
 import PaymentVerify from './PaymentVerify'
 import PaymentType from '../types/PaymentType'
+import SpanUser from './SpanUser'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 const RowPayment = ({
   item,
@@ -15,16 +16,28 @@ const RowPayment = ({
   item: PaymentTypeList
   onVerified?: () => void
 }) => {
+  const isRetirement = !!item?.isRetirement
   return (
     <View
       style={[
         styles.row,
-        item.canceled && { backgroundColor: colors.lightGray, opacity: 0.4 }
+        item.canceled && { backgroundColor: colors.lightGray, opacity: 0.4 },
+        isRetirement && {
+          backgroundColor: colors.white
+        }
       ]}
     >
       <View style={{ width: 80 }}>
+        {isRetirement && (
+          <View>
+            <Text style={gStyles.helper}>{dictionary(item?.type)}</Text>
+            <SpanUser userId={item?.employeeId} />
+            <Text style={gStyles.helper}>{item?.description}</Text>
+          </View>
+        )}
         <Text>
-          {item?.orderFolio || ''}-{item?.orderNote || ''}
+          {!!item?.orderFolio &&
+            `${item?.orderFolio || ''}-${item?.orderNote || ''}`}
         </Text>
         <Text numberOfLines={2}>{item?.orderName || ''}</Text>
       </View>
@@ -51,7 +64,9 @@ const RowPayment = ({
             <PaymentVerify payment={item} onVerified={onVerified} />
           </View>
         )}
-        <CurrencyAmount amount={item?.amount} />
+        <CurrencyAmount
+          amount={isRetirement ? -1 * item?.amount : item?.amount}
+        />
         <Text style={[gStyles.helper, gStyles.tCenter]}>
           {item?.canceled && 'Cancelado'}
         </Text>

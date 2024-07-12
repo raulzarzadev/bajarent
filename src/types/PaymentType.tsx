@@ -1,3 +1,4 @@
+import { RetirementType } from '../components/FormRetirement'
 import BaseType from './BaseType'
 
 export type PaymentBase = {
@@ -21,6 +22,12 @@ export type PaymentBase = {
   verifiedBy?: string
 
   image?: string
+
+  // For retirements
+  isRetirement?: boolean
+  description?: string
+  employeeId?: string
+  type?: RetirementType['type']
 }
 
 type PaymentType = PaymentBase & BaseType

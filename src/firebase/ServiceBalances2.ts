@@ -202,9 +202,17 @@ const groupOrdersBySection = ({
         return arr.map(({ id }) => id)
       }
 
-      const sectionPayments = payments.filter((p) =>
-        orders.find((o) => o.id === p.orderId)
-      )
+      let sectionPayments: PaymentType[] = []
+
+      if (sectionId === 'all') {
+        sectionPayments = payments
+      } else {
+        //? should we remove payments to other function?
+        //* Filter payments that don't have an order
+        sectionPayments = payments.filter(
+          (p) => orders.find((o) => o.id === p.orderId) //FIXME: this not works , some payments does not have order
+        )
+      }
 
       return {
         cancelledToday: getJustIds(cancelledToday),

@@ -183,6 +183,7 @@ const TabClients = () => {
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   const { storeId } = useStore()
+  const { consolidatedOrders } = useOrdersCtx()
 
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
@@ -206,16 +207,18 @@ const TabCashbox = () => {
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleGetLastBalanceInDate = (date: Date) => {
-    ServiceBalances.listenLastInDate(storeId, endOfDay(date), (res) => {
+    ServiceBalances.getLastInDate(storeId, endOfDay(date)).then((res) => {
       setBalance(res[0] || null)
     })
   }
+
   if (balance === undefined) return <Loading />
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button
           label="Cortes"
+          icon="cashbox"
           onPress={() => {
             //@ts-ignore
             navigate('StackBalances')
@@ -224,9 +227,21 @@ const TabCashbox = () => {
         />
         <Button
           label="Pagos"
+          icon="money"
           onPress={() => {
             //@ts-ignore
             navigate('StackPayments')
+          }}
+          variant="ghost"
+        />
+        <Button
+          label="Retirar"
+          icon="moneyOff"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackPayments', {
+              screen: 'ScreenRetirementsNew'
+            })
           }}
           variant="ghost"
         />
@@ -235,20 +250,8 @@ const TabCashbox = () => {
         debounce={400}
         label="Cuentas"
         onChangeDate={handleGetLastBalanceInDate}
-        // documentDate={balance?.createdAt}
+        documentDate={balance?.createdAt}
       />
-      {balance?.createdAt && (
-        <View style={{ marginVertical: 8 }}>
-          <Text style={[gStyles.helper, gStyles.tCenter]}>
-            Última actalización:
-          </Text>
-          <Text style={[gStyles.tCenter]}>
-            {dateFormat(asDate(balance.createdAt), 'HH:mm')}{' '}
-            {fromNow(balance?.createdAt)}
-          </Text>
-        </View>
-      )}
-
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
           disabled={updating}
