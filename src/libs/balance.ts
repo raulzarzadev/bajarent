@@ -232,24 +232,29 @@ export const getBalancePayments = async ({
 
   // //* 1.- Filter payments by date from server
   try {
-    const paymentsByDate = await ServicePayments.findMany([
-      where('storeId', '==', storeId),
-      where('createdAt', '>=', fromDate),
-      where('createdAt', '<=', toDate)
-    ])
-    //* 2.- Find orders from payments, remove duplicates
+    const paymentsByDate =
+      (await ServicePayments.findMany([
+        where('storeId', '==', storeId),
+        where('createdAt', '>=', fromDate),
+        where('createdAt', '<=', toDate)
+      ]).catch((e) => console.error({ e }))) || []
+    //* 2.- Find orders from payments, remove duplicates , remove nullish
     const paymentOrders = Array.from(
       new Set(paymentsByDate.map((p) => p.orderId))
-    )
+    ).filter((o) => !!o)
 
     let sectionOrders = []
     if (type === 'partial') {
-      sectionOrders = await ServiceOrders.getList(paymentOrders, {
-        sections: [section]
-      })
+      sectionOrders =
+        (await ServiceOrders.getList(paymentOrders, {
+          sections: [section]
+        }).catch((e) => console.error({ e }))) || []
     }
     if (type === 'full') {
-      sectionOrders = await ServiceOrders.getList(paymentOrders)
+      sectionOrders =
+        (await ServiceOrders.getList(paymentOrders).catch((e) =>
+          console.error({ e })
+        )) || []
     }
     //* 3.- Set orders with payments
     const ordersWithPayments = sectionOrders.map((o) => {
