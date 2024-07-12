@@ -183,7 +183,6 @@ const TabClients = () => {
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   const { storeId } = useStore()
-  const { consolidatedOrders } = useOrdersCtx()
 
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
@@ -207,11 +206,10 @@ const TabCashbox = () => {
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleGetLastBalanceInDate = (date: Date) => {
-    ServiceBalances.getLastInDate(storeId, endOfDay(date)).then((res) => {
+    ServiceBalances.listenLastInDate(storeId, endOfDay(date), (res) => {
       setBalance(res[0] || null)
     })
   }
-
   if (balance === undefined) return <Loading />
   return (
     <ScrollView>
