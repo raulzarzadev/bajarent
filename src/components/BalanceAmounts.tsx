@@ -8,15 +8,24 @@ import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
 export type BalanceAmountsProps = { payments: PaymentType[] }
 const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
+  console.log({ payments })
   const cashPayments = payments?.filter((p) => p.method === 'cash')
   const cardPayments = payments?.filter((p) => p.method === 'card')
   const transferPayments = payments?.filter((p) => p.method === 'transfer')
   const canceledPayments = payments?.filter((p) => p.canceled)
+  const retirementsCount = payments?.filter((p) => p.isRetirement)
   const notVerifiedTransfers = payments?.filter(
     (p) => p.method === 'transfer' && !p.verified
   )
-  const { total, canceled, card, cash, transfers, transfersNotVerified } =
-    payments_amount(payments)
+  const {
+    total,
+    canceled,
+    card,
+    cash,
+    transfers,
+    transfersNotVerified,
+    retirements
+  } = payments_amount(payments)
 
   return (
     <View>
@@ -86,6 +95,15 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
               paymentsIds={canceledPayments.map(({ id }) => id)}
               amount={canceled}
               title={'Cancelados'}
+            />
+          </View>
+        )}
+        {!!retirementsCount.length && (
+          <View style={styles.row}>
+            <LinkPayments
+              paymentsIds={retirementsCount.map(({ id }) => id)}
+              amount={retirements * -1}
+              title={'Retiros'}
             />
           </View>
         )}

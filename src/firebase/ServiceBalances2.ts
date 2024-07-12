@@ -210,7 +210,8 @@ const groupOrdersBySection = ({
         //? should we remove payments to other function?
         //* Filter payments that don't have an order
         sectionPayments = payments.filter(
-          (p) => orders.find((o) => o.id === p.orderId) //FIXME: this not works , some payments does not have order
+          (p) =>
+            orders.find((o) => o.id === p.orderId) || p.sectionId === sectionId
         )
       }
 
