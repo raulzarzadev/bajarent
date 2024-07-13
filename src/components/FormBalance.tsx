@@ -1,16 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Formik } from 'formik'
 import Button from './Button'
 import InputDate from './InputDate'
 import { gStyles } from '../styles'
-import { useStore } from '../contexts/storeContext'
 import { BalanceType } from '../types/BalanceType'
 import ErrorBoundary from './ErrorBoundary'
-import InputSelect from './InputSelect'
 import TextInfo from './TextInfo'
 import Icon from './Icon'
-import SelectStoreSection from './SelectStoreSection'
 
 export type FormBalanceProps = {
   defaultValues?: Partial<BalanceType>
