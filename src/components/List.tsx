@@ -245,7 +245,7 @@ function MyList<T extends { id: string }>({
               data={data}
               setData={(data) => {
                 setFilteredData(data)
-                setCurrentPage(1)
+                // setCurrentPage(1) //* FIXME: this mai cause a bug if uncomment
               }}
               filters={filters}
               setCollectionData={(data) => {
