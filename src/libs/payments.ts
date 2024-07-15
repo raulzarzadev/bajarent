@@ -12,20 +12,21 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
         acc.total -= amount
         acc.cash -= amount
         acc.retirements += amount
-        return acc
-      }
-      if (!p.verified && p.method === payment_methods.TRANSFER) {
-        acc.transfersNotVerified += amount
-        acc.total += amount
-        acc.transfers += amount
-        return acc
-      }
-      acc.total += amount
-      if (p.method === payment_methods.CASH) acc.cash += amount
-      if (p.method === payment_methods.CARD) acc.card += amount
-      if (p.method === payment_methods.TRANSFER) acc.transfers += amount
+        acc.outcomes += amount
 
-      return acc
+        return acc
+      } else {
+        //* if transfer is not verified count count as it
+        if (!p.verified && p.method === payment_methods.TRANSFER) {
+          acc.transfersNotVerified += amount
+        }
+        if (p.method === payment_methods.CASH) acc.cash += amount
+        if (p.method === payment_methods.CARD) acc.card += amount
+        if (p.method === payment_methods.TRANSFER) acc.transfers += amount
+        acc.total += amount
+        acc.incomes += amount
+        return acc
+      }
     },
     {
       total: 0,
@@ -34,7 +35,9 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
       transfers: 0,
       canceled: 0,
       transfersNotVerified: 0,
-      retirements: 0
+      retirements: 0,
+      incomes: 0,
+      outcomes: 0
     }
   )
 }

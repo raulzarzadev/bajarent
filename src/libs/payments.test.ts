@@ -13,7 +13,9 @@ describe('payments_amount', () => {
       transfers: 0,
       canceled: 0,
       transfersNotVerified: 0,
-      retirements: 0
+      retirements: 0,
+      incomes: 0,
+      outcomes: 0
     }
 
     const result = payments_amount(payments)
@@ -35,7 +37,9 @@ describe('payments_amount', () => {
       transfers: 0,
       canceled: 60,
       transfersNotVerified: 0,
-      retirements: 0
+      retirements: 0,
+      incomes: 0,
+      outcomes: 0
     }
 
     const result = payments_amount(payments)
@@ -45,12 +49,11 @@ describe('payments_amount', () => {
 
   it('should calculate the correct payment amounts when there are transfers not verified', () => {
     const payments: Partial<PaymentType>[] = [
-      { amount: 10, method: payment_methods.CASH, canceled: false },
-      { amount: 20, method: payment_methods.CARD, canceled: false },
+      { amount: 10, method: payment_methods.CASH },
+      { amount: 20, method: payment_methods.CARD },
       {
         amount: 30,
         method: payment_methods.TRANSFER,
-        canceled: false,
         verified: false
       }
     ]
@@ -62,7 +65,9 @@ describe('payments_amount', () => {
       transfers: 30,
       canceled: 0,
       transfersNotVerified: 30,
-      retirements: 0
+      retirements: 0,
+      incomes: 60,
+      outcomes: 0
     }
 
     const result = payments_amount(payments)
@@ -94,7 +99,9 @@ describe('payments_amount', () => {
       transfers: 0,
       canceled: 0,
       transfersNotVerified: 0,
-      retirements: 30
+      retirements: 30,
+      incomes: 30,
+      outcomes: 30
     }
 
     const result = payments_amount(payments)
@@ -126,7 +133,9 @@ describe('payments_amount', () => {
       transfers: 30,
       canceled: 0,
       transfersNotVerified: 30,
-      retirements: 30
+      retirements: 30,
+      incomes: 30,
+      outcomes: 30
     }
 
     const result = payments_amount(payments)

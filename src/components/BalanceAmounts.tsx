@@ -6,6 +6,7 @@ import { gStyles } from '../styles'
 import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
+
 export type BalanceAmountsProps = { payments: PaymentType[] }
 const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   const cashPayments = payments?.filter((p) => p.method === 'cash')
@@ -16,6 +17,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   const notVerifiedTransfers = payments?.filter(
     (p) => p.method === 'transfer' && !p.verified
   )
+  const allPayments = payments?.filter((p) => !p.canceled || !p.isRetirement)
   const {
     total,
     canceled,
@@ -23,7 +25,9 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
     cash,
     transfers,
     transfersNotVerified,
-    retirements
+    retirements,
+    incomes,
+    outcomes
   } = payments_amount(payments)
 
   return (
@@ -54,6 +58,15 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
               />
             </View>
           )}
+          {!!transfersNotVerified && (
+            <View style={styles.row}>
+              <LinkPayments
+                paymentsIds={notVerifiedTransfers.map(({ id }) => id)}
+                amount={transfersNotVerified}
+                title={'No verificados'}
+              />
+            </View>
+          )}
           {!!card && (
             <View style={styles.row}>
               <LinkPayments
@@ -72,19 +85,35 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
             }}
           >
             <LinkPayments
-              paymentsIds={payments.map(({ id }) => id)}
-              amount={total}
-              title={'Total'}
+              paymentsIds={allPayments.map(({ id }) => id)}
+              amount={incomes}
+              title={'Ingresos'}
               isTotal
             />
           </View>
         </View>
-        {!!transfersNotVerified && (
+        {/* {!!outcomes && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <LinkPayments
+              // paymentsIds={payments.map(({ id }) => id)}
+              amount={outcomes}
+              title={'Egresos'}
+              isTotal
+            />
+          </View>
+        )} */}
+        {!!retirementsCount.length && (
           <View style={styles.row}>
             <LinkPayments
-              paymentsIds={notVerifiedTransfers.map(({ id }) => id)}
-              amount={transfersNotVerified}
-              title={'No verificados'}
+              paymentsIds={retirementsCount.map(({ id }) => id)}
+              amount={outcomes * -1}
+              title={'Egresos'}
             />
           </View>
         )}
@@ -97,15 +126,9 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
             />
           </View>
         )}
-        {!!retirementsCount.length && (
-          <View style={styles.row}>
-            <LinkPayments
-              paymentsIds={retirementsCount.map(({ id }) => id)}
-              amount={retirements * -1}
-              title={'Retiros'}
-            />
-          </View>
-        )}
+        <View style={styles.row}>
+          <LinkPayments amount={total} title={'Total'} />
+        </View>
       </View>
     </View>
   )
@@ -146,12 +169,16 @@ const LinkPayments = ({
           >
             {title}
           </Text>
-          <Text
-            style={[
-              gStyles.helper,
-              { width: 30, textAlign: 'center', textAlignVertical: 'bottom' }
-            ]}
-          >{`(${paymentsIds?.length})`}</Text>
+          <View style={{ width: 30 }}>
+            {!!paymentsIds?.length && (
+              <Text
+                style={[
+                  gStyles.helper,
+                  { textAlign: 'center', textAlignVertical: 'bottom' }
+                ]}
+              >{`(${paymentsIds?.length})`}</Text>
+            )}
+          </View>
         </View>
       </Pressable>
       <CurrencyAmount style={styles.amount} amount={amount} />
