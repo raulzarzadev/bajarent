@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native'
 import useTheme from '../hooks/useTheme'
-import { Colors } from '../theme'
+import { colors, Colors } from '../theme'
 import Icon, { IconName } from './Icon'
 import ErrorBoundary from './ErrorBoundary'
 
@@ -26,6 +26,7 @@ export type ButtonProps = {
   justIcon?: boolean
   id?: string
   fullWidth?: boolean
+  progress?: number
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
@@ -41,6 +42,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   icon,
   justIcon,
   fullWidth = true,
+  progress,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -105,6 +107,20 @@ const ButtonX: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
+      {!!progress && progress != 100 && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            backgroundColor: colors.black,
+            opacity: 0.5,
+            borderRadius: 5,
+            width: `${progress}%`
+          }}
+        />
+      )}
       {!justIcon && !children && (
         <Text
           style={[

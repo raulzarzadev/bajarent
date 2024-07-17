@@ -26,6 +26,7 @@ import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { addDays, subDays } from 'date-fns'
 import DateCell from './DateCell'
 import HeaderDate from './HeaderDate'
+import { set } from 'cypress/types/lodash'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -183,8 +184,7 @@ const TabClients = () => {
 const TabCashbox = () => {
   const { navigate } = useNavigation()
   const { storeId } = useStore()
-  const { consolidatedOrders } = useOrdersCtx()
-
+  const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
@@ -192,11 +192,16 @@ const TabCashbox = () => {
   }, [])
 
   const handleUpdateStoreStatus = async () => {
-    await ServiceConsolidatedOrders.consolidate(storeId)
-    return await ServiceBalances.createV2(storeId)
-      .then((res) => {
-        console.log({ res })
+    setUpdating(true)
+    return await ServiceBalances.createV2(storeId, {
+      progress: (p) => {
+        setProgress(p)
+      }
+    })
+      .then(async (res) => {
         setBalance(res)
+        setUpdating(false)
+        await ServiceConsolidatedOrders.consolidate(storeId)
       })
       .catch((err) => {
         console.log(err)
@@ -256,15 +261,14 @@ const TabCashbox = () => {
       />
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
+          progress={progress}
           disabled={updating}
           size="small"
           fullWidth={false}
           label="Actualizar"
           icon="refresh"
           onPress={async () => {
-            setUpdating(true)
             await handleUpdateStoreStatus()
-            setUpdating(false)
           }}
         />
       </View>

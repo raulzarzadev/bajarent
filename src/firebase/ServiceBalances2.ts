@@ -59,10 +59,17 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 
   createV2 = async (
     storeId: string,
-    ops?: { fromDate?: Date; toDate?: Date; notSave?: boolean }
+    ops?: {
+      fromDate?: Date
+      toDate?: Date
+      notSave?: boolean
+      progress?: (progress: number) => void
+    }
   ): Promise<Partial<BalanceType2>> => {
-    const { fromDate, toDate } = ops || {}
+    const { fromDate, toDate, progress } = ops || {}
+
     try {
+      progress?.(1)
       const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))
       const TODAY_NIGHT = new Date(new Date().setHours(23, 59, 59, 999))
 
@@ -73,16 +80,17 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         where('storeId', '==', storeId),
         where('type', '==', order_type.RENT)
       ])
+      progress?.(10)
 
       const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
-
+      progress?.(20)
       const reportsSolvedToday = await ServiceComments.findMany([
         where('type', '==', 'report'),
         where('solved', '==', true),
         where('solvedAt', '>=', FROM_DATE),
         where('solvedAt', '<=', TO_DATE)
       ])
-
+      progress?.(30)
       const { payments } = await getBalancePayments({
         storeId,
         fromDate: FROM_DATE,
@@ -90,14 +98,17 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         section: [],
         type: 'full'
       })
+      progress?.(40)
 
       const itemsBySections = await ServiceStoreItems.getAvailable({ storeId })
+      progress?.(50)
       const groupedBySections = groupOrdersBySection({
         orders,
         reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])],
         payments,
         items: itemsBySections
       })
+      progress?.(60)
       const newBalance = {
         sections: groupedBySections,
         storeId
@@ -109,13 +120,18 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 
       return new Promise(async (resolve) => {
         await this.create({ ...newBalance })
-          .then((res) => {
-            this.get(res.res.id).then((res) => {
+          .then(async (res) => {
+            progress?.(80)
+            await this.get(res.res.id).then((res) => {
               resolve({ ...res })
+              progress?.(100)
             })
           })
-          .catch((err) => console.log({ err }))
-      })
+          .catch((err) => {
+            console.log({ err })
+            progress?.(-1)
+          })
+      }).then((res) => res)
     } catch (error) {
       console.error(error)
     }
