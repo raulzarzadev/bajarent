@@ -22,10 +22,6 @@ import { gStyles } from '../styles'
 import { getItem, setItem } from '../libs/storage'
 import { CollectionSearch } from '../hooks/useFilter'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { where } from 'firebase/firestore'
-
-// const windowHeight = Dimensions.get('window').height
-// const maxHeight = windowHeight - 110 //* this is the height of the bottom tab
 
 export type ListSideButton = {
   icon: IconName

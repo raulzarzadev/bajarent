@@ -3,8 +3,7 @@ import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
   TypeOrder,
-  order_status,
-  order_type
+  order_status
 } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
@@ -294,7 +293,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     fields: string[]
     value: string | number
     avoidIds?: string[]
-    sections: string[] | 'all'
+    sections: string[] | 'all' //FIXME: if is undefined, search in all sections, if is an array search in the array
   }): Promise<Partial<Type>[] | void> {
     const promises = fields?.map((field) => {
       const number = parseFloat(value as string)
@@ -302,7 +301,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       const filters = []
       // if (avoidIds.length > 0)
       //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
-      if (Array.isArray(sections?.length) && sections.length > 0) {
+      console.log({ sections })
+      if (Array.isArray(sections) && sections.length > 0) {
         filters.push(where('assignToSection', 'in', sections))
       }
 

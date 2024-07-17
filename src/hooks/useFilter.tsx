@@ -135,7 +135,6 @@ export default function useFilter<T extends { id?: string }>({
       const orders = await ServiceOrders.search({
         fields: collectionSearch?.fields,
         value,
-        //avoidIds: [],
         sections: collectionSearch?.assignedSections
       }).then((res) => {
         return formatOrders({ orders: res as Partial<OrderType>[], reports })
