@@ -38,28 +38,33 @@ const ListItemsSections = ({
   return (
     <View>
       <Text style={[gStyles.helper, gStyles.tCenter]}>Todos los artículos</Text>
-      {sections.map(([key, items]) => {
-        if (items.length === 0) return null
-        return (
-          <View key={key}>
-            <Text style={gStyles.h3}>
-              {storeSections.find((s) => s.id === key)?.name || 'Sin asignar '}
-              {`(${items.length})`}
-            </Text>
-            <RowSectionItemsE
-              items={items}
-              itemSelected={itemSelected}
-              onPressItem={(id) => {
-                if (onPressItem) {
-                  onPressItem?.(id)
-                } else {
-                  toItems({ id })
-                }
-              }}
-            />
-          </View>
-        )
-      })}
+      {sections
+        .sort((a, b) => {
+          return a[0].localeCompare(b[0])
+        })
+        .map(([key, items]) => {
+          if (items.length === 0) return null
+          return (
+            <View key={key}>
+              <Text style={gStyles.h3}>
+                {storeSections.find((s) => s.id === key)?.name ||
+                  'Sin asignar '}
+                {`(${items.length})`}
+              </Text>
+              <RowSectionItemsE
+                items={items}
+                itemSelected={itemSelected}
+                onPressItem={(id) => {
+                  if (onPressItem) {
+                    onPressItem?.(id)
+                  } else {
+                    toItems({ id })
+                  }
+                }}
+              />
+            </View>
+          )
+        })}
     </View>
   )
 }
