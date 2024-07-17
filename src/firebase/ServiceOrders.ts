@@ -299,9 +299,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       const number = parseFloat(value as string)
       //* search as number
       const filters = []
-      // if (avoidIds.length > 0)
-      //   filters.push(where(documentId(), 'not-in', avoidIds.slice(0, 10)))
-      console.log({ sections })
       if (Array.isArray(sections) && sections.length > 0) {
         filters.push(where('assignToSection', 'in', sections))
       }

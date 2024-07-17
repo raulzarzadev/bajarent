@@ -237,11 +237,6 @@ export const ItemRow = ({
       })
   }, [item.id])
 
-  console.log({
-    _item,
-    item
-  })
-
   //@ts-ignore
   const assignedSection = _item?.assignedSection || ''
   //@ts-ignore

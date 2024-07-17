@@ -118,7 +118,6 @@ const FormOrderA = ({
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
-  console.log({ store })
   const [error, setError] = useState<string | null>(null)
 
   //* <- Define order types allowed
