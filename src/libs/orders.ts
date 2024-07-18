@@ -4,6 +4,7 @@ import OrderType, { order_status } from '../types/OrderType'
 import { LabelRentType, expireDate2, translateTime } from './expireDate'
 import asDate from './utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
+import { TimePriceType } from '../types/PriceType'
 
 export const formatOrders = ({
   orders,
@@ -180,7 +181,7 @@ export const currentRentPeriod = (
   const shortLabel = props?.shortLabel || false
   if (order?.type === 'RENT') {
     const hasExtensions = Object.values(order?.extensions || {}).sort(
-      (a, b) => asDate(b?.startAt)?.getTime() - asDate(a?.expireAt)?.getTime()
+      (a, b) => asDate(b?.expireAt)?.getTime() - asDate(a?.expireAt)?.getTime()
     )
     if (hasExtensions?.length) {
       //* <--------- already has extensions
@@ -194,6 +195,18 @@ export const currentRentPeriod = (
     }
   }
   return ''
+}
+
+export const lastExtensionTime = (
+  order: Partial<OrderType> | Partial<ConsolidatedOrderType>
+): TimePriceType | null => {
+  const extensionsArr = Object.values(order?.extensions || {})
+
+  const lastExtension = extensionsArr.sort(
+    (a, b) => asDate(b?.expireAt)?.getTime() - asDate(a?.expireAt)?.getTime()
+  )[0]
+
+  return lastExtension?.time || null
 }
 
 export const isRenewedToday = (order: Partial<OrderType>): boolean => {

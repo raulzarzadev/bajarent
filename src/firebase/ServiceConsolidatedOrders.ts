@@ -106,7 +106,8 @@ const formatConsolidateOrder = (
     // @ts-ignore
     deliveredAt: order?.deliveredAt
       ? asDate(order?.deliveredAt).getTime()
-      : null
+      : null,
+    extensions: order?.extensions || {}
     //colorLabel: order?.colorLabel || ''
   }
 }

@@ -91,6 +91,13 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   async customMethod() {
     // Implementa tu método personalizado
   }
+  async getByOrderAndDay({ orderId, date }: { orderId: string; date: Date }) {
+    return this.getItems([
+      where('orderId', '==', orderId),
+      where('createdAt', '>=', date.setHours(0, 0, 0, 0)),
+      where('createdAt', '<=', date.setHours(23, 59, 59, 999))
+    ])
+  }
 }
 
 export const ServicePayments = new ServicePaymentsClass()

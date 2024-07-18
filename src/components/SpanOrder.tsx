@@ -3,18 +3,21 @@ import React, { useEffect, useState } from 'react'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { useNavigation } from '@react-navigation/native'
-import { currentRentPeriod } from '../libs/orders'
+import { currentRentPeriod, lastExtensionTime } from '../libs/orders'
+import { translateTime } from '../libs/expireDate'
 
 const SpanOrder = ({
   orderId,
   redirect,
-  name,
-  time
+  showName,
+  showTime,
+  showLastExtension
 }: {
   orderId: string
   redirect?: boolean
-  name?: boolean
-  time?: boolean
+  showName?: boolean
+  showTime?: boolean
+  showLastExtension?: boolean
 }) => {
   const [order, setOrder] = useState<Partial<ConsolidatedOrderType>>()
   const { consolidatedOrders } = useOrdersCtx()
@@ -38,7 +41,12 @@ const SpanOrder = ({
         }}
       >
         {!!order ? (
-          <OrderData order={order} time={time} name={name} />
+          <OrderData
+            order={order}
+            showTime={showTime}
+            showName={showName}
+            showLastExtension={showLastExtension}
+          />
         ) : (
           <Text>{orderId}</Text>
         )}
@@ -48,7 +56,12 @@ const SpanOrder = ({
   return (
     <>
       {!!order ? (
-        <OrderData order={order} time={time} name={name} />
+        <OrderData
+          order={order}
+          showTime={showTime}
+          showName={showName}
+          showLastExtension={showLastExtension}
+        />
       ) : (
         <Text>{orderId}</Text>
       )}
@@ -58,23 +71,26 @@ const SpanOrder = ({
 
 const OrderData = ({
   order,
-  name,
-  time
+  showName,
+  showTime,
+  showLastExtension
 }: {
   order: Partial<ConsolidatedOrderType>
-  name?: boolean
-  time?: boolean
+  showName?: boolean
+  showTime?: boolean
+  showLastExtension?: boolean
 }) => {
+  if (order.folio === 312) {
+    console.log({ orderExt: order })
+  }
   return (
     <View style={{ flexDirection: 'row' }}>
       <Text style={{ marginRight: 4 }}>
         {order?.folio}-{order?.note}
       </Text>
-      {name && <Text style={{ marginRight: 4 }}>{order?.fullName}</Text>}
-      {time && (
-        <Text style={{ marginRight: 4 }}>
-          {currentRentPeriod(order, { shortLabel: true })}
-        </Text>
+      {showName && <Text style={{ marginRight: 4 }}>{order?.fullName}</Text>}
+      {showLastExtension && (
+        <Text>{translateTime(lastExtensionTime(order))}</Text>
       )}
     </View>
   )

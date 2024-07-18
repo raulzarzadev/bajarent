@@ -354,7 +354,14 @@ const CellOrders = ({
       {!hiddenList &&
         ordersUnique?.map((orderId) => {
           return (
-            <SpanOrder key={orderId} orderId={orderId} name time redirect />
+            <SpanOrder
+              key={orderId}
+              orderId={orderId}
+              showName
+              showTime
+              redirect
+              showLastExtension
+            />
           )
         })}
     </View>
