@@ -201,7 +201,9 @@ export const lastExtensionTime = (
   order: Partial<OrderType> | Partial<ConsolidatedOrderType>
 ): TimePriceType | null => {
   const extensionsArr = Object.values(order?.extensions || {})
-
+  if (!extensionsArr.length && order?.items?.[0]?.priceSelected) {
+    return order?.items?.[0]?.priceSelected?.time
+  }
   const lastExtension = extensionsArr.sort(
     (a, b) => asDate(b?.expireAt)?.getTime() - asDate(a?.expireAt)?.getTime()
   )[0]

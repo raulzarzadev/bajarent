@@ -16,6 +16,8 @@ import ItemType from '../types/ItemType'
 import { useNavigation } from '@react-navigation/native'
 import { formatItems } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
+import { Timestamp } from 'firebase/firestore'
+import asDate from '../libs/utils-date'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -177,18 +179,21 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                     field="deliveredToday"
                     sectionSelected={balanceRow.section}
                     sections={balance.sections}
+                    day={balance.createdAt}
                   />
                   <CellOrders
                     label={'Renovadas'}
                     field="renewedToday"
                     sectionSelected={balanceRow.section}
                     sections={balance.sections}
+                    day={balance.createdAt}
                   />
                   <CellOrders
                     label={'Pagadas'}
                     field="paidToday"
                     sectionSelected={balanceRow.section}
                     sections={balance.sections}
+                    day={balance.createdAt}
                   />
                   <CellOrders
                     label={'Recogidas'}
@@ -318,13 +323,15 @@ export type CellOrdersProps = {
   field: BalanceRowKeyType
   sectionSelected: string
   hiddenList?: boolean
+  day?: Date | Timestamp
 }
 const CellOrders = ({
   label,
   sections,
   field,
   sectionSelected,
-  hiddenList
+  hiddenList,
+  day
 }: CellOrdersProps) => {
   const section = sections?.find((s) => s.section === sectionSelected)
   const orders = section?.[field] as string[]
@@ -361,6 +368,7 @@ const CellOrders = ({
               showTime
               redirect
               showLastExtension
+              showDatePaymentsAmount={day}
             />
           )
         })}
