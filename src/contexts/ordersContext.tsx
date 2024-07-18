@@ -72,17 +72,31 @@ export const OrdersContextProvider = ({
   }, [viewAllOrders])
 
   const handleGetConsolidates = async () => {
-    return await ServiceConsolidatedOrders.getByStore(storeId).then(
-      async (res) => {
+    ServiceConsolidatedOrders.listenByStore(
+      storeId,
+      (res) => {
         const chunks = res[0]?.consolidatedChunks || []
         const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
-        const chunksRes = await Promise.all(promises)
-        const orders = chunksRes.reduce((acc, chunk) => {
-          return { ...acc, ...chunk.orders }
-        }, {})
+        Promise.all(promises).then((chunksRes) => {
+          const orders = chunksRes.reduce((acc, chunk) => {
+            return { ...acc, ...chunk.orders }
+          }, {})
 
-        setConsolidatedOrders({ ...res[0], orders })
+          setConsolidatedOrders({ ...res[0], orders })
+        })
       }
+      // return await ServiceConsolidatedOrders.getByStore(storeId).then(
+      //   async (res) => {
+      //     const chunks = res[0]?.consolidatedChunks || []
+      //     const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
+      //     const chunksRes = await Promise.all(promises)
+      //     const orders = chunksRes.reduce((acc, chunk) => {
+      //       return { ...acc, ...chunk.orders }
+      //     }, {})
+
+      //     setConsolidatedOrders({ ...res[0], orders })
+      //   }
+      // )
     )
   }
 
