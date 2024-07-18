@@ -10,13 +10,16 @@ export type CollectionSearch = {
   collectionName: string
   fields?: string[]
   assignedSections?: 'all' | string[]
+  debouncedSearch?: number
 }
 export default function useFilter<T extends { id?: string }>({
   data = [],
-  collectionSearch
+  collectionSearch,
+  debounceSearch = 0
 }: {
   data: T[]
   collectionSearch?: CollectionSearch
+  debounceSearch?: number
 }) {
   const { reports } = useOrdersCtx()
   const [filteredData, setFilteredData] = useState<T[]>([...data])
@@ -110,39 +113,43 @@ export default function useFilter<T extends { id?: string }>({
   const [searchValue, setSearchValue] = useState('')
   const search = async (value: string) => {
     setSearchValue(value)
-    const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
-    if (!value) {
-      //<-- Apply filters if exist to keep current selection
-      setFilteredData(filteredData)
-      setCustomData([])
-      return
-    }
+    setTimeout(async () => {
+      const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
+      if (!value) {
+        //<-- Apply filters if exist to keep current selection
+        setFilteredData(filteredData)
+        setCustomData([])
+        return
+      }
 
-    const res = [...filteredData].filter((order) => {
-      return Object.values(order).some((val) => {
-        if (typeof val === 'string') {
-          return val.toLowerCase().includes(value.toLowerCase())
-        }
-        if (typeof val === 'number' && !isNaN(Number(value))) {
-          return val === parseFloat(value)
-        }
-        return false
-      })
-    })
-
-    if (collectionSearch?.collectionName === 'orders') {
-      // const avoidIds = res.map(({ id }) => id)
-      const orders = await ServiceOrders.search({
-        fields: collectionSearch?.fields,
-        value,
-        sections: collectionSearch?.assignedSections
-      }).then((res) => {
-        return formatOrders({ orders: res as Partial<OrderType>[], reports })
+      const res = [...filteredData].filter((order) => {
+        return Object.values(order).some((val) => {
+          if (typeof val === 'string') {
+            return val.toLowerCase().includes(value.toLowerCase())
+          }
+          if (typeof val === 'number' && !isNaN(Number(value))) {
+            return val === parseFloat(value)
+          }
+          return false
+        })
       })
 
-      setCustomData([...orders.filter((o) => !res.some((r) => r.id === o.id))])
-    }
-    setFilteredData([...res])
+      if (collectionSearch?.collectionName === 'orders') {
+        // const avoidIds = res.map(({ id }) => id)
+        const orders = await ServiceOrders.search({
+          fields: collectionSearch?.fields,
+          value,
+          sections: collectionSearch?.assignedSections
+        }).then((res) => {
+          return formatOrders({ orders: res as Partial<OrderType>[], reports })
+        })
+
+        setCustomData([
+          ...orders.filter((o) => !res.some((r) => r.id === o.id))
+        ])
+      }
+      setFilteredData([...res])
+    }, debounceSearch)
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {

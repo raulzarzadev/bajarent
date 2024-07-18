@@ -54,7 +54,8 @@ function ModalFilterList<T>({
     filterByDates
   } = useFilter<T>({
     data,
-    collectionSearch
+    collectionSearch,
+    debounceSearch: 1000
   })
 
   useEffect(() => {
@@ -89,15 +90,15 @@ function ModalFilterList<T>({
 
   let timerId = null
 
-  const handleDebounceSearch = (e: string) => {
-    if (timerId) {
-      clearTimeout(timerId)
-    }
+  // const handleDebounceSearch = (e: string) => {
+  //   if (timerId) {
+  //     clearTimeout(timerId)
+  //   }
 
-    timerId = setTimeout(() => {
-      search(e)
-    }, 1000)
-  }
+  //   timerId = setTimeout(() => {
+  //     search(e)
+  //   }, 1000)
+  // }
 
   const createFieldFilters = (
     field: string,
@@ -216,13 +217,19 @@ function ModalFilterList<T>({
         }}
       >
         <InputTextStyled
-          style={{ width: '100%', marginLeft: 4 }}
+          style={{ width: '100%' }}
           placeholder="Buscar..."
           value={searchValue}
           onChangeText={(e) => {
-            handleDebounceSearch(e)
+            search(e)
+          }}
+          hiddenInnerLeftIcon={searchValue.length === 0}
+          innerLeftIcon="close"
+          onLeftIconPress={() => {
+            search('')
           }}
         />
+
         {filters?.length > 0 && (
           <View style={{ marginLeft: 8 }}>
             <Button
