@@ -59,6 +59,7 @@ const InputTextStyled = ({
       >
         <TextInput
           {...props}
+          style={[baseStyle.input]}
           editable={!disabled}
           value={String(value || '')}
           onChangeText={(text) => {
@@ -92,7 +93,17 @@ const InputTextStyled = ({
           }}
         />
 
-        <View style={{ width: 16, height: '100%' }}>
+        <View
+          style={{
+            width: 20,
+            height: '100%',
+            justifyContent: 'center',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0
+          }}
+        >
           {innerLeftIcon && !onLeftIconPress && !hiddenInnerLeftIcon && (
             <Icon icon={innerLeftIcon} />
           )}
@@ -127,11 +138,17 @@ const baseStyle = StyleSheet.create({
   },
   inputStyle: {
     borderWidth: 1,
+
     borderColor: theme.neutral,
     borderRadius: BORDER_RADIUS * 1.8,
-    padding: PADDING * 3,
     width: '100%',
     placeholderTextColor: 'lightgrey' + placeholderOpacity, // Set placeholder text color to transparent
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignContent: 'center'
+  },
+  input: {
+    flex: 1,
+    padding: PADDING * 3,
+    paddingRight: 20
   }
 })

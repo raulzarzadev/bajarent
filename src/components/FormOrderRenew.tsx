@@ -5,13 +5,13 @@ import FormikSelectCategories from './FormikSelectCategories'
 import Button from './Button'
 import DateCell from './DateCell'
 import OrderType from '../types/OrderType'
-import { expireDate2 } from '../libs/expireDate'
+import { expireDate2, translateTime } from '../libs/expireDate'
 import InputCheckbox from './InputCheckbox'
 import StyledModal from './StyledModal'
 import FormPayment from './FormPayment'
 import useModal from '../hooks/useModal'
 import PaymentType from '../types/PaymentType'
-import { onExtend_V2, onPay } from '../libs/order-actions'
+import { onComment, onExtend_V2, onPay } from '../libs/order-actions'
 import { useNavigation } from '@react-navigation/native'
 import FormikInputImage from './FormikInputImage'
 
@@ -42,6 +42,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       })
         .then((res) => {
           console.log({ res })
+
           goBack()
         })
         .catch((err) => {
@@ -59,6 +60,12 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       time, //TODO: this should be the shrotest time?
       startAt,
       items
+    })
+    await onComment({
+      orderId,
+      content: `Renovación de ${order.folio} x ${translateTime(time)}`,
+      type: 'comment',
+      storeId: order.storeId
     })
   }
   const [addPay, setAddPay] = useState(true)
