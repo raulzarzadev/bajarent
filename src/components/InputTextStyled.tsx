@@ -142,13 +142,13 @@ const baseStyle = StyleSheet.create({
     borderColor: theme.neutral,
     borderRadius: BORDER_RADIUS * 1.8,
     width: '100%',
-    placeholderTextColor: 'lightgrey' + placeholderOpacity, // Set placeholder text color to transparent
     flexDirection: 'row',
     alignContent: 'center'
   },
   input: {
     flex: 1,
     padding: PADDING * 3,
-    paddingRight: 20
+    paddingRight: 20,
+    placeholderTextColor: 'lightgrey' + placeholderOpacity // Set placeholder text color to transparent
   }
 })
