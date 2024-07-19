@@ -187,6 +187,7 @@ const groupOrdersBySection = ({
       const reportedSolvedToday = reports.filter(
         (r) => r.solved === true && isToday(asDate(r.solvedAt))
       )
+      console.log({ reportedSolvedToday })
       const removeDuplicates = (arr: Partial<OrderType>[]) => {
         const map = new Map()
         arr.forEach((item) => {
@@ -249,9 +250,11 @@ const groupOrdersBySection = ({
         section: sectionId,
         inRent: getJustIds(inRent),
         renewedToday: getJustIds(renewedToday),
-        reported: getJustIds(reported),
-        pending: getJustIds(pending),
-        solvedToday: getJustIds(removeDuplicates(solvedToday)),
+        solvedToday: getJustIds(solvedToday),
+        reported: filterOutElements(
+          getJustIds(reported),
+          getJustIds(solvedToday)
+        ),
         paidToday: paidOrders,
         payments: sectionPayments,
         inStock
@@ -261,5 +264,9 @@ const groupOrdersBySection = ({
 
   return sections
 }
-
+const filterOutElements = (arr1: string[], arr2: string[]): string[] => {
+  const set2 = new Set(arr2)
+  const set1 = new Set(arr1)
+  return Array.from(set1).filter((item) => !set2.has(item))
+}
 export const ServiceBalances = new ServiceBalancesClass()
