@@ -197,8 +197,10 @@ const TabCashbox = () => {
     })
       .then(async (res) => {
         setBalance(res)
-        setUpdating(false)
+        setProgress(80)
         await ServiceConsolidatedOrders.consolidate(storeId)
+        setProgress(100)
+        setUpdating(false)
       })
       .catch((err) => {
         console.log(err)

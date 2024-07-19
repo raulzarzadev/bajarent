@@ -32,7 +32,7 @@ const SpanOrder = ({
   useEffect(() => {
     const orderFound = consolidatedOrders?.orders?.[orderId]
     setOrder(orderFound || null)
-  }, [])
+  }, [consolidatedOrders])
 
   if (redirect) {
     return (
