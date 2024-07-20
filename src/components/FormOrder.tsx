@@ -246,7 +246,7 @@ const FormOrderA = ({
             useEffect(() => {
               setErrors({})
               //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
-            }, [values.type])
+            }, [values])
             return (
               <>
                 <InputRadiosFormik
