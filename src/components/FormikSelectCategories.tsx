@@ -124,21 +124,17 @@ const FormikSelectCategories = ({
             <ListAssignedItemsE
               categoryId={category?.id}
               itemSelected={itemSelected}
-              onPressItem={(id) => {
-                setItemSelected(id)
+              onSelectItem={(id) => {
+                if (itemSelected === id) {
+                  setItemSelected('')
+                } else {
+                  setItemSelected(id)
+                }
+                const itemCategory = employeeItems.find(
+                  (item) => item.id === id
+                ).category
+                setCategory(categories.find((cat) => cat.id === itemCategory))
               }}
-              // itemSelected={itemSelected}
-              // onPressItem={(id) => {
-              //   if (itemSelected === id) {
-              //     setItemSelected('')
-              //   } else {
-              //     setItemSelected(id)
-              //   }
-              //   const itemCategory = employeeItems.find(
-              //     (item) => item.id === id
-              //   ).category
-              //   setCategory(categories.find((cat) => cat.id === itemCategory))
-              // }}
             />
           </View>
           {!!selectPrice && (

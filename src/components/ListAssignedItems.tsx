@@ -11,14 +11,17 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ItemActions from './ItemActions'
 import CardItem from './CardItem'
+import Button from './Button'
 
 export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']
   onPressItem?: (itemId: string) => void
   itemSelected?: string
+  onSelectItem?: (itemId: string) => void
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
+  const onSelectItem = props?.onSelectItem
   const itemSelected = props?.itemSelected
   const { items: availableItems } = useEmployee()
   const { categories, storeSections } = useStore()
@@ -34,6 +37,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
         items={formattedItems}
         itemSelected={itemSelected}
         onPressItem={onPressItem}
+        onSelectItem={onSelectItem}
       />
     </View>
   )
@@ -43,11 +47,13 @@ export type RowSectionItemsProps = {
   items: Partial<ItemType>[]
   itemSelected?: string
   onPressItem?: (itemId: string) => void
+  onSelectItem?: (itemId: string) => void
 }
 const RowSectionItems = ({
   items,
   itemSelected,
-  onPressItem
+  onPressItem,
+  onSelectItem
 }: RowSectionItemsProps) => {
   return (
     <FlatList
@@ -56,13 +62,28 @@ const RowSectionItems = ({
       data={items}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <SectionItem
-          item={item}
-          selected={itemSelected === item.id}
-          onPress={() => {
-            onPressItem?.(item.id)
-          }}
-        />
+        <View>
+          <SectionItem
+            item={item}
+            selected={itemSelected === item.id}
+            onPress={() => {
+              onPressItem?.(item.id)
+            }}
+          />
+          <View style={{ padding: 2, marginTop: 2 }}>
+            {!!onSelectItem && (
+              <Button
+                variant={itemSelected === item.id ? 'filled' : 'ghost'}
+                size="xs"
+                fullWidth
+                onPress={() => {
+                  onSelectItem(item.id)
+                }}
+                label="Seleccionar"
+              ></Button>
+            )}
+          </View>
+        </View>
       )}
     />
   )

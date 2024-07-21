@@ -68,10 +68,20 @@ export const EmployeeContextProvider = ({ children }) => {
   }, [isOwner])
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
+
   const canManageItems =
     isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
+
   useEffect(() => {
-    if (employee) {
+    if (isOwner || isAdmin) {
+      ServiceStoreItems.listenAvailableBySections({
+        storeId,
+        userSections: 'all',
+        cb: (items) => {
+          setItems(formatItems(items, categories, storeSections))
+        }
+      })
+    } else if (employee) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: employee?.sectionsAssigned || [],
