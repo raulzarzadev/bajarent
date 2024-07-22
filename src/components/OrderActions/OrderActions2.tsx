@@ -75,6 +75,8 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
 const RentOrderActions = ({ order }: { order: OrderType }) => {
   const status = order?.status
   const isDelivered = status === order_status.DELIVERED
+  const isPending =
+    status === order_status.AUTHORIZED || status === order_status.PENDING
   const isPickedUp = status === order_status.PICKED_UP
 
   const modalRentStart = useModal({ title: 'Comenzar renta' })
@@ -93,6 +95,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
           }}
         />
         <ButtonAction
+          disabled={isPending}
           isSelected={isPickedUp}
           selectedLabel="Recogido"
           unselectedLabel="Recoger"
@@ -109,17 +112,19 @@ const ButtonAction = ({
   selectedLabel,
   unselectedLabel,
   isSelected,
+  disabled,
   onPress
 }: {
   selectedLabel: string
   unselectedLabel: string
   isSelected: boolean
+  disabled?: boolean
   onPress: () => void
 }) => {
   return (
     <Button
       variant={isSelected ? 'filled' : 'outline'}
-      disabled={isSelected}
+      disabled={isSelected || disabled}
       label={isSelected ? selectedLabel : unselectedLabel}
       onPress={() => {
         onPress()

@@ -13,7 +13,7 @@ import { useAuth } from '../../contexts/authContext'
 const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
   const { user } = useAuth()
-  const items = order?.items
+  const items = order?.items || []
   const handleRentFinish = async () => {
     //*pickup items
     //onPickUp order it's ok
@@ -31,7 +31,7 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
           />
         </View>
         <View style={{ marginVertical: gSpace(3) }}>
-          {items.map((item, index) => (
+          {items?.map((item, index) => (
             <ItemRentOrder key={index} item={item} />
           ))}
         </View>
