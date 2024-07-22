@@ -108,6 +108,18 @@ export const onRepairFinish = async ({ orderId, userId }) => {
     })
     .catch(console.error)
 }
+export const onRepairDelivery = async ({ orderId, userId }) => {
+  return await ServiceOrders.update(orderId, {
+    status: order_status.DELIVERED,
+    deliveredAt: new Date(),
+    deliveredBy: userId,
+    isDelivered: true
+  })
+    .then(() => {
+      console.log('delivery')
+    })
+    .catch(console.error)
+}
 
 export const onRenew = async ({ orderId, renewedTo = '', userId }) => {
   return await ServiceOrders.update(orderId, {

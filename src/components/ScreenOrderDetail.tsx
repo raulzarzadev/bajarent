@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react'
 import { listenFullOrderData } from '../contexts/libs/getFullOrderData'
 import OrderType from '../types/OrderType'
 import ErrorBoundary from './ErrorBoundary'
-import { OrdersContextProvider } from '../contexts/ordersContext'
-import { OrderContext, OrderProvider } from '../contexts/orderContext'
+import { OrderContext } from '../contexts/orderContext'
 
 const ScreenOrderDetail = ({ route }) => {
   const { orderId } = route?.params
@@ -26,7 +25,7 @@ const ScreenOrderDetail = ({ route }) => {
     )
   }
   return (
-    <ScrollView style={{}}>
+    <ScrollView>
       <View
         style={{
           maxWidth: 500,

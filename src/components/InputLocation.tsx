@@ -13,48 +13,51 @@ import useLocation from '../hooks/useLocation'
 const InputLocation = ({ value, setValue, helperText }) => {
   const { getLocation, loading, location } = useLocation()
   return (
-    <View style={styles.group}>
-      <InputTextStyled
-        placeholder="Ubicación"
-        value={value}
-        onChangeText={setValue}
-        helperText={helperText}
-        containerStyle={{ flex: 1 }}
-      />
-      <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-        <Button
-          justIcon
-          icon="search"
-          variant="ghost"
-          onPress={() => {
-            if (value?.startsWith('http')) {
-              return Linking.openURL(value)
-            }
-            return Linking.openURL(`https://www.google.com/maps?q=${value}`)
-          }}
+    <View>
+      <Text>📍 Ubicación</Text>
+      <View style={styles.group}>
+        <InputTextStyled
+          placeholder="Ubicación"
+          value={value}
+          onChangeText={setValue}
+          helperText={helperText}
+          containerStyle={{ flex: 1 }}
         />
-      </View>
-      <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-        {loading ? (
-          <ActivityIndicator />
-        ) : (
+        <View style={{ width: 32, height: 32, marginLeft: 4 }}>
           <Button
             justIcon
-            disabled={location?.status === 'denied'}
-            icon={'location'}
+            icon="search"
             variant="ghost"
-            onPress={async () => {
-              const res = await getLocation()
-              if (res?.status === 'granted' && res.coords) {
-                const lat = res?.coords?.lat
-                const lon = res?.coords?.lon
-                setValue(`${lat},${lon}`)
-              } else {
-                setValue('')
+            onPress={() => {
+              if (value?.startsWith('http')) {
+                return Linking.openURL(value)
               }
+              return Linking.openURL(`https://www.google.com/maps?q=${value}`)
             }}
           />
-        )}
+        </View>
+        <View style={{ width: 32, height: 32, marginLeft: 4 }}>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Button
+              justIcon
+              disabled={location?.status === 'denied'}
+              icon={'location'}
+              variant="ghost"
+              onPress={async () => {
+                const res = await getLocation()
+                if (res?.status === 'granted' && res.coords) {
+                  const lat = res?.coords?.lat
+                  const lon = res?.coords?.lon
+                  setValue(`${lat},${lon}`)
+                } else {
+                  setValue('')
+                }
+              }}
+            />
+          )}
+        </View>
       </View>
     </View>
   )

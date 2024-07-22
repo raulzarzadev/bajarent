@@ -23,6 +23,6 @@ const OrderProvider: React.FC = ({ children }: { children: ReactNode }) => {
     </OrderContext.Provider>
   )
 }
-export const useOrderCtx = () => useContext(OrderContext)
+export const useOrderDetails = () => useContext(OrderContext)
 
 export { OrderContext, OrderProvider }

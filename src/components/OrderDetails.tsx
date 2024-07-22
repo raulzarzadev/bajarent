@@ -34,6 +34,8 @@ import PaymentVerify from './PaymentVerify'
 import ButtonCreateClient from './ButtonCreateClient'
 import RowOrderItem from './RowOrderItem'
 import { OrderProvider } from '../contexts/orderContext'
+import { OrderActionsE } from './OrderActions/OrderActions2'
+import ModalRepairItem from './ModalRepairItem'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -83,24 +85,37 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />
       </ErrorBoundary>
-      <View
-        style={{
-          marginVertical: 16,
-          paddingBottom: 16,
-          backgroundColor: theme?.base,
-          width: '100%',
-          paddingHorizontal: 4
-        }}
-      >
+
+      {order.type === order_type.RENT && (
         <ErrorBoundary componentName="OrderItems">
-          <OrderItems order={order} />
+          <View
+            style={{
+              marginVertical: 16,
+              paddingBottom: 16,
+              backgroundColor: theme?.base,
+              width: '100%',
+              paddingHorizontal: 4
+            }}
+          >
+            <OrderItems order={order} />
+            <Totals items={order.items} />
+            {order?.extensions ? (
+              <OrderExtensions order={order} />
+            ) : (
+              <View style={{ marginTop: gSpace(3) }}>
+                <OrderDates
+                  status={order.status}
+                  expireAt={order.expireAt}
+                  scheduledAt={order.scheduledAt}
+                  startedAt={order.deliveredAt}
+                  extendTime={order.extendTime}
+                  pickedUp={order.pickedUpAt}
+                />
+              </View>
+            )}
+          </View>
         </ErrorBoundary>
-        {order?.type !== order_type.REPAIR && (
-          <ErrorBoundary componentName="OrderTotals">
-            <OrderTotals order={order} />
-          </ErrorBoundary>
-        )}
-      </View>
+      )}
 
       {order?.type === order_type.REPAIR && (
         <ErrorBoundary componentName="ModalRepairQuote">
@@ -112,6 +127,9 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
               width: '100%'
             }}
           >
+            <View style={{ marginBottom: gSpace(4) }}>
+              <ModalRepairItem />
+            </View>
             <ModalRepairQuote
               orderId={order?.id}
               quote={{
@@ -129,9 +147,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           </View>
         </ErrorBoundary>
       )}
-
-      <OrderPayments orderId={order.id} />
-
+      <OrderActionsE />
       <View
         style={{
           maxWidth: 190,
@@ -145,6 +161,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           defaultAmount={defaultAmount}
         />
       </View>
+      <OrderPayments orderId={order.id} />
 
       <ErrorBoundary componentName="OrderActions">
         {[
@@ -231,33 +248,11 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const OrderTotals = ({ order }: { order: Partial<OrderType> }) => {
-  return (
-    <View>
-      <Totals items={order.items} />
-      {order?.extensions ? (
-        <OrderExtensions order={order} />
-      ) : (
-        <View style={{ marginTop: gSpace(3) }}>
-          <OrderDates
-            status={order.status}
-            expireAt={order.expireAt}
-            scheduledAt={order.scheduledAt}
-            startedAt={order.deliveredAt}
-            extendTime={order.extendTime}
-            pickedUp={order.pickedUpAt}
-          />
-        </View>
-      )}
-    </View>
-  )
-}
-
 const OrderItems = ({ order }: { order: Partial<OrderType> }) => {
   const items = order.items
   return (
     <View>
-      <Text style={gStyles.h3}>Artículos</Text>
+      <Text style={gStyles.h2}>Artículos</Text>
       {items?.map((item, i) => (
         <RowOrderItem item={item} key={item.id} order={order} />
       ))}

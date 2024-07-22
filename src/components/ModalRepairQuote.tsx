@@ -52,25 +52,26 @@ export const ModalRepairQuote = ({
   return (
     <>
       <View>
-        <Text style={gStyles.h3}>Artículo</Text>
-        <Text style={[gStyles.tCenter, gStyles.helper]}>{quote.category}</Text>
-        <Text style={[gStyles.tCenter, gStyles.helper]}>
-          <Text>Marca: </Text>
-          {quote.brand}
-        </Text>
-        <Text style={[gStyles.tCenter, gStyles.helper]}>
-          <Text>Serie: </Text>
-          {quote.serial}
-        </Text>
-        <Text style={[gStyles.tCenter, gStyles.tBold]}>
-          Descripción de la falla
-        </Text>
-        <Text style={[gStyles.tCenter, { marginBottom: 14 }]}>
-          {quote.failDescription}
-        </Text>
         {!!quoteAlreadyExists && (
           <View>
-            <Text style={gStyles.h3}>Detalles de cotización </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 8
+              }}
+            >
+              <Text style={gStyles.h2}>Cotización </Text>
+              <Button
+                variant="ghost"
+                size="small"
+                justIcon
+                icon="edit"
+                color="success"
+                onPress={modal.toggleOpen}
+              />
+            </View>
             <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
             <Text style={[gStyles.p, gStyles.tCenter]}>
               <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
@@ -78,15 +79,7 @@ export const ModalRepairQuote = ({
           </View>
         )}
       </View>
-      <Button
-        onPress={modal.toggleOpen}
-        icon="money"
-        size="small"
-        color="success"
-        variant="ghost"
-      >
-        {label}
-      </Button>
+
       <StyledModal {...modal}>
         <View style={styles.repairItemForm}>
           <InputTextStyled

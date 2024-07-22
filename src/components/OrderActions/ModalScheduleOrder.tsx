@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 import InputDate from '../InputDate'
-import { useOrderCtx } from '../../contexts/orderContext'
+import { useOrderDetails } from '../../contexts/orderContext'
 import asDate from '../../libs/utils-date'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 
@@ -12,7 +12,7 @@ const ModalScheduleOrder = ({ orderId = null }: { orderId: string | null }) => {
       console.error({ e })
     }
   }
-  const { order } = useOrderCtx()
+  const { order } = useOrderDetails()
   return (
     <View>
       <InputDate
