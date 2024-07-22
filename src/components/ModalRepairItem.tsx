@@ -36,12 +36,18 @@ export const ModalRepairItem = ({}) => {
             onPress={modal.toggleOpen}
           />
         </View>
-        <RepairItemDetails item={item} />
+        {item ? (
+          <RepairItemDetails item={item} />
+        ) : (
+          <Text style={{ justifyContent: 'center', textAlign: 'center' }}>
+            No hay artículo
+          </Text>
+        )}
       </View>
 
       <StyledModal {...modal}>
         <FormRepairItem
-          defaultValues={item}
+          defaultValues={{ ...item }}
           onSubmit={async (values) => {
             await ServiceOrders.update(order.id, { item: values })
               .then((res) => console.log({ res }))
@@ -66,12 +72,12 @@ export const RepairItemDetails = ({ item }: { item: OrderType['item'] }) => {
       <Text style={styles.title}>Categoria:</Text>
       <Text style={styles.value}>{categoryName}</Text>
       <Text style={styles.title}>Marca:</Text>
-      <Text style={styles.value}>{item.brand}</Text>
+      <Text style={styles.value}>{item?.brand}</Text>
       <Text style={styles.title}>Serie:</Text>
-      <Text style={styles.value}>{item.serial}</Text>
+      <Text style={styles.value}>{item?.serial}</Text>
 
       <Text style={styles.title}>Falla</Text>
-      <Text style={styles.value}>{item.failDescription}</Text>
+      <Text style={styles.value}>{item?.failDescription}</Text>
     </View>
   )
 }

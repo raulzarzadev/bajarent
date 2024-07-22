@@ -1,11 +1,14 @@
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
+import { Order } from '../DATA'
+import { onPickUpItem, onRentItem } from '../firebase/actions/item-actions'
 import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { CommentType } from '../types/CommentType'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
 import StoreType from '../types/StoreType'
+import { orderExpireAt } from './orders'
 
 export const onComment = async ({
   orderId,
@@ -227,4 +230,98 @@ export const onSetStatuses = async ({ orderId }) => {
   const order = await ServiceOrders.get(orderId)
   const { order: newOrder } = handleSetStatuses({ order })
   return await ServiceOrders.update(orderId, { ...newOrder, statuses: true })
+}
+
+export const onRentFinish = async ({
+  order,
+  userId
+}: {
+  order: Partial<OrderType>
+  userId: string
+}) => {
+  const items = order?.items || []
+  const storeId = order.storeId
+  const orderId = order?.id
+
+  if (order.type != order_type.RENT)
+    return console.error('Order is not a rent order')
+
+  //* pickup order
+  await onPickup({ orderId, userId })
+
+  //* create movement
+  await onComment({
+    orderId,
+    storeId,
+    content: 'Recogida',
+    type: 'comment'
+  })
+
+  //*pickup items
+  const promises = items?.map(async (item) => {
+    return onPickUpItem({
+      storeId,
+      itemId: item.id,
+      orderId: order.id
+    })
+      .then(async (res) => {
+        console.log({ res })
+      })
+      .catch(console.error)
+  })
+
+  await Promise.all(promises)
+    .then((res) => {
+      console.log({ res })
+    })
+    .catch(console.error)
+}
+export const onRentStart = async ({
+  order,
+  userId
+}: {
+  order: Partial<OrderType>
+  userId: string
+}) => {
+  const items = order?.items || []
+  const storeId = order.storeId
+  const orderId = order?.id
+
+  if (order.type != order_type.RENT)
+    return console.error('Order is not a rent order')
+
+  const expireAt = orderExpireAt({
+    order: { ...order, deliveredAt: new Date() }
+  })
+  //* delivery order
+  onDelivery({
+    expireAt,
+    orderId,
+    userId,
+    items,
+    order
+  })
+    .then((res) => console.log({ res }))
+    .catch(console.error)
+
+  //* create movement
+  await onComment({
+    orderId,
+    storeId,
+    content: 'Entregada',
+    type: 'comment'
+  })
+
+  //* delivery items
+  const promises = items.map((item) => {
+    return onRentItem({
+      itemId: item.id,
+      storeId: storeId,
+      orderId
+    })
+  })
+
+  await Promise.all(promises)
+    .then((res) => console.log({ res }))
+    .catch(console.error)
 }

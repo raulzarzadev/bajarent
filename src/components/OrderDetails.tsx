@@ -147,7 +147,12 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           </View>
         </ErrorBoundary>
       )}
+
+      {/*
+       //* ORDER ACTIONS FLOW DEPENDS ON ORDER TYPE
+       */}
       <OrderActionsE />
+
       <View
         style={{
           maxWidth: 190,

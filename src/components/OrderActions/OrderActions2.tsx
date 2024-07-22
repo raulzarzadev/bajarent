@@ -6,9 +6,9 @@ import OrderType, { order_status, order_type } from '../../types/OrderType'
 import useModal from '../../hooks/useModal'
 import ModalStartRepair from './ModalRepairStart'
 import ModalRepairFinish from './ModalRepairFinish'
-import { onComment, onRepairDelivery } from '../../libs/order-actions'
-import { useAuth } from '../../contexts/authContext'
 import ModalRepairDelivery from './ModalRepairDelivery'
+import ModalRentStart from './ModalRentStart'
+import ModalRentFinish from './ModalRentFinish'
 
 //* repaired
 function OrderActions() {
@@ -31,7 +31,6 @@ export const OrderActionsE = (props) => (
 
 const RepairOrderActions = ({ order }: { order: OrderType }) => {
   const status = order?.status
-  const { user } = useAuth()
   const isDelivered = status === order_status.DELIVERED
   const isRepaired = status === order_status.REPAIRED
   const isRepairing = status === order_status.REPAIRING
@@ -77,15 +76,20 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const status = order?.status
   const isDelivered = status === order_status.DELIVERED
   const isPickedUp = status === order_status.PICKED_UP
+
+  const modalRentStart = useModal({ title: 'Comenzar renta' })
+  const modalRentFinish = useModal({ title: 'Terminar renta' })
   return (
     <ScrollView horizontal style={styles.scrollView}>
+      <ModalRentStart modal={modalRentStart} />
+      <ModalRentFinish modal={modalRentFinish} />
       <View style={styles.container}>
         <ButtonAction
           isSelected={isDelivered}
-          selectedLabel="Rentado"
-          unselectedLabel="Rentar"
+          selectedLabel="Entregado"
+          unselectedLabel="Entregar"
           onPress={() => {
-            console.log('Rentar')
+            modalRentStart.toggleOpen()
           }}
         />
         <ButtonAction
@@ -93,7 +97,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
           selectedLabel="Recogido"
           unselectedLabel="Recoger"
           onPress={() => {
-            console.log('Rentar')
+            modalRentFinish.toggleOpen()
           }}
         />
       </View>

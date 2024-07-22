@@ -52,32 +52,30 @@ export const ModalRepairQuote = ({
   return (
     <>
       <View>
-        {!!quoteAlreadyExists && (
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: 8
-              }}
-            >
-              <Text style={gStyles.h2}>Cotización </Text>
-              <Button
-                variant="ghost"
-                size="small"
-                justIcon
-                icon="edit"
-                color="success"
-                onPress={modal.toggleOpen}
-              />
-            </View>
-            <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
-            <Text style={[gStyles.p, gStyles.tCenter]}>
-              <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
-            </Text>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 8
+            }}
+          >
+            <Text style={gStyles.h2}>Cotización </Text>
+            <Button
+              variant="ghost"
+              size="small"
+              justIcon
+              icon="edit"
+              color="success"
+              onPress={modal.toggleOpen}
+            />
           </View>
-        )}
+          <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>
+            <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
+          </Text>
+        </View>
       </View>
 
       <StyledModal {...modal}>

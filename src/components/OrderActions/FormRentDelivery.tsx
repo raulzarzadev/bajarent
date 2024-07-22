@@ -1,16 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import InputLocationFormik from './InputLocationFormik'
-import OrderType from '../types/OrderType'
-import Button from './Button'
+import FormikInputValue from '../FormikInputValue'
+import InputLocationFormik from '../InputLocationFormik'
+import OrderType from '../../types/OrderType'
+import Button from '../Button'
+import FormikInputImage from '../FormikInputImage'
+import FormikSelectCategories from '../FormikSelectCategories'
 
-const FormRepairDelivery = ({
+const FormRentDelivery = ({
   initialValues,
   onSubmit
 }: {
-  initialValues: Pick<OrderType, 'address' | 'location' | 'references'>
+  initialValues: Pick<
+    OrderType,
+    'address' | 'location' | 'references' | 'imageID' | 'imageHouse'
+  >
   onSubmit: (values) => Promise<void> | void
 }) => {
   const [loading, setLoading] = React.useState(false)
@@ -33,15 +38,26 @@ const FormRepairDelivery = ({
       >
         {({ handleSubmit, dirty }) => (
           <>
+            <View style={{ marginVertical: 8 }}>
+              <FormikSelectCategories name="items" selectPrice />
+            </View>
             <FormikInputValue name="address" label="Dirección" />
             <FormikInputValue
               name="references"
               label="Referencias de la casa"
             />
             <InputLocationFormik name="Location" />
+            <View style={{ marginVertical: 8 }}>
+              <FormikInputImage name="imageID" label="Subir identificación" />
+            </View>
+
+            <View style={{ marginVertical: 8 }}>
+              <FormikInputImage name="imageHouse" label="Subir fachada " />
+            </View>
+
             <Button
               buttonStyles={{ marginVertical: 12 }}
-              label="Actualizar "
+              label="Actualizar"
               disabled={loading || !dirty}
               onPress={handleSubmit}
             ></Button>
@@ -52,6 +68,4 @@ const FormRepairDelivery = ({
   )
 }
 
-export default FormRepairDelivery
-
-const styles = StyleSheet.create({})
+export default FormRentDelivery

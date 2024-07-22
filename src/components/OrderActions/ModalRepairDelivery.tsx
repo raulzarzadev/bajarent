@@ -3,15 +3,10 @@ import React from 'react'
 import StyledModal from '../StyledModal'
 import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
-import {
-  onComment,
-  onRepairDelivery,
-  onRepairFinish
-} from '../../libs/order-actions'
+import { onComment, onRepairDelivery } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
-import { Formik } from 'formik'
-import FormRepairDelivery from '../FormRepairDelivery'
+import FormRepairDelivery from './FormRepairDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
