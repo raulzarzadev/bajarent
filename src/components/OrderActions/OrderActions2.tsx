@@ -45,8 +45,8 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
       <View style={styles.container}>
         <ButtonAction
           isSelected={isRepairing}
-          selectedLabel="Reparando "
-          unselectedLabel="Inicar "
+          selectedLabel="Reparando"
+          unselectedLabel="Iniciar"
           onPress={() => {
             modalRepairStart.toggleOpen()
           }}

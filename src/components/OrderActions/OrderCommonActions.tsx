@@ -164,7 +164,7 @@ const OrderCommonActions = ({
       />
     ),
     canCopy && <ButtonCopyRow orderId={orderId} />,
-    true && (
+    false && (
       <>
         <ButtonConfirm
           text="Desea actualizar los estados a statuses"
