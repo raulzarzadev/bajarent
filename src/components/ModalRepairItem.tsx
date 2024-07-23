@@ -15,15 +15,15 @@ export const ModalRepairItem = ({}) => {
   const { order } = useOrderDetails()
   const { categories } = useStore()
   const modal = useModal({ title: 'Artículo' })
-  const item = order.item
+  const item = order?.item
   const categoryName =
-    categories.find((cat) => cat.id === item.categoryId)?.name || ''
+    categories.find((cat) => cat?.id === item?.categoryId)?.name || ''
   const formattedItem = {
     categoryName,
     categoryId: item?.categoryId || '',
-    brand: item?.brand || order.itemBrand || '',
-    serial: item?.serial || order.itemSerial || '',
-    failDescription: item?.failDescription || order.description || ''
+    brand: item?.brand || order?.itemBrand || '',
+    serial: item?.serial || order?.itemSerial || '',
+    failDescription: item?.failDescription || order?.description || ''
   }
 
   return (
