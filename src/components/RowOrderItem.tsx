@@ -140,14 +140,6 @@ export const RowOrderItem = ({
       </StyledModal>
 
       <View
-        // onPress={async () => {
-        //   if (itemAlreadyExist) {
-        //     toItems({ id: itemId })
-        //   } else {
-        //     createModal.toggleOpen()
-        //     console.log('this items not exist', { itemId })
-        //   }
-        // }}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -179,6 +171,8 @@ export const RowOrderItem = ({
             justIcon
             size="small"
             icon="add"
+            color="success"
+            variant="ghost"
             onPress={() => {
               createModal.toggleOpen()
             }}

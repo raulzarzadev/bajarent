@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from '../FormikInputValue'
 import InputLocationFormik from '../InputLocationFormik'
@@ -10,13 +10,15 @@ import FormikSelectCategories from '../FormikSelectCategories'
 
 const FormRentDelivery = ({
   initialValues,
-  onSubmit
+  onSubmit,
+  setDirty
 }: {
   initialValues: Pick<
     OrderType,
     'address' | 'location' | 'references' | 'imageID' | 'imageHouse'
   >
   onSubmit: (values) => Promise<void> | void
+  setDirty?: (dirty: boolean) => void
 }) => {
   const [loading, setLoading] = React.useState(false)
 
@@ -36,33 +38,39 @@ const FormRentDelivery = ({
           }
         }}
       >
-        {({ handleSubmit, dirty }) => (
-          <>
-            <View style={{ marginVertical: 8 }}>
-              <FormikSelectCategories name="items" selectPrice />
-            </View>
-            <FormikInputValue name="address" label="Dirección" />
-            <FormikInputValue
-              name="references"
-              label="Referencias de la casa"
-            />
-            <InputLocationFormik name="Location" />
-            <View style={{ marginVertical: 8 }}>
-              <FormikInputImage name="imageID" label="Subir identificación" />
-            </View>
+        {({ handleSubmit, dirty }) => {
+          useEffect(() => {
+            setDirty?.(dirty)
+          }, [dirty])
+          return (
+            <>
+              <View style={{ marginVertical: 8 }}>
+                <FormikSelectCategories name="items" selectPrice />
+              </View>
+              <FormikInputValue name="note" label="Contrato" />
+              <FormikInputValue name="address" label="Dirección" />
+              <FormikInputValue
+                name="references"
+                label="Referencias de la casa"
+              />
+              <InputLocationFormik name="Location" />
+              <View style={{ marginVertical: 8 }}>
+                <FormikInputImage name="imageID" label="Subir identificación" />
+              </View>
 
-            <View style={{ marginVertical: 8 }}>
-              <FormikInputImage name="imageHouse" label="Subir fachada " />
-            </View>
+              <View style={{ marginVertical: 8 }}>
+                <FormikInputImage name="imageHouse" label="Subir fachada " />
+              </View>
 
-            <Button
-              buttonStyles={{ marginVertical: 12 }}
-              label="Actualizar"
-              disabled={loading || !dirty}
-              onPress={handleSubmit}
-            ></Button>
-          </>
-        )}
+              <Button
+                buttonStyles={{ marginVertical: 12 }}
+                label="Actualizar"
+                disabled={loading || !dirty}
+                onPress={handleSubmit}
+              ></Button>
+            </>
+          )
+        }}
       </Formik>
     </View>
   )

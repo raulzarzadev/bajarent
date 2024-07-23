@@ -13,9 +13,15 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
   const { user } = useAuth()
+  const [isDirty, setIsDirty] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
   const handleRentStart = async () => {
     //*pickup items
-    onRentStart({ order, userId: user.id })
+    setIsLoading(true)
+    await onRentStart({ order, userId: user.id })
+    setIsLoading(false)
+    modal.toggleOpen()
+    return
   }
 
   return (
@@ -34,11 +40,15 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
             await ServiceOrders.update(order.id, values)
             return
           }}
+          setDirty={(dirty) => {
+            setIsDirty(dirty)
+          }}
         />
         <Button
+          disabled={isDirty || isLoading}
           label="Entregar"
-          onPress={() => {
-            handleRentStart()
+          onPress={async () => {
+            return await handleRentStart()
           }}
         ></Button>
       </StyledModal>

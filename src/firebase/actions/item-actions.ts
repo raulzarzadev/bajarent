@@ -223,3 +223,22 @@ export const onChangeOrderItem = async ({
     console.log('Error on changing item', { e })
   }
 }
+
+export const onAssignItem = async ({
+  storeId,
+  itemId,
+  orderId
+}: {
+  storeId: string
+  itemId: string
+  orderId: string
+}) => {
+  await onRentItem({ storeId, itemId, orderId })
+
+  // return await ServiceStoreItems.updateField({
+  //   storeId,
+  //   itemId,
+  //   field: 'assignedOrder',
+  //   value: orderId
+  // })
+}

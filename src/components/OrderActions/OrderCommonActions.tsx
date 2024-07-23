@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import {
@@ -16,6 +16,10 @@ import ButtonCopyRow from './ButtonCopyRow'
 import ModalSendWhatsapp from '../ModalSendWhatsapp'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import ModalScheduleOrder from './ModalScheduleOrder'
+import useModal from '../../hooks/useModal'
+import StyledModal from '../StyledModal'
+import ListAssignedItems, { ListAssignedItemsE } from '../ListAssignedItems'
+import { useState } from 'react'
 
 const OrderCommonActions = ({
   storeId,
@@ -102,6 +106,7 @@ const OrderCommonActions = ({
     canAssign && <ModalAssignOrder orderId={orderId} />,
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalSendWhatsapp orderId={orderId} />,
+    true && <ModalAssignItem orderId={orderId} />,
 
     canReorder && (
       <Button
@@ -223,5 +228,38 @@ const OrderCommonActions = ({
     </View>
   )
 }
-
+const ModalAssignItem = ({ orderId }) => {
+  const modal = useModal({ title: 'Asignar item' })
+  const [itemSelected, setItemSelected] = useState(null)
+  const handleAssignItem = () => {
+    console.log({ itemSelected })
+  }
+  return (
+    <View>
+      <Button
+        label="Asignar item"
+        onPress={() => {
+          modal.toggleOpen()
+        }}
+        size="small"
+      />
+      <StyledModal {...modal}>
+        <ListAssignedItemsE
+          itemSelected={itemSelected}
+          onSelectItem={(itemId) => {
+            setItemSelected(itemId)
+          }}
+        />
+        <View>
+          <Button
+            label="Asignar"
+            onPress={() => {
+              handleAssignItem()
+            }}
+          ></Button>
+        </View>
+      </StyledModal>
+    </View>
+  )
+}
 export default OrderCommonActions

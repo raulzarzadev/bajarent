@@ -20,8 +20,8 @@ import { expireDate2 } from '../libs/expireDate'
 import InputTextStyled from './InputTextStyled'
 
 export type ItemSelected = {
-  categoryId: any
-  failDescription: string
+  categoryId?: string
+  failDescription?: string
   categoryName?: string
   priceSelectedId?: string
   priceQty?: number
@@ -30,6 +30,7 @@ export type ItemSelected = {
   brand?: string
   serial?: string
   number?: string
+
   // priceId?: string
   // timestamp?: Date
 }
