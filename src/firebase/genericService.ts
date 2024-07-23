@@ -246,17 +246,23 @@ export class FirebaseGenericService<T extends Identifiable> {
       item
     })
   }
-  getRefItems<T>({
-    collectionRef,
-    filters
-  }: {
-    collectionRef: CollectionReference<DocumentData>
-    filters: QueryConstraint[]
-  }): Promise<T[]> {
-    return this.itemCRUD.getRefItems({
+  getRefItems<T>(
+    {
       collectionRef,
       filters
-    })
+    }: {
+      collectionRef: CollectionReference<DocumentData>
+      filters: QueryConstraint[]
+    },
+    ops?: GetItemsOps
+  ): Promise<T[]> {
+    return this.itemCRUD.getRefItems(
+      {
+        collectionRef,
+        filters
+      },
+      ops
+    )
   }
 
   listenRefItems({

@@ -17,16 +17,15 @@ import { fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 
 export const CommentRow = ({
-  comment: _comment,
-  viewOrder
+  comment: _comment
 }: // refetch
 // orderId
 {
   comment: FormattedComment
-  viewOrder?: boolean
   refetch?: (props?: { id?: string }) => void
-  // orderId: string
 }) => {
+  const { toOrders, toItems } = useMyNav()
+
   const { navigate } = useNavigation()
   const [disabled, setDisabled] = useState(false)
   const { staff } = useStore()
@@ -67,7 +66,6 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
-  const { toOrders } = useMyNav()
 
   if (!comment) return null
 
@@ -135,7 +133,8 @@ export const CommentRow = ({
                 size="small"
               />
             </View>
-            {!!order ? (
+
+            {!!order && (
               <View style={styles.badge}>
                 <Chip
                   title={`${order?.folio}  ${order?.fullName}`}
@@ -147,7 +146,8 @@ export const CommentRow = ({
                   }}
                 ></Chip>
               </View>
-            ) : (
+            )}
+            {!order && !!comment?.orderId && (
               <View style={styles.badge}>
                 <Chip
                   title={`ver orden`}
@@ -160,6 +160,21 @@ export const CommentRow = ({
                 ></Chip>
               </View>
             )}
+
+            {!!comment?.itemId && (
+              <View style={styles.badge}>
+                <Chip
+                  title={`ver item`}
+                  size="sm"
+                  color={theme.primary}
+                  titleColor={theme.white}
+                  onPress={() => {
+                    toItems({ id: comment?.itemId })
+                  }}
+                ></Chip>
+              </View>
+            )}
+
             {!!(isAdmin || isOwner) && (
               <View style={styles.badge}>
                 <ButtonConfirm

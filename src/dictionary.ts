@@ -183,9 +183,10 @@ const labels = {
   assignment: 'Asignación',
   created: 'Creada',
   exchange: 'cambio',
-
+  reactivate: 'habilitar',
   bonus: 'bono',
   expense: 'gasto',
+  'item-movement': 'Artículo MV',
   ' ': '',
   '': ''
 } as const

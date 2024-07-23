@@ -1,4 +1,7 @@
 import {
+  CollectionReference,
+  DocumentData,
+  DocumentReference,
   QueryConstraint,
   collection,
   limit,
@@ -8,6 +11,8 @@ import {
 import { db } from './main'
 import { FirebaseGenericService } from './genericService'
 import BaseType from '../types/BaseType'
+import { endDate, startDate } from '../libs/utils-date'
+import { GetItemsOps } from './firebase.CRUD'
 
 const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'
@@ -26,6 +31,7 @@ export type ItemHistoryBase = {
     | 'reactivate'
   orderId?: string
   content: string
+  itemId: string
 }
 export type ItemHistoryType = ItemHistoryBase & BaseType
 
@@ -138,6 +144,39 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
       ]
     })
     return entries[0]
+  }
+
+  getItemsMovements({
+    date,
+    storeId,
+    items
+  }: {
+    date: Date
+    storeId: string
+    items: string[]
+  }): Promise<Type[]> {
+    let filters: QueryConstraint[] = [
+      orderBy('createdAt', 'desc'),
+      where('createdAt', '>=', startDate(date)),
+      where('createdAt', '<=', endDate(date))
+    ]
+    // if (!!type) {
+    //   filters.push(where('type', '==', type))
+    // }
+
+    const res = items.map(async (itemId) => {
+      const collectionRef = collection(
+        db,
+        COLLECTION,
+        storeId,
+        SUB_COLLECTION,
+        itemId,
+        SUB_COLLECTION_2
+      )
+      const res = await this.getRefItems({ collectionRef, filters })
+      return res.map((item: ItemHistoryType) => ({ ...item, itemId }))
+    })
+    return Promise.all(res).then((res) => res.flat() as ItemHistoryType[])
   }
 }
 export const ServiceItemHistory = new ServiceItemHistoryClass('stores')

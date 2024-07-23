@@ -14,6 +14,7 @@ const ScreenItemNew = () => {
     return await onCreateItem({ storeId, item: values })
       .then((res) => {
         fetchItems()
+
         goBack()
       })
       .catch((err) => {
