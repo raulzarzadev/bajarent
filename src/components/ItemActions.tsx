@@ -62,7 +62,8 @@ const ItemActions = ({
       itemId,
       entry: {
         type: needFix ? 'fix' : 'report',
-        content: needFix ? `${comment}` : `${comment}`
+        content: needFix ? `${comment}` : `${comment}`,
+        itemId
       }
     })
 

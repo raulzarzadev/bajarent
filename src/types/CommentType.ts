@@ -8,7 +8,7 @@ export enum comment_types {
   important = 'important',
   'item-movement' = 'item-movement'
 }
-export type CommentTypes = comment_types
+export type CommentTypes = keyof typeof comment_types
 
 export type CommentBase = {
   id: string
