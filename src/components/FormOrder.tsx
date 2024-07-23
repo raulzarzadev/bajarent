@@ -495,20 +495,20 @@ const FormFieldsA = ({
     ),
     repairDescription: (
       <InputValueFormik
-        name={'description'}
+        name={'item.failDescription'}
         placeholder="Describe la falla"
-        helperText="Ejemplo: Lavadora no lava, hace ruido."
+        helperText="Ejemplo: No lava, hace ruido."
       />
     ),
     itemBrand: (
       <InputValueFormik
-        name={'itemBrand'}
+        name={'item.brand'}
         placeholder="Marca"
-        helperText="Ejemplo: Mytag"
+        helperText="Ejemplo: Maytag"
       />
     ),
     itemSerial: (
-      <InputValueFormik name={'itemSerial'} placeholder="No. de serie" />
+      <InputValueFormik name={'item.serial'} placeholder="No. de serie" />
     ),
     assignIt: <FormikAssignOrder />
     /*

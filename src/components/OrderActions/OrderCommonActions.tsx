@@ -20,6 +20,8 @@ import useModal from '../../hooks/useModal'
 import StyledModal from '../StyledModal'
 import ListAssignedItems, { ListAssignedItemsE } from '../ListAssignedItems'
 import { useState } from 'react'
+import { onAssignItem } from '../../firebase/actions/item-actions'
+import { useStore } from '../../contexts/storeContext'
 
 const OrderCommonActions = ({
   storeId,
@@ -106,7 +108,7 @@ const OrderCommonActions = ({
     canAssign && <ModalAssignOrder orderId={orderId} />,
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalSendWhatsapp orderId={orderId} />,
-    true && <ModalAssignItem orderId={orderId} />,
+    // true && <ModalAssignItem orderId={orderId} />,
 
     canReorder && (
       <Button
@@ -228,12 +230,23 @@ const OrderCommonActions = ({
     </View>
   )
 }
-const ModalAssignItem = ({ orderId }) => {
+const ModalAssignItem = ({ orderId, itemId }) => {
   const modal = useModal({ title: 'Asignar item' })
-  const [itemSelected, setItemSelected] = useState(null)
-  const handleAssignItem = () => {
-    console.log({ itemSelected })
+  const { storeId } = useStore()
+  const [itemSelected, setItemSelected] = useState<null | string>(null)
+  const [loading, setLoading] = useState(false)
+  const handleAssignItem = async () => {
+    setLoading(true)
+    await onAssignItem({
+      orderId,
+      itemId: itemSelected,
+      storeId
+    })
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }))
+    setLoading(false)
   }
+  const alreadyHasItem = item
   return (
     <View>
       <Button
@@ -252,6 +265,7 @@ const ModalAssignItem = ({ orderId }) => {
         />
         <View>
           <Button
+            disabled={alreadyHasItem}
             label="Asignar"
             onPress={() => {
               handleAssignItem()

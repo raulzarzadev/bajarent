@@ -39,15 +39,19 @@ export const RowOrderItem = ({
     ops?: { id: string }
   ) => void
 }) => {
-  const { storeId, categories, storeSections } = useStore()
   const { permissions } = useEmployee()
-  const { toItems } = useMyNav()
-  const priceSelected = item.priceSelected
+  const { storeId, categories, storeSections, items } = useStore()
+
   const itemId = item.id
   const orderId = order.id
+  const priceSelected = item.priceSelected
+
+  const itemData = items?.find((i) => i?.id === itemId)
+  console.log({ itemData })
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
+
   const canCreateItem =
     order.type === order_type.RENT &&
     order.status === order_status.DELIVERED &&
@@ -78,11 +82,10 @@ export const RowOrderItem = ({
           <TextInfo
             defaultVisible
             type="warning"
-            text={`Para crear este artículo la orden  debe  ${
-              !isRent && 'ser una renta ⏳. '
-            } ${!isDeliveredRent && 'estar entregada 🏠. '},   ${
-              !hasPermissionsToCreateItem && 'tener permisos necesarios'
-            }`}
+            text={`Para crear este artículo la orden  debe 
+               ${!isRent ? 'ser RENTA ⏳. ' : ''} 
+               ${!isDeliveredRent ? 'estar ENTREGADA 🏠. ' : ''}  
+               ${!hasPermissionsToCreateItem ? 'tener PERMISOS' : ''}`}
           />
         )}
 
@@ -149,9 +152,8 @@ export const RowOrderItem = ({
         <ModalChangeItem itemId={itemId} orderId={orderId} />
         <RowItem
           item={{
-            ..._item,
-            priceSelected,
-            categoryName: item.categoryName
+            ...item,
+            ...itemData
           }}
           style={{
             marginVertical: gSpace(2),

@@ -233,7 +233,9 @@ export const onAssignItem = async ({
   itemId: string
   orderId: string
 }) => {
-  await onRentItem({ storeId, itemId, orderId })
+  // this should edit item status, especic item in order items and create an entry for item history
+  //* 1. update item status to rented
+  return await onRentItem({ storeId, itemId, orderId })
 
   // return await ServiceStoreItems.updateField({
   //   storeId,
