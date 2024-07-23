@@ -1,6 +1,5 @@
 import { Timestamp } from 'firebase/firestore'
 import {
-  FormatDistanceToken,
   endOfWeek,
   format as fnsFormat,
   formatDistanceToNowStrict,
