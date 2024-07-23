@@ -8,7 +8,15 @@ import TextInfo from './TextInfo'
 import { ListItemsSectionsE } from './ListItemsSections'
 import { useEmployee } from '../contexts/employeeContext'
 
-const ModalChangeItem = ({ itemId, orderId }) => {
+const ModalChangeItem = ({
+  itemId,
+  orderId,
+  disabled
+}: {
+  itemId: string
+  orderId: string
+  disabled?: boolean
+}) => {
   const { storeId } = useStore()
   const { permissions } = useEmployee()
   const viewAllItems = permissions.isAdmin || permissions.isOwner
@@ -20,6 +28,7 @@ const ModalChangeItem = ({ itemId, orderId }) => {
   return (
     <View>
       <ButtonConfirm
+        openDisabled={disabled}
         handleConfirm={async () => {
           handleChangeItem()
         }}

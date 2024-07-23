@@ -128,6 +128,8 @@ export const onRentItem = async ({ storeId, itemId, orderId }) => {
     type: 'delivery',
     orderId
   })
+  // .then((res) => console.log({ res }))
+  // .catch((err) => console.error({ err }))
   return await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO DELIVERED
     storeId,
@@ -135,6 +137,8 @@ export const onRentItem = async ({ storeId, itemId, orderId }) => {
     field: 'status',
     value: 'rented'
   })
+  // .then((res) => console.log({ res }))
+  // .catch((err) => console.error({ err }))
 }
 
 export const onRegistryEntry = async ({

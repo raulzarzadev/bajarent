@@ -6,7 +6,7 @@ import FormItem from './FormItem'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import Button from './Button'
-import { gSpace } from '../styles'
+import { gSpace, gStyles } from '../styles'
 import theme, { colors } from '../theme'
 import { useStore } from '../contexts/storeContext'
 import { ItemSelected } from './FormSelectItem'
@@ -22,6 +22,8 @@ import TextInfo from './TextInfo'
 import ModalChangeItem from './ModalChangeItem'
 import StoreType from '../types/StoreType'
 import { CategoryType } from '../types/RentItem'
+import { ListAssignedItemsE } from './ListAssignedItems'
+import { onAssignItem } from '../firebase/actions/item-actions'
 
 export const RowOrderItem = ({
   item,
@@ -73,8 +75,31 @@ export const RowOrderItem = ({
     })
   }, [categories])
 
-  const createModal = useModal({ title: 'Crear artículo' })
+  const createModal = useModal({ title: 'Asignar o crear artículo' })
+  const [itemSelected, setItemSelected] = useState<null | string>(null)
+  const handleSelectItem = (itemId) => {
+    setItemSelected(itemId)
+  }
+  const [loading, setLoading] = useState(false)
 
+  const handleAssignItem = async () => {
+    setLoading(true)
+    createModal.toggleOpen()
+    console.log({
+      orderId,
+      itemId,
+      storeId
+    })
+    await onAssignItem({
+      orderId,
+      storeId,
+      itemId: itemSelected
+    })
+      .then((res) => console.log({ res }))
+      .catch((err) => console.log({ err }))
+    setLoading(false)
+    return
+  }
   return (
     <View>
       <StyledModal {...createModal}>
@@ -90,55 +115,76 @@ export const RowOrderItem = ({
         )}
 
         {canCreateItem && (
-          <FormItem
-            values={{
-              ...formatNewItem({
-                order,
-                item,
-                storeSections,
-                storeCategories: categories
-              })
-            }}
-            onSubmit={async (values) => {
-              //* CREATE ITEM
-              const newItemId = await ServiceStoreItems.add({
-                item: values,
-                storeId
-              })
-                .then(async ({ res }) => {
-                  const newItemId = res.id
-                  return newItemId
-                })
-                .catch((e) => console.log({ e }))
+          <>
+            <Text style={gStyles.h3}>
+              Asignar alguno de items que tienes disponibles
+            </Text>
+            <ListAssignedItemsE
+              itemSelected={itemSelected}
+              onSelectItem={(itemId) => {
+                handleSelectItem(itemId)
+              }}
+            />
+            <Button
+              disabled={!itemSelected}
+              label="Asignar item"
+              onPress={() => {
+                handleAssignItem()
+              }}
+            ></Button>
+            <Text style={gStyles.h3}>o</Text>
+            <Text style={gStyles.h3}>Crea un artítculo nuevo</Text>
 
-              if (newItemId) {
-                //* ADD ENTRY TO THE ITEM
-                await ServiceStoreItems.addEntry({
-                  storeId,
-                  itemId: newItemId,
-                  entry: {
-                    type: 'created',
-                    content: 'Item creado',
-                    orderId: orderId || ''
-                  }
+            <FormItem
+              values={{
+                ...formatNewItem({
+                  order,
+                  item,
+                  storeSections,
+                  storeCategories: categories
                 })
-                  .then((res) => console.log({ res }))
+              }}
+              onSubmit={async (values) => {
+                //* CREATE ITEM
+                const newItemId = await ServiceStoreItems.add({
+                  item: values,
+                  storeId
+                })
+                  .then(async ({ res }) => {
+                    const newItemId = res.id
+                    return newItemId
+                  })
                   .catch((e) => console.log({ e }))
 
-                //* UPDATE ORDER WITH THE NEW ITEM
-                await ServiceOrders.updateItemId({
-                  orderId,
-                  itemId,
-                  newItemId: newItemId
-                })
-                  .then((res) => console.log({ res }))
-                  .catch((e) => console.log({ e }))
-                onAction?.('created', { id: newItemId })
+                if (newItemId) {
+                  //* ADD ENTRY TO THE ITEM
+                  await ServiceStoreItems.addEntry({
+                    storeId,
+                    itemId: newItemId,
+                    entry: {
+                      type: 'created',
+                      content: 'Item creado',
+                      orderId: orderId || ''
+                    }
+                  })
+                    .then((res) => console.log({ res }))
+                    .catch((e) => console.log({ e }))
 
-                return
-              }
-            }}
-          />
+                  //* UPDATE ORDER WITH THE NEW ITEM
+                  await ServiceOrders.updateItemId({
+                    orderId,
+                    itemId,
+                    newItemId: newItemId
+                  })
+                    .then((res) => console.log({ res }))
+                    .catch((e) => console.log({ e }))
+                  onAction?.('created', { id: newItemId })
+
+                  return
+                }
+              }}
+            />
+          </>
         )}
       </StyledModal>
 
@@ -149,7 +195,7 @@ export const RowOrderItem = ({
           justifyContent: 'center'
         }}
       >
-        <ModalChangeItem itemId={itemId} orderId={orderId} />
+        <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
         <RowItem
           item={{
             ...item,
@@ -178,6 +224,7 @@ export const RowOrderItem = ({
             onPress={() => {
               createModal.toggleOpen()
             }}
+            disabled={loading}
           />
         )}
 
@@ -191,6 +238,7 @@ export const RowOrderItem = ({
             icon="edit"
             justIcon
             modalTitle="Editar item"
+            openDisabled={loading}
           >
             <View style={{ marginBottom: 8 }}>
               <FormItem
@@ -210,6 +258,7 @@ export const RowOrderItem = ({
             justIcon
             onPress={onPressDelete}
             size="small"
+            disabled={loading}
           />
         )}
       </View>
