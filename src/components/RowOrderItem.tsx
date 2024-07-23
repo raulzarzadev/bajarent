@@ -139,15 +139,15 @@ export const RowOrderItem = ({
         )}
       </StyledModal>
 
-      <Pressable
-        onPress={async () => {
-          if (itemAlreadyExist) {
-            toItems({ id: itemId })
-          } else {
-            createModal.toggleOpen()
-            console.log('this items not exist', { itemId })
-          }
-        }}
+      <View
+        // onPress={async () => {
+        //   if (itemAlreadyExist) {
+        //     toItems({ id: itemId })
+        //   } else {
+        //     createModal.toggleOpen()
+        //     console.log('this items not exist', { itemId })
+        //   }
+        // }}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -163,6 +163,7 @@ export const RowOrderItem = ({
           }}
           style={{
             marginVertical: gSpace(2),
+            marginHorizontal: gSpace(2),
             justifyContent: 'space-between',
             flexDirection: 'row',
             alignItems: 'center',
@@ -172,47 +173,18 @@ export const RowOrderItem = ({
             borderRadius: gSpace(2)
           }}
         />
-        {/* {shouldcanCreateItem && canCreateItem && (
-        <ButtonConfirm
-          handleConfirm={async () => {}}
-          confirmLabel="Cerrar"
-          confirmVariant="filled"
-          openSize="small"
-          openColor="success"
-          icon="save"
-          justIcon
-          modalTitle="Crear item"
-        >
-          <View style={{ marginBottom: 8 }}>
-            <FormItem
-              values={_item}
-              onSubmit={async (values) => {
-                //* create item
-                const res = await ServiceStoreItems.add({
-                  item: values,
-                  storeId
-                }).then(({ res }) => {
-                  if (res.id) {
-                    ServiceOrders.updateItemId({
-                      orderId,
-                      itemId,
-                      newItemId: res.id
-                    })
-                    //* update Order
-                  }
-                  console.log({ res })
-                })
-              }}
-            />
-          </View>
-        </ButtonConfirm>
-      )} */}
 
-        {!!itemAlreadyExist ? (
-          <Icon icon="done" color={colors.blue} />
-        ) : (
-          <Icon icon="add" color={colors.green} />
+        {!itemAlreadyExist && (
+          <Button
+            justIcon
+            size="small"
+            icon="add"
+            onPress={() => {
+              createModal.toggleOpen()
+            }}
+          />
         )}
+
         {!!onEdit && (
           <ButtonConfirm
             handleConfirm={async () => {}}
@@ -244,7 +216,7 @@ export const RowOrderItem = ({
             size="small"
           />
         )}
-      </Pressable>
+      </View>
     </View>
   )
 }
