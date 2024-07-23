@@ -92,6 +92,8 @@ const ListStoreItems = ({
   return (
     <View>
       <ListE
+        defaultOrder="des"
+        defaultSortBy="number"
         ComponentMultiActions={({ ids }) => (
           <View>
             <ButtonConfirm
