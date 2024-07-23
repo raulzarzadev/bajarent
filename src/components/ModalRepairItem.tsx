@@ -47,7 +47,7 @@ export const ModalRepairItem = ({}) => {
             onPress={modal.toggleOpen}
           />
         </View>
-        {item ? (
+        {formattedItem ? (
           <RepairItemDetails item={formattedItem} />
         ) : (
           <Text style={{ justifyContent: 'center', textAlign: 'center' }}>
@@ -80,14 +80,30 @@ export const RepairItemDetails = ({
   const { categoryName, brand, serial, failDescription } = item
   return (
     <View>
-      <Text style={styles.title}>Categoria:</Text>
-      <Text style={styles.value}>{categoryName}</Text>
-      <Text style={styles.title}>Marca:</Text>
-      <Text style={styles.value}>{brand}</Text>
-      <Text style={styles.title}>Serie:</Text>
-      <Text style={styles.value}>{serial}</Text>
-      <Text style={styles.title}>Falla</Text>
-      <Text style={styles.value}>{failDescription}</Text>
+      {categoryName && (
+        <>
+          <Text style={styles.title}>Categoria:</Text>
+          <Text style={styles.value}>{categoryName}</Text>
+        </>
+      )}
+      {brand && (
+        <>
+          <Text style={styles.title}>Marca:</Text>
+          <Text style={styles.value}>{brand}</Text>
+        </>
+      )}
+      {serial && (
+        <>
+          <Text style={styles.title}>Serie:</Text>
+          <Text style={styles.value}>{serial}</Text>
+        </>
+      )}
+      {failDescription && (
+        <>
+          <Text style={styles.title}>Falla</Text>
+          <Text style={styles.value}>{failDescription}</Text>
+        </>
+      )}
     </View>
   )
 }
