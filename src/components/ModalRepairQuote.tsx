@@ -9,6 +9,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import CurrencyAmount from './CurrencyAmount'
 import { gStyles } from '../styles'
 import theme from '../theme'
+import { useOrderDetails } from '../contexts/orderContext'
 
 export const ModalRepairQuote = ({
   orderId,

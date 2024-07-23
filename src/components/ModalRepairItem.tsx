@@ -9,11 +9,22 @@ import { useOrderDetails } from '../contexts/orderContext'
 import FormRepairItem from './FormRepairItem'
 import { useStore } from '../contexts/storeContext'
 import OrderType from '../types/OrderType'
+import { use } from 'chai'
 
 export const ModalRepairItem = ({}) => {
   const { order } = useOrderDetails()
+  const { categories } = useStore()
   const modal = useModal({ title: 'Artículo' })
   const item = order.item
+  const categoryName =
+    categories.find((cat) => cat.id === item.categoryId)?.name || ''
+  const formattedItem = {
+    categoryName,
+    categoryId: item?.categoryId || '',
+    brand: item?.brand || order.itemBrand || '',
+    serial: item?.serial || order.itemSerial || '',
+    failDescription: item?.failDescription || order.description || ''
+  }
 
   return (
     <>
@@ -37,7 +48,7 @@ export const ModalRepairItem = ({}) => {
           />
         </View>
         {item ? (
-          <RepairItemDetails item={item} />
+          <RepairItemDetails item={formattedItem} />
         ) : (
           <Text style={{ justifyContent: 'center', textAlign: 'center' }}>
             No hay artículo
@@ -47,7 +58,7 @@ export const ModalRepairItem = ({}) => {
 
       <StyledModal {...modal}>
         <FormRepairItem
-          defaultValues={{ ...item }}
+          defaultValues={{ ...formattedItem }}
           onSubmit={async (values) => {
             await ServiceOrders.update(order.id, { item: values })
               .then((res) => console.log({ res }))
@@ -61,23 +72,22 @@ export const ModalRepairItem = ({}) => {
   )
 }
 
-export const RepairItemDetails = ({ item }: { item: OrderType['item'] }) => {
-  const itemCategoryId = item?.categoryId
-  const { categories } = useStore()
-  const categoryName = itemCategoryId
-    ? categories.find((c) => c.id === itemCategoryId)?.name
-    : ''
+export const RepairItemDetails = ({
+  item = {}
+}: {
+  item: OrderType['item']
+}) => {
+  const { categoryName, brand, serial, failDescription } = item
   return (
     <View>
       <Text style={styles.title}>Categoria:</Text>
       <Text style={styles.value}>{categoryName}</Text>
       <Text style={styles.title}>Marca:</Text>
-      <Text style={styles.value}>{item?.brand}</Text>
+      <Text style={styles.value}>{brand}</Text>
       <Text style={styles.title}>Serie:</Text>
-      <Text style={styles.value}>{item?.serial}</Text>
-
+      <Text style={styles.value}>{serial}</Text>
       <Text style={styles.title}>Falla</Text>
-      <Text style={styles.value}>{item?.failDescription}</Text>
+      <Text style={styles.value}>{failDescription}</Text>
     </View>
   )
 }
