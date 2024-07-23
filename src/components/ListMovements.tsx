@@ -1,43 +1,88 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { LoadingList } from './List'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
 import { CommentType } from './ListComments'
-import PaymentType from '../types/PaymentType'
-import CurrencyAmount from './CurrencyAmount'
 import { useStore } from '../contexts/storeContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
 import formatComments from '../libs/formatComments'
-import { FormattedComment } from '../types/CommentType'
+import { comment_types, FormattedComment } from '../types/CommentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
+import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
+import dictionary from '../dictionary'
+import Loading from './Loading'
 
 const ListMovements = () => {
-  const [data, setData] = React.useState<FormattedComment[]>([])
+  const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  const { payments, staff } = useStore()
+  const { payments, staff, items } = useStore()
+  const [loading, setLoading] = React.useState(false)
   const { orders } = useOrdersCtx()
+
   const [date, setDate] = React.useState(new Date())
-  const handleChangeDate = (newDate: Date) => {
-    setDate(newDate)
+  const handleChangeDate = async (newDate: Date) => {
+    try {
+      setLoading(true)
+      setDate(newDate)
+      const itemsMovements = ServiceItemHistory.getItemsMovements({
+        storeId,
+        date: asDate(newDate),
+        items: items.map(({ id }) => id)
+      }).then((res) => {
+        const asMovement: Partial<CommentType>[] = res.map((movement) => {
+          const itemDetails = items.find(({ id }) => id === movement.itemId)
+          return {
+            type: comment_types['item-movement'],
+            title: 'hola',
+            createdAt: movement.createdAt,
+            user: movement.createdBy,
+            createdBy: movement.createdBy,
+            storeId,
+            orderId: movement.orderId,
+            content: ` ${
+              itemDetails?.number
+                ? `Artículo no. ${itemDetails?.number}  ${dictionary(
+                    movement.type
+                  )}`
+                : `${dictionary(movement.type)}`
+            }`,
+            id: movement?.id || '',
+            itemId: itemDetails?.id || ''
+          }
+        })
+        return asMovement
+      })
+      const ordersMovements = ServiceComments.getByDate(storeId, newDate).then(
+        async (comments) => {
+          const todayPayments = payments.filter(({ createdAt }) => {
+            return isToday(asDate(createdAt))
+          })
+          const movements = await formatComments({
+            comments,
+            orders,
+            staff,
+            payments: todayPayments
+          })
+          return movements
+        }
+      )
+      const res: Partial<FormattedComment[]> = await Promise.all([
+        itemsMovements,
+        ordersMovements
+      ]).then((res) => res.flat() as Partial<FormattedComment[]>)
+      setLoading(false)
+      setData(res)
+    } catch (error) {
+      console.error(error)
+    }
   }
   useEffect(() => {
-    ServiceComments.getByDate(storeId, date).then(async (comments) => {
-      const todayPayments = payments.filter(({ createdAt }) => {
-        return isToday(asDate(createdAt))
-      })
-      const movements = await formatComments({
-        comments,
-        orders,
-        staff,
-        payments: todayPayments
-      })
-      setData([...movements])
-    })
-  }, [orders, date])
+    handleChangeDate(date)
+  }, [])
 
   return (
     <View>
@@ -46,8 +91,9 @@ const ListMovements = () => {
         onChangeDate={handleChangeDate}
         debounce={700}
       />
+      {loading && <Loading />}
       <LoadingList
-        ComponentRow={({ item }) => <CommentRow comment={item} viewOrder />}
+        ComponentRow={({ item }) => <CommentRow comment={item} />}
         data={data}
         filters={[
           { field: 'type', label: 'Tipo' },
@@ -65,43 +111,6 @@ const ListMovements = () => {
       />
     </View>
   )
-}
-
-export type MovementType = {
-  type: string
-  title: string
-  createdAt: string
-  user: string
-  content: ReactNode
-  id: string
-}
-const formatMovements = ({
-  comments,
-  payments
-}: {
-  comments: CommentType[]
-  payments: PaymentType[]
-}): MovementType[] => {
-  let res = []
-  payments.forEach((payment) => {
-    res.push({
-      type: 'Pago',
-      createdAt: payment.createdAt,
-      user: payment.createdBy,
-      content: <CurrencyAmount amount={payment.amount} />,
-      id: payment.id
-    })
-  })
-  comments.forEach((comment) => {
-    res.push({
-      type: comment.type === 'comment' ? 'Comentario' : 'Reporte',
-      createdAt: comment.createdAt,
-      user: comment.createdBy,
-      title: comment.content,
-      id: comment.id
-    })
-  })
-  return res
 }
 
 export default ListMovements

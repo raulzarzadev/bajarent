@@ -51,7 +51,7 @@ export const EmployeeContextProvider = ({ children }) => {
 
     if (employee) {
       const sectionsAssigned = storeSections
-        ?.filter(({ staff }) => staff?.includes(employee.id))
+        ?.filter(({ staff }) => staff?.includes(employee?.id))
         .map(({ id }) => id)
       setIsAdmin(employee?.permissions?.isAdmin)
       setEmployee(employee)
@@ -146,10 +146,10 @@ export const formatItems = (
 ) => {
   return items.map((item) => ({
     ...item,
-    id: item.id,
+    id: item?.id,
     categoryName:
-      categories.find((cat) => cat.id === item.category)?.name || '',
+      categories.find((cat) => cat.id === item?.category)?.name || '',
     assignedSectionName:
-      sections.find((sec) => sec.id === item.assignedSection)?.name || ''
+      sections.find((sec) => sec.id === item?.assignedSection)?.name || ''
   }))
 }

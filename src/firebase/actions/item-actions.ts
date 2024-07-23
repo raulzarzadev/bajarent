@@ -36,15 +36,16 @@ export const onCreateItem = async ({
   storeId: string
   item: Type
 }) => {
-  await ServiceStoreItems.add({
+  const res = await ServiceStoreItems.add({
     item,
     storeId
   })
-  // await onRegistryEntry({
-  //   storeId,
-  //   itemId: item.id || '',
-  //   type: 'created'
-  // })
+  const newItemId = res?.res?.id
+  await onRegistryEntry({
+    storeId,
+    itemId: newItemId || '',
+    type: 'created'
+  })
 
   return
 }

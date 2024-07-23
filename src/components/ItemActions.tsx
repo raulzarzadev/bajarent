@@ -62,7 +62,8 @@ const ItemActions = ({
       itemId,
       entry: {
         type: needFix ? 'fix' : 'report',
-        content: needFix ? `${comment}` : `${comment}`
+        content: needFix ? `${comment}` : `${comment}`,
+        itemId
       }
     })
 
@@ -106,7 +107,8 @@ const ItemActions = ({
                 itemId,
                 entry: {
                   type: !retiredItem ? 'retire' : 'reactivate',
-                  content: !retiredItem ? 'Dada de baja' : 'Reactivada'
+                  content: !retiredItem ? 'Dada de baja' : 'Reactivada',
+                  itemId
                 }
               })
               onAction?.('retire')

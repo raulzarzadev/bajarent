@@ -1,19 +1,30 @@
 import BaseType from './BaseType'
 import { order_type } from './OrderType'
 
+export enum comment_types {
+  report = 'report',
+  comment = 'comment',
+  payment = 'payment',
+  important = 'important',
+  'item-movement' = 'item-movement'
+}
+export type CommentTypes = keyof typeof comment_types
+
 export type CommentBase = {
   id: string
 
-  orderId: string
+  orderId: string | null
   storeId: string
 
-  type: 'report' | 'comment' | 'payment' | 'important'
+  type: CommentTypes
   status?: 'open' | 'close' | 'hidden'
   content: string
 
   solved?: boolean
   solvedAt?: Date
   solvedBy?: string
+
+  itemId?: string
   solvedComment?: string
 }
 

@@ -102,7 +102,6 @@ const ListComments = ({
         ComponentRow={(props) => (
           <CommentRow
             comment={props.item}
-            viewOrder
             key={props.item.id}
             refetch={refetch}
           />

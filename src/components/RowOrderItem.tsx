@@ -164,7 +164,8 @@ export const RowOrderItem = ({
                     entry: {
                       type: 'created',
                       content: 'Item creado',
-                      orderId: orderId || ''
+                      orderId: orderId || '',
+                      itemId
                     }
                   })
                     .then((res) => console.log({ res }))
