@@ -473,6 +473,17 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     items[itemIndex].id = newItemId
     return await this.update(orderId, { items })
   }
+
+  async updateOrderItemId({ orderId, oldItemId, newItemId }) {
+    const order = await this.get(orderId)
+    const items = order?.items?.map((item) => {
+      if (item.id === oldItemId) {
+        item.id = newItemId
+      }
+      return item
+    })
+    return await this.update(orderId, { items })
+  }
 }
 
 export type ExtendReason = 'renew' | 'report' | 'original' | 'extension'

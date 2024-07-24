@@ -45,11 +45,11 @@ export const RowOrderItem = ({
   const { storeId, categories, storeSections, items } = useStore()
 
   const itemId = item.id
+  console.log({ item })
   const orderId = order.id
   const priceSelected = item.priceSelected
 
   const itemData = items?.find((i) => i?.id === itemId)
-  console.log({ itemData })
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
@@ -85,15 +85,13 @@ export const RowOrderItem = ({
   const handleAssignItem = async () => {
     setLoading(true)
     createModal.toggleOpen()
-    console.log({
-      orderId,
-      itemId,
-      storeId
-    })
+
     await onAssignItem({
       orderId,
+      newItemId: itemSelected,
+      oldItemId: itemId,
       storeId,
-      itemId: itemSelected
+      newItemNumber: items?.find((i) => i?.id === itemSelected)?.number
     })
       .then((res) => console.log({ res }))
       .catch((err) => console.log({ err }))

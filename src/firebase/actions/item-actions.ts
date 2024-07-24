@@ -123,23 +123,24 @@ export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
 }
 
 export const onRentItem = async ({ storeId, itemId, orderId }) => {
-  onRegistryEntry({
-    storeId,
-    itemId,
-    type: 'delivery',
-    orderId
-  })
-  // .then((res) => console.log({ res }))
-  // .catch((err) => console.error({ err }))
-  return await onEditItemField({
+  onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO DELIVERED
     storeId,
     itemId,
     field: 'status',
     value: 'rented'
   })
-  // .then((res) => console.log({ res }))
-  // .catch((err) => console.error({ err }))
+    .then((res) => console.log({ res }))
+    .catch((err) => console.error({ err }))
+  //* <------------------ UPDATE ITEM STATUS TO DELIVERED
+  // onRegistryEntry({
+  //   storeId,
+  //   itemId,
+  //   type: 'delivery',
+  //   orderId
+  // })
+  //   .then((res) => console.log({ res }))
+  //   .catch((err) => console.error({ err }))
 }
 
 export const onRegistryEntry = async ({
@@ -230,22 +231,43 @@ export const onChangeOrderItem = async ({
 }
 
 export const onAssignItem = async ({
+  newItemId,
+  orderId,
+  oldItemId,
   storeId,
-  itemId,
-  orderId
+  newItemNumber
 }: {
-  storeId: string
-  itemId: string
+  newItemId: string
   orderId: string
+  oldItemId: string
+  storeId: string
+  newItemNumber?: string
 }) => {
-  // this should edit item status, especic item in order items and create an entry for item history
-  //* 1. update item status to rented
-  return await onRentItem({ storeId, itemId, orderId })
+  try {
+    //* 1. update item status to rented
+    onRentItem({ storeId, itemId: newItemId, orderId })
 
-  // return await ServiceStoreItems.updateField({
-  //   storeId,
-  //   itemId,
-  //   field: 'assignedOrder',
-  //   value: orderId
-  // })
+    //* 2. update order item id
+    ServiceOrders.updateOrderItemId({
+      oldItemId: oldItemId,
+      newItemId: newItemId,
+      orderId
+    })
+    //* 3. add registry entry to new item
+    onRegistryEntry({
+      storeId,
+      itemId: newItemId,
+      type: 'delivery',
+      orderId
+    })
+    //* 4. add registry entry to order
+    onComment({
+      storeId,
+      orderId,
+      type: 'comment',
+      content: `Se asigno el artículo ${newItemNumber || newItemId}`
+    }).catch(console.error)
+  } catch (error) {
+    console.error({ error })
+  }
 }

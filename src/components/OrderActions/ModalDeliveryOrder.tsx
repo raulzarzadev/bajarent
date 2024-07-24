@@ -13,7 +13,10 @@ import Button from '../Button'
 import { onComment, onDelivery } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { orderExpireAt } from '../../libs/orders'
-import { onRentItem } from '../../firebase/actions/item-actions'
+import {
+  onRegistryEntry,
+  onRentItem
+} from '../../firebase/actions/item-actions'
 import { useStore } from '../../contexts/storeContext'
 
 const ModalDeliveryOrder = ({
@@ -52,6 +55,15 @@ const ModalDeliveryOrder = ({
       })
         .then((res) => console.log({ res }))
         .catch(console.error)
+
+      onRegistryEntry({
+        storeId,
+        itemId: item?.id,
+        type: 'delivery',
+        orderId: order?.id
+      })
+        .then((res) => console.log({ res }))
+        .catch((err) => console.error({ err }))
     })
 
     //* create movement
