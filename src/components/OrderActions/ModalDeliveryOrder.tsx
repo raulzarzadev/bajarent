@@ -28,7 +28,7 @@ const ModalDeliveryOrder = ({
 }) => {
   const { user } = useAuth()
   const { storeId } = useStore()
-  const itemSerial = order?.items?.[0]?.serial || ''
+
   const handleDeliveryOrder = async (values: Partial<OrderType>) => {
     deliveryModal.toggleOpen()
 
