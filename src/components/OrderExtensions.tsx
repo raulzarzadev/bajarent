@@ -25,7 +25,6 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
   const expireAt = order?.expireAt
   // FIXME: some times extensions are not created properly
   const handleCancelExtension = async ({ extensionId, orderId }) => {
-    debugger
     const prevExtension = extensions?.[1]
     //* if there is no prev extension, then the order is delivered
     const newExpireDate: Date = prevExtension?.expireAt || order.deliveredAt
@@ -95,7 +94,7 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
                   component: (
                     <View>
                       <SpanUser userId={createdBy} />
-                      <Text>
+                      <Text style={gStyles.helper}>
                         {dateFormat(asDate(createdAt), 'ddMMM HH:mm')}
                       </Text>
                     </View>
