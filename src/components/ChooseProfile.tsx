@@ -76,8 +76,10 @@ const ChooseProfile = () => {
       </Text>
       <FlatList
         style={{
-          maxWidth: 500,
-          margin: 'auto',
+          maxWidth: '100%',
+          marginHorizontal: 'auto',
+          // maxWidth: 500,
+          // margin: 'auto',
           paddingHorizontal: 16,
           paddingVertical: 12
         }}
