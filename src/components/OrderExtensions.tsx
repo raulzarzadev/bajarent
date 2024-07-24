@@ -14,6 +14,7 @@ import { deleteField } from 'firebase/firestore'
 import TextInfo from './TextInfo'
 import { OrderDates } from './OrderDetails'
 import { useEmployee } from '../contexts/employeeContext'
+import Icon from './Icon'
 
 const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
   const { permissions } = useEmployee()
@@ -54,20 +55,22 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
       <ListRow
         fields={[
           {
-            width: 100,
-            component: <Text style={gStyles.tBold}>Creación</Text>
-          },
-          {
-            width: 'rest',
-            component: <Text style={gStyles.tBold}>Tipo</Text>
-          },
-          {
             width: 80,
             component: <Text style={gStyles.tBold}>Comienza</Text>
           },
           {
             width: 80,
             component: <Text style={gStyles.tBold}>Termina</Text>
+          },
+          {
+            width: 'rest',
+            component: (
+              <Text style={[gStyles.tBold, gStyles.tCenter]}>Tipo</Text>
+            )
+          },
+          {
+            width: 100,
+            component: <Text style={gStyles.tBold}>Creación</Text>
           }
         ]}
       />
@@ -92,6 +95,32 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
             <ListRow
               fields={[
                 {
+                  width: 160,
+                  component: (
+                    <View
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
+                      <DateCell date={startAt} showTimeAgo={false} showTime />
+                      <View>
+                        <Icon icon="rowRight" />
+                      </View>
+                      <DateCell date={expireAt} showTimeAgo={false} showTime />
+                    </View>
+                  )
+                },
+
+                {
+                  width: 'rest',
+                  component: (
+                    <View>
+                      <Text style={gStyles.tCenter}>{dictionary(reason)}</Text>
+                      <Text style={gStyles.tCenter} numberOfLines={1}>
+                        {translateTime(time)}
+                      </Text>
+                    </View>
+                  )
+                },
+                {
                   width: 100,
                   component: (
                     <View>
@@ -102,29 +131,9 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
                     </View>
                   )
                 },
+
                 {
-                  width: 'rest',
-                  component: (
-                    <View>
-                      <Text>{dictionary(reason)}</Text>
-                      <Text numberOfLines={1}>{translateTime(time)}</Text>
-                    </View>
-                  )
-                },
-                {
-                  width: 80,
-                  component: (
-                    <DateCell date={startAt} showTimeAgo={false} showTime />
-                  )
-                },
-                {
-                  width: 80,
-                  component: (
-                    <DateCell date={expireAt} showTimeAgo={false} showTime />
-                  )
-                },
-                {
-                  width: 50,
+                  width: 30,
                   component: (
                     <View>
                       {isTheLast(id) && canDeleteExtension && (
