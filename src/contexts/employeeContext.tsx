@@ -24,6 +24,7 @@ export type EmployeeContextType = {
     canDeleteOrders?: boolean
     canDeleteItems?: boolean
     canViewAllOrders?: boolean
+    canDeleteExtension?: boolean
   }
   items: Partial<ItemType>[]
 }
@@ -120,7 +121,8 @@ export const EmployeeContextProvider = ({ children }) => {
           isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems,
         canManageItems,
         canViewAllOrders:
-          !!employee?.permissions?.order.canViewAll || isAdmin || isOwner
+          !!employee?.permissions?.order.canViewAll || isAdmin || isOwner,
+        canDeleteExtension: isAdmin || isOwner
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections, items]

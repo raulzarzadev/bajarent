@@ -8,14 +8,16 @@ import { translateTime } from '../libs/expireDate'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import OrderType from '../types/OrderType'
-import Button from './Button'
 import ButtonConfirm from './ButtonConfirm'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { deleteField } from 'firebase/firestore'
 import TextInfo from './TextInfo'
 import { OrderDates } from './OrderDetails'
+import { useEmployee } from '../contexts/employeeContext'
 
 const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
+  const { permissions } = useEmployee()
+  const canDeleteExtension = permissions?.canDeleteExtension
   const extensionsObj = order?.extensions || {}
   const extensions = Object.values(extensionsObj).sort((a, b) => {
     return asDate(a?.createdAt).getTime() < asDate(b?.createdAt).getTime()
@@ -125,7 +127,7 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
                   width: 50,
                   component: (
                     <View>
-                      {isTheLast(id) && (
+                      {isTheLast(id) && canDeleteExtension && (
                         <ButtonConfirm
                           icon="close"
                           justIcon
