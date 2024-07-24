@@ -23,7 +23,7 @@ const ListOrders = ({
   const formatOrders = orders
     ?.map((o) => {
       const assignedToSection =
-        storeSections.find((section) => section.id === o.assignToSection)
+        storeSections?.find((section) => section?.id === o?.assignToSection)
           ?.name || null
       return {
         id: o.id,
