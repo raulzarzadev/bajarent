@@ -25,9 +25,12 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
   const expireAt = order?.expireAt
   // FIXME: some times extensions are not created properly
   const handleCancelExtension = async ({ extensionId, orderId }) => {
+    debugger
     const prevExtension = extensions?.[1]
+    //* if there is no prev extension, then the order is delivered
+    const newExpireDate: Date = prevExtension?.expireAt || order.deliveredAt
     await ServiceOrders.update(orderId, {
-      expireAt: prevExtension?.expireAt,
+      expireAt: newExpireDate,
       [`extensions.${extensionId}`]: deleteField()
     })
       .then(console.log)
