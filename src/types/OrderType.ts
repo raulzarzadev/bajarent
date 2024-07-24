@@ -104,6 +104,9 @@ type OrderBase = {
   repairInfo?: string
   quoteBy?: string
 
+  quote?: OrderQuoteType
+  startRepair?: boolean
+
   cancelledAt?: Date
   cancelledBy?: string
   cancelledReason?: string
@@ -148,6 +151,11 @@ type OrderBase = {
   isRepairing?: boolean
   isDeleted?: boolean
   isExtended?: boolean
+}
+
+export type OrderQuoteType = {
+  description?: string
+  amount?: number
 }
 
 export enum order_status {

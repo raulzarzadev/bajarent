@@ -185,6 +185,8 @@ const labels = {
   exchange: 'cambio',
   reactivate: 'habilitar',
   bonus: 'bono',
+  quoteDetails: 'Cotización ',
+  startRepair: 'comenzar reparación',
   expense: 'gasto',
   'item-movement': 'Artículo MV',
   ' ': '',

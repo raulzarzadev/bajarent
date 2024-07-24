@@ -21,7 +21,8 @@ const InputCheckbox = ({
   disabled?: boolean
 }) => {
   const componentId = createId()
-  const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1)
+  const capitalizedLabel =
+    label?.charAt(0)?.toUpperCase() + label?.slice(1) || ''
   const [isChecked, setIsChecked] = useState(value)
   const [key, setKey] = useState(componentId)
 

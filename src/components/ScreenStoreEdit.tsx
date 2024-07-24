@@ -7,10 +7,12 @@ import ButtonConfirm from './ButtonConfirm'
 import { gStyles } from '../styles'
 import { clearStorage } from '../firebase/auth'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenStoreEdit = ({ navigation }) => {
   const { navigate } = navigation
-  const { store, updateUserStores } = useStore()
+  const { handleSetStoreId } = useAuth()
+  const { store } = useStore()
   if (!store) return <ActivityIndicator />
   return (
     <ScrollView>
@@ -39,7 +41,7 @@ const ScreenStoreEdit = ({ navigation }) => {
                 .then(console.log)
                 .catch(console.error)
                 .finally(() => {
-                  updateUserStores()
+                  handleSetStoreId('')
                   clearStorage()
                   navigate('Profile')
                 })

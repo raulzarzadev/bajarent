@@ -198,6 +198,9 @@ export const extraFields: FormOrderFields[] = [
   'itemSerial',
   'repairDescription', //*<- Field name is 'description' in the form
 
+  'quoteDetails',
+  'startRepair',
+
   //* images
   'imageID',
   'imageHouse'

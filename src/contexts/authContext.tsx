@@ -51,21 +51,22 @@ const AuthContextProvider = ({ children }) => {
     })
   }, [])
 
-  useEffect(() => {
+  const getUserStores = async () => {
     if (auth.user) {
-      // Get the user's stores
-      ServiceStores.userStores(auth.user.id).then((res) => {
-        setStores(res)
-      })
-      //ServiceStores.listen(storeId, setStore)
-    }
-    if (!auth.isAuthenticated) {
+      const userStores = await ServiceStores.userStores(auth.user.id)
+      setStores(userStores)
+    } else {
       setStore(null)
       setStores([])
     }
+  }
+
+  useEffect(() => {
+    getUserStores()
   }, [auth.user])
 
   const handleSetStoreId = async (storeId: string) => {
+    getUserStores()
     if (storeId) {
       setStoreId(storeId)
       setItem('storeId', storeId) //*<- save the storeId in localStorage

@@ -6,19 +6,24 @@ import { ServiceStores } from '../firebase/ServiceStore'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenCreateStore = ({ navigation }) => {
-  const { updateUserStores } = useStore()
+  const { handleSetStoreId } = useAuth()
   return (
     <ScrollView>
       <View style={gStyles.container}>
         <FormStoreE
           onSubmit={async (values) => {
             return await ServiceStores.create(values)
-              .then(console.log)
+              .then((res) => {
+                if (res.res.id) {
+                  handleSetStoreId(res.res.id)
+                }
+              })
               .catch(console.error)
               .finally(() => {
-                updateUserStores()
+                //updateUserStores()
                 navigation.goBack()
               })
           }}

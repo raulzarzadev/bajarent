@@ -113,10 +113,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       : ''
   }
   \n🔧 *Información del aparato*
-  🛠️ Marca: ${order?.itemBrand || ''}
-  #️⃣ Serie: ${order?.itemSerial || ''} 
-  🧾 Falla: ${order?.repairInfo || ''}
-  💲 Cotización:  $${order?.repairTotal || 0}
+  🛠️ Marca: ${order?.itemBrand || order?.item.brand || ''}
+  #️⃣ Serie: ${order?.itemSerial || order?.item.serial || ''} 
+  🧾 Falla: ${order?.repairInfo || order?.quote?.description || ''}
+  💲 Cotización:  $${order?.repairTotal || order?.quote?.amount || 0}
   🗓️ Garantía 1 Mes
   
   \n${PAYMENTS}

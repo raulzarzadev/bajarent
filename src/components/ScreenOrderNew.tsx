@@ -12,6 +12,7 @@ const ScreenOrderNew = ({ navigation }) => {
   const { user } = useAuth()
 
   const handleSubmit = async (values: OrderType) => {
+    debugger
     const defaultValues = {
       //* Default values
       storeId: storeId,
@@ -24,6 +25,14 @@ const ScreenOrderNew = ({ navigation }) => {
     }
 
     /* ********************************************
+     *  for repairs
+     *******************************************rz */
+    if (defaultValues?.startRepair) {
+      defaultValues.status = order_status.REPAIRING
+      defaultValues.repairingAt = new Date()
+      defaultValues.repairingBy = user.id
+    }
+    /* ********************************************
      *  if has delivered is true
      *******************************************rz */
     if (defaultValues?.hasDelivered) {
@@ -31,6 +40,7 @@ const ScreenOrderNew = ({ navigation }) => {
       defaultValues.deliveredAt = values.scheduledAt
       defaultValues.deliveredBy = user.id
     }
+
     defaultValues.expireAt = orderExpireAt({ order: values })
     defaultValues.statuses = true //* it means is set with expireAt
 

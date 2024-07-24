@@ -10,7 +10,7 @@ const FormikCheckbox = ({
   style
 }: {
   name: string
-  label?: string
+  label: string
   textStyle?: TextStyle
   style?: ViewStyle
 }) => {

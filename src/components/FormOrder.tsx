@@ -83,7 +83,11 @@ const LIST_OF_FORM_ORDER_FIELDS = [
 
   'selectItemsRepair',
   'selectItemsRent',
-  'selectItemsSale'
+  'selectItemsSale',
+
+  //Repairs
+  'quoteDetails',
+  'startRepair'
   // 'folio'
 ] as const
 
@@ -182,7 +186,6 @@ const FormOrderA = ({
   /* ********************************************
    * define order fields depends of order type
    *******************************************rz */
-
   //#region render
 
   return (
@@ -325,7 +328,7 @@ const FormFieldsA = ({
   setLoading
 }: FormFieldsProps) => {
   const { categories, store } = useStore()
-
+  console.log({ fields })
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
@@ -459,7 +462,6 @@ const FormFieldsA = ({
         }
       />
     ),
-
     selectItemsRepair: (
       <FormikSelectCategories
         name="items"
@@ -495,6 +497,8 @@ const FormFieldsA = ({
     ),
     repairDescription: (
       <InputValueFormik
+        multiline
+        numberOfLines={3}
         name={'item.failDescription'}
         placeholder="Describe la falla"
         helperText="Ejemplo: No lava, hace ruido."
@@ -510,7 +514,32 @@ const FormFieldsA = ({
     itemSerial: (
       <InputValueFormik name={'item.serial'} placeholder="No. de serie" />
     ),
-    assignIt: <FormikAssignOrder />
+    assignIt: <FormikAssignOrder />,
+    quoteDetails: (
+      <>
+        <View style={[styles.item]}>
+          <InputValueFormik
+            multiline
+            numberOfLines={3}
+            name={'quote.description'}
+            placeholder="Descripción de la cotización"
+            helperText="Ejemplo: Cambio de tarjeta"
+          />
+        </View>
+        <View style={[styles.item]}>
+          <InputValueFormik
+            name={'quote.amount'}
+            placeholder="Monto de la cotización"
+            helperText="Ejemplo: 1500"
+            type="number"
+          />
+        </View>
+      </>
+    ),
+
+    startRepair: (
+      <FormikCheckbox name="startRepair" label="Comenzar reparación" />
+    )
     /*
       <ErrorBoundary componentName="ModalAssignOrder">
          <ModalAssignOrder

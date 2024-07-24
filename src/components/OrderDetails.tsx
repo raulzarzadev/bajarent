@@ -38,18 +38,23 @@ import { OrderActionsE } from './OrderActions/OrderActions2'
 import ModalRepairItem from './ModalRepairItem'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
-  console.log({ order })
-  const multiItemOrder = order?.items?.length > 0
-  const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
-    const price = item?.priceSelected?.amount || 0
-    const qty = item?.priceQty || 1
+  const [defaultAmount, setDefaultAmount] = useState(0)
+  useEffect(() => {
+    if (order?.type === order_type.REPAIR) {
+      setDefaultAmount(order?.quote?.amount || order?.repairTotal || 0)
+    }
+    const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
+      const price = item?.priceSelected?.amount || 0
+      const qty = item?.priceQty || 1
 
-    // ? * qty should be 1 always ?
-    return acc + price * qty
-  }, 0)
-  const singleItemAmount =
-    order?.item?.priceSelected?.amount * order?.item?.priceQty
-  const defaultAmount = multiItemOrder ? multiItemOrderAmount : singleItemAmount
+      // ? * qty should be 1 always ?
+      //FIXME: This is a problem when you update items , types and price selected ...
+      return acc + price * qty
+    }, 0)
+    if (order?.type === order_type.RENT) {
+      setDefaultAmount(multiItemOrderAmount)
+    }
+  }, [])
   return (
     <View>
       <OrderMetadata order={order} />
@@ -133,8 +138,8 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             <ModalRepairQuote
               orderId={order?.id}
               quote={{
-                info: order?.repairInfo || '',
-                total: order?.repairTotal || 0,
+                info: order?.repairInfo || order?.quote?.description || '',
+                total: order?.repairTotal || order?.quote?.amount || 0,
                 brand: order?.itemBrand || '',
                 serial: order?.itemSerial || '',
                 category:
