@@ -161,13 +161,25 @@ export const RowOrderItem = ({
                     itemId: newItemId,
                     entry: {
                       type: 'created',
-                      content: 'Item creado',
+                      content: 'Item creado y entregado',
                       orderId: orderId || '',
                       itemId
                     }
                   })
                     .then((res) => console.log({ res }))
                     .catch((e) => console.log({ e }))
+                  // await ServiceStoreItems.addEntry({
+                  //   storeId,
+                  //   itemId: newItemId,
+                  //   entry: {
+                  //     type: 'delivery',
+                  //     content: 'Item entregado',
+                  //     orderId: orderId || '',
+                  //     itemId
+                  //   }
+                  // })
+                  //   .then((res) => console.log({ res }))
+                  //   .catch((e) => console.log({ e }))
 
                   //* UPDATE ORDER WITH THE NEW ITEM
                   await ServiceOrders.updateItemId({
