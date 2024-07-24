@@ -93,7 +93,7 @@ const ListMovements = () => {
       />
       {loading && <Loading />}
       <LoadingList
-        ComponentRow={({ item }) => <CommentRow comment={item} />}
+        ComponentRow={({ item }) => <CommentRow comment={item} showOrder />}
         data={data}
         filters={[
           { field: 'type', label: 'Tipo' },

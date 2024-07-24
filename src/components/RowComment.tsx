@@ -17,11 +17,13 @@ import { fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 
 export const CommentRow = ({
-  comment: _comment
+  comment: _comment,
+  showOrder = false
 }: // refetch
 // orderId
 {
   comment: FormattedComment
+  showOrder?: boolean
   refetch?: (props?: { id?: string }) => void
 }) => {
   const { toOrders, toItems } = useMyNav()
@@ -134,7 +136,7 @@ export const CommentRow = ({
               />
             </View>
 
-            {!!order && (
+            {showOrder && !!order && (
               <View style={styles.badge}>
                 <Chip
                   title={`${order?.folio}  ${order?.fullName}`}
@@ -147,7 +149,7 @@ export const CommentRow = ({
                 ></Chip>
               </View>
             )}
-            {!order && !!comment?.orderId && (
+            {showOrder && !order && !!comment?.orderId && (
               <View style={styles.badge}>
                 <Chip
                   title={`ver orden`}
