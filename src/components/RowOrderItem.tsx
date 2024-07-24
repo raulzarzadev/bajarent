@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import RowItem from './RowItem'
 import ButtonConfirm from './ButtonConfirm'
@@ -13,10 +13,8 @@ import { ItemSelected } from './FormSelectItem'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import ItemType from '../types/ItemType'
 import { useEmployee } from '../contexts/employeeContext'
-import useMyNav from '../hooks/useMyNav'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
-import Icon from './Icon'
 import TextInfo from './TextInfo'
 
 import ModalChangeItem from './ModalChangeItem'
@@ -45,9 +43,7 @@ export const RowOrderItem = ({
   const { storeId, categories, storeSections, items } = useStore()
 
   const itemId = item.id
-  console.log({ item })
   const orderId = order.id
-  const priceSelected = item.priceSelected
 
   const itemData = items?.find((i) => i?.id === itemId)
 
@@ -168,18 +164,6 @@ export const RowOrderItem = ({
                   })
                     .then((res) => console.log({ res }))
                     .catch((e) => console.log({ e }))
-                  // await ServiceStoreItems.addEntry({
-                  //   storeId,
-                  //   itemId: newItemId,
-                  //   entry: {
-                  //     type: 'delivery',
-                  //     content: 'Item entregado',
-                  //     orderId: orderId || '',
-                  //     itemId
-                  //   }
-                  // })
-                  //   .then((res) => console.log({ res }))
-                  //   .catch((e) => console.log({ e }))
 
                   //* UPDATE ORDER WITH THE NEW ITEM
                   await ServiceOrders.updateItemId({
@@ -291,12 +275,7 @@ const formatNewItem = ({
   const sectionAssigned = storeSections.find(
     (s) => s.id === order.assignToSection
   )
-  // const createEcoNumber = async ({ storeId }) => {
-  //   const currentNumber = await ServiceStores.currentItemNumber(storeId)
-  //   const nexItemNumber = nextItemNumber({ currentNumber })
-  //   return nexItemNumber
-  // }
-  // const number = await createEcoNumber({ storeId: order?.storeId })
+
   return {
     assignedSection: sectionAssigned?.id || '',
     assignedSectionName: sectionAssigned?.name || '',

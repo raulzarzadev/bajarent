@@ -43,7 +43,7 @@ const getOrderFields = (
 
   let mandatoryFieldsEnd: FormOrderFields[] = []
   if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItemsRent']
-  if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
+  // if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
   if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItemsSale']
 
   let addedFields: FormOrderFields[] = []
