@@ -19,6 +19,7 @@ import InputRadios from './InputRadios'
 import { translateTime } from '../libs/expireDate'
 import SpanCopy from './SpanCopy'
 import { isToday, isTomorrow } from 'date-fns'
+import ErrorBoundary from './ErrorBoundary'
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   const [order, setOrder] = useState<OrderType>()
@@ -113,10 +114,10 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       : ''
   }
   \n🔧 *Información del aparato*
-  🛠️ Marca: ${order?.itemBrand || order?.item.brand || ''}
-  #️⃣ Serie: ${order?.itemSerial || order?.item.serial || ''} 
-  🧾 Falla: ${order?.repairInfo || order?.quote?.description || ''}
-  💲 Cotización:  $${order?.repairTotal || order?.quote?.amount || 0}
+  🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
+  #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
+  🧾 Falla: ${order?.quote?.description || order?.repairInfo || ''}
+  💲 Cotización:  $${order?.quote?.amount || order?.repairTotal || 0}
   🗓️ Garantía 1 Mes
   
   \n${PAYMENTS}
@@ -316,6 +317,11 @@ const orderStringDates = (
     deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
   }
 }
+export const ModalSendWhatsappE = (props) => (
+  <ErrorBoundary componentName="ModalSendWhatsapp">
+    <ModalSendWhatsapp {...props} />
+  </ErrorBoundary>
+)
 
 const orderPayments = ({ order }: { order: OrderType }) => {
   let res = ''

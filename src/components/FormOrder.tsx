@@ -327,8 +327,7 @@ const FormFieldsA = ({
   setValues,
   setLoading
 }: FormFieldsProps) => {
-  const { categories, store } = useStore()
-  console.log({ fields })
+  const { store } = useStore()
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {

@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
-import ModalSendWhatsapp from '../ModalSendWhatsapp'
+import { ModalSendWhatsappE } from '../ModalSendWhatsapp'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import ModalScheduleOrder from './ModalScheduleOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
@@ -107,7 +107,7 @@ const OrderCommonActions = ({
       <ModalAssignOrder orderId={orderId} section={order?.assignToSection} />
     ),
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
-    canSendWS && <ModalSendWhatsapp orderId={orderId} />,
+    canSendWS && <ModalSendWhatsappE orderId={orderId} />,
     // true && <ModalAssignItem orderId={orderId} />,
 
     canReorder && (
