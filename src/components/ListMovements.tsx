@@ -31,7 +31,7 @@ const ListMovements = () => {
       const itemsMovements = ServiceItemHistory.getItemsMovements({
         storeId,
         date: asDate(newDate),
-        items: items.map(({ id }) => id)
+        items: items?.map(({ id }) => id) || []
       }).then((res) => {
         const asMovement: Partial<CommentType>[] = res.map((movement) => {
           const itemDetails = items.find(({ id }) => id === movement.itemId)
