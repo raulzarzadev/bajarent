@@ -16,6 +16,7 @@ function useCategories() {
         console.log({ e })
       })
   }
+
   const updateCategory = async (
     categoryId: string,
     values: Partial<CategoryType>

@@ -3,7 +3,7 @@ import { ServicePrices } from '../firebase/ServicePrices'
 import { useStore } from '../contexts/storeContext'
 
 function usePrices() {
-  //const { updateCategories } = useStore()
+  const { fetchPrices } = useStore()
   const createPrice = async (
     price: Partial<PriceType>,
     storeId: string,
@@ -17,6 +17,7 @@ function usePrices() {
         // updateCategories()
       })
       .catch((e) => console.error({ e }))
+    fetchPrices()
   }
   const updatePrice = async (
     priceId: PriceType['id'],
@@ -28,6 +29,7 @@ function usePrices() {
         //updateCategories()
       })
       .catch((e) => console.error({ e }))
+    fetchPrices()
   }
   const deletePrice = async (priceId: PriceType['id']) => {
     await ServicePrices.delete(priceId)
@@ -36,6 +38,7 @@ function usePrices() {
         // updateCategories()
       })
       .catch((e) => console.error({ e }))
+    fetchPrices()
   }
 
   return {

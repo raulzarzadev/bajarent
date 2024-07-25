@@ -14,6 +14,7 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { PriceType } from '../types/PriceType'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -39,6 +40,7 @@ export type StoreContextType = {
   fetchOrders?: () => any
   justActiveOrders?: boolean
   fetchItems?: () => void
+  fetchPrices?: () => void
 }
 
 const StoreContext = createContext<StoreContextType>({})
@@ -56,25 +58,16 @@ const StoreContextProvider = ({ children }) => {
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [storeItems, setStoreItems] = useState<Partial<ItemType>[]>(undefined)
 
+  const [storePrices, setStorePrices] =
+    useState<Partial<PriceType>[]>(undefined)
+  const fetchPrices = async () => {
+    const prices = await ServicePrices.getByStore(store.id)
+    setStorePrices(prices)
+  }
   useEffect(() => {
     if (store) {
       ServiceCategories.listenByStore(store.id, async (categories) => {
-        // const pricesCats = await categories.map(async (category) => {
-        //   const prices = await ServicePrices.getByCategory(category.id)
-        //   category.prices = prices
-        //   return category
-        // })
-        // console.log({ pricesCats })
-
-        const priceCategories = await Promise.all(
-          categories.map(async (category) => {
-            const prices = await ServicePrices.getByCategory(category.id)
-            category.prices = prices
-            return category
-          })
-        )
-
-        setCategories(priceCategories)
+        setCategories(categories)
       })
       ServiceSections.listenByStore(store.id, setSections)
       ServiceStaff.listenByStore(store.id, async (staff) => {
@@ -107,7 +100,10 @@ const StoreContextProvider = ({ children }) => {
   }, [store])
 
   useEffect(() => {
-    if (store && categories.length) fetchItems()
+    if (store && categories.length) {
+      fetchItems()
+      fetchPrices()
+    }
   }, [store, categories])
 
   const fetchItems = async () => {
@@ -140,9 +136,13 @@ const StoreContextProvider = ({ children }) => {
         storeId,
         handleSetStoreId,
         staff: staffWithSections,
-        categories,
+        categories: categories.map((cat) => ({
+          ...cat,
+          prices: storePrices?.filter((p) => p.categoryId === cat.id)
+        })),
         userStores: stores,
         storeSections: sections,
+        fetchPrices,
         payments,
         /**
          * @deprecated
@@ -152,6 +152,7 @@ const StoreContextProvider = ({ children }) => {
          * @deprecated
          */
         fetchItems,
+
         /**
          * @deprecated
          */
