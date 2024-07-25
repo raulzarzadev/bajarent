@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import OrderType, { order_status } from '../../types/OrderType'
-import OrderCommonActions from './OrderCommonActions'
+import { OrderCommonActionsE } from './OrderCommonActions'
 import { useEmployee } from '../../contexts/employeeContext'
 import ErrorBoundary from '../ErrorBoundary'
 
@@ -103,7 +103,7 @@ const OrderActions = ({
 
   return (
     <View>
-      <OrderCommonActions
+      <OrderCommonActionsE
         storeId={storeId}
         userId={userId}
         orderId={orderId}

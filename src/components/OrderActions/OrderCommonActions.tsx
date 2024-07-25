@@ -17,13 +17,8 @@ import ModalSendWhatsapp from '../ModalSendWhatsapp'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import ModalScheduleOrder from './ModalScheduleOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
-
-const OrderCommonActions = ({
-  storeId,
-  actionsAllowed,
-  orderId,
-  userId
-}: {
+import ErrorBoundary from '../ErrorBoundary'
+export type OrderCommonActionsType = {
   storeId: string
   orderId: string
   actionsAllowed: {
@@ -38,7 +33,13 @@ const OrderCommonActions = ({
     canExtend?: boolean
   }
   userId: string
-}) => {
+}
+const OrderCommonActions = ({
+  storeId,
+  actionsAllowed,
+  orderId,
+  userId
+}: OrderCommonActionsType) => {
   const onOrderComment = ({
     content,
     type = 'comment'
@@ -279,4 +280,10 @@ const OrderCommonActions = ({
 //     </View>
 //   )
 // }
+
+export const OrderCommonActionsE = (props: OrderCommonActionsType) => (
+  <ErrorBoundary componentName="OrderCommonActions">
+    <OrderCommonActions {...props} />
+  </ErrorBoundary>
+)
 export default OrderCommonActions
