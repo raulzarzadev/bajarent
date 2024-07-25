@@ -1,12 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useStore } from '../../contexts/storeContext'
 import useModal from '../../hooks/useModal'
 import Button from '../Button'
-import InputSelect from '../InputSelect'
 import StyledModal from '../StyledModal'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
-import WeekOrdersTimeLine from '../WeekOrdersTimeLine'
-import OrderType from '../../types/OrderType'
 import { View } from 'react-native'
 import FormikAssignOrder from '../FormikAssignOrder'
 import { Formik } from 'formik'
@@ -25,12 +22,10 @@ const ModalAssignOrder = ({
   date?: Date
 }) => {
   const modal = useModal({ title: 'Asignar a' })
-  const { store, storeSections } = useStore()
-  console.log({ section })
+  const { storeSections } = useStore()
   const assignedToSectionName = storeSections?.find(
     (s) => s.id === section
   )?.name
-  console.log({ assignedToSectionName })
   const [loading, setLoading] = useState(false)
   const handleSubmit = async (values: any) => {
     setLoading(true)
