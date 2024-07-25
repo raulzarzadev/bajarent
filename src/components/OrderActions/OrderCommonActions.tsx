@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import {
@@ -16,12 +16,7 @@ import ButtonCopyRow from './ButtonCopyRow'
 import ModalSendWhatsapp from '../ModalSendWhatsapp'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import ModalScheduleOrder from './ModalScheduleOrder'
-import useModal from '../../hooks/useModal'
-import StyledModal from '../StyledModal'
-import ListAssignedItems, { ListAssignedItemsE } from '../ListAssignedItems'
-import { useState } from 'react'
-import { onAssignItem } from '../../firebase/actions/item-actions'
-import { useStore } from '../../contexts/storeContext'
+import { useOrderDetails } from '../../contexts/orderContext'
 
 const OrderCommonActions = ({
   storeId,
@@ -53,7 +48,9 @@ const OrderCommonActions = ({
   }) => {
     onComment({ orderId, content, storeId, type })
   }
+  const { order } = useOrderDetails()
   const { navigate, goBack } = useNavigation()
+
   const canCancel = actionsAllowed?.canCancel
   const canEdit = actionsAllowed?.canEdit
   const canDelete = actionsAllowed?.canDelete
@@ -105,18 +102,21 @@ const OrderCommonActions = ({
 
   const buttons = [
     canAssign && <ModalScheduleOrder orderId={orderId} />,
-    canAssign && <ModalAssignOrder orderId={orderId} />,
+    canAssign && (
+      <ModalAssignOrder orderId={orderId} section={order?.assignToSection} />
+    ),
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalSendWhatsapp orderId={orderId} />,
     // true && <ModalAssignItem orderId={orderId} />,
 
     canReorder && (
       <Button
-        label="Reordenar"
+        label="Re-ordenar"
         onPress={() => {
           handleReorder()
         }}
         size="small"
+        icon="refresh"
       />
     ),
     canAuthorize && (

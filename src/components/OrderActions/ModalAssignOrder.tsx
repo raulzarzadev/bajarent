@@ -25,7 +25,12 @@ const ModalAssignOrder = ({
   date?: Date
 }) => {
   const modal = useModal({ title: 'Asignar a' })
-
+  const { store, storeSections } = useStore()
+  console.log({ section })
+  const assignedToSectionName = storeSections?.find(
+    (s) => s.id === section
+  )?.name
+  console.log({ assignedToSectionName })
   const [loading, setLoading] = useState(false)
   const handleSubmit = async (values: any) => {
     setLoading(true)
@@ -41,7 +46,12 @@ const ModalAssignOrder = ({
 
   return (
     <View>
-      <Button onPress={modal.toggleOpen} label="Asignar" size="small"></Button>
+      <Button
+        onPress={modal.toggleOpen}
+        label={`${assignedToSectionName || 'Asignar'}`}
+        size="small"
+        icon="swap"
+      ></Button>
       <StyledModal {...modal}>
         <Formik
           initialValues={{
