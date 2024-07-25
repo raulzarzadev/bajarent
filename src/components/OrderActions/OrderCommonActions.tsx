@@ -135,6 +135,7 @@ const OrderCommonActions = ({
           handleRenew()
         }}
         size="small"
+        icon="add"
       />
     )
   ]
