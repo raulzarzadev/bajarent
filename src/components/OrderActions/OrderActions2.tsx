@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import Button from '../Button'
+import Button, { ButtonProps } from '../Button'
 import { useOrderDetails } from '../../contexts/orderContext'
 import OrderType, { order_status, order_type } from '../../types/OrderType'
 import useModal from '../../hooks/useModal'
@@ -11,6 +11,8 @@ import ModalRentStart from './ModalRentStart'
 import ModalRentFinish from './ModalRentFinish'
 import { gSpace, gStyles } from '../../styles'
 import { useStore } from '../../contexts/storeContext'
+import { onAuthorize, onComment } from '../../libs/order-actions'
+import { useAuth } from '../../contexts/authContext'
 
 //* repaired
 function OrderActions() {
@@ -32,19 +34,40 @@ export const OrderActionsE = (props) => (
 )
 
 const RepairOrderActions = ({ order }: { order: OrderType }) => {
+  const { user } = useAuth()
+
   const status = order?.status
   const isDelivered = status === order_status.DELIVERED
   const isRepaired = status === order_status.REPAIRED
   const isRepairing = status === order_status.REPAIRING
+  const isAuthorized = status === order_status.AUTHORIZED
   const modalRepairStart = useModal({ title: 'Comenzar reparación' })
   const modalRepairFinish = useModal({ title: 'Terminar reparación' })
   const modalRepairDelivery = useModal({ title: 'Entregar reparación' })
+
   return (
     <ScrollView horizontal style={styles.scrollView}>
       <ModalStartRepair modal={modalRepairStart} />
       <ModalRepairFinish modal={modalRepairFinish} />
       <ModalRepairDelivery modal={modalRepairDelivery} />
       <View style={styles.container}>
+        <ButtonAction
+          isSelected={isAuthorized}
+          selectedLabel="Pedido"
+          unselectedLabel="Pedido"
+          color="success"
+          onPress={() => {
+            // modalRepairStart.toggleOpen()
+            onAuthorize({ orderId: order.id, userId: user.id })
+            //* create movement
+            onComment({
+              orderId: order.id,
+              content: 'Reparación comenzada',
+              storeId: order.storeId,
+              type: 'comment'
+            })
+          }}
+        />
         <ButtonAction
           isSelected={isRepairing}
           selectedLabel="Reparando"
@@ -128,6 +151,7 @@ const ButtonAction = ({
   unselectedLabel,
   isSelected,
   disabled,
+  color,
   onPress
 }: {
   selectedLabel: string
@@ -135,6 +159,7 @@ const ButtonAction = ({
   isSelected: boolean
   disabled?: boolean
   onPress: () => void
+  color?: ButtonProps['color']
 }) => {
   return (
     <Button
@@ -144,6 +169,7 @@ const ButtonAction = ({
       onPress={() => {
         onPress()
       }}
+      color={color}
       buttonStyles={styles.button}
     ></Button>
   )
