@@ -4,15 +4,19 @@ import Button, { ButtonProps } from '../Button'
 import { useOrderDetails } from '../../contexts/orderContext'
 import OrderType, { order_status, order_type } from '../../types/OrderType'
 import useModal from '../../hooks/useModal'
-import ModalStartRepair from './ModalRepairStart'
-import ModalRepairFinish from './ModalRepairFinish'
-import ModalRepairDelivery from './ModalRepairDelivery'
+
 import ModalRentStart from './ModalRentStart'
 import ModalRentFinish from './ModalRentFinish'
 import { gSpace, gStyles } from '../../styles'
 import { useStore } from '../../contexts/storeContext'
-import { onAuthorize, onComment } from '../../libs/order-actions'
+import {
+  onAuthorize,
+  onRepairDelivery,
+  onRepairFinish,
+  onRepairStart
+} from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
+import { useState } from 'react'
 
 //* repaired
 function OrderActions() {
@@ -41,39 +45,30 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
   const isRepaired = status === order_status.REPAIRED
   const isRepairing = status === order_status.REPAIRING
   const isAuthorized = status === order_status.AUTHORIZED
-  const modalRepairStart = useModal({ title: 'Comenzar reparación' })
-  const modalRepairFinish = useModal({ title: 'Terminar reparación' })
-  const modalRepairDelivery = useModal({ title: 'Entregar reparación' })
 
   return (
     <ScrollView horizontal style={styles.scrollView}>
-      <ModalStartRepair modal={modalRepairStart} />
-      <ModalRepairFinish modal={modalRepairFinish} />
-      <ModalRepairDelivery modal={modalRepairDelivery} />
       <View style={styles.container}>
         <ButtonAction
           isSelected={isAuthorized}
           selectedLabel="Pedido"
           unselectedLabel="Pedido"
           color="success"
-          onPress={() => {
-            // modalRepairStart.toggleOpen()
-            onAuthorize({ orderId: order.id, userId: user.id })
-            //* create movement
-            onComment({
-              orderId: order.id,
-              content: 'Pedido realizado',
-              storeId: order.storeId,
-              type: 'comment'
-            })
+          onPress={async () => {
+            await onAuthorize({ orderId: order.id, userId: user.id }).catch(
+              console.error
+            )
           }}
         />
         <ButtonAction
           isSelected={isRepairing}
           selectedLabel="Reparando"
           unselectedLabel="Iniciar"
-          onPress={() => {
-            modalRepairStart.toggleOpen()
+          onPress={async () => {
+            await onRepairStart({
+              orderId: order.id,
+              userId: user.id
+            }).catch(console.error)
           }}
         />
 
@@ -81,16 +76,22 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
           isSelected={isRepaired}
           selectedLabel="Reprada "
           unselectedLabel="Terminar "
-          onPress={() => {
-            modalRepairFinish.toggleOpen()
+          onPress={async () => {
+            await onRepairFinish({
+              orderId: order.id,
+              userId: user.id
+            }).catch(console.error)
           }}
         />
         <ButtonAction
           isSelected={isDelivered}
           selectedLabel="Entregado "
           unselectedLabel="Entregar "
-          onPress={() => {
-            modalRepairDelivery.toggleOpen()
+          onPress={async () => {
+            await onRepairDelivery({
+              orderId: order.id,
+              userId: user.id
+            }).catch(console.error)
           }}
         />
       </View>

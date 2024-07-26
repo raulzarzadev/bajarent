@@ -14,7 +14,7 @@ const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
 
   const { user } = useAuth()
 
-  const handleStartRepair = async () => {
+  const handleRepairDelivery = async () => {
     //*pickup items
     modal.setOpen(false)
 
@@ -38,7 +38,7 @@ const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
   return (
     <View>
       <StyledModal {...modal}>
-        <FormRepairDelivery
+        {/* <FormRepairDelivery
           initialValues={{
             address: order.address || '',
             location: order.location || '',
@@ -48,11 +48,11 @@ const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
             await ServiceOrders.update(order.id, values).catch(console.error)
             return
           }}
-        />
+        /> */}
         <Button
           label="Entregar reparación "
           onPress={() => {
-            handleStartRepair()
+            handleRepairDelivery()
           }}
         ></Button>
       </StyledModal>
