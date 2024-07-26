@@ -62,7 +62,7 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
             //* create movement
             onComment({
               orderId: order.id,
-              content: 'Reparación comenzada',
+              content: 'Pedido realizado',
               storeId: order.storeId,
               type: 'comment'
             })
