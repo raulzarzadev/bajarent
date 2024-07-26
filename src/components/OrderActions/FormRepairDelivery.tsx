@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from '../FormikInputValue'
 import InputLocationFormik from '../InputLocationFormik'
@@ -8,10 +8,12 @@ import Button from '../Button'
 
 const FormRepairDelivery = ({
   initialValues,
-  onSubmit
+  onSubmit,
+  setDirty
 }: {
   initialValues: Pick<OrderType, 'address' | 'location' | 'references'>
   onSubmit: (values) => Promise<void> | void
+  setDirty?: (dirty: boolean) => void
 }) => {
   const [loading, setLoading] = React.useState(false)
 
@@ -31,22 +33,27 @@ const FormRepairDelivery = ({
           }
         }}
       >
-        {({ handleSubmit, dirty }) => (
-          <>
-            <FormikInputValue name="address" label="Dirección" />
-            <FormikInputValue
-              name="references"
-              label="Referencias de la casa"
-            />
-            <InputLocationFormik name="Location" />
-            <Button
-              buttonStyles={{ marginVertical: 12 }}
-              label="Actualizar "
-              disabled={loading || !dirty}
-              onPress={handleSubmit}
-            ></Button>
-          </>
-        )}
+        {({ handleSubmit, dirty }) => {
+          useEffect(() => {
+            setDirty?.(dirty)
+          }, [dirty])
+          return (
+            <>
+              <FormikInputValue name="address" label="Dirección" />
+              <FormikInputValue
+                name="references"
+                label="Referencias de la casa"
+              />
+              <InputLocationFormik name="location" />
+              <Button
+                buttonStyles={{ marginVertical: 12 }}
+                label="Actualizar "
+                disabled={loading || !dirty}
+                onPress={handleSubmit}
+              ></Button>
+            </>
+          )
+        }}
       </Formik>
     </View>
   )

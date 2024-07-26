@@ -17,6 +17,7 @@ import {
 } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useState } from 'react'
+import ModalStartRepair from './ModalRepairStart'
 
 //* repaired
 function OrderActions() {
@@ -45,9 +46,11 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
   const isRepaired = status === order_status.REPAIRED
   const isRepairing = status === order_status.REPAIRING
   const isAuthorized = status === order_status.AUTHORIZED
+  const modalRepairStart = useModal({ title: 'Comenzar reparación' })
 
   return (
     <ScrollView horizontal style={styles.scrollView}>
+      <ModalStartRepair modal={modalRepairStart} />
       <View style={styles.container}>
         <ButtonAction
           isSelected={isAuthorized}
@@ -64,11 +67,8 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
           isSelected={isRepairing}
           selectedLabel="Reparando"
           unselectedLabel="Iniciar"
-          onPress={async () => {
-            await onRepairStart({
-              orderId: order.id,
-              userId: user.id
-            }).catch(console.error)
+          onPress={() => {
+            modalRepairStart.toggleOpen()
           }}
         />
 
