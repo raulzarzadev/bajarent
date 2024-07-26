@@ -32,12 +32,15 @@ const getOrderFields = (
 ): FormOrderFields[] => {
   //* extra ops config
   //* add extra ops config at the really first of the form
-  const extraOps = [
+
+  const extraOpsEnds = [
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
-    'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
-    'note', //*<- kind of external reference
     'scheduledAt'
   ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
+
+  const extraOpsStarts = ['sheetRow', 'note']?.filter(
+    (field) => !!fields?.[field]
+  ) as FormOrderFields[]
 
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
 
@@ -50,14 +53,15 @@ const getOrderFields = (
   const extraFieldsAllowed = extraFields
     ?.filter((field) => fields?.[field])
     //* clear extra ops because are already included at the first of the form
-    ?.filter((field) => !extraOps.includes(field))
+    ?.filter((field) => ![...extraOpsEnds, ...extraOpsStarts].includes(field))
 
   addedFields = extraFieldsAllowed
   const res = [
-    ...extraOps,
+    ...extraOpsStarts,
     ...mandatoryFieldsStart,
     ...addedFields,
-    ...mandatoryFieldsEnd
+    ...mandatoryFieldsEnd,
+    ...extraOpsEnds
   ]
   return res
 }
@@ -99,7 +103,8 @@ const initialValues: Partial<OrderType> = {
   phone: '',
   // scheduledAt: new Date(),
   // type: order_type.RENT,
-  address: ''
+  address: '',
+  scheduledAt: new Date()
 }
 
 //#region TYPES
@@ -454,7 +459,7 @@ const FormFieldsA = ({
     ),
     scheduledAt: (
       <InputDate
-        label="Fecha programada"
+        label="Fecha"
         value={asDate(values.scheduledAt) || new Date()}
         setValue={(value) =>
           setValues({ ...values, scheduledAt: value }, false)
@@ -487,11 +492,8 @@ const FormFieldsA = ({
     ),
     hasDelivered: (
       <>
-        <TextInfo text="Entregada. Útil para ingresar antiguas ordenes al sistema. No recomendable si es un cliente nuevo"></TextInfo>
-        <FormikCheckbox
-          name="hasDelivered"
-          label="Entregada en la fecha programada"
-        />
+        {/* <TextInfo text="Entregada. Útil para ingresar antiguas ordenes al sistema. No recomendable si es un cliente nuevo"></TextInfo> */}
+        <FormikCheckbox name="hasDelivered" label="Entregada en fecha" />
       </>
     ),
     repairDescription: (

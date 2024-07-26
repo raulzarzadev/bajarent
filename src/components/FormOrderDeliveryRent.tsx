@@ -241,10 +241,7 @@ const FormOrder = ({
                     { justifyContent: 'center', width: '100%' }
                   ]}
                 >
-                  <FormikCheckbox
-                    name="hasDelivered"
-                    label="Entregada en la fecha programada"
-                  />
+                  <FormikCheckbox name="hasDelivered" label="Entregada " />
                 </View>
               </>
             )}

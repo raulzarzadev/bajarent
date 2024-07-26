@@ -101,8 +101,6 @@ export const extraFields: FormOrderFields[] = [
   //'fullName',//*<- Required already included
   // 'phone',//*<- Required already included
 
-  //* extra ops config
-  'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
   'note', //*<- kind of external reference
   'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
 
@@ -112,8 +110,7 @@ export const extraFields: FormOrderFields[] = [
   'location',
   'references',
 
-  //* assign
-  'scheduledAt',
+  //* Assign date
   'assignIt',
 
   //* repair
@@ -125,7 +122,12 @@ export const extraFields: FormOrderFields[] = [
 
   //* images
   'imageID',
-  'imageHouse'
+  'imageHouse',
+
+  //* Scheduled date
+  'scheduledAt',
+  //* extra ops config
+  'hasDelivered' //*<- if order has delivered is marked as DELIVERED and its like new item already exists
 
   //* select item
   // 'selectItemsRent',//* <- Included by default

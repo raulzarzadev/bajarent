@@ -1,6 +1,10 @@
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import { Order } from '../DATA'
-import { onPickUpItem, onRentItem } from '../firebase/actions/item-actions'
+import {
+  onPickUpItem,
+  onRegistryEntry,
+  onRentItem
+} from '../firebase/actions/item-actions'
 import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { CommentType } from '../types/CommentType'
@@ -314,6 +318,15 @@ export const onRentStart = async ({
 
   //* delivery items
   const promises = items.map((item) => {
+    onRegistryEntry({
+      storeId,
+      itemId: item.id,
+      type: 'delivery',
+      orderId
+    })
+      .then((res) => console.log({ res }))
+      .catch((err) => console.error({ err }))
+    //* entry history item
     return onRentItem({
       itemId: item.id,
       storeId: storeId,

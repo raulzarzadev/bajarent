@@ -6,6 +6,7 @@ import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
 import { ListAssignedItemsE } from './ListAssignedItems'
+import { onRentStart } from '../libs/order-actions'
 //
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
@@ -58,6 +59,10 @@ const ScreenOrderNew = ({ navigation }) => {
           navigation.navigate('StackOrders', {
             screen: 'Orders',
             params: { orderId }
+          })
+          onRentStart({
+            order: { ...defaultValues, id: orderId },
+            userId: user.id
           })
           // navigation.navigate('Orders')
           // navigation.navigate('OrderDetails', { orderId })
