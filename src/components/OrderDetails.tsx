@@ -33,7 +33,7 @@ import OrderExtensions from './OrderExtensions'
 import PaymentVerify from './PaymentVerify'
 import ButtonCreateClient from './ButtonCreateClient'
 import RowOrderItem from './RowOrderItem'
-import { OrderProvider } from '../contexts/orderContext'
+import { OrderProvider, useOrderDetails } from '../contexts/orderContext'
 import { OrderActionsE } from './OrderActions/OrderActions2'
 import ModalRepairItem from './ModalRepairItem'
 
@@ -122,36 +122,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         </ErrorBoundary>
       )}
 
-      {order?.type === order_type.REPAIR && (
-        <ErrorBoundary componentName="ModalRepairQuote">
-          <View
-            style={{
-              marginVertical: 16,
-              paddingVertical: 16,
-              backgroundColor: theme?.base,
-              width: '100%'
-            }}
-          >
-            <View style={{ marginBottom: gSpace(4) }}>
-              <ModalRepairItem />
-            </View>
-            <ModalRepairQuote
-              orderId={order?.id}
-              quote={{
-                info: order?.repairInfo || order?.quote?.description || '',
-                total: order?.repairTotal || order?.quote?.amount || 0,
-                brand: order?.itemBrand || '',
-                serial: order?.itemSerial || '',
-                category:
-                  order?.items?.[0]?.categoryName ||
-                  order?.item?.categoryName ||
-                  'Sin articulo',
-                failDescription: order?.description || ''
-              }}
-            />
-          </View>
-        </ErrorBoundary>
-      )}
+      {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
 
       {/*
        //* ORDER ACTIONS FLOW DEPENDS ON ORDER TYPE
@@ -208,6 +179,40 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         <OrderComments orderId={order.id} />
       </ErrorBoundary>
     </View>
+  )
+}
+
+export const RepairItemConfigInfo = () => {
+  const { order } = useOrderDetails()
+  return (
+    <ErrorBoundary componentName="ModalRepairQuote">
+      <View
+        style={{
+          marginVertical: 16,
+          paddingVertical: 16,
+          backgroundColor: theme?.base,
+          width: '100%'
+        }}
+      >
+        <View style={{ marginBottom: gSpace(4) }}>
+          <ModalRepairItem />
+        </View>
+        <ModalRepairQuote
+          orderId={order?.id}
+          quote={{
+            info: order?.repairInfo || order?.quote?.description || '',
+            total: order?.repairTotal || order?.quote?.amount || 0,
+            brand: order?.itemBrand || '',
+            serial: order?.itemSerial || '',
+            category:
+              order?.items?.[0]?.categoryName ||
+              order?.item?.categoryName ||
+              'Sin articulo',
+            failDescription: order?.description || ''
+          }}
+        />
+      </View>
+    </ErrorBoundary>
   )
 }
 

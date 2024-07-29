@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
 import FormRepairDelivery from './FormRepairDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { RepairItemConfigInfo } from '../OrderDetails'
 
 const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
@@ -40,6 +41,7 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
     <View>
       <StyledModal {...modal}>
         <View style={{ marginBottom: 8 }}>
+          <RepairItemConfigInfo />
           <FormRepairDelivery
             initialValues={{
               address: order.address || '',
