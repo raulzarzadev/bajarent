@@ -102,10 +102,7 @@ export const RowOrderItem = ({
     setLoading(false)
     return
   }
-  console.log({
-    ...item,
-    ...itemData
-  })
+
   return (
     <View>
       <StyledModal {...createModal}>
