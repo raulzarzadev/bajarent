@@ -19,6 +19,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     //*pickup items
     setIsLoading(true)
     await onRentStart({ order, userId: user.id })
+
     setIsLoading(false)
     modal.toggleOpen()
     return
