@@ -264,9 +264,6 @@ export const CellItems = ({
   const { items: storeItems } = useStore()
   const { toItems } = useMyNav()
 
-  const itemsData = items.map((itemId) =>
-    storeItems.find((i) => i.id === itemId)
-  )
   return (
     <View>
       <Pressable
@@ -280,19 +277,22 @@ export const CellItems = ({
         </Text>
       </Pressable>
       <View>
-        {itemsData.map((item, index) => (
-          <Pressable
-            key={item.id || index}
-            onPress={() => {
-              toItems({ id: item.id })
-            }}
-          >
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text>{item?.categoryName} </Text>
-              <Text>{item?.number} </Text>
-            </View>
-          </Pressable>
-        ))}
+        {items?.map((itemId, index) => {
+          const item = storeItems?.find((i) => i?.id === itemId)
+          return (
+            <Pressable
+              key={item?.id || index}
+              onPress={() => {
+                toItems({ id: item?.id })
+              }}
+            >
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Text>{item?.categoryName} </Text>
+                <Text>{item?.number} </Text>
+              </View>
+            </Pressable>
+          )
+        })}
       </View>
     </View>
   )
