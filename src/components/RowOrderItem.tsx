@@ -22,6 +22,7 @@ import StoreType from '../types/StoreType'
 import { CategoryType } from '../types/RentItem'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import { onAssignItem } from '../firebase/actions/item-actions'
+import { use } from 'chai'
 
 export const RowOrderItem = ({
   item,
@@ -40,12 +41,14 @@ export const RowOrderItem = ({
   ) => void
 }) => {
   const { permissions } = useEmployee()
-  const { storeId, categories, storeSections, items } = useStore()
+  const { storeId, categories, storeSections, items, fetchItems } = useStore()
 
   const itemId = item.id
   const orderId = order.id
 
-  const itemData = items?.find((i) => i?.id === itemId)
+  //const itemData = items?.find((i) => i?.id === itemId)
+
+  const [itemData, setItemData] = useState<ItemSelected>()
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
@@ -58,6 +61,11 @@ export const RowOrderItem = ({
   const isRent = order.type === order_type.RENT
   const isDeliveredRent = order.status === order_status.DELIVERED && isRent
   const hasPermissionsToCreateItem = permissions.canManageItems
+
+  useEffect(() => {
+    const itemData = items?.find((i) => i?.id === itemId)
+    setItemData(itemData)
+  }, [itemId, items])
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -94,6 +102,10 @@ export const RowOrderItem = ({
     setLoading(false)
     return
   }
+  console.log({
+    ...item,
+    ...itemData
+  })
   return (
     <View>
       <StyledModal {...createModal}>
@@ -149,7 +161,7 @@ export const RowOrderItem = ({
                     return newItemId
                   })
                   .catch((e) => console.log({ e }))
-
+                fetchItems()
                 if (newItemId) {
                   //* ADD ENTRY TO THE ITEM
                   await ServiceStoreItems.addEntry({
@@ -183,6 +195,7 @@ export const RowOrderItem = ({
         )}
       </StyledModal>
 
+      <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
       <View
         style={{
           flexDirection: 'row',
@@ -190,7 +203,6 @@ export const RowOrderItem = ({
           justifyContent: 'center'
         }}
       >
-        <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
         <RowItem
           item={{
             ...item,
