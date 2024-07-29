@@ -261,20 +261,12 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  const { storeId, categories, storeSections } = useStore()
-  const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>([])
+  const { items: storeItems } = useStore()
   const { toItems } = useMyNav()
-  useEffect(() => {
-    const fetchItems = async () => {
-      const itemsData = await Promise.all(
-        items?.map(async (itemId) => {
-          return await ServiceStoreItems.get({ itemId, storeId })
-        })
-      )
-      setItemsData(formatItems(itemsData, categories, storeSections))
-    }
-    fetchItems()
-  }, [])
+
+  const itemsData = items.map((itemId) =>
+    storeItems.find((i) => i.id === itemId)
+  )
   return (
     <View>
       <Pressable
@@ -288,16 +280,16 @@ export const CellItems = ({
         </Text>
       </Pressable>
       <View>
-        {itemsData.map((i, index) => (
+        {itemsData.map((item, index) => (
           <Pressable
-            key={i?.id || index}
+            key={item.id || index}
             onPress={() => {
-              toItems({ id: i?.id })
+              toItems({ id: item.id })
             }}
           >
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text>{i?.categoryName} </Text>
-              <Text>{i?.number} </Text>
+              <Text>{item?.categoryName} </Text>
+              <Text>{item?.number} </Text>
             </View>
           </Pressable>
         ))}
