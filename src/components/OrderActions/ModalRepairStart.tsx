@@ -36,9 +36,8 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
     })
   }
 
-  const item = order.item
   const [dirty, setDirty] = useState(false)
-  console.log({ order })
+
   return (
     <View>
       <StyledModal {...modal}>
