@@ -195,7 +195,6 @@ export const RowOrderItem = ({
         )}
       </StyledModal>
 
-      <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
       <View
         style={{
           flexDirection: 'row',
@@ -203,6 +202,7 @@ export const RowOrderItem = ({
           justifyContent: 'center'
         }}
       >
+        <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
         <RowItem
           item={{
             ...item,
