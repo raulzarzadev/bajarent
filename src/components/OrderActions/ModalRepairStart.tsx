@@ -3,11 +3,9 @@ import React, { useState } from 'react'
 import StyledModal from '../StyledModal'
 import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
-import TextInfo from '../TextInfo'
 import { onComment, onRepairStart } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
-import { RepairItemDetails } from '../ModalRepairItem'
 import FormRepairDelivery from './FormRepairDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 
@@ -41,10 +39,6 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
   return (
     <View>
       <StyledModal {...modal}>
-        {/* <TextInfo
-          text="Asegurate de que REPARAS el siguiente articulo:"
-          defaultVisible
-        /> */}
         <View style={{ marginBottom: 8 }}>
           <FormRepairDelivery
             initialValues={{
