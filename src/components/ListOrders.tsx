@@ -6,18 +6,19 @@ import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 import { useStore } from '../contexts/storeContext'
 import { CollectionSearch } from '../hooks/useFilter'
-
+import ErrorBoundary from './ErrorBoundary'
+export type ListOrderProps = {
+  orders: OrderType[]
+  defaultOrdersIds?: string[]
+  sideButtons?: ListSideButton[]
+  collectionSearch?: CollectionSearch
+}
 const ListOrders = ({
   orders,
   defaultOrdersIds,
   sideButtons = [],
   collectionSearch
-}: {
-  orders: OrderType[]
-  defaultOrdersIds?: string[]
-  sideButtons?: ListSideButton[]
-  collectionSearch?: CollectionSearch
-}) => {
+}: ListOrderProps) => {
   const { navigate } = useNavigation()
   const { storeSections } = useStore()
   const formatOrders = orders
@@ -114,5 +115,11 @@ const ListOrders = ({
     />
   )
 }
+
+export const ListOrdersE = (props: ListOrderProps) => (
+  <ErrorBoundary componentName="ListOrders">
+    <ListOrders {...props} />
+  </ErrorBoundary>
+)
 
 export default ListOrders
