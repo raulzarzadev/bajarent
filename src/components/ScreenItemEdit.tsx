@@ -13,15 +13,13 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 const ScreenItemEdit = ({ route }) => {
   const itemId = route?.params?.id
   const { goBack } = useNavigation()
-  const { storeId, items, fetchItems } = useStore()
+  const { storeId, fetchItems } = useStore()
   const [item, setItem] = useState<Partial<ItemType>>()
   useEffect(() => {
-    if (items) {
-      ServiceStoreItems.get({ storeId, itemId }).then((res) => {
-        setItem(res)
-      })
-    }
-  }, [items])
+    ServiceStoreItems.get({ storeId, itemId }).then((res) => {
+      setItem(res)
+    })
+  }, [itemId])
 
   const handleUpdateItem = async (values: ItemType) => {
     return await onUpdateItem({ storeId, itemId, values })
