@@ -12,6 +12,8 @@ import StyledModal from './StyledModal'
 import InputRadios from './InputRadios'
 import Button from './Button'
 import { gStyles } from '../styles'
+import { onInvalidatePayment, onVerifyPayment } from '../libs/payments'
+import ButtonConfirm from './ButtonConfirm'
 
 export default function ScreenPayments({ navigation, route }) {
   const preList = route?.params?.payments || null
@@ -19,6 +21,7 @@ export default function ScreenPayments({ navigation, route }) {
   const { storeId } = useStore()
   const [days, setDays] = useState(1)
   const [payments, setPayments] = useState([])
+
   useEffect(() => {
     handleGetPayments()
   }, [consolidatedOrders])
@@ -88,6 +91,16 @@ export default function ScreenPayments({ navigation, route }) {
       </StyledModal>
       <Text style={gStyles.h2}>Pagos de los últimos {days} días</Text>
       <LoadingList
+        ComponentMultiActions={({ ids }) => {
+          return (
+            <ModalVerifyPayments
+              ids={ids}
+              fetchPayments={() => {
+                handleGetPayments()
+              }}
+            />
+          )
+        }}
         data={payments.map((payment) => {
           payment.amount = parseFloat(`${payment.amount || 0}`) || 0
           payment.createdByName =
@@ -144,6 +157,75 @@ export default function ScreenPayments({ navigation, route }) {
         ]}
       />
     </ScrollView>
+  )
+}
+
+export const ModalVerifyPayments = ({
+  ids,
+  fetchPayments
+}: {
+  ids: string[]
+  fetchPayments: () => void
+}) => {
+  const { storeId } = useStore()
+  const handleVerifyPayments = async (ids: string[]) => {
+    const validationsPromises = ids.map((id) => {
+      return onVerifyPayment(id, storeId).then(() => {})
+    })
+
+    return await Promise.all(validationsPromises)
+      .then((res) => {
+        console.log({ res })
+      })
+      .catch(console.error)
+      .finally(() => {
+        fetchPayments()
+      })
+  }
+  const handleInvalidatePayments = async (ids: string[]) => {
+    const invalidation = ids.map((id) => {
+      return onInvalidatePayment(id, storeId).then(() => {})
+    })
+
+    return await Promise.all(invalidation)
+      .then((res) => {
+        console.log({ res })
+      })
+      .catch(console.error)
+      .finally(() => {
+        fetchPayments()
+      })
+  }
+
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      <ButtonConfirm
+        handleConfirm={async () => {
+          await handleVerifyPayments(ids)
+        }}
+        confirmLabel="Verificar"
+        confirmColor="success"
+        confirmVariant="filled"
+        text="¿Verificar pagos?"
+        openLabel="Verificar pagos"
+        openColor="success"
+        openVariant="filled"
+        openSize="xs"
+      />
+      <ButtonConfirm
+        handleConfirm={async () => {
+          await handleInvalidatePayments(ids)
+        }}
+        confirmLabel="Invalidar"
+        confirmColor="error"
+        confirmVariant="ghost"
+        text="Invalidar pagos?"
+        openLabel="Invalidar pagos"
+        openColor="error"
+        openVariant="ghost"
+        openSize="xs"
+      />
+    </View>
   )
 }
 

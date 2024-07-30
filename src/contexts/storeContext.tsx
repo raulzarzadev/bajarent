@@ -20,7 +20,6 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { PriceType } from '../types/PriceType'
 
 export type StoreContextType = {
@@ -29,6 +28,9 @@ export type StoreContextType = {
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
   orders?: OrderType[]
+  /**
+   * @deprecated use
+   */
   items?: Partial<ItemType>[]
   comments?: CommentType[]
   staff?: StoreType['staff']
@@ -114,17 +116,21 @@ const StoreContextProvider = ({ children }) => {
   }, [store, categories])
 
   const fetchItems = async () => {
-    const items = await ServiceStoreItems.getAll({ storeId: store.id })
-    setStoreItems(
-      items?.map((item) => ({
-        ...item,
-        id: item.id,
-        categoryName:
-          categories.find((cat) => cat.id === item.category)?.name || '',
-        assignedSectionName:
-          sections.find((sec) => sec.id === item.assignedSection)?.name || ''
-      })) || []
-    )
+    // const items = await ServiceStoreItems.getAll({
+    //   storeId: store.id
+    //   // sections: []
+    // })
+    // setStoreItems(
+    //   items?.map((item) => ({
+    //     ...item,
+    //     id: item.id,
+    //     categoryName:
+    //       categories.find((cat) => cat.id === item.category)?.name || '',
+    //     assignedSectionName:
+    //       sections.find((sec) => sec.id === item.assignedSection)?.name || ''
+    //   })) || []
+    // )
+    setStoreItems([])
   }
 
   //#region render

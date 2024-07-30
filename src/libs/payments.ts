@@ -1,3 +1,4 @@
+import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType, { payment_methods } from '../types/PaymentType'
 
 export const payments_amount = (payments: Partial<PaymentType>[]) => {
@@ -40,6 +41,25 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
       outcomes: 0
     }
   )
+}
+
+export const onVerifyPayment = async (paymentId: string, userId) => {
+  await ServicePayments.update(paymentId, {
+    verified: true,
+    verifiedAt: new Date(),
+    verifiedBy: userId
+  })
+    .then(console.log)
+    .catch(console.error)
+}
+export const onInvalidatePayment = async (paymentId: string, userId) => {
+  await ServicePayments.update(paymentId, {
+    verified: false,
+    verifiedAt: new Date(),
+    verifiedBy: userId
+  })
+    .then(console.log)
+    .catch(console.error)
 }
 
 export type PaymentsAmount = ReturnType<typeof payments_amount>

@@ -14,7 +14,7 @@ import SpanOrder from './SpanOrder'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import ItemType from '../types/ItemType'
 import { useNavigation } from '@react-navigation/native'
-import { formatItems } from '../contexts/employeeContext'
+import { formatItems, useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
 import asDate from '../libs/utils-date'
@@ -261,7 +261,8 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  const { items: storeItems } = useStore()
+  //const { items: storeItems } = useStore()
+  const { items: storeItems } = useEmployee()
   const { toItems } = useMyNav()
 
   return (
