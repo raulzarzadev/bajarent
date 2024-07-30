@@ -1,4 +1,11 @@
-import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
+import {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  Dispatch,
+  useMemo
+} from 'react'
 import StoreType from '../types/StoreType'
 import OrderType from '../types/OrderType'
 import { CommentType, FormattedComment } from '../types/CommentType'
@@ -129,74 +136,87 @@ const StoreContextProvider = ({ children }) => {
     return { ...staff, sectionsAssigned }
   })
 
-  return (
-    <StoreContext.Provider
-      value={{
-        store,
-        storeId,
-        handleSetStoreId,
-        staff: staffWithSections,
-        categories: categories.map((cat) => ({
-          ...cat,
-          prices: storePrices?.filter((p) => p.categoryId === cat.id)
-        })),
-        userStores: stores,
-        storeSections: sections,
-        fetchPrices,
-        payments,
-        /**
-         * @deprecated
-         */
-        items: storeItems,
-        /**
-         * @deprecated
-         */
-        fetchItems,
+  const value = useMemo(
+    () => ({
+      store,
+      storeId,
+      handleSetStoreId,
+      staff: staffWithSections,
+      categories: categories.map((cat) => ({
+        ...cat,
+        prices: storePrices?.filter((p) => p.categoryId === cat.id)
+      })),
+      userStores: stores,
+      storeSections: sections,
+      fetchPrices,
+      payments,
+      /**
+       * @deprecated
+       */
+      items: storeItems,
+      /**
+       * @deprecated
+       */
+      fetchItems,
+      /**
+       * @deprecated
+       */
+      myStaffId: '',
+      // staffPermissions,
+      /**
+       * @deprecated
+       */
+      justActiveOrders,
+      /**
+       * @deprecated
+       */
+      handleToggleJustActiveOrders: () => {},
+      //comments,
+      /**
+       * @deprecated
+       */
+      handleSetMyStaffId: () => {},
+      /**
+       * @deprecated
+       */
+      orders: [],
+      /**
+       * @deprecated
+       */
+      myOrders: [],
+      /**
+       * @deprecated
+       */
+      userPositions: [],
 
-        /**
-         * @deprecated
-         */
-        myStaffId: '',
-        // staffPermissions,
-        /**
-         * @deprecated
-         */
-        justActiveOrders,
-
-        /**
-         * @deprecated
-         */
-        handleToggleJustActiveOrders: () => {},
-        //comments,
-        /**
-         * @deprecated
-         */
-        handleSetMyStaffId: () => {},
-        /**
-         * @deprecated
-         */
-        orders: [],
-        /**
-         * @deprecated
-         */
-        myOrders: [],
-        /**
-         * @deprecated
-         */
-        userPositions: [],
-
-        /**
-         * @deprecated
-         */
-        updateUserStores: () => {}
-        /**
-         * @deprecated
-         */
-      }}
-    >
-      {children}
-    </StoreContext.Provider>
+      /**
+       * @deprecated
+       */
+      updateUserStores: () => {}
+      /**
+       * @deprecated
+       */
+    }),
+    [
+      store,
+      storeId,
+      handleSetStoreId,
+      staffWithSections,
+      categories,
+      storePrices,
+      stores,
+      sections,
+      fetchPrices,
+      payments,
+      storeItems,
+      fetchItems,
+      justActiveOrders
+    ]
   )
+
+  console.log({ value })
+
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
 
 export const useStore = () => {
