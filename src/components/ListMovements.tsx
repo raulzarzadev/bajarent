@@ -47,9 +47,8 @@ const ListMovements = () => {
             storeId,
             orderId: movement.orderId,
             content: `Asigno el artículo ${itemDetails?.number || ''} a ${
-              storeSections.find(
-                (section) => section?.id === itemDetails?.assignedSection
-              )?.name || ''
+              s.find((section) => section?.id === itemDetails?.assignedSection)
+                ?.name || ''
             }`,
             id: movement?.id || '',
             itemId: itemDetails?.id || ''
