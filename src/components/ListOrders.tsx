@@ -25,14 +25,17 @@ const ListOrders = ({
       const assignedToSection =
         storeSections?.find((section) => section?.id === o?.assignToSection)
           ?.name || null
-      return {
-        id: o.id,
+
+      const order = {
+        id: o?.id,
         ...o,
         assignToSectionName: assignedToSection
         //  assignedToSection
       }
+      return o?.id ? order : null
     })
     ?.filter((order) => !!order)
+
   return (
     <LoadingList
       data={formatOrders}
