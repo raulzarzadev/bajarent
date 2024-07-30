@@ -19,7 +19,7 @@ import Loading from './Loading'
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  const { payments, staff, items } = useStore()
+  const { payments, staff, items, storeSections } = useStore()
   const [loading, setLoading] = React.useState(false)
   const { orders } = useOrdersCtx()
 
@@ -43,12 +43,17 @@ const ListMovements = () => {
             createdBy: movement.createdBy,
             storeId,
             orderId: movement.orderId,
-            content: ` ${
-              itemDetails?.number
-                ? `Artículo no. ${itemDetails?.number}  ${dictionary(
-                    movement.type
-                  )}`
-                : `${dictionary(movement.type)}`
+            // content: ` ${
+            //   itemDetails?.number
+            //     ? `Artículo no. ${itemDetails?.number}  ${dictionary(
+            //         movement.type
+            //       )}`
+            //     : `${dictionary(movement.type)}`
+            // }`,
+            content: `Asigno el artículo ${itemDetails?.number || ''} al area ${
+              storeSections.find(
+                (section) => section?.id === itemDetails?.assignedSection
+              )?.name || ''
             }`,
             id: movement?.id || '',
             itemId: itemDetails?.id || ''
