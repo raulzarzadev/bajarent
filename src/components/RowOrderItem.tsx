@@ -22,7 +22,6 @@ import StoreType from '../types/StoreType'
 import { CategoryType } from '../types/RentItem'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import { onAssignItem } from '../firebase/actions/item-actions'
-import { use } from 'chai'
 
 export const RowOrderItem = ({
   item,
@@ -41,7 +40,7 @@ export const RowOrderItem = ({
   ) => void
 }) => {
   const { permissions } = useEmployee()
-  const { storeId, categories, storeSections, items, fetchItems } = useStore()
+  const { storeId, categories, storeSections, fetchItems } = useStore()
 
   const itemId = item.id
   const orderId = order.id
@@ -63,9 +62,10 @@ export const RowOrderItem = ({
   const hasPermissionsToCreateItem = permissions.canManageItems
 
   useEffect(() => {
-    const itemData = items?.find((i) => i?.id === itemId)
-    setItemData(itemData)
-  }, [itemId, items])
+    ServiceStoreItems.get({ itemId, storeId }).then((res) => {
+      setItemData(res)
+    })
+  }, [itemId])
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -84,6 +84,7 @@ export const RowOrderItem = ({
   const handleSelectItem = (itemId) => {
     setItemSelected(itemId)
   }
+  const { items } = useEmployee()
   const [loading, setLoading] = useState(false)
 
   const handleAssignItem = async () => {

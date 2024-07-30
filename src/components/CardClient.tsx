@@ -71,8 +71,6 @@ const ButtonDeleteClient = ({ clientId }) => {
 }
 
 const ButtonEditClient = ({ clientId }) => {
-  const { storeId } = useStore()
-
   const { navigate } = useNavigation()
   return (
     <Button

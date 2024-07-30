@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -11,13 +11,10 @@ import { useStore } from '../contexts/storeContext'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
 import SpanOrder from './SpanOrder'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import ItemType from '../types/ItemType'
 import { useNavigation } from '@react-navigation/native'
-import { formatItems, useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
-import asDate from '../libs/utils-date'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -261,7 +258,6 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  //const { items: storeItems } = useStore()
   const { items: storeItems } = useEmployee()
   const { toItems } = useMyNav()
 

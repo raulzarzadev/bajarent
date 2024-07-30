@@ -232,54 +232,6 @@ const OrderCommonActions = ({
     </View>
   )
 }
-// const ModalAssignItem = ({ orderId, itemId }) => {
-//   const modal = useModal({ title: 'Asignar item' })
-//   const { storeId, items } = useStore()
-//   const [itemSelected, setItemSelected] = useState<null | string>(null)
-//   const [loading, setLoading] = useState(false)
-//   const handleAssignItem = async () => {
-//     setLoading(true)
-//     await onAssignItem({
-//       orderId,
-//       newItemId: itemSelected,
-//       storeId,
-//       newItemNumber: items?.find((i) => i?.id === itemId).number,
-//       oldItemId: itemId
-//     })
-//       .then((res) => console.log({ res }))
-//       .catch((err) => console.log({ err }))
-//     setLoading(false)
-//   }
-//   const alreadyHasItem = item
-//   return (
-//     <View>
-//       <Button
-//         label="Asignar item"
-//         onPress={() => {
-//           modal.toggleOpen()
-//         }}
-//         size="small"
-//       />
-//       <StyledModal {...modal}>
-//         <ListAssignedItemsE
-//           itemSelected={itemSelected}
-//           onSelectItem={(itemId) => {
-//             setItemSelected(itemId)
-//           }}
-//         />
-//         <View>
-//           <Button
-//             disabled={alreadyHasItem}
-//             label="Asignar"
-//             onPress={() => {
-//               handleAssignItem()
-//             }}
-//           ></Button>
-//         </View>
-//       </StyledModal>
-//     </View>
-//   )
-// }
 
 export const OrderCommonActionsE = (props: OrderCommonActionsType) => (
   <ErrorBoundary componentName="OrderCommonActions">
