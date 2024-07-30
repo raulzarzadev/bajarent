@@ -100,7 +100,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
         />
       )} */}
       <View style={{ justifyContent: 'center', margin: 'auto' }}>
-        <ImagePreview image={payment?.image} title="Comprobante" />
+        <ImagePreview image={payment?.image} title="Comprobante" fullscreen />
       </View>
 
       <PaymentVerify payment={payment} showData onVerified={handleGetPayment} />
