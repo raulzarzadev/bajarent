@@ -142,7 +142,25 @@ export const onRentItem = async ({ storeId, itemId, orderId }) => {
   //   .then((res) => console.log({ res }))
   //   .catch((err) => console.error({ err }))
 }
+export const onRetireItem = async ({ storeId, itemId }) => {
+  await ServiceStoreItems.updateField({
+    storeId,
+    itemId,
+    field: 'status',
+    value: 'retired'
+  })
+  await ServiceStoreItems.addEntry({
+    storeId,
+    itemId,
+    entry: {
+      type: 'retire',
+      content: 'Baja',
+      itemId
+    }
+  })
 
+  return
+}
 export const onRegistryEntry = async ({
   storeId,
   itemId,

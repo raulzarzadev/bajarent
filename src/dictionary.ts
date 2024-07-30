@@ -189,6 +189,8 @@ const labels = {
   startRepair: 'comenzar reparación',
   expense: 'gasto',
   'item-movement': 'Artículo MV',
+  retired: 'Retirado',
+  retire: 'Baja',
   ' ': '',
   '': ''
 } as const
