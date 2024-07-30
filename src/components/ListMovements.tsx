@@ -13,13 +13,13 @@ import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
 import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
-import dictionary from '../dictionary'
 import Loading from './Loading'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  const { payments, staff, items, storeSections } = useStore()
+  const { payments, staff, storeSections } = useStore()
   const [loading, setLoading] = React.useState(false)
   const { orders } = useOrdersCtx()
 
@@ -30,9 +30,12 @@ const ListMovements = () => {
       setDate(newDate)
       const itemsMovements = ServiceItemHistory.getItemsMovements({
         storeId,
-        date: asDate(newDate),
-        items: items?.map(({ id }) => id) || []
-      }).then((res) => {
+        date: asDate(newDate)
+      }).then(async (res) => {
+        const items = await ServiceStoreItems.getList({
+          storeId,
+          ids: res.map(({ itemId }) => itemId)
+        })
         const asMovement: Partial<CommentType>[] = res.map((movement) => {
           const itemDetails = items.find(({ id }) => id === movement.itemId)
           return {
@@ -43,14 +46,7 @@ const ListMovements = () => {
             createdBy: movement.createdBy,
             storeId,
             orderId: movement.orderId,
-            // content: ` ${
-            //   itemDetails?.number
-            //     ? `Artículo no. ${itemDetails?.number}  ${dictionary(
-            //         movement.type
-            //       )}`
-            //     : `${dictionary(movement.type)}`
-            // }`,
-            content: `Asigno el artículo ${itemDetails?.number || ''} al area ${
+            content: `Asigno el artículo ${itemDetails?.number || ''} a ${
               storeSections.find(
                 (section) => section?.id === itemDetails?.assignedSection
               )?.name || ''
