@@ -32,9 +32,10 @@ const ListMovements = () => {
         storeId,
         date: asDate(newDate)
       }).then(async (res) => {
+        const idsSet = new Set(res.map(({ itemId }) => itemId))
         const items = await ServiceStoreItems.getList({
           storeId,
-          ids: res.map(({ itemId }) => itemId)
+          ids: Array.from(idsSet)
         })
         const asMovement: Partial<CommentType>[] = res.map((movement) => {
           const itemDetails = items.find(({ id }) => id === movement.itemId)
