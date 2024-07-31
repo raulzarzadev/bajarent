@@ -283,12 +283,12 @@ export const onAssignItem = async ({
       orderId
     })
     //* 4. add registry entry to order
-    onComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: `Se asigno el artículo ${newItemNumber || newItemId}`
-    }).catch(console.error)
+    // onComment({
+    //   storeId,
+    //   orderId,
+    //   type: 'comment',
+    //   content: `Se asigno el artículo ${newItemNumber || newItemId}`
+    // }).catch(console.error)
   } catch (error) {
     console.error({ error })
   }
