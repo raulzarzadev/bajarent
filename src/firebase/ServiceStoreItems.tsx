@@ -190,8 +190,9 @@ export class ServiceStoreItemsClass {
   }): Promise<Type[]> {
     const ref = collection(db, 'stores', storeId, SUB_COLLECTION)
     let promises = []
-    for (let i = 0; i < ids.length; i += 30) {
-      const chunk = ids.slice(i, i + 30)
+    const MAX_BATCH_SIZE = 30
+    for (let i = 0; i < ids.length; i += MAX_BATCH_SIZE) {
+      const chunk = ids.slice(i, i + MAX_BATCH_SIZE)
       promises.push(
         ServiceStores.getRefItems({
           collectionRef: ref,
