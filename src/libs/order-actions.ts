@@ -250,6 +250,24 @@ export const onRentFinish = async ({
   if (order.type != order_type.RENT)
     return console.error('Order is not a rent order')
 
+  const promises = items?.map(async (item) => {
+    return onPickUpItem({
+      storeId,
+      itemId: item.id,
+      orderId: order.id
+    })
+      .then(async (res) => {
+        console.log({ res }, 'item picked up', item?.id, item?.number)
+      })
+      .catch(console.error)
+  })
+
+  await Promise.all(promises)
+    .then((res) => {
+      console.log({ res })
+    })
+    .catch(console.error)
+
   //* pickup order
   await onPickup({ orderId, userId })
 
@@ -262,23 +280,6 @@ export const onRentFinish = async ({
   })
 
   //*pickup items
-  const promises = items?.map(async (item) => {
-    return onPickUpItem({
-      storeId,
-      itemId: item.id,
-      orderId: order.id
-    })
-      .then(async (res) => {
-        console.log({ res })
-      })
-      .catch(console.error)
-  })
-
-  await Promise.all(promises)
-    .then((res) => {
-      console.log({ res })
-    })
-    .catch(console.error)
 }
 export const onRentStart = async ({
   order,

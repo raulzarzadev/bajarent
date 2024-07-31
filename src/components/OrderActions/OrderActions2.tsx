@@ -112,14 +112,14 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   }, [order.items])
 
   const [allItemsExists, setAllItemsExists] = useState(false)
+
   const checkIfAllItemsExists = async () => {
     const promises = order?.items.map((item) => {
       return ServiceStoreItems.get({ itemId: item.id, storeId: order.storeId })
     })
     const res = await Promise.all(promises)
-    if (res.some((r) => !r)) setAllItemsExists(false)
-    setAllItemsExists(true)
-    // return res.map((r) => r?.id || null)
+    if (res.every((r) => r)) return setAllItemsExists(true)
+    setAllItemsExists(false)
   }
 
   const modalRentStart = useModal({ title: 'Comenzar renta' })

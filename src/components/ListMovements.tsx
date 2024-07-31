@@ -45,6 +45,8 @@ const ListMovements = () => {
             createdAt: movement.createdAt,
             user: movement.createdBy,
             createdBy: movement.createdBy,
+            createdByName: staff.find(({ id }) => id === movement.createdBy)
+              ?.name,
             storeId,
             orderId: movement.orderId,
             content: `Asigno el artículo ${itemDetails?.number || ''} a ${

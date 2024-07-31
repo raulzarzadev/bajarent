@@ -105,21 +105,25 @@ export const onChangeItemSection = async ({
 }
 
 export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
-  //* <------------------ ADD REGISTRY ENTRY
-  onRegistryEntry({
-    storeId,
-    itemId,
-    type: 'pickup',
-    orderId
-  })
-
-  return await onEditItemField({
+  await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO PICKED UP
     storeId,
     itemId,
     field: 'status',
     value: 'pickedUp'
   })
+    .then((res) => console.log({ res }))
+    .catch((err) => console.error({ err }))
+  //* <------------------ ADD REGISTRY ENTRY
+  await onRegistryEntry({
+    storeId,
+    itemId,
+    type: 'pickup',
+    orderId
+  })
+    .then((res) => console.log({ res }))
+    .catch((err) => console.error({ err }))
+  return
 }
 
 export const onRentItem = async ({ storeId, itemId, orderId }) => {
