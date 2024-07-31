@@ -73,7 +73,7 @@ const ListMovements = () => {
               pickup: `${itemNumber} Recogida `,
               delivery: `${itemNumber} Entregada `,
               exchange: `${itemNumber} Cambio `,
-              assignment: `${itemNumber} Asignación de $`,
+              assignment: `${itemNumber} Asignación`,
               created: `${itemNumber} Creada `,
               fix: `${itemNumber} Reparada `,
               retire: `${itemNumber} Retirada `,

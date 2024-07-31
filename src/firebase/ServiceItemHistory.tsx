@@ -164,10 +164,9 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
     const items = await ServiceStoreItems.getAll(
       { storeId },
       { justRefs: true }
-    ).then((res) => res.map(({ id }) => id))
-    // if (!!type) {
-    //   filters.push(where('type', '==', type))
-    // }
+    ).then((res) => {
+      return res.map(({ id }) => id)
+    })
 
     const itemsHistory = items.map(async (itemId) => {
       const collectionRef = collection(
@@ -179,6 +178,7 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
         SUB_COLLECTION_2
       )
       const res = await this.getRefItems({ collectionRef, filters })
+      console.log({ res })
       return res.map((item: ItemHistoryType) => ({ ...item, itemId }))
     })
     return Promise.all(itemsHistory).then(
