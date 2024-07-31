@@ -220,8 +220,6 @@ const StoreContextProvider = ({ children }) => {
     ]
   )
 
-  console.log({ value })
-
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
 
