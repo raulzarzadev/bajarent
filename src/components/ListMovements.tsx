@@ -28,7 +28,9 @@ const ListMovements = () => {
   const { storeId } = useAuth()
   const { payments, staff, storeSections } = useStore()
   const [loading, setLoading] = React.useState(false)
-  const { orders } = useOrdersCtx()
+  const {
+    consolidatedOrders: { orders }
+  } = useOrdersCtx()
 
   const [date, setDate] = React.useState(new Date())
   const handleChangeDate = async (newDate: Date) => {
@@ -56,6 +58,7 @@ const ListMovements = () => {
               type: 'item-movement',
               storeId,
               orderId: movement.orderId,
+
               id: movement?.id || '',
               itemId: itemDetails?.id || '',
               content: movement.content,
@@ -86,21 +89,21 @@ const ListMovements = () => {
 
         return asMovement
       })
-
       const ordersMovements = ServiceComments.getByDate(storeId, newDate).then(
         async (comments) => {
           const todayPayments = payments.filter(({ createdAt }) => {
             return isToday(asDate(createdAt))
           })
-          const movements = await formatComments({
+          const movements = formatComments({
             comments,
-            orders,
+            orders: Object.values(orders),
             staff,
             payments: todayPayments
           })
           return movements
         }
       )
+
       const res: Partial<FormattedComment[]> = await Promise.all([
         itemsMovements,
         ordersMovements
