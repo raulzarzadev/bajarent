@@ -11,6 +11,7 @@ import { onPickUpItem } from '../../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
 import { useStore } from '../../contexts/storeContext'
 import RowOrderItem from '../RowOrderItem'
+import { FormattedResponse } from '../../firebase/firebase.CRUD'
 
 const ModalPickupOrder = ({
   modal,
@@ -39,9 +40,9 @@ const ModalPickupOrder = ({
         itemId: item.id,
         orderId: order.id
       })
-        .then(async (res) => {
+        .then(async (res: FormattedResponse) => {
           if (
-            !res.ok &&
+            !res?.ok &&
             res?.res?.code === 'not-found' &&
             shouldCreateItemIfNotExists
           ) {
