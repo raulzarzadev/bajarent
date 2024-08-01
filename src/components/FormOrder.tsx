@@ -36,6 +36,7 @@ const getOrderFields = (
   //* add extra ops config at the really first of the form
 
   const extraOpsEnds = [
+    'startRepair',
     'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
     'scheduledAt'
   ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
