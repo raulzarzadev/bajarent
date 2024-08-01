@@ -11,6 +11,7 @@ const Chip = ({
   size = 'md',
   style,
   onPress,
+  maxWidth,
   ...props
 }: ChipProps & {
   title: string
@@ -18,6 +19,7 @@ const Chip = ({
   titleColor?: string
   size?: Size
   style?: ViewStyle
+  maxWidth?: ViewStyle['maxWidth']
   onPress?: () => void
 }) => {
   const sizes = {
@@ -48,10 +50,14 @@ const Chip = ({
         },
         style
       ]}
+      titleProps={{
+        numberOfLines: 1
+      }}
       titleStyle={{
         color: titleColor,
         fontSize: sizes[size].fontSize,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        maxWidth
       }}
       onPress={onPress}
       {...props}

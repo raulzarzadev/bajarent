@@ -146,6 +146,7 @@ export const CommentRow = ({
                   onPress={() => {
                     toOrders({ id: comment?.orderId })
                   }}
+                  maxWidth={120}
                 ></Chip>
               </View>
             )}
