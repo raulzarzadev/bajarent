@@ -23,6 +23,7 @@ import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
 import TextInfo from './TextInfo'
+import { useEmployee } from '../contexts/employeeContext'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -127,6 +128,8 @@ const FormOrderA = ({
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
+  const { employee } = useEmployee()
+
   const [error, setError] = useState<string | null>(null)
 
   //* <- Define order types allowed
@@ -171,7 +174,7 @@ const FormOrderA = ({
       `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`
   }
 
-  if (!store) return <Loading />
+  if (!store || !employee) return <Loading />
   if (!defaultType)
     return (
       <TextInfo
@@ -192,7 +195,6 @@ const FormOrderA = ({
    * define order fields depends of order type
    *******************************************rz */
   //#region render
-
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -333,6 +335,7 @@ const FormFieldsA = ({
   setLoading
 }: FormFieldsProps) => {
   const { store } = useStore()
+  const { employee } = useEmployee()
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
@@ -375,6 +378,12 @@ const FormFieldsA = ({
     })
   }, [sheetRow])
 
+  useEffect(() => {
+    if (employee.sectionsAssigned.length > 0) {
+      setValues({ ...values, assignToSection: employee.sectionsAssigned[0] })
+    }
+  }, [employee.sectionsAssigned])
+
   //#region InputFields
   const inputFields: Record<FormOrderFields, ReactNode> = {
     type: (
@@ -386,24 +395,29 @@ const FormFieldsA = ({
     ),
     sheetRow: (
       <>
-        <TextInfo
+        {/* <TextInfo
           type="warning"
           text="Fila de excel. Las celdas deben estar en el siguiente orden | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | No.Casa | Fecha programada |"
-        ></TextInfo>
+        ></TextInfo> */}
         <InputTextStyled
           onChangeText={(text) => setSheetRow(text)}
           placeholder="Fila de excel"
           value={values.sheetRow}
-          helperText={'Fila de excel'}
-          style={{ borderColor: theme.warning, borderWidth: 2 }}
+          helperText={
+            'Fila de excel | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | '
+          }
+          style={{
+            borderColor: theme.warning,
+            borderWidth: 4
+          }}
         />
       </>
     ),
     note: (
       <InputValueFormik
         name={'note'}
-        placeholder="Contrato"
-        helperText={'Numero de nota o contrato '}
+        placeholder="Contrato (opcional)"
+        helperText={'Numero de nota o contrato  '}
       />
     ),
 

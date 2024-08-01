@@ -16,8 +16,9 @@ import {
   onRepairStart
 } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ModalStartRepair from './ModalRepairStart'
+import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
 
 //* repaired
 function OrderActions() {
@@ -105,17 +106,27 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const isPending =
     status === order_status.AUTHORIZED || status === order_status.PENDING
   const isPickedUp = status === order_status.PICKED_UP
-  const { items } = useStore()
 
-  const itemsAlreadyExists = order?.items?.every((item) =>
-    items?.find((i) => i?.id === item?.id)
-  )
+  useEffect(() => {
+    checkIfAllItemsExists()
+  }, [order.items])
+
+  const [allItemsExists, setAllItemsExists] = useState(false)
+
+  const checkIfAllItemsExists = async () => {
+    const promises = order?.items.map((item) => {
+      return ServiceStoreItems.get({ itemId: item.id, storeId: order.storeId })
+    })
+    const res = await Promise.all(promises)
+    if (res.every((r) => r)) return setAllItemsExists(true)
+    setAllItemsExists(false)
+  }
 
   const modalRentStart = useModal({ title: 'Comenzar renta' })
   const modalRentFinish = useModal({ title: 'Terminar renta' })
   return (
     <>
-      {!itemsAlreadyExists && (
+      {!allItemsExists && (
         <Text style={[gStyles.tError, gStyles.tCenter]}>
           *Algun artículo no existe
         </Text>
@@ -133,7 +144,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
             }}
           />
           <ButtonAction
-            disabled={isPending || !itemsAlreadyExists}
+            disabled={isPending || !allItemsExists}
             isSelected={isPickedUp}
             selectedLabel="Recogido"
             unselectedLabel="Recoger"

@@ -19,6 +19,7 @@ const OrderDirectives = ({
 }: {
   order: Partial<OrderType> | Partial<ConsolidatedOrderType>
 }) => {
+  if (!order) return null
   const { storeSections } = useStore()
   const assignedSectionLabel =
     order?.assignToSectionName ||
@@ -31,7 +32,7 @@ const OrderDirectives = ({
     if (type === order_type.REPAIR) return '🔧'
     return type
   }
-  const orderType = `${TypeIcon(order.type)} ${currentRentPeriod(order, {
+  const orderType = `${TypeIcon(order?.type)} ${currentRentPeriod(order, {
     shortLabel: true
   })}`
   return (

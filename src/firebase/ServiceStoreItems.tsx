@@ -189,12 +189,20 @@ export class ServiceStoreItemsClass {
     ids: string[]
   }): Promise<Type[]> {
     const ref = collection(db, 'stores', storeId, SUB_COLLECTION)
-    return await ServiceStores.getRefItems({
-      collectionRef: ref,
-      filters: [where(documentId(), 'in', ids)]
-    })
+    let promises = []
+    const MAX_BATCH_SIZE = 30
+    for (let i = 0; i < ids.length; i += MAX_BATCH_SIZE) {
+      const chunk = ids.slice(i, i + MAX_BATCH_SIZE)
+      promises.push(
+        ServiceStores.getRefItems({
+          collectionRef: ref,
+          filters: [where(documentId(), 'in', chunk)]
+        })
+      )
+    }
+    return Promise.all(promises).then((res) => res.flat())
   }
-  // Agrega tus métodos aquí
+
   async customMethod() {
     // Implementa tu método personalizado
   }

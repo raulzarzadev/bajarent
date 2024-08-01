@@ -10,7 +10,6 @@ import { json2csv } from 'json-2-csv'
 import asDate, { dateFormat } from '../libs/utils-date'
 import OrderType, { order_type } from '../types/OrderType'
 import { getUserName } from './SpanUser'
-import { pick } from 'cypress/types/lodash'
 import { currentRentPeriod } from '../libs/orders'
 import dictionary from '../dictionary'
 

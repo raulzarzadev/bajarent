@@ -166,6 +166,11 @@ function MyList<T extends { id: string }>({
       return []
     }
   }
+  useEffect(() => {
+    if ((filteredData?.length || 0) <= 10) {
+      setCurrentPage(1)
+    }
+  }, [filteredData?.length])
   if (!data) return <Loading />
 
   return (

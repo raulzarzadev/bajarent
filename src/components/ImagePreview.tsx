@@ -1,13 +1,28 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
+const { height: deviceHeight } = Dimensions.get('window')
 
 const ImagePreview = ({
   image,
   title = 'Imagen',
   width = 150,
-  height = 150
+  height = 150,
+  fullscreen = false
+}: {
+  image: string
+  title?: string
+  width?: number
+  height?: number
+  fullscreen?: boolean
 }) => {
   const modal = useModal({ title: title })
   if (!image) return <></>
@@ -33,8 +48,10 @@ const ImagePreview = ({
             width: '100%',
             height: '100%',
             marginVertical: 2,
-            minHeight: 350,
-            minWidth: 150
+            minWidth: '100%',
+            minHeight: deviceHeight - 100,
+            resizeMode: fullscreen ? 'contain' : 'cover',
+            alignItems: 'center'
           }}
         />
       </StyledModal>

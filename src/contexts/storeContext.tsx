@@ -1,4 +1,11 @@
-import { createContext, useState, useContext, useEffect, Dispatch } from 'react'
+import {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  Dispatch,
+  useMemo
+} from 'react'
 import StoreType from '../types/StoreType'
 import OrderType from '../types/OrderType'
 import { CommentType, FormattedComment } from '../types/CommentType'
@@ -13,7 +20,6 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { PriceType } from '../types/PriceType'
 
 export type StoreContextType = {
@@ -22,6 +28,9 @@ export type StoreContextType = {
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
   orders?: OrderType[]
+  /**
+   * @deprecated use
+   */
   items?: Partial<ItemType>[]
   comments?: CommentType[]
   staff?: StoreType['staff']
@@ -107,17 +116,21 @@ const StoreContextProvider = ({ children }) => {
   }, [store, categories])
 
   const fetchItems = async () => {
-    const items = await ServiceStoreItems.getAll({ storeId: store.id })
-    setStoreItems(
-      items?.map((item) => ({
-        ...item,
-        id: item.id,
-        categoryName:
-          categories.find((cat) => cat.id === item.category)?.name || '',
-        assignedSectionName:
-          sections.find((sec) => sec.id === item.assignedSection)?.name || ''
-      })) || []
-    )
+    // const items = await ServiceStoreItems.getAll({
+    //   storeId: store.id
+    //   // sections: []
+    // })
+    // setStoreItems(
+    //   items?.map((item) => ({
+    //     ...item,
+    //     id: item.id,
+    //     categoryName:
+    //       categories.find((cat) => cat.id === item.category)?.name || '',
+    //     assignedSectionName:
+    //       sections.find((sec) => sec.id === item.assignedSection)?.name || ''
+    //   })) || []
+    // )
+    setStoreItems([])
   }
 
   //#region render
@@ -129,74 +142,85 @@ const StoreContextProvider = ({ children }) => {
     return { ...staff, sectionsAssigned }
   })
 
-  return (
-    <StoreContext.Provider
-      value={{
-        store,
-        storeId,
-        handleSetStoreId,
-        staff: staffWithSections,
-        categories: categories.map((cat) => ({
-          ...cat,
-          prices: storePrices?.filter((p) => p.categoryId === cat.id)
-        })),
-        userStores: stores,
-        storeSections: sections,
-        fetchPrices,
-        payments,
-        /**
-         * @deprecated
-         */
-        items: storeItems,
-        /**
-         * @deprecated
-         */
-        fetchItems,
+  const value = useMemo(
+    () => ({
+      store,
+      storeId,
+      handleSetStoreId,
+      staff: staffWithSections,
+      categories: categories.map((cat) => ({
+        ...cat,
+        prices: storePrices?.filter((p) => p.categoryId === cat.id)
+      })),
+      userStores: stores,
+      storeSections: sections,
+      fetchPrices,
+      payments,
+      /**
+       * @deprecated
+       */
+      items: storeItems,
+      /**
+       * @deprecated
+       */
+      fetchItems,
+      /**
+       * @deprecated
+       */
+      myStaffId: '',
+      // staffPermissions,
+      /**
+       * @deprecated
+       */
+      justActiveOrders,
+      /**
+       * @deprecated
+       */
+      handleToggleJustActiveOrders: () => {},
+      //comments,
+      /**
+       * @deprecated
+       */
+      handleSetMyStaffId: () => {},
+      /**
+       * @deprecated
+       */
+      orders: [],
+      /**
+       * @deprecated
+       */
+      myOrders: [],
+      /**
+       * @deprecated
+       */
+      userPositions: [],
 
-        /**
-         * @deprecated
-         */
-        myStaffId: '',
-        // staffPermissions,
-        /**
-         * @deprecated
-         */
-        justActiveOrders,
-
-        /**
-         * @deprecated
-         */
-        handleToggleJustActiveOrders: () => {},
-        //comments,
-        /**
-         * @deprecated
-         */
-        handleSetMyStaffId: () => {},
-        /**
-         * @deprecated
-         */
-        orders: [],
-        /**
-         * @deprecated
-         */
-        myOrders: [],
-        /**
-         * @deprecated
-         */
-        userPositions: [],
-
-        /**
-         * @deprecated
-         */
-        updateUserStores: () => {}
-        /**
-         * @deprecated
-         */
-      }}
-    >
-      {children}
-    </StoreContext.Provider>
+      /**
+       * @deprecated
+       */
+      updateUserStores: () => {}
+      /**
+       * @deprecated
+       */
+    }),
+    [
+      store,
+      storeId,
+      handleSetStoreId,
+      staffWithSections,
+      categories,
+      storePrices,
+      stores,
+      sections,
+      fetchPrices,
+      payments,
+      storeItems,
+      fetchItems,
+      justActiveOrders
+    ]
   )
+
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
 
 export const useStore = () => {

@@ -250,6 +250,24 @@ export const onRentFinish = async ({
   if (order.type != order_type.RENT)
     return console.error('Order is not a rent order')
 
+  const promises = items?.map(async (item) => {
+    return onPickUpItem({
+      storeId,
+      itemId: item.id,
+      orderId: order.id
+    })
+      .then(async (res) => {
+        // console.log({ res }, 'item picked up', item?.id, item?.number)
+      })
+      .catch(console.error)
+  })
+
+  await Promise.all(promises)
+    .then((res) => {
+      //  console.log({ res })
+    })
+    .catch(console.error)
+
   //* pickup order
   await onPickup({ orderId, userId })
 
@@ -262,23 +280,6 @@ export const onRentFinish = async ({
   })
 
   //*pickup items
-  const promises = items?.map(async (item) => {
-    return onPickUpItem({
-      storeId,
-      itemId: item.id,
-      orderId: order.id
-    })
-      .then(async (res) => {
-        console.log({ res })
-      })
-      .catch(console.error)
-  })
-
-  await Promise.all(promises)
-    .then((res) => {
-      console.log({ res })
-    })
-    .catch(console.error)
 }
 export const onRentStart = async ({
   order,
@@ -318,7 +319,14 @@ export const onRentStart = async ({
 
   //* delivery items
   const promises = items.map((item) => {
-    onRegistryEntry({
+    return onRentItem({
+      itemId: item.id,
+      storeId: storeId,
+      orderId
+    })
+  })
+  const registryItemsEntriesPromises = items.map((item) => {
+    return onRegistryEntry({
       storeId,
       itemId: item.id,
       type: 'delivery',
@@ -326,15 +334,13 @@ export const onRentStart = async ({
     })
       .then((res) => console.log({ res }))
       .catch((err) => console.error({ err }))
-    //* entry history item
-    return onRentItem({
-      itemId: item.id,
-      storeId: storeId,
-      orderId
-    })
   })
 
-  await Promise.all(promises)
+  await Promise.all(rentOrderPromises)
+    .then((res) => console.log({ res }))
+    .catch(console.error)
+
+  await Promise.all(registryItemsEntriesPromises)
     .then((res) => console.log({ res }))
     .catch(console.error)
 }

@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -11,13 +11,10 @@ import { useStore } from '../contexts/storeContext'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
 import SpanOrder from './SpanOrder'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import ItemType from '../types/ItemType'
 import { useNavigation } from '@react-navigation/native'
-import { formatItems } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
-import asDate from '../libs/utils-date'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -261,20 +258,9 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  const { storeId, categories, storeSections } = useStore()
-  const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>([])
+  const { items: storeItems } = useEmployee()
   const { toItems } = useMyNav()
-  useEffect(() => {
-    const fetchItems = async () => {
-      const itemsData = await Promise.all(
-        items?.map(async (itemId) => {
-          return await ServiceStoreItems.get({ itemId, storeId })
-        })
-      )
-      setItemsData(formatItems(itemsData, categories, storeSections))
-    }
-    fetchItems()
-  }, [])
+
   return (
     <View>
       <Pressable
@@ -288,19 +274,22 @@ export const CellItems = ({
         </Text>
       </Pressable>
       <View>
-        {itemsData.map((i, index) => (
-          <Pressable
-            key={i?.id || index}
-            onPress={() => {
-              toItems({ id: i?.id })
-            }}
-          >
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text>{i?.categoryName} </Text>
-              <Text>{i?.number} </Text>
-            </View>
-          </Pressable>
-        ))}
+        {items?.map((itemId, index) => {
+          const item = storeItems?.find((i) => i?.id === itemId)
+          return (
+            <Pressable
+              key={item?.id || index}
+              onPress={() => {
+                toItems({ id: item?.id })
+              }}
+            >
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Text>{item?.categoryName} </Text>
+                <Text>{item?.number} </Text>
+              </View>
+            </Pressable>
+          )
+        })}
       </View>
     </View>
   )

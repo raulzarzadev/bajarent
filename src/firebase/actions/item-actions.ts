@@ -105,21 +105,25 @@ export const onChangeItemSection = async ({
 }
 
 export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
-  //* <------------------ ADD REGISTRY ENTRY
-  onRegistryEntry({
-    storeId,
-    itemId,
-    type: 'pickup',
-    orderId
-  })
-
-  return await onEditItemField({
+  await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO PICKED UP
     storeId,
     itemId,
     field: 'status',
     value: 'pickedUp'
   })
+    .then((res) => console.log({ res }))
+    .catch((err) => console.error({ err }))
+  //* <------------------ ADD REGISTRY ENTRY
+  await onRegistryEntry({
+    storeId,
+    itemId,
+    type: 'pickup',
+    orderId
+  })
+    .then((res) => console.log({ res }))
+    .catch((err) => console.error({ err }))
+  return
 }
 
 export const onRentItem = async ({ storeId, itemId, orderId }) => {
@@ -142,7 +146,25 @@ export const onRentItem = async ({ storeId, itemId, orderId }) => {
   //   .then((res) => console.log({ res }))
   //   .catch((err) => console.error({ err }))
 }
+export const onRetireItem = async ({ storeId, itemId }) => {
+  await ServiceStoreItems.updateField({
+    storeId,
+    itemId,
+    field: 'status',
+    value: 'retired'
+  })
+  await ServiceStoreItems.addEntry({
+    storeId,
+    itemId,
+    entry: {
+      type: 'retire',
+      content: 'Baja',
+      itemId
+    }
+  })
 
+  return
+}
 export const onRegistryEntry = async ({
   storeId,
   itemId,
@@ -261,12 +283,12 @@ export const onAssignItem = async ({
       orderId
     })
     //* 4. add registry entry to order
-    onComment({
-      storeId,
-      orderId,
-      type: 'comment',
-      content: `Se asigno el artículo ${newItemNumber || newItemId}`
-    }).catch(console.error)
+    // onComment({
+    //   storeId,
+    //   orderId,
+    //   type: 'comment',
+    //   content: `Se asigno el artículo ${newItemNumber || newItemId}`
+    // }).catch(console.error)
   } catch (error) {
     console.error({ error })
   }

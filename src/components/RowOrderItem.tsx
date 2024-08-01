@@ -40,12 +40,14 @@ export const RowOrderItem = ({
   ) => void
 }) => {
   const { permissions } = useEmployee()
-  const { storeId, categories, storeSections, items } = useStore()
+  const { storeId, categories, storeSections, fetchItems } = useStore()
 
   const itemId = item.id
   const orderId = order.id
 
-  const itemData = items?.find((i) => i?.id === itemId)
+  //const itemData = items?.find((i) => i?.id === itemId)
+
+  const [itemData, setItemData] = useState<ItemSelected>()
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
@@ -58,6 +60,12 @@ export const RowOrderItem = ({
   const isRent = order.type === order_type.RENT
   const isDeliveredRent = order.status === order_status.DELIVERED && isRent
   const hasPermissionsToCreateItem = permissions.canManageItems
+
+  useEffect(() => {
+    ServiceStoreItems.get({ itemId, storeId }).then((res) => {
+      setItemData(res)
+    })
+  }, [itemId])
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -76,6 +84,7 @@ export const RowOrderItem = ({
   const handleSelectItem = (itemId) => {
     setItemSelected(itemId)
   }
+  const { items } = useEmployee()
   const [loading, setLoading] = useState(false)
 
   const handleAssignItem = async () => {
@@ -94,6 +103,7 @@ export const RowOrderItem = ({
     setLoading(false)
     return
   }
+
   return (
     <View>
       <StyledModal {...createModal}>
@@ -149,7 +159,7 @@ export const RowOrderItem = ({
                     return newItemId
                   })
                   .catch((e) => console.log({ e }))
-
+                fetchItems()
                 if (newItemId) {
                   //* ADD ENTRY TO THE ITEM
                   await ServiceStoreItems.addEntry({

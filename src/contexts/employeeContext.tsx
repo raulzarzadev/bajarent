@@ -116,12 +116,12 @@ export const EmployeeContextProvider = ({ children }) => {
           isOwner ||
           !!employee?.permissions?.store?.canValidatePayments,
         canDeleteOrders:
-          isAdmin || isOwner || !!employee?.permissions?.order.canDelete,
+          isAdmin || isOwner || !!employee?.permissions?.order?.canDelete,
         canDeleteItems:
           isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems,
         canManageItems,
         canViewAllOrders:
-          !!employee?.permissions?.order.canViewAll || isAdmin || isOwner,
+          !!employee?.permissions?.order?.canViewAll || isAdmin || isOwner,
         canDeleteExtension: isAdmin || isOwner
       }
     }),

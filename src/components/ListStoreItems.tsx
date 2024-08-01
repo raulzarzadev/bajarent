@@ -11,6 +11,8 @@ import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { formatItems } from '../contexts/employeeContext'
+import { onRetireItem } from '../firebase/actions/item-actions'
+import theme from '../theme'
 
 const ListStoreItems = ({
   allItemsSections,
@@ -47,47 +49,77 @@ const ListStoreItems = ({
     setLoading(false)
     return res
   }
+  const handleRetireItem = async (ids: string[]) => {
+    //if any item here is in rent, cancel the action
+    const items = await ServiceStoreItems.getList({ storeId, ids })
+    const rentedItems = items.filter((item) => item.status === 'rented')
+    if (rentedItems.length) {
+      setErrors({ rentedItems: 'cant retire rented items' })
+      setTimeout(() => {
+        setErrors({})
+      }, 3000)
+      return console.log('cant retire rented items')
+    }
+    const promises = ids.map(async (id) => {
+      try {
+        await onRetireItem({ storeId, itemId: id })
+      } catch (error) {
+        console.error({ error })
+        return error
+      }
+    })
+    const res = await Promise.all(promises)
+    fetchItems()
+    setLoading(false)
+    return res
+  }
   const [items, setItems] = useState<Partial<ItemType>[]>([])
+
+  const fetchItems = async () => {
+    if (Array.isArray(listItems) && listItems.length > 0) {
+      ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
+        setItems(res)
+      })
+      return
+    }
+    if (allItems) {
+      ServiceStoreItems.getAll({ storeId }).then((res) => {
+        setItems(res)
+      })
+      return
+    }
+
+    if (allItemsSections?.length) {
+      ServiceStoreItems.getAll({
+        storeId,
+        sections: allItemsSections
+      }).then((res) => {
+        setItems(res)
+      })
+      return
+    }
+    if (availableItemsSections?.length) {
+      ServiceStoreItems.getAvailable({
+        storeId,
+        sections: availableItemsSections
+      }).then((res) => {
+        setItems(res)
+      })
+      return
+    }
+    if (getAllAvailable) {
+      ServiceStoreItems.getAvailable({ storeId }).then((res) => {
+        setItems(res)
+      })
+    }
+  }
   useEffect(() => {
     if (storeId) {
-      if (Array.isArray(listItems) && listItems.length > 0) {
-        ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
-          setItems(res)
-        })
-        return
-      }
-      if (allItems) {
-        ServiceStoreItems.getAll({ storeId }).then((res) => {
-          setItems(res)
-        })
-        return
-      }
-
-      if (allItemsSections?.length) {
-        ServiceStoreItems.getAll({
-          storeId,
-          sections: allItemsSections
-        }).then((res) => {
-          setItems(res)
-        })
-        return
-      }
-      if (availableItemsSections?.length) {
-        ServiceStoreItems.getAvailable({
-          storeId,
-          sections: availableItemsSections
-        }).then((res) => {
-          setItems(res)
-        })
-        return
-      }
-      if (getAllAvailable) {
-        ServiceStoreItems.getAvailable({ storeId }).then((res) => {
-          setItems(res)
-        })
-      }
+      fetchItems()
     }
   }, [storeId])
+
+  const [errors, setErrors] = useState<{ rentedItems?: string }>({})
 
   return (
     <View>
@@ -96,15 +128,43 @@ const ListStoreItems = ({
         defaultSortBy="number"
         ComponentMultiActions={({ ids }) => (
           <View>
-            <ButtonConfirm
-              openDisabled={loading}
-              openLabel="Eliminar"
-              openColor="error"
-              openVariant="outline"
-              icon="delete"
-              text={`Se eliminaran los ${ids?.length || 0} items seleccionados`}
-              handleConfirm={async () => await handleDeleteItems(ids)}
-            />
+            <View style={{ marginVertical: 8 }}>
+              <ButtonConfirm
+                openDisabled={loading}
+                openLabel="Eliminar"
+                openColor="error"
+                openVariant="outline"
+                icon="delete"
+                text={`Se eliminaran los ${
+                  ids?.length || 0
+                } items seleccionados`}
+                handleConfirm={async () => await handleDeleteItems(ids)}
+              />
+            </View>
+            <View style={{ marginVertical: 8 }}>
+              {!!errors?.rentedItems && (
+                <Text
+                  style={{
+                    color: theme.error,
+                    marginVertical: 6,
+                    textAlign: 'center'
+                  }}
+                >
+                  *No se pueden dar de BAJA artículos en renta
+                </Text>
+              )}
+              <ButtonConfirm
+                openDisabled={loading}
+                openLabel="Dar de baja"
+                openColor="secondary"
+                openVariant="outline"
+                icon="download"
+                text={`Se daran de baja ${
+                  ids?.length || 0
+                } items seleccionados`}
+                handleConfirm={async () => await handleRetireItem(ids)}
+              />
+            </View>
           </View>
         )}
         sideButtons={[
@@ -163,6 +223,12 @@ const ListStoreItems = ({
 }
 
 const RowItem = ({ item }: { item: Partial<ItemType> }) => {
+  const bgcolor: Record<ItemType['status'], string> = {
+    rented: theme.success,
+    pickedUp: theme.primary,
+    retired: theme.neutral
+  }
+  const opacity = '66'
   return (
     <ListRow
       style={{
@@ -170,7 +236,8 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         borderRadius: 5,
         borderWidth: 1,
         width: '100%',
-        marginVertical: 2
+        marginVertical: 2,
+        backgroundColor: `${bgcolor[item.status]}${opacity}`
       }}
       fields={[
         { width: '20%', component: <Text>{item.number}</Text> },

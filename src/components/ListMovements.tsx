@@ -7,21 +7,30 @@ import { useStore } from '../contexts/storeContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
 import formatComments from '../libs/formatComments'
-import { comment_types, FormattedComment } from '../types/CommentType'
+import {
+  comment_types,
+  CommentBase,
+  FormattedComment
+} from '../types/CommentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
-import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
-import dictionary from '../dictionary'
+import {
+  ItemHistoryType,
+  ServiceItemHistory
+} from '../firebase/ServiceItemHistory'
 import Loading from './Loading'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  const { payments, staff, items } = useStore()
+  const { payments, staff, storeSections } = useStore()
   const [loading, setLoading] = React.useState(false)
-  const { orders } = useOrdersCtx()
+  const {
+    consolidatedOrders: { orders }
+  } = useOrdersCtx()
 
   const [date, setDate] = React.useState(new Date())
   const handleChangeDate = async (newDate: Date) => {
@@ -30,30 +39,54 @@ const ListMovements = () => {
       setDate(newDate)
       const itemsMovements = ServiceItemHistory.getItemsMovements({
         storeId,
-        date: asDate(newDate),
-        items: items?.map(({ id }) => id) || []
-      }).then((res) => {
-        const asMovement: Partial<CommentType>[] = res.map((movement) => {
-          const itemDetails = items.find(({ id }) => id === movement.itemId)
-          return {
-            type: comment_types['item-movement'],
-            title: 'hola',
-            createdAt: movement.createdAt,
-            user: movement.createdBy,
-            createdBy: movement.createdBy,
-            storeId,
-            orderId: movement.orderId,
-            content: ` ${
-              itemDetails?.number
-                ? `Artículo no. ${itemDetails?.number}  ${dictionary(
-                    movement.type
-                  )}`
-                : `${dictionary(movement.type)}`
-            }`,
-            id: movement?.id || '',
-            itemId: itemDetails?.id || ''
-          }
+        date: asDate(newDate)
+      }).then(async (movements) => {
+        const idsSet = new Set(movements.map(({ itemId }) => itemId))
+        const items = await ServiceStoreItems.getList({
+          storeId,
+          ids: Array.from(idsSet)
         })
+
+        const asMovement: Partial<FormattedComment>[] = movements.map(
+          (movement) => {
+            const itemDetails = items.find(({ id }) => id === movement.itemId)
+            const newMovement: CommentBase &
+              Pick<
+                FormattedComment,
+                'createdBy' | 'createdAt' | 'createdByName'
+              > = {
+              type: 'item-movement',
+              storeId,
+              orderId: movement.orderId,
+
+              id: movement?.id || '',
+              itemId: itemDetails?.id || '',
+              content: movement.content,
+              createdAt: movement.createdAt,
+              createdBy: movement.createdBy,
+              createdByName:
+                staff.find(
+                  ({ id, userId }) =>
+                    id === movement.createdBy || userId === movement.createdBy
+                )?.name || ''
+            }
+            const itemNumber = itemDetails?.number || ''
+            const content: Record<ItemHistoryType['type'], string> = {
+              report: `${itemNumber} Reporte `,
+              pickup: `${itemNumber} Recogida `,
+              delivery: `${itemNumber} Entregada `,
+              exchange: `${itemNumber} Cambio `,
+              assignment: `${itemNumber} Asignación`,
+              created: `${itemNumber} Creada `,
+              fix: `${itemNumber} Reparada `,
+              retire: `${itemNumber} Retirada `,
+              reactivate: `${itemNumber} Reactivada`
+            }
+            newMovement.content = content[movement.type]
+            return newMovement
+          }
+        )
+
         return asMovement
       })
       const ordersMovements = ServiceComments.getByDate(storeId, newDate).then(
@@ -61,15 +94,16 @@ const ListMovements = () => {
           const todayPayments = payments.filter(({ createdAt }) => {
             return isToday(asDate(createdAt))
           })
-          const movements = await formatComments({
+          const movements = formatComments({
             comments,
-            orders,
+            orders: Object.values(orders),
             staff,
             payments: todayPayments
           })
           return movements
         }
       )
+
       const res: Partial<FormattedComment[]> = await Promise.all([
         itemsMovements,
         ordersMovements

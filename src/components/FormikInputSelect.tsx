@@ -20,7 +20,6 @@ const FormikInputSelect = ({
   disabled?: boolean
 }) => {
   const [field, meta, helpers] = useField(name)
-
   return (
     <View>
       {!!label && <Text>{label}</Text>}

@@ -1,4 +1,5 @@
 import dictionary from '../dictionary'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { CommentType, FormattedComment } from '../types/CommentType'
 import OrderType from '../types/OrderType'
 import PaymentType from '../types/PaymentType'
@@ -12,7 +13,7 @@ export default function formatComments({
 }: {
   comments: CommentType[]
   staff: StaffType[]
-  orders: OrderType[]
+  orders: OrderType[] | ConsolidatedOrderType[]
   payments?: PaymentType[]
 }): FormattedComment[] {
   const commentsFormatted: FormattedComment[] = comments.map((comment) => {
@@ -24,10 +25,12 @@ export default function formatComments({
       orderFolio: order?.folio,
       orderName: order?.fullName,
       orderStatus: order?.status,
+      orderId: order?.id || comment.orderId,
       orderType: order?.type,
       solved: !!comment?.solved
     }
   })
+
   const paymentsFormatted: FormattedComment[] = payments?.map((payment) => {
     const createdBy = staff?.find((st) => st.userId === payment.createdBy)
     const order = orders?.find((ord) => ord.id === payment.orderId)
