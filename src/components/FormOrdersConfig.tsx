@@ -4,7 +4,11 @@ import { Formik } from 'formik'
 import { gSpace, gStyles } from '../styles'
 import FormikCheckbox from './FormikCheckbox'
 import dictionary from '../dictionary'
-import { FormOrderFields } from './FormOrder'
+import {
+  FormOrderFields,
+  LIST_OF_FORM_ORDER_FIELDS,
+  mutableFormOrderFields
+} from './FormOrder'
 import Button from './Button'
 import StoreType from '../types/StoreType'
 
@@ -23,13 +27,14 @@ const FormOrdersConfig = ({
     <View>
       <Formik
         initialValues={defaultValues}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { resetForm }) => {
+          setIsSubmitting(true)
           await onSubmit(values)
-          console.log('submitted')
+          resetForm({ values })
           setIsSubmitting(false)
         }}
       >
-        {({ handleSubmit, values }) => (
+        {({ handleSubmit, values, dirty }) => (
           <View>
             <Text style={gStyles.h3}>Tipos de ordenes (recomendado)</Text>
             <Text style={gStyles.helper}>
@@ -37,7 +42,7 @@ const FormOrdersConfig = ({
               necesidades de tu negocio
             </Text>
             <View style={[styles.input, styles.type]}>
-              {ordersTypes.map((type) => (
+              {ordersTypes.sort().map((type) => (
                 <View key={type} style={[styles.type]}>
                   <FormikCheckbox
                     name={'orderTypes.' + type}
@@ -78,7 +83,7 @@ const FormOrdersConfig = ({
               )
             })}
             <Button
-              disabled={isSubmitting}
+              disabled={isSubmitting || !dirty}
               label="Guardar configuración"
               onPress={handleSubmit}
               fullWidth={false}
@@ -96,44 +101,48 @@ const FormOrdersConfig = ({
 /* ********************************************
  *  SORT of this array change the order of the fields
  *******************************************rz */
-export const extraFields: FormOrderFields[] = [
-  //'type',//*<- Required already included
-  //'fullName',//*<- Required already included
-  // 'phone',//*<- Required already included
+export const extraFields: FormOrderFields[] = mutableFormOrderFields.filter(
+  (field) => field !== 'type' && field !== 'fullName' && field !== 'phone'
+)
 
-  'note', //*<- kind of external reference
-  'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
+// [
+//   //'type',//*<- Required already included
+//   //'fullName',//*<- Required already included
+//   // 'phone',//*<- Required already included
 
-  //* address
-  'neighborhood',
-  'address',
-  'location',
-  'references',
+//   'note', //*<- kind of external reference
+//   'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
 
-  //* Assign date
-  'assignIt',
+//   //* address
+//   'neighborhood',
+//   'address',
+//   'location',
+//   'references',
 
-  //* repair
-  'itemBrand',
-  'itemSerial',
-  'repairDescription', //*<- Field name is 'description' in the form
-  'quoteDetails',
-  'startRepair',
+//   //* Assign date
+//   'assignIt',
 
-  //* images
-  'imageID',
-  'imageHouse',
+//   //* repair
+//   'itemBrand',
+//   'itemSerial',
+//   'repairDescription', //*<- Field name is 'description' in the form
+//   'quoteDetails',
+//   'startRepair',
 
-  //* Scheduled date
-  'scheduledAt',
-  //* extra ops config
-  'hasDelivered' //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+//   //* images
+//   'imageID',
+//   'imageHouse',
 
-  //* select item
-  // 'selectItemsRent',//* <- Included by default
-  // 'selectItemsSale',//* <- Included by default
-  // 'selectItemsRepair'//* <- Included by default
-]
+//   //* Scheduled date
+//   'scheduledAt',
+//   //* extra ops config
+//   'hasDelivered' //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+
+//   //* select item
+//   // 'selectItemsRent',//* <- Included by default
+//   // 'selectItemsSale',//* <- Included by default
+//   // 'selectItemsRepair'//* <- Included by default
+// ]
 
 export default FormOrdersConfig
 

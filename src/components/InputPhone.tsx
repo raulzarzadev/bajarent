@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Text, View, ViewStyle } from 'react-native'
 import RNPhoneInput, { ICountry } from 'react-native-international-phone-number'
 import { gStyles } from '../styles'
+import { HelperTextColors } from './InputTextStyled'
+import theme from '../theme'
 
 type PhoneInputProps = {
   defaultNumber?: string
@@ -10,12 +12,14 @@ type PhoneInputProps = {
   onChange?: (phoneNumber: string) => void
   helperText?: string
   label?: string
+  helperTextColor?: HelperTextColors
 }
 export default function InputPhone({
   defaultNumber = '+52',
   stylesContainer,
   onChange = (phoneNumber: string) => console.log(phoneNumber),
   helperText,
+  helperTextColor,
   label
 }: // stylesInput
 PhoneInputProps) {
@@ -46,7 +50,11 @@ PhoneInputProps) {
         onChangeSelectedCountry={handleSelectedCountry}
         popularCountries={['MX', 'CA', 'US']}
       />
-      {helperText && <Text style={gStyles.helper}>{helperText}</Text>}
+      {helperText && (
+        <Text style={[gStyles.helper, { color: theme[helperTextColor] }]}>
+          {helperText}
+        </Text>
+      )}
     </View>
   )
 }

@@ -24,7 +24,7 @@ import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
-import useMyNav from '../hooks/useMyNav'
+import FormikErrorsList from './FormikErrorsList'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -47,9 +47,9 @@ const getOrderFields = (
   const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
 
   let mandatoryFieldsEnd: FormOrderFields[] = []
-  if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItemsRent']
+  if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItems']
   // if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
-  if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItemsSale']
+  if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItems']
 
   let addedFields: FormOrderFields[] = []
   const extraFieldsAllowed = extraFields
@@ -67,7 +67,7 @@ const getOrderFields = (
   ]
   return res
 }
-const LIST_OF_FORM_ORDER_FIELDS = [
+export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
   'fullName',
   'phone',
@@ -87,9 +87,9 @@ const LIST_OF_FORM_ORDER_FIELDS = [
   'sheetRow',
   'note',
 
-  'selectItemsRepair',
-  'selectItemsRent',
-  'selectItemsSale',
+  'selectItems',
+  //'selectItemsRent',
+  //'selectItemsSale',
 
   //Repairs
   'quoteDetails',
@@ -98,7 +98,9 @@ const LIST_OF_FORM_ORDER_FIELDS = [
 ] as const
 
 export type FormOrderFields = (typeof LIST_OF_FORM_ORDER_FIELDS)[number]
-
+export const mutableFormOrderFields: FormOrderFields[] = [
+  ...LIST_OF_FORM_ORDER_FIELDS
+]
 const initialValues: Partial<OrderType> = {
   firstName: '',
   fullName: '',
@@ -130,7 +132,6 @@ const FormOrderA = ({
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
   const { employee } = useEmployee()
-  const { toOrders } = useMyNav()
   const [error, setError] = useState<string | null>(null)
 
   //* <- Define order types allowed
@@ -213,7 +214,9 @@ const FormOrderA = ({
         )}
         {title && <Text style={gStyles.h3}>{title}</Text>}
         {!!renew && <Text style={gStyles.h3}>Renovación de orden {renew}</Text>}
-
+        {!!error && (
+          <Text style={[gStyles.p, { color: theme.error }]}>{error}</Text>
+        )}
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, { resetForm }) => {
@@ -238,9 +241,9 @@ const FormOrderA = ({
           }}
           validate={(values) => {
             const errors: Partial<OrderType> = {}
-            if (!values.fullName) errors.fullName = '*Nombre necesario'
+            if (!values.fullName) errors.fullName = 'Nombre necesario'
             if (!values.phone || values.phone.length < 12)
-              errors.phone = '*Teléfono valido es necesario'
+              errors.phone = 'Teléfono valido es necesario'
 
             /* ********************************************
              * If orders has delivered, then must have a scheduled date
@@ -248,7 +251,7 @@ const FormOrderA = ({
 
             if (values.hasDelivered && !values.scheduledAt)
               //@ts-ignore
-              errors.scheduledAt = '*Fecha  necesaria'
+              errors.scheduledAt = 'Fecha  necesaria'
 
             return errors
           }}
@@ -278,7 +281,7 @@ const FormOrderA = ({
                   setLoading={setLoading}
                 />
 
-                <View>
+                {/* <View>
                   {Object.entries(errors).map(([key, value]) => (
                     <Text key={key} style={[gStyles.p, { color: theme.error }]}>
                       {value as string}
@@ -289,7 +292,8 @@ const FormOrderA = ({
                   <Text style={[gStyles.p, { color: theme.error }]}>
                     {error}
                   </Text>
-                )}
+                )} */}
+                <FormikErrorsList />
 
                 <View style={[styles.item]}>
                   <Button
@@ -481,7 +485,7 @@ const FormFieldsA = ({
         }
       />
     ),
-    selectItemsRepair: (
+    selectItems: (
       <FormikSelectCategories
         name="items"
         label="Selecciona un artículo"
@@ -489,22 +493,7 @@ const FormFieldsA = ({
         startAt={values.scheduledAt}
       />
     ),
-    selectItemsRent: (
-      <FormikSelectCategories
-        name="items"
-        label="Selecciona un artículo"
-        selectPrice
-        startAt={values.scheduledAt}
-      />
-    ),
-    selectItemsSale: (
-      <FormikSelectCategories
-        name="items"
-        label="Selecciona un artículo"
-        selectPrice
-        startAt={values.scheduledAt}
-      />
-    ),
+
     hasDelivered: (
       <>
         {/* <TextInfo text="Entregada. Útil para ingresar antiguas ordenes al sistema. No recomendable si es un cliente nuevo"></TextInfo> */}

@@ -21,6 +21,7 @@ const FormikInputPhone = ({ name, helperText, label }: InputPhoneProps) => {
         helpers.setValue(value)
         helpers.setTouched(true)
       }}
+      helperTextColor={meta?.error ? 'error' : undefined}
       helperText={meta?.error && meta?.touched ? meta?.error : helperText}
     />
   )

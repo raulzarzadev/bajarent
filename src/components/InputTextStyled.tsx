@@ -18,11 +18,12 @@ import Icon, { IconName } from './Icon'
  * @returns {JSX.Element} - Elemento JSX que representa el componente InputTextStyledText.
  */
 
+export type HelperTextColors = 'error' | 'primary' | 'black' | 'white'
 export type InputTextProps = Omit<TextInputProps, 'value'> & {
   value?: string | number
   disabled?: boolean
   helperText?: string
-  helperTextColor?: 'error' | 'primary' | 'black' | 'white'
+  helperTextColor?: HelperTextColors
   type?: 'number' | 'text'
   containerStyle?: ViewStyle
   label?: string
@@ -120,7 +121,7 @@ const InputTextStyled = ({
       </View>
 
       {!!helperText && (
-        <Text style={[baseStyle.helperText, { color: helperTextColor }]}>
+        <Text style={[baseStyle.helperText, { color: theme[helperTextColor] }]}>
           {helperText}
         </Text>
       )}

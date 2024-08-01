@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import React from 'react'
 import FormOrdersConfig from './FormOrdersConfig'
 import { gStyles } from '../styles'
@@ -37,5 +37,3 @@ const ScreenOrdersConfig = () => {
 }
 
 export default ScreenOrdersConfig
-
-const styles = StyleSheet.create({})
