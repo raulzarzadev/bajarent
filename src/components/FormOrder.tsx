@@ -24,6 +24,7 @@ import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
+import useMyNav from '../hooks/useMyNav'
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
@@ -129,7 +130,7 @@ const FormOrderA = ({
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
   const { employee } = useEmployee()
-
+  const { toOrders } = useMyNav()
   const [error, setError] = useState<string | null>(null)
 
   //* <- Define order types allowed
@@ -194,6 +195,7 @@ const FormOrderA = ({
   /* ********************************************
    * define order fields depends of order type
    *******************************************rz */
+
   //#region render
   return (
     <ScrollView>
@@ -218,7 +220,6 @@ const FormOrderA = ({
             setLoading(true)
             setError(null)
 
-            console.log(values.sheetRow)
             delete values.sheetRow //*<--- remove sheetRow from values
 
             await onSubmit(values)

@@ -7,11 +7,12 @@ import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import { onRentStart } from '../libs/order-actions'
+import useMyNav from '../hooks/useMyNav'
 //
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId } = useStore()
   const { user } = useAuth()
-
+  const { toOrders } = useMyNav()
   const handleSubmit = async (values: OrderType) => {
     debugger
     const defaultValues = {
@@ -36,11 +37,6 @@ const ScreenOrderNew = ({ navigation }) => {
     /* ********************************************
      *  if has delivered is true
      *******************************************rz */
-    if (defaultValues?.hasDelivered) {
-      defaultValues.status = order_status.DELIVERED
-      defaultValues.deliveredAt = values.scheduledAt
-      defaultValues.deliveredBy = user.id
-    }
 
     defaultValues.expireAt = orderExpireAt({ order: values })
     defaultValues.statuses = true //* it means is set with expireAt
@@ -54,18 +50,19 @@ const ScreenOrderNew = ({ navigation }) => {
     })
 
     return await ServiceOrders.createSerialOrder(defaultValues).then(
-      (orderId) => {
+      async (orderId) => {
         if (orderId) {
-          navigation.navigate('StackOrders', {
-            screen: 'Orders',
-            params: { orderId }
-          })
-          onRentStart({
-            order: { ...defaultValues, id: orderId },
-            userId: user.id
-          })
-          // navigation.navigate('Orders')
-          // navigation.navigate('OrderDetails', { orderId })
+          if (defaultValues?.hasDelivered) {
+            // defaultValues.status = order_status.DELIVERED
+            // defaultValues.deliveredAt = values.scheduledAt
+            // defaultValues.deliveredBy = user.id
+            await onRentStart({
+              order: { ...defaultValues, id: orderId },
+              userId: user.id,
+              deliveredAt: values.scheduledAt
+            })
+          }
+          toOrders({ id: orderId })
         }
       }
     )

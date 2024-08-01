@@ -283,10 +283,12 @@ export const onRentFinish = async ({
 }
 export const onRentStart = async ({
   order,
-  userId
+  userId,
+  deliveredAt = new Date()
 }: {
   order: Partial<OrderType>
   userId: string
+  deliveredAt?: Date
 }) => {
   const items = order?.items || []
   const storeId = order.storeId
@@ -296,7 +298,7 @@ export const onRentStart = async ({
     return console.error('Order is not a rent order')
 
   const expireAt = orderExpireAt({
-    order: { ...order, deliveredAt: new Date() }
+    order: { ...order, deliveredAt: deliveredAt }
   })
   //* delivery order
   onDelivery({
@@ -318,7 +320,7 @@ export const onRentStart = async ({
   })
 
   //* delivery items
-  const promises = items.map((item) => {
+  const rentOrderPromises = items.map((item) => {
     return onRentItem({
       itemId: item.id,
       storeId: storeId,
