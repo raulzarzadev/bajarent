@@ -7,7 +7,11 @@ import StoreType from '../types/StoreType'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
-import { FormOrderFields } from './FormOrder'
+import {
+  FormOrderFields,
+  LIST_OF_FORM_ORDER_FIELDS,
+  mutableFormOrderFields
+} from './FormOrder'
 import ErrorBoundary from './ErrorBoundary'
 import FormikInputPhone from './FormikInputPhone'
 import InputLocationFormik from './InputLocationFormik'
@@ -173,40 +177,42 @@ const styles = StyleSheet.create({
 /* ********************************************
  *  SORT of this array change the order of the fields
  *******************************************rz */
-export const extraFields: FormOrderFields[] = [
-  //'type',//*<- Required already included
-  //'fullName',//*<- Required already included
-  // 'phone',//*<- Required already included
+//export const extraFields: FormOrderFields[] = mutableFormOrderFields
 
-  //* extra ops config
-  'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
-  'note', //*<- kind of external reference
-  'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
+// [
+//   //'type',//*<- Required already included
+//   //'fullName',//*<- Required already included
+//   // 'phone',//*<- Required already included
 
-  //* address
-  'neighborhood',
-  'address',
-  'location',
-  'references',
+//   //* extra ops config
+//   'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+//   'note', //*<- kind of external reference
+//   'sheetRow', //*<- you can paste a google sheet row to get the data much more easy
 
-  //* assign
-  // 'scheduledAt',
-  'assignIt',
+//   //* address
+//   'neighborhood',
+//   'address',
+//   'location',
+//   'references',
 
-  //* repair
-  'itemBrand',
-  'itemSerial',
-  'repairDescription', //*<- Field name is 'description' in the form
+//   //* assign
+//   // 'scheduledAt',
+//   'assignIt',
 
-  'quoteDetails',
-  'startRepair',
+//   //* repair
+//   'itemBrand',
+//   'itemSerial',
+//   'repairDescription', //*<- Field name is 'description' in the form
 
-  //* images
-  'imageID',
-  'imageHouse'
+//   'quoteDetails',
+//   'startRepair',
 
-  //* select item
-  // 'selectItemsRent',//* <- Included by default
-  // 'selectItemsSale',//* <- Included by default
-  // 'selectItemsRepair'//* <- Included by default
-]
+//   //* images
+//   'imageID',
+//   'imageHouse'
+
+//   //* select item
+//   // 'selectItemsRent',//* <- Included by default
+//   // 'selectItemsSale',//* <- Included by default
+//   // 'selectItemsRepair'//* <- Included by default
+// ]

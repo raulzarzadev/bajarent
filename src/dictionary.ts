@@ -137,6 +137,7 @@ const labels = {
   repairDescription: 'Descripción de rep.',
   itemBrand: 'Marca',
   itemSerial: 'Serie',
+  itemModel: 'Modelo',
   imageID: 'Identificación',
   imageHouse: 'Fachada',
   hasDelivered: 'Ya entregado',

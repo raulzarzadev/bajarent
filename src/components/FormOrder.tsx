@@ -17,7 +17,6 @@ import { gSpace, gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import InputTextStyled from './InputTextStyled'
-import { extraFields } from './FormStore'
 import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
@@ -34,6 +33,13 @@ const getOrderFields = (
 ): FormOrderFields[] => {
   //* extra ops config
   //* add extra ops config at the really first of the form
+  const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
+  let mandatoryFieldsEnd: FormOrderFields[] = []
+  let addedFields: FormOrderFields[] = []
+
+  const extraOpsStarts = ['sheetRow', 'note']?.filter(
+    (field) => !!fields?.[field]
+  ) as FormOrderFields[]
 
   const extraOpsEnds = [
     'startRepair',
@@ -41,20 +47,13 @@ const getOrderFields = (
     'scheduledAt'
   ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
 
-  const extraOpsStarts = ['sheetRow', 'note']?.filter(
-    (field) => !!fields?.[field]
-  ) as FormOrderFields[]
-
-  const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
-
-  let mandatoryFieldsEnd: FormOrderFields[] = []
   if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItems']
   // if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
   if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItems']
 
-  let addedFields: FormOrderFields[] = []
-  const extraFieldsAllowed = extraFields
-    ?.filter((field) => fields?.[field])
+  const extraFieldsAllowed = LIST_OF_FORM_ORDER_FIELDS?.filter(
+    (field) => fields?.[field]
+  )
     //* clear extra ops because are already included at the first of the form
     ?.filter((field) => ![...extraOpsEnds, ...extraOpsStarts].includes(field))
 
@@ -79,6 +78,7 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   'references',
   'repairDescription', // Field name is 'description' in the form
   'itemBrand',
+  'itemModel',
   'itemSerial',
   'imageID',
   'imageHouse',
@@ -423,7 +423,7 @@ const FormFieldsA = ({
       <InputValueFormik
         name={'note'}
         placeholder="Contrato (opcional)"
-        helperText={'Numero de nota o contrato  '}
+        helperText={'No. de contrato, nota, factura, etc.'}
       />
     ),
 
@@ -507,7 +507,7 @@ const FormFieldsA = ({
         numberOfLines={3}
         name={'item.failDescription'}
         placeholder="Describe la falla"
-        helperText="Ejemplo: No lava, hace ruido."
+        helperText="Ejemplo: Hace ruido, no enciende, etc."
       />
     ),
     itemBrand: (
@@ -519,6 +519,13 @@ const FormFieldsA = ({
     ),
     itemSerial: (
       <InputValueFormik name={'item.serial'} placeholder="No. de serie" />
+    ),
+    itemModel: (
+      <InputValueFormik
+        name={'item.model'}
+        placeholder="Modelo"
+        helperText="Año, lote, etc."
+      />
     ),
     assignIt: <FormikAssignOrder />,
     quoteDetails: (
