@@ -12,6 +12,7 @@ export type PriceBase = {
   storeId: string
 
   marketVisible?: boolean
+  itExpires?: boolean
 }
 
 export type PriceType = PriceBase & BaseType

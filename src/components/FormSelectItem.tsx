@@ -20,6 +20,7 @@ import { expireDate2 } from '../libs/expireDate'
 import InputTextStyled from './InputTextStyled'
 
 export type ItemSelected = {
+  model?: string
   categoryId?: string
   failDescription?: string
   categoryName?: string

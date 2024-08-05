@@ -8,7 +8,8 @@ import { addDays, addHours, addMinutes, addMonths, addWeeks } from 'date-fns'
  * @returns the time in seconds
  */
 export function priceTimeInSeconds(time: TimePriceType): number {
-  const timeArray = time.split(' ')
+  if (!time) return null //* -> some prices don't have time
+  const timeArray = time?.split(' ')
   const timeNumber = parseInt(timeArray[0])
   const timeUnit = timeArray[1]
   const units = {

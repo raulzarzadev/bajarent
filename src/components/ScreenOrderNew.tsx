@@ -5,7 +5,6 @@ import { useStore } from '../contexts/storeContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
-import { ListAssignedItemsE } from './ListAssignedItems'
 import { onRentStart } from '../libs/order-actions'
 import useMyNav from '../hooks/useMyNav'
 //
@@ -62,8 +61,8 @@ const ScreenOrderNew = ({ navigation }) => {
               deliveredAt: values.scheduledAt
             })
           }
-          toOrders({ id: orderId })
         }
+        toOrders({ id: orderId })
       }
     )
   }

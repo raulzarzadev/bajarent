@@ -15,6 +15,7 @@ const FormPriceA = ({ defaultPrice, handleSubmit }: FormPriceProps) => {
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [title, setTitle] = useState('')
+  const [itExpires, setItExpires] = useState(true)
   const [loading, setLoading] = useState(false)
   const [marketVisible, setMarketVisible] = useState(
     defaultPrice?.marketVisible || false
@@ -39,9 +40,10 @@ const FormPriceA = ({ defaultPrice, handleSubmit }: FormPriceProps) => {
     setLoading(true)
     await handleSubmit({
       title,
-      time: `${quantity} ${units}`,
+      time: itExpires ? `${quantity} ${units}` : null,
       amount: price,
-      marketVisible
+      marketVisible,
+      itExpires
     })
     setLoading(false)
   }
@@ -63,26 +65,39 @@ const FormPriceA = ({ defaultPrice, handleSubmit }: FormPriceProps) => {
           placeholder="Título"
         />
       </View>
-      <View style={styles.input}>
-        <InputTextStyled
-          value={quantity.toString()}
-          onChangeText={(qty) => {
-            setQuantity(Number(qty))
+      <View>
+        <InputCheckbox
+          label="Por tiempo"
+          setValue={(value) => {
+            setItExpires(value)
           }}
-          placeholder="Cantidad "
-          type="number"
-          helperText='Cantidad de "Minutos, Horas, Días, Semanas, Meses"'
+          value={itExpires}
         />
       </View>
-      <View style={styles.input}>
-        <InputRadios
-          containerStyle={{ flexWrap: 'wrap' }}
-          layout="row"
-          setValue={handleSetUnits}
-          value={units}
-          options={unitOptions}
-        />
-      </View>
+      {itExpires && (
+        <View>
+          <View style={styles.input}>
+            <InputTextStyled
+              value={quantity.toString()}
+              onChangeText={(qty) => {
+                setQuantity(Number(qty))
+              }}
+              placeholder="Cantidad "
+              type="number"
+              helperText='Cantidad de "Minutos, Horas, Días, Semanas, Meses"'
+            />
+          </View>
+          <View style={styles.input}>
+            <InputRadios
+              containerStyle={{ flexWrap: 'wrap' }}
+              layout="row"
+              setValue={handleSetUnits}
+              value={units}
+              options={unitOptions}
+            />
+          </View>
+        </View>
+      )}
       <View style={styles.input}>
         <InputTextStyled
           value={price.toString()}

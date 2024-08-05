@@ -35,7 +35,6 @@ const ModalFormPrice = ({
           defaultPrice={values}
           handleSubmit={(price) => {
             modal.toggleOpen()
-            console.log({ price })
             return handleSubmit(price)
           }}
         />

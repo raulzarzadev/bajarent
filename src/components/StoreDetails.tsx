@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import P from './P'
 import StoreType from '../types/StoreType'
@@ -8,7 +8,6 @@ import { useEmployee } from '../contexts/employeeContext'
 import BadgesStore from './BadgesStore'
 import ErrorBoundary from './ErrorBoundary'
 import { useNavigation } from '@react-navigation/native'
-import { colors } from '../theme'
 import SpanCopy from './SpanCopy'
 import LinkLocation from './LinkLocation'
 
@@ -74,8 +73,8 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
         />
       )}
       <Text style={gStyles.h3}>Cuentas bancarias</Text>
-      {store?.bankInfo?.map(({ clabe, bank }) => (
-        <View key={clabe}>
+      {store?.bankInfo?.map(({ clabe, bank }, i) => (
+        <View key={clabe || i}>
           <SpanCopy content={clabe} copyValue={clabe} label={bank} />
         </View>
       ))}
