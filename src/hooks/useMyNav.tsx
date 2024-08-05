@@ -52,11 +52,25 @@ const useMyNav = () => {
   }
   const toOrders = ({
     id,
-    screenNew
+    ids,
+    screenNew,
+    idsTitle
   }: {
     id?: string
+    ids?: string[]
     screenNew?: boolean
+    idsTitle?: string
   }) => {
+    if (Array.isArray(ids) && ids.length > 0) {
+      //@ts-ignore
+      navigate('StackOrders', {
+        screen: 'ScreenOrders',
+        params: {
+          title: idsTitle || 'Ordenes',
+          orders: ids
+        }
+      })
+    }
     if (screenNew) {
       //@ts-ignore
       navigate('NewOrder')

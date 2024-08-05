@@ -192,6 +192,7 @@ const labels = {
   'item-movement': 'Artículo MV',
   retired: 'Retirado',
   retire: 'Baja',
+  canDeleteExtension: 'Eliminar extensiones',
   ' ': '',
   '': ''
 } as const

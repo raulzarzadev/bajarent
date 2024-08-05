@@ -94,7 +94,8 @@ export enum permissions_orders {
   canExtend,
   // showOrderTotal,
   // showOrderTime,
-  getExpireTomorrow
+  getExpireTomorrow,
+  canDeleteExtension
 }
 export enum permissions_store {
   canCreateBalance,
