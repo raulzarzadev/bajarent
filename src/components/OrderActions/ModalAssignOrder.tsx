@@ -7,6 +7,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { View } from 'react-native'
 import FormikAssignOrder from '../FormikAssignOrder'
 import { Formik } from 'formik'
+import { onComment } from '../../libs/order-actions'
 
 const ModalAssignOrder = ({
   orderId = null,
@@ -22,15 +23,24 @@ const ModalAssignOrder = ({
   date?: Date
 }) => {
   const modal = useModal({ title: 'Asignar a' })
-  const { storeSections } = useStore()
+  const { storeSections, storeId } = useStore()
   const assignedToSectionName = storeSections?.find(
     (s) => s.id === section
   )?.name
   const [loading, setLoading] = useState(false)
   const handleSubmit = async (values: any) => {
+    const newSectionName = storeSections?.find(
+      (s) => s.id === values.assignToSection
+    )?.name
     setLoading(true)
     try {
-      await ServiceOrders.update(orderId, values)
+      ServiceOrders.update(orderId, values)
+      onComment({
+        orderId,
+        content: `Asignada a ${newSectionName}`,
+        type: 'comment',
+        storeId
+      })
       modal.toggleOpen()
     } catch (e) {
       console.error({ e })
