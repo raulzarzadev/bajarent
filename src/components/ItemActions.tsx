@@ -170,10 +170,11 @@ const ItemActions = ({
           >
             <InputRadios
               layout="row"
-              label="Selecciona una area"
+              label="Selecciona un area"
               setValue={(sectionId) => {
                 setSectionId(sectionId)
               }}
+              containerStyle={{ marginVertical: 6 }}
               value={sectionId}
               options={storeSections.map(({ id, name }) => {
                 return {

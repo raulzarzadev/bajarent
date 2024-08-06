@@ -49,6 +49,7 @@ const InputRadios = <T extends string = string>({
         radioButtons={radioButtonsOptions}
         onPress={setValue}
         selectedId={value}
+        labelStyle={{ marginVertical: 8 }}
         containerStyle={[
           containerStyle,
           {
