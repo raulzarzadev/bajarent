@@ -54,19 +54,21 @@ export const onDelivery = async ({
   userId,
   expireAt,
   items,
-  order
+  order,
+  deliveredAt = new Date() // default to now, optional you can delivery in the past
 }: {
   orderId: string
   userId: string
   expireAt: Date
   items: OrderType['items']
   order?: Partial<OrderType>
+  deliveredAt?: Date
 }) => {
   return await ServiceOrders.update(orderId, {
     ...order,
     expireAt,
     status: order_status.DELIVERED,
-    deliveredAt: new Date(),
+    deliveredAt,
     deliveredBy: userId,
     isDelivered: true,
     items
@@ -306,7 +308,8 @@ export const onRentStart = async ({
     orderId,
     userId,
     items,
-    order
+    order,
+    deliveredAt
   })
     .then((res) => console.log({ res }))
     .catch(console.error)
