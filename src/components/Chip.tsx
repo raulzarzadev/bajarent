@@ -2,7 +2,7 @@ import { ViewStyle } from 'react-native'
 import React from 'react'
 import { ChipProps, Chip as RNEChip } from 'react-native-elements'
 import { IconOrderType } from '../types/OrderType'
-import Icon from './Icon'
+import Icon, { IconName } from './Icon'
 export type Size = 'xs' | 'sm' | 'md' | 'lg'
 const Chip = ({
   title = '',
@@ -12,6 +12,8 @@ const Chip = ({
   style,
   onPress,
   maxWidth,
+  icon,
+  iconColor,
   ...props
 }: ChipProps & {
   title: string
@@ -19,6 +21,8 @@ const Chip = ({
   titleColor?: string
   size?: Size
   style?: ViewStyle
+  icon?: IconName
+  iconColor?: string
   maxWidth?: ViewStyle['maxWidth']
   onPress?: () => void
 }) => {
@@ -40,6 +44,7 @@ const Chip = ({
       padding: 10
     }
   }
+
   return (
     <RNEChip
       title={title?.toUpperCase()}
@@ -59,6 +64,8 @@ const Chip = ({
         fontWeight: 'bold',
         maxWidth
       }}
+      icon={icon ? <Icon icon={icon} color={iconColor} size={20} /> : undefined}
+      iconRight={false}
       onPress={onPress}
       {...props}
     />

@@ -97,6 +97,8 @@ const OrderStatus = ({
           title={'Cancelada'}
           color={theme.transparent}
           size={chipSize}
+          icon={'cancel'}
+          iconColor={colors.red}
         />
       )}
       {isRepaired && (

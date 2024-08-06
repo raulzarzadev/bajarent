@@ -106,7 +106,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             </Text>
           </View>
           <View>
-            <Text style={{ textAlign: 'center', marginTop: 4 q}}>
+            <Text style={{ textAlign: 'center', marginTop: 4 }}>
               Motivo: {order?.cancelledReason || ''}
             </Text>
           </View>

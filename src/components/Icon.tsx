@@ -56,6 +56,7 @@ import { IoHammerOutline } from 'react-icons/io5'
 import { FaWrench } from 'react-icons/fa6'
 import { MdHome, MdMoneyOff } from 'react-icons/md'
 import { FaCashRegister } from 'react-icons/fa'
+import { FcCancel } from 'react-icons/fc'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -131,7 +132,8 @@ const icons = {
   info: MdInfoOutline,
   warning: MdWarningAmber,
   undo: MdOutlineUndo,
-  cancel: MdCancel,
+  cancel: FcCancel,
+
   refresh: MdOutlineRefresh,
   copy: MdCopyAll,
   arrowForward: MdOutlineArrowForward,
