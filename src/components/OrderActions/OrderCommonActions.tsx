@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import {
@@ -18,6 +18,8 @@ import ButtonDeleteOrder from './ButtonDeleteOrder'
 import ModalScheduleOrder from './ModalScheduleOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
 import ErrorBoundary from '../ErrorBoundary'
+import InputTextStyled from '../InputTextStyled'
+import { useState } from 'react'
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -51,6 +53,7 @@ const OrderCommonActions = ({
   }
   const { order } = useOrderDetails()
   const { navigate, goBack } = useNavigation()
+  const [cancelledReason, setCancelledReason] = useState('')
 
   const canCancel = actionsAllowed?.canCancel
   const canEdit = actionsAllowed?.canEdit
@@ -92,7 +95,7 @@ const OrderCommonActions = ({
     onOrderComment({ content: 'Autorizada' })
   }
   const handleCancel = async () => {
-    return await onCancel({ orderId, userId }).then(() => {
+    return await onCancel({ orderId, userId, cancelledReason }).then(() => {
       onOrderComment({ content: 'Cancelada' })
     })
   }
@@ -161,16 +164,27 @@ const OrderCommonActions = ({
         openColor="info"
         openSize="small"
         icon="cancel"
-        text={
-          'Cancelar orden. Si necesitas retomarla en cualquer momento debes tener permiso para autorizar ordenes o pidele a tu administrador que lo haga.  '
-        }
         confirmLabel="Cancelar orden"
         confirmVariant="outline"
         confirmColor="info"
         handleConfirm={async () => {
           return await handleCancel()
         }}
-      />
+      >
+        <Text>
+          Cancelar orden. Si necesitas retomarla en cualquer momento debes tener
+          permiso para autorizar ordenes o pidele a tu administrador que lo
+          haga.
+        </Text>
+        <InputTextStyled
+          label="Motivo de cancelación"
+          placeholder="Escribe el motivo de cancelación"
+          onChangeText={(value) => {
+            setCancelledReason(value)
+          }}
+          value={cancelledReason}
+        />
+      </ButtonConfirm>
     ),
     canCopy && <ButtonCopyRow orderId={orderId} />,
     false && (

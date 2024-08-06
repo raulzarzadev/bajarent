@@ -65,7 +65,9 @@ const getOrderFields = (
     ...mandatoryFieldsEnd,
     ...extraOpsEnds
   ]
-  return res
+  const removeDuplicates = [...new Set(res)]
+  //console.log({ res })
+  return removeDuplicates
 }
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',

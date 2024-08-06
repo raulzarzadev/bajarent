@@ -141,12 +141,13 @@ export const onRenew = async ({ orderId, renewedTo = '', userId }) => {
     .then(console.log)
     .catch(console.error)
 }
-export const onCancel = async ({ orderId, userId }) => {
+export const onCancel = async ({ orderId, userId, cancelledReason = '' }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.CANCELLED,
     cancelledAt: new Date(),
     cancelledBy: userId,
-    isCancelled: true
+    isCancelled: true,
+    cancelledReason
   })
     .then(() => {
       console.log('cancel')

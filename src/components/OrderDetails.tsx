@@ -84,6 +84,35 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           clientId={order.clientId}
         />
       </View>
+      {order.status === order_status.CANCELLED && (
+        <View style={{ marginVertical: 8 }}>
+          <View
+            style={{
+              borderWidth: 2,
+              borderColor: colors.red,
+              padding: 4,
+              borderRadius: 9999
+            }}
+          >
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 43,
+                textAlignVertical: 'center',
+                color: colors.red
+              }}
+            >
+              Cancelada!
+            </Text>
+          </View>
+          <View>
+            <Text style={{ textAlign: 'center', marginTop: 4 q}}>
+              Motivo: {order?.cancelledReason || ''}
+            </Text>
+          </View>
+        </View>
+      )}
+      <View></View>
       <CardPhone phone={order?.phone} />
       <OrderImages order={order} />
 
