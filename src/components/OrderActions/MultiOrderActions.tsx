@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from '../Button'
 import { handleCancel } from './libs/order_actions'
 import { useAuth } from '../../contexts/authContext'
@@ -8,6 +8,13 @@ import { onDelete, onSetStatuses } from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
 import { gStyles } from '../../styles'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
+import useModal from '../../hooks/useModal'
+import StyledModal from '../StyledModal'
+import OrderType from '../../types/OrderType'
+import { excelFormatToOrder, orderAsExcelFormat } from '../../libs/orders'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import asDate, { dateFormat } from '../../libs/utils-date'
+import SpanCopy from '../SpanCopy'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -77,7 +84,8 @@ const MultiOrderActions = ({
       variant="outline"
       color="neutral"
       disabled={loading}
-    />
+    />,
+    <ModalExcelRows ordersIds={ordersIds} />
     // <Button
     //   onPress={() => handleCreateItem()}
     //   label="Crear item"
@@ -112,6 +120,75 @@ const MultiOrderActions = ({
         {/* To fix las element */}
         <View style={{ flex: 1 }} />
       </View>
+    </View>
+  )
+}
+
+const ModalExcelRows = ({ ordersIds }: { ordersIds: OrderType['id'][] }) => {
+  const modal = useModal({ title: 'Formato excel' })
+  const [orders, setOrders] = React.useState<OrderType[]>([])
+
+  useEffect(() => {
+    ServiceOrders.getList(ordersIds).then((res) => {
+      setOrders(res)
+    })
+  }, [ordersIds])
+
+  return (
+    <View>
+      <Button
+        onPress={modal.toggleOpen}
+        label="Formato excel"
+        icon="list"
+        variant="outline"
+        color="neutral"
+      ></Button>
+      <StyledModal {...modal}>
+        {ordersIds.map((id) => {
+          const order = orders.find((o) => o.id === id)
+          const excelRow = orderAsExcelFormat(order)
+          const {
+            note,
+            fullName,
+            phone,
+            neighborhood,
+            address,
+            references,
+            scheduledAt
+          } = excelFormatToOrder(excelRow)
+          return (
+            <Text
+              key={id}
+              style={[
+                { marginBottom: 6, flexDirection: 'row' },
+                gStyles.helper
+              ]}
+              numberOfLines={1}
+            >
+              <Text style={{ width: 60 }}>{note}</Text>
+              <Text style={{ width: 60 }}>{fullName}</Text>
+              <Text style={{ width: 60 }}>{phone}</Text>
+              <Text style={{ width: 60 }}>{neighborhood}</Text>
+              <Text style={{ width: 60 }}>{address}</Text>
+              <Text style={{ width: 60 }}>{references}</Text>
+              <Text style={{ width: 60 }}>
+                {dateFormat(asDate(scheduledAt), 'dd/MM/yyyy')}
+              </Text>
+            </Text>
+          )
+        })}
+
+        <Text>
+          Copia y pega en tu hoja de cálculo favorita. Asegúrate de que los
+          campos estén en el mismo orden.
+        </Text>
+        <SpanCopy
+          copyValue={ordersIds
+            .map((id) => orderAsExcelFormat(orders.find((o) => o.id === id)))
+            .join('')}
+          label={'Copia'}
+        />
+      </StyledModal>
     </View>
   )
 }

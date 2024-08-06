@@ -352,6 +352,7 @@ const FormFieldsA = ({
 
   useEffect(() => {
     if (!sheetRow) return
+
     const [
       note = '',
       name = '',

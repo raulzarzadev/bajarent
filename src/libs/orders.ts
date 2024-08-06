@@ -1,4 +1,4 @@
-import { isBefore, isToday, isTomorrow } from 'date-fns'
+import { formatDate, isBefore, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
 import OrderType, { order_status } from '../types/OrderType'
 import { LabelRentType, expireDate2, translateTime } from './expireDate'
@@ -219,4 +219,65 @@ export const isRenewedToday = (order: Partial<OrderType>): boolean => {
         asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
     )[0]
   return isToday(asDate(lastExtension?.createdAt))
+}
+
+export const orderAsExcelFormat = (order?: Partial<OrderType>) => {
+  const {
+    id,
+    note = '',
+    fullName = '',
+    phone = '',
+    neighborhood = '',
+    address = '',
+    references = '',
+    scheduledAt = ''
+  } = order || {}
+  return `${note}\t${fullName}\t${formatPhone(
+    phone
+  )}\t${neighborhood}\t${address}\t${references}\t${
+    scheduledAt ? formatDate(asDate(scheduledAt), 'dd/MM/yyyy') : ''
+  }\n`
+}
+
+export const excelFormatToOrder = (
+  excelRow: string
+): Pick<
+  OrderType,
+  | 'note'
+  | 'fullName'
+  | 'phone'
+  | 'neighborhood'
+  | 'address'
+  | 'references'
+  | 'scheduledAt'
+> => {
+  const [
+    note,
+    fullName,
+    phone,
+    neighborhood,
+    address,
+    references,
+    scheduledAt
+  ] = excelRow.split('\t')
+
+  return {
+    note,
+    fullName,
+    phone: formatPhone(phone),
+    neighborhood,
+    address,
+    references,
+    scheduledAt: asDate(scheduledAt)
+  }
+}
+const formatPhone = (phone: string) => {
+  //if phone is empty, return null
+  if (!phone) return null
+  //if phone start with +52 remove it
+  if (phone.startsWith('+52')) return phone.slice(3)
+  //if phone start with 52 remove and is 12 digits, remove it
+  if (phone.startsWith('52') && phone.length === 12) return phone.slice(2)
+
+  return ''
 }
