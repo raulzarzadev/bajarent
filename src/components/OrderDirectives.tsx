@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType, { IconOrderType, order_type } from '../types/OrderType'
+import OrderType, { order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme, { colors } from '../theme'
 import Chip from './Chip'

@@ -1,5 +1,4 @@
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
-import { Order } from '../DATA'
 import {
   onPickUpItem,
   onRegistryEntry,

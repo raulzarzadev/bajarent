@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import StackOrders from './StackOrders'
 import StackProfile from './StackProfile'
-import StackStore, { StackStoreE } from './StackStore'
+import { StackStoreE } from './StackStore'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import Icon, { IconName } from './Icon'
