@@ -285,11 +285,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   //   assignedSections?: 'all' | string[]
   // }
   async search({
+    storeId,
     fields,
     value,
     avoidIds,
     sections
   }: {
+    storeId: string
     fields: string[]
     value: string | number
     avoidIds?: string[]
@@ -298,7 +300,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const promises = fields?.map((field) => {
       const number = parseFloat(value as string)
       //* search as number
-      const filters = []
+      const filters = [where('storeId', '==', storeId)]
       if (Array.isArray(sections) && sections.length > 0) {
         filters.push(where('assignToSection', 'in', sections))
       }

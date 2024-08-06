@@ -4,6 +4,7 @@ import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import asDate from '../libs/utils-date'
 import OrderType from '../types/OrderType'
+import { useStore } from '../contexts/storeContext'
 
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
@@ -21,6 +22,7 @@ export default function useFilter<T extends { id?: string }>({
   collectionSearch?: CollectionSearch
   debounceSearch?: number
 }) {
+  const { storeId } = useStore()
   const { reports } = useOrdersCtx()
   const [filteredData, setFilteredData] = useState<T[]>([...data])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
@@ -137,6 +139,7 @@ export default function useFilter<T extends { id?: string }>({
       if (collectionSearch?.collectionName === 'orders') {
         // const avoidIds = res.map(({ id }) => id)
         const orders = await ServiceOrders.search({
+          storeId,
           fields: collectionSearch?.fields,
           value,
           sections: collectionSearch?.assignedSections
