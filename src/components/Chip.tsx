@@ -15,7 +15,7 @@ const Chip = ({
   icon,
   iconColor,
   ...props
-}: ChipProps & {
+}: Omit<ChipProps, 'icon'> & {
   title: string
   color: string
   titleColor?: string
