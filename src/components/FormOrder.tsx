@@ -78,10 +78,7 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   'location',
   'neighborhood',
   'references',
-  'repairDescription', // Field name is 'description' in the form
-  'itemBrand',
-  'itemModel',
-  'itemSerial',
+  ,
   'imageID',
   'imageHouse',
   'assignIt',
@@ -90,13 +87,18 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   'sheetRow',
   'note',
 
-  'selectItems',
   //'selectItemsRent',
   //'selectItemsSale',
 
   //Repairs
+  'itemBrand',
+  'itemModel',
+  'itemSerial',
+  'repairDescription', // Field name is 'description' in the form
   'quoteDetails',
-  'startRepair'
+  'startRepair',
+  'selectItems'
+
   // 'folio'
 ] as const
 
