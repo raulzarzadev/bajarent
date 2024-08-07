@@ -14,7 +14,8 @@ export default function InputDate({
   format = 'EE dd / MMM / yy',
   withTime = false,
   icon = 'calendar',
-  size
+  size,
+  openButtonProps
 }: {
   label?: string
   icon?: IconName
@@ -23,6 +24,7 @@ export default function InputDate({
   format?: string
   withTime?: boolean
   size?: ButtonProps['size']
+  openButtonProps?: Partial<ButtonProps>
 }) {
   const nowDate = new Date()
 
@@ -71,6 +73,7 @@ export default function InputDate({
         onPress={() => setOpen(true)}
         icon={icon}
         size={size}
+        {...openButtonProps}
       >
         {`${label} ${!!date ? dateFormat(date, format) : ''}`}
       </Button>

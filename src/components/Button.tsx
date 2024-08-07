@@ -27,6 +27,7 @@ export type ButtonProps = {
   id?: string
   fullWidth?: boolean
   progress?: number
+  uppercase?: boolean
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
@@ -43,6 +44,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   justIcon,
   fullWidth = true,
   progress,
+  uppercase = true,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -128,7 +130,7 @@ const ButtonX: React.FC<ButtonProps> = ({
             textColor,
             textStyles,
             disabled && baseStyles.disabled,
-            { textTransform: 'uppercase' }
+            uppercase && { textTransform: 'uppercase' }
           ]}
         >
           {label}
@@ -143,7 +145,7 @@ const ButtonX: React.FC<ButtonProps> = ({
             disabled && baseStyles.disabled
           ]}
         >
-          {children?.toUpperCase()}
+          {uppercase ? children?.toUpperCase() : children}
         </Text>
       ) : (
         children

@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { addDays } from 'date-fns'
 import { gStyles } from '../styles'
 import DateCell from './DateCell'
 import useDebounce from '../hooks/useDebunce'
+import InputDate from './InputDate'
 
 const HeaderDate = ({
   label,
@@ -24,6 +25,9 @@ const HeaderDate = ({
   const handleMoveDate = (days = 0) => {
     handleDebounce()
     const newDate = addDays(date, days)
+    handleChangeDate(newDate)
+  }
+  const handleChangeDate = (newDate: Date) => {
     setDate(newDate)
     onChangeDate(newDate)
   }
@@ -38,11 +42,14 @@ const HeaderDate = ({
 
   return (
     <View>
+      <Text style={gStyles.h1}>{label}</Text>
+
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
-          margin: 'auto'
+          margin: 'auto',
+          alignItems: 'center'
         }}
       >
         <Button
@@ -55,7 +62,20 @@ const HeaderDate = ({
             handleMoveDate(-1)
           }}
         />
-        <Text style={gStyles.h1}>{label}</Text>
+
+        <InputDate
+          setValue={(value) => {
+            handleChangeDate(value)
+          }}
+          value={date}
+          format="EEE dd MMM yy"
+          openButtonProps={{
+            size: 'small',
+            variant: 'ghost',
+            buttonStyles: { width: 180 },
+            uppercase: false
+          }}
+        />
         <Button
           disabled={disabled}
           justIcon
@@ -67,13 +87,14 @@ const HeaderDate = ({
           }}
         />
       </View>
-      <DateCell
+
+      {/* <DateCell
         date={date}
         showTimeAgo={false}
         showTime={showTime}
         dateBold
         showDay
-      />
+      /> */}
       {!!documentDate && (
         <DateCell
           date={documentDate}
