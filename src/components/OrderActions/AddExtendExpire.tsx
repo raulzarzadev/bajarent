@@ -25,8 +25,8 @@ const AddExtendExpire = ({
   const [unit, setUnit] = useState<TimeType>('day')
 
   const handleExtend = async () => {
-    const order = await ServiceOrders.get(orderId)
     setDisabled(true)
+    const order = await ServiceOrders.get(orderId)
     await onExtend_V2({
       items: order.items,
       orderId: order.id,
@@ -62,6 +62,10 @@ const AddExtendExpire = ({
     {
       label: 'Semanas',
       value: 'week'
+    },
+    {
+      label: 'Meses',
+      value: 'month'
     }
   ]
 
@@ -96,6 +100,7 @@ const AddExtendExpire = ({
           </View>
           <View style={{ marginVertical: 8 }}>
             <Button
+              disabled={disabled}
               label="Extender"
               onPress={() => {
                 handleExtend()
