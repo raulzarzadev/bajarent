@@ -12,7 +12,9 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { formatItems } from '../contexts/employeeContext'
 import { onRetireItem } from '../firebase/actions/item-actions'
-import theme from '../theme'
+import theme, { colors } from '../theme'
+import Icon from './Icon'
+import { ItemFixDetails } from './ItemDetails'
 
 const ListStoreItems = ({
   allItemsSections,
@@ -201,7 +203,8 @@ const ListStoreItems = ({
           { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },
           { field: 'brand', label: 'Marca' },
-          { field: 'status', label: 'Estado' }
+          { field: 'status', label: 'Estado' },
+          { field: 'needFix', label: 'Necesita Reparación', boolean: true }
         ]}
         sortFields={[
           { key: 'number', label: 'Número' },
@@ -223,6 +226,7 @@ const ListStoreItems = ({
 }
 
 const RowItem = ({ item }: { item: Partial<ItemType> }) => {
+  const needFix = item?.needFix
   const bgcolor: Record<ItemType['status'], string> = {
     rented: theme.success,
     pickedUp: theme.primary,
@@ -234,13 +238,22 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
       style={{
         padding: 4,
         borderRadius: 5,
-        borderWidth: 1,
+        borderWidth: 2,
         width: '100%',
         marginVertical: 2,
+        borderColor: needFix ? colors.red : 'transparent',
         backgroundColor: `${bgcolor[item.status]}${opacity}`
       }}
       fields={[
-        { width: '20%', component: <Text>{item.number}</Text> },
+        {
+          width: '20%',
+          component: (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ marginRight: 8 }}>{item.number}</Text>
+              {needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
+            </View>
+          )
+        },
         { width: '20%', component: <Text>{item.categoryName}</Text> },
         { width: '20%', component: <Text>{item.assignedSectionName}</Text> },
         {
@@ -252,7 +265,25 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
             </View>
           )
         },
-        { width: '20%', component: <Text>{dictionary(item.status)}</Text> }
+        {
+          width: '20%',
+          component: (
+            <View>
+              {!!needFix && (
+                <View
+                  style={{
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                    alignItems: 'flex-end'
+                  }}
+                >
+                  <Icon icon="wrench" color={colors.red} size={16} />
+                </View>
+              )}
+              <Text>{dictionary(item.status)}</Text>
+            </View>
+          )
+        }
       ]}
     />
   )
