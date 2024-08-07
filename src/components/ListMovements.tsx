@@ -2,16 +2,11 @@ import React, { useEffect } from 'react'
 import { LoadingList } from './List'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
-import { CommentType } from './ListComments'
 import { useStore } from '../contexts/storeContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
 import formatComments from '../libs/formatComments'
-import {
-  comment_types,
-  CommentBase,
-  FormattedComment
-} from '../types/CommentType'
+import { CommentBase, FormattedComment } from '../types/CommentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
@@ -26,7 +21,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  const { payments, staff, storeSections } = useStore()
+  const { payments, staff } = useStore()
   const [loading, setLoading] = React.useState(false)
   const {
     consolidatedOrders: { orders }
