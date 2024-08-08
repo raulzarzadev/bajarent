@@ -39,8 +39,8 @@ const OrderStatus = ({
   const isExpired = (order?.isExpired || expireToday || expired) && isDelivered
   const expiresTomorrow = isRent && order.expiresTomorrow
   const expireLabel = expireToday
-    ? 'Vence hoy'
-    : `venció ${fromNow(asDate(order?.expireAt))}`
+    ? 'hoy'
+    : `${fromNow(asDate(order?.expireAt))}`
 
   const isCancelled = order?.status === order_status.CANCELLED
   const isAuthorized = order?.status === order_status.AUTHORIZED
@@ -178,6 +178,7 @@ const OrderStatus = ({
       {isExpired && (
         <Chip
           style={[chipStyles]}
+          icon="alarmOff"
           title={`${expireLabel || ''}`}
           color={theme.success}
           size={chipSize}
@@ -186,15 +187,17 @@ const OrderStatus = ({
       {isReported && (
         <Chip
           style={[chipStyles]}
-          title={'Reporte'}
+          title={''}
           color={theme.error}
+          icon="report"
           size={chipSize}
         />
       )}
       {hasImportantComments && (
         <Chip
           style={[chipStyles]}
-          title={'!'}
+          title={''}
+          icon="warning"
           color={theme.warning}
           size={chipSize}
         />
@@ -204,6 +207,7 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={'VM'}
           color={theme.success}
+          icon={'alarm'}
           size={chipSize}
         />
       )}

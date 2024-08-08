@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
+import { IconName } from './Icon'
 
 const OrderDirectives = ({
   order
@@ -25,16 +26,32 @@ const OrderDirectives = ({
     order?.assignToSectionName ||
     storeSections.find(({ id }) => id === order?.assignToSection)?.name ||
     false
-  const TypeIcon = (type: OrderType['type']) => {
-    return dictionary(type) || type
-    if (type === order_type.RENT) return '⏳'
-    if (type === order_type.SALE) return '💰'
-    if (type === order_type.REPAIR) return '🔧'
-    return type
+  const TypeIcon = (type: OrderType['type']): IconName => {
+    if (type === order_type.RENT) {
+      return 'rent'
+    }
+    if (type === order_type.SALE) {
+      return 'sale'
+    }
+    if (type === order_type.REPAIR) {
+      return 'wrench'
+    }
   }
-  const orderType = `${TypeIcon(order?.type)} ${currentRentPeriod(order, {
+  const iconColor = (type: OrderType['type']) => {
+    if (type === order_type.RENT) {
+      return colors.blue
+    }
+    if (type === order_type.SALE) {
+      return colors.green
+    }
+    if (type === order_type.REPAIR) {
+      return colors.amber
+    }
+  }
+  const orderType = `${currentRentPeriod(order, {
     shortLabel: true
   })}`
+
   return (
     <View
       style={{
@@ -49,7 +66,9 @@ const OrderDirectives = ({
       <Chip
         style={[styles.chip]}
         title={orderType}
-        color={theme?.info}
+        icon={TypeIcon(order?.type)}
+        color={theme?.transparent}
+        iconColor={iconColor(order?.type)}
         titleColor={theme.black}
         size="sm"
       ></Chip>

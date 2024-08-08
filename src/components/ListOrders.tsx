@@ -82,7 +82,7 @@ const ListOrders = ({
             field: 'hasNotSolvedReports',
             label: 'Reportes ',
             boolean: true,
-            icon: 'wrench',
+            icon: 'report',
             color: theme.error
           },
 

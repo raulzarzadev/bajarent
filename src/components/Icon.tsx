@@ -60,6 +60,7 @@ import { MdHome, MdMoneyOff } from 'react-icons/md'
 import { FaCashRegister } from 'react-icons/fa'
 import { FcCancel } from 'react-icons/fc'
 import { RxLapTimer } from 'react-icons/rx'
+import { PiSiren } from 'react-icons/pi'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -152,7 +153,9 @@ const icons = {
   wrench: FaWrench,
   truck: FaTruckPickup,
   home: MdHome,
-  calendarTime: LuCalendarClock
+  calendarTime: LuCalendarClock,
+  siren: PiSiren,
+  report: PiSiren
 } as const
 
 export type IconName = keyof typeof icons

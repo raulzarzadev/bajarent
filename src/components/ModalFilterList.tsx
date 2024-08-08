@@ -14,7 +14,7 @@ import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import FIlterByDate from './FIlterByDate'
-import { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import { IconName } from './Icon'
 
 export type FilterListType<T> = {
@@ -139,7 +139,7 @@ function ModalFilterList<T>({
   const chipColor = (field: string, value: string) => {
     //* FILTERS FOR COMMENTS
     if (field === 'type') {
-      if (value === 'comment') return theme.info
+      if (value === 'comment') return theme.warning
       if (value === 'report') return theme.error
     }
     if (field === 'solved') {
@@ -152,6 +152,7 @@ function ModalFilterList<T>({
     }
     //* this is useful for orders table to find type color
     if (field === 'type') {
+      return theme.base
       return (
         ORDER_TYPE_COLOR[value as keyof typeof ORDER_TYPE_COLOR] || theme.base
       )
@@ -164,6 +165,21 @@ function ModalFilterList<T>({
     return theme.info
   }
 
+  const chipIconType = (
+    type: OrderType['type']
+  ): { icon: IconName; color: string } => {
+    if (type === order_type.RENT) {
+      return { icon: 'rent', color: colors.blue }
+    }
+    if (type === order_type.SALE) {
+      return { icon: 'sale', color: colors.green }
+    }
+    if (type === order_type.REPAIR) {
+      return { icon: 'wrench', color: colors.amber }
+    }
+    return undefined
+  }
+
   const chipLabel = (field: string, value: string) => {
     //* this is useful for orders table to find section name
 
@@ -173,19 +189,19 @@ function ModalFilterList<T>({
         value as order_type
       )
     ) {
-      if (value === order_type.RENT) return 'RENTA ⏳ '
-      if (value === order_type.SALE) return 'VENTA 💰 '
-      if (value === order_type.REPAIR) return 'REPARACIÓN 🔧 '
+      if (value === order_type.RENT) return 'RENTA'
+      if (value === order_type.SALE) return 'VENTA'
+      if (value === order_type.REPAIR) return 'REPARACIÓN'
     }
 
     if (field === 'status') {
-      if (value === order_status.DELIVERED) return 'ENTREGADO 🏠 '
-      if (value === order_status.REPAIRING) return 'REPARANDO 🛠️ '
-      if (value === order_status.REPAIRED) return 'REPARADO ✅ '
-      if (value === order_status.PICKED_UP) return 'RECOGIDO 🚛 '
-      if (value === order_status.RENEWED) return 'RENOVADO 🔄 '
-      if (value === order_status.CANCELLED) return 'CANCELADO ❌ '
-      if (value === order_status.AUTHORIZED) return 'PEDIDO 🔖 '
+      if (value === order_status.DELIVERED) return 'ENTREGADO'
+      if (value === order_status.REPAIRING) return 'REPARANDO'
+      if (value === order_status.REPAIRED) return 'REPARADO'
+      if (value === order_status.PICKED_UP) return 'RECOGIDO'
+      if (value === order_status.RENEWED) return 'RENOVADO'
+      if (value === order_status.CANCELLED) return 'CANCELADO'
+      if (value === order_status.AUTHORIZED) return 'PEDIDO'
       if (value === order_status.PENDING) return 'PENDIENTE'
       if (value === order_status.REPORTED) return 'REPORTADO'
     }
@@ -332,14 +348,17 @@ function ModalFilterList<T>({
                     if (!value) return null
                     if (value === 'undefined') return null
                     const title = chipLabel(field as string, value) //<-- avoid shows empty chips
-                    if (!title) return null
 
+                    if (!title) return null
+                    const iconValues = chipIconType(value as OrderType['type'])
                     return (
                       <Chip
                         color={chipColor(field as string, value)}
                         title={title}
                         key={value}
                         size="sm"
+                        icon={iconValues?.icon}
+                        iconColor={iconValues?.color}
                         onPress={() => {
                           if (value === 'REPORTED') {
                             filterBy('isReported', true)
@@ -367,6 +386,7 @@ function ModalFilterList<T>({
             )
           })}
       </StyledModal>
+      {/*//* BOOLEAN FILTERS OUT SIDE OF MODAL */}
       <View style={{ flexDirection: 'row' }}>
         {filters
           .filter((f) => f.boolean)
