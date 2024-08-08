@@ -37,6 +37,7 @@ import { IoPricetagsOutline } from 'react-icons/io5'
 import { FaTruckPickup } from 'react-icons/fa6'
 import { LuCalendarClock } from 'react-icons/lu'
 import { LuCalendar } from 'react-icons/lu'
+import { MdOutlinePaid } from 'react-icons/md'
 
 import {
   IoPersonOutline,
@@ -155,7 +156,8 @@ const icons = {
   home: MdHome,
   calendarTime: LuCalendarClock,
   siren: PiSiren,
-  report: PiSiren
+  report: PiSiren,
+  payment: MdOutlinePaid
 } as const
 
 export type IconName = keyof typeof icons

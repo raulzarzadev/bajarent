@@ -8,10 +8,8 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { useState } from 'react'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
-import { useNavigation } from '@react-navigation/native'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { FormattedComment } from '../types/CommentType'
-import dictionary from '../dictionary'
 import Button from './Button'
 import { fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
@@ -27,8 +25,6 @@ export const CommentRow = ({
   refetch?: (props?: { id?: string }) => void
 }) => {
   const { toOrders, toItems } = useMyNav()
-
-  const { navigate } = useNavigation()
   const [disabled, setDisabled] = useState(false)
   const { staff } = useStore()
   const { user } = useAuth()

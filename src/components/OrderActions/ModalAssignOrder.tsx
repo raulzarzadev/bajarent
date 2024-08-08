@@ -39,7 +39,8 @@ const ModalAssignOrder = ({
         orderId,
         content: `Asignada a ${newSectionName}`,
         type: 'comment',
-        storeId
+        storeId,
+        isOrderMovement: true
       })
       modal.toggleOpen()
     } catch (e) {

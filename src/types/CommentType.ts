@@ -26,6 +26,12 @@ export type CommentBase = {
 
   itemId?: string
   solvedComment?: string
+
+  isReport?: boolean
+  isImportant?: boolean
+  isPayment?: boolean
+  isItemMovement?: boolean
+  isOrderMovement?: boolean
 }
 
 export type FormattedComment = CommentBase &

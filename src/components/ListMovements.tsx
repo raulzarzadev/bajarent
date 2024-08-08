@@ -6,17 +6,15 @@ import { useStore } from '../contexts/storeContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
 import formatComments from '../libs/formatComments'
-import { CommentBase, FormattedComment } from '../types/CommentType'
+import { FormattedComment } from '../types/CommentType'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
-import {
-  ItemHistoryType,
-  ServiceItemHistory
-} from '../firebase/ServiceItemHistory'
+import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
 import Loading from './Loading'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import theme from '../theme'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
@@ -42,47 +40,54 @@ const ListMovements = () => {
           ids: Array.from(idsSet)
         })
 
-        const asMovement: Partial<FormattedComment>[] = movements.map(
-          (movement) => {
-            const itemDetails = items.find(({ id }) => id === movement.itemId)
-            const newMovement: CommentBase &
-              Pick<
-                FormattedComment,
-                'createdBy' | 'createdAt' | 'createdByName'
-              > = {
-              type: 'item-movement',
-              storeId,
-              orderId: movement.orderId,
+        // const asMovement: Partial<FormattedComment>[] = movements.map(
+        //   (movement) => {
+        //     const itemDetails = items.find(({ id }) => id === movement.itemId)
+        //     const newMovement: CommentBase &
+        //       Pick<
+        //         FormattedComment,
+        //         'createdBy' | 'createdAt' | 'createdByName'
+        //       > = {
+        //       type: 'item-movement',
+        //       storeId,
+        //       orderId: movement.orderId,
 
-              id: movement?.id || '',
-              itemId: itemDetails?.id || '',
-              content: movement.content,
-              createdAt: movement.createdAt,
-              createdBy: movement.createdBy,
-              createdByName:
-                staff.find(
-                  ({ id, userId }) =>
-                    id === movement.createdBy || userId === movement.createdBy
-                )?.name || ''
-            }
-            const itemNumber = itemDetails?.number || ''
-            const content: Record<ItemHistoryType['type'], string> = {
-              report: `${itemNumber} Reporte `,
-              pickup: `${itemNumber} Recogida `,
-              delivery: `${itemNumber} Entregada `,
-              exchange: `${itemNumber} Cambio `,
-              assignment: `${itemNumber} Asignación`,
-              created: `${itemNumber} Creada `,
-              fix: `${itemNumber} Reparada `,
-              retire: `${itemNumber} Retirada `,
-              reactivate: `${itemNumber} Reactivada`
-            }
-            newMovement.content = content[movement.type]
-            return newMovement
-          }
-        )
+        //       id: movement?.id || '',
+        //       itemId: itemDetails?.id || '',
+        //       content: movement.content,
+        //       createdAt: movement.createdAt,
+        //       createdBy: movement.createdBy,
+        //       createdByName:
+        //         staff.find(
+        //           ({ id, userId }) =>
+        //             id === movement.createdBy || userId === movement.createdBy
+        //         )?.name || ''
+        //     }
+        //     const itemNumber = itemDetails?.number || ''
+        //     const content: Record<ItemHistoryType['type'], string> = {
+        //       report: `${itemNumber} Reporte `,
+        //       pickup: `${itemNumber} Recogida `,
+        //       delivery: `${itemNumber} Entregada `,
+        //       exchange: `${itemNumber} Cambio `,
+        //       assignment: `${itemNumber} Asignación`,
+        //       created: `${itemNumber} Creada `,
+        //       fix: `${itemNumber} Reparada `,
+        //       retire: `${itemNumber} Retirada `,
+        //       reactivate: `${itemNumber} Reactivada`
+        //     }
+        //     newMovement.content = content[movement.type]
+        //     return newMovement
+        //   }
+        // )
+        const asMovement2 = formatComments({
+          itemMovements: movements,
+          comments: [],
+          staff,
+          orders: Object.values(orders),
+          items
+        })
 
-        return asMovement
+        return asMovement2
       })
       const ordersMovements = ServiceComments.getByDate(storeId, newDate).then(
         async (comments) => {
@@ -113,6 +118,8 @@ const ListMovements = () => {
     handleChangeDate(date)
   }, [])
 
+  console.log({ data })
+
   return (
     <View>
       <HeaderDate
@@ -133,6 +140,41 @@ const ListMovements = () => {
           {
             field: 'createdByName',
             label: 'Usuario'
+          },
+          {
+            field: 'isReport',
+            boolean: true,
+            label: 'Reporte',
+            icon: 'report',
+            color: theme.error
+          },
+          {
+            field: 'isImportant',
+            boolean: true,
+            label: 'Importante',
+            icon: 'warning',
+            color: theme.warning
+          },
+          {
+            field: 'isOrderMovement',
+            boolean: true,
+            label: 'Entregada',
+            icon: 'orders',
+            color: theme.primary
+          },
+          // {
+          //   field: 'isPayment',
+          //   boolean: true,
+          //   label: 'Pago',
+          //   icon: 'payment',
+          //   color: theme.success
+          // },
+          {
+            field: 'isItemMovement',
+            boolean: true,
+            label: 'Movimiento',
+            icon: 'swap',
+            color: theme.primary
           }
         ]}
         defaultSortBy={'createdAt'}

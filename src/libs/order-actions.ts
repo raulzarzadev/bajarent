@@ -17,18 +17,21 @@ export const onComment = async ({
   orderId,
   storeId,
   content,
-  type
+  type,
+  isOrderMovement = false
 }: {
   orderId: string
   storeId: string
   content: string
   type: CommentType['type']
+  isOrderMovement?: boolean
 }) => {
   return await ServiceOrders.addComment({
     storeId,
     orderId,
     type,
-    content
+    content,
+    isOrderMovement
   })
     .then(() => {
       console.log('comment')
