@@ -118,7 +118,12 @@ const InputComment = ({
             }}
             options={[
               {
-                label: 'Importante',
+                label: 'Normal',
+                color: colors.blue,
+                value: 'comment'
+              },
+              {
+                label: 'Imp',
                 color: colors.yellow,
                 value: 'important'
               },
@@ -129,20 +134,6 @@ const InputComment = ({
               }
             ]}
           />
-          {/* <InputCheckbox
-            label="Importante"
-            setValue={handleToggleIsImportant}
-            value={isImportant}
-            color={theme.warning}
-            style={{ justifyContent: 'flex-end', marginRight: 6 }}
-          />
-          <InputCheckbox
-            label="Reporte"
-            setValue={handleToggleIsReport}
-            value={isReport}
-            color={theme.error}
-            style={{ justifyContent: 'flex-end' }}
-          /> */}
         </View>
 
         <Button
