@@ -49,7 +49,12 @@ export default function formatComments({
         id: movement?.id || '',
         //@ts-ignore
         storeId: itemDetails.storeId || '',
-        content: content[movement.type]
+        content: content[movement.type],
+        createdByName:
+          staff.find(
+            ({ id, userId }) =>
+              id === movement.createdBy || userId === movement.createdBy
+          )?.name || ''
       } as FormattedComment
     }
   )
