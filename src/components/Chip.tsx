@@ -27,7 +27,7 @@ const Chip = ({
 }) => {
   const sizes = {
     xs: {
-      fontSize: 7,
+      fontSize: 10,
       padding: 3
     },
     sm: {

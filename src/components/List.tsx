@@ -218,7 +218,7 @@ function MyList<T extends { id: string }>({
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               width: '100%',
               maxWidth: 500,
               margin: 'auto',
@@ -233,7 +233,7 @@ function MyList<T extends { id: string }>({
                       icon={button?.icon}
                       // label={button.label}
                       onPress={button?.onPress}
-                      size="small"
+                      size="xs"
                       disabled={button?.disabled}
                     ></Button>
                   </View>

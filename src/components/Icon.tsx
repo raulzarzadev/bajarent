@@ -27,7 +27,9 @@ import {
   MdCopyAll,
   MdUpload,
   MdOutlineArrowForward,
-  MdOutlineRemoveRedEye
+  MdOutlineRemoveRedEye,
+  MdOutlineAlarm,
+  MdOutlineTimerOff
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoKeyOutline } from 'react-icons/io5'
@@ -57,9 +59,13 @@ import { FaWrench } from 'react-icons/fa6'
 import { MdHome, MdMoneyOff } from 'react-icons/md'
 import { FaCashRegister } from 'react-icons/fa'
 import { FcCancel } from 'react-icons/fc'
+import { RxLapTimer } from 'react-icons/rx'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  alarm: MdOutlineAlarm,
+  alarmOff: MdOutlineTimerOff,
+  rent: RxLapTimer,
   cashbox: FaCashRegister,
   up: FaChevronUp,
   down: FaChevronDown,
@@ -140,7 +146,7 @@ const icons = {
   openEye: MdOutlineRemoveRedEye,
   pin: RiPushpinLine,
   unPin: RiUnpinLine,
-  rent: IoKeyOutline,
+  //rent: IoKeyOutline,
   repair: IoHammerOutline,
   sale: IoPricetagsOutline,
   wrench: FaWrench,

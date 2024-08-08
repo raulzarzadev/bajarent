@@ -63,7 +63,7 @@ type OrderBase = {
   comments: CommentType[]
 
   hasNotSolvedReports?: boolean
-
+  hasImportantComment?: boolean
   assignToSection?: string
   assignToSectionName?: string
   assignToStaff?: string

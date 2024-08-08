@@ -15,12 +15,15 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import FIlterByDate from './FIlterByDate'
 import { order_status, order_type } from '../types/OrderType'
+import { IconName } from './Icon'
 
 export type FilterListType<T> = {
   field: keyof T
   label: string
   boolean?: boolean
   isDate?: boolean
+  icon?: IconName
+  color?: string
 }
 
 export type ModalFilterOrdersProps<T> = {
@@ -231,7 +234,9 @@ function ModalFilterList<T>({
         />
 
         {filters?.length > 0 && (
-          <View style={{ marginLeft: 8 }}>
+          <View
+            style={{ marginLeft: 8, flexDirection: 'row', flexWrap: 'wrap' }}
+          >
             <Button
               variant={!filtersBy?.length ? 'ghost' : 'filled'}
               color={!filtersBy?.length ? 'black' : 'primary'}
@@ -314,6 +319,7 @@ function ModalFilterList<T>({
         {filters
           ?.filter((f) => !f?.isDate) //* <-- avoid show date filters
           ?.map(({ field, label, boolean }, i) => {
+            if (boolean) return null //* hide from here and show in outside the modal
             return (
               <View key={i}>
                 <Text style={[gStyles.h3, { marginBottom: 0, marginTop: 6 }]}>
@@ -361,6 +367,35 @@ function ModalFilterList<T>({
             )
           })}
       </StyledModal>
+      <View style={{ flexDirection: 'row' }}>
+        {filters
+          .filter((f) => f.boolean)
+          .map(({ field, label, icon, color }, i) => {
+            const count = data.filter((a) => a[field]).length
+            return (
+              <Chip
+                icon={icon}
+                size="xs"
+                color={color || theme.info}
+                disabled={count === 0}
+                title={`${count > 0 ? count : ''}`}
+                aria-label={label}
+                onPress={() => {
+                  filterBy(field as string, true)
+                }}
+                //iconColor={color}
+                style={{
+                  margin: 4,
+                  borderWidth: 4,
+                  borderColor: isFilterSelected(field, 'true')
+                    ? theme.black
+                    : 'transparent'
+                  // backgroundColor:
+                }}
+              />
+            )
+          })}
+      </View>
     </View>
   )
 }
