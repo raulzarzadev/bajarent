@@ -394,6 +394,7 @@ function ModalFilterList<T>({
             const count = filteredData.filter((a) => a[field]).length
             return (
               <Chip
+                key={i}
                 icon={icon}
                 size="xs"
                 color={color || theme.info}
