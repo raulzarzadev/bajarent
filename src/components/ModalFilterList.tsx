@@ -391,7 +391,7 @@ function ModalFilterList<T>({
         {filters
           .filter((f) => f.boolean)
           .map(({ field, label, icon, color }, i) => {
-            const count = data.filter((a) => a[field]).length
+            const count = filteredData.filter((a) => a[field]).length
             return (
               <Chip
                 icon={icon}
