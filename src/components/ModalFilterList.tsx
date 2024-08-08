@@ -393,6 +393,7 @@ function ModalFilterList<T>({
           .filter((f) => f.boolean)
           .map(({ field, label, icon, color, titleColor }, i) => {
             const count = filteredData.filter((a) => a[field]).length
+            if (!count) return null
             return (
               <Chip
                 key={i}

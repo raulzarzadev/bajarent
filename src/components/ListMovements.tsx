@@ -118,8 +118,6 @@ const ListMovements = () => {
     handleChangeDate(date)
   }, [])
 
-  console.log({ data })
-
   return (
     <View>
       <HeaderDate
