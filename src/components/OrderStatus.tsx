@@ -165,6 +165,7 @@ const OrderStatus = ({
           title={'Pedido'}
           color={theme.success}
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {saleAuthorized && (
@@ -182,6 +183,7 @@ const OrderStatus = ({
           title={`${expireLabel || ''}`}
           color={theme.success}
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {isReported && (
@@ -191,6 +193,7 @@ const OrderStatus = ({
           color={theme.error}
           icon="report"
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {hasImportantComments && (
@@ -200,6 +203,7 @@ const OrderStatus = ({
           icon="warning"
           color={theme.warning}
           size={chipSize}
+          titleColor={theme.accent}
         />
       )}
       {expiresTomorrow && (
@@ -209,6 +213,7 @@ const OrderStatus = ({
           color={theme.success}
           icon={'alarm'}
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {NullExpireAt && (
@@ -217,6 +222,7 @@ const OrderStatus = ({
           title={'SF'}
           color={theme.error}
           size={chipSize}
+          titleColor={colors.white}
         />
       )}
       {!!scheduledAt && isAuthorized && (

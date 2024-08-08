@@ -24,6 +24,7 @@ export type FilterListType<T> = {
   isDate?: boolean
   icon?: IconName
   color?: string
+  titleColor?: string
 }
 
 export type ModalFilterOrdersProps<T> = {
@@ -390,21 +391,22 @@ function ModalFilterList<T>({
       <View style={{ flexDirection: 'row' }}>
         {filters
           .filter((f) => f.boolean)
-          .map(({ field, label, icon, color }, i) => {
+          .map(({ field, label, icon, color, titleColor }, i) => {
             const count = filteredData.filter((a) => a[field]).length
             return (
               <Chip
                 key={i}
                 icon={icon}
                 size="xs"
-                color={color || theme.info}
+                color={color}
+                iconColor={titleColor}
+                titleColor={titleColor}
                 disabled={count === 0}
                 title={`${count > 0 ? count : ''}`}
                 aria-label={label}
                 onPress={() => {
                   filterBy(field as string, true)
                 }}
-                //iconColor={color}
                 style={{
                   margin: 4,
                   borderWidth: 4,

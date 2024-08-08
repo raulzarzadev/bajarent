@@ -83,7 +83,8 @@ const ListOrders = ({
             label: 'Reportes ',
             boolean: true,
             icon: 'report',
-            color: theme.error
+            color: theme.error,
+            titleColor: theme.white
           },
 
           {
@@ -91,42 +92,25 @@ const ListOrders = ({
             label: 'Vencidas ',
             boolean: true,
             icon: 'alarmOff',
-            color: theme.success
+            color: theme.success,
+            titleColor: theme.white
           },
           {
             field: 'hasImportantComment',
             label: 'Importante',
             boolean: true,
             icon: 'warning',
-            color: theme.warning
+            color: theme.warning,
+            titleColor: theme.accent
           },
           {
             field: 'expiresTomorrow',
             label: 'Vence mañana ',
             boolean: true,
             icon: 'alarm',
-            color: theme.warning
+            color: theme.warning,
+            titleColor: theme.accent
           }
-          // {
-          //   field: 'createdAt',
-          //   label: 'Creación',
-          //   isDate: true
-          // },
-          // {
-          //   field: 'expireAt',
-          //   label: 'Vencimiento',
-          //   isDate: true
-          // },
-          // {
-          //   field: 'deliveredAt',
-          //   label: 'Entrega',
-          //   isDate: true
-          // },
-          // {
-          //   field: 'pickedUpAt',
-          //   label: 'Fecha de recolección',
-          //   isDate: true
-          // }
         ]}
         ComponentMultiActions={({ ids }) => {
           return <MultiOrderActions ordersIds={ids} data={formatOrders} />

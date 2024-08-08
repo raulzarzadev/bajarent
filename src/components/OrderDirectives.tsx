@@ -63,15 +63,19 @@ const OrderDirectives = ({
     >
       <ChooseLabel colorLabel={order?.colorLabel} orderId={order?.id} />
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
-      <Chip
-        style={[styles.chip]}
-        title={orderType}
-        icon={TypeIcon(order?.type)}
-        color={theme?.transparent}
-        iconColor={iconColor(order?.type)}
-        titleColor={theme.black}
-        size="sm"
-      ></Chip>
+      <View style={{ width: 60 }}>
+        <Chip
+          style={[styles.chip]}
+          title={orderType}
+          icon={TypeIcon(order?.type)}
+          color={theme?.transparent}
+          // iconColor={iconColor(order?.type)}
+          // titleColor={theme.black}
+          titleColor={iconColor(order?.type)}
+          size="sm"
+        ></Chip>
+      </View>
+      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
       {!!assignedSectionLabel && (
         <Chip
           style={styles.chip}
@@ -81,8 +85,6 @@ const OrderDirectives = ({
           size="sm"
         ></Chip>
       )}
-
-      <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
     </View>
   )
 }
@@ -109,14 +111,16 @@ const ChooseLabel = ({ colorLabel, orderId }) => {
   }
   return (
     <View>
-      <Chip
-        style={[styles.chip, { marginLeft: 6 }]}
-        title="🏷️"
-        color={color}
-        titleColor={theme.secondary}
-        size="sm"
-        onPress={modal.toggleOpen}
-      ></Chip>
+      <View>
+        <Chip
+          style={[styles.chip, { marginLeft: 6 }]}
+          title="🏷️"
+          color={color}
+          titleColor={theme.secondary}
+          size="sm"
+          onPress={modal.toggleOpen}
+        ></Chip>
+      </View>
 
       <StyledModal {...modal}>
         <View>

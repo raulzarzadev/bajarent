@@ -146,21 +146,24 @@ const ListMovements = () => {
             boolean: true,
             label: 'Reporte',
             icon: 'report',
-            color: theme.error
+            color: theme.error,
+            titleColor: theme.white
           },
           {
             field: 'isImportant',
             boolean: true,
             label: 'Importante',
             icon: 'warning',
-            color: theme.warning
+            color: theme.warning,
+            titleColor: theme.accent
           },
           {
             field: 'isOrderMovement',
             boolean: true,
             label: 'Entregada',
             icon: 'orders',
-            color: theme.primary
+            color: theme.primary,
+            titleColor: theme.white
           },
           // {
           //   field: 'isPayment',
@@ -174,7 +177,8 @@ const ListMovements = () => {
             boolean: true,
             label: 'Movimiento',
             icon: 'swap',
-            color: theme.primary
+            color: theme.secondary,
+            titleColor: theme.white
           }
         ]}
         defaultSortBy={'createdAt'}

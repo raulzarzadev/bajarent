@@ -63,7 +63,9 @@ const Chip = ({
         fontWeight: 'bold',
         maxWidth
       }}
-      icon={icon ? <Icon icon={icon} color={iconColor} size={20} /> : undefined}
+      icon={
+        icon ? <Icon icon={icon} color={titleColor} size={20} /> : undefined
+      }
       iconRight={false}
       onPress={onPress}
       {...props}
