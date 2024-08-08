@@ -103,8 +103,9 @@ export const CommentRow = ({
             {comment?.type === 'report' && (
               <View style={styles.badge}>
                 <Chip
-                  disabled={disabled}
-                  title={dictionary(comment?.type)}
+                  disabled={disabled || comment?.solved}
+                  title={''}
+                  icon="report"
                   color={theme.error}
                   titleColor={theme.white}
                   size="xs"
@@ -114,8 +115,9 @@ export const CommentRow = ({
             {comment?.type === 'important' && (
               <View style={styles.badge}>
                 <Chip
-                  disabled={disabled}
-                  title={dictionary(comment?.type)}
+                  disabled={disabled || comment?.solved}
+                  title={''}
+                  icon="warning"
                   color={theme.warning}
                   titleColor={theme.black}
                   size="xs"
