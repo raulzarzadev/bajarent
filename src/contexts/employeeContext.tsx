@@ -155,6 +155,9 @@ export const formatItems = (
     categoryName:
       categories.find((cat) => cat.id === item?.category)?.name || '',
     assignedSectionName:
-      sections.find((sec) => sec.id === item?.assignedSection)?.name || ''
+      sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
+    needFix: !!item.needFix,
+    isRented: !!(item?.status === 'rented'),
+    isPickedUp: !!(item?.status === 'pickedUp')
   }))
 }
