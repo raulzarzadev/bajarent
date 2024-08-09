@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -15,6 +15,8 @@ import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
+import ItemType from '../types/ItemType'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -259,8 +261,15 @@ export const CellItems = ({
   label: string
 }) => {
   const { items: storeItems } = useEmployee()
+  const { storeId } = useStore()
   const { toItems } = useMyNav()
-
+  const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>()
+  useEffect(() => {
+    ServiceStoreItems.getList(
+      { storeId, ids: items },
+      { fromCache: true }
+    ).then((res) => setItemsData(res))
+  }, [items])
   return (
     <View>
       <Pressable
@@ -275,18 +284,24 @@ export const CellItems = ({
       </Pressable>
       <View>
         {items?.map((itemId, index) => {
-          const item = storeItems?.find((i) => i?.id === itemId)
+          const item = itemsData?.find((i) => i?.id === itemId)
           return (
             <Pressable
               key={item?.id || index}
               onPress={() => {
-                toItems({ id: item?.id })
+                toItems({ id: itemId })
               }}
             >
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text>{item?.categoryName} </Text>
-                <Text>{item?.number} </Text>
-              </View>
+              {item ? (
+                <View
+                  style={{ flexDirection: 'row', justifyContent: 'center' }}
+                >
+                  <Text>{item?.categoryName} </Text>
+                  <Text>{item?.number} </Text>
+                </View>
+              ) : (
+                <Text style={{ textAlign: 'center' }}>{itemId}</Text>
+              )}
             </Pressable>
           )
         })}
