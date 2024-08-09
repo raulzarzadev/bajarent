@@ -30,6 +30,7 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
   innerLeftIcon?: IconName
   onLeftIconPress?: () => void
   hiddenInnerLeftIcon?: boolean
+  inputStyle?: ViewStyle
 }
 const InputTextStyled = ({
   disabled,
@@ -42,12 +43,15 @@ const InputTextStyled = ({
   innerLeftIcon,
   onLeftIconPress,
   hiddenInnerLeftIcon,
+  inputStyle,
   ...props
 }: InputTextProps): JSX.Element => {
   const [value, setValue] = useState<string | number>()
+
   useEffect(() => {
     setValue(defValue)
   }, [defValue])
+
   return (
     <View style={containerStyle}>
       {label && <Text>{label}</Text>}
@@ -60,7 +64,7 @@ const InputTextStyled = ({
       >
         <TextInput
           {...props}
-          style={[baseStyle.input]}
+          style={[baseStyle.input, inputStyle]}
           editable={!disabled}
           value={String(value || '')}
           onChangeText={(text) => {

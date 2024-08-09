@@ -10,6 +10,7 @@ import CurrencyAmount from './CurrencyAmount'
 import { gStyles } from '../styles'
 import theme from '../theme'
 import { useOrderDetails } from '../contexts/orderContext'
+import FormQuote from './FormQuote'
 
 export const ModalRepairQuote = ({
   orderId,
@@ -80,7 +81,8 @@ export const ModalRepairQuote = ({
       </View>
 
       <StyledModal {...modal}>
-        <View style={styles.repairItemForm}>
+        <FormQuote />
+        {/* <View style={styles.repairItemForm}>
           <InputTextStyled
             value={info}
             placeholder="Descripción de reparación"
@@ -108,7 +110,7 @@ export const ModalRepairQuote = ({
           >
             {quoteAlreadyExists ? 'Guardar' : 'Editar'}
           </Button>
-        </View>
+        </View> */}
       </StyledModal>
     </>
   )
