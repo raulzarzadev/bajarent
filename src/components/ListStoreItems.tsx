@@ -129,7 +129,7 @@ const ListStoreItems = ({
     categories,
     storeSections
   )
-  console.log({ formattedItems })
+
   return (
     <View>
       <ListE

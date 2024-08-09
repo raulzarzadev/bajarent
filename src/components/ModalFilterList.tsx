@@ -263,6 +263,16 @@ function ModalFilterList<T>({
               }}
               justIcon
             />
+            {!!filtersBy?.length && (
+              <Button
+                icon="close"
+                justIcon
+                variant="ghost"
+                onPress={() => {
+                  handleClearFilters()
+                }}
+              />
+            )}
           </View>
         )}
       </View>
