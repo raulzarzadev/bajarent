@@ -59,7 +59,7 @@ function ModalFilterList<T>({
   } = useFilter<T>({
     data,
     collectionSearch,
-    debounceSearch: 1000
+    debounceSearch: 400
   })
 
   useEffect(() => {
