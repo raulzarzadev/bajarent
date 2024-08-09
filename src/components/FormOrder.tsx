@@ -391,7 +391,10 @@ const FormFieldsA = ({
 
   useEffect(() => {
     if (employee.sectionsAssigned.length > 0) {
-      setValues({ ...values, assignToSection: employee.sectionsAssigned[0] })
+      setValues({
+        ...values,
+        assignToSection: values.assignToSection || employee.sectionsAssigned[0]
+      })
     }
   }, [employee.sectionsAssigned])
 
