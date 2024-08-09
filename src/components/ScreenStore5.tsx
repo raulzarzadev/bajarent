@@ -28,13 +28,18 @@ import HeaderDate from './HeaderDate'
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
   const {
-    permissions: { isAdmin, isOwner, orders, store: storePermissions }
+    permissions: {
+      isAdmin,
+      isOwner,
+      orders,
+      store: storePermissions,
+      canManageItems
+    }
   } = useEmployee()
   const canViewSections = true
   const canViewOrders = isAdmin || isOwner || orders.canViewAll
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
-  const canViewItems = isAdmin || isOwner || storePermissions.canViewItems
 
   //&& (canViewCashbox || canViewSections || canViewOrders)
   return (
@@ -76,7 +81,7 @@ const ScreenStore = (props) => {
             {
               title: 'Artículos',
               content: <TabItems />,
-              show: canViewItems
+              show: canManageItems
             }
           ]}
         />
