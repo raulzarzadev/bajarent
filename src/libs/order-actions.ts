@@ -1,4 +1,4 @@
-import { arrayUnion } from 'firebase/firestore'
+import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import {
   onPickUpItem,
@@ -379,6 +379,6 @@ export const onRemoveQuote = async ({
   orderId: OrderType['id']
 }) => {
   return ServiceOrders.update(orderId, {
-    quotes: arrayUnion(quote)
+    quotes: arrayRemove(quote)
   })
 }

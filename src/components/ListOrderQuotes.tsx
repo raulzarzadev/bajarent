@@ -4,6 +4,7 @@ import { OrderQuoteType } from '../types/OrderType'
 import Button from './Button'
 import CurrencyAmount from './CurrencyAmount'
 import { gStyles } from '../styles'
+import ButtonConfirm from './ButtonConfirm'
 
 const ListOrderQuotes = ({
   quotes = [],
@@ -24,37 +25,47 @@ const ListOrderQuotes = ({
             style={{
               flex: 1,
               textAlign: 'center',
-              padding: 4
+              padding: 4,
+              alignContent: 'center'
             }}
           >
             {quote.description}
           </Text>
-          <Text
+          <View
             style={{
               width: 100,
-              padding: 4
+              padding: 4,
+              justifyContent: 'center'
             }}
           >
-            <CurrencyAmount amount={quote.amount} />
-          </Text>
-          {handleRemoveQuote ? (
-            <View
-              style={{
-                width: 60,
-                padding: 4
-              }}
-            >
-              <Button
-                icon={'delete'}
-                justIcon
-                color="error"
-                size="small"
-                onPress={() => {
-                  handleRemoveQuote(quote?.id)
+            {handleRemoveQuote ? (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
+                  width: '100%'
                 }}
-              />
-            </View>
-          ) : null}
+              >
+                <ButtonConfirm
+                  icon={'delete'}
+                  justIcon
+                  openColor="error"
+                  openSize="small"
+                  confirmColor="error"
+                  confirmVariant="outline"
+                  confirmLabel="Eliminar"
+                  text="¿Estás seguro de eliminar esta cotización?"
+                  handleConfirm={async () => {
+                    return handleRemoveQuote(quote?.id)
+                  }}
+                />
+              </View>
+            ) : null}
+            <CurrencyAmount
+              amount={quote.amount}
+              style={{ textAlign: 'right' }}
+            />
+          </View>
         </View>
       ))}
       <View style={{ flexDirection: 'row', padding: 6 }}>
@@ -67,14 +78,18 @@ const ListOrderQuotes = ({
         >
           Total:
         </Text>
-        <Text
+        <View
           style={{
             width: 100,
-            padding: 4
+            padding: 4,
+            justifyContent: 'center'
           }}
         >
-          <CurrencyAmount style={gStyles.h3} amount={totalAmount} />
-        </Text>
+          <CurrencyAmount
+            style={{ ...gStyles.h3, textAlign: 'right' }}
+            amount={totalAmount}
+          />
+        </View>
       </View>
     </View>
   )

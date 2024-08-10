@@ -14,6 +14,7 @@ import FormQuote from './FormQuote'
 import ListOrderQuotes from './ListOrderQuotes'
 import { onAddQuote, onRemoveQuote } from '../libs/order-actions'
 import { OrderQuoteType } from '../types/OrderType'
+import ButtonConfirm from './ButtonConfirm'
 
 export const ModalRepairQuote = ({
   orderId
@@ -67,8 +68,6 @@ export const ModalRepairQuote = ({
   }
 
   const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
-  const orderQuote = order?.quote
-
   return (
     <>
       <View>
@@ -92,6 +91,7 @@ export const ModalRepairQuote = ({
             />
           </View>
           <ListOrderQuotes quotes={orderQuotes} />
+
           {quote.info ? (
             <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
           ) : null}
@@ -100,24 +100,36 @@ export const ModalRepairQuote = ({
               <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
             </Text>
           ) : null}
-          {quote?.info || quote?.total ? (
-            <Button
-              onPress={() => {
-                ServiceOrders.update(orderId, {
-                  quote: null
+        </View>
+        {quote?.info || quote?.total ? (
+          <View style={{ justifyContent: 'center', margin: 'auto' }}>
+            <ButtonConfirm
+              justIcon
+              handleConfirm={() => {
+                return ServiceOrders.update(orderId, {
+                  quote: null,
+                  repairInfo: null,
+                  repairTotal: null
                 })
               }}
-            ></Button>
-          ) : null}
-        </View>
+              text="IMPORTANTE. Asegurate de incluir esta cotización en la nueva lista de cotizaciones!"
+              icon="delete"
+              openColor="error"
+              confirmColor="error"
+              confirmVariant="outline"
+              confirmLabel="Eliminar"
+            ></ButtonConfirm>
+          </View>
+        ) : null}
       </View>
 
       <StyledModal {...modal}>
         <ListOrderQuotes
           quotes={orderQuotes}
           handleRemoveQuote={(id) => {
+            const quote = orderQuotes.find((q) => q.id === id)
             onRemoveQuote({
-              quote: orderQuotes.find((q) => q.id === id),
+              quote,
               orderId
             }).then((res) => {
               console.log({ res })

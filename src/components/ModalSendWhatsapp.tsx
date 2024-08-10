@@ -5,7 +5,7 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import { gStyles } from '../styles'
 import theme from '../theme'
-import OrderType, { order_type } from '../types/OrderType'
+import OrderType, { order_type, OrderQuoteType } from '../types/OrderType'
 import dictionary from '../dictionary'
 import asDate, {
   dateFormat,
@@ -105,6 +105,21 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n${CONTACTS}
   \n${ADDRESS}`
 
+  const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
+
+  const QUOTE = `🧾 *Cotización*
+  ${orderQuotes
+    .map(
+      (q) => `
+  💲*${parseFloat(`${q.amount}`).toFixed(2)}* ${q.description}`
+    )
+    .join('\n')}
+
+    Cotización total:      💲*${orderQuotes
+      .reduce((prev, curr) => prev + parseFloat(`${curr.amount}`), 0)
+      .toFixed(2)}*
+  `
+
   const REPAIR_RECEIPT = `
   \n${WELCOME}
   \n${ORDER_TYPE}
@@ -116,8 +131,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   \n🔧 *Información del aparato*
   🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
   #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
-  🧾 Falla: ${order?.quote?.description || order?.repairInfo || ''}
-  💲 Cotización:  $${order?.quote?.amount || order?.repairTotal || 0}
+  \n${QUOTE}
   🗓️ Garantía 1 Mes
   
   \n${PAYMENTS}
