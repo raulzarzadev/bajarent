@@ -3,24 +3,27 @@ import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import Button from './Button'
-import { QuoteType } from './ListOrderQuotes'
+import { OrderQuoteType } from '../types/OrderType'
 
 const FormQuote = ({
   quote,
   onSubmit
 }: {
-  quote: { description: string; amount: number }
-  onSubmit: (values: QuoteType) => void
+  quote?: OrderQuoteType
+  onSubmit: (values: OrderQuoteType) => void
 }) => {
   return (
     <View>
-      <Formik onSubmit={onSubmit} initialValues={quote}>
+      <Formik
+        onSubmit={onSubmit}
+        initialValues={quote || { description: '', amount: 0 }}
+      >
         {({ handleSubmit }) => (
           <View style={{ flexDirection: 'row' }}>
             <FormikInputValue
               name="description"
               placeholder="Descripción "
-              inputStyle={{ flex: 1 }}
+              containerStyle={{ flex: 1 }}
             />
             <FormikInputValue
               name="amount"

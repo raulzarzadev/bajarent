@@ -1,3 +1,4 @@
+import { arrayUnion } from 'firebase/firestore'
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import {
   onPickUpItem,
@@ -7,11 +8,16 @@ import {
 import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { CommentType } from '../types/CommentType'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  order_type,
+  OrderQuoteType
+} from '../types/OrderType'
 import PaymentType from '../types/PaymentType'
 import { TimePriceType } from '../types/PriceType'
 import StoreType from '../types/StoreType'
 import { orderExpireAt } from './orders'
+import { createUUID } from './createId'
 
 export const onComment = async ({
   orderId,
@@ -351,4 +357,28 @@ export const onRentStart = async ({
   await Promise.all(registryItemsEntriesPromises)
     .then((res) => console.log({ res }))
     .catch(console.error)
+}
+
+export const onAddQuote = async ({
+  newQuote,
+  orderId
+}: {
+  newQuote: OrderQuoteType
+  orderId: OrderType['id']
+}) => {
+  const quiteId = createUUID()
+  return ServiceOrders.update(orderId, {
+    quotes: arrayUnion({ ...newQuote, id: quiteId })
+  })
+}
+export const onRemoveQuote = async ({
+  quote,
+  orderId
+}: {
+  quote: OrderQuoteType
+  orderId: OrderType['id']
+}) => {
+  return ServiceOrders.update(orderId, {
+    quotes: arrayUnion(quote)
+  })
 }

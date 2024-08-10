@@ -6,6 +6,7 @@ import PaymentType from './PaymentType'
 import { TimePriceType } from './PriceType'
 import { ExtendReason } from '../firebase/ServiceOrders'
 import UserType from './UserType'
+import { FieldValue } from 'firebase/firestore'
 
 type OrderBase = {
   colorLabel?: string
@@ -104,6 +105,7 @@ type OrderBase = {
   repairInfo?: string
   quoteBy?: string
 
+  quotes?: FieldValue | OrderQuoteType[]
   quote?: OrderQuoteType
   startRepair?: boolean
 
@@ -156,6 +158,7 @@ type OrderBase = {
 export type OrderQuoteType = {
   description?: string
   amount?: number
+  id?: string
 }
 
 export enum order_status {

@@ -226,20 +226,7 @@ export const RepairItemConfigInfo = () => {
         <View style={{ marginBottom: gSpace(4) }}>
           <ModalRepairItem />
         </View>
-        <ModalRepairQuote
-          orderId={order?.id}
-          quote={{
-            info: order?.repairInfo || order?.quote?.description || '',
-            total: order?.repairTotal || order?.quote?.amount || 0,
-            brand: order?.itemBrand || '',
-            serial: order?.itemSerial || '',
-            category:
-              order?.items?.[0]?.categoryName ||
-              order?.item?.categoryName ||
-              'Sin articulo',
-            failDescription: order?.description || ''
-          }}
-        />
+        <ModalRepairQuote orderId={order?.id} />
       </View>
     </ErrorBoundary>
   )

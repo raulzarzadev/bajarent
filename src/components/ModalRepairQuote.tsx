@@ -11,11 +11,14 @@ import { gStyles } from '../styles'
 import theme from '../theme'
 import { useOrderDetails } from '../contexts/orderContext'
 import FormQuote from './FormQuote'
+import ListOrderQuotes from './ListOrderQuotes'
+import { onAddQuote, onRemoveQuote } from '../libs/order-actions'
+import { OrderQuoteType } from '../types/OrderType'
 
 export const ModalRepairQuote = ({
-  orderId,
-  quote
-}: {
+  orderId
+}: //quote
+{
   orderId: string
   quote?: {
     info: string
@@ -27,6 +30,18 @@ export const ModalRepairQuote = ({
     category?: string
   }
 }) => {
+  const { order } = useOrderDetails()
+  const quote = {
+    info: order?.repairInfo || order?.quote?.description || '',
+    total: order?.repairTotal || order?.quote?.amount || 0,
+    brand: order?.itemBrand || '',
+    serial: order?.itemSerial || '',
+    category:
+      order?.items?.[0]?.categoryName ||
+      order?.item?.categoryName ||
+      'Sin articulo',
+    failDescription: order?.description || ''
+  }
   const quoteAlreadyExists = !quote || quote?.info || quote?.total
   const label = quoteAlreadyExists ? 'Modificar Cotización' : 'Cotización'
 
@@ -51,6 +66,9 @@ export const ModalRepairQuote = ({
       .catch(console.error)
   }
 
+  const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
+  const orderQuote = order?.quote
+
   return (
     <>
       <View>
@@ -73,15 +91,47 @@ export const ModalRepairQuote = ({
               onPress={modal.toggleOpen}
             />
           </View>
-          <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>
-            <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
-          </Text>
+          <ListOrderQuotes quotes={orderQuotes} />
+          {quote.info ? (
+            <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
+          ) : null}
+          {quote.total ? (
+            <Text style={[gStyles.p, gStyles.tCenter]}>
+              <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
+            </Text>
+          ) : null}
+          {quote?.info || quote?.total ? (
+            <Button
+              onPress={() => {
+                ServiceOrders.update(orderId, {
+                  quote: null
+                })
+              }}
+            ></Button>
+          ) : null}
         </View>
       </View>
 
       <StyledModal {...modal}>
-        <FormQuote />
+        <ListOrderQuotes
+          quotes={orderQuotes}
+          handleRemoveQuote={(id) => {
+            onRemoveQuote({
+              quote: orderQuotes.find((q) => q.id === id),
+              orderId
+            }).then((res) => {
+              console.log({ res })
+            })
+          }}
+        />
+        <FormQuote
+          onSubmit={(newQuote) => {
+            console.log({ newQuote })
+            onAddQuote({ newQuote, orderId }).then((res) => {
+              console.log({ res })
+            })
+          }}
+        />
         {/* <View style={styles.repairItemForm}>
           <InputTextStyled
             value={info}
