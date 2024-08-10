@@ -16,6 +16,8 @@ import theme, { colors } from '../theme'
 import Icon from './Icon'
 import { ItemFixDetails } from './ItemDetails'
 
+const OPACITY_ROW_COLOR = '66'
+
 const ListStoreItems = ({
   allItemsSections,
   allItems,
@@ -122,6 +124,11 @@ const ListStoreItems = ({
   }, [storeId])
 
   const [errors, setErrors] = useState<{ rentedItems?: string }>({})
+  const formattedItems = formatItems(
+    items?.map((item) => ({ ...item, id: item.id })),
+    categories,
+    storeSections
+  )
 
   return (
     <View>
@@ -194,17 +201,34 @@ const ListStoreItems = ({
           //   visible: true
           // }
         ]}
-        data={formatItems(
-          items?.map((item) => ({ ...item, id: item.id })),
-          categories,
-          storeSections
-        )}
+        data={formattedItems}
         filters={[
           { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },
           { field: 'brand', label: 'Marca' },
           { field: 'status', label: 'Estado' },
-          { field: 'needFix', label: 'Necesita Reparación', boolean: true }
+          {
+            field: 'needFix',
+            label: 'Necesita Reparación',
+            boolean: true,
+            color: colors.red,
+            icon: 'wrench',
+            titleColor: colors.white
+          },
+          {
+            field: 'isRented',
+            label: 'En renta',
+            boolean: true,
+            color: `${theme.success}${OPACITY_ROW_COLOR}`,
+            icon: 'rent'
+          },
+          {
+            field: 'isPickedUp',
+            label: 'Recogido',
+            boolean: true,
+            color: `${theme.primary}${OPACITY_ROW_COLOR}`,
+            icon: 'truck'
+          }
         ]}
         sortFields={[
           { key: 'number', label: 'Número' },
@@ -232,7 +256,6 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
     pickedUp: theme.primary,
     retired: theme.neutral
   }
-  const opacity = '66'
   return (
     <ListRow
       style={{
@@ -242,7 +265,7 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         width: '100%',
         marginVertical: 2,
         borderColor: needFix ? colors.red : 'transparent',
-        backgroundColor: `${bgcolor[item.status]}${opacity}`
+        backgroundColor: `${bgcolor[item.status]}${OPACITY_ROW_COLOR}`
       }}
       fields={[
         {

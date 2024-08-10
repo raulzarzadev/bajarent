@@ -27,6 +27,8 @@ export type ItemBase = {
   currentOrderId?: string
   currentLocation?: string
   needFix?: boolean
+  isRented?: boolean
+  isPickedUp?: boolean
 }
 
 type ItemType = BaseType & ItemBase

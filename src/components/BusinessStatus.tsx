@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -15,12 +15,14 @@ import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
+import ItemType from '../types/ItemType'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
   const { storeSections, storeId } = useStore()
   const table: {
-    field: keyof BalanceRowType
+    field: keyof BalanceRowType | 'allItems'
     label: string
     width: ListRowField['width']
   }[] = [
@@ -66,6 +68,11 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       field: 'inStock',
       label: 'EN CARRO',
       width: 'rest'
+    },
+    {
+      field: 'allItems',
+      label: 'ITEMS',
+      width: 'rest'
     }
   ]
 
@@ -104,141 +111,148 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
             storeSections.find((s) => s.id === b.section)?.name || b.section
           return aName.localeCompare(bName)
         })
-        .map((balanceRow: BalanceRowType) => (
-          <View key={balanceRow.section}>
-            <Pressable
-              onPress={() => {
-                handleSelectRow(balanceRow.section)
-              }}
-            >
-              <ListRow
-                style={{
-                  marginVertical: 4,
-                  backgroundColor:
-                    selectedRow === balanceRow.section
-                      ? 'lightblue'
-                      : 'transparent'
+        .map((balanceRow: BalanceRowType) => {
+          const inRentItems = balanceRow.inRent.length || 0
+          const inStockItems = balanceRow.inStock.length || 0
+          return (
+            <View key={balanceRow.section}>
+              <Pressable
+                onPress={() => {
+                  handleSelectRow(balanceRow.section)
                 }}
-                key={balanceRow.section}
-                fields={table.map(({ width, field }) => {
-                  const label = () => {
-                    if (field === 'section') {
-                      if (balanceRow[field] === 'all') {
-                        return 'Todas'
-                      }
-                      if (balanceRow[field] === 'withoutSection') {
-                        return 'Sin area'
-                      }
-
-                      return (
-                        storeSections.find((s) => s.id === balanceRow[field])
-                          ?.name || 'S/N'
-                      )
-                    }
-
-                    if (field === 'reported') {
-                      const reports = balanceRow['reported']?.length || 0
-                      const solved = balanceRow['solvedToday']?.length || 0
-                      return `${solved}/${reports}`
-                    }
-
-                    if (Array.isArray(balanceRow[field])) {
-                      return balanceRow[field].length
-                    }
-                  }
-                  return {
-                    component: (
-                      <Text
-                        key={field}
-                        numberOfLines={1}
-                        style={[gStyles.tCenter]}
-                      >
-                        {label()}
-                      </Text>
-                    ),
-                    width
-                  }
-                })}
-              />
-            </Pressable>
-            {selectedRow === balanceRow.section && (
-              <View>
-                <Text style={gStyles.h2}>Detalles</Text>
-                <View
+              >
+                <ListRow
                   style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-evenly'
+                    marginVertical: 4,
+                    backgroundColor:
+                      selectedRow === balanceRow.section
+                        ? 'lightblue'
+                        : 'transparent'
                   }}
-                >
-                  <CellOrders
-                    label={'Rentas'}
-                    field="deliveredToday"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                    day={balance.createdAt}
-                  />
-                  <CellOrders
-                    label={'Renovadas'}
-                    field="renewedToday"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                    day={balance.createdAt}
-                  />
-                  <CellOrders
-                    label={'Pagadas'}
-                    field="paidToday"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                    day={balance.createdAt}
-                  />
-                  <CellOrders
-                    label={'Recogidas'}
-                    field="pickedUpToday"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                  />
-                  <CellOrders
-                    label={'Reportes pendientes'}
-                    field="reported"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                  />
-                  <CellOrders
-                    label={'Reportes resueltos'}
-                    field="solvedToday"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                  />
-                  <CellOrders
-                    label={'Canceladas'}
-                    field="cancelledToday"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                  />
-                  <CellOrders
-                    label={'Todas'}
-                    field="inRent"
-                    sectionSelected={balanceRow.section}
-                    sections={balance.sections}
-                    hiddenList
-                  />
-                </View>
-                <CellItemsE
-                  items={
-                    balance.sections.find((s) => s?.section === selectedRow)
-                      ?.inStock
-                  }
-                  label="En carro"
-                ></CellItemsE>
+                  key={balanceRow.section}
+                  fields={table.map(({ width, field }) => {
+                    const label = () => {
+                      if (field === 'section') {
+                        if (balanceRow[field] === 'all') {
+                          return 'Todas'
+                        }
+                        if (balanceRow[field] === 'withoutSection') {
+                          return 'Sin area'
+                        }
+
+                        return (
+                          storeSections.find((s) => s.id === balanceRow[field])
+                            ?.name || 'S/N'
+                        )
+                      }
+
+                      if (field === 'reported') {
+                        const reports = balanceRow['reported']?.length || 0
+                        const solved = balanceRow['solvedToday']?.length || 0
+                        return `${solved}/${reports}`
+                      }
+                      if (field === 'allItems') {
+                        return inRentItems + inStockItems
+                      }
+
+                      if (Array.isArray(balanceRow[field])) {
+                        return balanceRow[field].length
+                      }
+                    }
+                    return {
+                      component: (
+                        <Text
+                          key={field}
+                          numberOfLines={1}
+                          style={[gStyles.tCenter]}
+                        >
+                          {label()}
+                        </Text>
+                      ),
+                      width
+                    }
+                  })}
+                />
+              </Pressable>
+              {selectedRow === balanceRow.section && (
                 <View>
-                  <Text style={[gStyles.h2, { marginTop: 8 }]}>Pagos</Text>
+                  <Text style={gStyles.h2}>Detalles</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      justifyContent: 'space-evenly'
+                    }}
+                  >
+                    <CellOrders
+                      label={'Rentas'}
+                      field="deliveredToday"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                      day={balance.createdAt}
+                    />
+                    <CellOrders
+                      label={'Renovadas'}
+                      field="renewedToday"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                      day={balance.createdAt}
+                    />
+                    <CellOrders
+                      label={'Pagadas'}
+                      field="paidToday"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                      day={balance.createdAt}
+                    />
+                    <CellOrders
+                      label={'Recogidas'}
+                      field="pickedUpToday"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                    />
+                    <CellOrders
+                      label={'Reportes pendientes'}
+                      field="reported"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                    />
+                    <CellOrders
+                      label={'Reportes resueltos'}
+                      field="solvedToday"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                    />
+                    <CellOrders
+                      label={'Canceladas'}
+                      field="cancelledToday"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                    />
+                    <CellOrders
+                      label={'Todas'}
+                      field="inRent"
+                      sectionSelected={balanceRow.section}
+                      sections={balance.sections}
+                      hiddenList
+                    />
+                  </View>
+                  <CellItemsE
+                    items={
+                      balance.sections.find((s) => s?.section === selectedRow)
+                        ?.inStock
+                    }
+                    label="En carro"
+                  ></CellItemsE>
+                  <View>
+                    <Text style={[gStyles.h2, { marginTop: 8 }]}>Pagos</Text>
+                  </View>
+                  <BalanceAmountsE payments={balanceRow.payments} />
                 </View>
-                <BalanceAmountsE payments={balanceRow.payments} />
-              </View>
-            )}
-          </View>
-        ))}
+              )}
+            </View>
+          )
+        })}
     </View>
   )
 }
@@ -259,8 +273,15 @@ export const CellItems = ({
   label: string
 }) => {
   const { items: storeItems } = useEmployee()
+  const { storeId } = useStore()
   const { toItems } = useMyNav()
-
+  const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>()
+  useEffect(() => {
+    ServiceStoreItems.getList(
+      { storeId, ids: items },
+      { fromCache: true }
+    ).then((res) => setItemsData(res))
+  }, [items])
   return (
     <View>
       <Pressable
@@ -275,18 +296,24 @@ export const CellItems = ({
       </Pressable>
       <View>
         {items?.map((itemId, index) => {
-          const item = storeItems?.find((i) => i?.id === itemId)
+          const item = itemsData?.find((i) => i?.id === itemId)
           return (
             <Pressable
               key={item?.id || index}
               onPress={() => {
-                toItems({ id: item?.id })
+                toItems({ id: itemId })
               }}
             >
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text>{item?.categoryName} </Text>
-                <Text>{item?.number} </Text>
-              </View>
+              {item ? (
+                <View
+                  style={{ flexDirection: 'row', justifyContent: 'center' }}
+                >
+                  <Text>{item?.categoryName} </Text>
+                  <Text>{item?.number} </Text>
+                </View>
+              ) : (
+                <Text style={{ textAlign: 'center' }}>{itemId}</Text>
+              )}
             </Pressable>
           )
         })}

@@ -24,6 +24,7 @@ import {
   Query,
   query,
   QueryConstraint,
+  QuerySnapshot,
   setDoc,
   Timestamp,
   updateDoc,
@@ -33,6 +34,7 @@ import {
 
 export type GetItemsOps = {
   justRefs?: boolean
+  fromCache?: boolean //* use cache con cuidado puede no estar actualizado
 }
 export class FirebaseCRUD {
   static uploadFile(
@@ -438,7 +440,12 @@ export class FirebaseCRUD {
   ) {
     const res: any[] = []
     const q: Query<DocumentData> = query(collectionRef, ...filters)
-    const querySnapshot = await getDocs(q)
+    let querySnapshot: QuerySnapshot<DocumentData, DocumentData>
+    if (ops?.fromCache) {
+      querySnapshot = await getDocsFromCache(q)
+    } else {
+      querySnapshot = await getDocs(q)
+    }
     if (ops?.justRefs) {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)

@@ -124,13 +124,25 @@ export default function useFilter<T extends { id?: string }>({
         return
       }
 
-      const res = [...filteredData].filter((order) => {
-        return Object.values(order).some((val) => {
-          if (typeof val === 'string') {
-            return val.toLowerCase().includes(value.toLowerCase())
+      let exactMatches = []
+
+      const res = filteredData?.filter((order) => {
+        //* Get all values of the order
+        const orderValues = Object.values(order)
+
+        //*  Check for exact matches first and add to exactMatches
+        orderValues.forEach((orderValue) => {
+          if (orderValue == value) {
+            exactMatches.push(order)
           }
-          if (typeof val === 'number' && !isNaN(Number(value))) {
-            return val === parseFloat(value)
+        })
+        //*  Check for partial matches and add to filteredData
+        return orderValues.some((orderValue) => {
+          if (typeof orderValue === 'string') {
+            return orderValue.toLowerCase().includes(value.toLowerCase())
+          }
+          if (typeof orderValue === 'number' && !isNaN(Number(value))) {
+            return orderValue === parseFloat(value)
           }
           return false
         })
@@ -151,7 +163,11 @@ export default function useFilter<T extends { id?: string }>({
           ...orders.filter((o) => !res.some((r) => r.id === o.id))
         ])
       }
-      setFilteredData([...res])
+      if (exactMatches.length > 0) {
+        setFilteredData(exactMatches)
+      } else {
+        setFilteredData(res)
+      }
     }, debounceSearch)
   }
 

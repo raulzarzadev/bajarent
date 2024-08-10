@@ -59,7 +59,7 @@ function ModalFilterList<T>({
   } = useFilter<T>({
     data,
     collectionSearch,
-    debounceSearch: 1000
+    debounceSearch: 400
   })
 
   useEffect(() => {
@@ -263,6 +263,16 @@ function ModalFilterList<T>({
               }}
               justIcon
             />
+            {!!filtersBy?.length && (
+              <Button
+                icon="close"
+                justIcon
+                variant="ghost"
+                onPress={() => {
+                  handleClearFilters()
+                }}
+              />
+            )}
           </View>
         )}
       </View>
@@ -336,7 +346,7 @@ function ModalFilterList<T>({
         {filters
           ?.filter((f) => !f?.isDate) //* <-- avoid show date filters
           ?.map(({ field, label, boolean }, i) => {
-            if (boolean) return null //* hide from here and show in outside the modal
+            // if (boolean) return null //* hide from here and show in outside the modal
             return (
               <View key={i}>
                 <Text style={[gStyles.h3, { marginBottom: 0, marginTop: 6 }]}>

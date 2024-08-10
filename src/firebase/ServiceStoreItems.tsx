@@ -181,23 +181,29 @@ export class ServiceStoreItemsClass {
     })
   }
 
-  async getList({
-    storeId,
-    ids
-  }: {
-    storeId: string
-    ids: string[]
-  }): Promise<Type[]> {
+  async getList(
+    {
+      storeId,
+      ids
+    }: {
+      storeId: string
+      ids: string[]
+    },
+    ops?: GetItemsOps
+  ): Promise<Type[]> {
     const ref = collection(db, 'stores', storeId, SUB_COLLECTION)
     let promises = []
     const MAX_BATCH_SIZE = 30
     for (let i = 0; i < ids.length; i += MAX_BATCH_SIZE) {
       const chunk = ids.slice(i, i + MAX_BATCH_SIZE)
       promises.push(
-        ServiceStores.getRefItems({
-          collectionRef: ref,
-          filters: [where(documentId(), 'in', chunk)]
-        })
+        ServiceStores.getRefItems(
+          {
+            collectionRef: ref,
+            filters: [where(documentId(), 'in', chunk)]
+          },
+          ops
+        )
       )
     }
     return Promise.all(promises).then((res) => res.flat())
