@@ -47,7 +47,13 @@ const CardUser = ({
           ></Button>
         )}
       </View>
-      <CardPhone phone={_user?.phone} />
+
+      <CardPhone
+        phone={_user?.phone}
+        style={{
+          marginHorizontal: 'auto'
+        }}
+      />
       <CardEmail email={_user?.email} />
       {__DEV__ && (
         <Text

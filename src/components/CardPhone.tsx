@@ -1,8 +1,8 @@
-import { Linking, View } from 'react-native'
+import { Linking, View, ViewStyle } from 'react-native'
 import P from './P'
 import Button from './Button'
 
-const CardPhone = ({ phone }) => {
+const CardPhone = ({ phone, style }: { phone: string; style?: ViewStyle }) => {
   const formatPhoneNumber = (phone: string): string => {
     // Remove any non-digit characters from the phone number
     const cleanedPhoneNumber = phone?.replace(/\D/g, '')
@@ -20,11 +20,12 @@ const CardPhone = ({ phone }) => {
 
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginHorizontal: 'auto'
-      }}
+      style={[
+        {
+          flexDirection: 'row'
+        },
+        style
+      ]}
     >
       <P size="lg">{formatPhoneNumber(phone)}</P>
       {phone && (
