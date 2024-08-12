@@ -53,7 +53,7 @@ const FormRentDelivery = ({
                 name="references"
                 label="Referencias de la casa"
               />
-              <InputLocationFormik name="Location" />
+              <InputLocationFormik name="location" />
               <View style={{ marginVertical: 8 }}>
                 <FormikInputImage name="imageID" label="Subir identificación" />
               </View>
