@@ -108,6 +108,7 @@ const labels = {
   showOrderTotal: 'Monto total',
   showOrderTime: 'Tiempo',
   getExpireTomorrow: 'Vence mañana',
+  canCancelPickedUp: 'Cancelar recogida',
   /* ********************************************
    * PERMISSIONS STORE V2
    *******************************************rz */

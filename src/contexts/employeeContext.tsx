@@ -13,6 +13,7 @@ import { SectionType } from '../types/SectionType'
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
   permissions: {
+    canCancelPickedUp?: boolean
     isAdmin: boolean
     isOwner: boolean
     orders: Partial<PermissionsOrder>
@@ -125,7 +126,11 @@ export const EmployeeContextProvider = ({ children }) => {
         canDeleteExtension:
           isAdmin ||
           isOwner ||
-          !!employee?.permissions?.order?.canDeleteExtension
+          !!employee?.permissions?.order?.canDeleteExtension,
+        canCancelPickedUp:
+          isAdmin ||
+          isOwner ||
+          !!employee?.permissions?.order?.canCancelPickedUp
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections, items]

@@ -39,6 +39,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
           initialValues={order}
           onSubmit={async (values) => {
             await ServiceOrders.update(order.id, values)
+              .then((res) => console.log(res))
+              .catch((e) => console.error(e))
             return
           }}
           setDirty={(dirty) => {

@@ -43,8 +43,8 @@ const ModalDeliveryOrder = ({
       items: values.items,
       order: values
     })
-      .then((res) => console.log({ res }))
-      .catch(console.error)
+      .then((r) => console.log(r))
+      .catch((e) => console.error(e))
 
     //* delivery items
     values.items.forEach((item) => {
@@ -53,8 +53,8 @@ const ModalDeliveryOrder = ({
         itemId: item.id,
         orderId: values.id
       })
-        .then((res) => console.log({ res }))
-        .catch(console.error)
+        .then((r) => console.log(r))
+        .catch((e) => console.error(e))
 
       onRegistryEntry({
         storeId,
@@ -62,8 +62,8 @@ const ModalDeliveryOrder = ({
         type: 'delivery',
         orderId: order?.id
       })
-        .then((res) => console.log({ res }))
-        .catch((err) => console.error({ err }))
+        .then((r) => console.log(r))
+        .catch((e) => console.error(e))
     })
 
     //* create movement
@@ -73,6 +73,8 @@ const ModalDeliveryOrder = ({
       storeId,
       type: 'comment'
     })
+      .then((r) => console.log(r))
+      .catch((e) => console.error(e))
   }
   const correctQtyOfItems = (items = []) => {
     return true

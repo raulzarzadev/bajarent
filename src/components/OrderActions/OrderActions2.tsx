@@ -8,17 +8,21 @@ import useModal from '../../hooks/useModal'
 import ModalRentStart from './ModalRentStart'
 import ModalRentFinish from './ModalRentFinish'
 import { gSpace, gStyles } from '../../styles'
-import { useStore } from '../../contexts/storeContext'
 import {
   onAuthorize,
+  onComment,
   onRepairDelivery,
-  onRepairFinish,
-  onRepairStart
+  onRepairFinish
 } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useEffect, useState } from 'react'
 import ModalStartRepair from './ModalRepairStart'
 import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
+import ButtonConfirm from '../ButtonConfirm'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { useEmployee } from '../../contexts/employeeContext'
+import { ItemStatuses } from '../../types/ItemType'
+import { ServiceItemHistory } from '../../firebase/ServiceItemHistory'
 
 //* repaired
 function OrderActions() {
@@ -106,7 +110,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const isPending =
     status === order_status.AUTHORIZED || status === order_status.PENDING
   const isPickedUp = status === order_status.PICKED_UP
-
+  const { permissions } = useEmployee()
   useEffect(() => {
     checkIfAllItemsExists()
   }, [order.items])
@@ -114,6 +118,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const [allItemsExists, setAllItemsExists] = useState(false)
 
   const checkIfAllItemsExists = async () => {
+    console.log({ orderItems: order.items })
     const promises = order?.items.map((item) => {
       return ServiceStoreItems.get({ itemId: item.id, storeId: order.storeId })
     })
@@ -121,6 +126,8 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
     if (res.every((r) => r)) return setAllItemsExists(true)
     setAllItemsExists(false)
   }
+
+  const canCancelPickUp = permissions?.canCancelPickedUp
 
   const modalRentStart = useModal({ title: 'Comenzar renta' })
   const modalRentFinish = useModal({ title: 'Terminar renta' })
@@ -152,6 +159,60 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
               modalRentFinish.toggleOpen()
             }}
           />
+          {isPickedUp && canCancelPickUp && (
+            <View style={{ marginVertical: 'auto' }}>
+              <ButtonConfirm
+                openLabel="Regresar "
+                confirmColor="error"
+                confirmVariant="outline"
+                confirmLabel="Cancelar recolección"
+                icon="undo"
+                openColor="error"
+                openVariant="outline"
+                openSize="small"
+                text="¿Estás seguro de que quieres cancelar la recolección?"
+                handleConfirm={async () => {
+                  //* UPDATE ORDER
+                  ServiceOrders.update(order.id, {
+                    status: order_status.DELIVERED,
+                    pickedUpAt: null,
+                    pickedUpBy: null
+                  })
+                    .then(console.log)
+                    .catch(console.error)
+                  //* COMMENT ORDER
+                  onComment({
+                    content: 'Recolección cancelada',
+                    orderId: order.id,
+                    storeId: order.storeId,
+                    type: 'comment',
+                    isOrderMovement: true
+                  })
+                    .then(console.log)
+                    .catch(console.error)
+                  order?.items?.forEach((item) => {
+                    //* UPDATE ITEM AND CREATE HISTORY ENTRY
+                    ServiceStoreItems.update({
+                      itemId: item.id,
+                      storeId: order.storeId,
+                      itemData: { status: ItemStatuses.rented }
+                    })
+                      .then(console.log)
+                      .catch(console.error)
+
+                    ServiceItemHistory.create({
+                      orderId: order.id,
+                      type: 'pickup',
+                      content: 'Recolección cancelada',
+                      itemId: item.id
+                    })
+                      .then(console.log)
+                      .catch(console.error)
+                  })
+                }}
+              />
+            </View>
+          )}
         </View>
       </ScrollView>
     </>

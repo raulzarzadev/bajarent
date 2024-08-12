@@ -95,7 +95,8 @@ export enum permissions_orders {
   // showOrderTotal,
   // showOrderTime,
   getExpireTomorrow,
-  canDeleteExtension
+  canDeleteExtension,
+  canCancelPickedUp
 }
 export enum permissions_store {
   canCreateBalance,

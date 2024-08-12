@@ -32,7 +32,7 @@ const ItemActions = ({
   actions?: Array<Actions>
 }) => {
   const itemId = item?.id
-  const itemSection = item?.assignedSection
+  const itemSection = item?.assignedSection || ''
   const needFix = item?.needFix
   const { storeSections, storeId } = useStore()
   const [sectionId, setSectionId] = React.useState<string | null>(
@@ -102,6 +102,8 @@ const ItemActions = ({
                 field: 'status',
                 value: retiredItem ? 'pickedUp' : 'retired'
               })
+                .then((r) => console.log(r))
+                .catch((e) => console.error(e))
               await ServiceStoreItems.addEntry({
                 storeId,
                 itemId,
@@ -111,6 +113,8 @@ const ItemActions = ({
                   itemId
                 }
               })
+                .then((r) => console.log(r))
+                .catch((e) => console.error(e))
               onAction?.('retire')
               setDisabled(false)
               return

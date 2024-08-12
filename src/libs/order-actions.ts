@@ -322,8 +322,8 @@ export const onRentStart = async ({
     order,
     deliveredAt
   })
-    .then((res) => console.log({ res }))
-    .catch(console.error)
+    .then((r) => console.log(r))
+    .catch((e) => console.error(e))
 
   //* create movement
   await onComment({
@@ -332,6 +332,8 @@ export const onRentStart = async ({
     content: 'Entregada',
     type: 'comment'
   })
+    .then((r) => console.log(r))
+    .catch((e) => console.error(e))
 
   //* delivery items
   const rentOrderPromises = items.map((item) => {
@@ -353,12 +355,12 @@ export const onRentStart = async ({
   })
 
   await Promise.all(rentOrderPromises)
-    .then((res) => console.log({ res }))
-    .catch(console.error)
+    .then((r) => console.log(r))
+    .catch((e) => console.error(e))
 
   await Promise.all(registryItemsEntriesPromises)
-    .then((res) => console.log({ res }))
-    .catch(console.error)
+    .then((r) => console.log(r))
+    .catch((e) => console.error(e))
 }
 
 export const onAddQuote = async ({
