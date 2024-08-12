@@ -261,36 +261,39 @@ export const onRentFinish = async ({
 
   if (order.type != order_type.RENT)
     return console.error('Order is not a rent order')
-
-  const promises = items?.map(async (item) => {
-    return onPickUpItem({
-      storeId,
-      itemId: item.id,
-      orderId: order.id,
-      assignToSection: order.assignToSection
+  try {
+    const promises = items?.map(async (item) => {
+      return onPickUpItem({
+        storeId,
+        itemId: item.id,
+        orderId: order.id,
+        assignToSection: order?.assignToSection || ''
+      })
+        .then(async (res) => {
+          // console.log({ res }, 'item picked up', item?.id, item?.number)
+        })
+        .catch(console.error)
     })
-      .then(async (res) => {
-        // console.log({ res }, 'item picked up', item?.id, item?.number)
+
+    await Promise.all(promises)
+      .then((res) => {
+        //  console.log({ res })
       })
       .catch(console.error)
-  })
 
-  await Promise.all(promises)
-    .then((res) => {
-      //  console.log({ res })
+    //* pickup order
+    await onPickup({ orderId, userId })
+
+    //* create movement
+    await onComment({
+      orderId,
+      storeId,
+      content: 'Recogida',
+      type: 'comment'
     })
-    .catch(console.error)
-
-  //* pickup order
-  await onPickup({ orderId, userId })
-
-  //* create movement
-  await onComment({
-    orderId,
-    storeId,
-    content: 'Recogida',
-    type: 'comment'
-  })
+  } catch (error) {
+    console.error(error)
+  }
 
   //*pickup items
 }
