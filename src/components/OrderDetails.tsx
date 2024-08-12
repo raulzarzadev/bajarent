@@ -240,7 +240,11 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const address = order?.address || ''
   const references = order?.references || ''
 
-  const location = order?.location || ''
+  const location =
+    order?.location ||
+    //@ts-ignore typo in form generete this error
+    order?.Location ||
+    ''
 
   return (
     <View
