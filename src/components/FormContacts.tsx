@@ -10,7 +10,7 @@ const FormContacts = ({
   contact,
   onSubmit
 }: {
-  contact: ContactType
+  contact?: ContactType
   onSubmit: (newContact: ContactType) => Promise<void> | void
 }) => {
   return (
@@ -20,13 +20,13 @@ const FormContacts = ({
         initialValues={contact || { name: '', phone: '' }}
       >
         {({ handleSubmit }) => (
-          <View style={{ flexDirection: 'row' }}>
-            <FormikInputValue
-              name="name"
-              placeholder="Descripción "
-              containerStyle={{ flex: 1 }}
-            />
-            <FormikInputPhone name="phone" />
+          <View style={{}}>
+            <View style={{ marginVertical: 6 }}>
+              <FormikInputValue name="name" placeholder="Nombre" />
+            </View>
+            <View style={{ marginVertical: 6 }}>
+              <FormikInputPhone name="phone" />
+            </View>
             <Button onPress={handleSubmit} icon="add" size="xs" />
           </View>
         )}

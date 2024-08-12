@@ -9,6 +9,7 @@ import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { CommentType } from '../types/CommentType'
 import OrderType, {
+  ContactType,
   order_status,
   order_type,
   OrderQuoteType
@@ -380,5 +381,45 @@ export const onRemoveQuote = async ({
 }) => {
   return ServiceOrders.update(orderId, {
     quotes: arrayRemove(quote)
+  })
+}
+
+export const onAddContact = async ({
+  contact,
+  orderId
+}: {
+  contact: ContactType
+  orderId: OrderType['id']
+}) => {
+  const quiteId = createUUID()
+  return ServiceOrders.update(orderId, {
+    contacts: arrayUnion({ ...contact, id: quiteId })
+  })
+}
+
+export const onRemoveContact = async ({
+  contact,
+  orderId
+}: {
+  contact: ContactType
+  orderId: OrderType['id']
+}) => {
+  return ServiceOrders.update(orderId, {
+    contacts: arrayRemove(contact)
+  })
+}
+
+export const onMarkContactAsFavorite = async ({
+  contact,
+  orderId,
+  isFavorite
+}: {
+  contact: ContactType
+  orderId: OrderType['id']
+  isFavorite: boolean
+}) => {
+  onRemoveContact({ contact, orderId })
+  return ServiceOrders.update(orderId, {
+    contacts: arrayUnion({ ...contact, isFavorite })
   })
 }

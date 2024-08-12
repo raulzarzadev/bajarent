@@ -10,6 +10,9 @@ import { FieldValue } from 'firebase/firestore'
 export type ContactType = {
   name: string
   phone: string
+  id?: string
+  isOriginal?: boolean
+  isFavorite?: boolean
 }
 type OrderBase = {
   colorLabel?: string
@@ -29,7 +32,7 @@ type OrderBase = {
   email: string
   phone: string
 
-  contacts?: ContactType[]
+  contacts?: ContactType[] | FieldValue
 
   imageID: string
   imageHouse: string
