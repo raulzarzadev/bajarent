@@ -38,7 +38,8 @@ const ModalPickupOrder = ({
       const res = await onPickUpItem({
         storeId,
         itemId: item.id,
-        orderId: order.id
+        orderId: order.id,
+        assignToSection: order?.assignToSection || ''
       })
         .then(async (res: FormattedResponse) => {
           if (

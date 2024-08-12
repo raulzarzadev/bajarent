@@ -265,7 +265,8 @@ export const onRentFinish = async ({
     return onPickUpItem({
       storeId,
       itemId: item.id,
-      orderId: order.id
+      orderId: order.id,
+      assignToSection: order.assignToSection
     })
       .then(async (res) => {
         // console.log({ res }, 'item picked up', item?.id, item?.number)

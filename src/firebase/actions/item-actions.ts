@@ -104,7 +104,24 @@ export const onChangeItemSection = async ({
   })
 }
 
-export const onPickUpItem = async ({ storeId, itemId, orderId }) => {
+export const onPickUpItem = async ({
+  storeId,
+  itemId,
+  orderId,
+  assignToSection
+}: {
+  storeId: string
+  itemId: string
+  orderId: string
+  assignToSection?: string
+}) => {
+  onEditItemField({
+    //* <------------------ WHEN PICK UP ITEM REASSIGN TO SECTION
+    storeId,
+    itemId,
+    field: 'assignedSection',
+    value: assignToSection
+  })
   const pickedUpRes = await onEditItemField({
     //* <------------------ UPDATE ITEM STATUS TO PICKED UP
     storeId,
