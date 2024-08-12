@@ -7,7 +7,13 @@ import { TimePriceType } from './PriceType'
 import { ExtendReason } from '../firebase/ServiceOrders'
 import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
-
+export type ContactType = {
+  name: string
+  phone: string
+  id?: string
+  isOriginal?: boolean
+  isFavorite?: boolean
+}
 type OrderBase = {
   colorLabel?: string
   type: TypeOfOrderType
@@ -25,6 +31,8 @@ type OrderBase = {
 
   email: string
   phone: string
+
+  contacts?: ContactType[] | FieldValue
 
   imageID: string
   imageHouse: string

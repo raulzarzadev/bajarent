@@ -29,7 +29,10 @@ import {
   MdOutlineArrowForward,
   MdOutlineRemoveRedEye,
   MdOutlineAlarm,
-  MdOutlineTimerOff
+  MdOutlineTimerOff,
+  MdOutlineStarBorder,
+  MdOutlineStar,
+  MdStarHalf
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoKeyOutline } from 'react-icons/io5'
@@ -157,7 +160,10 @@ const icons = {
   calendarTime: LuCalendarClock,
   siren: PiSiren,
   report: PiSiren,
-  payment: MdOutlinePaid
+  payment: MdOutlinePaid,
+  starFilled: MdOutlineStar,
+  starHalf: MdStarHalf,
+  starEmpty: MdOutlineStarBorder
 } as const
 
 export type IconName = keyof typeof icons

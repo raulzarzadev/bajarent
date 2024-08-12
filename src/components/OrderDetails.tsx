@@ -36,6 +36,7 @@ import RowOrderItem from './RowOrderItem'
 import { useOrderDetails } from '../contexts/orderContext'
 import { OrderActionsE } from './OrderActions/OrderActions2'
 import ModalRepairItem from './ModalRepairItem'
+import OrderContacts from './OrderContacts'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -112,8 +113,8 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           </View>
         </View>
       )}
-      <View></View>
-      <CardPhone phone={order?.phone} />
+
+      <OrderContacts />
       <OrderImages order={order} />
 
       <ErrorBoundary componentName="OrderAddress">
