@@ -14,6 +14,7 @@ const ScreenOrderReorder = ({ route }) => {
     getFullOrderData(orderId).then((order) => setOriginalOrder(order))
   }, [orderId])
   const newOrder: Partial<OrderType> = {
+    contacts: originalOrder?.contacts || [],
     status: order_status.AUTHORIZED,
     storeId: originalOrder?.storeId || '',
     assignToSection: originalOrder?.assignToSection || '',
@@ -28,16 +29,16 @@ const ScreenOrderReorder = ({ route }) => {
     betweenStreets: originalOrder?.betweenStreets || '',
     location: originalOrder?.location || '',
     email: originalOrder?.email || '',
-    description: originalOrder?.description || '',
     imageHouse: originalOrder?.imageHouse || '',
     imageID: originalOrder?.imageID || '',
     indications: originalOrder?.indications || '',
-    items: originalOrder?.items || [],
-    item: originalOrder?.item || null,
-    itemBrand: originalOrder?.itemBrand || '',
-    itemSerial: originalOrder?.itemSerial || '',
     street: originalOrder?.street || '',
     expireAt: null
+    // description: originalOrder?.description || '', //* describe the failure
+    //items: originalOrder?.items || [],
+    //item: originalOrder?.item || null,
+    //itemBrand: originalOrder?.itemBrand || '',
+    //itemSerial: originalOrder?.itemSerial || '',
   }
 
   if (!originalOrder) return <ActivityIndicator />
