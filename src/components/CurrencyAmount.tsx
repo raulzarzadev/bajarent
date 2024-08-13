@@ -15,7 +15,7 @@ const CurrencyAmount = ({
     return <Text style={[style]}>$0.00</Text>
   }
   return (
-    <Text style={[style]} numberOfLines={1}>
+    <Text style={[style, { alignContent: 'center' }]} numberOfLines={1}>
       {_amount?.toLocaleString('es-MX', {
         style: 'currency',
         currency: 'MXN'

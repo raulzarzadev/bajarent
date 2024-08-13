@@ -367,7 +367,7 @@ const CellOrders = ({
   if (!orders.length) return null
   const { navigate } = useNavigation()
   return (
-    <View style={{ margin: 4 }}>
+    <View style={{ margin: 4, maxWidth: '100%' }}>
       <Pressable
         onPress={() => {
           //@ts-ignore

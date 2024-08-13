@@ -10,6 +10,8 @@ import { payments_amount } from '../libs/payments'
 import { isSameDay } from 'date-fns'
 import asDate from '../libs/utils-date'
 import { Timestamp } from 'firebase/firestore'
+import theme from '../theme'
+import { gStyles } from '../styles'
 
 const SpanOrder = ({
   orderId,
@@ -98,22 +100,42 @@ const OrderData = ({
   )
 
   return (
-    <View style={{ flexDirection: 'row' }}>
-      <Text style={{ marginRight: 4 }}>
+    <View style={{ flexDirection: 'row', alignContent: 'center' }}>
+      <Text style={{ marginRight: 4, textAlignVertical: 'center' }}>
         {order?.folio}-{order?.note}
       </Text>
       {showLastExtension && (
-        <Text style={{ fontWeight: 'bold' }}>
-          {' '}
+        <Text style={{ fontWeight: 'bold', textAlignVertical: 'center' }}>
           {translateTime(lastExtensionTime(order), { shortLabel: true })}{' '}
         </Text>
       )}
-      {showName && <Text style={{ marginRight: 4 }}>{order?.fullName} </Text>}
       {showDatePaymentsAmount && !!dateAmounts?.incomes && (
         <CurrencyAmount
           amount={dateAmounts?.incomes}
-          style={{ fontWeight: 'bold' }}
+          style={{
+            fontWeight: 'bold',
+            ...gStyles.helper,
+            backgroundColor: theme.success,
+            borderRadius: 9999,
+            paddingVertical: 0,
+            paddingHorizontal: 3,
+            color: theme.white,
+            textAlignVertical: 'center',
+            marginRight: 4
+          }}
         />
+      )}
+      {showName && (
+        <Text
+          style={{
+            minWidth: 100,
+            flex: 1,
+            textAlignVertical: 'center'
+          }}
+          numberOfLines={1}
+        >
+          {order?.fullName}{' '}
+        </Text>
       )}
     </View>
   )
