@@ -9,6 +9,7 @@ import { ServicePayments } from './ServicePayments'
 import PaymentType from '../types/PaymentType'
 type Type = ConsolidatedStoreOrdersType
 
+const ORDER_QTY_BY_CHUNK = 2
 class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
   constructor() {
     super('consolidatedOrders')
@@ -42,30 +43,34 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     const mapOrders = formatConsolidateOrders(storeOrders, payments)
     progress(40)
     //* 3. split data in chunks
-    const chunks = splitOrdersCount(500, Object.values(mapOrders))
-    progress(50)
+    const chunks = splitOrdersCount(
+      ORDER_QTY_BY_CHUNK,
+      Object.values(mapOrders)
+    )
+    progress(40)
 
     //* 4. create chunks
+
     const promisesChunks = chunks.map(async (chunk, i) => {
       const obj = chunk.reduce((acc, order) => {
         acc[order.id] = order
         return acc
       }, {} as ConsolidatedStoreOrdersType['orders'])
 
-      const progressValue =
-        chunks && chunks.length > 1 ? 50 + (i / (chunks.length - 1)) * 30 : 50
-
-      progress(progressValue)
-
       return ServiceChunks.create({
         storeId,
         orders: obj
-      }).then(({ res }) => res.id)
+      }).then(({ res }) => {
+        const progressValue =
+          chunks && chunks.length > 1 ? 50 + (i / (chunks.length - 1)) * 50 : 50
+        progress(progressValue)
+        return res.id
+      })
     })
-    progress(80)
+    progress(90)
     const createdChunks = await Promise.all(promisesChunks)
 
-    progress(90)
+    progress(95)
     //* 5. create consolidate with chunks
     await this.create({
       storeId,
