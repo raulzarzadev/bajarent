@@ -38,11 +38,13 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     const payments = await ServicePayments.getByStore(storeId)
     progress(30)
     //* 2. format data
+
     const mapOrders = formatConsolidateOrders(storeOrders, payments)
     progress(40)
     //* 3. split data in chunks
     const chunks = splitOrdersCount(500, Object.values(mapOrders))
     progress(50)
+
     //* 4. create chunks
     const promisesChunks = chunks.map(async (chunk, i) => {
       const obj = chunk.reduce((acc, order) => {
@@ -50,16 +52,19 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
         return acc
       }, {} as ConsolidatedStoreOrdersType['orders'])
 
-      const progressValue = 50 + (i / (chunks.length - 1)) * 30
+      const progressValue =
+        chunks && chunks.length > 1 ? 50 + (i / (chunks.length - 1)) * 30 : 50
+
       progress(progressValue)
 
-      return await ServiceChunks.create({
+      return ServiceChunks.create({
         storeId,
         orders: obj
       }).then(({ res }) => res.id)
     })
     progress(80)
     const createdChunks = await Promise.all(promisesChunks)
+
     progress(90)
     //* 5. create consolidate with chunks
     await this.create({
@@ -70,6 +75,7 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
       ordersCount: storeOrders.length
     })
     progress(100)
+
     if (process.env.PRE_PRODUCTION) console.timeEnd('consolidate')
   }
 
