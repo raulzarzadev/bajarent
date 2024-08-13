@@ -29,6 +29,7 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
   }
 
   async consolidate(storeId: string, ops?: ConsolidatedOps) {
+    if (__DEV__) console.time('consolidate')
     const progress = ops?.progress || (() => {})
     //* 1. get all data
     progress(10)
@@ -69,6 +70,7 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
       ordersCount: storeOrders.length
     })
     progress(100)
+    if (__DEV__) console.timeEnd('consolidate')
   }
 
   // Agrega tus métodos aquí

@@ -200,6 +200,7 @@ const TabCashbox = () => {
         setProgress(p)
       }
     })
+
     return await ServiceBalances.createV2(storeId, {
       progress: (p) => {
         setProgress(p)
