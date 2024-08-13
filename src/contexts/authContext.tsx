@@ -90,10 +90,10 @@ const AuthContextProvider = ({ children }) => {
     [auth, setAuth, storeId, stores, store]
   )
   at++
-  console.log({ at })
+  if (__DEV__) console.log({ at })
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
-console.log(Platform.OS)
+if (__DEV__) console.log(Platform.OS)
 export const useAuth = () => {
   return useContext(AuthContext)
 }

@@ -140,7 +140,7 @@ export const EmployeeContextProvider = ({ children }) => {
   )
 
   em++
-  console.log({ em })
+  if (__DEV__) console.log({ em })
   return (
     <EmployeeContext.Provider value={value}>
       {children}
