@@ -7,7 +7,11 @@ import ErrorBoundary from './ErrorBoundary'
 import FormikCheckbox from './FormikCheckbox'
 import dictionary from '../dictionary'
 const screenWidth = Dimensions.get('window').width
-import { permissionsOrderKeys, permissionsStoreKeys } from '../types/StaffType'
+import {
+  permissionsOrderKeys,
+  permissionsStoreKeys,
+  permissionsItemsKeys
+} from '../types/StaffType'
 import { gStyles } from '../styles'
 import FormEmployeeSections from './FormEmployeeSections'
 
@@ -88,6 +92,19 @@ const FormStaff = ({
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {permissionsStoreKeys.map((permission) => (
+                <FormikCheckbox
+                  style={{ width: checkboxWidth, marginVertical: 4 }}
+                  key={permission}
+                  name={`permissions.store.${permission}`}
+                  label={dictionary(permission)}
+                />
+              ))}
+            </View>
+            <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
+              Permisos de items
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {permissionsItemsKeys.map((permission) => (
                 <FormikCheckbox
                   style={{ width: checkboxWidth, marginVertical: 4 }}
                   key={permission}

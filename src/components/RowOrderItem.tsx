@@ -55,11 +55,10 @@ export const RowOrderItem = ({
   const canCreateItem =
     order.type === order_type.RENT &&
     order.status === order_status.DELIVERED &&
-    permissions.canManageItems
+    permissions?.canCreateItems
 
   const isRent = order.type === order_type.RENT
   const isDeliveredRent = order.status === order_status.DELIVERED && isRent
-  const hasPermissionsToCreateItem = permissions.canManageItems
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -114,7 +113,7 @@ export const RowOrderItem = ({
             text={`Para crear este artículo la orden  debe 
                ${!isRent ? 'ser RENTA ⏳. ' : ''} 
                ${!isDeliveredRent ? 'estar ENTREGADA 🏠. ' : ''}  
-               ${!hasPermissionsToCreateItem ? 'tener PERMISOS' : ''}`}
+               ${!canCreateItem ? 'tener PERMISOS' : ''}`}
           />
         )}
 

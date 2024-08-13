@@ -120,7 +120,10 @@ const labels = {
   canCancelPayments: 'Cancelar pagos',
   canValidatePayments: 'Validar pagos',
   canManageItems: 'Administrar artículos',
-
+  /* ********************************************
+   * PERMISSIONS ITEMS V2
+   *******************************************rz */
+  canViewAllItems: 'Ver todos ',
   /* ********************************************
    * OTHERS
    *******************************************rz */

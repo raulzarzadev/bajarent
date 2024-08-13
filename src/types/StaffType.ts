@@ -112,9 +112,19 @@ export enum permissions_store {
   canManageItems
 }
 
+export enum permissions_items {
+  canCreate,
+  canEdit,
+  canDelete,
+  canViewAllItems
+}
+
 export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
 export type PermissionsStore = Partial<
   Record<keyof typeof permissions_store, boolean>
+>
+export type PermissionsItems = Partial<
+  Record<keyof typeof permissions_items, boolean>
 >
 
 export type StaffPermissions = {
@@ -122,6 +132,7 @@ export type StaffPermissions = {
   isAdmin?: boolean
   order?: Partial<PermissionsOrder>
   store?: Partial<PermissionsStore>
+  items?: Partial<PermissionsItems>
 }
 
 export type PermissionsOrderType = keyof typeof permissions_orders
@@ -132,5 +143,8 @@ export const permissionsOrderKeys = Object.keys(permissions_orders).filter(
 )
 
 export const permissionsStoreKeys = Object.keys(permissions_store).filter(
+  (key) => isNaN(Number(key))
+)
+export const permissionsItemsKeys = Object.keys(permissions_items).filter(
   (key) => isNaN(Number(key))
 )
