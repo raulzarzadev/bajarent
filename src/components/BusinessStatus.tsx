@@ -114,6 +114,8 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
         .map((balanceRow: BalanceRowType) => {
           const inRentItems = balanceRow.inRent.length || 0
           const inStockItems = balanceRow.inStock.length || 0
+
+          if (allFieldsAreEmpty(balanceRow)) return null
           return (
             <View key={balanceRow.section}>
               <Pressable
@@ -255,6 +257,16 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
         })}
     </View>
   )
+}
+
+const allFieldsAreEmpty = (balanceRow: BalanceRowType) => {
+  return Object.keys(balanceRow).every((key) => {
+    if (key === 'section') return false
+    if (Array.isArray(balanceRow[key])) {
+      return !balanceRow[key].length
+    }
+    return !balanceRow[key]
+  })
 }
 
 export const CellItemsE = (props: { items: string[]; label: string }) => {
