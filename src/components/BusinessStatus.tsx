@@ -261,7 +261,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
 
 const allFieldsAreEmpty = (balanceRow: BalanceRowType) => {
   return Object.keys(balanceRow).every((key) => {
-    if (key === 'section') return false
+    if (key === 'section') return true
     if (Array.isArray(balanceRow[key])) {
       return !balanceRow[key].length
     }
