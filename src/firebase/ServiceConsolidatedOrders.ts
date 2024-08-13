@@ -47,8 +47,8 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
       ORDER_QTY_BY_CHUNK,
       Object.values(mapOrders)
     )
-    progress(40)
-
+    const CHUNK_AVERAGE_CHARGE = 0.5
+    progress(100 * CHUNK_AVERAGE_CHARGE)
     //* 4. create chunks
 
     const promisesChunks = chunks.map(async (chunk, i) => {
@@ -62,7 +62,10 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
         orders: obj
       }).then(({ res }) => {
         const progressValue =
-          chunks && chunks.length > 1 ? 50 + (i / (chunks.length - 1)) * 50 : 50
+          chunks && chunks.length > 1
+            ? 100 * CHUNK_AVERAGE_CHARGE +
+              (i / (chunks.length - 1)) * 100 * CHUNK_AVERAGE_CHARGE
+            : 100 * CHUNK_AVERAGE_CHARGE
         progress(progressValue)
         return res.id
       })
