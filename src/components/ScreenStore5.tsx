@@ -185,7 +185,7 @@ const TabClients = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
-  const { storeId } = useStore()
+  const { storeId, storeSections } = useStore()
   const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
@@ -204,7 +204,8 @@ const TabCashbox = () => {
     return await ServiceBalances.createV2(storeId, {
       progress: (p) => {
         setProgress(p)
-      }
+      },
+      storeSections: storeSections.map((s) => s.id)
     })
       .then(async (res) => {
         setBalance(res)

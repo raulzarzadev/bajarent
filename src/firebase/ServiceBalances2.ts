@@ -64,6 +64,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       toDate?: Date
       notSave?: boolean
       progress?: (progress: number) => void
+      storeSections?: string[]
     }
   ): Promise<Partial<BalanceType2>> => {
     if (process.env.PRE_PRODUCTION) console.time('createV2')
@@ -77,14 +78,17 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       const FROM_DATE = fromDate || TODAY_MORNING
       const TO_DATE = toDate || TODAY_NIGHT
 
+      //* GET RENT STORE ORDERS
       const orders = await ServiceOrders.findMany([
         where('storeId', '==', storeId),
         where('type', '==', order_type.RENT)
       ])
       progress?.(10)
 
+      //* GET UNSOLVED REPORTS
       const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
       progress?.(20)
+      //* GET SOLVED REPORTS
       const reportsSolvedToday = await ServiceComments.findMany([
         where('type', '==', 'report'),
         where('solved', '==', true),
@@ -92,6 +96,8 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         where('solvedAt', '<=', TO_DATE)
       ])
       progress?.(30)
+
+      //* GET ALL DATE PAYMENTS
       const { payments } = await getBalancePayments({
         storeId,
         fromDate: FROM_DATE,
@@ -101,13 +107,17 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       })
       progress?.(40)
 
+      //* GET AVAILABLE ITEMS
       const itemsBySections = await ServiceStoreItems.getAvailable({ storeId })
       progress?.(50)
+
+      //* GROUP BY SECTIONS
       const groupedBySections = groupOrdersBySection({
         orders,
         reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])],
         payments,
-        items: itemsBySections
+        items: itemsBySections,
+        storeSections: ops?.storeSections || []
       })
       progress?.(60)
       const newBalance = {
@@ -145,20 +155,28 @@ const groupOrdersBySection = ({
   orders,
   reports,
   payments,
-  items
+  items,
+  storeSections
 }: {
   orders: Partial<OrderType>[]
   reports: Partial<CommentType>[]
   payments: PaymentType[]
   items: Partial<ItemType>[]
+  storeSections?: string[]
 }): Partial<BalanceType2['sections']> => {
+  const WITHOUT_SECTION_NAME = 'withoutSection'
   const groupedSections = {
     all: [],
-    withoutSection: []
+    [WITHOUT_SECTION_NAME]: [],
+    ...storeSections?.reduce((acc, section) => {
+      acc[section] = []
+      return acc
+    }, {})
   }
 
+  // //* GROUP ORDERS BY SECTION
   orders.forEach((order) => {
-    const assignToSection = order.assignToSection || 'withoutSection'
+    const assignToSection = order.assignToSection || WITHOUT_SECTION_NAME
     if (!groupedSections[assignToSection]) {
       groupedSections[order.assignToSection] = []
     }
@@ -166,12 +184,13 @@ const groupOrdersBySection = ({
     groupedSections.all.push(order)
   })
 
+  //* GROUP ORDERS BY TYPE IN EACH SECTION
   const sections = Object.entries(groupedSections).map(
     ([sectionId, orders]: [string, Partial<OrderType>[]]) => {
       // *** *** ASSIGN ITEMS TO SECTION
       let inStock = items
         .filter(
-          (item) => sectionId === (item.assignedSection || 'withoutSection')
+          (item) => sectionId === (item.assignedSection || WITHOUT_SECTION_NAME)
         )
         .map(({ id }) => id)
       if (sectionId === 'all') {

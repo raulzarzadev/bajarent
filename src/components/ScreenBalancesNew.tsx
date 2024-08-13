@@ -59,7 +59,6 @@ const ScreenBalancesNew = ({ navigation }) => {
     const payments = ordersWithPayments.map((o) => o.payments).flat()
     return { paidOrders, payments }
   }
-
   const handleCalculateBalance = async (values: {
     toDate: Date
     fromDate: Date
@@ -67,7 +66,8 @@ const ScreenBalancesNew = ({ navigation }) => {
     ServiceBalances.createV2(storeId, {
       fromDate: values.fromDate,
       toDate: values.toDate,
-      notSave: true
+      notSave: true,
+      storeSections: storeSections.map((s) => s.id)
     }).then((res) => {
       setBalance(res)
     })
