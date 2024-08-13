@@ -23,6 +23,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { useEmployee } from '../../contexts/employeeContext'
 import { ItemStatuses } from '../../types/ItemType'
 import { ServiceItemHistory } from '../../firebase/ServiceItemHistory'
+import { onRegistryEntry } from '../../firebase/actions/item-actions'
 
 //* repaired
 function OrderActions() {
@@ -178,9 +179,8 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
                     pickedUpAt: null,
                     pickedUpBy: null
                   })
-                    .then(console.log)
-                    .catch(console.error)
-                  //* COMMENT ORDER
+                    .then((r) => console.log(r))
+                    .catch((e) => console.log(e)) //* COMMENT ORDER
                   onComment({
                     content: 'Recolección cancelada',
                     orderId: order.id,
@@ -188,8 +188,8 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
                     type: 'comment',
                     isOrderMovement: true
                   })
-                    .then(console.log)
-                    .catch(console.error)
+                    .then((r) => console.log(r))
+                    .catch((e) => console.log(e))
                   order?.items?.forEach((item) => {
                     //* UPDATE ITEM AND CREATE HISTORY ENTRY
                     ServiceStoreItems.update({
@@ -197,17 +197,17 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
                       storeId: order.storeId,
                       itemData: { status: ItemStatuses.rented }
                     })
-                      .then(console.log)
-                      .catch(console.error)
-
-                    ServiceItemHistory.create({
+                      .then((r) => console.log(r))
+                      .catch((e) => console.log(e))
+                    onRegistryEntry({
+                      itemId: item.id,
+                      storeId: order.storeId,
+                      type: 'delivery',
                       orderId: order.id,
-                      type: 'pickup',
-                      content: 'Recolección cancelada',
-                      itemId: item.id
+                      content: 'Recolección cancelada'
                     })
-                      .then(console.log)
-                      .catch(console.error)
+                      .then((r) => console.log(r))
+                      .catch((e) => console.log(e))
                   })
                 }}
               />
