@@ -9,7 +9,7 @@ import { ServicePayments } from './ServicePayments'
 import PaymentType from '../types/PaymentType'
 type Type = ConsolidatedStoreOrdersType
 
-const ORDER_QTY_BY_CHUNK = 2
+const ORDER_QTY_BY_CHUNK = 500
 class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
   constructor() {
     super('consolidatedOrders')
