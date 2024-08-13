@@ -53,8 +53,9 @@ export const RowOrderItem = ({
   const [_item, _setItem] = useState<ItemSelected>(undefined)
 
   const canCreateItem =
-    order.type === order_type.RENT && order.status === order_status.DELIVERED
-  // && permissions?.canCreateItems //FIXME: any one can create items for now
+    order.type === order_type.RENT &&
+    order.status === order_status.DELIVERED &&
+    permissions?.canCreateItems
 
   const isRent = order.type === order_type.RENT
   const isDeliveredRent = order.status === order_status.DELIVERED && isRent

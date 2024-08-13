@@ -108,7 +108,7 @@ const FormStaff = ({
                 <FormikCheckbox
                   style={{ width: checkboxWidth, marginVertical: 4 }}
                   key={permission}
-                  name={`permissions.store.${permission}`}
+                  name={`permissions.items.${permission}`}
                   label={dictionary(permission)}
                 />
               ))}

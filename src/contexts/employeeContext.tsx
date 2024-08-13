@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import StaffType, {
+  PermissionsItems,
   PermissionsOrder,
   PermissionsStore
 } from '../types/StaffType'
@@ -18,6 +19,7 @@ export type EmployeeContextType = {
     isOwner: boolean
     orders: Partial<PermissionsOrder>
     store: Partial<PermissionsStore>
+    items?: Partial<PermissionsItems>
     canEditStaff?: boolean
     canManageItems?: boolean
     canCancelPayments?: boolean
@@ -107,6 +109,7 @@ export const EmployeeContextProvider = ({ children }) => {
         isOwner: isOwner,
         orders: employee?.permissions?.order || {},
         store: employee?.permissions?.store || {},
+        items: employee?.permissions?.items || {},
         canEditStaff:
           !!employee?.permissions?.store?.canEditStaff || isOwner || isAdmin,
         canCancelPayments:
