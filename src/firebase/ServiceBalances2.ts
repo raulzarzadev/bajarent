@@ -66,7 +66,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       progress?: (progress: number) => void
     }
   ): Promise<Partial<BalanceType2>> => {
-    if (__DEV__) console.time('createV2')
+    if (process.env.PRE_PRODUCTION) console.time('createV2')
     const { fromDate, toDate, progress } = ops || {}
 
     try {
@@ -136,7 +136,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
     } catch (error) {
       console.error(error)
     } finally {
-      if (__DEV__) console.timeEnd('createV2')
+      if (process.env.PRE_PRODUCTION) console.timeEnd('createV2')
     }
   }
 }
