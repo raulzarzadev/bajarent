@@ -15,7 +15,7 @@ import OrderType, {
   OrderQuoteType
 } from '../types/OrderType'
 import PaymentType from '../types/PaymentType'
-import { TimePriceType } from '../types/PriceType'
+import { PriceType, TimePriceType } from '../types/PriceType'
 import StoreType from '../types/StoreType'
 import { orderExpireAt } from './orders'
 import { createUUID } from './createId'
@@ -427,5 +427,21 @@ export const onMarkContactAsFavorite = async ({
   onRemoveContact({ contact, orderId })
   return ServiceOrders.update(orderId, {
     contacts: arrayUnion({ ...contact, isFavorite })
+  })
+}
+
+export const onChangeOrderItemTime = async ({
+  orderId,
+  itemId,
+  priceSelected
+}: {
+  orderId: OrderType['id']
+  itemId: string
+  priceSelected: Partial<PriceType>
+}) => {
+  return ServiceOrders.updateItemPrice({
+    orderId,
+    itemId,
+    newPrice: priceSelected
   })
 }

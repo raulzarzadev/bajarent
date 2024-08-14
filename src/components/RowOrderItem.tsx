@@ -22,6 +22,8 @@ import StoreType from '../types/StoreType'
 import { CategoryType } from '../types/RentItem'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import { onAssignItem } from '../firebase/actions/item-actions'
+import FormSelectPrice from './FormSelectPrice'
+import { onChangeOrderItemTime } from '../libs/order-actions'
 
 export const RowOrderItem = ({
   item,
@@ -45,9 +47,7 @@ export const RowOrderItem = ({
   const itemId = item.id
   const orderId = order.id
 
-  //const itemData = items?.find((i) => i?.id === itemId)
-
-  const [itemData, setItemData] = useState<ItemSelected>()
+  const [itemData, setItemData] = useState<ItemType>()
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
@@ -59,6 +59,7 @@ export const RowOrderItem = ({
 
   const isRent = order.type === order_type.RENT
   const isDeliveredRent = order.status === order_status.DELIVERED && isRent
+  const canEditItemPrice = isDeliveredRent
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -103,8 +104,130 @@ export const RowOrderItem = ({
     return
   }
 
+  const [itemPriceSelectedId, setItemPriceSelectedId] = useState<string | null>(
+    item?.priceSelectedId
+  )
+  const itemPrices = categories.find(
+    (c) => c?.id === itemData?.category
+  )?.prices
+
+  const originalPriceId = itemPrices?.find(
+    (p) => p?.id === item?.priceSelectedId
+  ).id
+
   return (
     <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
+
+        <RowItem
+          item={{
+            ...item,
+            ...itemData
+          }}
+          style={{
+            marginVertical: gSpace(2),
+            marginHorizontal: gSpace(2),
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: theme.info,
+            paddingHorizontal: gSpace(2),
+            paddingVertical: gSpace(1),
+            borderRadius: gSpace(2)
+          }}
+        />
+
+        {!itemAlreadyExist && (
+          <Button
+            justIcon
+            size="small"
+            icon="add"
+            color="success"
+            variant="ghost"
+            onPress={() => {
+              createModal.toggleOpen()
+            }}
+            disabled={loading}
+          />
+        )}
+
+        {!!onEdit && (
+          <ButtonConfirm
+            handleConfirm={async () => {}}
+            confirmLabel="Cerrar"
+            confirmVariant="outline"
+            openSize="small"
+            openColor="info"
+            icon="edit"
+            justIcon
+            modalTitle="Editar item"
+            confirmDisabled={loading}
+          >
+            <View style={{ marginBottom: 8 }}>
+              <FormItem
+                values={_item}
+                onSubmit={async (values) => {
+                  return await onEdit(values)
+                }}
+              />
+            </View>
+          </ButtonConfirm>
+        )}
+        {!!canEditItemPrice && (
+          <ButtonConfirm
+            handleConfirm={async () => {
+              onChangeOrderItemTime({
+                orderId,
+                itemId,
+                priceSelected: itemPrices.find(
+                  (p) => p.id === itemPriceSelectedId
+                )
+              })
+            }}
+            confirmLabel="Editar tiempo"
+            confirmVariant="outline"
+            openSize="small"
+            openColor="info"
+            icon="rent"
+            justIcon
+            modalTitle="Cambiar tiempo"
+            confirmDisabled={originalPriceId === itemPriceSelectedId}
+          >
+            <View style={{ marginBottom: 8 }}>
+              <FormSelectPrice
+                prices={itemPrices}
+                value={itemPriceSelectedId}
+                setValue={setItemPriceSelectedId}
+              />
+              {/* <FormItem
+                values={_item}
+                onSubmit={async (values) => {
+                  return await onEdit(values)
+                }}
+              /> */}
+            </View>
+          </ButtonConfirm>
+        )}
+        {!!onPressDelete && (
+          <Button
+            buttonStyles={{ marginLeft: gSpace(2) }}
+            icon="sub"
+            color="error"
+            justIcon
+            onPress={onPressDelete}
+            size="small"
+            disabled={loading}
+          />
+        )}
+      </View>
+
       <StyledModal {...createModal}>
         {!canCreateItem && (
           <TextInfo
@@ -191,81 +314,6 @@ export const RowOrderItem = ({
           </>
         )}
       </StyledModal>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <ModalChangeItem itemId={itemId} orderId={orderId} disabled={loading} />
-        <RowItem
-          item={{
-            ...item,
-            ...itemData
-          }}
-          style={{
-            marginVertical: gSpace(2),
-            marginHorizontal: gSpace(2),
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: theme.info,
-            paddingHorizontal: gSpace(2),
-            paddingVertical: gSpace(1),
-            borderRadius: gSpace(2)
-          }}
-        />
-
-        {!itemAlreadyExist && (
-          <Button
-            justIcon
-            size="small"
-            icon="add"
-            color="success"
-            variant="ghost"
-            onPress={() => {
-              createModal.toggleOpen()
-            }}
-            disabled={loading}
-          />
-        )}
-
-        {!!onEdit && (
-          <ButtonConfirm
-            handleConfirm={async () => {}}
-            confirmLabel="Cerrar"
-            confirmVariant="outline"
-            openSize="small"
-            openColor="info"
-            icon="edit"
-            justIcon
-            modalTitle="Editar item"
-            openDisabled={loading}
-          >
-            <View style={{ marginBottom: 8 }}>
-              <FormItem
-                values={_item}
-                onSubmit={async (values) => {
-                  return await onEdit(values)
-                }}
-              />
-            </View>
-          </ButtonConfirm>
-        )}
-        {!!onPressDelete && (
-          <Button
-            buttonStyles={{ marginLeft: gSpace(2) }}
-            icon="sub"
-            color="error"
-            justIcon
-            onPress={onPressDelete}
-            size="small"
-            disabled={loading}
-          />
-        )}
-      </View>
     </View>
   )
 }

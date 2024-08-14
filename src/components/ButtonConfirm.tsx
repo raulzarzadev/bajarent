@@ -20,6 +20,7 @@ const ButtonConfirm = ({
   confirmColor,
   openSize,
   openDisabled,
+  confirmDisabled,
   onOpen
 }: {
   openLabel?: string
@@ -33,6 +34,7 @@ const ButtonConfirm = ({
   openColor?: ButtonProps['color']
   confirmVariant?: ButtonProps['variant']
   confirmColor?: ButtonProps['color']
+  confirmDisabled?: boolean
   text?: string
   openSize?: ButtonProps['size']
   openDisabled?: ButtonProps['disabled']
@@ -84,7 +86,7 @@ const ButtonConfirm = ({
             buttonStyles={{}}
             color={confirmColor}
             variant={confirmVariant}
-            disabled={sending}
+            disabled={sending || confirmDisabled}
             onPress={async () => {
               setSending(true)
               await handleConfirm()

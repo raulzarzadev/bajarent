@@ -489,6 +489,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     })
     return await this.update(orderId, { items })
   }
+
+  async updateItemPrice({
+    orderId,
+    itemId,
+    newPrice
+  }: {
+    orderId: string
+    itemId: string
+    newPrice: Partial<PriceType>
+  }) {
+    const items = await this.get(orderId).then((res) => res.items)
+    const itemIndex = items.findIndex((item) => item.id === itemId)
+    if (itemIndex < 0) return console.error('Item not found')
+    items[itemIndex].priceSelected = newPrice
+    items[itemIndex].priceSelectedId = newPrice.id
+    return await this.update(orderId, { items })
+  }
 }
 
 export type ExtendReason = 'renew' | 'report' | 'original' | 'extension'
