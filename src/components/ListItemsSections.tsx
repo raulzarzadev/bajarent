@@ -52,7 +52,7 @@ const ListItemsSections = ({
                 {`(${items.length})`}
               </Text>
               <RowSectionItemsE
-                items={items}
+                items={items.sort((a, b) => a.number.localeCompare(b.number))}
                 itemSelected={itemSelected}
                 onPressItem={(id) => {
                   if (onPressItem) {
