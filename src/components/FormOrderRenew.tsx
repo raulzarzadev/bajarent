@@ -14,6 +14,7 @@ import PaymentType from '../types/PaymentType'
 import { onComment, onExtend_V2, onPay } from '../libs/order-actions'
 import { useNavigation } from '@react-navigation/native'
 import FormikInputImage from './FormikInputImage'
+import theme from '../theme'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
@@ -115,16 +116,18 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
               {/* <DateCell label="Fecha de vencimiento" date={order.expireAt} /> */}
               {values?.items?.[0]?.priceSelected && (
                 <DateCell
-                  label="NUEVA Fecha de vencimiento "
+                  dateBold
+                  label="Nuevo vencimiento"
                   date={expireDate2({
                     startedAt: order?.expireAt,
                     price: values?.items?.[0]?.priceSelected
                   })}
+                  borderColor={theme.success}
                 />
               )}
             </View>
 
-            <View style={{ marginVertical: 8 }}>
+            <View style={{ marginVertical: 16 }}>
               <InputCheckbox
                 label="Agrega pago"
                 value={addPay}

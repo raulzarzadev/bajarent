@@ -180,41 +180,7 @@ export const RowOrderItem = ({
             </View>
           </ButtonConfirm>
         )}
-        {!!canEditItemPrice && (
-          <ButtonConfirm
-            handleConfirm={async () => {
-              onChangeOrderItemTime({
-                orderId,
-                itemId,
-                priceSelected: itemPrices.find(
-                  (p) => p.id === itemPriceSelectedId
-                )
-              })
-            }}
-            confirmLabel="Editar tiempo"
-            confirmVariant="outline"
-            openSize="small"
-            openColor="info"
-            icon="rent"
-            justIcon
-            modalTitle="Cambiar tiempo"
-            confirmDisabled={originalPriceId === itemPriceSelectedId}
-          >
-            <View style={{ marginBottom: 8 }}>
-              <FormSelectPrice
-                prices={itemPrices}
-                value={itemPriceSelectedId}
-                setValue={setItemPriceSelectedId}
-              />
-              {/* <FormItem
-                values={_item}
-                onSubmit={async (values) => {
-                  return await onEdit(values)
-                }}
-              /> */}
-            </View>
-          </ButtonConfirm>
-        )}
+
         {!!onPressDelete && (
           <Button
             buttonStyles={{ marginLeft: gSpace(2) }}

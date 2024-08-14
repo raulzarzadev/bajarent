@@ -22,6 +22,9 @@ import ButtonConfirm from './ButtonConfirm'
 import FormItem from './FormItem'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import ModalSelectCategoryPrice, {
+  ModalSelectCategoryPriceE
+} from './ModalSelectCategoryPrice'
 
 const FormikSelectCategories = ({
   name,
@@ -83,6 +86,18 @@ const FormikSelectCategories = ({
   const modal = useModal({ title: 'Agregar artículo' })
   const handleChangeItemSelected = (items: ItemSelected[]) => {
     helpers.setValue(items)
+  }
+  const handleChangeItemPrice = (itemId: string, price: Partial<PriceType>) => {
+    const newItems = items.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          priceSelected: price
+        }
+      }
+      return item
+    })
+    helpers.setValue(newItems)
   }
   return (
     <>
@@ -178,7 +193,11 @@ const FormikSelectCategories = ({
           </View>
         </StyledModal>
       </View>
-      <ListItems items={items} handleRemoveItem={handleRemoveItem} />
+      <ListItems
+        items={items}
+        handleRemoveItem={handleRemoveItem}
+        handleChangeItemPrice={handleChangeItemPrice}
+      />
       <Totals items={items} />
     </>
   )
@@ -186,18 +205,24 @@ const FormikSelectCategories = ({
 
 const ListItems = ({
   items,
-  handleRemoveItem
+  handleRemoveItem,
+  handleChangeItemPrice
 }: {
   items: ItemSelected[]
   handleRemoveItem: (itemId: string) => void
+  handleChangeItemPrice?: (itemId: string, price: Partial<PriceType>) => void
 }) => {
   return (
     <FlatList
       data={items}
       renderItem={({ item, index }) => (
         <ItemRow
-          item={item}
+          item={item as ItemType}
           onPressDelete={() => handleRemoveItem(item.id)}
+          handleChangeItemPrice={(price) => {
+            console.log({ price })
+            handleChangeItemPrice?.(item.id, price)
+          }}
         ></ItemRow>
       )}
       keyExtractor={(item) => item.id}
@@ -210,17 +235,19 @@ export const ItemRow = ({
   onPressDelete,
   onEdit,
   createItem,
-  orderId
+  orderId,
+  handleChangeItemPrice
 }: {
-  item: ItemSelected
+  item: ItemType
   onPressDelete?: () => void
   onEdit?: (values: ItemSelected) => void | Promise<void>
   createItem?: boolean
   orderId?: string
+  handleChangeItemPrice?: (price: Partial<PriceType>) => void
 }) => {
   const { storeId } = useStore()
   const [shouldCreateItem, setShouldCreateItem] = useState(false)
-  const [_item, _setItem] = useState<ItemSelected>(item)
+  const [_item, _setItem] = useState<ItemType & ItemSelected>(item)
   useEffect(() => {
     ServiceStoreItems.get({ itemId: item.id, storeId })
       .then((res) => {
@@ -233,9 +260,7 @@ export const ItemRow = ({
       })
   }, [item.id])
 
-  //@ts-ignore
   const assignedSection = _item?.assignedSection || ''
-  //@ts-ignore
   const category = _item?.category || ''
   const brand = _item?.brand || ''
   const number = _item?.number || ''
@@ -249,6 +274,15 @@ export const ItemRow = ({
         justifyContent: 'center'
       }}
     >
+      <View style={{ marginRight: 6 }}>
+        <ModalSelectCategoryPriceE
+          categoryId={_item?.category}
+          handleSelectPrice={(res) => {
+            handleChangeItemPrice(res)
+          }}
+          priceSelectedId={_item?.priceSelectedId}
+        />
+      </View>
       <RowItem
         item={{ ...item, ..._item }}
         style={{
@@ -305,6 +339,7 @@ export const ItemRow = ({
           </View>
         </ButtonConfirm>
       )}
+
       {!!onEdit && (
         <ButtonConfirm
           handleConfirm={async () => {}}
@@ -326,6 +361,7 @@ export const ItemRow = ({
           </View>
         </ButtonConfirm>
       )}
+
       {!!onPressDelete && (
         <Button
           buttonStyles={{ marginLeft: gSpace(2) }}
