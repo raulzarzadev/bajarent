@@ -59,7 +59,7 @@ const RowSectionItems = ({
     <FlatList
       style={{ margin: 'auto', maxWidth: '100%', paddingBottom: 12 }}
       horizontal
-      data={items}
+      data={items.sort((a, b) => a.number.localeCompare(b.number))}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <View>
