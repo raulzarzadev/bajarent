@@ -423,7 +423,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     time,
     startAt,
     items,
-    content
+    content = null
   }: {
     orderId: string
     reason: ExtendReason

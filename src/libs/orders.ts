@@ -232,6 +232,23 @@ export const orderExtensionsBetweenDates = ({
     .map((e) => ({ ...e, orderId: order.id }))
 }
 
+export const getTodayRenews = ({
+  orders
+}: {
+  orders: Partial<OrderType>[]
+}) => {
+  const renewsToday = orders
+    .map((order) => {
+      const todayExtensions = Object.values(order?.extensions || {}).filter(
+        (e) => e.reason === 'renew' && isToday(asDate(e.createdAt))
+      )
+      return todayExtensions.map((e) => ({ ...e, orderId: order.id }))
+    })
+
+    .flat()
+  return renewsToday
+}
+
 export const isRenewedToday = (order: Partial<OrderType>): boolean => {
   const lastExtension = Object.values(order?.extensions || {})
     .filter((e) => e.reason === 'renew')

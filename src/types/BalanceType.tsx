@@ -34,6 +34,7 @@ export type Balance_V2 = {
   orderExtensions?: OrderExtensionType[]
   createdItems?: string[]
   retiredItems?: string[]
+  createdOrders?: string[]
 }
 export type BalanceRowType = {
   section?: string

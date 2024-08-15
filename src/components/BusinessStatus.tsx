@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import ListRow, { ListRowField } from './ListRow'
 import {
   BalanceRowKeyType,
@@ -11,20 +11,20 @@ import { useStore } from '../contexts/storeContext'
 import { BalanceAmountsE } from './BalanceAmounts'
 import ErrorBoundary from './ErrorBoundary'
 import SpanOrder from './SpanOrder'
-import { useNavigation } from '@react-navigation/native'
-import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { translateTime } from '../libs/expireDate'
 import asDate, { dateFormat } from '../libs/utils-date'
-import Icon from './Icon'
 import { OrderExtensionType } from '../types/OrderType'
+import Button from './Button'
+import { id } from 'date-fns/locale'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
   const { storeSections, storeId } = useStore()
+  const { toOrders } = useMyNav()
   const table: {
     field: keyof BalanceRowType | 'allItems'
     label: string
@@ -91,10 +91,40 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
 
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
-      <View style={{ marginVertical: 16 }}>
+      <View
+        style={{
+          marginVertical: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap'
+        }}
+      >
         <Extensions extensions={balance.orderExtensions} />
         <CellItemsE items={balance.createdItems} label="Items creados" />
         <CellItemsE items={balance.retiredItems} label="Items retirados" />
+        <ExpandibleList
+          onPressRow={(id) => {
+            toOrders({ id })
+          }}
+          onPressTitle={() => {
+            toOrders({ ids: balance.createdOrders })
+          }}
+          items={balance.createdOrders.map((o) => {
+            return {
+              id: o,
+              content: (
+                <SpanOrder
+                  orderId={o}
+                  showName
+                  showTime
+                  showLastExtension
+                  showDatePaymentsAmount={balance.createdAt}
+                />
+              )
+            }
+          })}
+          label="Ordenes creadas"
+        />
       </View>
       {/* HEADER */}
       <ListRow
@@ -202,6 +232,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                       sectionSelected={balanceRow.section}
                       sections={balance.sections}
                       day={balance.createdAt}
+                      defaultExpanded
                     />
                     <CellOrders
                       label={'Renovadas'}
@@ -209,6 +240,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                       sectionSelected={balanceRow.section}
                       sections={balance.sections}
                       day={balance.createdAt}
+                      defaultExpanded
                     />
                     <CellOrders
                       label={'Pagadas'}
@@ -216,12 +248,14 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                       sectionSelected={balanceRow.section}
                       sections={balance.sections}
                       day={balance.createdAt}
+                      defaultExpanded
                     />
                     <CellOrders
                       label={'Recogidas'}
                       field="pickedUpToday"
                       sectionSelected={balanceRow.section}
                       sections={balance.sections}
+                      defaultExpanded
                     />
                     <CellOrders
                       label={'Reportes pendientes'}
@@ -248,14 +282,14 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                       sections={balance.sections}
                       hiddenList
                     />
+                    <CellItemsE
+                      items={
+                        balance.sections.find((s) => s?.section === selectedRow)
+                          ?.inStock
+                      }
+                      label="En carro"
+                    ></CellItemsE>
                   </View>
-                  <CellItemsE
-                    items={
-                      balance.sections.find((s) => s?.section === selectedRow)
-                        ?.inStock
-                    }
-                    label="En carro"
-                  ></CellItemsE>
                   <View>
                     <Text style={[gStyles.h2, { marginTop: 8 }]}>Pagos</Text>
                   </View>
@@ -294,7 +328,6 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  const { items: storeItems } = useEmployee()
   const { storeId } = useStore()
   const { toItems } = useMyNav()
   const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>()
@@ -304,43 +337,22 @@ export const CellItems = ({
       { fromCache: true }
     ).then((res) => setItemsData(res))
   }, [items])
+
   return (
-    <View>
-      <Pressable
-        onPress={() => {
-          toItems({ ids: items })
-        }}
-      >
-        <Text style={gStyles.h3}>
-          {label}
-          <Text style={gStyles.helper}>{`(${items?.length || 0})`}</Text>
-        </Text>
-      </Pressable>
-      <View>
-        {items?.map((itemId, index) => {
-          const item = itemsData?.find((i) => i?.id === itemId)
-          return (
-            <Pressable
-              key={item?.id || index}
-              onPress={() => {
-                toItems({ id: itemId })
-              }}
-            >
-              {item ? (
-                <View
-                  style={{ flexDirection: 'row', justifyContent: 'center' }}
-                >
-                  <Text>{item?.categoryName} </Text>
-                  <Text>{item?.number} </Text>
-                </View>
-              ) : (
-                <Text style={{ textAlign: 'center' }}>{itemId}</Text>
-              )}
-            </Pressable>
-          )
-        })}
-      </View>
-    </View>
+    <ExpandibleList
+      label={label}
+      onPressTitle={() => toItems({ ids: items })}
+      onPressRow={(id) => toItems({ id })}
+      items={itemsData?.map((item) => ({
+        id: item.id,
+        content: (
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Text>{item.categoryName} </Text>
+            <Text>{item.number} </Text>
+          </View>
+        )
+      }))}
+    />
   )
 }
 
@@ -362,53 +374,105 @@ export type CellOrdersProps = {
   sectionSelected: string
   hiddenList?: boolean
   day?: Date | Timestamp
+  defaultExpanded?: boolean
 }
 const CellOrders = ({
   label,
   sections,
   field,
   sectionSelected,
-  hiddenList,
-  day
+  day,
+  defaultExpanded
 }: CellOrdersProps) => {
   const section = sections?.find((s) => s.section === sectionSelected)
   const orders = section?.[field] as string[]
   const ordersUnique = removeDuplicates(orders)
+  const { toOrders } = useMyNav()
   if (!orders.length) return null
-  const { navigate } = useNavigation()
-  return (
-    <View style={{ margin: 4, maxWidth: '100%' }}>
-      <Pressable
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'ScreenOrders',
-            params: {
-              title: label,
-              orders: orders
-            }
-          })
-        }}
-      >
-        <Text style={gStyles.h3}>
-          {label}
-          <Text style={gStyles.helper}>({ordersUnique?.length || 0})</Text>
-        </Text>
-      </Pressable>
 
-      {!hiddenList &&
-        ordersUnique?.map((orderId) => {
+  return (
+    <ExpandibleList
+      defaultExpanded={defaultExpanded}
+      label={label}
+      onPressRow={(id) => {
+        toOrders({ id })
+      }}
+      onPressTitle={() => {
+        toOrders({ ids: orders })
+      }}
+      items={orders.map((o) => ({
+        id: o,
+        content: (
+          <SpanOrder
+            orderId={o}
+            showName
+            showTime
+            showLastExtension
+            showDatePaymentsAmount={day}
+          />
+        )
+      }))}
+    />
+  )
+}
+
+export const ExpandibleList = ({
+  label,
+  items = [],
+  onPressRow,
+  onPressTitle,
+  defaultExpanded = false
+}: {
+  label: string
+  items: { id: string; content: string | ReactNode }[]
+  onPressRow: (id: string) => void
+  onPressTitle?: () => void
+  defaultExpanded?: boolean
+}) => {
+  const [expanded, setExpanded] = React.useState(defaultExpanded)
+
+  const uniqueItems = removeDuplicates(items.map((i) => i.id))
+
+  return (
+    <View style={{ marginVertical: 8, marginHorizontal: 6 }}>
+      <View style={{ flexDirection: 'row' }}>
+        <Pressable onPress={onPressTitle}>
+          <Text style={[gStyles.h3, { marginRight: 4 }]}>
+            {label}
+            {`(${items?.length || 0})`}
+          </Text>
+        </Pressable>
+        <Button
+          size="small"
+          variant="ghost"
+          justIcon
+          color="accent"
+          icon={expanded ? 'rowDown' : 'rowRight'}
+          onPress={() => setExpanded(!expanded)}
+        />
+      </View>
+
+      {expanded &&
+        uniqueItems.map((item, index) => {
+          const itemData = items.find((i) => i.id === item)
+          const countItems = items.filter((i) => i.id === item)?.length || 0
           return (
-            <View key={orderId} style={{ marginVertical: 2 }}>
-              <SpanOrder
-                orderId={orderId}
-                showName
-                showTime
-                redirect
-                showLastExtension
-                showDatePaymentsAmount={day}
-              />
-            </View>
+            <Pressable
+              key={`${itemData.id}-${index}`}
+              onPress={() => onPressRow(itemData.id)}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                marginVertical: 2
+              }}
+            >
+              <View style={{ width: 20 }}>
+                {countItems > 1 && (
+                  <Text style={[gStyles.tBold]}>{countItems}*</Text>
+                )}
+              </View>
+              <Text key={index}>{itemData.content}</Text>
+            </Pressable>
           )
         })}
     </View>
@@ -419,45 +483,46 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
   const { toOrders } = useMyNav()
   return (
     <View>
-      <Text style={gStyles.h3}>Extensiones ({extensions.length})</Text>
-      {extensions
-        ?.sort(
-          (a, b) =>
-            asDate(a.createdAt).getTime() - asDate(b.createdAt).getTime()
-        )
-        ?.map((extension) => {
-          return (
-            <Pressable
-              key={extension.id}
-              onPress={() => {
-                toOrders({ id: extension.orderId })
-              }}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignContent: 'center'
-              }}
-            >
-              <Text
+      <ExpandibleList
+        label="Extensiones"
+        onPressTitle={() => {
+          toOrders({
+            ids: extensions.map((e) => e.orderId),
+            idsTitle: 'Extensiones'
+          })
+        }}
+        items={extensions
+          ?.sort(
+            (a, b) =>
+              asDate(a.createdAt).getTime() - asDate(b.createdAt).getTime()
+          )
+          .map((extension) => ({
+            id: extension.id,
+            content: (
+              <View
                 style={{
-                  textAlignVertical: 'center',
-                  fontWeight: 'bold',
-                  marginRight: 4
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignContent: 'center'
                 }}
               >
-                {translateTime(extension.time, { shortLabel: true })}
-              </Text>
-              <SpanOrder orderId={extension.orderId} showName />
-              {/* <Text style={{ textAlignVertical: 'center' }}>
-                  {dateFormat(asDate(extension.startAt))}
+                <Text
+                  style={{
+                    textAlignVertical: 'center',
+                    fontWeight: 'bold',
+                    marginRight: 4
+                  }}
+                >
+                  {translateTime(extension.time, { shortLabel: true })}
                 </Text>
-                <Icon icon="rowRight" size={22} />
-                <Text style={{ textAlignVertical: 'center' }}>
-                  {dateFormat(asDate(extension.expireAt))}
-                </Text> */}
-            </Pressable>
-          )
-        })}
+                <SpanOrder orderId={extension.orderId} showName />
+              </View>
+            )
+          }))}
+        onPressRow={(id) => {
+          toOrders({ id })
+        }}
+      />
     </View>
   )
 }

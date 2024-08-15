@@ -5,7 +5,11 @@ import { ServiceOrders } from './ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isAfter, isBefore, isToday } from 'date-fns'
-import { isRenewedToday, orderExtensionsBetweenDates } from '../libs/orders'
+import {
+  getTodayRenews,
+  isRenewedToday,
+  orderExtensionsBetweenDates
+} from '../libs/orders'
 import { ServiceComments } from './ServiceComments'
 import { CommentType } from '../types/CommentType'
 import { getBalancePayments } from '../libs/balance'
@@ -85,6 +89,13 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         where('type', '==', order_type.RENT)
       ])
 
+      const createdIntDate = orders.filter(
+        (order) =>
+          isAfter(asDate(order.createdAt), asDate(FROM_DATE)) &&
+          isBefore(asDate(order.createdAt), asDate(TO_DATE))
+      )
+      console.log({ createdIntDate })
+
       //* GET ORDER EXTENSIONS IN DATES
 
       const extensionsInDate = orders
@@ -155,7 +166,8 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         storeId,
         createdItems: createItemsInDate.map((i) => i.id) || [],
         retiredItems: retiredItemsInDate.map((i) => i.id) || [],
-        orderExtensions: extensionsInDate
+        orderExtensions: extensionsInDate,
+        createdOrders: createdIntDate.map((i) => i.id) || []
       }
 
       if (ops?.notSave) {
@@ -263,6 +275,8 @@ const groupOrdersBySection = ({
           order.status === order_status.DELIVERED && isRenewedToday(order)
       )
 
+      const renewsToday = getTodayRenews({ orders })
+      console.log({ renewsToday })
       const cancelledToday = orders.filter(
         (order) =>
           order.status === order_status.CANCELLED &&
@@ -296,7 +310,7 @@ const groupOrdersBySection = ({
         pickedUpToday: getJustIds(pickedUpToday),
         section: sectionId,
         inRent: getJustIds(inRent),
-        renewedToday: getJustIds(renewedToday),
+        renewedToday: renewsToday.map((r) => r.orderId),
         solvedToday: getJustIds(solvedToday),
         reported: filterOutElements(
           getJustIds(reported),

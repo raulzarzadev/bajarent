@@ -14,8 +14,6 @@ import {
   MdOutlineSearch,
   MdLocationOff,
   MdOutlineDone,
-  MdChevronLeft,
-  MdChevronRight,
   MdSettings,
   MdDownload,
   MdOutlinePhotoCamera,
@@ -35,7 +33,6 @@ import {
   MdStarHalf
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
-import { IoKeyOutline } from 'react-icons/io5'
 import { IoPricetagsOutline } from 'react-icons/io5'
 import { FaTruckPickup } from 'react-icons/fa6'
 import { LuCalendarClock } from 'react-icons/lu'
@@ -65,6 +62,12 @@ import { FaCashRegister } from 'react-icons/fa'
 import { FcCancel } from 'react-icons/fc'
 import { RxLapTimer } from 'react-icons/rx'
 import { PiSiren } from 'react-icons/pi'
+import {
+  GoChevronUp,
+  GoChevronDown,
+  GoChevronLeft,
+  GoChevronRight
+} from 'react-icons/go'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -133,8 +136,10 @@ const icons = {
   // order: ReceiptLongIcon,
   // change: ChangeCircleIcon,
   // google: GoogleIcon
-  rowLeft: MdChevronLeft,
-  rowRight: MdChevronRight,
+  rowLeft: GoChevronLeft,
+  rowRight: GoChevronRight,
+  rowDown: GoChevronDown,
+  rowUp: GoChevronUp,
   settings: MdSettings,
   download: MdDownload,
   upload: MdUpload,
