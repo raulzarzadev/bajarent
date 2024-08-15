@@ -344,8 +344,6 @@ export const CellItems = ({
     ).then((res) => setItemsData(res))
   }, [items])
 
-  console.log('oras', items, itemsData)
-
   return (
     <ExpandibleListE
       label={label}
