@@ -88,6 +88,12 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       setSelectedRow(rowId)
     }
   }
+  const [createdItems, setCreatedItems] = React.useState<Partial<string>[]>()
+  const [retiredItems, setRetiredItems] = React.useState<Partial<string>[]>()
+  useEffect(() => {
+    setCreatedItems(balance?.createdItems || [])
+    setRetiredItems(balance?.retiredItems || [])
+  }, [balance])
 
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
@@ -99,17 +105,17 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
           flexWrap: 'wrap'
         }}
       >
-        <Extensions extensions={balance.orderExtensions} />
-        <CellItemsE items={balance.createdItems} label="Items creados" />
-        <CellItemsE items={balance.retiredItems} label="Items retirados" />
+        <Extensions extensions={balance?.orderExtensions} />
+        <CellItemsE items={createdItems} label="Items creados" />
+        <CellItemsE items={retiredItems} label="Items retirados" />
         <ExpandibleList
           onPressRow={(id) => {
             toOrders({ id })
           }}
           onPressTitle={() => {
-            toOrders({ ids: balance.createdOrders })
+            toOrders({ ids: balance?.createdOrders })
           }}
-          items={balance.createdOrders.map((o) => {
+          items={balance?.createdOrders?.map((o) => {
             return {
               id: o,
               content: (
@@ -118,7 +124,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                   showName
                   showTime
                   showLastExtension
-                  showDatePaymentsAmount={balance.createdAt}
+                  showDatePaymentsAmount={balance?.createdAt}
                 />
               )
             }
@@ -338,8 +344,10 @@ export const CellItems = ({
     ).then((res) => setItemsData(res))
   }, [items])
 
+  console.log('oras', items, itemsData)
+
   return (
-    <ExpandibleList
+    <ExpandibleListE
       label={label}
       onPressTitle={() => toItems({ ids: items })}
       onPressRow={(id) => toItems({ id })}
@@ -416,19 +424,25 @@ const CellOrders = ({
   )
 }
 
+export const ExpandibleListE = (props: ExpandibleListProps) => (
+  <ErrorBoundary componentName="ExpandibleList">
+    <ExpandibleList {...props} />
+  </ErrorBoundary>
+)
+export type ExpandibleListProps = {
+  label: string
+  items: { id: string; content: string | ReactNode }[]
+  onPressRow: (id: string) => void
+  onPressTitle?: () => void
+  defaultExpanded?: boolean
+}
 export const ExpandibleList = ({
   label,
   items = [],
   onPressRow,
   onPressTitle,
   defaultExpanded = false
-}: {
-  label: string
-  items: { id: string; content: string | ReactNode }[]
-  onPressRow: (id: string) => void
-  onPressTitle?: () => void
-  defaultExpanded?: boolean
-}) => {
+}: ExpandibleListProps) => {
   const [expanded, setExpanded] = React.useState(defaultExpanded)
 
   const uniqueItems = removeDuplicates(items.map((i) => i.id))
