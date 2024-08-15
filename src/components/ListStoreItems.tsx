@@ -15,6 +15,7 @@ import { onRetireItem } from '../firebase/actions/item-actions'
 import theme, { colors } from '../theme'
 import Icon from './Icon'
 import { ItemFixDetails } from './ItemDetails'
+import { useAuth } from '../contexts/authContext'
 
 const OPACITY_ROW_COLOR = '66'
 
@@ -37,6 +38,7 @@ const ListStoreItems = ({
 
   const { toItems } = useMyNav()
   const { storeId, categories, storeSections } = useStore()
+  const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
@@ -66,7 +68,7 @@ const ListStoreItems = ({
     }
     const promises = ids.map(async (id) => {
       try {
-        await onRetireItem({ storeId, itemId: id })
+        await onRetireItem({ storeId, itemId: id, userId: user?.id })
       } catch (error) {
         console.error({ error })
         return error

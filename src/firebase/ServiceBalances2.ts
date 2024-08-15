@@ -86,17 +86,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       ])
 
       //* GET ORDER EXTENSIONS IN DATES
-      // const extendedInDate = orders.filter(
-      //   (order) =>
-      //     orderExtensionsBetweenDates({
-      //       order,
-      //       fromDate: FROM_DATE,
-      //       toDate: TO_DATE,
-      //       reason: 'extension'
-      //     })?.length > 0
-      // )
 
-      // console.log({ extendedInDate })
       const extensionsInDate = orders
         .map((order) => {
           return Object.values(order?.extensions || {})
@@ -109,6 +99,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
             )
         })
         .flat()
+
       progress?.(10)
 
       //* GET UNSOLVED REPORTS
@@ -134,7 +125,20 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       progress?.(40)
 
       //* GET AVAILABLE ITEMS
-      const itemsBySections = await ServiceStoreItems.getAvailable({ storeId })
+      const availableItems = await ServiceStoreItems.getAvailable({ storeId })
+      const createItemsInDate = await ServiceStoreItems.getFieldBetweenDates({
+        storeId,
+        field: 'createdAt',
+        fromDate: FROM_DATE,
+        toDate: TO_DATE
+      })
+      const retiredItemsInDate = await ServiceStoreItems.getFieldBetweenDates({
+        storeId,
+        field: 'retiredAt',
+        fromDate: FROM_DATE,
+        toDate: TO_DATE
+      })
+
       progress?.(50)
 
       //* GROUP BY SECTIONS
@@ -142,15 +146,15 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         orders,
         reports: [...(reportsSolvedToday || []), ...(reportsUnsolved || [])],
         payments,
-        items: itemsBySections,
+        items: availableItems,
         storeSections: ops?.storeSections || []
       })
       progress?.(60)
       const newBalance: Partial<BalanceType2> = {
         sections: groupedBySections,
         storeId,
-        createdItems: [],
-        retiredItems: [],
+        createdItems: createItemsInDate.map((i) => i.id) || [],
+        retiredItems: retiredItemsInDate.map((i) => i.id) || [],
         orderExtensions: extensionsInDate
       }
 

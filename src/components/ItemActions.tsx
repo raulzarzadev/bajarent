@@ -4,13 +4,18 @@ import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
 import InputRadios from './InputRadios'
-import { onChangeItemSection } from '../firebase/actions/item-actions'
+import {
+  onChangeItemSection,
+  onReactiveItem,
+  onRetireItem
+} from '../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
 import useMyNav from '../hooks/useMyNav'
 import InputTextStyled from './InputTextStyled'
 import ButtonDeleteItem from './ButtonDeleteItem'
+import { useAuth } from '../contexts/authContext'
 
 type Actions =
   | 'details'
@@ -35,6 +40,7 @@ const ItemActions = ({
   const itemSection = item?.assignedSection || ''
   const needFix = item?.needFix
   const { storeSections, storeId } = useStore()
+  const { user } = useAuth()
   const [sectionId, setSectionId] = React.useState<string | null>(
     itemSection || null
   )
@@ -96,26 +102,11 @@ const ItemActions = ({
             text={`${retiredItem ? 'Reactivar' : 'Dar de baja'}`}
             handleConfirm={async () => {
               setDisabled(true)
-              await ServiceStoreItems.updateField({
-                storeId,
-                itemId,
-                field: 'status',
-                value: retiredItem ? 'pickedUp' : 'retired'
-              })
-                .then((r) => console.log(r))
-                .catch((e) => console.error(e))
-              await ServiceStoreItems.addEntry({
-                storeId,
-                itemId,
-                entry: {
-                  type: !retiredItem ? 'retire' : 'reactivate',
-                  content: !retiredItem ? 'Dada de baja' : 'Reactivada',
-                  itemId
-                }
-              })
-                .then((r) => console.log(r))
-                .catch((e) => console.error(e))
-              onAction?.('retire')
+              if (retiredItem) {
+                onReactiveItem({ itemId, storeId })
+              } else {
+                onRetireItem({ itemId, storeId, userId: user.id })
+              }
               setDisabled(false)
               return
             }}

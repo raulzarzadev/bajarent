@@ -93,6 +93,8 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
       <View style={{ marginVertical: 16 }}>
         <Extensions extensions={balance.orderExtensions} />
+        <CellItemsE items={balance.createdItems} label="Items creados" />
+        <CellItemsE items={balance.retiredItems} label="Items retirados" />
       </View>
       {/* HEADER */}
       <ListRow
@@ -417,7 +419,7 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
   const { toOrders } = useMyNav()
   return (
     <View>
-      <Text style={gStyles.h2}>Extensiones</Text>
+      <Text style={gStyles.h3}>Extensiones ({extensions.length})</Text>
       {extensions
         ?.sort(
           (a, b) =>

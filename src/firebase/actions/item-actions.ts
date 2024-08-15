@@ -163,19 +163,45 @@ export const onRentItem = async ({ storeId, itemId, orderId }) => {
   //   .then((res) => console.log({ res }))
   //   .catch((err) => console.error({ err }))
 }
-export const onRetireItem = async ({ storeId, itemId }) => {
-  await ServiceStoreItems.updateField({
+
+export const onReactiveItem = async ({ storeId, itemId }) => {
+  ServiceStoreItems.update({
     storeId,
     itemId,
-    field: 'status',
-    value: 'retired'
+    itemData: {
+      status: 'pickedUp',
+      retiredAt: null,
+      retiredBy: null
+    }
+  })
+  await ServiceStoreItems.addEntry({
+    storeId,
+    itemId,
+    entry: {
+      type: 'reactivate',
+      content: 'Reactivada',
+      itemId
+    }
+  })
+
+  return
+}
+export const onRetireItem = async ({ storeId, itemId, userId }) => {
+  ServiceStoreItems.update({
+    storeId,
+    itemId,
+    itemData: {
+      status: 'retired',
+      retiredAt: new Date(),
+      retiredBy: userId
+    }
   })
   await ServiceStoreItems.addEntry({
     storeId,
     itemId,
     entry: {
       type: 'retire',
-      content: 'Baja',
+      content: 'Dada de baja',
       itemId
     }
   })

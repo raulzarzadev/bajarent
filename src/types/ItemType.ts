@@ -29,6 +29,8 @@ export type ItemBase = {
   needFix?: boolean
   isRented?: boolean
   isPickedUp?: boolean
+  retiredAt?: Date
+  retiredBy?: string
 }
 
 type ItemType = BaseType & ItemBase
