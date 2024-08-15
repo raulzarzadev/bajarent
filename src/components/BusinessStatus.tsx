@@ -17,6 +17,10 @@ import useMyNav from '../hooks/useMyNav'
 import { Timestamp } from 'firebase/firestore'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { translateTime } from '../libs/expireDate'
+import asDate, { dateFormat } from '../libs/utils-date'
+import Icon from './Icon'
+import { OrderExtensionType } from '../types/OrderType'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -87,6 +91,9 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
 
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
+      <View style={{ marginVertical: 16 }}>
+        <Extensions extensions={balance.orderExtensions} />
+      </View>
       {/* HEADER */}
       <ListRow
         fields={table.map(({ label, width }) => ({
@@ -102,6 +109,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
           width
         }))}
       />
+
       {/* ROWS */}
       {balance?.sections
         ?.sort((a, b) => {
@@ -399,6 +407,53 @@ const CellOrders = ({
                 showDatePaymentsAmount={day}
               />
             </View>
+          )
+        })}
+    </View>
+  )
+}
+
+const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
+  const { toOrders } = useMyNav()
+  return (
+    <View>
+      <Text style={gStyles.h2}>Extensiones</Text>
+      {extensions
+        ?.sort(
+          (a, b) =>
+            asDate(a.createdAt).getTime() - asDate(b.createdAt).getTime()
+        )
+        ?.map((extension) => {
+          return (
+            <Pressable
+              key={extension.id}
+              onPress={() => {
+                toOrders({ id: extension.orderId })
+              }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignContent: 'center'
+              }}
+            >
+              <Text
+                style={{
+                  textAlignVertical: 'center',
+                  fontWeight: 'bold',
+                  marginRight: 4
+                }}
+              >
+                {translateTime(extension.time, { shortLabel: true })}
+              </Text>
+              <SpanOrder orderId={extension.orderId} showName />
+              {/* <Text style={{ textAlignVertical: 'center' }}>
+                  {dateFormat(asDate(extension.startAt))}
+                </Text>
+                <Icon icon="rowRight" size={22} />
+                <Text style={{ textAlignVertical: 'center' }}>
+                  {dateFormat(asDate(extension.expireAt))}
+                </Text> */}
+            </Pressable>
           )
         })}
     </View>

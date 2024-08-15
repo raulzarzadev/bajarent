@@ -4,14 +4,15 @@ import { BalanceType2 } from '../types/BalanceType'
 import { ServiceOrders } from './ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import asDate, { endDate, startDate } from '../libs/utils-date'
-import { isToday } from 'date-fns'
-import { isRenewedToday } from '../libs/orders'
+import { isAfter, isBefore, isToday } from 'date-fns'
+import { isRenewedToday, orderExtensionsBetweenDates } from '../libs/orders'
 import { ServiceComments } from './ServiceComments'
 import { CommentType } from '../types/CommentType'
 import { getBalancePayments } from '../libs/balance'
 import PaymentType from '../types/PaymentType'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import ItemType from '../types/ItemType'
+import { Order } from '../DATA'
 
 class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
   constructor() {
@@ -79,10 +80,35 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       const TO_DATE = toDate || TODAY_NIGHT
 
       //* GET RENT STORE ORDERS
-      const orders = await ServiceOrders.findMany([
+      const orders: Partial<OrderType>[] = await ServiceOrders.findMany([
         where('storeId', '==', storeId),
         where('type', '==', order_type.RENT)
       ])
+
+      //* GET ORDER EXTENSIONS IN DATES
+      // const extendedInDate = orders.filter(
+      //   (order) =>
+      //     orderExtensionsBetweenDates({
+      //       order,
+      //       fromDate: FROM_DATE,
+      //       toDate: TO_DATE,
+      //       reason: 'extension'
+      //     })?.length > 0
+      // )
+
+      // console.log({ extendedInDate })
+      const extensionsInDate = orders
+        .map((order) => {
+          return Object.values(order?.extensions || {})
+            .map((e) => ({ ...e, orderId: order?.id }))
+            .filter(
+              (ext) =>
+                ext.reason === 'extension' &&
+                isAfter(asDate(ext.createdAt), asDate(FROM_DATE)) &&
+                isBefore(asDate(ext.createdAt), asDate(TO_DATE))
+            )
+        })
+        .flat()
       progress?.(10)
 
       //* GET UNSOLVED REPORTS
@@ -120,9 +146,12 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         storeSections: ops?.storeSections || []
       })
       progress?.(60)
-      const newBalance = {
+      const newBalance: Partial<BalanceType2> = {
         sections: groupedBySections,
-        storeId
+        storeId,
+        createdItems: [],
+        retiredItems: [],
+        orderExtensions: extensionsInDate
       }
 
       if (ops?.notSave) {

@@ -2,6 +2,7 @@ import { documentId, where } from 'firebase/firestore'
 import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
+  OrderExtensionType,
   TypeOrder,
   order_status
 } from '../types/OrderType'
@@ -421,30 +422,33 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     reason,
     time,
     startAt,
-    items
+    items,
+    content
   }: {
     orderId: string
     reason: ExtendReason
     time: PriceType['time']
     startAt: Date
     items: OrderType['items']
+    content?: string
   }) => {
     const userId = auth.currentUser?.uid
     const uuid = createUUID()
     const expireAt = expireDate2({ startedAt: startAt, price: { time } })
-
+    const newExtension: OrderExtensionType = {
+      id: uuid,
+      time,
+      reason,
+      startAt,
+      expireAt,
+      createdAt: new Date(),
+      createdBy: userId,
+      content
+    }
     return await this.update(orderId, {
       items, //* <--- modify the new order items
       expireAt, //* <--- modify the new order expire date
-      [`extensions.${uuid}`]: {
-        id: uuid,
-        time,
-        reason,
-        startAt,
-        expireAt,
-        createdAt: new Date(),
-        createdBy: userId
-      }
+      [`extensions.${uuid}`]: newExtension
     })
   }
   async getClientOrders({ clientId, storeId }, ops?: { justIds: boolean }) {

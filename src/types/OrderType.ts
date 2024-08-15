@@ -127,18 +127,7 @@ type OrderBase = {
 
   sheetRow?: string //* for google sheet row and lavarenta format
 
-  extensions?: Record<
-    string,
-    {
-      id: string
-      time: TimePriceType
-      reason: ExtendReason
-      startAt: Date
-      expireAt: Date
-      createdAt: Date
-      createdBy: UserType['id']
-    }
-  >
+  extensions?: Record<string, OrderExtensionType>
 
   /* ******************************************** 
              Extend expire feature               
@@ -162,7 +151,17 @@ type OrderBase = {
   isDeleted?: boolean
   isExtended?: boolean
 }
-
+export type OrderExtensionType = {
+  id: string
+  time: TimePriceType
+  reason: ExtendReason
+  startAt: Date
+  expireAt: Date
+  createdAt: Date
+  createdBy: UserType['id']
+  content?: string
+  orderId?: string
+}
 export type OrderQuoteType = {
   description?: string
   amount?: number

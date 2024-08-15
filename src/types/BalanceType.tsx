@@ -1,4 +1,5 @@
 import BaseType from './BaseType'
+import { OrderExtensionType } from './OrderType'
 import PaymentType from './PaymentType'
 
 export type BalanceOrders = {
@@ -30,6 +31,9 @@ export type BalanceBase = {
 export type Balance_V2 = {
   sections: BalanceRowType[]
   storeId: string
+  orderExtensions?: OrderExtensionType[]
+  createdItems?: string[]
+  retiredItems?: string[]
 }
 export type BalanceRowType = {
   section?: string

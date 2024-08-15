@@ -1,10 +1,12 @@
 import { formatDate, isBefore, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, OrderExtensionType } from '../types/OrderType'
 import { LabelRentType, expireDate2, translateTime } from './expireDate'
 import asDate from './utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { TimePriceType } from '../types/PriceType'
+import { Order } from '../DATA'
+import { ExtendReason } from '../firebase/ServiceOrders'
 
 export const formatOrders = ({
   orders,
@@ -209,6 +211,25 @@ export const lastExtensionTime = (
   )[0]
 
   return lastExtension?.time || null
+}
+export const orderExtensionsBetweenDates = ({
+  order,
+  fromDate,
+  toDate,
+  reason = 'extension'
+}: {
+  order: Partial<OrderType>
+  fromDate: Date
+  toDate: Date
+  reason?: ExtendReason
+}): OrderExtensionType[] => {
+  const extensions = Object.values(order?.extensions || {})
+  const isBetween = (date: Date) =>
+    isBefore(date, asDate(toDate)) && isBefore(asDate(fromDate), date)
+  return extensions
+    .filter((e) => e.reason === reason)
+    .filter((e) => isBetween(asDate(e.createdAt)))
+    .map((e) => ({ ...e, orderId: order.id }))
 }
 
 export const isRenewedToday = (order: Partial<OrderType>): boolean => {

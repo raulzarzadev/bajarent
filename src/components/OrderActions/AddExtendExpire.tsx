@@ -32,7 +32,8 @@ const AddExtendExpire = ({
       orderId: order.id,
       startAt: order.expireAt,
       time: `${count} ${unit}`,
-      reason: 'extension'
+      reason: 'extension',
+      content: reason || ''
     })
       .then(console.log)
       .catch(console.error)

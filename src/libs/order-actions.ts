@@ -201,13 +201,15 @@ export const onExtend_V2 = async ({
   time,
   reason,
   startAt,
-  items
+  items,
+  content
 }: {
   orderId: string
   time: TimePriceType
   reason: ExtendReason
   startAt: Date
   items: OrderType['items']
+  content?: string
 }) => {
   //********* Add the original order to extends list if it does't have  extensions
   const order = await ServiceOrders.get(orderId)
@@ -226,7 +228,8 @@ export const onExtend_V2 = async ({
     time,
     reason,
     startAt,
-    items
+    items,
+    content
   })
 }
 
