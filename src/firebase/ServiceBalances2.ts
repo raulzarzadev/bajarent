@@ -276,7 +276,6 @@ const groupOrdersBySection = ({
       )
 
       const renewsToday = getTodayRenews({ orders })
-      console.log({ renewsToday })
       const cancelledToday = orders.filter(
         (order) =>
           order.status === order_status.CANCELLED &&

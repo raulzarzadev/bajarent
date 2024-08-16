@@ -12,6 +12,7 @@ import asDate from '../libs/utils-date'
 import { Timestamp } from 'firebase/firestore'
 import theme from '../theme'
 import { gStyles } from '../styles'
+import useMyNav from '../hooks/useMyNav'
 
 const SpanOrder = ({
   orderId,
@@ -30,7 +31,7 @@ const SpanOrder = ({
 }) => {
   const [order, setOrder] = useState<Partial<ConsolidatedOrderType>>()
   const { consolidatedOrders } = useOrdersCtx()
-  const { navigate } = useNavigation()
+  const { toOrders } = useMyNav()
   useEffect(() => {
     const orderFound = consolidatedOrders?.orders?.[orderId]
     setOrder(orderFound || null)
@@ -40,13 +41,7 @@ const SpanOrder = ({
     return (
       <Pressable
         onPress={() => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'OrderDetails',
-            params: {
-              orderId
-            }
-          })
+          toOrders({ id: orderId })
         }}
       >
         {!!order ? (

@@ -504,6 +504,10 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
             idsTitle: 'Extensiones'
           })
         }}
+        onPressRow={(id) => {
+          const orderId = extensions.find((e) => e.id === id)?.orderId
+          toOrders({ id: orderId })
+        }}
         items={extensions
           ?.sort(
             (a, b) =>
@@ -532,9 +536,6 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
               </View>
             )
           }))}
-        onPressRow={(id) => {
-          toOrders({ id })
-        }}
       />
     </View>
   )
