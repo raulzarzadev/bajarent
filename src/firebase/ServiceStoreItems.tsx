@@ -109,7 +109,7 @@ export class ServiceStoreItemsClass {
   async get(
     { storeId, itemId }: { storeId: string; itemId: string },
     ops?: GetItemsOps
-  ) {
+  ): Promise<Type> {
     return ServiceStores.getItemInCollection(
       {
         itemId,

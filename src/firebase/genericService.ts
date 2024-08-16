@@ -38,7 +38,7 @@ export class FirebaseGenericService<T extends Identifiable> {
     return await this.itemCRUD.deleteItem(itemId || '')
   }
 
-  async get(itemId: T['id']) {
+  async get(itemId: T['id']): Promise<T> {
     return await this.itemCRUD.getItem(itemId || '')
   }
 

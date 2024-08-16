@@ -14,7 +14,7 @@ export type ContactType = {
   isOriginal?: boolean
   isFavorite?: boolean
 }
-type OrderBase = {
+export type OrderBase = {
   colorLabel?: string
   type: TypeOfOrderType
   clientId: string

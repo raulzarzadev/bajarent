@@ -32,11 +32,13 @@ export type CommentBase = {
   isPayment?: boolean
   isItemMovement?: boolean
   isOrderMovement?: boolean
+
+  createdByName?: string
 }
 
 export type FormattedComment = CommentBase &
   BaseType & {
-    createdByName: string
+    createdByName?: string
     orderFolio?: string | number
     orderName?: string
     orderStatus?: string

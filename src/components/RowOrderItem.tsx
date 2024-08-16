@@ -47,7 +47,7 @@ export const RowOrderItem = ({
   const itemId = item.id
   const orderId = order.id
 
-  const [itemData, setItemData] = useState<ItemType>()
+  const [itemData, setItemData] = useState<Partial<ItemType>>()
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
@@ -113,7 +113,7 @@ export const RowOrderItem = ({
 
   const originalPriceId = itemPrices?.find(
     (p) => p?.id === item?.priceSelectedId
-  ).id
+  )?.id
 
   return (
     <View>
@@ -267,7 +267,8 @@ export const RowOrderItem = ({
                   await ServiceOrders.updateItemId({
                     orderId,
                     itemId,
-                    newItemId: newItemId
+                    newItemId: newItemId,
+                    newItemCategoryName: values?.categoryName
                   })
                     .then((res) => console.log({ res }))
                     .catch((e) => console.log({ e }))

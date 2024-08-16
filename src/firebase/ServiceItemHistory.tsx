@@ -1,7 +1,4 @@
 import {
-  CollectionReference,
-  DocumentData,
-  DocumentReference,
   QueryConstraint,
   collection,
   limit,
@@ -12,7 +9,6 @@ import { db } from './main'
 import { FirebaseGenericService } from './genericService'
 import BaseType from '../types/BaseType'
 import { endDate, startDate } from '../libs/utils-date'
-import { GetItemsOps } from './firebase.CRUD'
 import { ServiceStoreItems } from './ServiceStoreItems'
 
 const COLLECTION = 'stores'
@@ -186,8 +182,6 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
     const historyEntries = await Promise.all(itemsHistory).then(
       (res) => res.flat() as ItemHistoryType[]
     )
-    console.log({ entries: historyEntries?.length || 0 })
-    //console.log({ historyEntries })
     return historyEntries
   }
 }

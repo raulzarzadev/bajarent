@@ -245,9 +245,9 @@ export const ItemRow = ({
   orderId?: string
   handleChangeItemPrice?: (price: Partial<PriceType>) => void
 }) => {
-  const { storeId } = useStore()
+  const { storeId, categories } = useStore()
   const [shouldCreateItem, setShouldCreateItem] = useState(false)
-  const [_item, _setItem] = useState<ItemType & ItemSelected>(item)
+  const [_item, _setItem] = useState<Partial<ItemType>>(item)
   useEffect(() => {
     ServiceStoreItems.get({ itemId: item.id, storeId })
       .then((res) => {
@@ -280,6 +280,7 @@ export const ItemRow = ({
           handleSelectPrice={(res) => {
             handleChangeItemPrice(res)
           }}
+          //@ts-ignore
           priceSelectedId={_item?.priceSelectedId}
         />
       </View>
@@ -326,7 +327,10 @@ export const ItemRow = ({
                     ServiceOrders.updateItemId({
                       orderId: orderId,
                       itemId: item.id,
-                      newItemId: res.id
+                      newItemId: res.id,
+                      newItemCategoryName: categories.find(
+                        (cat) => cat.id === item.category
+                      )?.name
                     })
                     //* update Order
                   }

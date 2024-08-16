@@ -13,11 +13,7 @@ const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
       onPress={async () => {
         setDisabled(true)
         if (orderId) {
-          const order: Partial<OrderType> = await ServiceOrders.get(
-            orderId
-          ).catch((e) => {
-            console.log({ e })
-          })
+          const order: Partial<OrderType> = await ServiceOrders.get(orderId)
           const {
             note = '',
             fullName = '',

@@ -470,16 +470,19 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   async updateItemId({
     orderId,
     itemId,
-    newItemId
+    newItemId,
+    newItemCategoryName = ''
   }: {
     orderId: string
     itemId: string
     newItemId: string
+    newItemCategoryName: string
   }) {
     const items = await this.get(orderId).then((res) => res.items)
     const itemIndex = items.findIndex((item) => item.id === itemId)
     if (itemIndex < 0) return console.error('Item not found')
     items[itemIndex].id = newItemId
+    items[itemIndex].categoryName = newItemCategoryName
     return await this.update(orderId, { items })
   }
 

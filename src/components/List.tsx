@@ -22,6 +22,8 @@ import { gStyles } from '../styles'
 import { getItem, setItem } from '../libs/storage'
 import { CollectionSearch } from '../hooks/useFilter'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import BaseType from '../types/BaseType'
+import OrderType from '../types/OrderType'
 
 export type ListSideButton = {
   icon: IconName
@@ -157,11 +159,11 @@ function MyList<T extends { id: string }>({
     }
   }, [pinnedRows])
 
-  const getPinnedRows = async (pinnedRows: string[]) => {
+  const getPinnedRows = async (pinnedRows: string[]): Promise<T[]> => {
     if (collectionSearch?.collectionName === 'orders') {
       const promises = pinnedRows.map((id) => ServiceOrders.get(id))
       const res = await Promise.all(promises)
-      return res
+      return res as unknown as T[]
     } else {
       return []
     }

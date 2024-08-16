@@ -237,6 +237,11 @@ export const onChangeOrderItem = async ({
   orderId,
   newItemId,
   storeId
+}: {
+  itemId: string
+  orderId: string
+  newItemId: string
+  storeId: string
 }) => {
   try {
     if (!newItemId || itemId === newItemId)
@@ -246,15 +251,18 @@ export const onChangeOrderItem = async ({
       (res) => res
     )
     const oldItemNumber = oldItem?.number
-    const newItemNumber = await ServiceStoreItems.get({
+    const newItem = await ServiceStoreItems.get({
       storeId,
       itemId: newItemId
-    }).then((res) => res.number)
+    }).then((res) => res)
+    const newItemNumber = newItem?.number
+    const newItemCategoryName = newItem?.categoryName
     //* 1 update item id in order
     await ServiceOrders.updateItemId({
       orderId,
       itemId,
-      newItemId
+      newItemId,
+      newItemCategoryName
     })
 
     //* 2 update old item status to picked up
