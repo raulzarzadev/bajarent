@@ -1,3 +1,4 @@
+import { ItemSelected } from '../../components/FormSelectItem'
 import { onComment, onDelivery } from '../../libs/order-actions'
 import ItemType from '../../types/ItemType'
 import { ItemHistoryType, ServiceItemHistory } from '../ServiceItemHistory'
@@ -236,12 +237,17 @@ export const onChangeOrderItem = async ({
   itemId,
   orderId,
   newItemId,
-  storeId
+  storeId,
+  newItem
 }: {
   itemId: string
   orderId: string
-  newItemId: string
+  /**
+   * @deprecated
+   */
+  newItemId?: string
   storeId: string
+  newItem: ItemSelected
 }) => {
   try {
     if (!newItemId || itemId === newItemId)
@@ -251,10 +257,7 @@ export const onChangeOrderItem = async ({
       (res) => res
     )
     const oldItemNumber = oldItem?.number
-    const newItem = await ServiceStoreItems.get({
-      storeId,
-      itemId: newItemId
-    }).then((res) => res)
+
     const newItemNumber = newItem?.number
     const newItemCategoryName = newItem?.categoryName
     //* 1 update item id in order

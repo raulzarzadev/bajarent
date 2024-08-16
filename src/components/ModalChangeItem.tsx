@@ -7,6 +7,7 @@ import { onChangeOrderItem } from '../firebase/actions/item-actions'
 import TextInfo from './TextInfo'
 import { ListItemsSectionsE } from './ListItemsSections'
 import { useEmployee } from '../contexts/employeeContext'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ModalChangeItem = ({
   itemId,
@@ -17,12 +18,25 @@ const ModalChangeItem = ({
   orderId: string
   disabled?: boolean
 }) => {
-  const { storeId } = useStore()
+  const { storeId, categories } = useStore()
   const { permissions } = useEmployee()
   const viewAllItems = permissions.isAdmin || permissions.isOwner
   const [itemSelected, setItemSelected] = useState(undefined)
+
   const handleChangeItem = async () => {
-    onChangeOrderItem({ itemId, orderId, newItemId: itemSelected, storeId })
+    const newItem = await ServiceStoreItems.get({
+      storeId,
+      itemId: itemSelected
+    })
+    newItem.categoryName = categories.find(
+      (e) => e.id === newItem?.category
+    )?.name
+    onChangeOrderItem({
+      itemId,
+      orderId,
+      storeId,
+      newItem
+    })
   }
 
   return (
