@@ -4,10 +4,14 @@ import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
 import DocMetadata from './DocMetadata'
 import dictionary, { asCapitalize } from '../dictionary'
-import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
+import {
+  ItemHistoryType,
+  ServiceItemHistory
+} from '../firebase/ServiceItemHistory'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ItemActions from './ItemActions'
+import { dateFormat } from '../libs/utils-date'
 
 const ItemDetails = ({
   item,
@@ -56,7 +60,7 @@ export const ItemFixDetails = ({
   itemId: string
   size?: 'sm' | 'md' | 'lg'
 }) => {
-  const [lastFixEntry, setLastFixEntry] = React.useState('')
+  const [lastFixEntry, setLastFixEntry] = React.useState<ItemHistoryType>()
   const { storeId } = useStore()
 
   useEffect(() => {
@@ -66,7 +70,7 @@ export const ItemFixDetails = ({
       count: 1,
       type: 'report'
     }).then((res) => {
-      setLastFixEntry(res[0]?.content)
+      setLastFixEntry(res[0])
     })
   }, [])
   const textSize = {
@@ -74,16 +78,21 @@ export const ItemFixDetails = ({
     md: 14,
     lg: 18
   }
+  console.log({ lastFixEntry })
+  if (lastFixEntry === undefined) return null
   return (
     <View>
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center'
           //marginVertical: 12
         }}
       >
+        <Text style={[gStyles.helper, gStyles.tError]}>
+          {dateFormat(lastFixEntry?.createdAt, 'dd/MMM/yy HH:mm ')}
+        </Text>
         <Text
           numberOfLines={2}
           style={[
@@ -92,7 +101,7 @@ export const ItemFixDetails = ({
             { fontSize: textSize[size] }
           ]}
         >
-          {lastFixEntry}
+          {lastFixEntry.content}
         </Text>
       </View>
     </View>
