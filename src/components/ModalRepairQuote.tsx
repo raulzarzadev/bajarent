@@ -44,7 +44,7 @@ export const ModalRepairQuote = ({
     failDescription: order?.description || ''
   }
   const quoteAlreadyExists = !quote || quote?.info || quote?.total
-  const label = quoteAlreadyExists ? 'Modificar Cotización' : 'Cotización'
+  const label = quoteAlreadyExists ? 'Modificar cotización' : 'Cotización'
 
   const modal = useModal({ title: label })
 
@@ -137,9 +137,9 @@ export const ModalRepairQuote = ({
           }}
         />
         <FormQuote
-          onSubmit={(newQuote) => {
+          onSubmit={async (newQuote) => {
             console.log({ newQuote })
-            onAddQuote({ newQuote, orderId }).then((res) => {
+            return await onAddQuote({ newQuote, orderId }).then((res) => {
               console.log({ res })
             })
           }}

@@ -38,34 +38,28 @@ const ListOrderQuotes = ({
               justifyContent: 'center'
             }}
           >
-            {handleRemoveQuote ? (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'flex-end',
-                  width: '100%'
-                }}
-              >
-                <ButtonConfirm
-                  icon={'delete'}
-                  justIcon
-                  openColor="error"
-                  openSize="small"
-                  confirmColor="error"
-                  confirmVariant="outline"
-                  confirmLabel="Eliminar"
-                  text="¿Estás seguro de eliminar esta cotización?"
-                  handleConfirm={async () => {
-                    return handleRemoveQuote(quote?.id)
-                  }}
-                />
-              </View>
-            ) : null}
             <CurrencyAmount
               amount={quote.amount}
               style={{ textAlign: 'right' }}
             />
           </View>
+          {handleRemoveQuote ? (
+            <View style={{}}>
+              <ButtonConfirm
+                icon={'delete'}
+                justIcon
+                openColor="error"
+                openSize="small"
+                confirmColor="error"
+                confirmVariant="outline"
+                confirmLabel="Eliminar"
+                text="¿Estás seguro de eliminar esta cotización?"
+                handleConfirm={async () => {
+                  return handleRemoveQuote(quote?.id)
+                }}
+              />
+            </View>
+          ) : null}
         </View>
       ))}
       <View style={{ flexDirection: 'row', padding: 6 }}>
