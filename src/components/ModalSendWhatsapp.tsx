@@ -5,7 +5,11 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import { gStyles } from '../styles'
 import theme from '../theme'
-import OrderType, { order_type, OrderQuoteType } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  order_type,
+  OrderQuoteType
+} from '../types/OrderType'
 import dictionary from '../dictionary'
 import asDate, {
   dateFormat,
@@ -20,9 +24,11 @@ import { translateTime } from '../libs/expireDate'
 import SpanCopy from './SpanCopy'
 import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
+import { useOrderDetails } from '../contexts/orderContext'
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
-  const [order, setOrder] = useState<OrderType>()
+  // const [order, setOrder] = useState<OrderType>()
+  const { order } = useOrderDetails()
   const phone = order?.phone
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
@@ -120,14 +126,13 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       .toFixed(2)}*
   `
 
+  const ORDER_DATES = `Fechas
+  \n${getReceiptDates(order)}`
+
   const REPAIR_RECEIPT = `
   \n${WELCOME}
   \n${ORDER_TYPE}
-  \n📆Fecha ${
-    order?.pickedUpAt
-      ? dateFormat(asDate(order?.pickedUpAt), 'dd MMMM yyyy')
-      : ''
-  }
+  \n📆${ORDER_DATES}
   \n🔧 *Información del aparato*
   🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
   #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
@@ -167,11 +172,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const REPAIR_PICKED_UP = `
   \n${WELCOME}
   \n${ORDER_TYPE}
-  \n📆Fecha ${
-    order?.pickedUpAt
-      ? dateFormat(asDate(order?.pickedUpAt), 'dd MMMM yyyy')
-      : ''
-  }
+  \n📆${ORDER_DATES}
   \n🔧 *Información del aparato*
   🛠️ Marca: ${order?.itemBrand || ''}
   #️⃣ Serie: ${order?.itemSerial || ''} 
@@ -228,12 +229,12 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     }
   ]
 
-  const handleGetOrderInfo = () => {
-    getFullOrderData(orderId).then((order) => {
-      setOrder(order)
-      setMessage(messages.find((m) => m.type === messageType)?.content)
-    })
-  }
+  // const handleGetOrderInfo = () => {
+  //   getFullOrderData(orderId).then((order) => {
+  //     //setOrder(order)
+  //     setMessage(messages.find((m) => m.type === messageType)?.content)
+  //   })
+  // }
   const [messageType, setMessageType] = useState<MessageType>()
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
@@ -261,7 +262,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       <Button
         label="Whatsapp"
         onPress={() => {
-          handleGetOrderInfo()
+          // handleGetOrderInfo()
           modal.toggleOpen()
         }}
         size="small"
@@ -289,7 +290,11 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
             Numero de telefono invalido
           </Text>
         )}
-        {message && <SpanCopy label={'Copiar'} copyValue={message} />}
+        {message && (
+          <View style={{ marginVertical: 16 }}>
+            <SpanCopy label={'Copiar'} copyValue={message} />
+          </View>
+        )}
         <Button
           disabled={invalidPhone || !message}
           label="Enviar"
@@ -302,6 +307,44 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
       </StyledModal>
     </View>
   )
+}
+
+const getReceiptDates = (order: OrderType): string => {
+  if (!order) return ''
+  const isRent = order?.type === order_type.RENT
+  const isRepair = order?.type === order_type.REPAIR
+
+  const dFormat = (date: Date) => dateFormat(asDate(date), 'dd/MMM/yy HH:mm')
+
+  let dates = [`Creada ${dFormat(order.createdAt)}`]
+  if (isRent) {
+    const isDelivered = order?.status === order_status.DELIVERED
+    const isPickedUp = order?.status === order_status.PICKED_UP
+    if (isDelivered && order.deliveredAt)
+      dates.push(`Entregada ${dFormat(order?.deliveredAt)}`)
+    if (isPickedUp && order?.pickedUpAt)
+      dates.push(`Recogida ${dFormat(order?.pickedUpAt)}`)
+  }
+  if (isRepair) {
+    const isRepairing = order?.status === order_status.REPAIRING
+    const isRepaired = order?.status === order_status.REPAIRED
+    const isDelivered = order?.status === order_status.DELIVERED
+    if (order.repairingAt) dates.push(`Comenzada ${dFormat(order.repairingAt)}`)
+    if (order.repairedAt) dates.push(`Terminada ${dFormat(order.repairedAt)}`)
+    if (order.deliveredAt) dates.push(`Entregada ${dFormat(order.deliveredAt)}`)
+  }
+  return dates.join('\n')
+  //
+  // const isRepairing = order?.status === order_status.REPAIRING
+  // const isDelivered = order?.status === order_status.DELIVERED
+  // const defaultDate = new Date()
+  // if (isRepair && isRepairing) {
+  //   return defaultDate
+  // }
+  // if (isRent && isDelivered) {
+  //   return asDate(order.deliveredAt)
+  // }
+  // return defaultDate
 }
 const orderStringDates = (
   order: Partial<OrderType>,
