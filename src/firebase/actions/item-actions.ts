@@ -109,7 +109,7 @@ export const onPickUpItem = async ({
   storeId,
   itemId,
   orderId,
-  assignToSection
+  assignToSection = null
 }: {
   storeId: string
   itemId: string
@@ -236,19 +236,15 @@ export const onRegistryEntry = async ({
 export const onChangeOrderItem = async ({
   itemId,
   orderId,
-  newItemId,
   storeId,
   newItem
 }: {
   itemId: string
   orderId: string
-  /**
-   * @deprecated
-   */
-  newItemId?: string
   storeId: string
   newItem: ItemSelected
 }) => {
+  const newItemId = newItem?.id
   try {
     if (!newItemId || itemId === newItemId)
       return console.log('no new item or is the same ')

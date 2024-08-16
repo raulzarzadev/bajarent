@@ -590,7 +590,6 @@ export class FirebaseCRUD {
         })
       )
       .catch((err) => {
-        console.error(err)
         return this.formatResponse(false, `${this.collectionName}_ERROR`, err)
       })
   }

@@ -155,6 +155,11 @@ export class ServiceStoreItemsClass {
       field,
       value
     })
+      .then((res) => res)
+      .catch((err) => {
+        console.log({ err, field, value, SUB_COLLECTION })
+        return err
+      })
   }
 
   async delete({ storeId, itemId }: { storeId: string; itemId: string }) {

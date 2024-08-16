@@ -204,13 +204,15 @@ export class FirebaseGenericService<T extends Identifiable> {
     field: string
     value: any
   }) {
-    return this.itemCRUD.updateFieldInSubCollection({
-      subCollection,
-      itemId,
-      field,
-      value,
-      parentId
-    })
+    return this.itemCRUD
+      .updateFieldInSubCollection({
+        subCollection,
+        itemId,
+        field,
+        value,
+        parentId
+      })
+      .then((res) => res)
   }
   listenItemsInSubCollection({
     parentId,
