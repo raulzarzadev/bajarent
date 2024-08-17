@@ -177,7 +177,7 @@ const OrderStatus = ({
           style={[chipStyles]}
           title={dateFormat(asDate(order?.deliveredAt), 'dd / MMM')}
           icon="home"
-          color={theme.success}
+          color={theme.transparent}
           size={chipSize}
         />
       )}
