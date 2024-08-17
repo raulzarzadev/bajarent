@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
     borderTopEndRadius: 5,
     borderTopStartRadius: 5,
-    width: 120, // Ajusta el ancho de cada botón
+    width: 130, // Ajusta el ancho de cada botón
     borderWidth: 0.2,
     borderColor: '#cccb',
     borderBottomWidth: 0,
