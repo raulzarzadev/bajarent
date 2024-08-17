@@ -51,6 +51,7 @@ const OrderStatus = ({
   const isRepaired = order?.status === order_status.REPAIRED
   const rentPickedUp = order.type === 'RENT' && isPickedUp
   const repairPickedUp = order.type === 'REPAIR' && isPickedUp
+  const repairDelivered = order.type === 'REPAIR' && isDelivered
   const rentAuthorized = order.type === 'RENT' && isAuthorized
   const repairAuthorized = order.type === 'REPAIR' && isAuthorized
   const saleAuthorized = order.type === 'SALE' && isAuthorized
@@ -171,6 +172,15 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
+      {repairDelivered && (
+        <Chip
+          style={[chipStyles]}
+          title={dateFormat(asDate(order?.deliveredAt), 'dd / MMM')}
+          icon="home"
+          color={theme.success}
+          size={chipSize}
+        />
+      )}
 
       {/* 
       //* Chip of rent order status Pedido | Entregada | Recogida 
@@ -179,15 +189,13 @@ const OrderStatus = ({
 
       {/* if is rented, and not expires yet. Show date */}
       {isRent && isDelivered && !expiresTomorrow && !isExpired && (
-        <>
-          <Chip
-            style={[chipStyles]}
-            title={dateFormat(asDate(order?.expireAt), 'dd / MMM')}
-            icon="home"
-            color={theme.transparent}
-            size={chipSize}
-          />
-        </>
+        <Chip
+          style={[chipStyles]}
+          title={dateFormat(asDate(order?.expireAt), 'dd / MMM')}
+          icon="home"
+          color={theme.transparent}
+          size={chipSize}
+        />
       )}
 
       {/* if is rented, and expires tomorrow. Show VM */}
