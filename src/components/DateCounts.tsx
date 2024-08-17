@@ -25,17 +25,25 @@ const DateCounts = ({ date }: { date: Date }) => {
     }).then(setPayments)
   }, [])
 
-  console.log({ payments, storeSections, staff })
-
   //* If the user is NOT an admin or owner, return null
   if (!(isAdmin || isOwner)) return null
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around'
+      }}
+    >
+      <View style={{ marginVertical: 4 }}>
+        <Text style={gStyles.h3}>Todos</Text>
+        <BalanceAmounts payments={payments} />
+      </View>
       {staff.map(({ userId, position, name }) => {
         const userPayments = payments?.filter((p) => p?.createdBy === userId)
         if (userPayments.length === 0) return null
         return (
-          <View key={userId}>
+          <View key={userId} style={{ marginVertical: 4 }}>
             <Text style={gStyles.h3}>{position || name}</Text>
             <BalanceAmounts payments={userPayments} />
           </View>

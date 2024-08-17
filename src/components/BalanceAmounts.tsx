@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TextStyle, View } from 'react-native'
 import React from 'react'
 import PaymentType from '../types/PaymentType'
 import { payments_amount } from '../libs/payments'
@@ -34,7 +34,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
     <View>
       <View
         style={{
-          width: 180,
+          //width: 180,
           // marginVertical: gSpace(2),
           marginHorizontal: 'auto'
         }}
@@ -59,8 +59,9 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
             </View>
           )}
           {!!transfersNotVerified && (
-            <View style={styles.row}>
+            <View style={[styles.row]}>
               <LinkPayments
+                labelStyle={gStyles.tError}
                 paymentsIds={notVerifiedTransfers.map(({ id }) => id)}
                 amount={transfersNotVerified}
                 title={'No verificados'}
@@ -127,7 +128,11 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           </View>
         )}
         <View style={styles.row}>
-          <LinkPayments amount={total} title={'Total'} />
+          <LinkPayments
+            amount={total}
+            title={'Total'}
+            labelStyle={gStyles.tBold}
+          />
         </View>
       </View>
     </View>
@@ -138,7 +143,14 @@ const LinkPayments = ({
   title,
   paymentsIds = [],
   amount = 0,
-  isTotal = false
+  isTotal = false,
+  labelStyle
+}: {
+  title: string
+  paymentsIds?: string[]
+  amount?: number
+  isTotal?: boolean
+  labelStyle?: TextStyle
 }) => {
   const { navigate } = useNavigation()
   return (
@@ -162,10 +174,12 @@ const LinkPayments = ({
         >
           <Text
             style={{
-              width: 120,
+              width: 80,
               textDecorationLine: 'underline',
-              textAlign: 'right'
+              textAlign: 'right',
+              ...labelStyle
             }}
+            numberOfLines={1}
           >
             {title}
           </Text>
@@ -206,11 +220,11 @@ const styles = StyleSheet.create({
     marginVertical: 2
   },
   label: {
-    width: 140,
+    width: 80,
     textAlign: 'right'
   },
   amount: {
     textAlign: 'left',
-    width: 140
+    width: 90
   }
 })
