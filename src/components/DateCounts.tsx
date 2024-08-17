@@ -23,7 +23,7 @@ const DateCounts = ({ date }: { date: Date }) => {
       toDate: endDate(date),
       storeId
     }).then(setPayments)
-  }, [])
+  }, [date])
 
   //* If the user is NOT an admin or owner, return null
   if (!(isAdmin || isOwner)) return null
