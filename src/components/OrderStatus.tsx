@@ -1,7 +1,7 @@
 import React from 'react'
 import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
-import { Text, ViewStyle } from 'react-native'
+import { Text, View, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
 import {
   formatDate,
@@ -81,6 +81,7 @@ const OrderStatus = ({
       return `📅 ${dateFormat(asDate(scheduledAt), 'dd/MMM')}`
     }
   }
+
   return (
     <>
       {isRenewed && (
@@ -120,10 +121,11 @@ const OrderStatus = ({
       )}
       {rentPickedUp && (
         <Chip
-          style={[chipStyles]}
-          title={'Recogida'}
+          style={[chipStyles, { opacity: 0.2 }]}
+          title={dateFormat(asDate(order?.pickedUpAt), 'dd / MMM')}
           color={theme.transparent}
           size={chipSize}
+          icon="truck"
         />
       )}
       {isRepairing && (
@@ -135,14 +137,7 @@ const OrderStatus = ({
           titleColor={colors.white}
         />
       )}
-      {!isExpired && isDelivered && (
-        <Chip
-          style={[chipStyles]}
-          title={'Entregada'}
-          color={theme.transparent}
-          size={chipSize}
-        />
-      )}
+
       {isPending && (
         <Chip
           style={[chipStyles]}
@@ -176,6 +171,40 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
+
+      {/* 
+      //* Chip of rent order status Pedido | Entregada | Recogida 
+      //*                           🔖 | 🏠 22/Mar | 🛻
+      */}
+
+      {/* if is rented, and not expires yet. Show date */}
+      {isRent && isDelivered && !expiresTomorrow && !isExpired && (
+        <>
+          <Chip
+            style={[chipStyles]}
+            title={dateFormat(asDate(order?.expireAt), 'dd / MMM')}
+            icon="home"
+            color={theme.transparent}
+            size={chipSize}
+          />
+        </>
+      )}
+
+      {/* if is rented, and expires tomorrow. Show VM */}
+
+      {expiresTomorrow && (
+        <Chip
+          style={[chipStyles]}
+          title={'VM'}
+          color={theme.success}
+          icon={'alarm'}
+          size={chipSize}
+          titleColor={colors.white}
+        />
+      )}
+
+      {/* if is rented, and expires today. Show time ago */}
+
       {isExpired && (
         <Chip
           style={[chipStyles]}
@@ -186,6 +215,17 @@ const OrderStatus = ({
           titleColor={colors.white}
         />
       )}
+      {NullExpireAt && (
+        <Chip
+          style={[chipStyles]}
+          title={'SF'}
+          color={theme.error}
+          size={chipSize}
+          titleColor={colors.white}
+        />
+      )}
+
+      {/* Reports and importante badges */}
       {isReported && (
         <Chip
           style={[chipStyles]}
@@ -206,25 +246,7 @@ const OrderStatus = ({
           titleColor={theme.accent}
         />
       )}
-      {expiresTomorrow && (
-        <Chip
-          style={[chipStyles]}
-          title={'VM'}
-          color={theme.success}
-          icon={'alarm'}
-          size={chipSize}
-          titleColor={colors.white}
-        />
-      )}
-      {NullExpireAt && (
-        <Chip
-          style={[chipStyles]}
-          title={'SF'}
-          color={theme.error}
-          size={chipSize}
-          titleColor={colors.white}
-        />
-      )}
+
       {!!scheduledAt && isAuthorized && (
         <Chip
           style={[chipStyles]}
