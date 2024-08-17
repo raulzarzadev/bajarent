@@ -8,6 +8,7 @@ import theme from '../theme'
 import Button from './Button'
 import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
+import ModalCurrentWork from './ModalCurrentWork'
 
 const MyStaffLabel = () => {
   const { user } = useAuth()
@@ -20,44 +21,10 @@ const MyStaffLabel = () => {
   const handleClearHistory = () => {
     setItem(PERSISTENCE_KEY, '')
   }
+
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      {/* {user && <LocationStatus />} */}
-      {/* {!!store && <StoreTopButton />} */}
-      {/* <Pressable
-        role="button"
-        id="profileButton"
-        style={{
-          minWidth: 60,
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: isProfile ? 1 : 0.5
-        }}
-        onPress={() => {
-          // @ts-ignore
-          navigation.navigate('Profile')
-        }}
-      >
-        {user && (
-          <Icon
-            icon={label ? `profileFill` : 'profile'}
-            color={isProfile ? theme.primary : theme.black}
-          />
-        )}
-        {user === null && <Icon icon="profileAdd" />}
-        <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-          <Text
-            numberOfLines={1}
-            style={[
-              gStyles.helper,
-              { maxWidth: 80, color: isProfile ? theme.primary : theme.black }
-            ]}
-          >
-            {label}
-          </Text>
-        </View>
-      </Pressable> */}
+      <ModalCurrentWork />
       {__DEV__ && (
         <Button
           icon="broom"

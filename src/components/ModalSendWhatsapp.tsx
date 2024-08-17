@@ -358,12 +358,6 @@ const orderStringDates = (
           : 1
       }
     )[0]
-    console.log(
-      Object.values(order?.extensions || {}).map((e) =>
-        dateFormat(asDate(e.startAt), format)
-      )
-    )
-    console.log({ lastExtension })
     return {
       expireAt: dateFormat(asDate(lastExtension?.expireAt), format) || '',
       deliveredAt: dateFormat(asDate(lastExtension?.startAt), format) || ''

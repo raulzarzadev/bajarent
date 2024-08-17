@@ -79,7 +79,6 @@ const ListOrdersConsolidated = () => {
             }
           ]}
           onPressRow={(orderId) => {
-            console.log({ orderId })
             //@ts-ignore
             navigate('StackConsolidated', {
               screen: 'OrderDetails',

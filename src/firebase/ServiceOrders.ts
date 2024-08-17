@@ -435,6 +435,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const userId = auth.currentUser?.uid
     const uuid = createUUID()
     const expireAt = expireDate2({ startedAt: startAt, price: { time } })
+    const isRenew = reason === 'renew'
     const newExtension: OrderExtensionType = {
       id: uuid,
       time,
@@ -445,11 +446,20 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       createdBy: userId,
       content
     }
-    return await this.update(orderId, {
+
+    const orderUpdated: Partial<OrderType> = {
       items, //* <--- modify the new order items
       expireAt, //* <--- modify the new order expire date
+
       [`extensions.${uuid}`]: newExtension
-    })
+    }
+
+    if (isRenew) {
+      orderUpdated.renewedAt = new Date()
+      orderUpdated.renewedBy = userId
+    }
+
+    return await this.update(orderId, { ...orderUpdated })
   }
   async getClientOrders({ clientId, storeId }, ops?: { justIds: boolean }) {
     const justIds = !!ops?.justIds
@@ -512,6 +522,102 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     items[itemIndex].priceSelected = newPrice
     items[itemIndex].priceSelectedId = newPrice.id
     return await this.update(orderId, { items })
+  }
+
+  static createFilterToGetOrderFieldValue = ({
+    status,
+    field,
+    storeId,
+    userId,
+    fromDate,
+    toDate
+  }: {
+    status: OrderType['status']
+    storeId: string
+    field: keyof OrderType
+    userId: string
+    fromDate: Date
+    toDate: Date
+  }) => {
+    const filters = [
+      where('storeId', '==', storeId),
+      where('status', '==', status)
+    ]
+    //* Replace last to words of fields by ""By"
+
+    const formatField = field.replace(/At/g, 'By')
+    if (userId) filters.push(where(formatField, '==', userId))
+    if (fromDate) filters.push(where(field, '>=', fromDate))
+    if (toDate) filters.push(where(field, '<=', toDate))
+    return filters
+  }
+
+  async getDelivered({
+    storeId,
+    userId,
+    fromDate,
+    toDate
+  }: {
+    storeId: string
+    userId: string
+    fromDate: Date
+    toDate: Date
+  }) {
+    const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
+      status: order_status.DELIVERED,
+      storeId,
+      userId,
+      fromDate,
+      toDate,
+      field: 'deliveredAt'
+    })
+
+    return this.findMany(filters)
+  }
+
+  async getRenewed({
+    storeId,
+    userId,
+    fromDate,
+    toDate
+  }: {
+    storeId: string
+    userId: string
+    fromDate: Date
+    toDate: Date
+  }) {
+    const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
+      status: order_status.DELIVERED,
+      storeId,
+      userId,
+      fromDate,
+      toDate,
+      field: 'renewedAt'
+    })
+
+    return this.findMany(filters)
+  }
+  async getPickedUp({
+    storeId,
+    userId,
+    fromDate,
+    toDate
+  }: {
+    storeId: string
+    userId: string
+    fromDate: Date
+    toDate: Date
+  }) {
+    const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
+      status: order_status.PICKED_UP,
+      storeId,
+      userId,
+      fromDate,
+      toDate,
+      field: 'pickedUpAt'
+    })
+
+    return this.findMany(filters)
   }
 }
 

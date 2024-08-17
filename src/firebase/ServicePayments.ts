@@ -101,17 +101,44 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   async getBetweenDates({
     fromDate,
     toDate,
-    storeId
+    storeId,
+    userId
   }: {
     fromDate: Date
     toDate: Date
     storeId: string
+    userId?: string
   }) {
-    return this.getItems([
+    let filters = [
       where('storeId', '==', storeId),
       where('createdAt', '>=', fromDate),
       where('createdAt', '<=', toDate)
-    ])
+    ]
+    if (userId) filters.push(where('createdBy', '==', userId))
+    return this.getItems(filters)
+  }
+  async listenBetweenDates({
+    fromDate,
+    toDate,
+    storeId,
+    userId,
+    callback
+  }: {
+    fromDate: Date
+    toDate: Date
+    storeId: string
+    userId?: string
+    callback: (items: PaymentType[]) => void
+  }) {
+    let filters = [
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', fromDate),
+      where('createdAt', '<=', toDate)
+    ]
+    if (userId) filters.push(where('createdBy', '==', userId))
+
+    this.listenMany(filters, callback)
+    // Implementa tu método personalizado
   }
 }
 
