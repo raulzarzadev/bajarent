@@ -18,14 +18,20 @@ export type StyledModalProps = {
   children?: ReactNode
   title?: string
   size?: 'md' | 'full'
+  onclose?: () => void
 }
 const StyledModal = ({
   open,
   setOpen,
   children,
   title = '',
-  size = 'md'
+  size = 'md',
+  onclose = () => {}
 }: StyledModalProps) => {
+  const handleClose = () => {
+    setOpen(!open)
+    onclose()
+  }
   return (
     <View>
       <View style={styles.centeredView}>
@@ -49,7 +55,7 @@ const StyledModal = ({
             >
               <View style={styles.topBar}>
                 <Text style={styles.title}>{title}</Text>
-                <Pressable onPress={() => setOpen(!open)}>
+                <Pressable onPress={() => handleClose()}>
                   <Icon icon="close" />
                 </Pressable>
               </View>

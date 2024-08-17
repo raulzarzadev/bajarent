@@ -1,5 +1,13 @@
-import React, { ReactNode, createContext, useContext, useState } from 'react'
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 import OrderType from '../types/OrderType'
+import { listenFullOrderData } from './libs/getFullOrderData'
+import { useRoute } from '@react-navigation/native'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -14,9 +22,20 @@ interface OrderContextProps {
 const OrderContext = createContext<OrderContextProps>({})
 
 // Create the OrderContext provider component
-const OrderProvider: React.FC = ({ children }: { children: ReactNode }) => {
+const OrderProvider = ({ children }: { children: ReactNode }) => {
+  const route = useRoute()
   const [order, setOrder] = useState<Order>()
 
+  //@ts-ignore
+  const orderId = route?.params?.orderId
+
+  useEffect(() => {
+    if (orderId) {
+      listenFullOrderData(orderId, (order) => {
+        setOrder(order)
+      })
+    }
+  }, [orderId])
   return (
     <OrderContext.Provider value={{ order, setOrder }}>
       {children}

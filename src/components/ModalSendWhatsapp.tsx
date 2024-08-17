@@ -51,6 +51,8 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const PHONES = `📞 ${store?.phone}
 📱 ${store?.mobile} Whatsapp`
 
+  const orderExpiresAt = order?.expireAt
+
   const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:\n${PHONES}
 `
 
@@ -59,9 +61,9 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   const RENT_PERIOD = `Periodo contratado: ${
     translateTime(order?.items?.[0]?.priceSelected?.time) || ''
   }
-  
+
   ⏳ Inicio: ${orderStringDates(order).deliveredAt}
-  🔚 Vencimiento: ${orderStringDates(order).expireAt}`
+  🔚 Vencimiento: ${dateFormat(asDate(orderExpiresAt), 'EEEE dd MMMM yy')}`
 
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
   const PAYMENTS = ` ${orderPayments({ order })}`
@@ -235,7 +237,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   //     setMessage(messages.find((m) => m.type === messageType)?.content)
   //   })
   // }
-  const [messageType, setMessageType] = useState<MessageType>()
+  const [messageType, setMessageType] = useState<MessageType>(null)
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
   let options = []
@@ -257,6 +259,11 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     ]
   }
 
+  const handleResetMessage = () => {
+    setMessageType(null)
+    setMessage(null)
+  }
+
   return (
     <View>
       <Button
@@ -264,11 +271,17 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
         onPress={() => {
           // handleGetOrderInfo()
           modal.toggleOpen()
+          handleResetMessage()
         }}
         size="small"
         icon="whatsapp"
       ></Button>
-      <StyledModal {...modal}>
+      <StyledModal
+        {...modal}
+        onclose={() => {
+          handleResetMessage()
+        }}
+      >
         <InputRadios
           options={options}
           value={messageType}
