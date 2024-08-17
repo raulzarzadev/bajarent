@@ -13,6 +13,9 @@ import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
 import Button from './Button'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import OrderType from '../types/OrderType'
+import Tabs from './Tabs'
+import SpanOrder from './SpanOrder'
 
 const ModalCurrentWork = () => {
   const { storeId } = useStore()
@@ -23,6 +26,7 @@ const ModalCurrentWork = () => {
   const [loading, setLoading] = useState(false)
   const handleUpdate = () => {
     setLoading(true)
+    handleGetOrders()
     ServicePayments.getBetweenDates({
       fromDate: startDate(date),
       toDate: endDate(date),
@@ -41,10 +45,10 @@ const ModalCurrentWork = () => {
     if (user) handleUpdate()
   }, [user])
 
-  const [pickedUp, setPickedUp] = useState(0)
-  const [delivered, setDelivered] = useState(0)
-  const [solved, setSolved] = useState(0)
-  const [renewed, setRenewed] = useState(0)
+  const [pickedUp, setPickedUp] = useState<OrderType[]>([])
+  const [delivered, setDelivered] = useState<OrderType[]>([])
+  const [solved, setSolved] = useState<OrderType[]>([])
+  const [renewed, setRenewed] = useState<OrderType[]>([])
 
   const handleGetOrders = () => {
     ServiceOrders.getDelivered({
@@ -53,7 +57,7 @@ const ModalCurrentWork = () => {
       fromDate: startDate(date),
       toDate: endDate(date)
     }).then((orders) => {
-      setDelivered(orders.length)
+      setDelivered(orders)
     })
     ServiceOrders.getRenewed({
       storeId,
@@ -61,7 +65,7 @@ const ModalCurrentWork = () => {
       fromDate: startDate(date),
       toDate: endDate(date)
     }).then((orders) => {
-      setRenewed(orders.length)
+      setRenewed(orders)
     })
     ServiceOrders.getPickedUp({
       storeId,
@@ -69,18 +73,9 @@ const ModalCurrentWork = () => {
       fromDate: startDate(date),
       toDate: endDate(date)
     }).then((orders) => {
-      setPickedUp(orders.length)
+      setPickedUp(orders)
     })
-    // ServiceOrders.getSolved({
-    //   storeId,
-    //   userId,
-    //   fromDate: startDate(date),
-    //   toDate: endDate(date)
-    // }).then((orders) => {
-    //   setSolved(orders.length)
-    // })
   }
-  console.log({ pickedUp, delivered, renewed })
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
@@ -99,8 +94,68 @@ const ModalCurrentWork = () => {
           />
         </View>
         <BalanceAmountsE payments={payments} />
-        <Button label="Ver ordenes" onPress={handleGetOrders} />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            flexWrap: 'wrap',
+            marginTop: 16
+          }}
+        >
+          <Tabs
+            tabs={[
+              {
+                title: `Recogidas: ${pickedUp?.length || 0}`,
+                content: (
+                  <TabOrderList
+                    orders={pickedUp}
+                    onRedirect={modalCurrentWork.toggleOpen}
+                  />
+                ),
+                show: true
+              },
+              {
+                title: `Entregadas: ${delivered?.length || 0}`,
+                content: (
+                  <TabOrderList
+                    orders={delivered}
+                    onRedirect={modalCurrentWork.toggleOpen}
+                  />
+                ),
+                show: true
+              },
+              {
+                title: `Renovadas: ${renewed?.length || 0}`,
+                content: (
+                  <TabOrderList
+                    orders={renewed}
+                    onRedirect={modalCurrentWork.toggleOpen}
+                  />
+                ),
+                show: true
+              }
+            ]}
+          />
+        </View>
       </StyledModal>
+    </View>
+  )
+}
+
+const TabOrderList = ({ orders, onRedirect }) => {
+  return (
+    <View style={{ paddingHorizontal: 8, marginVertical: 16 }}>
+      {orders.map((order) => (
+        <View key={order.id} style={{ marginVertical: 4 }}>
+          <SpanOrder
+            orderId={order.id}
+            showName
+            redirect
+            onRedirect={onRedirect}
+          />
+        </View>
+      ))}
     </View>
   )
 }

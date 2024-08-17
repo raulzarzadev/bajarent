@@ -40,7 +40,6 @@ import OrderContacts from './OrderContacts'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
-  console.log({ order })
   useEffect(() => {
     if (order?.type === order_type.REPAIR) {
       setDefaultAmount(order?.quote?.amount || order?.repairTotal || 0)

@@ -20,7 +20,8 @@ const SpanOrder = ({
   showName,
   showTime,
   showLastExtension,
-  showDatePaymentsAmount
+  showDatePaymentsAmount,
+  onRedirect
 }: {
   orderId: string
   redirect?: boolean
@@ -28,6 +29,7 @@ const SpanOrder = ({
   showTime?: boolean
   showLastExtension?: boolean
   showDatePaymentsAmount?: Date | Timestamp
+  onRedirect?: () => void
 }) => {
   const [order, setOrder] = useState<Partial<ConsolidatedOrderType>>()
   const { consolidatedOrders } = useOrdersCtx()
@@ -42,6 +44,7 @@ const SpanOrder = ({
       <Pressable
         onPress={() => {
           toOrders({ id: orderId })
+          onRedirect()
         }}
       >
         {!!order ? (
