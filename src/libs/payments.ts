@@ -30,6 +30,10 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
       }
     },
     {
+      /**
+       * @abstract is the total amount of all payments in the list of payments. Exclude canceled payments
+       *
+       */
       total: 0,
       cash: 0,
       card: 0,

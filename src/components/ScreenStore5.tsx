@@ -24,6 +24,7 @@ import ButtonDownloadCSV from './ButtonDownloadCSV'
 import ListClients from './ListClients'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import HeaderDate from './HeaderDate'
+import DateCounts from './DateCounts'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -216,7 +217,7 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
-
+  const [date, setDate] = useState(new Date())
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleGetLastBalanceInDate = (date: Date) => {
@@ -264,7 +265,10 @@ const TabCashbox = () => {
       <HeaderDate
         debounce={400}
         label="Cuentas"
-        onChangeDate={handleGetLastBalanceInDate}
+        onChangeDate={(date) => {
+          setDate(date)
+          handleGetLastBalanceInDate(date)
+        }}
         documentDate={balance?.createdAt}
       />
       <View style={{ margin: 'auto', marginVertical: 6 }}>
@@ -280,6 +284,7 @@ const TabCashbox = () => {
           }}
         />
       </View>
+      <DateCounts date={date} />
       <BusinessStatusE balance={balance} />
     </ScrollView>
   )

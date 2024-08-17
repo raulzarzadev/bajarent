@@ -98,6 +98,21 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       where('createdAt', '<=', date.setHours(23, 59, 59, 999))
     ])
   }
+  async getBetweenDates({
+    fromDate,
+    toDate,
+    storeId
+  }: {
+    fromDate: Date
+    toDate: Date
+    storeId: string
+  }) {
+    return this.getItems([
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', fromDate),
+      where('createdAt', '<=', toDate)
+    ])
+  }
 }
 
 export const ServicePayments = new ServicePaymentsClass()

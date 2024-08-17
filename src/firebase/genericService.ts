@@ -50,8 +50,8 @@ export class FirebaseGenericService<T extends Identifiable> {
     return await this.itemCRUD.listenItems(filters, cb)
   }
 
-  async getItems(filters: QueryConstraint[] = []) {
-    return await this.itemCRUD.getItems(filters)
+  async getItems(filters: QueryConstraint[] = [], ops?: GetItemsOps) {
+    return await this.itemCRUD.getItems(filters, ops)
   }
 
   async findOne(filters: QueryConstraint[] = []) {
