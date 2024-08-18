@@ -46,7 +46,8 @@ const Chip = ({
   }
 
   const iconSize = {
-    sm: 14,
+    xs: 15,
+    sm: 15,
     md: 16,
     lg: 18
   }[size]
