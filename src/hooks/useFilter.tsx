@@ -117,25 +117,26 @@ export default function useFilter<T extends { id?: string }>({
     setSearchValue(value)
     setTimeout(async () => {
       const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
+      // let exactMatches = []
       if (!value) {
         //<-- Apply filters if exist to keep current selection
         setFilteredData(filteredData)
         setCustomData([])
+
         return
       }
-
-      let exactMatches = []
 
       const res = filteredData?.filter((order) => {
         //* Get all values of the order
         const orderValues = Object.values(order)
 
         //*  Check for exact matches first and add to exactMatches
-        orderValues.forEach((orderValue) => {
-          if (orderValue == value) {
-            exactMatches.push(order)
-          }
-        })
+        // orderValues.forEach((orderValue) => {
+        //   if (orderValue == value) {
+        //     exactMatches.push(order)
+        //   }
+
+        // })
         //*  Check for partial matches and add to filteredData
         return orderValues.some((orderValue) => {
           if (typeof orderValue === 'string') {
@@ -163,11 +164,13 @@ export default function useFilter<T extends { id?: string }>({
           ...orders.filter((o) => !res.some((r) => r.id === o.id))
         ])
       }
-      if (exactMatches.length > 0) {
-        setFilteredData(exactMatches)
-      } else {
-        setFilteredData(res)
-      }
+      //console.log({ exactMatches })
+
+      setFilteredData(res)
+      // if (exactMatches.length > 0) {
+      //   setFilteredData(exactMatches)
+      // } else {
+      // }
     }, debounceSearch)
   }
 

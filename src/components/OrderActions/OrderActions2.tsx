@@ -119,9 +119,13 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const [allItemsExists, setAllItemsExists] = useState(false)
 
   const checkIfAllItemsExists = async () => {
-    const promises = order?.items.map((item) => {
-      return ServiceStoreItems.get({ itemId: item.id, storeId: order.storeId })
-    })
+    const promises =
+      order?.items?.map((item) => {
+        return ServiceStoreItems.get({
+          itemId: item.id,
+          storeId: order.storeId
+        })
+      }) || []
     const res = await Promise.all(promises)
     if (res.every((r) => r)) return setAllItemsExists(true)
     setAllItemsExists(false)

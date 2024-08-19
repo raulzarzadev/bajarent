@@ -69,6 +69,7 @@ function MyList<T extends { id: string }>({
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
+
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
     data: filteredData,
     defaultSortBy: defaultSortBy as string,
@@ -174,7 +175,6 @@ function MyList<T extends { id: string }>({
     }
   }, [filteredData?.length])
   if (!data) return <Loading />
-  console.log({ filteredData, sortedData })
   return (
     <ScrollView style={{ flex: 1 }}>
       <View
