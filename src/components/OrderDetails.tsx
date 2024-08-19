@@ -360,14 +360,7 @@ export const OrderDates = ({
 }
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
-  const [payments, setPayments] = useState<PaymentType[]>([])
-  const { navigate } = useNavigation()
-  useEffect(() => {
-    if (orderId) {
-      ServicePayments.listenByOrder(orderId, setPayments)
-    }
-    return () => {}
-  }, [orderId])
+  const payments = useOrderDetails()?.payments
 
   const sortByCreatedAt = (a: PaymentType, b: PaymentType) => {
     return asDate(a.createdAt).getTime() < asDate(b.createdAt).getTime()

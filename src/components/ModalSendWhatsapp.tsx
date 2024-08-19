@@ -25,10 +25,12 @@ import SpanCopy from './SpanCopy'
 import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
+
 export default function ModalSendWhatsapp({ orderId = '' }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   // const [order, setOrder] = useState<OrderType>()
-  const { order } = useOrderDetails()
+  const { order, payments } = useOrderDetails()
+
   const phone = order?.phone
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
@@ -66,7 +68,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   🔚 Vencimiento: ${dateFormat(asDate(orderExpiresAt), 'EEEE dd MMMM yy')}`
 
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
-  const PAYMENTS = ` ${orderPayments({ order })}`
+  const PAYMENTS = ` ${orderPayments({ order: { ...order, payments } })}`
   const ADDRESS = `📍${store?.address ? `Dirección: ${store.address}` : ''}`
   const SCHEDULE = store?.schedule
     ? `🕒 Horario de atención: ${store?.schedule || ''}`
