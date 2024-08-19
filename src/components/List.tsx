@@ -174,7 +174,7 @@ function MyList<T extends { id: string }>({
     }
   }, [filteredData?.length])
   if (!data) return <Loading />
-
+  console.log({ filteredData, sortedData })
   return (
     <ScrollView style={{ flex: 1 }}>
       <View
