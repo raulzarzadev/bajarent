@@ -137,6 +137,7 @@ const ListStoreItems = ({
       <ListE
         defaultOrder="des"
         defaultSortBy="number"
+        pinRows
         ComponentMultiActions={({ ids }) => (
           <View>
             <View style={{ marginVertical: 8 }}>
