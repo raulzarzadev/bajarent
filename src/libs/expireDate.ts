@@ -179,3 +179,28 @@ export const translateTime = (
   }
   return `${amountNumber} ${unitCount}`
 }
+
+export const sumTimeToDate = (date: Date, time: TimePriceType): Date => {
+  const [amount, unit] = time?.split(' ') || ['', '']
+  const QTY = parseInt(amount)
+  if (!QTY) return date
+  if (unit === 'year') {
+    return addMonths(date, QTY * 12)
+  }
+  if (unit === 'hour') {
+    return addHours(date, QTY)
+  }
+  if (unit === 'minute') {
+    return addMinutes(date, QTY)
+  }
+  if (unit === 'month') {
+    return addMonths(date, QTY)
+  }
+  if (unit === 'week') {
+    return addWeeks(date, QTY)
+  }
+  if (unit === 'day') {
+    return addDays(date, QTY)
+  }
+  return null
+}

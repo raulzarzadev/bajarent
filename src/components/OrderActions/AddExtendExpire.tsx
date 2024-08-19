@@ -2,14 +2,17 @@ import { useState } from 'react'
 import useModal from '../../hooks/useModal'
 import Button from '../Button'
 import StyledModal from '../StyledModal'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import InputTextStyled from '../InputTextStyled'
 import InputCount from '../InputCount'
 import { onComment, onExtend, onExtend_V2 } from '../../libs/order-actions'
 import InputRadios from '../InputRadios'
 import { TimeType } from '../../types/PriceType'
-import { translateTime } from '../../libs/expireDate'
+import { sumTimeToDate, translateTime } from '../../libs/expireDate'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { useOrderDetails } from '../../contexts/orderContext'
+import asDate, { dateFormat } from '../../libs/utils-date'
+import { gStyles } from '../../styles'
 
 const AddExtendExpire = ({
   orderId,
@@ -24,9 +27,10 @@ const AddExtendExpire = ({
   const [disabled, setDisabled] = useState(false)
   const [unit, setUnit] = useState<TimeType>('day')
 
+  const { order } = useOrderDetails()
   const handleExtend = async () => {
     setDisabled(true)
-    const order = await ServiceOrders.get(orderId)
+    //const order = await ServiceOrders.get(orderId)
     await onExtend_V2({
       items: order.items,
       orderId: order.id,
@@ -69,7 +73,10 @@ const AddExtendExpire = ({
       value: 'month'
     }
   ]
-
+  const newExpireDate = () => {
+    const newDate = sumTimeToDate(asDate(order.expireAt), `${count} ${unit}`)
+    return dateFormat(newDate, 'dd/MMM/yy HH:mm')
+  }
   return (
     <View>
       <Button
@@ -92,6 +99,14 @@ const AddExtendExpire = ({
             </View>
             <View style={{ marginVertical: 8 }}>
               <InputCount setValue={setCount} value={count} />
+            </View>
+            <View style={{ marginVertical: 12 }}>
+              <Text style={{ textAlign: 'center', ...gStyles.helper }}>
+                Nueva fecha de vencimiento:
+              </Text>
+              <Text
+                style={{ textAlign: 'center' }}
+              >{` ${newExpireDate()}`}</Text>
             </View>
             <InputTextStyled
               placeholder="Motivo"
