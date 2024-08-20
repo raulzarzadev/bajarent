@@ -24,6 +24,9 @@ export type ItemSelected = {
   categoryId?: string
   failDescription?: string
   categoryName?: string
+  /**
+   * @deprecated user priceSelected.id instead
+   */
   priceSelectedId?: string
   priceQty?: number
   priceSelected?: Partial<PriceType>

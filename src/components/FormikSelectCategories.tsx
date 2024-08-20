@@ -93,7 +93,8 @@ const FormikSelectCategories = ({
       if (item.id === itemId) {
         return {
           ...item,
-          priceSelected: price
+          priceSelected: price,
+          priceSelectedId: price?.id || null
         }
       }
       return item
@@ -278,6 +279,9 @@ export const ItemRow = ({
   const number = _item?.number || ''
   const serial = _item?.serial || ''
 
+  //@ts-ignore //TODO: <--- this should be fixed
+  const priceSelectedId = item?.priceSelected?.id
+  //const priceSelectedId = item?.priceSelectedId
   return (
     <View
       style={{
@@ -288,12 +292,11 @@ export const ItemRow = ({
     >
       <View style={{ marginRight: 6 }}>
         <ModalSelectCategoryPriceE
-          categoryId={_item?.category}
+          categoryId={category}
           handleSelectPrice={(res) => {
             handleChangeItemPrice(res)
           }}
-          //@ts-ignore
-          priceSelectedId={_item?.priceSelectedId}
+          priceSelectedId={priceSelectedId}
         />
       </View>
       <RowItem
