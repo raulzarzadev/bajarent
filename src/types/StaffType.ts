@@ -96,7 +96,8 @@ export enum permissions_orders {
   // showOrderTime,
   getExpireTomorrow,
   canDeleteExtension,
-  canCancelPickedUp
+  canCancelPickedUp,
+  shouldChooseExactItem
 }
 export enum permissions_store {
   canCreateBalance,

@@ -22,12 +22,8 @@ import ButtonConfirm from './ButtonConfirm'
 import FormItem from './FormItem'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import ModalSelectCategoryPrice, {
-  ModalSelectCategoryPriceE
-} from './ModalSelectCategoryPrice'
-import FormikErrorsList, { ErrorsList } from './FormikErrorsList'
-
-const ALLOW_CHOOSE_EMPTY_CATEGORY = true
+import { ModalSelectCategoryPriceE } from './ModalSelectCategoryPrice'
+import { ErrorsList } from './FormikErrorsList'
 
 const FormikSelectCategories = ({
   name,
@@ -41,8 +37,12 @@ const FormikSelectCategories = ({
   startAt?: Date
 }) => {
   const { categories } = useStore()
-  const { items: employeeItems } = useEmployee()
+  const {
+    items: employeeItems,
+    permissions: { shouldChooseExactItem }
+  } = useEmployee()
   const [field, meta, helpers] = useField(name)
+  const ALLOW_CHOOSE_EMPTY_CATEGORY = !shouldChooseExactItem
 
   const [availableCategories, setAvailableCategories] = useState<
     Partial<CategoryType>[]

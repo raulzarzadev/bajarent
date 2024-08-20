@@ -109,6 +109,7 @@ const labels = {
   showOrderTime: 'Tiempo',
   getExpireTomorrow: 'Vence mañana',
   canCancelPickedUp: 'Cancelar recogida',
+  shouldChooseExactItem: 'Item exacto',
   /* ********************************************
    * PERMISSIONS STORE V2
    *******************************************rz */
