@@ -50,6 +50,38 @@ const useMyNav = () => {
       return
     }
   }
+  const toPayments = ({
+    id,
+    ids,
+    idsTitle
+  }: {
+    id?: string
+    ids?: string[]
+    idsTitle?: string
+  }) => {
+    if (Array.isArray(ids) && ids.length > 0) {
+      //@ts-ignore
+      navigate('StackPayments', {
+        screen: 'ScreenPayments',
+        params: {
+          title: idsTitle || 'Pagos',
+          payments: ids
+        }
+      })
+    }
+
+    if (id) {
+      //@ts-ignore
+      navigate('StackPayments', {
+        screen: 'ScreenPaymentsDetails',
+        params: {
+          id
+        }
+      })
+      return
+    }
+  }
+
   const toOrders = ({
     id,
     ids,
@@ -89,7 +121,8 @@ const useMyNav = () => {
   }
   return {
     toItems,
-    toOrders
+    toOrders,
+    toPayments
   }
 }
 

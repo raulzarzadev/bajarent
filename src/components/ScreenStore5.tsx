@@ -271,6 +271,7 @@ const TabCashbox = () => {
         }}
         documentDate={balance?.createdAt}
       />
+      <DateCounts date={date} />
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
           progress={progress}
@@ -284,7 +285,6 @@ const TabCashbox = () => {
           }}
         />
       </View>
-      <DateCounts date={date} />
       <BusinessStatusE balance={balance} />
     </ScrollView>
   )

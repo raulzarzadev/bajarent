@@ -37,6 +37,7 @@ import { useOrderDetails } from '../contexts/orderContext'
 import { OrderActionsE } from './OrderActions/OrderActions2'
 import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
+import useMyNav from '../hooks/useMyNav'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -361,7 +362,7 @@ export const OrderDates = ({
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
   const payments = useOrderDetails()?.payments
-
+  const { toPayments } = useMyNav()
   const sortByCreatedAt = (a: PaymentType, b: PaymentType) => {
     return asDate(a.createdAt).getTime() < asDate(b.createdAt).getTime()
       ? 1
@@ -384,11 +385,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
             {payments.sort(sortByCreatedAt)?.map((payment) => (
               <Pressable
                 onPress={() => {
-                  //@ts-ignore
-                  navigate('StackPayments', {
-                    screen: 'ScreenPaymentsDetails',
-                    params: { id: payment.id }
-                  })
+                  toPayments({ id: payment.id })
                 }}
                 key={payment.id}
                 style={[
