@@ -1,7 +1,7 @@
 import React from 'react'
 import { ListSideButton, LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
-import { RowOrderE } from './RowOrder'
+import { RowOrderE, RowOrderType } from './RowOrder'
 import OrderType from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 import { useStore } from '../contexts/storeContext'
@@ -30,13 +30,19 @@ const ListOrders = ({
         storeSections?.find((section) => section?.id === o?.assignToSection)
           ?.name || null
 
-      const order: OrderType = {
+      const order: RowOrderType = {
         id: o?.id,
         ...o,
         assignToSectionName: assignedToSection,
         hasImportantComment: o?.comments?.some(
           (c) => c.type === 'important' && !c.solved
-        )
+        ),
+        //* Show a list of items numbers
+        //* if has more tha one show count and list
+        //* else show only the number
+        itemsList: `${
+          o?.items?.length > 1 ? `(${o?.items?.length}) ` : ''
+        }${o?.items?.map((i) => i?.number).join(', ')}`
         //  assignedToSection
       }
       return o?.id ? order : null
@@ -46,6 +52,7 @@ const ListOrders = ({
   return (
     <>
       <LoadingList
+        ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
         pinRows={true}
         sideButtons={sideButtons}
@@ -71,7 +78,6 @@ const ListOrders = ({
           { key: 'expireAt', label: 'Vencimiento' },
           { key: 'colorLabel', label: 'Color' }
         ]}
-        ComponentRow={({ item }) => <RowOrderE item={item} />}
         filters={[
           { field: 'assignToSection', label: 'Area' },
           { field: 'type', label: 'Tipo' },

@@ -6,8 +6,10 @@ import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
 import ListRow, { ListRowField } from './ListRow'
+
+export type RowOrderType = OrderType & { itemsList?: string }
 export type RowOrderProps = {
-  item: OrderType
+  item: RowOrderType
   showTime?: boolean
   showTotal?: boolean
   showTodayAmount?: boolean
@@ -28,10 +30,15 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
           <Text style={{ textAlign: 'center' }} numberOfLines={1}>
             <ClientName order={order} />
           </Text>
+          <Text
+            numberOfLines={1}
+            style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
+          >
+            {order.itemsList}
+          </Text>
         </View>
       )
     },
-
     {
       width: 50,
       component: (
