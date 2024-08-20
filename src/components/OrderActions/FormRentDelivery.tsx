@@ -7,6 +7,9 @@ import OrderType from '../../types/OrderType'
 import Button from '../Button'
 import FormikInputImage from '../FormikInputImage'
 import FormikSelectCategories from '../FormikSelectCategories'
+import { getOrderFields } from '../FormOrder'
+import { useOrderDetails } from '../../contexts/orderContext'
+import { useStore } from '../../contexts/storeContext'
 
 const FormRentDelivery = ({
   initialValues,
@@ -20,8 +23,16 @@ const FormRentDelivery = ({
   onSubmit: (values) => Promise<void> | void
   setDirty?: (dirty: boolean) => void
 }) => {
+  const { order } = useOrderDetails()
+  console.log({ order })
   const [loading, setLoading] = React.useState(false)
 
+  const { store } = useStore()
+  const orderFields = store.orderFields[order?.type]
+  const ORDER_FIELDS = getOrderFields({
+    ...orderFields
+  })
+  console.log({ ORDER_FIELDS })
   return (
     <View>
       <Formik
@@ -37,6 +48,13 @@ const FormRentDelivery = ({
             setLoading(false)
           }
         }}
+        validate={(values) => {
+          const errors: any = {}
+          if (ORDER_FIELDS.includes('selectItems') && !values.items) {
+            errors.items = 'Selecciona al menos un item'
+          }
+          return errors
+        }}
       >
         {({ handleSubmit, dirty }) => {
           useEffect(() => {
@@ -44,23 +62,39 @@ const FormRentDelivery = ({
           }, [dirty])
           return (
             <>
-              <View style={{ marginVertical: 8 }}>
-                <FormikSelectCategories name="items" selectPrice />
-              </View>
-              <FormikInputValue name="note" label="Contrato" />
-              <FormikInputValue name="address" label="Dirección" />
-              <FormikInputValue
-                name="references"
-                label="Referencias de la casa"
-              />
-              <InputLocationFormik name="location" />
-              <View style={{ marginVertical: 8 }}>
-                <FormikInputImage name="imageID" label="Subir identificación" />
-              </View>
-
-              <View style={{ marginVertical: 8 }}>
-                <FormikInputImage name="imageHouse" label="Subir fachada " />
-              </View>
+              {ORDER_FIELDS.includes('selectItems') && (
+                <View style={{ marginVertical: 8 }}>
+                  <FormikSelectCategories name="items" selectPrice />
+                </View>
+              )}
+              {ORDER_FIELDS.includes('note') && (
+                <FormikInputValue name="note" label="Contrato" />
+              )}
+              {ORDER_FIELDS.includes('address') && (
+                <FormikInputValue name="address" label="Dirección" />
+              )}
+              {ORDER_FIELDS.includes('references') && (
+                <FormikInputValue
+                  name="references"
+                  label="Referencias de la casa"
+                />
+              )}
+              {ORDER_FIELDS.includes('location') && (
+                <InputLocationFormik name="location" />
+              )}
+              {ORDER_FIELDS.includes('imageID') && (
+                <View style={{ marginVertical: 8 }}>
+                  <FormikInputImage
+                    name="imageID"
+                    label="Subir identificación"
+                  />
+                </View>
+              )}
+              {ORDER_FIELDS.includes('imageHouse') && (
+                <View style={{ marginVertical: 8 }}>
+                  <FormikInputImage name="imageHouse" label="Subir fachada " />
+                </View>
+              )}
 
               <Button
                 buttonStyles={{ marginVertical: 12 }}

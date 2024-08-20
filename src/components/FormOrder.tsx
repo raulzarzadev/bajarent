@@ -60,48 +60,6 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
-const getOrderFields = (
-  fields: OrderFields,
-  type: TypeOrder
-): FormOrderFields[] => {
-  //* extra ops config
-  //* add extra ops config at the really first of the form
-  const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
-  let mandatoryFieldsEnd: FormOrderFields[] = []
-  let addedFields: FormOrderFields[] = []
-
-  const extraOpsStarts = ['sheetRow', 'note']?.filter(
-    (field) => !!fields?.[field]
-  ) as FormOrderFields[]
-
-  const extraOpsEnds = [
-    'startRepair',
-    'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
-    'scheduledAt'
-  ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
-
-  // if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItems']
-  // // if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
-  // if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItems']
-
-  const extraFieldsAllowed = LIST_OF_FORM_ORDER_FIELDS?.filter(
-    (field) => fields?.[field]
-  )
-    //* clear extra ops because are already included at the first of the form
-    ?.filter((field) => ![...extraOpsEnds, ...extraOpsStarts].includes(field))
-
-  addedFields = extraFieldsAllowed
-  const res = [
-    ...extraOpsStarts,
-    ...mandatoryFieldsStart,
-    ...addedFields,
-    ...mandatoryFieldsEnd,
-    ...extraOpsEnds
-  ]
-  const removeDuplicates = [...new Set(res)]
-  //console.log({ res })
-  return removeDuplicates
-}
 
 export type FormOrderFields = (typeof LIST_OF_FORM_ORDER_FIELDS)[number]
 export const mutableFormOrderFields: FormOrderFields[] = [
@@ -610,3 +568,43 @@ const styles = StyleSheet.create({
     marginVertical: 8
   }
 })
+
+export const getOrderFields = (fields: OrderFields): FormOrderFields[] => {
+  //* extra ops config
+  //* add extra ops config at the really first of the form
+  const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
+  let mandatoryFieldsEnd: FormOrderFields[] = []
+  let addedFields: FormOrderFields[] = []
+
+  const extraOpsStarts = ['sheetRow', 'note']?.filter(
+    (field) => !!fields?.[field]
+  ) as FormOrderFields[]
+
+  const extraOpsEnds = [
+    'startRepair',
+    'hasDelivered', //*<- if order has delivered is marked as DELIVERED and its like new item already exists
+    'scheduledAt'
+  ]?.filter((field) => !!fields?.[field]) as FormOrderFields[]
+
+  // if (type === TypeOrder.RENT) mandatoryFieldsEnd = ['selectItems']
+  // // if (type === TypeOrder.REPAIR) mandatoryFieldsEnd = ['selectItemsRepair']
+  // if (type === TypeOrder.SALE) mandatoryFieldsEnd = ['selectItems']
+
+  const extraFieldsAllowed = LIST_OF_FORM_ORDER_FIELDS?.filter(
+    (field) => fields?.[field]
+  )
+    //* clear extra ops because are already included at the first of the form
+    ?.filter((field) => ![...extraOpsEnds, ...extraOpsStarts].includes(field))
+
+  addedFields = extraFieldsAllowed
+  const res = [
+    ...extraOpsStarts,
+    ...mandatoryFieldsStart,
+    ...addedFields,
+    ...mandatoryFieldsEnd,
+    ...extraOpsEnds
+  ]
+  const removeDuplicates = [...new Set(res)]
+  //console.log({ res })
+  return removeDuplicates
+}

@@ -108,6 +108,7 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
 const RentOrderActions = ({ order }: { order: OrderType }) => {
   const status = order?.status
   const isDelivered = status === order_status.DELIVERED
+
   const isPending =
     status === order_status.AUTHORIZED || status === order_status.PENDING
   const isPickedUp = status === order_status.PICKED_UP
@@ -146,23 +147,60 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
         <ModalRentStart modal={modalRentStart} />
         <ModalRentFinish modal={modalRentFinish} />
         <View style={styles.container}>
-          <ButtonAction
-            isSelected={isDelivered}
-            selectedLabel="Entregado"
-            unselectedLabel="Entregar"
-            onPress={() => {
-              modalRentStart.toggleOpen()
-            }}
-          />
-          <ButtonAction
-            disabled={isPending || !allItemsExists}
-            isSelected={isPickedUp}
-            selectedLabel="Recogido"
-            unselectedLabel="Recoger"
-            onPress={() => {
-              modalRentFinish.toggleOpen()
-            }}
-          />
+          {isDelivered && canCancelPickUp && (
+            <View style={{ marginVertical: 'auto' }}>
+              <ButtonConfirm
+                openLabel="Pedido "
+                confirmColor="warning"
+                confirmVariant="outline"
+                confirmLabel="Cancelar entrega"
+                icon="undo"
+                openColor="warning"
+                openVariant="outline"
+                openSize="small"
+                text="¿Estás seguro de que quieres cancelar entrega?"
+                handleConfirm={async () => {
+                  //* UPDATE ORDER
+                  ServiceOrders.update(order.id, {
+                    status: order_status.AUTHORIZED,
+                    deliveredAt: null,
+                    deliveredBy: null
+                  })
+                    .then((r) => console.log(r))
+                    .catch((e) => console.log(e)) //* COMMENT ORDER
+                  onComment({
+                    content: 'Entrega cancelada',
+                    orderId: order.id,
+                    storeId: order.storeId,
+                    type: 'comment',
+                    isOrderMovement: true
+                  })
+                    .then((r) => console.log(r))
+                    .catch((e) => console.log(e))
+                  order?.items?.forEach((item) => {
+                    //* UPDATE ITEM AND CREATE HISTORY ENTRY
+                    ServiceStoreItems.update({
+                      itemId: item.id,
+                      storeId: order.storeId,
+                      itemData: { status: ItemStatuses.pickedUp }
+                    })
+                      .then((r) => console.log(r))
+                      .catch((e) => console.log(e))
+                    onRegistryEntry({
+                      itemId: item.id,
+                      storeId: order.storeId,
+                      type: 'pickup',
+                      orderId: order.id,
+                      content: 'Entrega cancelada'
+                    })
+                      .then((r) => console.log(r))
+                      .catch((e) => console.log(e))
+                  })
+                }}
+              />
+            </View>
+          )}
+
           {isPickedUp && canCancelPickUp && (
             <View style={{ marginVertical: 'auto' }}>
               <ButtonConfirm
@@ -216,6 +254,23 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
               />
             </View>
           )}
+          <ButtonAction
+            isSelected={isDelivered}
+            selectedLabel="Entregado"
+            unselectedLabel="Entregar"
+            onPress={() => {
+              modalRentStart.toggleOpen()
+            }}
+          />
+          <ButtonAction
+            disabled={isPending || !allItemsExists}
+            isSelected={isPickedUp}
+            selectedLabel="Recogido"
+            unselectedLabel="Recoger"
+            onPress={() => {
+              modalRentFinish.toggleOpen()
+            }}
+          />
         </View>
       </ScrollView>
     </>
