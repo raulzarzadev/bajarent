@@ -40,9 +40,13 @@ const ListOrders = ({
         //* Show a list of items numbers
         //* if has more tha one show count and list
         //* else show only the number
-        itemsList: `${
+        itemsString: `${
           o?.items?.length > 1 ? `(${o?.items?.length}) ` : ''
-        }${o?.items?.map((i) => i?.number).join(', ')}`
+        }${o?.items?.map((i) => i?.number).join(', ')}`,
+        itemsNumbers: o?.items
+          ?.map((i) => i?.number)
+          .sort((a, b) => a.localeCompare(b))
+          .join(', ')
         //  assignedToSection
       }
       return o?.id ? order : null
@@ -76,7 +80,8 @@ const ListOrders = ({
           { key: 'assignToSection', label: 'Area' },
           { key: 'type', label: 'Tipo' },
           { key: 'expireAt', label: 'Vencimiento' },
-          { key: 'colorLabel', label: 'Color' }
+          { key: 'colorLabel', label: 'Color' },
+          { key: 'itemsNumbers', label: 'Item' }
         ]}
         filters={[
           { field: 'assignToSection', label: 'Area' },

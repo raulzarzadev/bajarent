@@ -7,7 +7,10 @@ import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
 import ListRow, { ListRowField } from './ListRow'
 
-export type RowOrderType = OrderType & { itemsList?: string }
+export type RowOrderType = OrderType & {
+  itemsNumbers?: string
+  itemsString?: string
+}
 export type RowOrderProps = {
   item: RowOrderType
   showTime?: boolean
@@ -34,7 +37,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             numberOfLines={1}
             style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
           >
-            {order.itemsList}
+            {order?.itemsString}
           </Text>
         </View>
       )
