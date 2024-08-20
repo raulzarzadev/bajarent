@@ -59,7 +59,6 @@ export const RowOrderItem = ({
 
   const isRent = order.type === order_type.RENT
   const isDeliveredRent = order.status === order_status.DELIVERED && isRent
-  const canEditItemPrice = isDeliveredRent
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -103,17 +102,6 @@ export const RowOrderItem = ({
     setLoading(false)
     return
   }
-
-  const [itemPriceSelectedId, setItemPriceSelectedId] = useState<string | null>(
-    item?.priceSelectedId
-  )
-  const itemPrices = categories.find(
-    (c) => c?.id === itemData?.category
-  )?.prices
-
-  const originalPriceId = itemPrices?.find(
-    (p) => p?.id === item?.priceSelectedId
-  )?.id
 
   return (
     <View>
