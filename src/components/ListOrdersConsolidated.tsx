@@ -15,7 +15,10 @@ import OrderDirectives from './OrderDirectives'
 import asDate, { fromNow } from '../libs/utils-date'
 import ErrorBoundary from './ErrorBoundary'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
-type OrderWithId = Partial<ConsolidatedOrderType> & { id: string }
+type OrderWithId = Partial<ConsolidatedOrderType> & {
+  id: string
+  itemsString?: string
+}
 
 const ListOrdersConsolidated = () => {
   const { consolidatedOrders, handleRefresh } = useOrdersCtx()
@@ -56,6 +59,7 @@ const ListOrdersConsolidated = () => {
           Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
         </Text>
         <LoadingList
+          ComponentRow={({ item }) => <ComponentRow item={item} />}
           pinRows
           collectionSearch={{
             collectionName: 'orders',
@@ -85,7 +89,6 @@ const ListOrdersConsolidated = () => {
               params: { orderId }
             })
           }}
-          ComponentRow={({ item }) => <ComponentRow item={item} />}
           filters={[
             {
               field: 'type',
@@ -161,6 +164,10 @@ const ListOrdersConsolidated = () => {
             {
               key: 'expireAt',
               label: 'Vencimiento'
+            },
+            {
+              key: 'itemsString',
+              label: 'Item'
             }
           ]}
         />
@@ -192,13 +199,29 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       )
     },
     {
-      width: 50,
+      width: 70,
       component: (
-        <Text style={styles.cell} numberOfLines={1}>
-          {order?.neighborhood}
-        </Text>
+        <View style={{ alignItems: 'stretch' }}>
+          <Text
+            style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
+            numberOfLines={1}
+          >
+            {order?.itemsString}
+          </Text>
+          <Text style={[gStyles.helper]} numberOfLines={1}>
+            {order?.neighborhood}
+          </Text>
+        </View>
       )
     },
+    // {
+    //   width: 50,
+    //   component: (
+    //     <Text style={styles.cell} numberOfLines={1}>
+    //       {order?.neighborhood}
+    //     </Text>
+    //   )
+    // },
     {
       width: 'rest',
       component: <OrderDirectives order={order} />

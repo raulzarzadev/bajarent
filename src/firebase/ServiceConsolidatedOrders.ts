@@ -109,7 +109,7 @@ const formatConsolidateOrder = (
   payments: PaymentType[]
 ): Omit<
   Partial<OrderType>,
-  'createdAt' | 'expireAt' | 'pickedUpAt' | 'deliveredAt'
+  'createdAt' | 'expireAt' | 'pickedUpAt' | 'deliveredAt' | 'itemsString'
 > & {
   createdAt: string | null
   expireAt: string | null
@@ -129,6 +129,14 @@ const formatConsolidateOrder = (
     //references: order?.references || '',
     location: order?.location || '',
     items: order?.items || [],
+    itemsString:
+      order?.items
+        //* get just the number
+        ?.map((i) => i.number)
+        //* sort by number
+        .sort((a, b) => a.localeCompare(b))
+        //* join by comma
+        ?.join(', ') || '',
     neighborhood: order?.neighborhood || '',
     assignToSection: order?.assignToSection || '',
     // @ts-ignore
