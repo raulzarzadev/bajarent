@@ -41,8 +41,8 @@ const ListOrders = ({
         //* if has more tha one show count and list
         //* else show only the number
         itemsString: `${
-          o?.items?.length > 1 ? `(${o?.items?.length}) ` : ''
-        }${o?.items?.map((i) => i?.number).join(', ')}`,
+          o?.items?.length > 1 ? `(${o?.items?.length || 0}) ` : ''
+        }${o?.items?.map((i) => i?.number)?.join(', ') || ''}`,
         itemsNumbers: o?.items
           ?.map((i) => i?.number)
           .sort((a, b) => a.localeCompare(b))

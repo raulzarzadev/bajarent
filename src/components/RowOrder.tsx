@@ -33,12 +33,14 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
           <Text style={{ textAlign: 'center' }} numberOfLines={1}>
             <ClientName order={order} />
           </Text>
-          <Text
-            numberOfLines={1}
-            style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
-          >
-            {order?.itemsString}
-          </Text>
+          {!!order?.itemsString && (
+            <Text
+              numberOfLines={1}
+              style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
+            >
+              {order?.itemsString}
+            </Text>
+          )}
         </View>
       )
     },
