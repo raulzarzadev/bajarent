@@ -9,6 +9,7 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import TextInfo from '../TextInfo'
 import FormRentDelivery from './FormRentDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { ErrorsList } from '../FormikErrorsList'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
@@ -34,7 +35,6 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
             text="Asegurate de que ENTREGAS el siguiente artículo"
           />
         </View>
-
         <FormRentDelivery
           initialValues={order}
           onSubmit={async (values) => {
@@ -47,8 +47,16 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
             setIsDirty(dirty)
           }}
         />
+        <ErrorsList
+          errors={(() => {
+            const errors = {}
+            if (order?.items?.length <= 0)
+              errors['items'] = 'Debes seleccionar al menos un item'
+            return errors
+          })()}
+        />
         <Button
-          disabled={isDirty || isLoading}
+          disabled={isDirty || isLoading || !order?.items?.length}
           label="Entregar"
           onPress={async () => {
             return await handleRentStart()

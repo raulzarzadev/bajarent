@@ -24,7 +24,6 @@ const FormRentDelivery = ({
   setDirty?: (dirty: boolean) => void
 }) => {
   const { order } = useOrderDetails()
-  console.log({ order })
   const [loading, setLoading] = React.useState(false)
 
   const { store } = useStore()
@@ -32,7 +31,7 @@ const FormRentDelivery = ({
   const ORDER_FIELDS = getOrderFields({
     ...orderFields
   })
-  console.log({ ORDER_FIELDS })
+
   return (
     <View>
       <Formik
@@ -47,13 +46,6 @@ const FormRentDelivery = ({
           } finally {
             setLoading(false)
           }
-        }}
-        validate={(values) => {
-          const errors: any = {}
-          if (ORDER_FIELDS.includes('selectItems') && !values.items) {
-            errors.items = 'Selecciona al menos un item'
-          }
-          return errors
         }}
       >
         {({ handleSubmit, dirty }) => {
