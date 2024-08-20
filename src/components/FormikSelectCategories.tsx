@@ -27,6 +27,8 @@ import ModalSelectCategoryPrice, {
 } from './ModalSelectCategoryPrice'
 import FormikErrorsList, { ErrorsList } from './FormikErrorsList'
 
+const ALLOW_CHOOSE_EMPTY_CATEGORY = true
+
 const FormikSelectCategories = ({
   name,
   selectPrice,
@@ -46,12 +48,9 @@ const FormikSelectCategories = ({
     Partial<CategoryType>[]
   >([])
 
-  //TODO: <--- this will alow you choose category with out specific item
-  const CHOOSE_SPECIFIC_ITEM = false
-  const chooseSpecificItem = CHOOSE_SPECIFIC_ITEM
-
+  const shouldSelectAnItem = !ALLOW_CHOOSE_EMPTY_CATEGORY
   useEffect(() => {
-    if (chooseSpecificItem) {
+    if (ALLOW_CHOOSE_EMPTY_CATEGORY) {
       setAvailableCategories(
         categories.filter((category) =>
           employeeItems.find((item) => item.category === category?.id)
@@ -67,7 +66,6 @@ const FormikSelectCategories = ({
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
   const [price, setPrice] = useState<Partial<PriceType> | null>(null)
   const [category, setCategory] = useState<Partial<CategoryType> | null>(null)
-
   const items: ItemSelected[] = useMemo(() => value, [value])
 
   const handleRemoveItem = (id: string) => {
@@ -101,6 +99,8 @@ const FormikSelectCategories = ({
     })
     helpers.setValue(newItems)
   }
+
+  const disabledAddItem = !price || (shouldSelectAnItem && !itemSelected)
   return (
     <>
       <View
@@ -171,7 +171,7 @@ const FormikSelectCategories = ({
           <ErrorsList
             errors={(() => {
               let errorList: Record<string, string> = {}
-              if (!itemSelected)
+              if (!itemSelected && shouldSelectAnItem)
                 errorList.itemSelected = 'Seleccione un artículo'
               if (!price) errorList.priceSelected = 'Seleccione un precio'
               return errorList
@@ -198,7 +198,7 @@ const FormikSelectCategories = ({
                 handleChangeItemSelected([...items, newItem])
                 modal.toggleOpen()
               }}
-              disabled={!price || !itemSelected}
+              disabled={disabledAddItem}
               label="Agregar"
               icon="add"
               fullWidth
