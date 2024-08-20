@@ -194,24 +194,7 @@ export const RowOrderItem = ({
 
         {canCreateItem && (
           <>
-            <Text style={gStyles.h3}>
-              Asignar alguno de items que tienes disponibles
-            </Text>
-            <ListAssignedItemsE
-              itemSelected={itemSelected}
-              onSelectItem={(itemId) => {
-                handleSelectItem(itemId)
-              }}
-            />
-            <Button
-              disabled={!itemSelected}
-              label="Asignar item"
-              onPress={() => {
-                handleAssignItem()
-              }}
-            ></Button>
-            <Text style={gStyles.h3}>o</Text>
-            <Text style={gStyles.h3}>Crea un artítculo nuevo</Text>
+            <Text style={gStyles.h2}>Crea un artítculo nuevo</Text>
 
             <FormItem
               values={{
@@ -264,6 +247,23 @@ export const RowOrderItem = ({
                 }
               }}
             />
+            <Text style={[gStyles.h2, { marginTop: 16 }]}>o</Text>
+            <Text style={[gStyles.h2, { marginBottom: 16 }]}>
+              Asigna alguno
+            </Text>
+            <ListAssignedItemsE
+              itemSelected={itemSelected}
+              onSelectItem={(itemId) => {
+                handleSelectItem(itemId)
+              }}
+            />
+            <Button
+              disabled={!itemSelected}
+              label="Asignar item"
+              onPress={() => {
+                handleAssignItem()
+              }}
+            ></Button>
           </>
         )}
       </StyledModal>
