@@ -22,9 +22,9 @@ const RowItem = ({
         >
           <Text
             numberOfLines={1}
-            style={[gStyles.tBold, { textAlign: 'center', paddingRight: 4 }]}
+            style={[gStyles.h1, { textAlign: 'center', paddingRight: 4 }]}
           >
-            {item.categoryName}
+            {item.number}
           </Text>
           {!!item.serial && (
             <Text style={[gStyles.helper, { textAlign: 'center' }]}>
@@ -43,7 +43,7 @@ const RowItem = ({
             justifyContent: 'center'
           }}
         >
-          <Text style={[]}>{item.number}</Text>
+          <Text style={[]}>{item.categoryName}</Text>
         </View>
       ),
       width: 'rest'

@@ -22,8 +22,6 @@ import StoreType from '../types/StoreType'
 import { CategoryType } from '../types/RentItem'
 import { ListAssignedItemsE } from './ListAssignedItems'
 import { onAssignItem } from '../firebase/actions/item-actions'
-import FormSelectPrice from './FormSelectPrice'
-import { onChangeOrderItemTime } from '../libs/order-actions'
 
 export const RowOrderItem = ({
   item,

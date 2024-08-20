@@ -5,10 +5,11 @@ import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
 import { useOrderDetails } from '../../contexts/orderContext'
 import TextInfo from '../TextInfo'
-import ItemOrderDetails from '../ItemOrderDetails'
 import { gSpace } from '../../styles'
 import { onRentFinish } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
+import RowOrderItem from '../RowOrderItem'
+import CardItem from '../CardItem'
 
 const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
@@ -32,7 +33,7 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
         </View>
         <View style={{ marginVertical: gSpace(3) }}>
           {items?.map((item, index) => (
-            <ItemRentOrder key={index} item={item} />
+            <CardItem item={item} key={item.id} />
           ))}
         </View>
         <Button
@@ -42,13 +43,6 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
           }}
         ></Button>
       </StyledModal>
-    </View>
-  )
-}
-export const ItemRentOrder = ({ item }) => {
-  return (
-    <View>
-      <ItemOrderDetails item={item} />
     </View>
   )
 }

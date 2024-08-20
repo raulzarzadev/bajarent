@@ -38,10 +38,10 @@ const CardItem = ({ item }: { item: Partial<ItemType> }) => {
           />
         )}
       </View>
-      <Text numberOfLines={2} style={[gStyles.h3]}>
-        {item.categoryName}
+      <Text numberOfLines={2} style={[gStyles.h1]}>
+        {item.number}
       </Text>
-      <Text style={[gStyles.tCenter]}>{item.number} </Text>
+      <Text style={[gStyles.tCenter]}>{item.categoryName} </Text>
       {item?.needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
     </View>
   )
