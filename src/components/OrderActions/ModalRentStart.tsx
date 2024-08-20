@@ -26,6 +26,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     return
   }
 
+  const disabledDelivery = isDirty || isLoading || !order?.items?.length
+
   return (
     <View>
       <StyledModal {...modal}>
@@ -56,7 +58,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
           })()}
         />
         <Button
-          disabled={isDirty || isLoading || !order?.items?.length}
+          disabled={disabledDelivery}
+          variant={disabledDelivery ? 'ghost' : 'filled'}
           label="Entregar"
           onPress={async () => {
             return await handleRentStart()

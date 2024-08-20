@@ -10,6 +10,7 @@ import { PriceType } from '../types/PriceType'
 import P from './P'
 import theme, { colors } from '../theme'
 import CurrencyAmount from './CurrencyAmount'
+import { sortPricesByTime } from '../libs/prices'
 const FormSelectPrice = ({
   prices,
   value,
@@ -30,7 +31,7 @@ const FormSelectPrice = ({
       </View>
       <View style={{ flexDirection: 'row' }}>
         <FlatList
-          data={prices}
+          data={prices.sort(sortPricesByTime)}
           renderItem={({ item }) => (
             <Pressable
               style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}

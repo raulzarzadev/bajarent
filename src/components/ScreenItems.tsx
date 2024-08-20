@@ -20,6 +20,7 @@ import ModalFormPrice from './ModalFormPrice'
 import useCategories from '../hooks/useCategories'
 import { priceTimeInSeconds } from '../libs/expireDate'
 import StoreItems from './StoreItems'
+import { sortPricesByTime } from '../libs/prices'
 
 const ScreenItems = () => {
   return (
@@ -59,9 +60,7 @@ const StoreCategories = () => {
 
   useEffect(() => {
     const prices = categories.find((c) => c.id === selected)?.prices || []
-    prices.sort((a, b) => {
-      return priceTimeInSeconds(a.time) - priceTimeInSeconds(b.time)
-    })
+    prices.sort(sortPricesByTime)
     setCategoryPrices(prices)
   }, [selected, categories])
 

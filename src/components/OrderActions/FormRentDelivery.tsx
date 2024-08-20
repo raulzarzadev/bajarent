@@ -52,6 +52,8 @@ const FormRentDelivery = ({
           useEffect(() => {
             setDirty?.(dirty)
           }, [dirty])
+
+          const disabledUpdate = loading || !dirty
           return (
             <>
               {ORDER_FIELDS.includes('selectItems') && (
@@ -91,7 +93,8 @@ const FormRentDelivery = ({
               <Button
                 buttonStyles={{ marginVertical: 12 }}
                 label="Actualizar"
-                disabled={loading || !dirty}
+                disabled={disabledUpdate}
+                variant={disabledUpdate ? 'ghost' : 'filled'}
                 onPress={handleSubmit}
               ></Button>
             </>
