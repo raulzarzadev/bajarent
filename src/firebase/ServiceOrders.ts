@@ -16,6 +16,7 @@ import { createUUID } from '../libs/createId'
 import { auth } from './auth'
 import { expireDate2 } from '../libs/expireDate'
 import { PriceType } from '../types/PriceType'
+import ItemType from '../types/ItemType'
 
 type Type = OrderType
 
@@ -481,18 +482,21 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     orderId,
     itemId,
     newItemId,
-    newItemCategoryName = ''
+    newItemCategoryName = '',
+    newItemNumber = ''
   }: {
     orderId: string
     itemId: string
     newItemId: string
     newItemCategoryName: string
+    newItemNumber?: ItemType['number']
   }) {
     const items = await this.get(orderId).then((res) => res.items)
     const itemIndex = items.findIndex((item) => item.id === itemId)
     if (itemIndex < 0) return console.error('Item not found')
     items[itemIndex].id = newItemId
     items[itemIndex].categoryName = newItemCategoryName
+    items[itemIndex].number = newItemNumber || ''
     return await this.update(orderId, { items })
   }
 

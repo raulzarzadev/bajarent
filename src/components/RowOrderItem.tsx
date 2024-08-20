@@ -100,7 +100,6 @@ export const RowOrderItem = ({
     setLoading(false)
     return
   }
-
   return (
     <View>
       <View
@@ -207,21 +206,24 @@ export const RowOrderItem = ({
               }}
               onSubmit={async (values) => {
                 //* CREATE ITEM
-                const newItemId = await ServiceStoreItems.add({
+                const newItem = await ServiceStoreItems.add({
                   item: values,
                   storeId
                 })
-                  .then(async ({ res }) => {
-                    const newItemId = res.id
-                    return newItemId
+                  .then(async ({ res, newItem }) => {
+                    return { ...newItem, id: res.id }
                   })
                   .catch((e) => console.log({ e }))
+
+                //@ts-ignore
+                const itemCreated: ItemType = { ...newItem }
+
                 fetchItems()
-                if (newItemId) {
+                if (itemCreated.id) {
                   //* ADD ENTRY TO THE ITEM
                   await ServiceStoreItems.addEntry({
                     storeId,
-                    itemId: newItemId,
+                    itemId: itemCreated.id,
                     entry: {
                       type: 'created',
                       content: 'Item creado y entregado',
@@ -236,12 +238,13 @@ export const RowOrderItem = ({
                   await ServiceOrders.updateItemId({
                     orderId,
                     itemId,
-                    newItemId: newItemId,
-                    newItemCategoryName: values?.categoryName
+                    newItemId: itemCreated.id,
+                    newItemCategoryName: itemCreated?.categoryName,
+                    newItemNumber: itemCreated.number
                   })
                     .then((res) => console.log({ res }))
                     .catch((e) => console.log({ e }))
-                  onAction?.('created', { id: newItemId })
+                  onAction?.('created', { id: itemCreated.id })
 
                   return
                 }

@@ -337,7 +337,7 @@ export const ItemRow = ({
                 const res = await ServiceStoreItems.add({
                   item: values,
                   storeId
-                }).then(({ res }) => {
+                }).then(({ res, newItem }) => {
                   if (res.id) {
                     ServiceOrders.updateItemId({
                       orderId: orderId,
@@ -345,7 +345,8 @@ export const ItemRow = ({
                       newItemId: res.id,
                       newItemCategoryName: categories.find(
                         (cat) => cat.id === item.category
-                      )?.name
+                      )?.name,
+                      newItemNumber: res?.number
                     })
                     //* update Order
                   }

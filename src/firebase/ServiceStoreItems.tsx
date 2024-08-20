@@ -8,7 +8,11 @@ type Type = Partial<ItemType>
 type Field = keyof Type
 const SUB_COLLECTION = 'items'
 export class ServiceStoreItemsClass {
-  async add({ storeId, item }: { storeId: string; item: Type }) {
+  async add({ storeId, item }: { storeId: string; item: Type }): Promise<{
+    newItem: Type
+    ok: boolean
+    res: any
+  }> {
     //* 1. get current number
     const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
     const newNUmber = await ServiceStores.incrementItemNumber({
@@ -18,13 +22,16 @@ export class ServiceStoreItemsClass {
     await ServiceStores.update(storeId, {
       currentItemNumber: newNUmber
     })
+    const newItem = { ...item, number: newNUmber }
     //* 3. create item
-    const newItem = await ServiceStores.createRefItem({
+    const createItemRes = await ServiceStores.createRefItem({
       collectionRef,
-      item: { ...item, number: newNUmber }
+      item: newItem
     })
 
-    return newItem as FormattedResponse
+    return { ...createItemRes, newItem } as FormattedResponse & {
+      newItem: Type
+    }
   }
 
   async getAll(
