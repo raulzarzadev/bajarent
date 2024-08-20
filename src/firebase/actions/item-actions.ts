@@ -261,7 +261,8 @@ export const onChangeOrderItem = async ({
       orderId,
       itemId,
       newItemId,
-      newItemCategoryName
+      newItemCategoryName,
+      newItemNumber
     })
 
     //* 2 update old item status to picked up
