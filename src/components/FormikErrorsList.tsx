@@ -6,6 +6,9 @@ import theme from '../theme'
 
 const FormikErrorsList = () => {
   const { errors } = useFormikContext()
+  return <ErrorsList errors={errors} />
+}
+export const ErrorsList = ({ errors }: { errors: Record<string, string> }) => {
   return (
     <View>
       {Object.entries(errors).map(([key, value]) => (

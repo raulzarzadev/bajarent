@@ -25,6 +25,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import ModalSelectCategoryPrice, {
   ModalSelectCategoryPriceE
 } from './ModalSelectCategoryPrice'
+import FormikErrorsList, { ErrorsList } from './FormikErrorsList'
 
 const FormikSelectCategories = ({
   name,
@@ -129,6 +130,7 @@ const FormikSelectCategories = ({
               setValue={(value) => {
                 const newItem = categories.find(({ id }) => id === value)
                 setItemSelected('')
+                setPrice(null)
                 setCategory(newItem)
               }}
               value={category?.id || ''}
@@ -164,9 +166,20 @@ const FormikSelectCategories = ({
               />
             </View>
           )}
+
+          <ErrorsList
+            errors={(() => {
+              let errorList: Record<string, string> = {}
+              if (!itemSelected)
+                errorList.itemSelected = 'Seleccione un artículo'
+              if (!price) errorList.priceSelected = 'Seleccione un precio'
+              return errorList
+            })()}
+          />
+
           <View style={{ justifyContent: 'center' }}>
             <Button
-              buttonStyles={{ margin: 'auto' }}
+              buttonStyles={{ margin: 'auto', marginTop: gSpace(2) }}
               onPress={() => {
                 const itemData = employeeItems.find(
                   (item) => item.id === itemSelected
@@ -184,11 +197,10 @@ const FormikSelectCategories = ({
                 handleChangeItemSelected([...items, newItem])
                 modal.toggleOpen()
               }}
-              //disabled={!itemSelected}
+              disabled={!price || !itemSelected}
               label="Agregar"
               icon="add"
-              size="small"
-              fullWidth={false}
+              fullWidth
             />
           </View>
         </StyledModal>
