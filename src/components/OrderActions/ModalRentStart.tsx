@@ -10,7 +10,8 @@ import TextInfo from '../TextInfo'
 import FormRentDelivery from './FormRentDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ErrorsList } from '../FormikErrorsList'
-
+// const MAX_ITEMS_PER_ORDER = 1
+// const MIN_ITEMS_PER_ORDER = 1
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
   const { user } = useAuth()
@@ -26,8 +27,12 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     return
   }
 
-  const disabledDelivery = isDirty || isLoading || !order?.items?.length
+  const itemsCount = order?.items?.length || 0
+  // const toMuchItems = itemsCount > MAX_ITEMS_PER_ORDER
+  // const toLittleItems = itemsCount < MIN_ITEMS_PER_ORDER
+  // const disabledByCountItems = toMuchItems || toLittleItems
 
+  const disabledDelivery = isDirty || isLoading || itemsCount < 1
   return (
     <View>
       <StyledModal {...modal}>
@@ -52,7 +57,18 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
         <ErrorsList
           errors={(() => {
             const errors = {}
-            if (order?.items?.length <= 0)
+            // if (toMuchItems) {
+            //   errors[
+            //     'items'
+            //   ] = `Solo puedes seleccionar ${MAX_ITEMS_PER_ORDER} item(s)`
+            //   return
+            // }
+
+            // if(toLittleItems) {
+            //   errors['items'] = `Debes seleccionar al menos ${MIN_ITEMS_PER_ORDER} item(s)`
+            //   return errors
+            // }
+            if (itemsCount < 1)
               errors['items'] = 'Debes seleccionar al menos un item'
             return errors
           })()}

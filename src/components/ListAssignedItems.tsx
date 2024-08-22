@@ -32,9 +32,11 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
     .sort((a, b) => a.number.localeCompare(b.number))
   return (
     <View>
-      {formattedItems.length > 0 && (
+      {availableItems?.length === 0 ? (
+        <Text style={gStyles.h3}>No hay artículos disponibles</Text>
+      ) : (
         <Text style={[gStyles.helper, gStyles.tCenter]}>
-          Mis artículos disponibles {availableItems.length || 0}
+          Artículos disponibles {availableItems?.length || 0}
         </Text>
       )}
       <RowSectionItems

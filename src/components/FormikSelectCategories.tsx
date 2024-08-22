@@ -50,15 +50,7 @@ const FormikSelectCategories = ({
 
   const shouldSelectAnItem = !ALLOW_CHOOSE_EMPTY_CATEGORY
   useEffect(() => {
-    if (ALLOW_CHOOSE_EMPTY_CATEGORY) {
-      setAvailableCategories(
-        categories.filter((category) =>
-          employeeItems.find((item) => item.category === category?.id)
-        )
-      )
-    } else {
-      setAvailableCategories(categories)
-    }
+    setAvailableCategories(categories)
   }, [employeeItems])
 
   const value = field.value || []
