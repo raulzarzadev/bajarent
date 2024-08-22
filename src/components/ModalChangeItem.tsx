@@ -8,6 +8,8 @@ import TextInfo from './TextInfo'
 import { ListItemsSectionsE } from './ListItemsSections'
 import { useEmployee } from '../contexts/employeeContext'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { useOrderDetails } from '../contexts/orderContext'
+import { order_status, order_type } from '../types/OrderType'
 
 const ModalChangeItem = ({
   itemId,
@@ -39,6 +41,10 @@ const ModalChangeItem = ({
     })
   }
 
+  const { order } = useOrderDetails()
+  //* if is rent and not delivered return null
+  if (order.type === order_type.RENT && order.status !== order_status.DELIVERED)
+    return null
   return (
     <View>
       <ButtonConfirm
