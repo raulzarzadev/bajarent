@@ -20,18 +20,18 @@ const ModalSelectCategoryPrice = ({
   const { categories } = useStore()
   const [itemPriceSelectedId, setItemPriceSelectedId] =
     useState<string>(priceSelectedId)
-  const [itemPrices, setItemPrices] = useState<Partial<PriceType>[]>([])
+  const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
 
   useEffect(() => {
-    setItemPrices(categories.find((c) => c.id === categoryId)?.prices || [])
+    setCategoryPrices(categories.find((c) => c.id === categoryId)?.prices || [])
   }, [categories, categoryId])
 
   return (
     <View>
       <ButtonConfirm
         handleConfirm={async () => {
-          const priceSelected = itemPrices.find(
-            (p) => p.id === itemPriceSelectedId
+          const priceSelected = categoryPrices.find(
+            (p) => p.categoryId === categoryId
           )
           handleSelectPrice(priceSelected)
         }}
@@ -46,7 +46,7 @@ const ModalSelectCategoryPrice = ({
       >
         <View style={{ marginBottom: 8 }}>
           <FormSelectPrice
-            prices={itemPrices}
+            prices={categoryPrices}
             value={itemPriceSelectedId}
             setValue={(id) => {
               setItemPriceSelectedId(id)
