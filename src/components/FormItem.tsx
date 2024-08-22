@@ -12,10 +12,12 @@ import { useEmployee } from '../contexts/employeeContext'
 
 const FormItem = ({
   onSubmit,
+  progress,
   values = {}
 }: {
   values?: Partial<ItemType>
   onSubmit?: (values: ItemType) => Promise<any> | void
+  progress?: number
 }) => {
   const { store, categories, storeSections } = useStore()
   const { permissions } = useEmployee()
@@ -107,6 +109,7 @@ const FormItem = ({
               onPress={handleSubmit}
               label={'Guardar'}
               disabled={disabled}
+              progress={progress}
             />
           </View>
         </View>

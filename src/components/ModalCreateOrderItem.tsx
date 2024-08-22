@@ -63,7 +63,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
   }, [categories])
 
   const handleCreteOrderItem = async (values: Partial<ItemType>) => {
-    setProgress(1)
+    setProgress(20)
     //* 1. CREATE ITEM
     const newItem = await ServiceStoreItems.add({
       item: values,
@@ -74,7 +74,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
         return { ...newItem, id: res?.id }
       })
       .catch((e) => console.log({ e }))
-    setProgress(30)
+    setProgress(40)
     const itemCreated: Partial<ItemType> = { ...newItem }
 
     //* 2. UPDATE ORDER WITH THE NEW ITEM
@@ -102,10 +102,13 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
           itemId
         }
       })
-        .then((res) => console.log({ res }))
+        .then((res) => {
+          setProgress(100)
+          console.log({ res })
+        })
         .catch((e) => console.log({ e }))
     }
-    setProgress(100)
+
     return
   }
   const handleAssignItem = async () => {
@@ -124,12 +127,10 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
     setLoading(false)
     return
   }
-  console.log({ progress })
   return (
     <>
       {itemAlreadyExist === false && (
         <Button
-          progress={progress}
           justIcon
           size="small"
           icon="add"
@@ -169,6 +170,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
               onSubmit={async (values) => {
                 return handleCreteOrderItem(values)
               }}
+              progress={progress}
             />
             <Text style={[gStyles.h2, { marginTop: 16 }]}>o</Text>
             <Text style={[gStyles.h2, { marginBottom: 16 }]}>
