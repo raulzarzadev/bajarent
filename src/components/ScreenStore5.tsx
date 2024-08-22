@@ -271,6 +271,25 @@ const TabCashbox = () => {
         }}
         documentDate={balance?.createdAt}
       />
+      <Tabs
+        tabs={[
+          {
+            title: 'Caja',
+            content: <ListMovements />,
+            show: true
+          },
+          {
+            title: 'Pagos',
+            content: <TabOrders />,
+            show: true
+          },
+          {
+            title: 'Clientes',
+            content: <TabClients />,
+            show: true
+          }
+        ]}
+      ></Tabs>
       <DateCounts date={date} />
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button

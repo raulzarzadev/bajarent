@@ -21,7 +21,6 @@ const ModalSelectCategoryPrice = ({
   const [itemPriceSelectedId, setItemPriceSelectedId] =
     useState<string>(priceSelectedId)
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
-
   useEffect(() => {
     setCategoryPrices(categories.find((c) => c.id === categoryId)?.prices || [])
   }, [categories, categoryId])

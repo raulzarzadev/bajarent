@@ -272,12 +272,15 @@ export const ItemRow = ({
         _setItem({ ...item })
       })
   }, [item.id])
-
   const assignedSection = _item?.assignedSection || ''
   const category = _item?.category || ''
   const brand = _item?.brand || ''
   const number = _item?.number || ''
   const serial = _item?.serial || ''
+
+  const itemCategoryId = categories.find(
+    (cat) => item.category === cat.id || item.categoryName === cat.name
+  ).id
 
   //@ts-ignore //TODO: <--- this should be fixed
   const priceSelectedId = item?.priceSelected?.id
@@ -292,7 +295,7 @@ export const ItemRow = ({
     >
       <View style={{ marginRight: 6 }}>
         <ModalSelectCategoryPriceE
-          categoryId={category}
+          categoryId={itemCategoryId}
           handleSelectPrice={(res) => {
             handleChangeItemPrice(res)
           }}
