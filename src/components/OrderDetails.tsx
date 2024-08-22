@@ -289,7 +289,12 @@ const OrderItems = ({ order }: { order: Partial<OrderType> }) => {
     <View>
       <Text style={gStyles.h2}>Artículos</Text>
       {items?.map((item, i) => (
-        <RowOrderItem item={item} key={item.id} order={order} />
+        <RowOrderItem
+          item={item}
+          key={item.id}
+          order={order}
+          itemId={item.id}
+        />
       ))}
     </View>
   )
