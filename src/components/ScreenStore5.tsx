@@ -25,6 +25,7 @@ import ListClients from './ListClients'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import HeaderDate from './HeaderDate'
 import DateCounts from './DateCounts'
+import StoreCounts from './StoreCounts'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -57,6 +58,22 @@ const ScreenStore = (props) => {
             {
               title: 'Caja',
               content: <TabCashbox />,
+              show: canViewCashbox
+            },
+            {
+              title: 'Cuentas',
+              content: (
+                <View
+                  style={{
+                    maxWidth: 800,
+                    margin: 'auto',
+                    marginTop: 16,
+                    width: '100%'
+                  }}
+                >
+                  <StoreCounts />
+                </View>
+              ),
               show: canViewCashbox
             },
             {
@@ -227,6 +244,7 @@ const TabCashbox = () => {
   }
 
   if (balance === undefined) return <Loading />
+
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -271,7 +289,8 @@ const TabCashbox = () => {
         }}
         documentDate={balance?.createdAt}
       />
-      <DateCounts date={date} />
+
+      {/* <DateCounts date={date} /> */}
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
           progress={progress}

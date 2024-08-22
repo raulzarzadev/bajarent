@@ -12,12 +12,14 @@ export type Tab = {
 
 export type TabsProps = {
   tabs: Tab[]
-  defaultTab?: string
+  defaultTab?: string | null
   showProgressBar?: boolean
 }
 
 const TabsA = ({ tabs = [], defaultTab, showProgressBar }: TabsProps) => {
-  const [selectedTab, setSelectedTab] = useState(defaultTab || tabs[0]?.title)
+  const [selectedTab, setSelectedTab] = useState(
+    defaultTab === null ? undefined : tabs[0]?.title
+  )
   const visibleTabs = tabs.filter(({ show }) => show)
   const handleTabPress = (tab) => {
     setSelectedTab(tab)
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   tabsContainer: {
-    maxHeight: 50, // Ajusta esta altura según tu diseño
+    // maxHeight: 80, // Ajusta esta altura según tu diseño
     backgroundColor: 'transparent'
   },
   tabBar: {
@@ -100,7 +102,9 @@ const styles = StyleSheet.create({
     borderColor: '#cccb',
     borderBottomWidth: 0,
     shadowOffset: { width: 0, height: 2 },
-    shadowColor: '#f2f2f2'
+    shadowColor: '#f2f2f2',
+    minHeight: 35,
+    justifyContent: 'center'
   },
   selectedTab: {
     backgroundColor: '#ccc',
