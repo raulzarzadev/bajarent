@@ -27,7 +27,7 @@ const FormRentDelivery = ({
   const [loading, setLoading] = React.useState(false)
 
   const { store } = useStore()
-  const orderFields = store.orderFields[order?.type]
+  const orderFields = store?.orderFields?.[order?.type]
   const ORDER_FIELDS = getOrderFields({
     ...orderFields
   })
