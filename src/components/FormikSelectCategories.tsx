@@ -226,11 +226,11 @@ const ListItems = ({
           onPressDelete={() => handleRemoveItem(item.id)}
           handleChangeItemPrice={(price) => {
             console.log({ price })
-            handleChangeItemPrice?.(item.id, price)
+            handleChangeItemPrice?.(item?.id, price)
           }}
         ></ItemRow>
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item?.id}
     ></FlatList>
   )
 }
@@ -254,7 +254,7 @@ export const ItemRow = ({
   const [shouldCreateItem, setShouldCreateItem] = useState(false)
   const [_item, _setItem] = useState<Partial<ItemType>>(item)
   useEffect(() => {
-    ServiceStoreItems.get({ itemId: item.id, storeId })
+    ServiceStoreItems.get({ itemId: item?.id, storeId })
       .then((res) => {
         _setItem(res)
       })
@@ -270,9 +270,9 @@ export const ItemRow = ({
   const number = _item?.number || ''
   const serial = _item?.serial || ''
 
-  const itemCategoryId = categories.find(
-    (cat) => item.category === cat.id || item.categoryName === cat.name
-  ).id
+  const itemCategoryId = categories?.find(
+    (cat) => item?.category === cat?.id || item.categoryName === cat?.name
+  )?.id
 
   //@ts-ignore //TODO: <--- this should be fixed
   const priceSelectedId = item?.priceSelected?.id

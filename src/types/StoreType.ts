@@ -30,7 +30,8 @@ export type BaseStoreType = {
   // }
   location?: string
   orderTypes?: Record<TypeOrderKey, boolean>
-  orderFields?: Record<TypeOrderKey, FormOrderFields[]>
+  orderFields?: Record<TypeOrderKey, FormOrderFields>
+
   bankInfo?: {
     bank: string
     clabe: string

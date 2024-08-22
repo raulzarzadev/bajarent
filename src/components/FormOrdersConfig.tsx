@@ -11,6 +11,7 @@ import {
 } from './FormOrder'
 import Button from './Button'
 import StoreType from '../types/StoreType'
+import FormikInputValue from './FormikInputValue'
 
 export type OrdersConfigType = Pick<StoreType, 'orderTypes' | 'orderFields'>
 
@@ -33,10 +34,14 @@ const FormOrdersConfig = ({
           resetForm({ values })
           setIsSubmitting(false)
         }}
+        validate={() => {
+          //* TODO validate the form when check items is marked as true validate if fields max and min has a valid value
+        }}
       >
         {({ handleSubmit, values, dirty }) => (
           <View>
             <Text style={gStyles.h3}>Tipos de ordenes (recomendado)</Text>
+
             <Text style={gStyles.helper}>
               Te permitira crear diferentes tipos de ordenes según las
               necesidades de tu negocio
@@ -69,6 +74,26 @@ const FormOrdersConfig = ({
                   >
                     {dictionary(type)}
                   </Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    <FormikCheckbox
+                      label="Items por orden"
+                      name={`orderFields.${type}.validateItemsQty`}
+                    ></FormikCheckbox>
+                    {values.orderFields[type]?.validateItemsQty && (
+                      <View style={{ flexDirection: 'row' }}>
+                        <FormikInputValue
+                          name={`orderFields.${type}.itemsMin`}
+                          type="number"
+                          placeholder="Mínimo "
+                        ></FormikInputValue>
+                        <FormikInputValue
+                          name={`orderFields.${type}.itemsMax`}
+                          type="number"
+                          placeholder="Máximo "
+                        ></FormikInputValue>
+                      </View>
+                    )}
+                  </View>
                   <View style={styles.checkboxContainer}>
                     {extraFields.map((field) => (
                       <FormikCheckbox

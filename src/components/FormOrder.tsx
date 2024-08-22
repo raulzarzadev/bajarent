@@ -61,7 +61,12 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
 
-export type FormOrderFields = (typeof LIST_OF_FORM_ORDER_FIELDS)[number]
+export type FormOrderFields = (typeof LIST_OF_FORM_ORDER_FIELDS)[number] & {
+  validateItemsQty?: boolean
+  itemsMin?: number
+  itemsMax?: number
+}
+
 export const mutableFormOrderFields: FormOrderFields[] = [
   ...LIST_OF_FORM_ORDER_FIELDS
 ]
@@ -95,6 +100,7 @@ const FormOrderA = ({
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
+
   const { employee } = useEmployee()
   const [error, setError] = useState<string | null>(null)
 
@@ -209,6 +215,27 @@ const FormOrderA = ({
             if (!values.phone || values.phone.length < 12)
               errors.phone = 'Teléfono valido es necesario'
 
+            const ITEMS_MAX_BY_ORDER =
+              store?.orderFields?.[values.type]?.itemsMax
+            const ITEMS_MIN_BY_ORDER =
+              store?.orderFields?.[values.type]?.itemsMin
+            const VALIDATE_ITEMS_QTY =
+              store?.orderFields?.[values.type]?.validateItemsQty
+            /* ********************************************
+             * Very Important to validate items quantity
+             *******************************************rz */
+            const itemsCount = values?.items?.length || 0
+            if (VALIDATE_ITEMS_QTY) {
+              // if (itemsCount === 0)
+              //   //@ts-ignore
+              //   errors.items = 'Artículos necesarios'
+              if (ITEMS_MIN_BY_ORDER && itemsCount < ITEMS_MIN_BY_ORDER)
+                //@ts-ignore
+                errors.items = `Selecciona mínimo ${ITEMS_MIN_BY_ORDER} artículo(s)`
+              if (ITEMS_MAX_BY_ORDER && itemsCount > ITEMS_MAX_BY_ORDER)
+                //@ts-ignore
+                errors.items = `Selecciona máximo ${ITEMS_MAX_BY_ORDER} artículo(s)`
+            }
             /* ********************************************
              * If orders has delivered, then must have a scheduled date
              *******************************************rz */

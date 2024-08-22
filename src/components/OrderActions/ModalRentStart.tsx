@@ -10,9 +10,11 @@ import TextInfo from '../TextInfo'
 import FormRentDelivery from './FormRentDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ErrorsList } from '../FormikErrorsList'
-// const MAX_ITEMS_PER_ORDER = 1
-// const MIN_ITEMS_PER_ORDER = 1
+import { useStore } from '../../contexts/storeContext'
+import { order_type } from '../../types/OrderType'
+
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
+  const { store } = useStore()
   const { order } = useOrderDetails()
   const { user } = useAuth()
   const [isDirty, setIsDirty] = React.useState(false)
@@ -26,13 +28,21 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     modal.toggleOpen()
     return
   }
+  const VALIDATE_ITEMS_QTY =
+    store.orderFields?.[order_type.RENT]?.validateItemsQty
+  const ITEMS_MAX_BY_ORDER = parseInt(
+    store.orderFields?.[order_type.RENT]?.itemsMax || '0'
+  )
+  const ITEMS_MIN_BY_ORDER = parseInt(
+    store.orderFields?.[order_type.RENT]?.itemsMin || '0'
+  )
 
   const itemsCount = order?.items?.length || 0
-  // const toMuchItems = itemsCount > MAX_ITEMS_PER_ORDER
-  // const toLittleItems = itemsCount < MIN_ITEMS_PER_ORDER
-  // const disabledByCountItems = toMuchItems || toLittleItems
+  const toMuchItems = itemsCount > ITEMS_MAX_BY_ORDER
+  const toLittleItems = itemsCount < ITEMS_MIN_BY_ORDER
+  const disabledByCountItems = toMuchItems || toLittleItems
 
-  const disabledDelivery = isDirty || isLoading || itemsCount < 1
+  const disabledDelivery = isDirty || isLoading || disabledByCountItems
   return (
     <View>
       <StyledModal {...modal}>
@@ -57,19 +67,21 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
         <ErrorsList
           errors={(() => {
             const errors = {}
-            // if (toMuchItems) {
-            //   errors[
-            //     'items'
-            //   ] = `Solo puedes seleccionar ${MAX_ITEMS_PER_ORDER} item(s)`
-            //   return
-            // }
+            if (VALIDATE_ITEMS_QTY) {
+              console.log({ itemsCount, ITEMS_MAX_BY_ORDER })
+              if (toMuchItems) {
+                errors[
+                  'items'
+                ] = `Selecciona máximo ${ITEMS_MAX_BY_ORDER} artículo(s)`
+              }
 
-            // if(toLittleItems) {
-            //   errors['items'] = `Debes seleccionar al menos ${MIN_ITEMS_PER_ORDER} item(s)`
-            //   return errors
-            // }
-            if (itemsCount < 1)
-              errors['items'] = 'Debes seleccionar al menos un item'
+              if (toLittleItems) {
+                errors[
+                  'items'
+                ] = `Selecciona mínimo ${ITEMS_MIN_BY_ORDER} artículo(s)`
+              }
+            }
+
             return errors
           })()}
         />
