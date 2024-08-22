@@ -34,12 +34,14 @@ export default function formatComments({
         report: `${itemNumber} Reporte `,
         pickup: `${itemNumber} Recogida `,
         delivery: `${itemNumber} Entregada `,
-        exchange: `${itemNumber} Cambio `,
+        exchange: `${itemNumber} Cambio`,
         assignment: `${itemNumber} Asignación`,
         created: `${itemNumber} Creada `,
         fix: `${itemNumber} Reparada `,
         retire: `${itemNumber} Retirada `,
-        reactivate: `${itemNumber} Reactivada`
+        reactivate: `${itemNumber} Reactivada`,
+        exchangeDelivery: `${itemNumber} Entregada (cambio)`,
+        exchangePickup: `${itemNumber} Recogida (cambio)`
       }
       return {
         ...movement,

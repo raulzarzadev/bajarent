@@ -21,6 +21,8 @@ export type ItemHistoryBase = {
     | 'delivery'
     | 'report'
     | 'exchange'
+    | 'exchangeDelivery'
+    | 'exchangePickup'
     | 'assignment'
     | 'created'
     | 'fix'

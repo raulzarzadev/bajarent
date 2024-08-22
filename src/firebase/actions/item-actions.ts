@@ -274,7 +274,7 @@ export const onChangeOrderItem = async ({
     await onRentItem({ storeId, itemId: newItemId, orderId })
     //* 4 add registry entry to old item
     await onRegistryEntry({
-      type: 'exchange',
+      type: 'exchangePickup',
       itemId,
       orderId,
       storeId,
@@ -282,7 +282,7 @@ export const onChangeOrderItem = async ({
     }).catch((e) => console.log('Error on registry entry', { e }))
     //* 5 add registry entry to new item
     await onRegistryEntry({
-      type: 'exchange',
+      type: 'exchangeDelivery',
       itemId: newItemId,
       orderId,
       storeId,
