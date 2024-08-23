@@ -7,16 +7,31 @@ const SpanCopy = ({ label, copyValue, content = '' }) => {
   const [copied, setCopied] = React.useState(false)
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-      <Text style={{ fontWeight: 'bold', marginRight: 4 }}>{label}</Text>
-      <Text>
-        {content}
+      {/* <Text style={{ fontWeight: 'bold', marginRight: 4 }}>{label}</Text> */}
+      <Text>{content}</Text>
+      <View style={{ position: 'relative' }}>
+        <Button
+          label={label}
+          icon="copy"
+          //justIcon
+          variant="ghost"
+          size="small"
+          onPress={() => {
+            //@ts-ignore
+            navigator.clipboard.writeText(copyValue)
+            setCopied(true)
+            setTimeout(() => {
+              setCopied(false)
+            }, 2000)
+          }}
+        />
         {copied && (
           <View
             style={[
               {
                 position: 'absolute',
                 top: -4,
-                right: -4,
+                right: 0,
                 backgroundColor: colors.emerald,
                 padding: 3,
                 borderRadius: 4
@@ -26,21 +41,7 @@ const SpanCopy = ({ label, copyValue, content = '' }) => {
             <Text>Copiado!</Text>
           </View>
         )}
-      </Text>
-      <Button
-        icon="copy"
-        justIcon
-        variant="ghost"
-        size="small"
-        onPress={() => {
-          //@ts-ignore
-          navigator.clipboard.writeText(copyValue)
-          setCopied(true)
-          setTimeout(() => {
-            setCopied(false)
-          }, 2000)
-        }}
-      />
+      </View>
     </View>
   )
 }

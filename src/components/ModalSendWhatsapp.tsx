@@ -26,7 +26,7 @@ import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
 
-export default function ModalSendWhatsapp({ orderId = '' }) {
+export default function ModalSendWhatsapp({ justIcon = false }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   // const [order, setOrder] = useState<OrderType>()
   const { order, payments } = useOrderDetails()
@@ -164,6 +164,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     | 'repair-picked-up'
     | 'rent-quality-survey'
     | 'store-info'
+    | 'hello'
 
   const CLIENT_NOT_FOUND = `${WELCOME}
   \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
@@ -230,21 +231,20 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
     {
       type: 'store-info',
       content: STORE_INFO
+    },
+    {
+      type: 'hello',
+      content: `Hola ${order.fullName}`
     }
   ]
 
-  // const handleGetOrderInfo = () => {
-  //   getFullOrderData(orderId).then((order) => {
-  //     //setOrder(order)
-  //     setMessage(messages.find((m) => m.type === messageType)?.content)
-  //   })
-  // }
   const [messageType, setMessageType] = useState<MessageType>(null)
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
   let options = []
   if (order?.type === order_type.RENT) {
     options = [
+      { label: 'Saludos', value: 'hello' },
       { label: 'Vencimiento', value: 'expireAt' },
       { label: 'Recibo', value: 'receipt-rent' },
       { label: 'No encontrado', value: 'not-found' },
@@ -254,6 +254,7 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
   }
   if (order?.type === order_type.REPAIR) {
     options = [
+      { label: 'Saludos/Vacio', value: 'hello' },
       { label: 'Recibo', value: 'receipt-repair' },
       { label: 'No encontrado', value: 'not-found' },
       { label: 'Recogido', value: 'repair-picked-up' },
@@ -268,16 +269,29 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
 
   return (
     <View>
-      <Button
-        label="Whatsapp"
-        onPress={() => {
-          // handleGetOrderInfo()
-          modal.toggleOpen()
-          handleResetMessage()
-        }}
-        size="small"
-        icon="whatsapp"
-      ></Button>
+      {justIcon ? (
+        <Button
+          icon="whatsapp"
+          onPress={() => {
+            modal.toggleOpen()
+            handleResetMessage()
+          }}
+          justIcon
+          variant="ghost"
+          color="success"
+        />
+      ) : (
+        <Button
+          label="Whatsapp"
+          onPress={() => {
+            // handleGetOrderInfo()
+            modal.toggleOpen()
+            handleResetMessage()
+          }}
+          size="small"
+          icon="whatsapp"
+        ></Button>
+      )}
       <StyledModal
         {...modal}
         onclose={() => {
@@ -293,7 +307,12 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
           }}
           layout="row"
         />
-        <Text>{message}</Text>
+        {message && (
+          <View style={{ marginVertical: 6 }}>
+            <SpanCopy label={'Copiar'} copyValue={message} />
+          </View>
+        )}
+        <Text style={{ marginVertical: 12 }}>{message}</Text>
 
         {invalidPhone && (
           <Text
@@ -305,11 +324,18 @@ export default function ModalSendWhatsapp({ orderId = '' }) {
             Numero de telefono invalido
           </Text>
         )}
-        {message && (
-          <View style={{ marginVertical: 16 }}>
-            <SpanCopy label={'Copiar'} copyValue={message} />
-          </View>
+
+        {invalidPhone && (
+          <Text
+            style={[
+              gStyles.helperError,
+              { textAlign: 'center', marginVertical: 6 }
+            ]}
+          >
+            *Numero de telefono invalido
+          </Text>
         )}
+
         <Button
           disabled={invalidPhone || !message}
           label="Enviar"

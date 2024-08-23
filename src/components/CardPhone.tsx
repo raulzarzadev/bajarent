@@ -1,6 +1,8 @@
 import { Linking, View, ViewStyle } from 'react-native'
 import P from './P'
 import Button from './Button'
+import StyledModal from './StyledModal'
+import ModalSendWhatsapp from './ModalSendWhatsapp'
 
 const CardPhone = ({ phone, style }: { phone: string; style?: ViewStyle }) => {
   const formatPhoneNumber = (phone: string): string => {
@@ -40,7 +42,7 @@ const CardPhone = ({ phone, style }: { phone: string; style?: ViewStyle }) => {
               Linking.openURL(`tel:${phone}`)
             }}
           />
-          <Button
+          {/* <Button
             buttonStyles={{ marginHorizontal: 4 }}
             justIcon
             icon="whatsapp"
@@ -49,7 +51,8 @@ const CardPhone = ({ phone, style }: { phone: string; style?: ViewStyle }) => {
             onPress={() => {
               Linking.openURL(`https://wa.me/${phone.replace('+', '')}`)
             }}
-          />
+          /> */}
+          <ModalSendWhatsapp justIcon />
         </>
       )}
     </View>
