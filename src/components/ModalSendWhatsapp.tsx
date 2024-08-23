@@ -234,7 +234,7 @@ export default function ModalSendWhatsapp({ justIcon = false }) {
     },
     {
       type: 'hello',
-      content: `Hola ${order.fullName}`
+      content: `Hola ${order?.fullName || ''}`
     }
   ]
 

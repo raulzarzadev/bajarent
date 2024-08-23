@@ -245,11 +245,14 @@ export class FirebaseCRUD {
     let docSnap
     try {
       docSnap = await getDocFromCache(ref)
-      console.log('cache doc')
     } catch (error) {
-      console.log('server doc')
       docSnap = await getDocFromServer(ref)
     }
+    this.showDataSource(
+      docSnap.metadata.fromCache,
+      this.collectionName,
+      'getItem'
+    )
     return this.normalizeItem(docSnap)
   }
 
@@ -263,25 +266,13 @@ export class FirebaseCRUD {
 
     const querySnapshot = await getDocs(q)
     // let querySnapshot: QuerySnapshot
-    const source = querySnapshot.metadata.fromCache
-      ? ' cache docs'
-      : 'server docs'
-    console.log(source)
-    // try { FIXME: //* <--- this is not working some times gets cache not updated
-    //   querySnapshot = await getDocsFromCache(q)
-    //   console.log('docs from cache')
-    // } catch (error) {
-    //   console.log('docs from server')
-    //   querySnapshot = await getDocsFromServer(q)
-    // }
-    // const GET_FROM_CACHE = false
-    // if (GET_FROM_CACHE) {
-    //   querySnapshot = await getDocsFromCache(q)
-    //   console.log('docs from cache')
-    // } else {
-    //   querySnapshot = await getDocsFromServer(q)
-    //   console.log('docs from server')
-    // }
+
+    this.showDataSource(
+      querySnapshot.metadata.fromCache,
+      this.collectionName,
+      'getItems'
+    )
+
     if (ops?.justRefs) {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
@@ -340,8 +331,11 @@ export class FirebaseCRUD {
     const querySnapshot = await getDocs(q)
     const res: any[] = []
     querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      // console.log(doc.id, " => ", doc.data());
+      this.showDataSource(
+        querySnapshot.metadata.fromCache,
+        this.collectionName,
+        'getUserItems'
+      )
       res.push(this.normalizeItem(doc))
     })
     return res
@@ -351,8 +345,13 @@ export class FirebaseCRUD {
     if (!itemId) return console.error('invalid value', { itemId })
     const q = doc(this.db, this.collectionName, itemId)
 
-    onSnapshot(q, (doc) => {
-      cb(this.normalizeItem(doc))
+    onSnapshot(q, (snapshotDoc) => {
+      this.showDataSource(
+        snapshotDoc.metadata.fromCache,
+        this.collectionName,
+        'listenItem'
+      )
+      cb(this.normalizeItem(snapshotDoc))
     })
   }
 
@@ -367,6 +366,11 @@ export class FirebaseCRUD {
     const q = query(collection(this.db, this.collectionName), ...filters)
     onSnapshot(q, (querySnapshot) => {
       const res: any[] = []
+      this.showDataSource(
+        querySnapshot.metadata.fromCache,
+        this.collectionName,
+        'listenItems'
+      )
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
       })
@@ -446,12 +450,21 @@ export class FirebaseCRUD {
     } else {
       querySnapshot = await getDocs(q)
     }
+    this.showDataSource(
+      querySnapshot.metadata.fromCache,
+      this.collectionName,
+      'getItemsByRef'
+    )
     if (ops?.justRefs) {
       console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
     }
-    console.log(querySnapshot.metadata.fromCache ? 'cache docs' : 'server docs')
 
+    this.showDataSource(
+      querySnapshot.metadata.fromCache,
+      this.collectionName,
+      'getItems'
+    )
     querySnapshot.forEach((doc) => {
       res.push(doc)
     })
@@ -477,6 +490,11 @@ export class FirebaseCRUD {
     const querySnapshot = await getDocs(queryRef)
     if (ops?.justRefs) return querySnapshot?.docs?.map((doc) => doc?.ref)
     const res: any[] = []
+    this.showDataSource(
+      querySnapshot.metadata.fromCache,
+      this.collectionName,
+      'getItemsInCollection'
+    )
     querySnapshot.forEach((doc) => {
       res.push(this.normalizeItem(doc))
     })
@@ -502,7 +520,13 @@ export class FirebaseCRUD {
     if (ops?.justRefs) return ref
 
     const docSnap = await getDoc(ref)
-    console.log(docSnap.metadata.fromCache ? 'cache doc' : 'server doc')
+
+    this.showDataSource(
+      docSnap.metadata.fromCache,
+      this.collectionName,
+      'getItemInCollection'
+    )
+
     return this.normalizeItem(docSnap)
   }
 
@@ -609,6 +633,11 @@ export class FirebaseCRUD {
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
       })
+      this.showDataSource(
+        querySnapshot.metadata.fromCache,
+        this.collectionName,
+        'listenRefItems'
+      )
       cb(res)
     })
   }
@@ -641,9 +670,9 @@ export class FirebaseCRUD {
 
   // -------------------------------------------------------------> Helpers
 
-  showDataFrom(querySnapshot: any, collection: string) {
-    const source = querySnapshot.metadata.fromCache ? 'local cache' : 'server'
-    console.log('Data came from ' + source + ' collection ' + collection)
+  showDataSource(isFromCache: any, collection: string, method: string) {
+    const source = isFromCache ? 'cache' : 'server'
+    console.log(`${source} ${method} ${collection} `)
   }
 
   transformAnyToDate = (date: unknown): Date | null => {
