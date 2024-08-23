@@ -37,7 +37,8 @@ const ModalChangeItem = ({
       itemId,
       orderId,
       storeId,
-      newItem
+      newItem,
+      currentSectionId: order.assignToSection
     })
   }
 

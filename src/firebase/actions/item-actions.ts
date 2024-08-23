@@ -116,15 +116,15 @@ export const onPickUpItem = async ({
   orderId: string
   assignToSection?: string
 }) => {
+  //* <------------------ WHEN PICK UP ITEM REASSIGN TO SECTION
   onEditItemField({
-    //* <------------------ WHEN PICK UP ITEM REASSIGN TO SECTION
     storeId,
     itemId,
     field: 'assignedSection',
     value: assignToSection
   })
+  //* <------------------ UPDATE ITEM STATUS TO PICKED UP
   const pickedUpRes = await onEditItemField({
-    //* <------------------ UPDATE ITEM STATUS TO PICKED UP
     storeId,
     itemId,
     field: 'status',
@@ -237,14 +237,17 @@ export const onChangeOrderItem = async ({
   itemId,
   orderId,
   storeId,
-  newItem
+  newItem,
+  currentSectionId
 }: {
   itemId: string
   orderId: string
   storeId: string
   newItem: ItemSelected
+  currentSectionId?: string
 }) => {
   const newItemId = newItem?.id
+
   try {
     if (!newItemId || itemId === newItemId)
       return console.log('no new item or is the same ')
@@ -268,7 +271,12 @@ export const onChangeOrderItem = async ({
     //* 2 update old item status to picked up
     //******* if oldItem not exist don picked up. in case of you want to assign a item to order that has not real item
     if (oldItem) {
-      await onPickUpItem({ storeId, itemId, orderId })
+      await onPickUpItem({
+        storeId,
+        itemId,
+        orderId,
+        assignToSection: currentSectionId
+      })
     }
     //* 3 update new item  status to rented
     await onRentItem({ storeId, itemId: newItemId, orderId })
