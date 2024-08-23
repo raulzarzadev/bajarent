@@ -43,12 +43,15 @@ const InputMapLocation = ({
         <View style={styles.container}>
           <MapContainer
             style={styles.map}
+            //@ts-ignore
             center={mapCenter}
             zoom={16}
             key={mapCenter.toString()}
             // scrollWheelZoom={false}
           >
             <TileLayer
+              //@ts-ignore
+
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
@@ -236,6 +239,7 @@ function DraggableMarker({
 
   return (
     <Marker
+      //@ts-ignore
       draggable={true}
       eventHandlers={eventHandlers}
       position={position}
