@@ -313,19 +313,20 @@ function MyList<T extends { id: string }>({
           <View
             style={{
               padding: 2,
+
               justifyContent: 'center',
               // marginTop: gSpace(2),
               maxWidth: '100%'
             }}
           >
             <FlatList
-              style={
-                {
-                  // width: '100%',
-                  // maxWidth: 600,
-                  // margin: 'auto'
-                }
-              }
+              style={{
+                // width: '100%',
+                // maxWidth: 600,
+                // margin: 'auto',
+                paddingBottom: 6,
+                paddingTop: 6
+              }}
               horizontal
               data={sortFields}
               renderItem={({ item: field }) => (
