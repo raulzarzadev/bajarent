@@ -10,6 +10,7 @@ const InputLocationFormik = ({ name, ...props }) => {
       value={field.value}
       setValue={helpers.setValue}
       helperText={meta.error}
+      {...props}
     />
   )
 }

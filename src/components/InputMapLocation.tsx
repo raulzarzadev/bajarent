@@ -20,10 +20,12 @@ const customIcon = L.icon({
 
 const InputMapLocation = ({
   setLocation,
-  location
+  location,
+  defaultSearch
 }: {
   location?: [number, number]
   setLocation?: (coords: [number, number]) => void
+  defaultSearch?: string
 }) => {
   const INITIAL_POSITION: [number, number] = location || [
     24.145708, -110.311002
@@ -71,6 +73,7 @@ const InputMapLocation = ({
           }}
         >
           <SearchAddressLocation
+            defaultSearch={defaultSearch}
             setLocation={(coords) => {
               handleSetCenter(coords)
             }}
@@ -101,13 +104,15 @@ interface NominatimResult {
 const SearchAddressLocation = ({
   setOptions,
   setLocation,
-  maxResults = 6
+  maxResults = 6,
+  defaultSearch
 }: {
   setOptions?: (options: NominatimResult[]) => void
   setLocation?: (coords: [number, number]) => void
   maxResults?: number
+  defaultSearch?: string
 }) => {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState(defaultSearch)
   const [responses, setResponses] = useState(undefined)
 
   const [showResponses, setShowResponses] = useState(false)

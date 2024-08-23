@@ -13,7 +13,13 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import InputMapLocation from './InputMapLocation'
 
-const InputLocation = ({ value, setValue, helperText }) => {
+const InputLocation = ({
+  value,
+  setValue,
+  helperText,
+  neighborhood,
+  address
+}) => {
   const { getLocation, loading, location } = useLocation()
 
   return (
@@ -28,7 +34,15 @@ const InputLocation = ({ value, setValue, helperText }) => {
           containerStyle={{ flex: 1 }}
         />
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-          <ModalSelectLocation setValue={setValue} value={value} />
+          <ModalSelectLocation
+            setValue={setValue}
+            value={value}
+            defaultSearch={
+              neighborhood || address
+                ? `${address || ''}${neighborhood ? ',' + neighborhood : ''}`
+                : ''
+            }
+          />
         </View>
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
           {loading ? (
@@ -59,10 +73,12 @@ const InputLocation = ({ value, setValue, helperText }) => {
 
 const ModalSelectLocation = ({
   setValue,
-  value
+  value,
+  defaultSearch
 }: {
   setValue: (location: `${number},${number}`) => void
   value: `${number},${number}`
+  defaultSearch: string
 }) => {
   const { getLocation, loading, location } = useLocation()
   const modal = useModal({ title: 'Selecciona la ubicación' })
@@ -99,6 +115,7 @@ const ModalSelectLocation = ({
             setValue(`${coors[0]},${coors[1]}`)
           }}
           location={coords}
+          defaultSearch={defaultSearch}
         />
         <Button
           label="Cerrar"

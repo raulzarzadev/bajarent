@@ -30,9 +30,9 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   'fullName',
   'phone',
   'scheduledAt',
+  'neighborhood',
   'address',
   'location',
-  'neighborhood',
   'references',
   ,
   'imageID',
@@ -463,7 +463,13 @@ const FormFieldsA = ({
         helperText="Ejemplo: Centro, San Pedro, etc."
       />
     ),
-    location: <InputLocationFormik name={'location'} />,
+    location: (
+      <InputLocationFormik
+        name={'location'}
+        neighborhood={values.neighborhood}
+        address={values.address}
+      />
+    ),
     references: (
       <InputValueFormik
         name={'references'}
