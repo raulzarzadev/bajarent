@@ -5,13 +5,17 @@ import {
   Text,
   View
 } from 'react-native'
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import InputMapLocation from './InputMapLocation'
 
 const InputLocation = ({ value, setValue, helperText }) => {
-  const { getLocation, loading, location } = useLocation()
+  // const { getLocation, loading, location } = useLocation()
+
   return (
     <View>
       <Text>📍 Ubicación</Text>
@@ -37,29 +41,65 @@ const InputLocation = ({ value, setValue, helperText }) => {
           />
         </View>
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-          {loading ? (
-            <ActivityIndicator />
-          ) : (
-            <Button
-              justIcon
-              disabled={location?.status === 'denied'}
-              icon={'location'}
-              variant="ghost"
-              onPress={async () => {
-                const res = await getLocation()
-                if (res?.status === 'granted' && res.coords) {
-                  const lat = res?.coords?.lat
-                  const lon = res?.coords?.lon
-                  setValue(`${lat},${lon}`)
-                } else {
-                  setValue('')
-                }
-              }}
-            />
-          )}
+          <ModalSelectLocation setValue={setValue} value={value} />
         </View>
       </View>
     </View>
+  )
+}
+
+const ModalSelectLocation = ({
+  setValue,
+  value
+}: {
+  setValue: (location: `${number},${number}`) => void
+  value: `${number},${number}`
+}) => {
+  const { getLocation, loading, location } = useLocation()
+  const modal = useModal({ title: 'Selecciona la ubicación' })
+  const coords: [number, number] = useMemo(() => {
+    if (value) {
+      const [lat, lon] = value.split(',')
+      return [Number(lat), Number(lon)]
+    }
+    return null
+  }, [value])
+
+  return (
+    <>
+      <Button
+        justIcon
+        //disabled={location?.status === 'denied'}
+        icon={'location'}
+        variant="ghost"
+        onPress={async () => {
+          modal.toggleOpen()
+          const res = await getLocation()
+          if (res?.status === 'granted' && res.coords) {
+            const lat = res?.coords?.lat
+            const lon = res?.coords?.lon
+            setValue(`${lat},${lon}`)
+          } else {
+            setValue(null)
+          }
+        }}
+      />
+      <StyledModal {...modal}>
+        <InputMapLocation
+          setLocation={(coors: [number, number]) => {
+            setValue(`${coors[0]},${coors[1]}`)
+          }}
+          location={coords}
+        />
+        <Button
+          label="Cerrar"
+          variant="outline"
+          onPress={() => {
+            modal.toggleOpen()
+          }}
+        ></Button>
+      </StyledModal>
+    </>
   )
 }
 

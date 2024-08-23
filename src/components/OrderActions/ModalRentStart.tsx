@@ -40,7 +40,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const itemsCount = order?.items?.length || 0
   const toMuchItems = itemsCount > ITEMS_MAX_BY_ORDER
   const toLittleItems = itemsCount < ITEMS_MIN_BY_ORDER
-  const disabledByCountItems = toMuchItems || toLittleItems
+  const disabledByCountItems =
+    VALIDATE_ITEMS_QTY && (toMuchItems || toLittleItems)
 
   const disabledDelivery = isDirty || isLoading || disabledByCountItems
   return (
