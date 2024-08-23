@@ -19,6 +19,12 @@ const InputLocation = ({
   helperText,
   neighborhood,
   address
+}: {
+  value: string
+  setValue: (value: string) => void
+  helperText: string
+  neighborhood?: string
+  address?: string
 }) => {
   const { getLocation, loading, location } = useLocation()
 
@@ -36,7 +42,7 @@ const InputLocation = ({
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
           <ModalSelectLocation
             setValue={setValue}
-            value={value}
+            value={value as `${number},${number}`}
             defaultSearch={
               neighborhood || address
                 ? `${address || ''}${neighborhood ? ',' + neighborhood : ''}`
