@@ -29,10 +29,17 @@ const ModalSelectCategoryPrice = ({
     <View>
       <ButtonConfirm
         handleConfirm={async () => {
-          const priceSelected = categoryPrices.find(
+          const itemPriceSelected = categoryPrices.find(
+            //* this is necessary to find the correct price
+            (p) => p.id === itemPriceSelectedId
+          )
+          const categoryPriceSelected = categoryPrices.find(
+            //* FIXME: this was moved in the past. we need to check if it's still necessary
             (p) => p.categoryId === categoryId
           )
-          handleSelectPrice(priceSelected)
+
+          // console.log({ categoryPriceSelected, itemPriceSelected })
+          handleSelectPrice(itemPriceSelected)
         }}
         confirmLabel="Editar tiempo"
         confirmVariant="outline"

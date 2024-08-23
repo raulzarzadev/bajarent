@@ -186,7 +186,7 @@ const FormikSelectCategories = ({
                   priceSelected: price || null,
                   number: itemData?.number || 'SN'
                 }
-                console.log({ newItem })
+                //console.log({ newItem })
                 handleChangeItemSelected([...items, newItem])
                 modal.toggleOpen()
               }}
@@ -225,7 +225,6 @@ const ListItems = ({
           item={item as ItemType}
           onPressDelete={() => handleRemoveItem(item.id)}
           handleChangeItemPrice={(price) => {
-            console.log({ price })
             handleChangeItemPrice?.(item?.id, price)
           }}
         ></ItemRow>
@@ -345,10 +344,7 @@ export const ItemRow = ({
                     })
                     //* update Order
                   }
-                  console.log({ res })
                 })
-
-                console.log({ values })
               }}
             />
           </View>
