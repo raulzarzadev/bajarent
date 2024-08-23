@@ -1,14 +1,12 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useMemo, useRef, useState } from 'react'
-import {
-  MapContainer,
-  Marker,
-  TileLayer,
-  useMap,
-  useMapEvents
-} from 'react-leaflet'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import InputTextStyled from './InputTextStyled'
+import Button from './Button'
+import useDebounce from '../hooks/useDebunce'
+import { set } from 'cypress/types/lodash'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({
@@ -39,21 +37,171 @@ const InputMapLocation = ({
     setLocation?.(center)
   }
 
+  const INPUT_HEIGHT = 40
+
   return (
-    <View style={{ position: 'relative' }}>
-      <View style={styles.container}>
-        <MapContainer
-          style={styles.map}
-          center={mapCenter}
-          zoom={16}
-          scrollWheelZoom={false}
+    <View>
+      <View style={{ position: 'relative', marginTop: INPUT_HEIGHT }}>
+        <View style={styles.container}>
+          <MapContainer
+            style={styles.map}
+            center={mapCenter}
+            zoom={16}
+            key={mapCenter.toString()}
+            // scrollWheelZoom={false}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <DraggableMarker center={mapCenter} setCenter={handleSetCenter} />
+          </MapContainer>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            position: 'absolute',
+            zIndex: 9999,
+            top: -INPUT_HEIGHT,
+            right: 0,
+            left: 0,
+            justifyContent: 'center',
+            backgroundColor: 'white'
+          }}
         >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          <SearchAddressLocation
+            setLocation={(coords) => {
+              handleSetCenter(coords)
+            }}
           />
-          <DraggableMarker center={mapCenter} setCenter={handleSetCenter} />
-        </MapContainer>
+        </View>
+      </View>
+    </View>
+  )
+}
+
+interface NominatimResult {
+  place_id: number
+  osm_type: string
+  osm_id: number
+  boundingbox: [string, string, string, string]
+  lat: string
+  lon: string
+  display_name: string
+  class: string
+  type: string
+  importance: number
+  address: {
+    city?: string
+    [key: string]: string | undefined
+  }
+  licence: string
+}
+const SearchAddressLocation = ({
+  setOptions,
+  setLocation,
+  maxResults = 6
+}: {
+  setOptions?: (options: NominatimResult[]) => void
+  setLocation?: (coords: [number, number]) => void
+  maxResults?: number
+}) => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [responses, setResponses] = useState(undefined)
+
+  const [showResponses, setShowResponses] = useState(false)
+
+  const handleSearch = async (query) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          query
+        )}`
+      )
+      const data = await response.json()
+      const slicedResult = data.slice(0, maxResults)
+      setResponses(slicedResult)
+      if (data.length > 0) {
+        setShowResponses(true)
+
+        setOptions?.(slicedResult)
+        const { lat, lon } = data[0]
+        const newCenter: [number, number] = [parseFloat(lat), parseFloat(lon)]
+        // setLocation(newCenter)
+      } else {
+        // alert('No se encontraron resultados')
+        setResponses([])
+      }
+    } catch (error) {
+      console.error(error)
+      setResponses(-1)
+      //  alert('Error al buscar la dirección')
+    }
+  }
+  const debouncedSearch = useDebounce(searchQuery, 500)
+  useEffect(() => {
+    if (debouncedSearch) {
+      handleSearch(debouncedSearch)
+    }
+  }, [debouncedSearch])
+
+  return (
+    <View style={{ position: 'relative', width: '100%' }}>
+      <View style={{ flexDirection: 'row' }}>
+        <InputTextStyled
+          containerStyle={{ flex: 1 }}
+          onChangeText={(text) => {
+            if (text === '') {
+              setShowResponses(false)
+              setResponses(undefined)
+            }
+            setSearchQuery(text)
+          }}
+          value={searchQuery}
+          placeholder="Buscar dirección "
+          innerLeftIcon={searchQuery ? 'close' : 'search'}
+          onLeftIconPress={() => {
+            if (searchQuery) {
+              setSearchQuery('')
+              setShowResponses(false)
+            } else {
+              // alert('Buscar')
+            }
+          }}
+        />
+      </View>
+      <View style={{ zIndex: 99999999 }}>
+        {responses === -1 && <Text>Error al buscar la dirección</Text>}
+        {responses?.length === 0 && (
+          <Text>No se encontraron coincidencias</Text>
+        )}
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: 'white'
+          }}
+        >
+          {showResponses &&
+            responses?.map((response: NominatimResult) => (
+              <Pressable
+                style={{ padding: 4, marginVertical: 4 }}
+                key={response.place_id}
+                onPress={() => {
+                  const newCenter: [number, number] = [
+                    parseFloat(response.lat),
+                    parseFloat(response.lon)
+                  ]
+                  setLocation(newCenter)
+                  setShowResponses(false)
+                }}
+              >
+                <Text>{response.display_name}</Text>
+              </Pressable>
+            ))}
+        </View>
       </View>
     </View>
   )
