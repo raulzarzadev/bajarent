@@ -4,9 +4,7 @@ import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import InputTextStyled from './InputTextStyled'
-import Button from './Button'
 import useDebounce from '../hooks/useDebunce'
-import { set } from 'cypress/types/lodash'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({

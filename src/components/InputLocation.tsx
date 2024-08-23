@@ -14,7 +14,7 @@ import StyledModal from './StyledModal'
 import InputMapLocation from './InputMapLocation'
 
 const InputLocation = ({ value, setValue, helperText }) => {
-  // const { getLocation, loading, location } = useLocation()
+  const { getLocation, loading, location } = useLocation()
 
   return (
     <View>
@@ -28,20 +28,29 @@ const InputLocation = ({ value, setValue, helperText }) => {
           containerStyle={{ flex: 1 }}
         />
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-          <Button
-            justIcon
-            icon="search"
-            variant="ghost"
-            onPress={() => {
-              if (value?.startsWith('http')) {
-                return Linking.openURL(value)
-              }
-              return Linking.openURL(`https://www.google.com/maps?q=${value}`)
-            }}
-          />
+          <ModalSelectLocation setValue={setValue} value={value} />
         </View>
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-          <ModalSelectLocation setValue={setValue} value={value} />
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Button
+              justIcon
+              disabled={location?.status === 'denied'}
+              icon={'location'}
+              variant="ghost"
+              onPress={async () => {
+                const res = await getLocation()
+                if (res?.status === 'granted' && res.coords) {
+                  const lat = res?.coords?.lat
+                  const lon = res?.coords?.lon
+                  setValue(`${lat},${lon}`)
+                } else {
+                  setValue('')
+                }
+              }}
+            />
+          )}
         </View>
       </View>
     </View>
@@ -70,7 +79,7 @@ const ModalSelectLocation = ({
       <Button
         justIcon
         //disabled={location?.status === 'denied'}
-        icon={'location'}
+        icon={'map'}
         variant="ghost"
         onPress={async () => {
           modal.toggleOpen()
