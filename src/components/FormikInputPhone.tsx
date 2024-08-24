@@ -13,6 +13,7 @@ const FormikInputPhone = ({ name, helperText, label }: InputPhoneProps) => {
 
   return (
     <PhoneInput
+      stylesContainer={{ flex: 1, maxWidth: '100%' }}
       label={label}
       defaultNumber={value}
       onChange={(value) => {

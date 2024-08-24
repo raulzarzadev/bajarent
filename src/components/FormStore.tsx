@@ -7,14 +7,10 @@ import StoreType from '../types/StoreType'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
-import {
-  FormOrderFields,
-  LIST_OF_FORM_ORDER_FIELDS,
-  mutableFormOrderFields
-} from './FormOrder'
 import ErrorBoundary from './ErrorBoundary'
 import FormikInputPhone from './FormikInputPhone'
 import InputLocationFormik from './InputLocationFormik'
+import { FormikFieldArrayE } from './FormikInputArray'
 
 const FormStore = ({
   defaultValues,
@@ -52,16 +48,6 @@ const FormStore = ({
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
           </View>
-          <View style={styles.input}></View>
-
-          <View style={styles.input}>
-            <FormikInputValue
-              name={'link'}
-              placeholder="Nombre unico"
-              helperText="No debe modificarse una vez creado, (agrega - para separar palabras)"
-              disabled
-            />
-          </View>
 
           <View style={styles.input}>
             <FormikInputValue name={'address'} placeholder="Dirección" />
@@ -77,7 +63,91 @@ const FormStore = ({
               helperText="ej. Lun - Sab 8:00am a 6:00pm"
             />
           </View>
+          <Separator />
+          <FormikFieldArrayE
+            label="Contactos"
+            name="contacts"
+            values={values}
+            typeOptions={[
+              {
+                label: 'Whatsapp',
+                value: 'whatsapp',
+                type: 'phone'
+              },
+              {
+                label: 'Celular',
+                value: 'mobile',
+                type: 'phone'
+              },
+              {
+                label: 'Telefono fijo',
+                value: 'phone',
+                type: 'phone'
+              },
+              {
+                label: 'Correo',
+                value: 'email'
+              }
+            ]}
+          />
+          <Separator />
+          <FormikFieldArrayE
+            label="Redes sociales"
+            name="socialMedia"
+            values={values}
+            typeOptions={[
+              { label: 'Página web', value: 'web' },
+              {
+                label: 'Facebook',
+                value: 'facebook'
+              },
+              {
+                label: 'Instagram',
+                value: 'instagram'
+              },
+              {
+                label: 'Twitter',
+                value: 'twitter'
+              },
+              {
+                label: 'Youtube',
+                value: 'youtube'
+              },
+              {
+                label: 'Tiktok',
+                value: 'tiktok'
+              },
+              {
+                label: 'Linkedin',
+                value: 'linkedin'
+              },
+              {
+                label: 'Otra',
+                value: 'other'
+              }
+            ]}
+          />
 
+          <Separator />
+
+          <FormikFieldArrayE
+            label="Cuentas bancarias"
+            name="bankInfo"
+            values={values}
+            typeOptions={[
+              {
+                label: 'Principal',
+                value: 'principal'
+              },
+              {
+                label: 'Secundaria',
+                value: 'secondary'
+              }
+            ]}
+            shouldIncludeLabel
+          />
+
+          <Separator />
           <Text style={gStyles.h3}>Teléfono fijo</Text>
           <View style={styles.input}>
             <FormikInputPhone
@@ -92,7 +162,7 @@ const FormStore = ({
               helperText="Numero de telefono movil (whatsapp)"
             />
           </View>
-
+          <Separator />
           <Text style={gStyles.h2}>Información bancaria</Text>
           <Text style={gStyles.h3}>Titular </Text>
           <View style={styles.input}>
@@ -129,8 +199,9 @@ const FormStore = ({
               placeholder="Cuenta clabe"
             />
           </View>
-
+          <Separator />
           <Text style={gStyles.h3}>Visibilidad</Text>
+
           <Text style={gStyles.helper}>
             {`La tienda será visible en el mercado. (nombre, descripción, imagen y  contacto)`}
           </Text>
@@ -140,7 +211,16 @@ const FormStore = ({
               label={'Mostrar en el mercado'}
             />
           </View>
-
+          {values.marketVisible && (
+            <View style={styles.input}>
+              <FormikInputValue
+                name={'link'}
+                placeholder="Nombre unico"
+                helperText="No debe modificarse una vez creado, (agrega - para separar palabras)"
+              />
+            </View>
+          )}
+          <Separator />
           <View style={styles.input}>
             <Button
               disabled={submitting}
@@ -173,6 +253,10 @@ const styles = StyleSheet.create({
     margin: 4
   }
 })
+
+const Separator = () => {
+  return <View style={{ height: 20 }} />
+}
 
 /* ********************************************
  *  SORT of this array change the order of the fields

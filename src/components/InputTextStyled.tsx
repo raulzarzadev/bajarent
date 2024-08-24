@@ -64,7 +64,7 @@ const InputTextStyled = ({
       >
         <TextInput
           {...props}
-          style={[baseStyle.input, inputStyle]}
+          style={[baseStyle.input, inputStyle, { flex: 1, maxWidth: '100%' }]}
           editable={!disabled}
           value={String(value || '')}
           onChangeText={(text) => {
