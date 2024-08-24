@@ -11,6 +11,7 @@ import ErrorBoundary from './ErrorBoundary'
 import FormikInputPhone from './FormikInputPhone'
 import InputLocationFormik from './InputLocationFormik'
 import { FormikFieldArrayE } from './FormikInputArray'
+import { Separator } from './Separator'
 
 const FormStore = ({
   defaultValues,
@@ -132,7 +133,7 @@ const FormStore = ({
 
           <FormikFieldArrayE
             label="Cuentas bancarias"
-            name="bankInfo"
+            name="bankAccounts"
             values={values}
             typeOptions={[
               {
@@ -253,10 +254,6 @@ const styles = StyleSheet.create({
     margin: 4
   }
 })
-
-const Separator = () => {
-  return <View style={{ height: 20 }} />
-}
 
 /* ********************************************
  *  SORT of this array change the order of the fields

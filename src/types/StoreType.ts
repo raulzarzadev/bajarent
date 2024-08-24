@@ -18,8 +18,7 @@ export type BaseStoreType = {
   allowStaff?: boolean
   img?: string
   marketVisible?: boolean
-  phone?: string
-  mobile?: string
+
   address?: string
 
   schedule?: string
@@ -32,12 +31,36 @@ export type BaseStoreType = {
   orderTypes?: Record<TypeOrderKey, boolean>
   orderFields?: Record<TypeOrderKey, FormOrderFields>
 
+  /**
+   * @deprecated use bankAccounts instead
+   */
   bankInfo?: {
     bank: string
     clabe: string
   }[]
+  /**
+   * @deprecated use bankAccounts instead
+   */
+  phone?: string
+  /**
+   * @deprecated use bankAccounts instead
+   */
+  mobile?: string
+
+  //* multi items
+
+  bankAccounts?: MultiFields[]
+  contacts?: MultiFields[]
+  socialMedia?: MultiFields[]
+
   accountHolder?: string
   items?: StoreItems
+}
+
+export type MultiFields = {
+  type: string
+  label: string
+  value: string
 }
 
 type StoreType = BaseType & BaseStoreType

@@ -10,6 +10,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { useNavigation } from '@react-navigation/native'
 import SpanCopy from './SpanCopy'
 import LinkLocation from './LinkLocation'
+import { Separator } from './Separator'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useNavigation()
@@ -57,6 +58,22 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
 
         {store?.location && <LinkLocation location={store?.location} />}
       </View>
+      <Separator />
+      <Text style={gStyles.h2}>Contactos</Text>
+      {store?.contacts?.map(({ label, value, type }, index) => (
+        <RowInfo key={index} label={label} value={value} type={type} />
+      ))}
+      <Separator />
+      <Text style={gStyles.h2}>Redes sociales</Text>
+      {store?.socialMedia?.map(({ label, value, type }, index) => (
+        <RowInfo key={index} label={label} value={value} type={type} />
+      ))}
+      <Separator />
+      <Text style={gStyles.h2}>Cuentas de banco</Text>
+      {store?.bankAccounts?.map(({ label, value, type }, index) => (
+        <RowInfo key={index} label={label} value={value} type={type} />
+      ))}
+
       <Text style={gStyles.h3}>Teléfonos</Text>
       {store?.phone && (
         <SpanCopy
@@ -73,11 +90,27 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
         />
       )}
       <Text style={gStyles.h3}>Cuentas bancarias</Text>
-      {store?.bankInfo?.map(({ clabe, bank }, i) => (
-        <View key={clabe || i}>
+      {store?.bankInfo?.map(({ clabe, bank }) => (
+        <View key={clabe}>
           <SpanCopy content={clabe} copyValue={clabe} label={bank} />
         </View>
       ))}
+    </View>
+  )
+}
+
+const RowInfo = ({ label, value, type }) => {
+  return (
+    <View
+      style={{
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginVertical: 4
+      }}
+    >
+      <Text style={{ marginHorizontal: 4 }}>{type || ''}</Text>
+      <Text style={{ marginHorizontal: 4 }}>{label || ''}</Text>
+      <Text style={{ marginHorizontal: 4 }}>{value || ''}</Text>
     </View>
   )
 }
