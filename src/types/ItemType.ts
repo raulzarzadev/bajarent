@@ -31,6 +31,8 @@ export type ItemBase = {
   isPickedUp?: boolean
   retiredAt?: Date
   retiredBy?: string
+  lastInventoryAt?: Date
+  lastInventoryBy?: string
 }
 
 type ItemType = BaseType & ItemBase

@@ -27,6 +27,7 @@ type Actions =
   | 'edit'
   | 'retire'
   | 'history'
+  | 'inventory'
 
 const ItemActions = ({
   item,
@@ -84,6 +85,27 @@ const ItemActions = ({
       entry: {
         type: 'custom',
         content: `${comment}`,
+        itemId
+      }
+    })
+    setComment('')
+  }
+
+  const handleAddInventoryEntry = async () => {
+    ServiceStoreItems.update({
+      storeId,
+      itemId,
+      itemData: {
+        lastInventoryAt: new Date(),
+        lastInventoryBy: user.id
+      }
+    })
+    ServiceStoreItems.addEntry({
+      storeId,
+      itemId,
+      entry: {
+        type: 'inventory',
+        content: `Inventario`,
         itemId
       }
     })
@@ -213,6 +235,33 @@ const ItemActions = ({
               label="Descripción"
               onChangeText={(value) => setComment(value)}
             ></InputTextStyled>
+          </ButtonConfirm>
+        )}
+
+        {actions?.includes('inventory') && (
+          <ButtonConfirm
+            icon="inventory"
+            openVariant="outline"
+            handleConfirm={async () => {
+              return handleAddInventoryEntry()
+            }}
+          >
+            <Text style={gStyles.h3}>
+              ¿Verifica que este elemento realmente existe y esta en en el sitio
+              correcto
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text style={gStyles.h3}>Number: </Text>
+              <Text>{item.number}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text style={gStyles.h3}>Serie: </Text>
+              <Text>{item.serial}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text style={gStyles.h3}>Area: </Text>
+              <Text>{item.assignedSectionName}</Text>
+            </View>
           </ButtonConfirm>
         )}
 

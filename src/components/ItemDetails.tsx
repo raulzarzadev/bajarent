@@ -11,7 +11,8 @@ import {
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ItemActions from './ItemActions'
-import { dateFormat } from '../libs/utils-date'
+import asDate, { dateFormat } from '../libs/utils-date'
+import SpanUser from './SpanUser'
 
 const ItemDetails = ({
   item,
@@ -29,7 +30,17 @@ const ItemDetails = ({
       <Text style={[gStyles.helper, { textAlign: 'center' }]}>
         {item.brand || 'sin marca'} - {item.serial || 'si serie'}
       </Text>
-
+      <Text
+        style={{
+          textAlign: 'center',
+          justifyContent: 'center',
+          marginVertical: 8
+        }}
+      >
+        Ultimo inventario:{' '}
+        {dateFormat(asDate(item?.lastInventoryAt), 'dd/MMM/yy HH:mm')} por{' '}
+        <SpanUser userId={item?.lastInventoryBy} />
+      </Text>
       <Text style={[gStyles.tCenter, { marginVertical: 6 }]}>
         <Text style={gStyles.h1}>{asCapitalize(dictionary(item.status))}</Text>
       </Text>
@@ -37,7 +48,15 @@ const ItemDetails = ({
       <View style={{ marginBottom: 8 }}>
         <ItemActions
           item={item}
-          actions={['assign', 'fix', 'edit', 'delete', 'retire', 'history']}
+          actions={[
+            'assign',
+            'fix',
+            'edit',
+            'delete',
+            'retire',
+            'history',
+            'inventory'
+          ]}
           onAction={() => {
             onAction?.()
           }}
