@@ -41,7 +41,9 @@ export default function formatComments({
         retire: `${itemNumber} Retirada `,
         reactivate: `${itemNumber} Reactivada`,
         exchangeDelivery: `${itemNumber} Entregada (cambio)`,
-        exchangePickup: `${itemNumber} Recogida (cambio)`
+        exchangePickup: `${itemNumber} Recogida (cambio)`,
+        custom: `${itemNumber} ${movement.content}`,
+        inventory: `${itemNumber} Inventario`
       }
       return {
         ...movement,
