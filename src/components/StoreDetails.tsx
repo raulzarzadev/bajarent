@@ -45,6 +45,15 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
         )}
       </View>
       <BadgesStore />
+      <SpanCopy
+        label={'Copiar información'}
+        copyValue={`\nTienda: *${store?.name || ''}* ${
+          store?.address ? `Direccón:\n${store?.address}\n` : ''
+        } ${store?.description ? `Descripción:\n${store?.description}\n` : ''}
+        ${arrayRows({ rows: store?.contacts, title: 'Contactos' })}
+        ${arrayRows({ rows: store?.socialMedia, title: 'Redes sociales' })}
+        ${arrayRows({ rows: store?.bankAccounts, title: 'Cuentas de banco' })}`}
+      />
       <P>{store?.description}</P>
       <Text style={gStyles.h3}>Dirección</Text>
       <View
@@ -73,30 +82,22 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       {store?.bankAccounts?.map(({ label, value, type }, index) => (
         <RowInfo key={index} label={label} value={value} type={type} />
       ))}
-
-      <Text style={gStyles.h3}>Teléfonos</Text>
-      {store?.phone && (
-        <SpanCopy
-          content={store?.phone}
-          copyValue={store?.phone}
-          label="Teléfono fijo"
-        />
-      )}
-      {store?.mobile && (
-        <SpanCopy
-          content={store?.mobile}
-          copyValue={store?.mobile}
-          label="Teléfono móvil"
-        />
-      )}
-      <Text style={gStyles.h3}>Cuentas bancarias</Text>
-      {store?.bankInfo?.map(({ clabe, bank }) => (
-        <View key={clabe}>
-          <SpanCopy content={clabe} copyValue={clabe} label={bank} />
-        </View>
-      ))}
     </View>
   )
+}
+
+const arrayRows = ({ rows = [], title }: { rows: RowInfo[]; title: string }) =>
+  `${
+    rows?.length > 0
+      ? `\n${title}\n${rows?.map((row) => stringRow({ row })).join('\n') || ''}`
+      : ''
+  }`
+
+type RowInfo = { label: string; value: string; type: string }
+
+const stringRow = ({ row }: { row: RowInfo }) => {
+  const { label, value, type } = row
+  return `${type || ''}${label || ''} ${value || ''} `
 }
 
 const RowInfo = ({ label, value, type }) => {
