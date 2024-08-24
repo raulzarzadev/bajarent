@@ -26,6 +26,7 @@ type Actions =
   | 'delete'
   | 'edit'
   | 'retire'
+  | 'history'
 
 const ItemActions = ({
   item,
@@ -76,6 +77,19 @@ const ItemActions = ({
     setComment('')
   }
 
+  const handleAddItemEntry = async () => {
+    ServiceStoreItems.addEntry({
+      storeId,
+      itemId,
+      entry: {
+        type: 'custom',
+        content: `${comment}`,
+        itemId
+      }
+    })
+    setComment('')
+  }
+
   const [comment, setComment] = React.useState('')
   const [disabled, setDisabled] = React.useState(false)
   const { toItems } = useMyNav()
@@ -85,6 +99,7 @@ const ItemActions = ({
   const disabledAssign = item?.status === 'retired'
   const disabledDelete = item?.status === 'retired'
   const disabledEdit = item?.status === 'retired'
+
   return (
     <View>
       <View
@@ -178,6 +193,26 @@ const ItemActions = ({
                 }
               })}
             />
+          </ButtonConfirm>
+        )}
+
+        {actions?.includes('history') && (
+          <ButtonConfirm
+            icon="history"
+            modalTitle="Agregar historial"
+            openVariant="outline"
+            confirmLabel="Agregar"
+            handleConfirm={async () => {
+              handleAddItemEntry()
+            }}
+          >
+            <Text style={gStyles.h3}>Historial</Text>
+            <InputTextStyled
+              style={{ marginVertical: 6 }}
+              placeholder="Descripción"
+              label="Descripción"
+              onChangeText={(value) => setComment(value)}
+            ></InputTextStyled>
           </ButtonConfirm>
         )}
 

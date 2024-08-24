@@ -30,7 +30,8 @@ import {
   MdOutlineTimerOff,
   MdOutlineStarBorder,
   MdOutlineStar,
-  MdStarHalf
+  MdStarHalf,
+  MdOutlineHistory
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoPricetagsOutline } from 'react-icons/io5'
@@ -71,6 +72,7 @@ import {
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  history: MdOutlineHistory,
   alarm: MdOutlineAlarm,
   alarmOff: MdOutlineTimerOff,
   rent: RxLapTimer,

@@ -153,6 +153,7 @@ const ListStoreItems = ({
                 handleConfirm={async () => await handleDeleteItems(ids)}
               />
             </View>
+
             <View style={{ marginVertical: 8 }}>
               {!!errors?.rentedItems && (
                 <Text

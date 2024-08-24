@@ -28,6 +28,9 @@ export type ItemHistoryBase = {
     | 'fix'
     | 'retire'
     | 'reactivate'
+    | 'custom'
+    | 'inventory'
+
   orderId?: string
   content: string
   itemId: string
