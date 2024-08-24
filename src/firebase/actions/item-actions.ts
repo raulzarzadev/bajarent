@@ -105,6 +105,26 @@ export const onChangeItemSection = async ({
   })
 }
 
+export const onCheckInInventory = async ({ storeId, itemId, userId }) => {
+  ServiceStoreItems.update({
+    storeId,
+    itemId,
+    itemData: {
+      lastInventoryAt: new Date(),
+      lastInventoryBy: userId
+    }
+  })
+  ServiceStoreItems.addEntry({
+    storeId,
+    itemId,
+    entry: {
+      type: 'inventory',
+      content: `Inventario`,
+      itemId
+    }
+  })
+}
+
 export const onPickUpItem = async ({
   storeId,
   itemId,

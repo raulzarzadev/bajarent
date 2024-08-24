@@ -11,11 +11,16 @@ import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { formatItems } from '../contexts/employeeContext'
-import { onRetireItem } from '../firebase/actions/item-actions'
+import {
+  onCheckInInventory,
+  onRetireItem
+} from '../firebase/actions/item-actions'
 import theme, { colors } from '../theme'
 import Icon from './Icon'
 import { ItemFixDetails } from './ItemDetails'
 import { useAuth } from '../contexts/authContext'
+import { isToday } from 'date-fns'
+import asDate from '../libs/utils-date'
 
 const OPACITY_ROW_COLOR = '66'
 
@@ -119,6 +124,21 @@ const ListStoreItems = ({
       })
     }
   }
+
+  const handleAddInventoryEntry = async (ids: string[]) => {
+    const promises = ids.map(async (id) => {
+      try {
+        await onCheckInInventory({ storeId, itemId: id, userId: user?.id })
+      } catch (error) {
+        console.error({ error })
+        return error
+      }
+    })
+    const res = await Promise.all(promises)
+    fetchItems()
+    setLoading(false)
+    return res
+  }
   useEffect(() => {
     if (storeId) {
       fetchItems()
@@ -151,6 +171,18 @@ const ListStoreItems = ({
                   ids?.length || 0
                 } items seleccionados`}
                 handleConfirm={async () => await handleDeleteItems(ids)}
+              />
+            </View>
+            <View style={{ marginVertical: 8 }}>
+              <ButtonConfirm
+                openDisabled={loading}
+                openLabel="Invetario"
+                openVariant="outline"
+                icon="inventory"
+                text={`Se marcaran inventarios en los ${
+                  ids?.length || 0
+                } items seleccionados`}
+                handleConfirm={async () => await handleAddInventoryEntry(ids)}
               />
             </View>
 
@@ -260,6 +292,7 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
     pickedUp: theme.primary,
     retired: theme.neutral
   }
+  const inventoryCheckedToday = isToday(asDate(item?.lastInventoryAt))
   return (
     <ListRow
       style={{
@@ -275,9 +308,16 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         {
           width: '20%',
           component: (
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ marginRight: 8 }}>{item.number}</Text>
-              {needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ width: 18 }}>
+                {inventoryCheckedToday && (
+                  <Icon icon={'inventory'} color={colors.black} size={16} />
+                )}
+              </View>
+              <View style={{ alignItems: 'center' }}>
+                <Text style={{ marginRight: 8 }}>{item.number}</Text>
+                {needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
+              </View>
             </View>
           )
         },

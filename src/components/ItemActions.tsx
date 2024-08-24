@@ -6,6 +6,7 @@ import ButtonConfirm from './ButtonConfirm'
 import InputRadios from './InputRadios'
 import {
   onChangeItemSection,
+  onCheckInInventory,
   onReactiveItem,
   onRetireItem
 } from '../firebase/actions/item-actions'
@@ -92,24 +93,7 @@ const ItemActions = ({
   }
 
   const handleAddInventoryEntry = async () => {
-    ServiceStoreItems.update({
-      storeId,
-      itemId,
-      itemData: {
-        lastInventoryAt: new Date(),
-        lastInventoryBy: user.id
-      }
-    })
-    ServiceStoreItems.addEntry({
-      storeId,
-      itemId,
-      entry: {
-        type: 'inventory',
-        content: `Inventario`,
-        itemId
-      }
-    })
-    setComment('')
+    await onCheckInInventory({ storeId, itemId, userId: user?.id })
   }
 
   const [comment, setComment] = React.useState('')
@@ -245,6 +229,7 @@ const ItemActions = ({
             handleConfirm={async () => {
               return handleAddInventoryEntry()
             }}
+            //* TODO: if the invletory was don today should be a green filled button
           >
             <Text style={gStyles.h3}>
               ¿Verifica que este elemento realmente existe y esta en en el sitio
