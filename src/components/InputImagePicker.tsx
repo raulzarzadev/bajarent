@@ -46,6 +46,7 @@ export default function InputImagePicker({
           // Redimensionar la imagen usando pica
           // Obtener el tamaño del Blob original
           console.log('Tamaño del Blob original:', blob.size)
+
           if (blob.size < MIN_SIZE) {
             console.log(
               'El tamaño de la imagen es menor que el tamaño mínimo requerido. No se redimensionará.'
@@ -65,6 +66,14 @@ export default function InputImagePicker({
 
           img.onload = () => {
             const picaInstance = pica()
+            // Calcular la relación de aspecto original
+            const aspectRatio = img.width / img.height
+            // Ajustar las dimensiones del canvas manteniendo la relación de aspecto
+            const targetWidth = 300 // Puedes ajustar este valor según tus necesidades
+            const targetHeight = targetWidth / aspectRatio
+            canvas.width = targetWidth
+            canvas.height = targetHeight
+
             picaInstance
               .resize(img, canvas, {
                 quality: 3,

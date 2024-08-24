@@ -9,6 +9,7 @@ import {
 import React from 'react'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
+import { colors } from '../theme'
 const { height: deviceHeight } = Dimensions.get('window')
 
 const ImagePreview = ({
@@ -32,11 +33,23 @@ const ImagePreview = ({
         <Image
           source={{ uri: image }}
           style={{
+            backgroundColor: colors.lightGray,
+            //ligth shadow
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            borderRadius: 4,
+
             flex: 1,
             minHeight: 150,
             marginVertical: 2,
             width,
-            height
+            height,
+            resizeMode: 'contain'
           }}
         />
       </Pressable>
@@ -50,7 +63,7 @@ const ImagePreview = ({
             marginVertical: 2,
             minWidth: '100%',
             minHeight: deviceHeight - 100,
-            resizeMode: fullscreen ? 'contain' : 'cover',
+            resizeMode: 'contain',
             alignItems: 'center'
           }}
         />
