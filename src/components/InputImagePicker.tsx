@@ -4,7 +4,9 @@ import * as ImagePicker from 'expo-image-picker'
 import { uploadFile } from '../firebase/files'
 import { colors } from '../theme'
 import Button from './Button'
+import pica from 'pica'
 
+const MIN_SIZE = 100000
 export default function InputImagePicker({
   label,
   value = null,
@@ -41,14 +43,52 @@ export default function InputImagePicker({
       fetch(uri)
         .then((response) => response.blob())
         .then((blob) => {
-          // Pasar el Blob a uploadFile
-          uploadFile(blob, name, ({ progress, downloadURL }) => {
-            // console.log({ progress, downloadURL })
-            onUploading?.(progress)
-            if (progress < 0) return console.error('Error uploading file')
-            if (progress >= 80) setProgress(progress)
-            if (downloadURL) setValue(downloadURL)
-          })
+          // Redimensionar la imagen usando pica
+          // Obtener el tamaño del Blob original
+          console.log('Tamaño del Blob original:', blob.size)
+          if (blob.size < MIN_SIZE) {
+            console.log(
+              'El tamaño de la imagen es menor que el tamaño mínimo requerido. No se redimensionará.'
+            )
+            // Pasar el Blob original a uploadFile
+            uploadFile(blob, name, ({ progress, downloadURL }) => {
+              onUploading?.(progress)
+              if (progress < 0) return console.error('Error uploading file')
+              if (progress >= 80) setProgress(progress)
+              if (downloadURL) setValue(downloadURL)
+            })
+            return // No proceder con el redimensionamiento
+          }
+          const canvas = document.createElement('canvas')
+          const img = new window.Image() // Usar window.Image para crear una imagen HTML
+          img.src = URL.createObjectURL(blob)
+
+          img.onload = () => {
+            const picaInstance = pica()
+            picaInstance
+              .resize(img, canvas, {
+                quality: 3,
+                alpha: true
+              })
+              .then((result) => {
+                return picaInstance.toBlob(result, 'image/jpeg', 0.8)
+              })
+              .then((resizedBlob) => {
+                // Obtener el tamaño del Blob redimensionado
+                console.log('Tamaño del Blob redimensionado:', resizedBlob.size)
+
+                // Pasar el Blob redimensionado a uploadFile
+                uploadFile(resizedBlob, name, ({ progress, downloadURL }) => {
+                  onUploading?.(progress)
+                  if (progress < 0) return console.error('Error uploading file')
+                  if (progress >= 80) setProgress(progress)
+                  if (downloadURL) setValue(downloadURL)
+                })
+              })
+              .catch((error) => {
+                console.error('Error resizing image:', error)
+              })
+          }
         })
       // uploadFile(result.assets[0], name, ({ progress, downloadURL }) => {
       //   console.log({ progress, downloadURL })
