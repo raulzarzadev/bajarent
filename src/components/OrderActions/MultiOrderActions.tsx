@@ -4,30 +4,27 @@ import Button from '../Button'
 import { handleCancel } from './libs/order_actions'
 import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
-import {
-  onAssignOrder,
-  onDelete,
-  onSetStatuses
-} from '../../libs/order-actions'
+import { onAssignOrder } from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
 import { gStyles } from '../../styles'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import useModal from '../../hooks/useModal'
 import StyledModal from '../StyledModal'
-import OrderType from '../../types/OrderType'
+import OrderType, { order_status, order_type } from '../../types/OrderType'
 import { excelFormatToOrder, orderAsExcelFormat } from '../../libs/orders'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import SpanCopy from '../SpanCopy'
 import InputAssignSection from '../InputAssingSection'
 import { useStore } from '../../contexts/storeContext'
+import ButtonConfirm from '../ButtonConfirm'
 
 const MultiOrderActions = ({
   ordersIds = [],
   data
 }: {
   ordersIds: string[]
-  data: any[]
+  data: unknown[]
 }) => {
   const { storeId, user } = useAuth()
   const {
@@ -40,35 +37,52 @@ const MultiOrderActions = ({
   const canCancel = permissionsOrder?.canCancel || isOwner || isAdmin
   const canDelete = permissionsOrder?.canDelete || isOwner || isAdmin
 
-  const timeOut = () => {
-    setTimeout(() => {
-      setLoading(false)
-      handleRefresh()
-    }, 3000)
-  }
+  // const timeOut = () => {
+  //   setTimeout(() => {
+  //     setLoading(false)
+  //     handleRefresh()
+  //   }, 3000)
+  // }
 
-  const handleCancelOrders = () => {
+  const handleCancelOrders = async () => {
     setLoading(true)
     const res = ordersIds.map((id) =>
       handleCancel({ orderId: id, storeId, userId: user.id || '' })
     )
-    timeOut()
+    return await Promise.all(res)
   }
 
-  const buttons = [
-    canCancel && (
-      <Button
-        onPress={() => handleCancelOrders()}
-        label="Cancelar"
-        icon="cancel"
-        variant="outline"
-        color="neutral"
-        disabled={loading}
-      />
-    ),
-    canDelete && <ButtonDeleteOrder orderIds={ordersIds} />,
+  const rentOrdersDelivered = data.filter(
+    (o) =>
+      o['status'] === order_status.DELIVERED &&
+      o['type'] === order_type.RENT &&
+      ordersIds.includes(o['id'])
+  )
 
-    <ModalAssignOrders ordersIds={ordersIds} />
+  const buttons = [
+    <ModalExcelRows ordersIds={ordersIds} />,
+    <ModalAssignOrders ordersIds={ordersIds} />,
+    canCancel && (
+      <ButtonConfirm
+        confirmLabel="Cancelar"
+        openLabel="Cancelar"
+        icon="cancel"
+        openVariant="outline"
+        confirmVariant="outline"
+        openColor="neutral"
+        confirmColor="error"
+        handleConfirm={handleCancelOrders}
+      >
+        {rentOrdersDelivered.length > 0 ? (
+          <Text style={[gStyles.h2, gStyles.tError, { marginVertical: 8 }]}>
+            {` Algunas ordenes de renta estan VIGENTES . 
+           (${rentOrdersDelivered.length}) 
+            Cancelarlas podria afectar los inventarios, ordenes de trabajo y otras estadisitcas `}
+          </Text>
+        ) : null}
+      </ButtonConfirm>
+    ),
+    canDelete && <ButtonDeleteOrder orderIds={ordersIds} />
   ]
   return (
     <View style={{ marginTop: 8 }}>
