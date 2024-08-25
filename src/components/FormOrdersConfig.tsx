@@ -79,7 +79,7 @@ const FormOrdersConfig = ({
                       label="Items por orden"
                       name={`orderFields.${type}.validateItemsQty`}
                     ></FormikCheckbox>
-                    {values.orderFields[type]?.validateItemsQty && (
+                    {values?.orderFields?.[type]?.validateItemsQty && (
                       <View style={{ flexDirection: 'row' }}>
                         <FormikInputValue
                           name={`orderFields.${type}.itemsMin`}
