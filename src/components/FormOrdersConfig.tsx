@@ -12,16 +12,17 @@ import {
 import Button from './Button'
 import StoreType from '../types/StoreType'
 import FormikInputValue from './FormikInputValue'
+import ErrorBoundary from './ErrorBoundary'
 
 export type OrdersConfigType = Pick<StoreType, 'orderTypes' | 'orderFields'>
-
+export type FormOrdersConfigProps = {
+  onSubmit: (values: OrdersConfigType) => Promise<any>
+  defaultValues: Partial<OrdersConfigType>
+}
 const FormOrdersConfig = ({
   onSubmit,
   defaultValues
-}: {
-  onSubmit: (values: OrdersConfigType) => Promise<any>
-  defaultValues: Partial<OrdersConfigType>
-}) => {
+}: FormOrdersConfigProps) => {
   const ordersTypes = ['RENT', 'SALE', 'REPAIR']
   const [isSubmitting, setIsSubmitting] = useState(false)
   return (
@@ -122,6 +123,12 @@ const FormOrdersConfig = ({
     </View>
   )
 }
+
+export const FormOrdersConfigE = (props: FormOrdersConfigProps) => (
+  <ErrorBoundary componentName="FormOrdersConfig">
+    <FormOrdersConfig {...props} />
+  </ErrorBoundary>
+)
 
 /* ********************************************
  *  SORT of this array change the order of the fields

@@ -1,6 +1,6 @@
 import { ScrollView, View } from 'react-native'
 import React from 'react'
-import FormOrdersConfig from './FormOrdersConfig'
+import { FormOrdersConfigE } from './FormOrdersConfig'
 import { gStyles } from '../styles'
 import { useAuth } from '../contexts/authContext'
 import { ServiceStores } from '../firebase/ServiceStore'
@@ -27,7 +27,7 @@ const ScreenOrdersConfig = () => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <FormOrdersConfig
+        <FormOrdersConfigE
           onSubmit={handleSubmit}
           defaultValues={storeOrdersConfig}
         />
