@@ -192,19 +192,6 @@ const ListStoreItems = ({
         ComponentMultiActions={({ ids }) => (
           <View>
             <View style={{ marginVertical: 8 }}>
-              <ButtonConfirm
-                openDisabled={loading}
-                openLabel="Eliminar"
-                openColor="error"
-                openVariant="outline"
-                icon="delete"
-                text={`Se eliminaran los ${
-                  ids?.length || 0
-                } artículos seleccionados`}
-                handleConfirm={async () => await handleDeleteItems(ids)}
-              />
-            </View>
-            <View style={{ marginVertical: 8 }}>
               <InputAssignSection
                 currentSection=""
                 disabled={loading}
@@ -248,6 +235,19 @@ const ListStoreItems = ({
                   ids?.length || 0
                 } artículos seleccionados`}
                 handleConfirm={async () => await handleRetireItem(ids)}
+              />
+            </View>
+            <View style={{ marginVertical: 8 }}>
+              <ButtonConfirm
+                openDisabled={loading}
+                openLabel="Eliminar"
+                openColor="error"
+                openVariant="outline"
+                icon="delete"
+                text={`Se eliminaran los ${
+                  ids?.length || 0
+                } artículos seleccionados`}
+                handleConfirm={async () => await handleDeleteItems(ids)}
               />
             </View>
           </View>
