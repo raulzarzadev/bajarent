@@ -433,6 +433,31 @@ export const onMarkContactAsFavorite = async ({
   })
 }
 
+export const onAssignOrder = async ({
+  orderId,
+  sectionId,
+  sectionName,
+  storeId
+}: {
+  orderId: OrderType['id']
+  sectionId: string
+  sectionName: string
+  storeId: StoreType['id']
+}) => {
+  const res = await ServiceOrders.update(orderId, {
+    assignToSection: sectionId,
+    assignToSectionName: sectionName
+  })
+  onComment({
+    orderId,
+    content: `Asignada a ${sectionName}`,
+    type: 'comment',
+    storeId,
+    isOrderMovement: true
+  })
+  return res
+}
+
 export const onChangeOrderItemTime = async ({
   orderId,
   itemId,

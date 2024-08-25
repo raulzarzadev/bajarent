@@ -151,7 +151,7 @@ const ListStoreItems = ({
   }, [storeId])
 
   const [errors, setErrors] = useState<{ rentedItems?: string }>({})
-  const [sectionId, setSectionId] = useState<string | null>(null)
+
   const formattedItems = formatItems(
     items?.map((item) => ({ ...item, id: item.id })),
     categories,
@@ -160,12 +160,18 @@ const ListStoreItems = ({
 
   const handleAssignItems = async (
     ids: string[],
-    sectionId: SectionType['id']
+    sectionId: SectionType['id'],
+    sectionName: SectionType['name']
   ) => {
     setLoading(true)
     const promises = ids.map(async (id) => {
       try {
-        return onChangeItemSection({ itemId: id, storeId, sectionId })
+        return onChangeItemSection({
+          itemId: id,
+          storeId,
+          sectionId,
+          sectionName
+        })
       } catch (error) {
         console.error({ error })
         return error
@@ -202,8 +208,8 @@ const ListStoreItems = ({
               <InputAssignSection
                 currentSection=""
                 disabled={loading}
-                setNewSection={async (newSectionId) => {
-                  await handleAssignItems(ids, newSectionId)
+                setNewSection={async ({ sectionId, sectionName }) => {
+                  await handleAssignItems(ids, sectionId, sectionName)
                 }}
               />
             </View>

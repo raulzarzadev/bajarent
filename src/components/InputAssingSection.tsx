@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import InputRadios from './InputRadios'
 import { useStore } from '../contexts/storeContext'
@@ -11,13 +11,33 @@ const InputAssignSection = ({
 }: {
   currentSection?: string | null
   disabled?: boolean
-  setNewSection?: (sectionId: string | null) => Promise<void>
+  setNewSection?: ({
+    sectionId,
+    sectionName
+  }: {
+    sectionId: string | null
+    sectionName: string
+  }) => Promise<void>
 }) => {
   const { storeSections } = useStore()
   const [sectionId, setSectionId] = React.useState<string | null>(null)
-  const assignedToSectionName = storeSections?.find(
-    (s) => s.id === currentSection
-  )?.name
+
+  const assignedToSectionName =
+    storeSections?.find((s) => s.id === currentSection)?.name || null
+
+  const newSectionName =
+    storeSections?.find((s) => s.id === sectionId)?.name || null
+
+  useEffect(() => {
+    setSectionId(currentSection)
+  }, [currentSection])
+
+  const storeSectionOptions = storeSections.map(({ id, name }) => {
+    return {
+      label: name,
+      value: id
+    }
+  })
   return (
     <View>
       <ButtonConfirm
@@ -27,7 +47,10 @@ const InputAssignSection = ({
         openVariant="outline"
         confirmLabel="Cambiar"
         handleConfirm={async () => {
-          return await setNewSection(sectionId)
+          return await setNewSection({
+            sectionId,
+            sectionName: newSectionName
+          })
         }}
       >
         <InputRadios
@@ -38,12 +61,7 @@ const InputAssignSection = ({
           }}
           containerStyle={{ marginVertical: 6 }}
           value={sectionId}
-          options={storeSections.map(({ id, name }) => {
-            return {
-              label: name,
-              value: id
-            }
-          })}
+          options={[{ label: 'Sin', value: null }, ...storeSectionOptions]}
         />
       </ButtonConfirm>
     </View>

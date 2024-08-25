@@ -4,7 +4,11 @@ import Button from '../Button'
 import { handleCancel } from './libs/order_actions'
 import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
-import { onDelete, onSetStatuses } from '../../libs/order-actions'
+import {
+  onAssignOrder,
+  onDelete,
+  onSetStatuses
+} from '../../libs/order-actions'
 import { useOrdersCtx } from '../../contexts/ordersContext'
 import { gStyles } from '../../styles'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
@@ -15,6 +19,8 @@ import { excelFormatToOrder, orderAsExcelFormat } from '../../libs/orders'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import SpanCopy from '../SpanCopy'
+import InputAssignSection from '../InputAssingSection'
+import { useStore } from '../../contexts/storeContext'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -49,22 +55,6 @@ const MultiOrderActions = ({
     timeOut()
   }
 
-  const handleUpdateStatuses = async () => {
-    setLoading(true)
-    const res = ordersIds.map(async (id) => {
-      return await onSetStatuses({ orderId: id })
-    })
-    timeOut()
-  }
-
-  // const handleCreateItem = async () => {
-  //   setLoading(true)
-  //   const items = createItemsFromOrders(
-  //     orders.filter((o) => ordersIds.includes(o.id))
-  //   )
-  //   console.log({ items })
-  //   timeOut()
-  // }
   const buttons = [
     canCancel && (
       <Button
@@ -77,23 +67,8 @@ const MultiOrderActions = ({
       />
     ),
     canDelete && <ButtonDeleteOrder orderIds={ordersIds} />,
-    <Button
-      onPress={() => handleUpdateStatuses()}
-      label="Actualizar"
-      icon="refresh"
-      variant="outline"
-      color="neutral"
-      disabled={loading}
-    />,
-    <ModalExcelRows ordersIds={ordersIds} />
-    // <Button
-    //   onPress={() => handleCreateItem()}
-    //   label="Crear item"
-    //   icon="save"
-    //   variant="outline"
-    //   color="neutral"
-    //   disabled={loading}
-    // />
+
+    <ModalAssignOrders ordersIds={ordersIds} />
   ]
   return (
     <View style={{ marginTop: 8 }}>
@@ -120,6 +95,31 @@ const MultiOrderActions = ({
         {/* To fix las element */}
         <View style={{ flex: 1 }} />
       </View>
+    </View>
+  )
+}
+
+const ModalAssignOrders = ({ ordersIds }: { ordersIds: string[] }) => {
+  const { storeId } = useStore()
+  const handleAssignOrders = async ({ sectionId, sectionName, ordersIds }) => {
+    try {
+      const promises = ordersIds.map((orderId) =>
+        onAssignOrder({ orderId, sectionId, sectionName, storeId })
+      )
+      return await Promise.all(promises)
+    } catch (e) {
+      console.error({ e })
+    }
+  }
+  return (
+    <View>
+      <InputAssignSection
+        currentSection={null}
+        setNewSection={async ({ sectionId, sectionName }) => {
+          await handleAssignOrders({ sectionId, sectionName, ordersIds })
+        }}
+        disabled={false}
+      />
     </View>
   )
 }

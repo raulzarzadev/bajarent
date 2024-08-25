@@ -24,6 +24,7 @@ import Loading from './Loading'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
 import FormikErrorsList from './FormikErrorsList'
+import FormikAssignSection from './FormikAssingSection'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -395,10 +396,6 @@ const FormFieldsA = ({
     ),
     sheetRow: (
       <>
-        {/* <TextInfo
-          type="warning"
-          text="Fila de excel. Las celdas deben estar en el siguiente orden | Nota | Nombre | Teléfono | Colonia | Dirección | Referencias | No.Casa | Fecha programada |"
-        ></TextInfo> */}
         <InputTextStyled
           onChangeText={(text) => setSheetRow(text)}
           placeholder="Fila de excel"
@@ -527,7 +524,7 @@ const FormFieldsA = ({
         helperText="Año, lote, etc."
       />
     ),
-    assignIt: <FormikAssignOrder />,
+    assignIt: <FormikAssignSection name={'assignToSection'} />,
     quoteDetails: (
       <>
         <View style={[styles.item]}>
@@ -553,19 +550,6 @@ const FormFieldsA = ({
     startRepair: (
       <FormikCheckbox name="startRepair" label="Comenzar reparación" />
     )
-    /*
-      <ErrorBoundary componentName="ModalAssignOrder">
-         <ModalAssignOrder
-          orderId={values.id}
-          section={values.assignToSection}
-          date={values.scheduledAt}
-          assignSection={(sectionId) => {
-            setValues({ ...values, assignToSection: sectionId })
-          }}
-          assignDate={(date) => setValues({ ...values, scheduledAt: date })}
-        /> 
-        </ErrorBoundary>
-      */
   }
 
   return (

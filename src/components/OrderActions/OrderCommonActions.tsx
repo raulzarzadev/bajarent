@@ -111,8 +111,6 @@ const OrderCommonActions = ({
     ),
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
     canSendWS && <ModalSendWhatsappE orderId={orderId} />,
-    // true && <ModalAssignItem orderId={orderId} />,
-
     canReorder && (
       <Button
         label="Re-ordenar"
