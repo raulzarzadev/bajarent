@@ -304,6 +304,13 @@ const ListStoreItems = ({
             boolean: true,
             color: `${theme.primary}${OPACITY_ROW_COLOR}`,
             icon: 'truck'
+          },
+          {
+            field: 'checkedInInventory',
+            label: 'Inventariado hoy',
+            boolean: true,
+            color: `${colors.pink}${OPACITY_ROW_COLOR}`,
+            icon: 'inventory'
           }
         ]}
         sortFields={[

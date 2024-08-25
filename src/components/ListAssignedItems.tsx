@@ -109,7 +109,7 @@ export const SectionItem = ({
     <>
       <StyledModal {...modal}>
         <View style={{ marginBottom: 8 }}>
-          <CardItem item={item} />
+          <CardItem item={item} showSerialNumber />
         </View>
         <ItemActions
           // FIXME: avoid select options
@@ -140,7 +140,7 @@ export const SectionItem = ({
             padding: 4
           }}
         >
-          <CardItem item={item} />
+          <CardItem item={item} showSerialNumber />
         </View>
       </Pressable>
     </>

@@ -5,8 +5,17 @@ import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
 import { ItemFixDetails } from './ItemDetails'
-
-const CardItem = ({ item }: { item: Partial<ItemType> }) => {
+export type CartItemType = {
+  item: Partial<ItemType>
+  showAssignedSection?: boolean
+  showSerialNumber?: boolean
+}
+const CardItem = ({
+  item,
+  showAssignedSection,
+  showSerialNumber
+}: CartItemType) => {
+  const sectionName = item?.assignedSectionName || 'Sin asignar'
   return (
     <View
       style={{
@@ -38,10 +47,18 @@ const CardItem = ({ item }: { item: Partial<ItemType> }) => {
           />
         )}
       </View>
+      <Text style={[gStyles.tCenter, gStyles.helper]}>
+        {item.categoryName}{' '}
+      </Text>
       <Text numberOfLines={2} style={[gStyles.h1]}>
         {item.number}
       </Text>
-      <Text style={[gStyles.tCenter]}>{item.categoryName} </Text>
+      {showSerialNumber && (
+        <Text style={[gStyles.tCenter, gStyles.helper]}>{item.serial}</Text>
+      )}
+      {showAssignedSection && (
+        <Text style={[gStyles.tCenter]}>{sectionName}</Text>
+      )}
       {item?.needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
     </View>
   )
@@ -73,19 +90,28 @@ const ItemIcon = ({
   )
 }
 
-export const SquareItem = ({ item }: { item: Partial<ItemType> }) => {
+export const SquareItem = ({
+  item,
+  showAssignedSection,
+  showSerialNumber,
+  bgColor = colors.lightBlue
+}: CartItemType & { bgColor?: string }) => {
   return (
     <View
       style={{
         width: 120,
-        height: 80,
-        backgroundColor: colors.lightBlue,
+        minHeight: 80,
+        backgroundColor: bgColor,
         borderRadius: gSpace(2),
         margin: 2,
         padding: 4
       }}
     >
-      <CardItem item={item} />
+      <CardItem
+        item={item}
+        showAssignedSection={showAssignedSection}
+        showSerialNumber={showSerialNumber}
+      />
     </View>
   )
 }

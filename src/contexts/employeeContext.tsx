@@ -10,6 +10,8 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { CategoryType } from '../types/RentItem'
 import { SectionType } from '../types/SectionType'
+import asDate from '../libs/utils-date'
+import { isToday } from 'date-fns'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -172,6 +174,7 @@ export const formatItems = (
       sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
     needFix: !!item.needFix,
     isRented: !!(item?.status === 'rented'),
-    isPickedUp: !!(item?.status === 'pickedUp')
+    isPickedUp: !!(item?.status === 'pickedUp'),
+    checkedInInventory: isToday(asDate(item.lastInventoryAt))
   }))
 }

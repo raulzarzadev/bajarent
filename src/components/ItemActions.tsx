@@ -17,6 +17,12 @@ import useMyNav from '../hooks/useMyNav'
 import InputTextStyled from './InputTextStyled'
 import ButtonDeleteItem from './ButtonDeleteItem'
 import { useAuth } from '../contexts/authContext'
+import { isToday } from 'date-fns'
+import asDate, { dateFormat } from '../libs/utils-date'
+import Icon from './Icon'
+import theme from '../theme'
+import SpanUser from './SpanUser'
+import CardItem, { SquareItem } from './CardItem'
 
 type Actions =
   | 'details'
@@ -42,7 +48,9 @@ const ItemActions = ({
   const itemId = item?.id
   const itemSection = item?.assignedSection || ''
   const needFix = item?.needFix
+  const checkedInventoryToday = isToday(asDate(item?.lastInventoryAt))
   const { storeSections, storeId } = useStore()
+
   const { user } = useAuth()
   const [sectionId, setSectionId] = React.useState<string | null>(
     itemSection || null
@@ -105,7 +113,8 @@ const ItemActions = ({
   const disabledAssign = item?.status === 'retired'
   const disabledDelete = item?.status === 'retired'
   const disabledEdit = item?.status === 'retired'
-
+  const disabledHistory = item?.status === 'retired'
+  const disabledInventory = item?.status === 'retired'
   return (
     <View>
       <View
@@ -116,142 +125,176 @@ const ItemActions = ({
         }}
       >
         {actions.includes('retire') && (
-          <ButtonConfirm
-            openDisabled={disabled || rentedItem}
-            icon={retiredItem ? 'upload' : 'download'}
-            openVariant={!retiredItem ? 'outline' : 'filled'}
-            text={`${retiredItem ? 'Reactivar' : 'Dar de baja'}`}
-            handleConfirm={async () => {
-              setDisabled(true)
-              if (retiredItem) {
-                onReactiveItem({ itemId, storeId })
-              } else {
-                onRetireItem({ itemId, storeId, userId: user.id })
-              }
-              setDisabled(false)
-              return
-            }}
-          />
+          <View style={{ margin: 2 }}>
+            <ButtonConfirm
+              openDisabled={disabled || rentedItem}
+              icon={retiredItem ? 'upload' : 'download'}
+              openVariant={!retiredItem ? 'outline' : 'filled'}
+              text={`${retiredItem ? 'Reactivar' : 'Dar de baja'}`}
+              handleConfirm={async () => {
+                setDisabled(true)
+                if (retiredItem) {
+                  onReactiveItem({ itemId, storeId })
+                } else {
+                  onRetireItem({ itemId, storeId, userId: user.id })
+                }
+                setDisabled(false)
+                return
+              }}
+            />
+          </View>
         )}
         {actions.includes('delete') && (
-          <ButtonDeleteItem
-            disabled={disabled || disabledDelete}
-            itemId={item.id}
-            onDeleted={() => {
-              onAction?.('delete')
-            }}
-          />
+          <View style={{ margin: 2 }}>
+            <ButtonDeleteItem
+              disabled={disabled || disabledDelete}
+              itemId={item.id}
+              onDeleted={() => {
+                onAction?.('delete')
+              }}
+            />
+          </View>
         )}
         {actions.includes('edit') && (
-          <Button
-            disabled={disabled || disabledEdit}
-            onPress={() => {
-              toItems({ id: itemId, screenEdit: true })
-            }}
-            variant="outline"
-            // justIcon
-            color="primary"
-            icon="edit"
-          />
+          <View style={{ margin: 2 }}>
+            <Button
+              disabled={disabled || disabledEdit}
+              onPress={() => {
+                toItems({ id: itemId, screenEdit: true })
+              }}
+              variant="outline"
+              // justIcon
+              color="primary"
+              icon="edit"
+            />
+          </View>
         )}
         {actions?.includes('select') && (
-          <Button
-            label="Selecciona"
-            onPress={() => {
-              onAction?.('select')
-            }}
-          />
+          <View style={{ margin: 2 }}>
+            <Button
+              label="Selecciona"
+              onPress={() => {
+                onAction?.('select')
+              }}
+            />
+          </View>
         )}
         {actions?.includes('details') && (
-          <Button
-            label="Detalles"
-            onPress={() => {
-              onAction?.('details')
-              toItems({ id: itemId })
-            }}
-          />
+          <View style={{ margin: 2 }}>
+            <Button
+              label="Detalles"
+              onPress={() => {
+                onAction?.('details')
+                toItems({ id: itemId })
+              }}
+            />
+          </View>
         )}
 
         {actions?.includes('assign') && (
-          <ButtonConfirm
-            openDisabled={disabled || disabledAssign}
-            openLabel={currentSection || 'Asignar'}
-            icon="swap"
-            openVariant="outline"
-            confirmLabel="Cambiar"
-            handleConfirm={async () => {
-              onAction?.('assign')
-              return await handleChangeItemSection()
-            }}
-          >
-            <InputRadios
-              layout="row"
-              label="Selecciona un area"
-              setValue={(sectionId) => {
-                setSectionId(sectionId)
+          <View style={{ margin: 2 }}>
+            <ButtonConfirm
+              openDisabled={disabled || disabledAssign}
+              openLabel={currentSection || 'Asignar'}
+              icon="swap"
+              openVariant="outline"
+              confirmLabel="Cambiar"
+              handleConfirm={async () => {
+                onAction?.('assign')
+                return await handleChangeItemSection()
               }}
-              containerStyle={{ marginVertical: 6 }}
-              value={sectionId}
-              options={storeSections.map(({ id, name }) => {
-                return {
-                  label: name,
-                  value: id
-                }
-              })}
-            />
-          </ButtonConfirm>
+            >
+              <InputRadios
+                layout="row"
+                label="Selecciona un area"
+                setValue={(sectionId) => {
+                  setSectionId(sectionId)
+                }}
+                containerStyle={{ marginVertical: 6 }}
+                value={sectionId}
+                options={storeSections.map(({ id, name }) => {
+                  return {
+                    label: name,
+                    value: id
+                  }
+                })}
+              />
+            </ButtonConfirm>
+          </View>
         )}
 
         {actions?.includes('history') && (
-          <ButtonConfirm
-            icon="history"
-            modalTitle="Agregar historial"
-            openVariant="outline"
-            confirmLabel="Agregar"
-            handleConfirm={async () => {
-              handleAddItemEntry()
-            }}
-          >
-            <Text style={gStyles.h3}>Historial</Text>
-            <InputTextStyled
-              style={{ marginVertical: 6 }}
-              placeholder="Descripción"
-              label="Descripción"
-              onChangeText={(value) => setComment(value)}
-            ></InputTextStyled>
-          </ButtonConfirm>
+          <View style={{ margin: 2 }}>
+            <ButtonConfirm
+              openDisabled={disabled || disabledHistory}
+              icon="history"
+              modalTitle="Agregar historial"
+              openVariant="outline"
+              confirmLabel="Agregar"
+              handleConfirm={async () => {
+                handleAddItemEntry()
+              }}
+            >
+              <Text style={gStyles.h3}>Historial</Text>
+              <InputTextStyled
+                style={{ marginVertical: 6 }}
+                placeholder="Descripción"
+                label="Descripción"
+                onChangeText={(value) => setComment(value)}
+              ></InputTextStyled>
+            </ButtonConfirm>
+          </View>
         )}
 
         {actions?.includes('inventory') && (
-          <ButtonConfirm
-            icon="inventory"
-            openVariant="outline"
-            handleConfirm={async () => {
-              return handleAddInventoryEntry()
-            }}
-            //* TODO: if the invletory was don today should be a green filled button
-          >
-            <Text style={gStyles.h3}>
-              ¿Verifica que este elemento realmente existe y esta en en el sitio
-              correcto
-            </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={gStyles.h3}>Number: </Text>
-              <Text>{item.number}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={gStyles.h3}>Serie: </Text>
-              <Text>{item.serial}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={gStyles.h3}>Area: </Text>
-              <Text>{item.assignedSectionName}</Text>
-            </View>
-          </ButtonConfirm>
+          <View style={{ margin: 2 }}>
+            <ButtonConfirm
+              openDisabled={disabled || disabledInventory}
+              modalTitle="Verificar inventrio"
+              icon="inventory"
+              openVariant={checkedInventoryToday ? 'filled' : 'outline'}
+              openColor={checkedInventoryToday ? 'success' : 'primary'}
+              handleConfirm={async () => {
+                return handleAddInventoryEntry()
+              }}
+
+              //* TODO: if the invletory was don today should be a green filled button
+            >
+              {checkedInventoryToday && (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 8
+                  }}
+                >
+                  <Icon icon="inventory" color={theme.success} />
+                  <Text style={{ textAlign: 'center' }}>
+                    Ya fue verificado HOY a las{' '}
+                    {dateFormat(asDate(item.lastInventoryAt), 'HH:mm')}hrs por{' '}
+                    <SpanUser userId={item?.lastInventoryBy} />
+                  </Text>
+                </View>
+              )}
+              <Text style={gStyles.h3}>
+                Verifica que este elemento realmente existe, tiene los datos
+                correctos y está en en el sitio indicado.
+              </Text>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  margin: 'auto',
+                  marginVertical: 16
+                }}
+              >
+                <SquareItem item={item} showAssignedSection showSerialNumber />
+              </View>
+            </ButtonConfirm>
+          </View>
         )}
 
         {actions.includes('fix') && (
-          <>
+          <View style={{ margin: 2 }}>
             {needFix ? (
               <ButtonConfirm
                 openDisabled={disabled || disabledFix}
@@ -292,7 +335,7 @@ const ItemActions = ({
                 ></InputTextStyled>
               </ButtonConfirm>
             )}
-          </>
+          </View>
         )}
       </View>
     </View>
