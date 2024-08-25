@@ -265,28 +265,20 @@ function MyList<T extends { id: string }>({
               justifyContent: 'center'
             }}
           >
-            <View style={{ flexDirection: 'row' }}>
-              {multiSelect && selectedRows?.length > 0 && (
-                <>
-                  <Button
-                    icon="settings"
-                    justIcon
-                    onPress={() => {
-                      multiSelectActionsModal.toggleOpen()
-                    }}
-                    variant="ghost"
-                  ></Button>
-                  <StyledModal {...multiSelectActionsModal}>
-                    <ComponentMultiActions ids={selectedRows} />
-                  </StyledModal>
-                </>
-              )}
+            <Text style={{ textAlign: 'center', marginRight: 4 }}>
+              {filteredData?.length} coincidencias
+            </Text>
+          </View>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <View style={{ width: '30%', justifyContent: 'center' }}>
               {ComponentMultiActions && (
                 <Button
                   label={
                     multiSelect
-                      ? `${selectedRows.length || 0} Seleccionadas `
-                      : 'Seleccionar'
+                      ? `Hecho ${selectedRows.length || 0}`
+                      : 'Selección'
                   }
                   variant={'ghost'}
                   size="xs"
@@ -296,17 +288,32 @@ function MyList<T extends { id: string }>({
                 ></Button>
               )}
             </View>
-            <Text style={{ textAlign: 'center', marginRight: 4 }}>
-              {filteredData?.length} coincidencias
-            </Text>
-          </View>
-          <View style={{}}>
-            <Pagination
-              currentPage={currentPage}
-              handleNextPage={handleNextPage}
-              handlePrevPage={handlePrevPage}
-              totalPages={totalPages}
-            />
+            <View style={{ width: '40%', justifyContent: 'center' }}>
+              <Pagination
+                currentPage={currentPage}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+                totalPages={totalPages}
+              />
+            </View>
+            <View style={{ width: '30%', justifyContent: 'center' }}>
+              {multiSelect && (
+                <>
+                  <Button
+                    icon="settings"
+                    buttonStyles={{ margin: 'auto' }}
+                    onPress={() => {
+                      multiSelectActionsModal.toggleOpen()
+                    }}
+                    size="xs"
+                    variant="ghost"
+                  ></Button>
+                  <StyledModal {...multiSelectActionsModal}>
+                    <ComponentMultiActions ids={selectedRows} />
+                  </StyledModal>
+                </>
+              )}
+            </View>
           </View>
 
           {/* SORT OPTIONS   */}
@@ -553,18 +560,18 @@ const Pagination = ({
         onPress={handlePrevPage}
         disabled={currentPage === 1}
         label="Prev"
-        size="small"
+        size="medium"
         icon="rowLeft"
         justIcon
       />
-      <Text style={styles.pageText}>
-        {currentPage} de {totalPages}
+      <Text style={styles.pageText} numberOfLines={1}>
+        {currentPage} / {totalPages}
       </Text>
       <Button
         onPress={handleNextPage}
         disabled={currentPage === totalPages}
         label="Next"
-        size="small"
+        size="medium"
         icon="rowRight"
         justIcon
       />
