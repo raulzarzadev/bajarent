@@ -12,6 +12,8 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import { formatItems } from '../contexts/employeeContext'
 import {
+  onAssignItem,
+  onChangeItemSection,
   onCheckInInventory,
   onRetireItem
 } from '../firebase/actions/item-actions'
@@ -21,6 +23,9 @@ import { ItemFixDetails } from './ItemDetails'
 import { useAuth } from '../contexts/authContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
+import SelectStoreSection from './SelectStoreSection'
+import InputAssignSection from './InputAssingSection'
+import { SectionType } from '../types/SectionType'
 
 const OPACITY_ROW_COLOR = '66'
 
@@ -146,11 +151,31 @@ const ListStoreItems = ({
   }, [storeId])
 
   const [errors, setErrors] = useState<{ rentedItems?: string }>({})
+  const [sectionId, setSectionId] = useState<string | null>(null)
   const formattedItems = formatItems(
     items?.map((item) => ({ ...item, id: item.id })),
     categories,
     storeSections
   )
+
+  const handleAssignItems = async (
+    ids: string[],
+    sectionId: SectionType['id']
+  ) => {
+    setLoading(true)
+    const promises = ids.map(async (id) => {
+      try {
+        return onChangeItemSection({ itemId: id, storeId, sectionId })
+      } catch (error) {
+        console.error({ error })
+        return error
+      }
+    })
+    const res = await Promise.all(promises)
+    fetchItems()
+    setLoading(false)
+    return res
+  }
 
   return (
     <View>
@@ -169,8 +194,17 @@ const ListStoreItems = ({
                 icon="delete"
                 text={`Se eliminaran los ${
                   ids?.length || 0
-                } items seleccionados`}
+                } artículos seleccionados`}
                 handleConfirm={async () => await handleDeleteItems(ids)}
+              />
+            </View>
+            <View style={{ marginVertical: 8 }}>
+              <InputAssignSection
+                currentSection=""
+                disabled={loading}
+                setNewSection={async (newSectionId) => {
+                  await handleAssignItems(ids, newSectionId)
+                }}
               />
             </View>
             <View style={{ marginVertical: 8 }}>
@@ -181,7 +215,7 @@ const ListStoreItems = ({
                 icon="inventory"
                 text={`Se marcaran inventarios en los ${
                   ids?.length || 0
-                } items seleccionados`}
+                } artículos seleccionados`}
                 handleConfirm={async () => await handleAddInventoryEntry(ids)}
               />
             </View>
@@ -206,7 +240,7 @@ const ListStoreItems = ({
                 icon="download"
                 text={`Se daran de baja ${
                   ids?.length || 0
-                } items seleccionados`}
+                } artículos seleccionados`}
                 handleConfirm={async () => await handleRetireItem(ids)}
               />
             </View>

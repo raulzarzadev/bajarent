@@ -331,6 +331,10 @@ export const onChangeOrderItem = async ({
   }
 }
 
+/**
+ * Assing item to order
+ * @param param0
+ */
 export const onAssignItem = async ({
   newItemId,
   orderId,

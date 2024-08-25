@@ -8,33 +8,31 @@ import { View } from 'react-native'
 import FormikAssignOrder from '../FormikAssignOrder'
 import { Formik } from 'formik'
 import { onComment } from '../../libs/order-actions'
+import InputAssignSection from '../InputAssingSection'
 
 const ModalAssignOrder = ({
   orderId = null,
-  assignDate,
-  assignSection,
+
   section,
   date
 }: {
   orderId: string | null
-  assignDate?: (value: Date | null) => void
-  assignSection?: (value: string | null) => void
+
   section?: string
   date?: Date
 }) => {
-  const modal = useModal({ title: 'Asignar a' })
   const { storeSections, storeId } = useStore()
-  const assignedToSectionName = storeSections?.find(
-    (s) => s.id === section
-  )?.name
+
   const [loading, setLoading] = useState(false)
-  const handleSubmit = async (values: any) => {
-    const newSectionName = storeSections?.find(
-      (s) => s.id === values.assignToSection
-    )?.name
+  const handleAssignSection = async (sectionId: any) => {
+    const newSectionName =
+      storeSections?.find((s) => s.id === sectionId)?.name || ''
     setLoading(true)
     try {
-      ServiceOrders.update(orderId, values)
+      ServiceOrders.update(orderId, {
+        assignToSection: sectionId,
+        assignToSectionName: newSectionName
+      })
       onComment({
         orderId,
         content: `Asignada a ${newSectionName}`,
@@ -42,7 +40,6 @@ const ModalAssignOrder = ({
         storeId,
         isOrderMovement: true
       })
-      modal.toggleOpen()
     } catch (e) {
       console.error({ e })
     } finally {
@@ -52,32 +49,11 @@ const ModalAssignOrder = ({
 
   return (
     <View>
-      <Button
-        onPress={modal.toggleOpen}
-        label={`${assignedToSectionName || 'Asignar'}`}
-        size="small"
-        icon="swap"
-      ></Button>
-      <StyledModal {...modal}>
-        <Formik
-          initialValues={{
-            scheduledAt: date || new Date(),
-            assignToSection: section || null
-          }}
-          onSubmit={handleSubmit}
-        >
-          {({ handleSubmit }) => (
-            <View>
-              <FormikAssignOrder />
-              <Button
-                disabled={loading}
-                onPress={handleSubmit}
-                label="Asignar"
-              ></Button>
-            </View>
-          )}
-        </Formik>
-      </StyledModal>
+      <InputAssignSection
+        currentSection={section}
+        setNewSection={(sectionId) => handleAssignSection(sectionId)}
+        disabled={loading}
+      />
     </View>
   )
 }
