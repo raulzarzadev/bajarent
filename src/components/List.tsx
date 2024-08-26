@@ -48,6 +48,7 @@ export type ListPops<T extends { id: string }> = {
   onFetchMore?: () => void
   pinRows?: boolean
   onFetchMoreCount?: string
+  maxWidth?: number
 }
 
 function MyList<T extends { id: string }>({
@@ -65,7 +66,8 @@ function MyList<T extends { id: string }>({
   collectionSearch,
   onFetchMore,
   pinRows,
-  onFetchMoreCount
+  onFetchMoreCount,
+  maxWidth = 600
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
@@ -181,7 +183,7 @@ function MyList<T extends { id: string }>({
         style={{
           //margin: 'auto',
           width: '100%',
-          maxWidth: 600,
+          maxWidth: maxWidth,
           margin: 'auto'
         }}
       >

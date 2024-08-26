@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
+import { View, Text, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ListE } from './List'
 import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
-import ListRow from './ListRow'
+import ListRow, { ListRowField } from './ListRow'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import dictionary from '../dictionary'
@@ -26,6 +26,7 @@ import asDate from '../libs/utils-date'
 import SelectStoreSection from './SelectStoreSection'
 import InputAssignSection from './InputAssingSection'
 import { SectionType } from '../types/SectionType'
+import { gStyles } from '../styles'
 
 const OPACITY_ROW_COLOR = '66'
 
@@ -186,6 +187,7 @@ const ListStoreItems = ({
   return (
     <View>
       <ListE
+        maxWidth={1000}
         defaultOrder="des"
         defaultSortBy="number"
         pinRows
@@ -340,6 +342,76 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
     retired: theme.neutral
   }
   const inventoryCheckedToday = isToday(asDate(item?.lastInventoryAt))
+  const isBigScreen = Dimensions.get('window').width > 600
+
+  const rowFields: ListRowField[] = [
+    {
+      width: '20%',
+      component: (
+        <View style={{ flexDirection: isBigScreen ? 'row' : 'column' }}>
+          <View style={{ width: 18 }}>
+            {inventoryCheckedToday && (
+              <Icon icon={'inventory'} color={colors.black} size={16} />
+            )}
+          </View>
+          <View style={{ alignItems: 'center', flex: 1 }}>
+            <Text style={{ marginRight: 8 }}>{item.number}</Text>
+            <Text style={gStyles.helper}>{item.serial}</Text>
+          </View>
+        </View>
+      )
+    },
+    { width: '20%', component: <Text>{item.assignedSectionName}</Text> },
+    {
+      width: '20%',
+      component: (
+        <View>
+          <Text>{item.categoryName}</Text>
+          <Text style={gStyles.helper}>{item.brand}</Text>
+        </View>
+      )
+    },
+    {
+      width: 'rest',
+      component: <Text>{dictionary(item.status)}</Text>
+    }
+  ]
+  if (isBigScreen) {
+    rowFields.push({
+      width: '30%',
+      component: (
+        <View>
+          {!!needFix && (
+            <View
+              style={
+                {
+                  // justifyContent: 'flex-end',
+                  // width: '100%',
+                  // alignItems: 'flex-end'
+                }
+              }
+            >
+              <ItemFixDetails itemId={item?.id} size="sm" />
+            </View>
+          )}
+        </View>
+      )
+    })
+  } else {
+    rowFields.push({
+      width: 'rest',
+      component: (
+        <View>
+          {!!needFix && (
+            <View>
+              <Icon icon="wrench" color={colors.red} size={14} />
+            </View>
+          )}
+        </View>
+      )
+    })
+  }
+
   return (
     <ListRow
       style={{
@@ -351,54 +423,7 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
         borderColor: needFix ? colors.red : 'transparent',
         backgroundColor: `${bgcolor[item.status]}${OPACITY_ROW_COLOR}`
       }}
-      fields={[
-        {
-          width: '20%',
-          component: (
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ width: 18 }}>
-                {inventoryCheckedToday && (
-                  <Icon icon={'inventory'} color={colors.black} size={16} />
-                )}
-              </View>
-              <View style={{ alignItems: 'center' }}>
-                <Text style={{ marginRight: 8 }}>{item.number}</Text>
-                {needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
-              </View>
-            </View>
-          )
-        },
-        { width: '20%', component: <Text>{item.categoryName}</Text> },
-        { width: '20%', component: <Text>{item.assignedSectionName}</Text> },
-        {
-          width: '20%',
-          component: (
-            <View>
-              <Text>{item.brand}</Text>
-              <Text>{item.serial}</Text>
-            </View>
-          )
-        },
-        {
-          width: '20%',
-          component: (
-            <View>
-              {!!needFix && (
-                <View
-                  style={{
-                    justifyContent: 'flex-end',
-                    width: '100%',
-                    alignItems: 'flex-end'
-                  }}
-                >
-                  <Icon icon="wrench" color={colors.red} size={16} />
-                </View>
-              )}
-              <Text>{dictionary(item.status)}</Text>
-            </View>
-          )
-        }
-      ]}
+      fields={rowFields}
     />
   )
 }

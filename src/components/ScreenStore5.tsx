@@ -332,7 +332,9 @@ const TabAreas = (props) => {
 
 const TabItems = () => {
   return (
-    <View style={[gStyles.container, { marginBottom: gSpace(16) }]}>
+    <View
+      style={[gStyles.container, { marginBottom: gSpace(16), maxWidth: 1200 }]}
+    >
       <ScreenItems />
     </View>
   )

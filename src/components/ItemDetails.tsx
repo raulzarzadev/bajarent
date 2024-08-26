@@ -13,6 +13,8 @@ import ErrorBoundary from './ErrorBoundary'
 import ItemActions from './ItemActions'
 import asDate, { dateFormat } from '../libs/utils-date'
 import SpanUser from './SpanUser'
+import Icon from './Icon'
+import { colors } from '../theme'
 
 const ItemDetails = ({
   item,
@@ -109,6 +111,7 @@ export const ItemFixDetails = ({
         }}
       >
         <Text style={[gStyles.helper, gStyles.tError]}>
+          <Icon icon="wrench" color={colors.red} size={14} />
           {dateFormat(lastFixEntry?.createdAt, 'dd/MMM/yy HH:mm ')}
         </Text>
         <Text
