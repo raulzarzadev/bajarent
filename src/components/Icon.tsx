@@ -32,7 +32,8 @@ import {
   MdOutlineStar,
   MdStarHalf,
   MdOutlineHistory,
-  MdOutlineInventory
+  MdOutlineInventory,
+  MdMyLocation
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoPricetagsOutline } from 'react-icons/io5'
@@ -172,7 +173,8 @@ const icons = {
   payment: MdOutlinePaid,
   starFilled: MdOutlineStar,
   starHalf: MdStarHalf,
-  starEmpty: MdOutlineStarBorder
+  starEmpty: MdOutlineStarBorder,
+  target: MdMyLocation
 } as const
 
 export type IconName = keyof typeof icons

@@ -5,6 +5,8 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import InputTextStyled from './InputTextStyled'
 import useDebounce from '../hooks/useDebunce'
+import Button from './Button'
+import useLocation from '../hooks/useLocation'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({
@@ -112,6 +114,7 @@ const SearchAddressLocation = ({
   maxResults?: number
   defaultSearch?: string
 }) => {
+  const { location, getLocation } = useLocation()
   const [searchQuery, setSearchQuery] = useState(defaultSearch)
   const [responses, setResponses] = useState(undefined)
 
@@ -153,7 +156,13 @@ const SearchAddressLocation = ({
 
   return (
     <View style={{ position: 'relative', width: '100%' }}>
-      <View style={{ flexDirection: 'row' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginVertical: 4
+        }}
+      >
         <InputTextStyled
           containerStyle={{ flex: 1 }}
           onChangeText={(text) => {
@@ -172,6 +181,24 @@ const SearchAddressLocation = ({
               setShowResponses(false)
             } else {
               // alert('Buscar')
+            }
+          }}
+        />
+        <Button
+          justIcon
+          disabled={location?.status === 'denied'}
+          icon={'target'}
+          variant="ghost"
+          onPress={async () => {
+            const res = await getLocation()
+            console.log({ res })
+            if (res?.status === 'granted' && res.coords) {
+              const lat = res?.coords?.lat
+              const lon = res?.coords?.lon
+              setLocation([lat, lon])
+              console.log({ lat, lon })
+            } else {
+              setLocation(null)
             }
           }}
         />
