@@ -17,6 +17,7 @@ import { auth } from './auth'
 import { expireDate2 } from '../libs/expireDate'
 import { PriceType } from '../types/PriceType'
 import ItemType from '../types/ItemType'
+import { GetItemsOps } from './firebase.CRUD'
 
 type Type = OrderType
 
@@ -622,6 +623,27 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     })
 
     return this.findMany(filters)
+  }
+  getFieldBetweenDates = async (
+    {
+      storeId,
+      field,
+      fromDate,
+      toDate
+    }: {
+      storeId: string
+      field: keyof OrderType
+      fromDate: Date
+      toDate: Date
+    },
+    ops?: GetItemsOps
+  ) => {
+    const filters = [
+      where('storeId', '==', storeId),
+      where(field, '>=', fromDate),
+      where(field, '<=', toDate)
+    ]
+    return this.findMany(filters, ops)
   }
 }
 

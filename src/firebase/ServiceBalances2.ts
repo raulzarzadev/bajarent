@@ -150,7 +150,15 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         toDate: TO_DATE
       })
 
-      progress?.(50)
+      const cancelledOrdersInDate = await ServiceOrders.getFieldBetweenDates(
+        {
+          storeId,
+          field: 'cancelledAt',
+          fromDate: FROM_DATE,
+          toDate: TO_DATE
+        },
+        { justRefs: true }
+      )
 
       //* GROUP BY SECTIONS
       const groupedBySections = groupOrdersBySection({
@@ -161,13 +169,15 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         storeSections: ops?.storeSections || []
       })
       progress?.(60)
+
       const newBalance: Partial<BalanceType2> = {
         sections: groupedBySections,
         storeId,
         createdItems: createItemsInDate.map((i) => i.id) || [],
         retiredItems: retiredItemsInDate.map((i) => i.id) || [],
         orderExtensions: extensionsInDate,
-        createdOrders: createdIntDate.map((i) => i.id) || []
+        createdOrders: createdIntDate.map((i) => i.id) || [],
+        cancelledOrders: cancelledOrdersInDate.map((i) => i.id) || []
       }
 
       if (ops?.notSave) {

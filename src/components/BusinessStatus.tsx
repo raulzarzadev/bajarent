@@ -100,37 +100,44 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       <View
         style={{
           marginVertical: 16,
-          flexDirection: 'row',
+          flexDirection: 'column',
           justifyContent: 'space-around',
           flexWrap: 'wrap'
         }}
       >
-        <Extensions extensions={balance?.orderExtensions} />
-        <CellItemsE items={createdItems} label="Items creados" />
-        <CellItemsE items={retiredItems} label="Items retirados" />
-        <ExpandibleList
-          onPressRow={(id) => {
-            toOrders({ id })
-          }}
-          onPressTitle={() => {
-            toOrders({ ids: balance?.createdOrders })
-          }}
-          items={balance?.createdOrders?.map((o) => {
-            return {
-              id: o,
-              content: (
-                <SpanOrder
-                  orderId={o}
-                  showName
-                  showTime
-                  showLastExtension
-                  showDatePaymentsAmount={balance?.createdAt}
-                />
-              )
-            }
-          })}
-          label="Ordenes creadas"
-        />
+        <View>
+          <Text style={gStyles.h2}>Items</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-around'
+            }}
+          >
+            <CellItemsE items={createdItems} label="Creados" />
+            <CellItemsE items={retiredItems} label="Retirados" />
+          </View>
+        </View>
+        <View>
+          <Text style={gStyles.h2}>Ordenes</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-around'
+            }}
+          >
+            <ExpandibleOrderList
+              label="Nuevas"
+              ordersIds={balance?.createdOrders || []}
+            />
+            <ExpandibleOrderList
+              label="Canceladas"
+              ordersIds={balance?.cancelledOrders || []}
+            />
+            <Extensions extensions={balance?.orderExtensions} />
+          </View>
+        </View>
       </View>
       {/* HEADER */}
       <ListRow
@@ -543,3 +550,30 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
 
 export default BusinessStatus
 const removeDuplicates = (arr: string[]) => Array.from(new Set(arr))
+
+const ExpandibleOrderList = ({
+  ordersIds,
+  label
+}: {
+  ordersIds: string[]
+  label: string
+}) => {
+  const { toOrders } = useMyNav()
+  return (
+    <ExpandibleList
+      onPressRow={(id) => {
+        toOrders({ id })
+      }}
+      onPressTitle={() => {
+        toOrders({ ids: ordersIds })
+      }}
+      items={ordersIds.map((orderId) => {
+        return {
+          id: orderId,
+          content: <SpanOrder orderId={orderId} showName />
+        }
+      })}
+      label={label}
+    />
+  )
+}
