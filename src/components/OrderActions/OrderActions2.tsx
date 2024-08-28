@@ -261,6 +261,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
             onPress={() => {
               modalRentStart.toggleOpen()
             }}
+            disabled={isPickedUp}
           />
           <ButtonAction
             disabled={isPending || !allItemsExists}
