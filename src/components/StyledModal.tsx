@@ -5,7 +5,8 @@ import {
   View,
   Modal,
   ScrollView,
-  Dimensions
+  Dimensions,
+  TouchableWithoutFeedback
 } from 'react-native'
 import React, { ReactNode } from 'react'
 import Icon from './Icon'
@@ -45,23 +46,25 @@ const StyledModal = ({
             setOpen(!open)
           }}
         >
-          <View style={styles.centeredView}>
-            <View
-              style={[
-                styles.modalView,
-                size === 'full' && styles.fullSizeModal,
-                size === 'md' && styles.mdSizeModal
-              ]}
-            >
-              <View style={styles.topBar}>
-                <Text style={styles.title}>{title}</Text>
-                <Pressable onPress={() => handleClose()}>
-                  <Icon icon="close" />
-                </Pressable>
+          <TouchableWithoutFeedback onPress={handleClose}>
+            <View style={styles.centeredView}>
+              <View
+                style={[
+                  styles.modalView,
+                  size === 'full' && styles.fullSizeModal,
+                  size === 'md' && styles.mdSizeModal
+                ]}
+              >
+                <View style={styles.topBar}>
+                  <Text style={styles.title}>{title}</Text>
+                  <Pressable onPress={() => handleClose()}>
+                    <Icon icon="close" />
+                  </Pressable>
+                </View>
+                <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
               </View>
-              <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </View>
     </View>
