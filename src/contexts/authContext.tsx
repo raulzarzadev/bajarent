@@ -52,13 +52,6 @@ const AuthContextProvider = ({ children }) => {
     getItem('storeId').then((res) => {
       handleSetStoreId(res)
     })
-
-    setTimeout(() => {
-      console.log({ auth })
-      if (!auth.user) {
-        toProfile()
-      }
-    }, 1000)
   }, [])
 
   const getUserStores = async () => {
@@ -72,7 +65,12 @@ const AuthContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    getUserStores()
+    if (auth.user === null) {
+      toProfile()
+    }
+    if (auth.user) {
+      getUserStores()
+    }
   }, [auth.user])
 
   const handleSetStoreId = async (storeId: string) => {
