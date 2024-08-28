@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import CardPhone from './CardPhone'
+import CardPhone, { CardPhoneE } from './CardPhone'
 import CardEmail from './CardEmail'
 import UserType from '../types/UserType'
 import { gStyles } from '../styles'
@@ -48,7 +48,7 @@ const CardUser = ({
         )}
       </View>
 
-      <CardPhone
+      <CardPhoneE
         phone={_user?.phone}
         style={{
           marginHorizontal: 'auto'

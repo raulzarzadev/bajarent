@@ -42,24 +42,24 @@ export default function App() {
   }
   return (
     <ErrorBoundary componentName="App">
-      <AuthContextProvider>
-        <StoreContextProvider>
-          <EmployeeContextProvider>
-            <OrdersContextProvider>
-              <ThemeProvider>
-                <NavigationContainer
-                  initialState={initialState}
-                  onStateChange={(state) => {
-                    AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-                  }}
-                >
+      <NavigationContainer
+        initialState={initialState}
+        onStateChange={(state) => {
+          AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+        }}
+      >
+        <AuthContextProvider>
+          <StoreContextProvider>
+            <EmployeeContextProvider>
+              <OrdersContextProvider>
+                <ThemeProvider>
                   <BottomAppBarE />
-                </NavigationContainer>
-              </ThemeProvider>
-            </OrdersContextProvider>
-          </EmployeeContextProvider>
-        </StoreContextProvider>
-      </AuthContextProvider>
+                </ThemeProvider>
+              </OrdersContextProvider>
+            </EmployeeContextProvider>
+          </StoreContextProvider>
+        </AuthContextProvider>
+      </NavigationContainer>
     </ErrorBoundary>
   )
 }

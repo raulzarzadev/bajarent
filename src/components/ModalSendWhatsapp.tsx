@@ -26,11 +26,11 @@ import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
 
+//FIXME: This just works for orders, but it shows in profile
 export default function ModalSendWhatsapp({ justIcon = false }) {
   const modal = useModal({ title: 'Enviar mensaje' })
   // const [order, setOrder] = useState<OrderType>()
   const { order, payments } = useOrderDetails()
-
   const phone = order?.phone
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
@@ -101,7 +101,9 @@ export default function ModalSendWhatsapp({ justIcon = false }) {
   \n${ORDER_TYPE}  ${expireDateString(order)}.
   \n*Para renovar*
   \n${BANK_INFO}
-  \nEnviar su comprobante al Whatsapp  ${store.mobile} y esperar confirmación 👌🏼
+  \nEnviar su comprobante al Whatsapp  ${
+    store?.mobile
+  } y esperar confirmación 👌🏼
   \nEn caso de *NO CONTINUAR* con el servicio favor de avisar horario de recolección para evitar cargos 💲 por días extras. 
   \n${CONTACTS}
   \n${ADDRESS}

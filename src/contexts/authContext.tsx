@@ -13,6 +13,8 @@ import StaffType from '../types/StaffType'
 import StoreType from '../types/StoreType'
 import { getItem, setItem } from '../libs/storage'
 import { ServiceStores } from '../firebase/ServiceStore'
+import { useNavigation } from '@react-navigation/native'
+import useMyNav from '../hooks/useMyNav'
 
 const initialAutState: {
   isAuthenticated: boolean
@@ -37,6 +39,7 @@ const initialAutState: {
 const AuthContext = createContext(initialAutState)
 let at = 0
 const AuthContextProvider = ({ children }) => {
+  const { toProfile } = useMyNav()
   const [auth, setAuth] = useState(initialAutState)
   const [storeId, setStoreId] = useState<string>('')
   const [stores, setStores] = useState<StoreType[]>([])
@@ -49,6 +52,13 @@ const AuthContextProvider = ({ children }) => {
     getItem('storeId').then((res) => {
       handleSetStoreId(res)
     })
+
+    setTimeout(() => {
+      console.log({ auth })
+      if (!auth.user) {
+        toProfile()
+      }
+    }, 1000)
   }, [])
 
   const getUserStores = async () => {

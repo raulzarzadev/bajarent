@@ -2,9 +2,9 @@ import { Linking, View, ViewStyle } from 'react-native'
 import P from './P'
 import Button from './Button'
 import StyledModal from './StyledModal'
-import ModalSendWhatsapp from './ModalSendWhatsapp'
-
-const CardPhone = ({ phone, style }: { phone: string; style?: ViewStyle }) => {
+import ModalSendWhatsapp, { ModalSendWhatsappE } from './ModalSendWhatsapp'
+import ErrorBoundary from './ErrorBoundary'
+const CardPhone = ({ phone, style }: CardPhoneType) => {
   const formatPhoneNumber = (phone: string): string => {
     // Remove any non-digit characters from the phone number
     const cleanedPhoneNumber = phone?.replace(/\D/g, '')
@@ -52,11 +52,17 @@ const CardPhone = ({ phone, style }: { phone: string; style?: ViewStyle }) => {
               Linking.openURL(`https://wa.me/${phone.replace('+', '')}`)
             }}
           /> */}
-          <ModalSendWhatsapp justIcon />
+          <ModalSendWhatsappE justIcon />
         </>
       )}
     </View>
   )
 }
+export type CardPhoneType = { phone: string; style?: ViewStyle }
 
+export const CardPhoneE = (props: CardPhoneType) => (
+  <ErrorBoundary componentName="CardPhone">
+    <CardPhone {...props} />
+  </ErrorBoundary>
+)
 export default CardPhone

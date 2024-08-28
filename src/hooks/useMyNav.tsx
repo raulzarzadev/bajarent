@@ -119,10 +119,15 @@ const useMyNav = () => {
       return
     }
   }
+  const toProfile = () => {
+    //@ts-ignore
+    navigate('Profile')
+  }
   return {
     toItems,
     toOrders,
-    toPayments
+    toPayments,
+    toProfile
   }
 }
 
