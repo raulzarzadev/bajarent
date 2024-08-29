@@ -26,12 +26,15 @@ import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
 
-//FIXME: This just works for orders, but it shows in profile
-export default function ModalSendWhatsapp({ justIcon = false }) {
+//FIXME: This just works for orders, but it shows in profile:
+export default function ModalSendWhatsapp({
+  justIcon = false,
+  whatsappPhone
+}: ModalSendWhatsappType) {
   const modal = useModal({ title: 'Enviar mensaje' })
   // const [order, setOrder] = useState<OrderType>()
   const { order, payments } = useOrderDetails()
-  const phone = order?.phone
+  const phone = whatsappPhone
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
   const item = order?.items?.[0]
@@ -411,7 +414,12 @@ const orderStringDates = (
     deliveredAt: dateFormat(asDate(order?.deliveredAt), format) || ''
   }
 }
-export const ModalSendWhatsappE = (props) => (
+
+export type ModalSendWhatsappType = {
+  justIcon?: boolean
+  whatsappPhone?: string
+}
+export const ModalSendWhatsappE = (props: ModalSendWhatsappType) => (
   <ErrorBoundary componentName="ModalSendWhatsapp">
     <ModalSendWhatsapp {...props} />
   </ErrorBoundary>

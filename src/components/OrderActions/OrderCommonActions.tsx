@@ -20,6 +20,7 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import ErrorBoundary from '../ErrorBoundary'
 import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
+import { ContactType } from '../../types/OrderType'
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -104,13 +105,20 @@ const OrderCommonActions = ({
     onSetStatuses({ orderId })
   }
 
+  const orderContacts = order?.contacts as ContactType[]
+  const defaultWhatsappPhone =
+    orderContacts.find((c) => c.isFavorite)?.phone ||
+    orderContacts[0]?.phone ||
+    order.phone ||
+    ''
+
   const buttons = [
     canAssign && <ModalScheduleOrder orderId={orderId} />,
     canAssign && (
       <ModalAssignOrder orderId={orderId} section={order?.assignToSection} />
     ),
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
-    canSendWS && <ModalSendWhatsappE orderId={orderId} />,
+    canSendWS && <ModalSendWhatsappE whatsappPhone={defaultWhatsappPhone} />,
     canReorder && (
       <Button
         label="Re-ordenar"
