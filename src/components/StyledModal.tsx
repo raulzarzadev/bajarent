@@ -48,7 +48,7 @@ const StyledModal = ({
         >
           <TouchableWithoutFeedback onPress={handleClose}>
             <View style={styles.centeredView}>
-              <TouchableWithoutFeedback>
+              <TouchableWigithoutFeedback>
                 <View
                   style={[
                     styles.modalView,
@@ -68,7 +68,7 @@ const StyledModal = ({
                     </ScrollView>
                   </>
                 </View>
-              </TouchableWithoutFeedback>
+              </TouchableWigithoutFeedback>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
