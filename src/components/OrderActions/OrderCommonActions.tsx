@@ -107,8 +107,8 @@ const OrderCommonActions = ({
 
   const orderContacts = order?.contacts as ContactType[]
   const defaultWhatsappPhone =
-    orderContacts.find((c) => c.isFavorite)?.phone ||
-    orderContacts[0]?.phone ||
+    orderContacts?.find((c) => c.isFavorite)?.phone ||
+    orderContacts?.[0]?.phone ||
     order.phone ||
     ''
 
