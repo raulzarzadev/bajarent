@@ -48,21 +48,27 @@ const StyledModal = ({
         >
           <TouchableWithoutFeedback onPress={handleClose}>
             <View style={styles.centeredView}>
-              <View
-                style={[
-                  styles.modalView,
-                  size === 'full' && styles.fullSizeModal,
-                  size === 'md' && styles.mdSizeModal
-                ]}
-              >
-                <View style={styles.topBar}>
-                  <Text style={styles.title}>{title}</Text>
-                  <Pressable onPress={() => handleClose()}>
-                    <Icon icon="close" />
-                  </Pressable>
+              <TouchableWithoutFeedback>
+                <View
+                  style={[
+                    styles.modalView,
+                    size === 'full' && styles.fullSizeModal,
+                    size === 'md' && styles.mdSizeModal
+                  ]}
+                >
+                  <>
+                    <View style={styles.topBar}>
+                      <Text style={styles.title}>{title}</Text>
+                      <Pressable onPress={() => handleClose()}>
+                        <Icon icon="close" />
+                      </Pressable>
+                    </View>
+                    <ScrollView style={{ width: '100%' }}>
+                      {children}
+                    </ScrollView>
+                  </>
                 </View>
-                <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
-              </View>
+              </TouchableWithoutFeedback>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
