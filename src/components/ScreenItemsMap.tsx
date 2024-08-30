@@ -16,10 +16,10 @@ import { ItemMap, ItemMapE } from './ItemsMap'
 import theme, { colors } from '../theme'
 import { formatOrders } from '../libs/orders'
 import { ServiceComments } from '../firebase/ServiceComments'
+import { ModalFilterListE } from './ModalFilterList'
 
 const ScreenItemsMap = () => {
   const screenWidth = useWindowDimensions().width
-  const isScreenWidthGreaterThan500 = screenWidth > 700
   const [locatedOrders, setLocatedOrders] = useState<OrderType[]>([])
   const { storeId } = useStore()
   useEffect(() => {
@@ -40,16 +40,17 @@ const ScreenItemsMap = () => {
   return (
     <ScrollView>
       <View
-        style={{
-          flexDirection: isScreenWidthGreaterThan500 ? 'row' : 'column'
-        }}
+      // style={{
+      //   flexDirection: isScreenWidthGreaterThan500 ? 'row' : 'column'
+      // }}
       >
+        {/* 
         <View
           style={{
             width: isScreenWidthGreaterThan500 ? 300 : 500,
             margin: 'auto'
+            >
           }}
-        >
           <LoadingList
             sortFields={[
               { key: 'fullName', label: 'Nombre' },
@@ -59,9 +60,24 @@ const ScreenItemsMap = () => {
             ComponentRow={({ item }) => <OrderLocationRow order={item} />}
             filters={[]}
             data={locatedOrders}
+          /> 
+        </View>
+          */}
+        <View style={{ width: '100%', maxWidth: 400, margin: 'auto' }}>
+          <ModalFilterListE
+            data={locatedOrders}
+            setData={(orders) => {
+              console.log({ orders })
+            }}
+            filters={[
+              {
+                field: 'status',
+                label: 'Status'
+              }
+            ]}
           />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{}}>
           <ItemMapE orders={locatedOrders} />
         </View>
         {/*         

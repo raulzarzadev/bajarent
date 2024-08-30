@@ -31,7 +31,7 @@ export type ModalFilterOrdersProps<T> = {
   data: T[]
   setData: (orders: T[]) => void
   filters?: FilterListType<T>[]
-  preFilteredIds: string[]
+  preFilteredIds?: string[]
   collectionSearch?: CollectionSearch
   setCollectionData?: (data: T[]) => void
 }
@@ -238,6 +238,7 @@ function ModalFilterList<T>({
       >
         <InputTextStyled
           style={{ width: '100%' }}
+          containerStyle={{ flex: 1 }}
           placeholder="Buscar..."
           value={searchValue}
           onChangeText={(e) => {
@@ -277,6 +278,50 @@ function ModalFilterList<T>({
         )}
       </View>
 
+      {/*//* BOOLEAN FILTERS OUT SIDE OF MODAL */}
+      <View style={{ flexDirection: 'row' }}>
+        {filters
+          ?.filter((f) => f.boolean)
+          ?.map(({ field, label, icon, color, titleColor }, i) => {
+            const count = filteredData.filter((a) => a[field]).length
+            if (!count) return null
+            return (
+              <Chip
+                key={i}
+                icon={icon}
+                size="xs"
+                color={color}
+                iconColor={titleColor}
+                titleColor={titleColor}
+                disabled={count === 0}
+                title={`${count > 0 ? count : ''}`}
+                aria-label={label}
+                onPress={() => {
+                  filterBy(field as string, true)
+                }}
+                style={{
+                  margin: 4,
+                  borderWidth: 4,
+                  borderColor: isFilterSelected(field, 'true')
+                    ? theme.black
+                    : 'transparent'
+                  // backgroundColor:
+                }}
+              />
+            )
+          })}
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={{ textAlign: 'center', marginRight: 4 }}>
+          {filteredData?.length} coincidencias
+        </Text>
+      </View>
       <StyledModal {...filterModal}>
         <View
           style={{
@@ -397,39 +442,6 @@ function ModalFilterList<T>({
             )
           })}
       </StyledModal>
-      {/*//* BOOLEAN FILTERS OUT SIDE OF MODAL */}
-      <View style={{ flexDirection: 'row' }}>
-        {filters
-          .filter((f) => f.boolean)
-          .map(({ field, label, icon, color, titleColor }, i) => {
-            const count = filteredData.filter((a) => a[field]).length
-            if (!count) return null
-            return (
-              <Chip
-                key={i}
-                icon={icon}
-                size="xs"
-                color={color}
-                iconColor={titleColor}
-                titleColor={titleColor}
-                disabled={count === 0}
-                title={`${count > 0 ? count : ''}`}
-                aria-label={label}
-                onPress={() => {
-                  filterBy(field as string, true)
-                }}
-                style={{
-                  margin: 4,
-                  borderWidth: 4,
-                  borderColor: isFilterSelected(field, 'true')
-                    ? theme.black
-                    : 'transparent'
-                  // backgroundColor:
-                }}
-              />
-            )
-          })}
-      </View>
     </View>
   )
 }
