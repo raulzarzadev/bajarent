@@ -239,7 +239,7 @@ export default function ModalSendWhatsapp({
     },
     {
       type: 'hello',
-      content: `Hola ${order?.fullName || ''}`
+      content: ` `
     }
   ]
 
@@ -249,7 +249,7 @@ export default function ModalSendWhatsapp({
   let options = []
   if (order?.type === order_type.RENT) {
     options = [
-      { label: 'Saludos', value: 'hello' },
+      { label: 'Vacío', value: 'hello' },
       { label: 'Vencimiento', value: 'expireAt' },
       { label: 'Recibo', value: 'receipt-rent' },
       { label: 'No encontrado', value: 'not-found' },
@@ -259,7 +259,7 @@ export default function ModalSendWhatsapp({
   }
   if (order?.type === order_type.REPAIR) {
     options = [
-      { label: 'Saludos/Vacio', value: 'hello' },
+      { label: 'Vacío', value: 'hello' },
       { label: 'Recibo', value: 'receipt-repair' },
       { label: 'No encontrado', value: 'not-found' },
       { label: 'Recogido', value: 'repair-picked-up' },

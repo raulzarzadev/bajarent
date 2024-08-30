@@ -133,7 +133,7 @@ function MyList<T extends { id: string }>({
         setPinnedRows(validItems)
       }
     })()
-  }, [])
+  }, [data])
 
   const handleUnpinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
