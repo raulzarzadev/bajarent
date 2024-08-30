@@ -8,7 +8,7 @@ const LinkLocation = ({ location }: { location: string }) => {
       disabled={!location}
       onPress={() => {
         console.log({ location })
-        if (location.startsWith('http')) {
+        if (location.includes('http')) {
           return Linking.openURL(location)
         }
         return Linking.openURL(`https://www.google.com/maps?q=${location}`)

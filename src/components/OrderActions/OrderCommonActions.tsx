@@ -21,8 +21,11 @@ import ErrorBoundary from '../ErrorBoundary'
 import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
 import { ContactType } from '../../types/OrderType'
-import extractCoordsFromUrl from '../../libs/extractCoordsFromUrl'
 import unShortUrl from '../../libs/unShortUrl'
+import extractCoordsFromUrl from '../../libs/extractCoordsFromUrl'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { or } from 'firebase/firestore'
+import ButtonSetOrderLocation from './ButtonSetOrderLocation'
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -115,7 +118,6 @@ const OrderCommonActions = ({
     ''
 
   const buttons = [
-    <ButtonSetOrderCoords />,
     canAssign && <ModalScheduleOrder orderId={orderId} />,
     canAssign && (
       <ModalAssignOrder orderId={orderId} section={order?.assignToSection} />
@@ -150,7 +152,8 @@ const OrderCommonActions = ({
         size="small"
         icon="add"
       />
-    )
+    ),
+    <ButtonSetOrderLocation />
   ]
   const buttons2 = [
     canEdit && (
@@ -258,25 +261,30 @@ const OrderCommonActions = ({
 
 export const ButtonSetOrderCoords = () => {
   const { order } = useOrderDetails()
+  const [loading, setLoading] = useState(false)
   const handleSetOrderCoords = async () => {
+    setLoading(true)
     const isURL = order?.location.includes('https')
-    const isCoords = order.location.includes(',')
     if (isURL) {
-      const shortenUrl = await unShortUrl({ url: order.location })
-      console.log({ shortenUrl })
-      if (shortenUrl.success) {
-        const coords = extractCoordsFromUrl(shortenUrl.unshortened_url)
+      const { success, unshortened_url } = await unShortUrl({
+        url: order.location
+      })
+      if (success) {
+        const coords = extractCoordsFromUrl(unshortened_url)
+        ServiceOrders.update(order.id, { coords })
       } else {
-        console.log('Error getting coords from url', shortenUrl)
+        console.log('Error getting coords from url', unshortened_url)
       }
     }
-
-    const coords = order?.location
-    console.log('Set Order Coords')
+    setLoading(false)
   }
   return (
     <Button
-      label="Set Order Coords"
+      disabled={loading}
+      label="Coords"
+      // color={order?.coords ? 'success' : 'primary'}
+      variant="outline"
+      icon={order?.coords ? 'location' : 'locationOff'}
       onPress={() => {
         console.log('Set Order Coords')
         handleSetOrderCoords()
