@@ -128,7 +128,7 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
                 []
               )
               return (
-                <View>
+                <View key={filter.label}>
                   <Text style={{ textAlign: 'right', fontWeight: 'bold' }}>
                     {filter.label}
                   </Text>
@@ -136,6 +136,7 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
                     {markers.map((marker) => {
                       return (
                         <Pressable
+                          key={marker}
                           onPress={handleFilter({
                             field: filter.field,
                             value: marker

@@ -25,16 +25,25 @@ const unShortUrl = ({
   unshortened_url: string
   shortened_url: string
   success: boolean
+  message?: string
 }> => {
   return fetch(`https://unshorten.me/api/v2/unshorten?url=${url}`, {
     headers: headers
   })
     .then((response) => response.json())
     .then((data) => {
-      if (data?.detail) {
-        console.error(data.detail)
+      if (data.error) {
         return {
           success: false,
+          message: data.error,
+          unshortened_url: '', // //* un_shorted_url as empty string
+          shortened_url: url
+        }
+      }
+      if (data?.detail) {
+        return {
+          success: false,
+          message: data.detail || 'looks like to many requests',
           unshortened_url: '', // //* un_shorted_url as empty string
           shortened_url: url
         }

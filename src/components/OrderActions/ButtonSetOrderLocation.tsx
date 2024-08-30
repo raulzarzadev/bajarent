@@ -20,14 +20,19 @@ export const ButtonSetOrderLocation = () => {
     const location = newLocation || orderOriginalLocation
     const isURL = location.includes('https')
     if (isURL) {
-      const { success, unshortened_url } = await unShortUrl({
-        url: location
-      })
+      if (location !== orderOriginalLocation) {
+        console.log('location are different, updating')
+        await ServiceOrders.update(order.id, { location })
+      }
+      const { success, unshortened_url, message, shortened_url } =
+        await unShortUrl({
+          url: location
+        })
       if (success) {
         const coords = extractCoordsFromUrl(unshortened_url)
-        await ServiceOrders.update(order.id, { coords, location })
+        await ServiceOrders.update(order.id, { coords })
       } else {
-        console.log('Error getting coords from url', unshortened_url)
+        console.error(shortened_url, message)
         setError(
           'Ups! no se pudieron obtener las coordenadas. Intentalo mas tarde'
         )

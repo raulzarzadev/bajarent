@@ -5,6 +5,7 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import { order_status, order_type } from '../types/OrderType'
 import unShortUrl from '../libs/unShortUrl'
 import extractCoordsFromUrl from '../libs/extractCoordsFromUrl'
+import { useEmployee } from '../contexts/employeeContext'
 
 const testOrders: MapOrderType[] = [
   {
@@ -84,8 +85,7 @@ const StoreTabMap = () => {
         )
           return true
       })
-      ?.map(async (order) => {
-        const { location, ...rest } = order
+      ?.map((order) => {
         const formatOrder: MapOrderType = {
           fullName: order.fullName,
           coords: order.coords,
@@ -98,7 +98,7 @@ const StoreTabMap = () => {
         }
         return formatOrder
       })
-    setOrders(testOrders)
+    setOrders(formatted)
   }, [consolidated])
   return (
     <View>
