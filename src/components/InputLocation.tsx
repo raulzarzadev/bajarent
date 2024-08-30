@@ -5,7 +5,7 @@ import {
   Text,
   View
 } from 'react-native'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
@@ -31,6 +31,7 @@ const InputLocation = ({
   return (
     <View>
       <Text>📍 Ubicación</Text>
+
       <View style={styles.group}>
         <InputTextStyled
           placeholder="Ubicación"

@@ -260,7 +260,17 @@ function MyList<T extends { id: string }>({
           </View>
 
           {/* COINCIDENT AND PAGINATION */}
-
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Text style={{ textAlign: 'center', marginRight: 4 }}>
+              {filteredData?.length} coincidencias
+            </Text>
+          </View>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >

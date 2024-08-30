@@ -21,6 +21,8 @@ import ErrorBoundary from '../ErrorBoundary'
 import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
 import { ContactType } from '../../types/OrderType'
+import extractCoordsFromUrl from '../../libs/extractCoordsFromUrl'
+import unShortUrl from '../../libs/unShortUrl'
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -113,6 +115,7 @@ const OrderCommonActions = ({
     ''
 
   const buttons = [
+    <ButtonSetOrderCoords />,
     canAssign && <ModalScheduleOrder orderId={orderId} />,
     canAssign && (
       <ModalAssignOrder orderId={orderId} section={order?.assignToSection} />
@@ -250,6 +253,36 @@ const OrderCommonActions = ({
         <View style={{ flex: 1 }} />
       </View>
     </View>
+  )
+}
+
+export const ButtonSetOrderCoords = () => {
+  const { order } = useOrderDetails()
+  const handleSetOrderCoords = async () => {
+    const isURL = order?.location.includes('https')
+    const isCoords = order.location.includes(',')
+    if (isURL) {
+      const shortenUrl = await unShortUrl({ url: order.location })
+      console.log({ shortenUrl })
+      if (shortenUrl.success) {
+        const coords = extractCoordsFromUrl(shortenUrl.unshortened_url)
+      } else {
+        console.log('Error getting coords from url', shortenUrl)
+      }
+    }
+
+    const coords = order?.location
+    console.log('Set Order Coords')
+  }
+  return (
+    <Button
+      label="Set Order Coords"
+      onPress={() => {
+        console.log('Set Order Coords')
+        handleSetOrderCoords()
+      }}
+      size="small"
+    />
   )
 }
 

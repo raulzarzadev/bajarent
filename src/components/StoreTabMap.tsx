@@ -2,7 +2,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { MapOrderType, OrdersMapE } from './OrdersMap'
 import { useOrdersCtx } from '../contexts/ordersContext'
-import { order_status } from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
+import unShortUrl from '../libs/unShortUrl'
+import extractCoordsFromUrl from '../libs/extractCoordsFromUrl'
 
 const testOrders: MapOrderType[] = [
   {
@@ -12,7 +14,8 @@ const testOrders: MapOrderType[] = [
     orderFolio: '1',
     itemNumber: '1',
     itemId: '1',
-    status: 'REPORTED'
+    status: 'REPORTED',
+    type: order_type.RENT
   },
   {
     fullName: 'Jorge',
@@ -21,7 +24,8 @@ const testOrders: MapOrderType[] = [
     orderFolio: '2',
     itemNumber: '2',
     itemId: '2',
-    status: 'DELIVERED'
+    status: 'DELIVERED',
+    type: order_type.RENT
   },
   {
     fullName: 'Maria',
@@ -30,7 +34,8 @@ const testOrders: MapOrderType[] = [
     orderFolio: '3',
     itemNumber: '3',
     itemId: '3',
-    status: 'PENDING'
+    status: 'PENDING',
+    type: order_type.RENT
   },
   {
     fullName: 'Maria',
@@ -39,7 +44,8 @@ const testOrders: MapOrderType[] = [
     orderFolio: '4',
     itemNumber: '4',
     itemId: '4',
-    status: 'PENDING'
+    status: 'PENDING',
+    type: order_type.RENT
   },
   {
     fullName: 'Carlos',
@@ -48,7 +54,8 @@ const testOrders: MapOrderType[] = [
     orderFolio: '5',
     itemNumber: '5',
     itemId: '5',
-    status: 'REPORTED'
+    status: 'REPORTED',
+    type: order_type.RENT
   },
   {
     fullName: 'Luis',
@@ -57,7 +64,8 @@ const testOrders: MapOrderType[] = [
     orderFolio: '6',
     itemNumber: '6',
     itemId: '6',
-    status: 'DELIVERED'
+    status: 'DELIVERED',
+    type: order_type.RENT
   }
 ]
 const StoreTabMap = () => {
@@ -65,7 +73,7 @@ const StoreTabMap = () => {
   const { orders: consolidated } = useOrdersCtx()
   useEffect(() => {
     const formatted = consolidated
-      .filter((order) => {
+      ?.filter((order) => {
         //if has location
         //if is delivered
         //if is a rent
@@ -76,16 +84,17 @@ const StoreTabMap = () => {
         )
           return true
       })
-      .map((order) => {
+      ?.map(async (order) => {
         const { location, ...rest } = order
         const formatOrder: MapOrderType = {
           fullName: order.fullName,
-          coords: asCoords(location),
+          coords: order.coords,
           orderId: order.id,
           orderFolio: order.folio,
           itemNumber: order.items[0].number,
           itemId: order.items[0].id,
-          status: order.status
+          status: order.status,
+          type: order.type
         }
         return formatOrder
       })
@@ -98,7 +107,19 @@ const StoreTabMap = () => {
   )
 }
 
-const asCoords = (location: string): [number, number] | null => {
+const asCoords = async (location: string): Promise<[number, number] | null> => {
+  if (!location) return null
+  if (location.includes('https:')) {
+    const shortUrl = await unShortUrl({ url: location }).then((res) => {
+      console.log({ res })
+
+      return res.shortened_url
+    })
+    const coordsFromUrl = extractCoordsFromUrl(shortUrl)
+    return coordsFromUrl
+
+    return null
+  }
   const [lat, lng] = location.split(',')
   if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lng))) return null
   return [parseFloat(lat), parseFloat(lng)]

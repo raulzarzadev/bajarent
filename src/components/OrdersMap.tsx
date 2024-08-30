@@ -1,4 +1,5 @@
 import {
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,21 +8,24 @@ import {
 } from 'react-native'
 import React from 'react'
 import LinkLocation from './LinkLocation'
-import { order_status } from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { MarkerInfo } from './ItemsMap'
-import theme, { colors } from '../theme'
-import { ModalFilterListE } from './ModalFilterList'
+import theme, { colors, ORDER_STATUS_COLOR } from '../theme'
+import { ModalFilterListE, ModalFilterOrdersProps } from './ModalFilterList'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
+import dictionary from '../dictionary'
 export type MapOrderType = {
   fullName: string
-  coords: [number, number]
+  coords?: [number, number]
+  location?: string
   orderId: string
   orderFolio: string | number
   itemNumber: string | number
   itemId: string
   status: keyof typeof order_status
+  type: OrderType['type']
 }
 
 const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
@@ -29,22 +33,20 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
   const mapHeight = useWindowDimensions().height
   const headerAndFooterHeight = 220
   const [filteredOrders, setFilteredOrders] = React.useState<MapOrderType[]>([])
+
+  const handleFilter =
+    ({ field, value }) =>
+    () => {
+      setFilteredOrders(orders.filter((order) => order[field] === value))
+    }
+  const filters: ModalFilterOrdersProps<MapOrderType>['filters'] = [
+    {
+      field: 'status',
+      label: 'Status'
+    }
+  ]
   return (
     <ScrollView>
-      <View style={{ width: '100%', maxWidth: 400, margin: 'auto' }}>
-        <ModalFilterListE
-          data={orders}
-          setData={(orders) => {
-            setFilteredOrders(orders)
-          }}
-          filters={[
-            {
-              field: 'status',
-              label: 'Status'
-            }
-          ]}
-        />
-      </View>
       <View
         style={{
           position: 'relative'
@@ -75,7 +77,7 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
                 key={order.itemId}
                 position={order.coords}
                 //@ts-ignore
-                icon={customSvgIcon(order.iconColor)}
+                icon={customSvgIcon(ORDER_STATUS_COLOR[order.status])}
               >
                 <Popup>
                   <Text>{order.orderFolio}</Text>
@@ -111,19 +113,57 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
 
           <View
             style={{
-              flexDirection: 'row',
               position: 'absolute',
               zIndex: 9999,
-              right: 16
+              right: 8,
+              top: 8
             }}
           >
-            {}
-            <MarkerInfo label="Vencidas" color={theme.success} />
-            <MarkerInfo label="Reportes" color={theme.error} />
-            <MarkerInfo label="Pedidos" color={theme.warning} />
-            <MarkerInfo label="En renta" color={theme.transparent} />
+            {filters.map((filter) => {
+              const markers: MapOrderType['status'][] = orders?.reduce(
+                (acc, order) => {
+                  if (!acc.includes(order.status)) acc.push(order.status)
+                  return acc
+                },
+                []
+              )
+              return (
+                <View>
+                  <Text style={{ textAlign: 'right', fontWeight: 'bold' }}>
+                    {filter.label}
+                  </Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    {markers.map((marker) => {
+                      return (
+                        <Pressable
+                          onPress={handleFilter({
+                            field: filter.field,
+                            value: marker
+                          })}
+                        >
+                          <MarkerInfo
+                            label={dictionary(marker)}
+                            color={ORDER_STATUS_COLOR[marker]}
+                            key={marker}
+                          />
+                        </Pressable>
+                      )
+                    })}
+                  </View>
+                </View>
+              )
+            })}
           </View>
         </MapContainer>
+        <View style={{ width: '100%', maxWidth: 400, margin: 'auto' }}>
+          <ModalFilterListE
+            data={orders}
+            setData={(orders) => {
+              setFilteredOrders(orders)
+            }}
+            filters={filters}
+          />
+        </View>
       </View>
     </ScrollView>
   )
