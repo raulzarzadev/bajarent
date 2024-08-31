@@ -14,6 +14,9 @@ const headers = {
   Authorization: process.env.UNSHORTEN_URL_TOKEN
 }
 
+//const SHORTEN_API = 'https://unshorten.me/api/v2/unshorten'
+const SHORTEN_API = 'https://bajarent.app/unshorten'
+
 /**
  *
  * @param param0
@@ -27,8 +30,8 @@ const unShortUrl = ({
   success: boolean
   message?: string
 }> => {
-  return fetch(`https://unshorten.me/api/v2/unshorten?url=${url}`, {
-    headers: headers
+  return fetch(`${SHORTEN_API}?url=${url}`, {
+    //headers: headers
   })
     .then((response) => response.json())
     .then((data) => {
