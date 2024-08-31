@@ -88,8 +88,8 @@ export const ORDER_TYPE_COLOR: Record<order_type, string> = {
 }
 
 export const STATUS_COLOR: Record<order_status, string> = {
-  PENDING: theme.transparent,
-  AUTHORIZED: theme.success,
+  PENDING: theme.primary,
+  AUTHORIZED: theme.warning,
 
   DELIVERED: theme.transparent,
   PICKUP: theme.secondary,
@@ -106,6 +106,7 @@ export const STATUS_COLOR: Record<order_status, string> = {
   EXPIRE_TODAY: theme.error,
   EXPIRED_TOMORROW: theme.warning
 }
+export const ORDER_STATUS_COLOR = STATUS_COLOR
 
 export const FONT_SIZE = 10
 export const FONT_FAMILY = 'Roboto'

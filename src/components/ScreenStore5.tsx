@@ -26,6 +26,7 @@ import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import HeaderDate from './HeaderDate'
 import DateCounts from './DateCounts'
 import StoreCounts from './StoreCounts'
+import StoreTabMap from './StoreTabMap'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -99,6 +100,11 @@ const ScreenStore = (props) => {
             {
               title: 'Artículos',
               content: <TabItems />,
+              show: canManageItems
+            },
+            {
+              title: 'Mapa',
+              content: <StoreTabMap />,
               show: canManageItems
             }
           ]}

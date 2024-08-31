@@ -156,8 +156,8 @@ export const MarkerInfo = ({
     style={{
       justifyContent: 'center',
       flexDirection: 'row',
-      marginRight: 8,
-      marginVertical: 16
+      marginLeft: 4,
+      marginVertical: 4
     }}
   >
     <Text>{label}</Text>

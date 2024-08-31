@@ -41,6 +41,7 @@ export type OrderBase = {
   betweenStreets?: string
   neighborhood?: string
   location?: string
+  coords?: [number, number]
   /**
    * @deprecated use references instead
    */
