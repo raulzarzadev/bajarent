@@ -8,6 +8,8 @@ import Button from '../Button'
 import ButtonConfirm from '../ButtonConfirm'
 import InputTextStyled from '../InputTextStyled'
 import { gStyles } from '../../styles'
+import InputLocation from '../InputLocation'
+import containCoordinates from '../../libs/containCoordinates'
 
 export const ButtonSetOrderLocation = () => {
   const { order } = useOrderDetails()
@@ -16,14 +18,21 @@ export const ButtonSetOrderLocation = () => {
   const [error, setError] = useState(null)
   const [newLocation, setNewLocation] = useState(orderOriginalLocation || '')
   const handleSetOrderCoords = async () => {
-    setLoading(true)
     const location = newLocation || orderOriginalLocation
+    if (location !== orderOriginalLocation) {
+      console.log('location are different, updating')
+      await ServiceOrders.update(order.id, { location })
+    }
+    const { containCoords, coords } = containCoordinates(location)
+    console.log({ containCoords, coords })
+    setLoading(true)
+    if (containCoords) {
+      await ServiceOrders.update(order.id, { coords })
+      setLoading(false)
+      return
+    }
     const isURL = location.includes('https')
     if (isURL) {
-      if (location !== orderOriginalLocation) {
-        console.log('location are different, updating')
-        await ServiceOrders.update(order.id, { location })
-      }
       const { success, unshortened_url, message, shortened_url } =
         await unShortUrl(location)
       if (success) {
@@ -57,9 +66,14 @@ export const ButtonSetOrderLocation = () => {
       }}
       confirmLabel="Actualizar"
     >
-      <Text>Actualizar ubicación</Text>
+      {/* <Text>Actualizar ubicación</Text> */}
       <View style={{ marginVertical: 16 }}>
-        <InputTextStyled onChangeText={setNewLocation} value={newLocation} />
+        <InputLocation
+          value={newLocation}
+          setValue={setNewLocation}
+          helperText="Pega la URL de Google Maps o busca las coordenadas"
+        />
+        {/* <InputTextStyled onChangeText={setNewLocation} value={newLocation} /> */}
       </View>
       {error && <Text style={gStyles.tError}>{error}*</Text>}
       {/* <Button label="Actualizar" onPress={handleSetOrderCoords}></Button> */}
