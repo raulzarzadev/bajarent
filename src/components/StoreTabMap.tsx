@@ -107,24 +107,6 @@ const StoreTabMap = () => {
   )
 }
 
-const asCoords = async (location: string): Promise<[number, number] | null> => {
-  if (!location) return null
-  if (location.includes('https:')) {
-    const shortUrl = await unShortUrl({ url: location }).then((res) => {
-      console.log({ res })
-
-      return res.shortened_url
-    })
-    const coordsFromUrl = extractCoordsFromUrl(shortUrl)
-    return coordsFromUrl
-
-    return null
-  }
-  const [lat, lng] = location.split(',')
-  if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lng))) return null
-  return [parseFloat(lat), parseFloat(lng)]
-}
-
 export default StoreTabMap
 
 const styles = StyleSheet.create({})
