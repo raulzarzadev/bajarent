@@ -85,6 +85,9 @@ const StoreTabMap = () => {
         )
           return true
       })
+      // Filter only orders with coords
+      ?.filter((order) => !!order?.coords)
+      // Format the orders
       ?.map((order) => {
         const formatOrder: MapOrderType = {
           fullName: order.fullName,
