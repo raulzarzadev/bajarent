@@ -1,3 +1,4 @@
+//@ts-nocheck
 import extractCoordsFromUrl from '../libs/extractCoordsFromUrl'
 
 const one = `https://maps.google.com/?q=24.164223,-110.314148`
