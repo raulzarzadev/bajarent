@@ -25,9 +25,7 @@ export const ButtonSetOrderLocation = () => {
         await ServiceOrders.update(order.id, { location })
       }
       const { success, unshortened_url, message, shortened_url } =
-        await unShortUrl({
-          url: location
-        })
+        await unShortUrl(location)
       if (success) {
         const coords = extractCoordsFromUrl(unshortened_url)
         await ServiceOrders.update(order.id, { coords })

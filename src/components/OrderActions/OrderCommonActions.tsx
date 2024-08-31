@@ -26,6 +26,7 @@ import extractCoordsFromUrl from '../../libs/extractCoordsFromUrl'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { or } from 'firebase/firestore'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
+import containsCoordinates from '../../libs/containCoordinates'
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -256,41 +257,6 @@ const OrderCommonActions = ({
         <View style={{ flex: 1 }} />
       </View>
     </View>
-  )
-}
-
-export const ButtonSetOrderCoords = () => {
-  const { order } = useOrderDetails()
-  const [loading, setLoading] = useState(false)
-  const handleSetOrderCoords = async () => {
-    setLoading(true)
-    const isURL = order?.location.includes('https')
-    if (isURL) {
-      const { success, unshortened_url } = await unShortUrl({
-        url: order.location
-      })
-      if (success) {
-        const coords = extractCoordsFromUrl(unshortened_url)
-        ServiceOrders.update(order.id, { coords })
-      } else {
-        console.log('Error getting coords from url', unshortened_url)
-      }
-    }
-    setLoading(false)
-  }
-  return (
-    <Button
-      disabled={loading}
-      label="Coords"
-      // color={order?.coords ? 'success' : 'primary'}
-      variant="outline"
-      icon={order?.coords ? 'location' : 'locationOff'}
-      onPress={() => {
-        console.log('Set Order Coords')
-        handleSetOrderCoords()
-      }}
-      size="small"
-    />
   )
 }
 

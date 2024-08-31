@@ -15,54 +15,53 @@ const headers = {
 }
 
 //const SHORTEN_API = 'https://unshorten.me/api/v2/unshorten'
-const SHORTEN_API = 'https://bajarent.app/unshorten'
+const SHORTEN_API = 'https://bajarent.app/api/unshorten'
 
 /**
  *
  * @param param0
  *
  */
-const unShortUrl = ({
-  url
-}): Promise<{
+const unShortUrl = (
+  url: string
+): Promise<{
   unshortened_url: string
   shortened_url: string
   success: boolean
   message?: string
 }> => {
-  return fetch(`${SHORTEN_API}?url=${url}`, {
-    //headers: headers
-  })
-    .then((response) => response.json())
+  return fetch(`${SHORTEN_API}?url=${url}`)
+    .then((response) => {
+      return response.json()
+    })
     .then((data) => {
       if (data.error) {
         return {
           success: false,
           message: data.error,
-          unshortened_url: '', // //* un_shorted_url as empty string
+          unshortened_url: '', //* un_shorted_url as empty string
           shortened_url: url
         }
       }
       if (data?.detail) {
         return {
           success: false,
-          message: data.detail || 'looks like to many requests',
+          message: data.detail || 'looks like too many requests',
           unshortened_url: '', // //* un_shorted_url as empty string
           shortened_url: url
         }
       }
       return {
-        success: data.success,
-        unshortened_url: data.unshortened_url, //* un_shorted_url
+        success: true,
+        unshortened_url: data.unshortened_url,
         shortened_url: url
       }
-      // Handle the response data here
     })
     .catch((error) => {
-      console.log({ error })
       return {
         success: false,
-        unshortened_url: '', // //* un_shorted_url as empty string
+        message: error.message,
+        unshortened_url: '', //* un_shorted_url as empty string
         shortened_url: url
       }
     })
