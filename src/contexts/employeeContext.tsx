@@ -89,6 +89,7 @@ export const EmployeeContextProvider = ({ children }) => {
         storeId,
         userSections: 'all',
         cb: (items) => {
+          console.log({ items })
           setItems(formatItems(items, categories, storeSections))
         }
       })

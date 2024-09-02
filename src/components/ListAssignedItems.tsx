@@ -30,6 +30,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const formattedItems = formatItems(availableItems, categories, storeSections)
     .filter((item) => !categoryId || item.category === categoryId)
     .sort((a, b) => a.number.localeCompare(b.number))
+
   return (
     <View>
       {availableItems?.length === 0 ? (
