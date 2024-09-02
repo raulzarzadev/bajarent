@@ -92,6 +92,7 @@ export class ServiceStoreItemsClass {
     cb: (items: Type[]) => void
   }) {
     if (Array.isArray(userSections) && userSections.length > 0) {
+      console.log('just my sections')
       return ServiceStores.listenItemsInSubCollection({
         parentId: storeId,
         subCollection: SUB_COLLECTION,
@@ -103,7 +104,7 @@ export class ServiceStoreItemsClass {
       })
     }
     if (userSections === 'all') {
-      console.log('all sectis')
+      console.log('all sections')
       return ServiceStores.listenItemsInSubCollection({
         parentId: storeId,
         subCollection: SUB_COLLECTION,

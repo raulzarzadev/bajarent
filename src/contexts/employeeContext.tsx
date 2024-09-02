@@ -84,6 +84,10 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
 
   useEffect(() => {
+    console.log('cambio employee')
+  }, [employee])
+
+  useEffect(() => {
     if (isOwner || isAdmin) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
