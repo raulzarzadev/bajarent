@@ -52,6 +52,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
 
+  const [isEmployee, setIsEmployee] = useState(false)
   useEffect(() => {
     setIsOwner(store && store?.createdBy === user?.id)
     const employee = staff?.find(
@@ -59,6 +60,7 @@ export const EmployeeContextProvider = ({ children }) => {
     )
 
     if (employee) {
+      setIsEmployee(true)
       const sectionsAssigned = storeSections
         ?.filter(({ staff }) => staff?.includes(employee?.id))
         .map(({ id }) => id)
@@ -66,6 +68,7 @@ export const EmployeeContextProvider = ({ children }) => {
       setEmployee(employee)
       setAssignedSections(sectionsAssigned)
     } else {
+      setIsEmployee(false)
       console.log('no employee')
     }
   }, [staff])
@@ -84,20 +87,15 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
 
   useEffect(() => {
-    console.log('cambio employee')
-  }, [employee])
-
-  useEffect(() => {
     if (isOwner || isAdmin) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: 'all',
         cb: (items) => {
-          console.log({ items })
           setItems(formatItems(items, categories, storeSections))
         }
       })
-    } else if (employee) {
+    } else if (isEmployee) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: employee?.sectionsAssigned || [],
@@ -106,7 +104,7 @@ export const EmployeeContextProvider = ({ children }) => {
         }
       })
     }
-  }, [employee])
+  }, [isEmployee])
 
   const value = useMemo(
     () => ({
