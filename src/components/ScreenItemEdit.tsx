@@ -13,7 +13,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 const ScreenItemEdit = ({ route }) => {
   const itemId = route?.params?.id
   const { goBack } = useNavigation()
-  const { storeId, fetchItems } = useStore()
+  const { storeId } = useStore()
   const [item, setItem] = useState<Partial<ItemType>>()
   useEffect(() => {
     ServiceStoreItems.get({ storeId, itemId }).then((res) => {
@@ -40,7 +40,6 @@ const ScreenItemEdit = ({ route }) => {
           values={item}
           onSubmit={async (values) => {
             await handleUpdateItem(values)
-            fetchItems()
             goBack()
           }}
         />

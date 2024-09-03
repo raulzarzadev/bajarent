@@ -9,12 +9,10 @@ import { onCreateItem } from '../firebase/actions/item-actions'
 
 const ScreenItemNew = () => {
   const { goBack } = useNavigation()
-  const { storeId, fetchItems } = useStore()
+  const { storeId } = useStore()
   const handleCreateItem = async (values: ItemType) => {
     return await onCreateItem({ storeId, item: values })
       .then((res) => {
-        fetchItems()
-
         goBack()
       })
       .catch((err) => {
