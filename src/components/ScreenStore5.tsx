@@ -27,6 +27,7 @@ import HeaderDate from './HeaderDate'
 import DateCounts from './DateCounts'
 import StoreCounts from './StoreCounts'
 import StoreTabMap from './StoreTabMap'
+import StoreWorkshop from './StoreWorkshop'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -54,12 +55,20 @@ const ScreenStore = (props) => {
             {
               title: 'Información',
               content: <StoreDetailsE store={store} {...props} />,
-              show: true
+              show: true,
+              icon: 'info'
+            },
+            {
+              title: 'Taller',
+              content: <StoreWorkshop />,
+              show: true,
+              icon: 'tools'
             },
             {
               title: 'Caja',
               content: <TabCashbox />,
-              show: canViewCashbox
+              show: canViewCashbox,
+              icon: 'cashbox'
             },
             {
               title: 'Cuentas',

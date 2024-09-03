@@ -50,7 +50,7 @@ import {
 import { LuComponent } from 'react-icons/lu'
 import { PiUserList } from 'react-icons/pi'
 import { FaRegWindowRestore } from 'react-icons/fa6'
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
+import { FaChevronDown, FaChevronUp, FaTools } from 'react-icons/fa'
 import { LiaBroomSolid } from 'react-icons/lia'
 import { TbMapSearch } from 'react-icons/tb'
 import { HiDotsVertical } from 'react-icons/hi'
@@ -71,6 +71,8 @@ import {
   GoChevronLeft,
   GoChevronRight
 } from 'react-icons/go'
+import { BsTools } from 'react-icons/bs'
+import { LiaToolsSolid } from 'react-icons/lia'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -174,7 +176,8 @@ const icons = {
   starFilled: MdOutlineStar,
   starHalf: MdStarHalf,
   starEmpty: MdOutlineStarBorder,
-  target: MdMyLocation
+  target: MdMyLocation,
+  tools: LiaToolsSolid
 } as const
 
 export type IconName = keyof typeof icons

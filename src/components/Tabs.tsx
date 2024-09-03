@@ -3,11 +3,13 @@ import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
 import { gStyles } from '../styles'
+import Icon, { IconName } from './Icon'
 
 export type Tab = {
   title: string
   content: ReactNode
   show?: boolean
+  icon?: IconName
 }
 
 export type TabsProps = {
@@ -45,11 +47,23 @@ const TabsA = ({ tabs = [], defaultTab, showProgressBar }: TabsProps) => {
               style={({ pressed }) => [
                 styles.tabButton,
                 selectedTab === tab.title && styles.selectedTab,
-                pressed && { backgroundColor: '#ddd' }
+                pressed && { backgroundColor: '#ddd' },
+                { flexDirection: 'row' }
               ]}
               onPress={() => handleTabPress(tab.title)}
             >
               <Text style={styles.tabButtonText}>{tab.title}</Text>
+              {tab.icon && (
+                <View
+                  style={{
+                    marginLeft: 4,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon icon={tab.icon} size={14} />
+                </View>
+              )}
             </Pressable>
           ))}
         </ScrollView>
@@ -115,7 +129,8 @@ const styles = StyleSheet.create({
   },
   tabButtonText: {
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: 'center',
+    alignContent: 'center'
   },
   tabContent: {
     flex: 1,
