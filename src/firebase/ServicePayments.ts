@@ -1,7 +1,7 @@
 import { where, documentId, limit, orderBy } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import PaymentType from '../types/PaymentType'
-import { addDays, subDays } from 'date-fns'
+import { subDays } from 'date-fns'
 import { RetirementType } from '../components/FormRetirement'
 import { GetItemsOps } from './firebase.CRUD'
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
