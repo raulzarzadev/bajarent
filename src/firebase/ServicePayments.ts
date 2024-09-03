@@ -3,6 +3,7 @@ import { FirebaseGenericService } from './genericService'
 import PaymentType from '../types/PaymentType'
 import { addDays, subDays } from 'date-fns'
 import { RetirementType } from '../components/FormRetirement'
+import { GetItemsOps } from './firebase.CRUD'
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   constructor() {
     super('payments')
@@ -98,24 +99,27 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       where('createdAt', '<=', date.setHours(23, 59, 59, 999))
     ])
   }
-  async getBetweenDates({
-    fromDate,
-    toDate,
-    storeId,
-    userId
-  }: {
-    fromDate: Date
-    toDate: Date
-    storeId: string
-    userId?: string
-  }) {
+  async getBetweenDates(
+    {
+      fromDate,
+      toDate,
+      storeId,
+      userId
+    }: {
+      fromDate: Date
+      toDate: Date
+      storeId: string
+      userId?: string
+    },
+    ops?: GetItemsOps
+  ) {
     let filters = [
       where('storeId', '==', storeId),
       where('createdAt', '>=', fromDate),
       where('createdAt', '<=', toDate)
     ]
     if (userId) filters.push(where('createdBy', '==', userId))
-    return this.getItems(filters)
+    return this.getItems(filters, ops)
   }
   async listenBetweenDates({
     fromDate,

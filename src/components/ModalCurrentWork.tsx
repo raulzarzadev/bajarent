@@ -12,79 +12,20 @@ import BalanceAmounts, { BalanceAmountsE } from './BalanceAmounts'
 import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
 import Button from './Button'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType from '../types/OrderType'
+
 import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ModalCurrentWork = () => {
-  const { storeId } = useStore()
-  const { user } = useAuth()
-  const userId = user?.id
+  const { todayWork } = useEmployee()
+  const pickedUp = todayWork?.pickedUp
+  const delivered = todayWork?.delivered
+  const renewed = todayWork?.renewed
+  const payments = todayWork?.payments
+  const handleUpdate = todayWork?.handleUpdate
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
-  const [payments, setPayments] = useState<PaymentType[]>([])
-  const [loading, setLoading] = useState(false)
-  const handleUpdate = () => {
-    setLoading(true)
-    handleGetOrders()
-    ServicePayments.getBetweenDates({
-      fromDate: startDate(date),
-      toDate: endDate(date),
-      storeId,
-      userId
-    })
-      .then(setPayments)
-      .finally(() => {
-        setTimeout(() => {
-          setLoading(false)
-        }, 400)
-      })
-  }
-  const date = new Date()
-  useEffect(() => {
-    if (user) handleUpdate()
-  }, [user])
 
-  const [pickedUp, setPickedUp] = useState<OrderType[]>([])
-  const [delivered, setDelivered] = useState<OrderType[]>([])
-  const [renewed, setRenewed] = useState<OrderType[]>([])
-
-  const handleGetOrders = () => {
-    ServiceOrders.getDelivered(
-      {
-        storeId,
-        userId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      },
-      { justRefs: true, fromCache: true }
-    ).then((orders) => {
-      setDelivered(orders)
-    })
-    ServiceOrders.getRenewed(
-      {
-        storeId,
-        userId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      },
-      { justRefs: true, fromCache: true }
-    ).then((orders) => {
-      setRenewed(orders)
-    })
-    ServiceOrders.getPickedUp(
-      {
-        storeId,
-        userId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      },
-      { justRefs: true, fromCache: true }
-    ).then((orders) => {
-      setPickedUp(orders)
-    })
-  }
-  console.log({ pickedUp, delivered, renewed })
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
@@ -96,7 +37,7 @@ const ModalCurrentWork = () => {
       <StyledModal {...modalCurrentWork}>
         <View style={{ margin: 'auto' }}>
           <Button
-            disabled={loading}
+            //disabled={loading}
             icon="refresh"
             onPress={handleUpdate}
             justIcon

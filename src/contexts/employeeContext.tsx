@@ -10,11 +10,22 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { CategoryType } from '../types/RentItem'
 import { SectionType } from '../types/SectionType'
-import asDate from '../libs/utils-date'
+import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isToday } from 'date-fns'
+import PaymentType from '../types/PaymentType'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import OrderType from '../types/OrderType'
+import { ServicePayments } from '../firebase/ServicePayments'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
+  todayWork?: {
+    pickedUp: OrderType[]
+    delivered: OrderType[]
+    renewed: OrderType[]
+    payments: PaymentType[]
+    handleUpdate: () => void
+  }
   permissions: {
     canCancelPickedUp?: boolean
     isAdmin: boolean
@@ -45,6 +56,74 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
+
+  const [payments, setPayments] = useState<PaymentType[]>([])
+  const [loading, setLoading] = useState(false)
+  const handleUpdate = () => {
+    setLoading(true)
+    handleGetOrders()
+    handleGetPayments()
+  }
+  const date = new Date()
+  useEffect(() => {
+    if (user) handleUpdate()
+  }, [user])
+
+  const userId = user?.id
+
+  const [pickedUp, setPickedUp] = useState<OrderType[]>([])
+  const [delivered, setDelivered] = useState<OrderType[]>([])
+  const [renewed, setRenewed] = useState<OrderType[]>([])
+
+  const handleGetOrders = () => {
+    ServiceOrders.getDelivered(
+      {
+        storeId,
+        userId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      },
+      { justRefs: true, fromCache: true }
+    ).then((orders) => {
+      setDelivered(orders)
+    })
+    ServiceOrders.getRenewed(
+      {
+        storeId,
+        userId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      },
+      { justRefs: true, fromCache: true }
+    ).then((orders) => {
+      setRenewed(orders)
+    })
+    ServiceOrders.getPickedUp(
+      {
+        storeId,
+        userId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      },
+      { justRefs: true, fromCache: true }
+    ).then((orders) => {
+      setPickedUp(orders)
+    })
+  }
+
+  const handleGetPayments = () => {
+    ServicePayments.getBetweenDates(
+      {
+        fromDate: startDate(new Date()),
+        toDate: endDate(new Date()),
+        storeId,
+        userId
+      },
+      { fromCache: true }
+    )
+      .then(setPayments)
+      .catch(console.error)
+  }
   const { store, staff, storeSections, storeId, categories } = useStore()
 
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
@@ -156,7 +235,18 @@ export const EmployeeContextProvider = ({ children }) => {
   em++
   if (__DEV__) console.log({ em })
   return (
-    <EmployeeContext.Provider value={value}>
+    <EmployeeContext.Provider
+      value={{
+        ...value,
+        todayWork: {
+          pickedUp: pickedUp,
+          delivered: delivered,
+          renewed: renewed,
+          payments,
+          handleUpdate
+        }
+      }}
+    >
       {children}
     </EmployeeContext.Provider>
   )
