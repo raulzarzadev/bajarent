@@ -277,7 +277,6 @@ export class FirebaseCRUD {
     )
 
     if (ops?.justRefs) {
-      console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
     }
 
@@ -459,7 +458,6 @@ export class FirebaseCRUD {
       'getItemsByRef'
     )
     if (ops?.justRefs) {
-      console.log('just refs')
       return querySnapshot.docs.map((doc) => doc.ref)
     }
 

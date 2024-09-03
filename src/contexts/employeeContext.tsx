@@ -26,6 +26,7 @@ export type EmployeeContextType = {
     payments: PaymentType[]
     handleUpdate: () => void
   }
+  isEmployee?: boolean
   permissions: {
     canCancelPickedUp?: boolean
     isAdmin: boolean
@@ -148,7 +149,6 @@ export const EmployeeContextProvider = ({ children }) => {
       setAssignedSections(sectionsAssigned)
     } else {
       setIsEmployee(false)
-      console.log('no employee')
     }
   }, [staff])
 
@@ -191,7 +191,7 @@ export const EmployeeContextProvider = ({ children }) => {
       employee: employee
         ? { ...employee, sectionsAssigned: assignedSections }
         : undefined,
-
+      isEmployee,
       permissions: {
         isAdmin: !!isAdmin,
         isOwner: isOwner,

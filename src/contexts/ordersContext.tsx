@@ -45,7 +45,7 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const { employee, permissions } = useEmployee()
+  const { employee, permissions, isEmployee } = useEmployee()
   const { storeId, store } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
@@ -65,47 +65,42 @@ export const OrdersContextProvider = ({
   const [consolidatedOrders, setConsolidatedOrders] =
     useState<ConsolidatedStoreOrdersType>()
 
-  useEffect(() => {
-    //* Consolidate orders it useful to search in all orders
-    if (viewAllOrders) {
-      handleGetConsolidates()
-    }
-  }, [viewAllOrders])
-
   const handleGetConsolidates = async () => {
-    ServiceConsolidatedOrders.listenByStore(
-      storeId,
-      (res) => {
+    // ServiceConsolidatedOrders.listenByStore(
+    //   storeId,
+    //   (res) => {
+    //     console.log('lisening chunks')
+    //     const chunks = res[0]?.consolidatedChunks || []
+    //     const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
+    //     Promise.all(promises).then((chunksRes) => {
+    //       const orders = chunksRes.reduce((acc, chunk) => {
+    //         return { ...acc, ...chunk.orders }
+    //       }, {})
+
+    //       setConsolidatedOrders({ ...res[0], orders })
+    //     })
+    //   }
+    //)
+    return await ServiceConsolidatedOrders.getByStore(storeId).then(
+      async (res) => {
         const chunks = res[0]?.consolidatedChunks || []
         const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
-        Promise.all(promises).then((chunksRes) => {
-          const orders = chunksRes.reduce((acc, chunk) => {
-            return { ...acc, ...chunk.orders }
-          }, {})
+        const chunksRes = await Promise.all(promises)
+        const orders = chunksRes.reduce((acc, chunk) => {
+          return { ...acc, ...chunk.orders }
+        }, {})
 
-          setConsolidatedOrders({ ...res[0], orders })
-        })
+        setConsolidatedOrders({ ...res[0], orders })
       }
-      // return await ServiceConsolidatedOrders.getByStore(storeId).then(
-      //   async (res) => {
-      //     const chunks = res[0]?.consolidatedChunks || []
-      //     const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
-      //     const chunksRes = await Promise.all(promises)
-      //     const orders = chunksRes.reduce((acc, chunk) => {
-      //       return { ...acc, ...chunk.orders }
-      //     }, {})
-
-      //     setConsolidatedOrders({ ...res[0], orders })
-      //   }
-      // )
     )
   }
 
   useEffect(() => {
-    if (employee) {
+    if (isEmployee) {
       handleGetOrders()
+      handleGetConsolidates()
     }
-  }, [employee])
+  }, [isEmployee])
 
   useEffect(() => {
     if (store) {
@@ -120,7 +115,7 @@ export const OrdersContextProvider = ({
 
   const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
-    await handleGetConsolidates()
+    // await handleGetConsolidates()
     const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
 
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
