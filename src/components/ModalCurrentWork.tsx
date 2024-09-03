@@ -47,35 +47,44 @@ const ModalCurrentWork = () => {
 
   const [pickedUp, setPickedUp] = useState<OrderType[]>([])
   const [delivered, setDelivered] = useState<OrderType[]>([])
-  const [solved, setSolved] = useState<OrderType[]>([])
   const [renewed, setRenewed] = useState<OrderType[]>([])
 
   const handleGetOrders = () => {
-    ServiceOrders.getDelivered({
-      storeId,
-      userId,
-      fromDate: startDate(date),
-      toDate: endDate(date)
-    }).then((orders) => {
+    ServiceOrders.getDelivered(
+      {
+        storeId,
+        userId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      },
+      { justRefs: true, fromCache: true }
+    ).then((orders) => {
       setDelivered(orders)
     })
-    ServiceOrders.getRenewed({
-      storeId,
-      userId,
-      fromDate: startDate(date),
-      toDate: endDate(date)
-    }).then((orders) => {
+    ServiceOrders.getRenewed(
+      {
+        storeId,
+        userId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      },
+      { justRefs: true, fromCache: true }
+    ).then((orders) => {
       setRenewed(orders)
     })
-    ServiceOrders.getPickedUp({
-      storeId,
-      userId,
-      fromDate: startDate(date),
-      toDate: endDate(date)
-    }).then((orders) => {
+    ServiceOrders.getPickedUp(
+      {
+        storeId,
+        userId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      },
+      { justRefs: true, fromCache: true }
+    ).then((orders) => {
       setPickedUp(orders)
     })
   }
+  console.log({ pickedUp, delivered, renewed })
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
@@ -104,6 +113,7 @@ const ModalCurrentWork = () => {
           }}
         >
           <Tabs
+            defaultTab={null}
             tabs={[
               {
                 title: `Recogidas: ${pickedUp?.length || 0}`,

@@ -264,9 +264,12 @@ export class FirebaseCRUD {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)
 
-    const querySnapshot = await getDocs(q)
-    // let querySnapshot: QuerySnapshot
-
+    let querySnapshot: QuerySnapshot<DocumentData, DocumentData>
+    if (ops?.fromCache) {
+      querySnapshot = await getDocsFromCache(q)
+    } else {
+      querySnapshot = await getDocs(q)
+    }
     this.showDataSource(
       querySnapshot.metadata.fromCache,
       this.collectionName,

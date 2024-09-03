@@ -557,17 +557,20 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return filters
   }
 
-  async getDelivered({
-    storeId,
-    userId,
-    fromDate,
-    toDate
-  }: {
-    storeId: string
-    userId: string
-    fromDate: Date
-    toDate: Date
-  }) {
+  async getDelivered(
+    {
+      storeId,
+      userId,
+      fromDate,
+      toDate
+    }: {
+      storeId: string
+      userId: string
+      fromDate: Date
+      toDate: Date
+    },
+    ops?: GetItemsOps
+  ) {
     const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
       status: order_status.DELIVERED,
       storeId,
@@ -577,20 +580,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       field: 'deliveredAt'
     })
 
-    return this.findMany(filters)
+    return this.findMany(filters, ops)
   }
 
-  async getRenewed({
-    storeId,
-    userId,
-    fromDate,
-    toDate
-  }: {
-    storeId: string
-    userId: string
-    fromDate: Date
-    toDate: Date
-  }) {
+  async getRenewed(
+    {
+      storeId,
+      userId,
+      fromDate,
+      toDate
+    }: {
+      storeId: string
+      userId: string
+      fromDate: Date
+      toDate: Date
+    },
+    ops?: GetItemsOps
+  ) {
     const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
       status: order_status.DELIVERED,
       storeId,
@@ -600,19 +606,22 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       field: 'renewedAt'
     })
 
-    return this.findMany(filters)
+    return this.findMany(filters, ops)
   }
-  async getPickedUp({
-    storeId,
-    userId,
-    fromDate,
-    toDate
-  }: {
-    storeId: string
-    userId: string
-    fromDate: Date
-    toDate: Date
-  }) {
+  async getPickedUp(
+    {
+      storeId,
+      userId,
+      fromDate,
+      toDate
+    }: {
+      storeId: string
+      userId: string
+      fromDate: Date
+      toDate: Date
+    },
+    ops?: GetItemsOps
+  ) {
     const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
       status: order_status.PICKED_UP,
       storeId,
@@ -622,7 +631,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       field: 'pickedUpAt'
     })
 
-    return this.findMany(filters)
+    return this.findMany(filters, ops)
   }
   getFieldBetweenDates = async (
     {
