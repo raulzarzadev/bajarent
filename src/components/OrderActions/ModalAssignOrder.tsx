@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useStore } from '../../contexts/storeContext'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { View } from 'react-native'
 import { onAssignOrder, onComment } from '../../libs/order-actions'
 import InputAssignSection from '../InputAssingSection'

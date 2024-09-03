@@ -18,10 +18,9 @@ export const listenFullOrderData = async (
   cb: CallableFunction
 ) => {
   ServiceOrders.listen(orderId, async (order) => {
-    const payments = await ServicePayments.getByOrder(orderId)
     await ServiceComments.listenOrderReports(orderId, (reports) => {
       const formattedOrder = formatOrder({ comments: reports, order })
-      cb({ ...formattedOrder, payments, comments: reports })
+      cb({ ...formattedOrder, comments: reports })
     })
   })
 }

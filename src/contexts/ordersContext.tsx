@@ -37,6 +37,7 @@ export type OrdersContextType = {
   consolidatedOrders?: ConsolidatedStoreOrdersType
 }
 
+let oc = 0
 export const OrdersContext = createContext<OrdersContextType>({})
 
 export const OrdersContextProvider = ({
@@ -153,6 +154,9 @@ export const OrdersContextProvider = ({
       setOrders([])
     }
   }
+
+  oc++
+  if (__DEV__) console.log({ oc })
 
   return (
     <OrdersContext.Provider

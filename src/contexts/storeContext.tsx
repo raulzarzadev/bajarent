@@ -47,19 +47,14 @@ export type StoreContextType = {
   fetchComments?: () => any
   handleToggleJustActiveOrders?: () => any
   fetchOrders?: () => any
-  justActiveOrders?: boolean
-  fetchItems?: () => void
   fetchPrices?: () => void
 }
 
+let sc = 0
 const StoreContext = createContext<StoreContextType>({})
-
 const StoreContextProvider = ({ children }) => {
   //#region hooks
-  const { storeId, handleSetStoreId, store, stores, isAuthenticated } =
-    useAuth()
-
-  const [justActiveOrders, setJustActiveOrders] = useState<boolean>(true)
+  const { storeId, handleSetStoreId, store, stores } = useAuth()
 
   const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
@@ -70,16 +65,16 @@ const StoreContextProvider = ({ children }) => {
   const [storePrices, setStorePrices] =
     useState<Partial<PriceType>[]>(undefined)
   const fetchPrices = async () => {
-    const prices = await ServicePrices.getByStore(store.id)
+    const prices = await ServicePrices.getByStore(storeId)
     setStorePrices(prices)
   }
   useEffect(() => {
-    if (store) {
-      ServiceCategories.listenByStore(store.id, async (categories) => {
+    if (storeId) {
+      ServiceCategories.listenByStore(storeId, async (categories) => {
         setCategories(categories)
       })
-      ServiceSections.listenByStore(store.id, setSections)
-      ServiceStaff.listenByStore(store.id, async (staff) => {
+      ServiceSections.listenByStore(storeId, setSections)
+      ServiceStaff.listenByStore(storeId, async (staff) => {
         const staffUserInfo = await Promise.all(
           staff.map(async ({ userId, ...rest }) => {
             const user = await ServiceUsers.get(userId)
@@ -95,43 +90,30 @@ const StoreContextProvider = ({ children }) => {
             }
           })
         )
-        const ownerIsNotStaff = [...staffUserInfo]?.find(
-          (s) => s.id === store.createdBy
-        )
-        if (ownerIsNotStaff) {
-          const owner = await ServiceUsers.get(store.createdBy)
-          staff.push({ ...owner, userId: owner.id, isOwner: true })
-        }
+        // const ownerIsNotStaff = [...staffUserInfo]?.find(
+        //   (s) => s.id === store.createdBy
+        // )
+        // if (ownerIsNotStaff) {
+        //   const owner = await ServiceUsers.get(store.createdBy)
+        //   staff.push({ ...owner, userId: owner.id, isOwner: true })
+        // }
 
         setStaff(staffUserInfo)
       })
     }
-  }, [store])
+  }, [storeId])
 
-  useEffect(() => {
-    if (store && categories.length) {
-      fetchItems()
-      fetchPrices()
-    }
-  }, [store, categories])
+  // useEffect(() => {
+  //   if (store && categories.length) {
+  //     fetchItems()
+  //     fetchPrices()
+  //   }
+  // }, [store, categories])
 
-  const fetchItems = async () => {
-    // const items = await ServiceStoreItems.getAll({
-    //   storeId: store.id
-    //   // sections: []
-    // })
-    // setStoreItems(
-    //   items?.map((item) => ({
-    //     ...item,
-    //     id: item.id,
-    //     categoryName:
-    //       categories.find((cat) => cat.id === item.category)?.name || '',
-    //     assignedSectionName:
-    //       sections.find((sec) => sec.id === item.assignedSection)?.name || ''
-    //   })) || []
-    // )
-    setStoreItems([])
-  }
+  // const fetchItems = async () => {
+
+  //   setStoreItems([])
+  // }
 
   //#region render
 
@@ -163,16 +145,13 @@ const StoreContextProvider = ({ children }) => {
       /**
        * @deprecated
        */
-      fetchItems,
+      // fetchItems,
       /**
        * @deprecated
        */
       myStaffId: '',
       // staffPermissions,
-      /**
-       * @deprecated
-       */
-      justActiveOrders,
+
       /**
        * @deprecated
        */
@@ -214,11 +193,12 @@ const StoreContextProvider = ({ children }) => {
       sections,
       fetchPrices,
       payments,
-      storeItems,
-      fetchItems,
-      justActiveOrders
+      storeItems
+      //fetchItems
     ]
   )
+  sc++
+  if (__DEV__) console.log({ sc })
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }

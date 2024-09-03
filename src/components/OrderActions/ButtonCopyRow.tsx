@@ -1,19 +1,17 @@
 import React from 'react'
 import Button from '../Button'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 import asDate, { dateFormat } from '../../libs/utils-date'
-import OrderType from '../../types/OrderType'
+import { useOrderDetails } from '../../contexts/orderContext'
 
 const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
   const [disabled, setDisabled] = React.useState(false)
-
+  const { order } = useOrderDetails()
   return (
     <Button
       disabled={disabled}
       onPress={async () => {
         setDisabled(true)
         if (orderId) {
-          const order: Partial<OrderType> = await ServiceOrders.get(orderId)
           const {
             note = '',
             fullName = '',

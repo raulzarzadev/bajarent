@@ -9,7 +9,6 @@ import { onComment, onExtend, onExtend_V2 } from '../../libs/order-actions'
 import InputRadios from '../InputRadios'
 import { TimeType } from '../../types/PriceType'
 import { sumTimeToDate, translateTime } from '../../libs/expireDate'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { useOrderDetails } from '../../contexts/orderContext'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import { gStyles } from '../../styles'
@@ -30,7 +29,7 @@ const AddExtendExpire = ({
   const { order } = useOrderDetails()
   const handleExtend = async () => {
     setDisabled(true)
-    //const order = await ServiceOrders.get(orderId)
+
     await onExtend_V2({
       items: order.items,
       orderId: order.id,
