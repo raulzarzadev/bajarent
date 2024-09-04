@@ -150,11 +150,13 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
 
   async getItemsMovements({
     date,
-    storeId
+    storeId,
+    type
   }: //items
   {
     date: Date
     storeId: string
+    type?: Type['type']
     //items: string[]
   }): Promise<Type[]> {
     let filters: QueryConstraint[] = [
@@ -162,6 +164,9 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
       where('createdAt', '>=', startDate(date)),
       where('createdAt', '<=', endDate(date))
     ]
+    if (!!type) {
+      filters.push(where('type', '==', type))
+    }
     const items = await ServiceStoreItems.getAll(
       { storeId },
       { justRefs: true }

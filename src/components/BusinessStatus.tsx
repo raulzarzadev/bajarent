@@ -430,29 +430,38 @@ const CellOrders = ({
   )
 }
 
-export const ExpandibleListE = (props: ExpandibleListProps) => (
+export const ExpandibleListE = <T extends BasicExpandibleItemType>(
+  props: ExpandibleListProps<T>
+) => (
   <ErrorBoundary componentName="ExpandibleList">
     <ExpandibleList {...props} />
   </ErrorBoundary>
 )
-export type ExpandibleListProps = {
+
+export type BasicExpandibleItemType = {
+  id: string
+  content?: string | ReactNode
+}
+export type ExpandibleListProps<T> = {
   label: string
-  items: { id: string; content: string | ReactNode }[]
+  items: T[] | BasicExpandibleItemType[]
   onPressRow: (id: string) => void
   onPressTitle?: () => void
   defaultExpanded?: boolean
+  renderItem?: (item: T) => ReactNode
 }
-export const ExpandibleList = ({
+export const ExpandibleList = <T extends BasicExpandibleItemType>({
   label,
   items = [],
   onPressRow,
   onPressTitle,
-  defaultExpanded = false
-}: ExpandibleListProps) => {
+  defaultExpanded = false,
+  renderItem
+}: ExpandibleListProps<T>) => {
   const [expanded, setExpanded] = React.useState(defaultExpanded)
 
   const uniqueItems = removeDuplicates(items.map((i) => i.id))
-
+  const hasRenderItem = typeof renderItem === 'function'
   return (
     <View style={{ marginVertical: 8, marginHorizontal: 6 }}>
       <View style={{ flexDirection: 'row' }}>
@@ -476,6 +485,7 @@ export const ExpandibleList = ({
         uniqueItems.map((item, index) => {
           const itemData = items.find((i) => i.id === item)
           const countItems = items.filter((i) => i.id === item)?.length || 0
+          if (hasRenderItem) return renderItem(itemData)
           return (
             <Pressable
               key={`${itemData.id}-${index}`}
@@ -491,7 +501,7 @@ export const ExpandibleList = ({
                   <Text style={[gStyles.tBold]}>{countItems}*</Text>
                 )}
               </View>
-              <Text key={index}>{itemData.content}</Text>
+              <Text key={index}>{itemData?.content}</Text>
             </Pressable>
           )
         })}

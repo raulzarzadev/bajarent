@@ -21,6 +21,9 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { PriceType } from '../types/PriceType'
+import { MovementType, RepairType } from '../components/StoreWorkshop'
+import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
+import asDate, { dateFormat } from '../libs/utils-date'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -69,6 +72,7 @@ export type StoreContextType = {
   handleToggleJustActiveOrders?: () => any
   fetchOrders?: () => any
   fetchPrices?: () => void
+  storePrices?: Partial<PriceType>[]
 }
 
 let sc = 0
@@ -82,6 +86,7 @@ const StoreContextProvider = ({ children }) => {
   const [staff, setStaff] = useState<StaffType[]>([])
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [storeItems, setStoreItems] = useState<Partial<ItemType>[]>(undefined)
+
   const [storePrices, setStorePrices] =
     useState<Partial<PriceType>[]>(undefined)
 
@@ -93,6 +98,7 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     if (storeId) {
       fetchPrices()
+
       ServiceCategories.listenByStore(storeId, async (categories) => {
         setCategories(categories)
       })
@@ -113,14 +119,6 @@ const StoreContextProvider = ({ children }) => {
             }
           })
         )
-        // const ownerIsNotStaff = [...staffUserInfo]?.find(
-        //   (s) => s.id === store.createdBy
-        // )
-        // if (ownerIsNotStaff) {
-        //   const owner = await ServiceUsers.get(store.createdBy)
-        //   staff.push({ ...owner, userId: owner.id, isOwner: true })
-        // }
-
         setStaff(staffUserInfo)
       })
     }
