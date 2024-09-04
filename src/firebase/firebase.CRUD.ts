@@ -270,6 +270,8 @@ export class FirebaseCRUD {
     } else {
       querySnapshot = await getDocs(q)
     }
+
+    this.showSnapshot(querySnapshot)
     this.showDataSource(
       querySnapshot.metadata.fromCache,
       this.collectionName,
@@ -674,6 +676,20 @@ export class FirebaseCRUD {
   showDataSource(isFromCache: any, collection: string, method: string) {
     const source = isFromCache ? 'cache' : 'server'
     console.log(`${source} ${method} ${collection} `)
+  }
+  showSnapshot(querySnapshot: QuerySnapshot<DocumentData, DocumentData>) {
+    let totalSize = 0
+    querySnapshot.forEach((doc) => {
+      const docData = doc.data()
+      const docSize = new TextEncoder().encode(JSON.stringify(docData)).length
+      totalSize += docSize
+    })
+    const sizeHumanReadable = (totalSize / 1024).toFixed(2)
+    const filters = querySnapshot.query._query.filters.map(
+      (f) => `${f.field.segments[0]} ${f.op} ${f.value.stringValue}`
+    )
+    console.log('filters', filters)
+    console.log('Size', `(${querySnapshot.size}) ${sizeHumanReadable}MB`)
   }
 
   transformAnyToDate = (date: unknown): Date | null => {
