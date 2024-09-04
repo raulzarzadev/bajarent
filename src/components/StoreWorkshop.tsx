@@ -83,17 +83,17 @@ const StoreWorkshop = () => {
         <ExpandibleListE
           label="Reparaciones"
           onPressRow={() => {}}
-          items={repairs.filter(
-            ({ id }) => !!filteredData.find((data) => data.id === id)
-          )}
+          items={repairs
+            .filter(({ id }) => !!filteredData.find((data) => data.id === id))
+            .sort((a, b) => b.time.localeCompare(a.time))}
           renderItem={(repair) => <Repair repair={repair} />}
         />
         <ExpandibleListE
           label="Movimientos"
           onPressRow={() => {}}
-          items={movements.filter(
-            ({ id }) => !!filteredData.find((data) => data.id === id)
-          )}
+          items={movements
+            .filter(({ id }) => !!filteredData.find((data) => data.id === id))
+            .sort((a, b) => b.time.localeCompare(a.time))}
           renderItem={(movement) => <Movement movement={movement} />}
         />
       </View>
