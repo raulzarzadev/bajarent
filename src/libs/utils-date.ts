@@ -29,8 +29,10 @@ export const dateMx = (date?: Date | Timestamp | null) => {
 
 export const dateFormat = (
   date?: number | Date | Timestamp | null,
-  strFormat?: string
+  strFormat?: string,
+  returnNullIfInvalid = false
 ): string => {
+  if (!date && returnNullIfInvalid) return null
   if (!date) return 'n/d' //* not a date
   const value = date instanceof Timestamp ? date.toDate() : date
   const res = fnsFormat(value, strFormat || 'dd/MMM/yy', {
