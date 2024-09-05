@@ -198,6 +198,7 @@ const labels = {
   retired: 'Retirado',
   retire: 'Baja',
   canDeleteExtension: 'Eliminar extensiones',
+  unassigned: 'sin asignar',
   ' ': '',
   '': ''
 } as const
