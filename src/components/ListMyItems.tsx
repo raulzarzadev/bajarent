@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
@@ -30,8 +30,8 @@ export type ListMyItemsProps = {
 }
 
 const ListMyItems = ({ items }: ListMyItemsProps) => {
-  const sections = groupSectionItems(items || [])
-
+  const [filteredData, setFilteredData] = useState<Partial<ItemType>[]>(items)
+  const sections = groupSectionItems(filteredData || [])
   return (
     <View
       style={
@@ -47,11 +47,11 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
       }
     >
       {/* <Text style={[gStyles.h1, { marginBottom: 16 }]}>Artículos</Text> */}
-      <View>
+      <View style={{ marginBottom: 12 }}>
         <ModalFilterListE
           data={items}
           setData={(data) => {
-            console.log({ data })
+            setFilteredData(data)
           }}
           filters={[
             {
@@ -81,7 +81,7 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
       </View>
       {Object.entries(sections).map(([key, items]) => {
         return (
-          <View key={key}>
+          <View key={key} style={{ marginBottom: 12 }}>
             <Text style={gStyles.h2}>
               {asCapitalize(dictionary(key))} {`(${items?.length || 0})`}
             </Text>
