@@ -12,7 +12,6 @@ import StyledModal from './StyledModal'
 import ItemActions from './ItemActions'
 import CardItem from './CardItem'
 import Button from './Button'
-import { ExpandibleListE } from './BusinessStatus'
 
 export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']
@@ -66,19 +65,28 @@ const RowSectionItems = ({
   onSelectItem,
   layout = 'row'
 }: RowSectionItemsProps) => {
+  const sortByNumber = (a: ItemType, b: ItemType) =>
+    parseFloat(a.number) - parseFloat(b.number)
+
   if (layout === 'flex')
     return (
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        {items.map((item) => (
-          <SectionItem
-            key={item.id}
-            item={item}
-            selected={itemSelected === item.id}
-            onPress={() => {
-              onPressItem?.(item.id)
-            }}
-          />
-        ))}
+      <View>
+        <View
+          style={[
+            { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }
+          ]}
+        >
+          {items.sort(sortByNumber).map((item) => (
+            <SectionItem
+              key={item.id}
+              item={item}
+              selected={itemSelected === item.id}
+              onPress={() => {
+                onPressItem?.(item.id)
+              }}
+            />
+          ))}
+        </View>
       </View>
     )
   if (layout === 'row')
@@ -86,7 +94,7 @@ const RowSectionItems = ({
       <FlatList
         style={{ margin: 'auto', maxWidth: '100%', paddingBottom: 12 }}
         horizontal
-        data={items.sort((a, b) => a.number.localeCompare(b.number))}
+        data={items.sort(sortByNumber)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View>

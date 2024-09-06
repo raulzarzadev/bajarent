@@ -6,6 +6,10 @@ export const gSpace = (space = 1) => space * 4
 const placeholderOpacity = 'ee'
 
 export const gStyles = StyleSheet.create({
+  guide: {
+    borderWidth: 1,
+    borderColor: 'gray'
+  },
   h1: {
     fontSize: 24,
     fontWeight: 'bold',
