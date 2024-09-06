@@ -1,15 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { ListItemsSectionsE } from './ListItemsSections'
 import { useEmployee } from '../contexts/employeeContext'
 import { ListMyItemsE } from './ListMyItems'
 
 const ScreenMyItems = () => {
-  const { employee, items } = useEmployee()
+  const { items } = useEmployee()
   return (
-    <View>
+    <ScrollView>
       <ListMyItemsE items={items} />
-    </View>
+    </ScrollView>
   )
 }
 
