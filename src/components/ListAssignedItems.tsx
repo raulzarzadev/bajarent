@@ -134,6 +134,7 @@ export const SectionItem = ({
   onPress?: () => void
 }) => {
   const modal = useModal({ title: `Acciones de artículo` })
+  const OPACITY = 33
   return (
     <>
       <Pressable
@@ -143,7 +144,11 @@ export const SectionItem = ({
         style={{
           width: 120,
           minHeight: 80,
-          height: 110,
+          height: 90,
+          borderWidth: 2,
+          borderColor: item.needFix
+            ? `${theme.error}${OPACITY}`
+            : theme.transparent,
           backgroundColor: selected ? colors.lightBlue : theme.base,
           borderRadius: gSpace(2),
           margin: 2,
@@ -155,7 +160,7 @@ export const SectionItem = ({
       {/* Modal item actions */}
       <StyledModal {...modal}>
         <View style={{ marginBottom: 8 }}>
-          <CardItem item={item} showSerialNumber />
+          <CardItem item={item} showSerialNumber showFixNeeded />
         </View>
         <ItemActions
           // FIXME: avoid select options

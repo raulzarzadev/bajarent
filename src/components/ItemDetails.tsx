@@ -89,6 +89,7 @@ export const ItemFixDetails = ({
   const { storeId } = useStore()
 
   useEffect(() => {
+    //* FIXME: here you are make one call for
     ServiceItemHistory.getLastEntries({
       itemId,
       storeId,
