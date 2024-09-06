@@ -71,9 +71,11 @@ import {
   GoChevronLeft,
   GoChevronRight
 } from 'react-icons/go'
+import { CgSmartHomeWashMachine } from 'react-icons/cg'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  washMachine: CgSmartHomeWashMachine,
   inventory: MdOutlineInventory,
   history: MdOutlineHistory,
   alarm: MdOutlineAlarm,

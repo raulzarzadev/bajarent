@@ -12,7 +12,7 @@ function StackMyItems() {
       <Stack.Screen
         name="ScreenItems"
         options={{
-          title: 'Items'
+          title: 'Artículos'
         }}
         component={ScreenMyItems}
       />

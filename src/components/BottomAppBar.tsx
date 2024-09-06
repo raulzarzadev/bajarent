@@ -38,7 +38,7 @@ const BottomAppBar = () => {
               MyOrders: 'myOrders',
               StackOrders: 'orders',
               StackConsolidated: 'orders',
-              StackMyItems: 'components'
+              StackMyItems: 'washMachine'
             }
             return (
               <Icon
@@ -85,7 +85,7 @@ const BottomAppBar = () => {
       <Tab.Screen
         name="StackMyItems"
         options={{
-          title: 'Items',
+          title: 'Artículos',
           headerShown: false
           // tabBarButton: () => null
         }}
