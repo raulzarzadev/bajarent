@@ -13,15 +13,15 @@ import ErrorBoundary from './ErrorBoundary'
 import ItemActions from './ItemActions'
 import asDate, { dateFormat } from '../libs/utils-date'
 import SpanUser from './SpanUser'
-import Icon from './Icon'
-import { colors } from '../theme'
 
 const ItemDetails = ({
   item,
-  onAction
+  onAction,
+  showFixTime = true
 }: {
   item: Partial<ItemType>
   onAction?: () => void
+  showFixTime?: boolean
 }) => {
   return (
     <View>
@@ -67,20 +67,24 @@ const ItemDetails = ({
 
       {item?.needFix && (
         <View style={{ marginVertical: 12 }}>
-          <ItemFixDetails itemId={item?.id} />
+          <ItemFixDetails itemId={item?.id} showTime={showFixTime} />
         </View>
       )}
     </View>
   )
 }
 
-export const ItemFixDetails = ({
-  itemId,
-  size = 'lg'
-}: {
+export type ItemFixDetailsProps = {
   itemId: string
   size?: 'sm' | 'md' | 'lg'
-}) => {
+  showTime?: boolean
+}
+
+export const ItemFixDetails = ({
+  itemId,
+  size = 'lg',
+  showTime = true
+}: ItemFixDetailsProps) => {
   const [lastFixEntry, setLastFixEntry] = React.useState<ItemHistoryType>()
   const { storeId } = useStore()
 
@@ -110,18 +114,17 @@ export const ItemFixDetails = ({
           //marginVertical: 12
         }}
       >
-        <Text style={[gStyles.helper, gStyles.tError]}>
-          <Icon icon="wrench" color={colors.red} size={14} />
-          {dateFormat(lastFixEntry?.createdAt, 'dd/MMM/yy HH:mm ')}
-        </Text>
         <Text
-          numberOfLines={2}
+          numberOfLines={3}
           style={[
             gStyles.tError,
             gStyles.tCenter,
             { fontSize: textSize[size] }
           ]}
         >
+          {showTime
+            ? dateFormat(lastFixEntry?.createdAt, 'dd/MMM/yy HH:mm ')
+            : ''}{' '}
           {lastFixEntry.content}
         </Text>
       </View>

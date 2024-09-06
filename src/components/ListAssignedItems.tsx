@@ -12,12 +12,14 @@ import StyledModal from './StyledModal'
 import ItemActions from './ItemActions'
 import CardItem from './CardItem'
 import Button from './Button'
+import { ExpandibleListE } from './BusinessStatus'
 
 export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']
   onPressItem?: (itemId: string) => void
   itemSelected?: string
   onSelectItem?: (itemId: string) => void
+  layout?: 'row' | 'flex'
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
@@ -30,7 +32,6 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const formattedItems = formatItems(availableItems, categories, storeSections)
     .filter((item) => !categoryId || item.category === categoryId)
     .sort((a, b) => a.number.localeCompare(b.number))
-
   return (
     <View>
       {availableItems?.length === 0 ? (
@@ -45,6 +46,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
         itemSelected={itemSelected}
         onPressItem={onPressItem}
         onSelectItem={onSelectItem}
+        layout={props?.layout}
       />
     </View>
   )
@@ -55,45 +57,63 @@ export type RowSectionItemsProps = {
   itemSelected?: string
   onPressItem?: (itemId: string) => void
   onSelectItem?: (itemId: string) => void
+  layout?: 'row' | 'flex'
 }
 const RowSectionItems = ({
   items,
   itemSelected,
   onPressItem,
-  onSelectItem
+  onSelectItem,
+  layout = 'row'
 }: RowSectionItemsProps) => {
-  return (
-    <FlatList
-      style={{ margin: 'auto', maxWidth: '100%', paddingBottom: 12 }}
-      horizontal
-      data={items.sort((a, b) => a.number.localeCompare(b.number))}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View>
+  if (layout === 'flex')
+    return (
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        {items.map((item) => (
           <SectionItem
+            key={item.id}
             item={item}
             selected={itemSelected === item.id}
             onPress={() => {
               onPressItem?.(item.id)
             }}
           />
-          <View style={{ padding: 2, marginTop: 2 }}>
-            {!!onSelectItem && (
-              <Button
-                variant={itemSelected === item.id ? 'filled' : 'ghost'}
-                size="xs"
-                fullWidth
-                onPress={() => {
-                  onSelectItem(item.id)
-                }}
-                label="Seleccionar"
-              ></Button>
-            )}
+        ))}
+      </View>
+    )
+  if (layout === 'row')
+    return (
+      <FlatList
+        style={{ margin: 'auto', maxWidth: '100%', paddingBottom: 12 }}
+        horizontal
+        data={items.sort((a, b) => a.number.localeCompare(b.number))}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View>
+            <SectionItem
+              item={item}
+              selected={itemSelected === item.id}
+              onPress={() => {
+                onPressItem?.(item.id)
+              }}
+            />
+            <View style={{ padding: 2, marginTop: 2 }}>
+              {!!onSelectItem && (
+                <Button
+                  variant={itemSelected === item.id ? 'filled' : 'ghost'}
+                  size="xs"
+                  fullWidth
+                  onPress={() => {
+                    onSelectItem(item.id)
+                  }}
+                  label="Seleccionar"
+                ></Button>
+              )}
+            </View>
           </View>
-        </View>
-      )}
-    />
-  )
+        )}
+      />
+    )
 }
 
 export const SectionItem = ({
@@ -108,6 +128,23 @@ export const SectionItem = ({
   const modal = useModal({ title: `Acciones de artículo` })
   return (
     <>
+      <Pressable
+        onPress={() => {
+          modal.toggleOpen()
+        }}
+        style={{
+          width: 120,
+          minHeight: 80,
+          height: 110,
+          backgroundColor: selected ? colors.lightBlue : theme.base,
+          borderRadius: gSpace(2),
+          margin: 2,
+          padding: 4
+        }}
+      >
+        <CardItem item={item} showSerialNumber showFixTime={false} />
+      </Pressable>
+      {/* Modal item actions */}
       <StyledModal {...modal}>
         <View style={{ marginBottom: 8 }}>
           <CardItem item={item} showSerialNumber />
@@ -124,26 +161,6 @@ export const SectionItem = ({
           }}
         />
       </StyledModal>
-
-      <Pressable
-        onPress={() => {
-          modal.toggleOpen()
-        }}
-      >
-        <View
-          style={{
-            width: 120,
-            minHeight: 80,
-            height: '100%',
-            backgroundColor: selected ? colors.lightBlue : theme.base,
-            borderRadius: gSpace(2),
-            margin: 2,
-            padding: 4
-          }}
-        >
-          <CardItem item={item} showSerialNumber />
-        </View>
-      </Pressable>
     </>
   )
 }

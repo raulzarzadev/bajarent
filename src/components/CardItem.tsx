@@ -9,11 +9,13 @@ export type CartItemType = {
   item: Partial<ItemType>
   showAssignedSection?: boolean
   showSerialNumber?: boolean
+  showFixTime?: boolean
 }
 const CardItem = ({
   item,
   showAssignedSection,
-  showSerialNumber
+  showSerialNumber,
+  showFixTime = true
 }: CartItemType) => {
   const sectionName = item?.assignedSectionName || 'Sin asignar'
   return (
@@ -59,7 +61,9 @@ const CardItem = ({
       {showAssignedSection && (
         <Text style={[gStyles.tCenter]}>{sectionName}</Text>
       )}
-      {item?.needFix && <ItemFixDetails itemId={item?.id} size="sm" />}
+      {item?.needFix && (
+        <ItemFixDetails itemId={item?.id} size="sm" showTime={showFixTime} />
+      )}
     </View>
   )
 }

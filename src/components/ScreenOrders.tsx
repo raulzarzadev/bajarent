@@ -30,7 +30,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const userSections = employee?.sectionsAssigned
   return (
     <ScrollView>
-      <ListAssignedItemsE />
+      {/* <ListAssignedItemsE /> */}
       <ListOrders
         orders={hasOrderList ? preOrders : orders}
         collectionSearch={{

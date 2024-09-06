@@ -15,7 +15,7 @@ const useMyNav = () => {
   }) => {
     if (Array.isArray(ids) && ids.length > 0) {
       //@ts-ignore
-      navigate('StackItems', {
+      navigate('StackMyItems', {
         screen: 'ScreenItems',
         params: {
           ids
@@ -24,7 +24,7 @@ const useMyNav = () => {
     }
     if (screenEdit && id) {
       //@ts-ignore
-      navigate('StackItems', {
+      navigate('StackMyItems', {
         screen: 'ScreenItemEdit',
         params: {
           id
@@ -35,13 +35,13 @@ const useMyNav = () => {
 
     if (screenNew) {
       //@ts-ignore
-      navigate('StackItems', {
+      navigate('StackMyItems', {
         screen: 'ScreenItemNew'
       })
       return
     } else if (id) {
       //@ts-ignore
-      navigate('StackItems', {
+      navigate('StackMyItems', {
         screen: 'ScreenItemsDetails',
         params: {
           id
