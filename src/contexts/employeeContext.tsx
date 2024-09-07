@@ -169,7 +169,7 @@ export const EmployeeContextProvider = ({ children }) => {
   //* You can view all items if you are an admin, owner or have the permission to view all items
   //* otherwise you can only view the items assigned to your sections
   const canViewAllItems =
-    isAdmin || isOwner || !!employee?.permissions?.items.canViewAllItems
+    isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
 
   useEffect(() => {
     if (canViewAllItems) {
