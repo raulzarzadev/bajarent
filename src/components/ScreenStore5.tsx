@@ -64,16 +64,21 @@ const ScreenStore = (props) => {
             {
               title: 'Cuentas',
               content: (
-                <View
-                  style={{
-                    maxWidth: 800,
-                    margin: 'auto',
-                    marginTop: 16,
-                    width: '100%'
-                  }}
-                >
-                  <StoreCounts />
+                <View>
+                  <Text style={gStyles.h3}>
+                    Esta vista no esta disponible por ahora!{' '}
+                  </Text>
                 </View>
+                // <View
+                //   style={{
+                //     maxWidth: 800,
+                //     margin: 'auto',
+                //     marginTop: 16,
+                //     width: '100%'
+                //   }}
+                // >
+                //   <StoreCounts />
+                // </View>
               ),
               show: canViewCashbox
             },
@@ -104,7 +109,14 @@ const ScreenStore = (props) => {
             },
             {
               title: 'Mapa',
-              content: <StoreTabMap />,
+              content: (
+                <View>
+                  <Text style={gStyles.h3}>
+                    Esta vista no esta disponible por ahora!
+                  </Text>
+                  {/* <StoreTabMap /> */}
+                </View>
+              ),
               show: canManageItems
             }
           ]}
@@ -115,7 +127,12 @@ const ScreenStore = (props) => {
 }
 
 const TabMovements = () => {
-  return <ListMovements />
+  return (
+    <View>
+      <Text style={gStyles.h3}>Esta vista no esta disponible por ahora! </Text>
+      {/* <ListMovements /> */}
+    </View>
+  )
 }
 
 const StoreNumbersRow = () => {
@@ -194,15 +211,16 @@ const StoreNumbersRow = () => {
 
 const TabClients = () => {
   const { storeId } = useStore()
-  const [clients, setClients] = useState([])
-  useEffect(() => {
-    ServiceStoreClients.getAll(storeId).then((res) => {
-      setClients(res)
-    })
-  }, [])
+  // const [clients, setClients] = useState([])
+  // useEffect(() => {
+  //   ServiceStoreClients.getAll(storeId).then((res) => {
+  //     setClients(res)
+  //   })
+  // }, [])
   return (
     <View>
-      <ListClients clients={clients} />
+      <Text style={gStyles.h3}>Esta vista no esta disponible por ahora! </Text>
+      {/* <ListClients clients={clients} /> */}
     </View>
   )
 }
