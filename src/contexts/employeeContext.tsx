@@ -44,6 +44,7 @@ export type EmployeeContextType = {
     canDeleteExtension?: boolean
     canCreateItems?: boolean
     shouldChooseExactItem?: boolean
+    canViewAllItems?: boolean
   }
   items: Partial<ItemType>[]
 }
@@ -165,8 +166,13 @@ export const EmployeeContextProvider = ({ children }) => {
   const canManageItems =
     isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
 
+  //* You can view all items if you are an admin, owner or have the permission to view all items
+  //* otherwise you can only view the items assigned to your sections
+  const canViewAllItems =
+    isAdmin || isOwner || !!employee?.permissions?.items.canViewAllItems
+
   useEffect(() => {
-    if (isOwner || isAdmin) {
+    if (canViewAllItems) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: 'all',
@@ -174,10 +180,10 @@ export const EmployeeContextProvider = ({ children }) => {
           setItems(formatItems(items, categories, storeSections))
         }
       })
-    } else if (isEmployee) {
+    } else {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
-        userSections: employee?.sectionsAssigned || [],
+        userSections: assignedSections,
         cb: (items) => {
           setItems(formatItems(items, categories, storeSections))
         }
@@ -226,7 +232,8 @@ export const EmployeeContextProvider = ({ children }) => {
         canCreateItems:
           !!employee?.permissions?.items?.canCreate || isAdmin || isOwner,
         shouldChooseExactItem:
-          employee?.permissions?.order?.shouldChooseExactItem
+          employee?.permissions?.order?.shouldChooseExactItem,
+        canViewAllItems
       }
     }),
     [employee, isAdmin, isOwner, store, assignedSections, items]
