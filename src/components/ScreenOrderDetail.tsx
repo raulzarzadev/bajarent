@@ -1,11 +1,7 @@
 import { View, ScrollView } from 'react-native'
 import OrderDetails from './OrderDetails'
 import ErrorBoundary from './ErrorBoundary'
-import {
-  OrderContext,
-  OrderProvider,
-  useOrderDetails
-} from '../contexts/orderContext'
+import { OrderProvider, useOrderDetails } from '../contexts/orderContext'
 import Loading from './Loading'
 
 const ScreenOrderDetail = () => {
