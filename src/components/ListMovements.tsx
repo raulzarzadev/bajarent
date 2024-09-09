@@ -5,11 +5,12 @@ import { LoadingList } from './List'
 // import { useStore } from '../contexts/storeContext'
 import { FormattedComment } from '../types/CommentType'
 //import { useOrdersCtx } from '../contexts/ordersContext'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
 import Loading from './Loading'
 import theme from '../theme'
+import DisabledView from './DisabledView'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
@@ -35,6 +36,12 @@ const ListMovements = () => {
   useEffect(() => {
     handleChangeDate(date)
   }, [])
+
+  return (
+    <View>
+      <DisabledView />
+    </View>
+  )
 
   //console.log({ data })
 

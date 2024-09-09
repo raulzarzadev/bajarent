@@ -27,6 +27,7 @@ import HeaderDate from './HeaderDate'
 import DateCounts from './DateCounts'
 import StoreCounts from './StoreCounts'
 import StoreTabMap from './StoreTabMap'
+import DisabledView from './DisabledView'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -65,9 +66,7 @@ const ScreenStore = (props) => {
               title: 'Cuentas',
               content: (
                 <View>
-                  <Text style={gStyles.h3}>
-                    Esta vista no esta disponible por ahora!{' '}
-                  </Text>
+                  <DisabledView />
                 </View>
                 // <View
                 //   style={{
@@ -111,9 +110,7 @@ const ScreenStore = (props) => {
               title: 'Mapa',
               content: (
                 <View>
-                  <Text style={gStyles.h3}>
-                    Esta vista no esta disponible por ahora!
-                  </Text>
+                  <DisabledView />
                   {/* <StoreTabMap /> */}
                 </View>
               ),
@@ -218,7 +215,7 @@ const TabClients = () => {
   // }, [])
   return (
     <View>
-      <Text style={gStyles.h3}>Esta vista no esta disponible por ahora! </Text>
+      <DisabledView />
       {/* <ListClients clients={clients} /> */}
     </View>
   )
