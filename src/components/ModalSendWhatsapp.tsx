@@ -37,7 +37,24 @@ export default function ModalSendWhatsapp({
   const { store } = useStore()
   const item = order?.items?.[0]
   const FEE_PER_DAY = 100
-
+  const getLateFee = ({
+    expireDate,
+    feePerDay = 100
+  }: {
+    expireDate: Date
+    feePerDay: number
+  }): { days: number; amount: number } => {
+    const expireAt = asDate(expireDate)
+    const today = new Date()
+    const days = Math.ceil(
+      (today.getTime() - expireAt?.getTime()) / (1000 * 3600 * 24)
+    )
+    // const amount = order?.items?.[0]?.priceSelected?.amount || 0
+    return {
+      days,
+      amount: feePerDay * days
+    }
+  }
   //*********  MEMES
   const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
   const ORDER_TYPE = `Su servicio📄 de ${
@@ -77,15 +94,31 @@ export default function ModalSendWhatsapp({
     ? `🕒 Horario de atención: ${store?.schedule || ''}`
     : ''
   //******** MESSAGES
+  const fee = getLateFee({
+    expireDate: asDate(order?.expireAt),
+    feePerDay: FEE_PER_DAY
+  })
+
+  // const FEE_ADVERT = `\n\nRecargos: $${FEE_PER_DAY}mxn x día de retraso 📆 \n${
+  //   fee.amount > 0
+  //     ? `Presenta un adeudo de *$${fee.amount} de recargos por ${fee.days}  de retraso en su renovación*`
+  //     : ''
+  // }`
+  //Su DEUDA hasta hoy por 9 días vencido es de $900 ($100 x 9 días)
+
+  const FEE_ADVERT =
+    fee?.amount > 0
+      ? `\n\n*Su DEUDA hasta hoy por ${fee?.days} días vencidos es de $${fee?.amount}  ($${FEE_PER_DAY} x ${fee.days} días)*`
+      : `\n\nRENOVAR o ENTREGAR a tiempo, evitara multas y recargos de *$${FEE_PER_DAY}mxn x día* `
 
   const expireDateString = (order) => {
     const date = asDate(order?.expireAt)
 
     if (isToday(date)) {
-      return '*VENCE HOY* 😔.'
+      return `*VENCE HOY* 😔. ${FEE_ADVERT}`
     }
     if (isTomorrow(date)) {
-      return '*VENCE MAÑANA* 😔.'
+      return `*VENCE MAÑANA* 😔. ${FEE_ADVERT}`
     }
     if (isAfterTomorrow(date)) {
       return `VENCE EL ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
@@ -96,44 +129,15 @@ export default function ModalSendWhatsapp({
     // "X" dias de atraso y un adeudo de (X dias x $100)
 
     if (isBeforeYesterday(date)) {
-      const fee = getLateFee({
-        expireDate: date,
-        feePerDay: FEE_PER_DAY
-      })
-
       return `VENCIÓ el ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
         date
-      )}) \n\n*Tiene un adeudo de: $${fee.amount} (${
-        fee.days
-      } días x $${FEE_PER_DAY})*`
+      )}) ${FEE_ADVERT}`
     }
     return ''
   }
 
-  const getLateFee = ({
-    expireDate,
-    feePerDay = 100
-  }: {
-    expireDate: Date
-    feePerDay: number
-  }): { days: number; amount: number } => {
-    const expireAt = asDate(expireDate)
-    const today = new Date()
-    const days = Math.ceil(
-      (today.getTime() - expireAt.getTime()) / (1000 * 3600 * 24)
-    )
-    // const amount = order?.items?.[0]?.priceSelected?.amount || 0
-    return {
-      days,
-      amount: feePerDay * days
-    }
-  }
-
-  const EXPIRE_FEE_AMOUNT = `$$ Presenta `
-  // \n*Para renovar*
-
   const RENT_EXPIRE_DATE = `${WELCOME}
-  \n${ORDER_TYPE}  ${expireDateString(order)}.
+  \n${ORDER_TYPE}  ${expireDateString(order)}
   \n${BANK_INFO}
   \nEnviar su comprobante al Whatsapp  ${
     store?.mobile
@@ -147,6 +151,7 @@ export default function ModalSendWhatsapp({
   const RENT_RECEIPT = `${WELCOME}
   \n${ORDER_TYPE}
   \n${RENT_PERIOD}
+  \n${FEE_ADVERT}
   \n${PAYMENTS}
   \n${CONTACTS}
   \n${ADDRESS}`
