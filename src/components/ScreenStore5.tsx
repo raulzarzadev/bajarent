@@ -129,8 +129,7 @@ const ScreenStore = (props) => {
 const TabMovements = () => {
   return (
     <View>
-      <Text style={gStyles.h3}>Esta vista no esta disponible por ahora! </Text>
-      {/* <ListMovements /> */}
+      <ListMovements />
     </View>
   )
 }
