@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { LoadingList } from './List'
-import { ServiceComments } from '../firebase/ServiceComments'
+//import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { FormattedComment } from '../types/CommentType'
-import { useOrdersCtx } from '../contexts/ordersContext'
+//import { useOrdersCtx } from '../contexts/ordersContext'
 import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
@@ -13,8 +13,8 @@ import theme from '../theme'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
-  const { storeId } = useAuth()
-  const { payments, staff } = useStore()
+  //const { storeId } = useAuth()
+  //const { payments, staff } = useStore()
   const [loading, setLoading] = React.useState(false)
   // const {
   //   consolidatedOrders: { orders }
