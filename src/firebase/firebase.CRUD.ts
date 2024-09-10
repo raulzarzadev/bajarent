@@ -455,6 +455,7 @@ export class FirebaseCRUD {
     const res: any[] = []
     const q: Query<DocumentData> = query(collectionRef, ...filters)
     let querySnapshot: QuerySnapshot<DocumentData, DocumentData>
+    console.log('fromCacheRef', ops?.fromCache)
     if (ops?.fromCache) {
       querySnapshot = await getDocsFromCache(q)
     } else {
@@ -469,7 +470,7 @@ export class FirebaseCRUD {
     this.showDataSource(
       querySnapshot.metadata.fromCache,
       this.collectionName,
-      'getItems'
+      'getRefItems'
     )
     querySnapshot.forEach((doc) => {
       res.push(doc)
@@ -493,8 +494,15 @@ export class FirebaseCRUD {
   ) {
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
-    const querySnapshot = await getDocs(queryRef)
+
+    let querySnapshot
+    if (ops.fromCache) {
+      querySnapshot = await getDocsFromCache(queryRef)
+    } else {
+      querySnapshot = await getDocs(queryRef)
+    }
     if (ops?.justRefs) return querySnapshot?.docs?.map((doc) => doc?.ref)
+
     const res: any[] = []
     this.showDataSource(
       querySnapshot.metadata.fromCache,

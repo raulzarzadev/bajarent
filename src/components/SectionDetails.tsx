@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SectionType } from '../types/SectionType'
 
 import { useStore } from '../contexts/storeContext'
@@ -21,6 +21,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   const {
     permissions: { canEditStaff }
   } = useEmployee()
+
   const handleRemoveStaff = (staffId: string) => {
     ServiceSections.removeStaff(section?.id, staffId)
       .then((res) => console.log(res))
@@ -30,6 +31,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   const staffSection = section?.staff?.map((staffId) =>
     staff?.find((s) => s?.id === staffId)
   )
+
   const canEditSection = canEditStaff
 
   return (

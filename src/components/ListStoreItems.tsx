@@ -1,7 +1,6 @@
 import { View, Text, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ListE } from './List'
-import StoreType from '../types/StoreType'
 import ItemType from '../types/ItemType'
 import ListRow, { ListRowField } from './ListRow'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -23,7 +22,6 @@ import { ItemFixDetails } from './ItemDetails'
 import { useAuth } from '../contexts/authContext'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
-import SelectStoreSection from './SelectStoreSection'
 import InputAssignSection from './InputAssingSection'
 import { SectionType } from '../types/SectionType'
 import { gStyles } from '../styles'
@@ -86,50 +84,64 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    fetchItems()
+    fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
-  const fetchItems = async () => {
+  const fetchItems = async (props?: { fromCache?: boolean }) => {
+    const { fromCache } = props || {}
     if (Array.isArray(listItems) && listItems.length > 0) {
-      ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
+      ServiceStoreItems.getList(
+        { storeId, ids: listItems },
+        { fromCache }
+      ).then((res) => {
         setItems(res)
       })
       return
     }
     if (allItems) {
-      ServiceStoreItems.getAll({ storeId }).then((res) => {
+      ServiceStoreItems.getAll({ storeId }, { fromCache }).then((res) => {
         setItems(res)
       })
       return
     }
 
     if (allItemsSections?.length) {
-      ServiceStoreItems.getAll({
-        storeId,
-        sections: allItemsSections
-      }).then((res) => {
+      ServiceStoreItems.getAll(
+        {
+          storeId,
+          sections: allItemsSections
+        },
+        { fromCache }
+      ).then((res) => {
         setItems(res)
       })
       return
     }
     if (availableItemsSections?.length) {
-      ServiceStoreItems.getAvailable({
-        storeId,
-        sections: availableItemsSections
-      }).then((res) => {
+      ServiceStoreItems.getAvailable(
+        {
+          storeId,
+          sections: availableItemsSections
+        },
+        { fromCache }
+      ).then((res) => {
         setItems(res)
       })
       return
     }
     if (getAllAvailable) {
-      ServiceStoreItems.getAvailable({ storeId }).then((res) => {
+      ServiceStoreItems.getAvailable({ storeId }, { fromCache }).then((res) => {
         setItems(res)
       })
     }
   }
+
+  useEffect(() => {
+    fetchItems({ fromCache: true })
+  }, [allItemsSections])
 
   const handleAddInventoryEntry = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
@@ -141,13 +153,13 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    fetchItems()
+    fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }
   useEffect(() => {
     if (storeId) {
-      fetchItems()
+      fetchItems({ fromCache: true })
     }
   }, [storeId])
 
@@ -179,7 +191,7 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    fetchItems()
+    fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }

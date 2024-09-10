@@ -29,6 +29,7 @@ import StoreCounts from './StoreCounts'
 import StoreTabMap from './StoreTabMap'
 import StoreWorkshop from './StoreWorkshop'
 import DisabledView from './DisabledView'
+import TabStoreSections from './TabStoreSections'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -59,17 +60,18 @@ const ScreenStore = (props) => {
               show: true,
               icon: 'info'
             },
-            {
-              title: 'Taller',
-              content: <StoreWorkshop />,
-              show: true,
-              icon: 'tools'
-            },
+
             {
               title: 'Caja',
               content: <TabCashbox />,
               show: canViewCashbox,
               icon: 'cashbox'
+            },
+            {
+              title: 'Areas',
+              content: <TabStoreSections />,
+              show: true,
+              icon: 'windows'
             },
             {
               title: 'Cuentas',

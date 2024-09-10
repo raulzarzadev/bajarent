@@ -11,6 +11,7 @@ export type Tab = {
   show?: boolean
   icon?: IconName
 }
+export type TabType = Tab
 
 export type TabsProps = {
   tabs: Tab[]

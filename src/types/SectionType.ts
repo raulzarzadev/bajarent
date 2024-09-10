@@ -1,3 +1,4 @@
+import { IconName } from '../components/Icon'
 import BaseType from './BaseType'
 
 export type SectionBase = {
@@ -5,6 +6,7 @@ export type SectionBase = {
   description?: string
   storeId: string
   staff: string[]
+  icon?: IconName
 }
 
 export type SectionType = BaseType & SectionBase
