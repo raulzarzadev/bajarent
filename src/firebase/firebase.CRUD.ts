@@ -496,7 +496,7 @@ export class FirebaseCRUD {
     const queryRef = query(ref, ...filters)
 
     let querySnapshot
-    if (ops.fromCache) {
+    if (ops?.fromCache) {
       querySnapshot = await getDocsFromCache(queryRef)
     } else {
       querySnapshot = await getDocs(queryRef)
