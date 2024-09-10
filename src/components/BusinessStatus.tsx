@@ -448,7 +448,7 @@ export type ExpandibleListProps<T> = {
   onPressRow: (id: string) => void
   onPressTitle?: () => void
   defaultExpanded?: boolean
-  renderItem?: (item: T) => ReactNode
+  renderItem?: (item) => ReactNode
 }
 export const ExpandibleList = <T extends BasicExpandibleItemType>({
   label,
