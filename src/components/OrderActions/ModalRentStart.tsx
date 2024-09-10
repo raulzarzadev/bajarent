@@ -29,12 +29,12 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     return
   }
   const VALIDATE_ITEMS_QTY =
-    store.orderFields?.[order_type.RENT]?.validateItemsQty
+    store?.orderFields?.[order_type.RENT]?.validateItemsQty
   const ITEMS_MAX_BY_ORDER = parseInt(
-    store.orderFields?.[order_type.RENT]?.itemsMax || '0'
+    store?.orderFields?.[order_type.RENT]?.itemsMax || '0'
   )
   const ITEMS_MIN_BY_ORDER = parseInt(
-    store.orderFields?.[order_type.RENT]?.itemsMin || '0'
+    store?.orderFields?.[order_type.RENT]?.itemsMin || '0'
   )
 
   const itemsCount = order?.items?.length || 0

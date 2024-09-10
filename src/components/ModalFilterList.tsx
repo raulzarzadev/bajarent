@@ -25,6 +25,7 @@ export type FilterListType<T> = {
   icon?: IconName
   color?: string
   titleColor?: string
+  booleanValue?: boolean
 }
 
 export type ModalFilterOrdersProps<T> = {
@@ -92,18 +93,6 @@ function ModalFilterList<T>({
     return filtersBy.some((a) => a.field === field && a.value === value)
   }
 
-  let timerId = null
-
-  // const handleDebounceSearch = (e: string) => {
-  //   if (timerId) {
-  //     clearTimeout(timerId)
-  //   }
-
-  //   timerId = setTimeout(() => {
-  //     search(e)
-  //   }, 1000)
-  // }
-
   const createFieldFilters = (
     field: string,
     isBoolean?: boolean
@@ -113,11 +102,6 @@ function ModalFilterList<T>({
       if (isBoolean) {
         currField = currField ? 'true' : 'false'
       }
-
-      // if (isDate) {
-      //   setFieldDates((filedDates) => [...filedDates, currField])
-      //   return acc
-      // }
 
       //* Avoid invalid fields
       if (!currField || currField === 'undefined') return acc
@@ -278,38 +262,46 @@ function ModalFilterList<T>({
         )}
       </View>
 
-      {/*//* BOOLEAN FILTERS OUT SIDE OF MODAL */}
-      <View style={{ flexDirection: 'row' }}>
+      {/*//************* CHIP BOOLEAN FILTERS OUT SIDE OF MODAL ***********/}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
         {filters
           ?.filter((f) => f.boolean)
-          ?.map(({ field, label, icon, color, titleColor }, i) => {
-            const count = filteredData.filter((a) => a[field]).length
-            if (!count) return null
-            return (
-              <Chip
-                key={i}
-                icon={icon}
-                size="xs"
-                color={color}
-                iconColor={titleColor}
-                titleColor={titleColor}
-                disabled={count === 0}
-                title={`${count > 0 ? count : ''}`}
-                aria-label={label}
-                onPress={() => {
-                  filterBy(field as string, true)
-                }}
-                style={{
-                  margin: 4,
-                  borderWidth: 4,
-                  borderColor: isFilterSelected(field, 'true')
-                    ? theme.black
-                    : 'transparent'
-                  // backgroundColor:
-                }}
-              />
-            )
-          })}
+          ?.map(
+            (
+              { field, label, icon, color, titleColor, booleanValue = true },
+              i
+            ) => {
+              const count = filteredData.filter(
+                (a) => a[field] === booleanValue
+              ).length
+              if (!count) return null
+              return (
+                <Chip
+                  key={i}
+                  icon={icon}
+                  size="xs"
+                  color={color}
+                  iconColor={titleColor}
+                  titleColor={titleColor}
+                  disabled={count === 0}
+                  title={`${count > 0 ? count : ''}`}
+                  aria-label={label}
+                  onPress={() => {
+                    filterBy(field as string, booleanValue)
+                  }}
+                  style={{
+                    margin: 4,
+                    borderWidth: 4,
+                    borderColor: isFilterSelected(field, 'true')
+                      ? theme.black
+                      : 'transparent'
+                    // backgroundColor:
+                  }}
+                />
+              )
+            }
+          )}
       </View>
       <View
         style={{

@@ -28,6 +28,7 @@ import DateCounts from './DateCounts'
 import StoreCounts from './StoreCounts'
 import StoreTabMap from './StoreTabMap'
 import StoreWorkshop from './StoreWorkshop'
+import DisabledView from './DisabledView'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -73,16 +74,19 @@ const ScreenStore = (props) => {
             {
               title: 'Cuentas',
               content: (
-                <View
-                  style={{
-                    maxWidth: 800,
-                    margin: 'auto',
-                    marginTop: 16,
-                    width: '100%'
-                  }}
-                >
-                  <StoreCounts />
+                <View>
+                  <DisabledView />
                 </View>
+                // <View
+                //   style={{
+                //     maxWidth: 800,
+                //     margin: 'auto',
+                //     marginTop: 16,
+                //     width: '100%'
+                //   }}
+                // >
+                //   <StoreCounts />
+                // </View>
               ),
               show: canViewCashbox
             },
@@ -113,7 +117,12 @@ const ScreenStore = (props) => {
             },
             {
               title: 'Mapa',
-              content: <StoreTabMap />,
+              content: (
+                <View>
+                  <DisabledView />
+                  {/* <StoreTabMap /> */}
+                </View>
+              ),
               show: canManageItems
             }
           ]}
@@ -124,7 +133,11 @@ const ScreenStore = (props) => {
 }
 
 const TabMovements = () => {
-  return <ListMovements />
+  return (
+    <View>
+      <ListMovements />
+    </View>
+  )
 }
 
 const StoreNumbersRow = () => {
@@ -203,15 +216,16 @@ const StoreNumbersRow = () => {
 
 const TabClients = () => {
   const { storeId } = useStore()
-  const [clients, setClients] = useState([])
-  useEffect(() => {
-    ServiceStoreClients.getAll(storeId).then((res) => {
-      setClients(res)
-    })
-  }, [])
+  // const [clients, setClients] = useState([])
+  // useEffect(() => {
+  //   ServiceStoreClients.getAll(storeId).then((res) => {
+  //     setClients(res)
+  //   })
+  // }, [])
   return (
     <View>
-      <ListClients clients={clients} />
+      <DisabledView />
+      {/* <ListClients clients={clients} /> */}
     </View>
   )
 }

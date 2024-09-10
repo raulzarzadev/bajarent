@@ -17,7 +17,6 @@ import asDate, {
   isAfterTomorrow,
   isBeforeYesterday
 } from '../libs/utils-date'
-import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useStore } from '../contexts/storeContext'
 import InputRadios from './InputRadios'
 import { translateTime } from '../libs/expireDate'
@@ -25,7 +24,6 @@ import SpanCopy from './SpanCopy'
 import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
-
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
   justIcon = false,
@@ -38,6 +36,25 @@ export default function ModalSendWhatsapp({
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
   const item = order?.items?.[0]
+  const FEE_PER_DAY = 100
+  const getLateFee = ({
+    expireDate,
+    feePerDay = 100
+  }: {
+    expireDate: Date
+    feePerDay: number
+  }): { days: number; amount: number } => {
+    const expireAt = asDate(expireDate)
+    const today = new Date()
+    const days = Math.ceil(
+      (today.getTime() - expireAt?.getTime()) / (1000 * 3600 * 24)
+    )
+    // const amount = order?.items?.[0]?.priceSelected?.amount || 0
+    return {
+      days,
+      amount: feePerDay * days
+    }
+  }
   //*********  MEMES
   const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
   const ORDER_TYPE = `Su servicio📄 de ${
@@ -77,32 +94,50 @@ export default function ModalSendWhatsapp({
     ? `🕒 Horario de atención: ${store?.schedule || ''}`
     : ''
   //******** MESSAGES
+  const fee = getLateFee({
+    expireDate: asDate(order?.expireAt),
+    feePerDay: FEE_PER_DAY
+  })
+
+  // const FEE_ADVERT = `\n\nRecargos: $${FEE_PER_DAY}mxn x día de retraso 📆 \n${
+  //   fee.amount > 0
+  //     ? `Presenta un adeudo de *$${fee.amount} de recargos por ${fee.days}  de retraso en su renovación*`
+  //     : ''
+  // }`
+  //Su DEUDA hasta hoy por 9 días vencido es de $900 ($100 x 9 días)
+
+  const FEE_ADVERT =
+    fee?.amount > 0
+      ? `\n\n*Su DEUDA hasta hoy por ${fee?.days} días vencidos es de $${fee?.amount}  ($${FEE_PER_DAY} x ${fee.days} días)*`
+      : `\n\nRENOVAR o ENTREGAR a tiempo, evitara multas y recargos de *$${FEE_PER_DAY}mxn x día* `
 
   const expireDateString = (order) => {
     const date = asDate(order?.expireAt)
 
     if (isToday(date)) {
-      return '*VENCE HOY* 😔.'
+      return `*VENCE HOY* 😔. ${FEE_ADVERT}`
     }
     if (isTomorrow(date)) {
-      return '*VENCE MAÑANA* 😔.'
+      return `*VENCE MAÑANA* 😔. ${FEE_ADVERT}`
     }
     if (isAfterTomorrow(date)) {
       return `VENCE EL ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
         date
       )})`
     }
+    // Su servicio📄 de RENTA de Lavadora: 1706 tiene
+    // "X" dias de atraso y un adeudo de (X dias x $100)
+
     if (isBeforeYesterday(date)) {
       return `VENCIÓ el ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
         date
-      )})`
+      )}) ${FEE_ADVERT}`
     }
     return ''
   }
 
   const RENT_EXPIRE_DATE = `${WELCOME}
-  \n${ORDER_TYPE}  ${expireDateString(order)}.
-  \n*Para renovar*
+  \n${ORDER_TYPE}  ${expireDateString(order)}
   \n${BANK_INFO}
   \nEnviar su comprobante al Whatsapp  ${
     store?.mobile
@@ -116,6 +151,7 @@ export default function ModalSendWhatsapp({
   const RENT_RECEIPT = `${WELCOME}
   \n${ORDER_TYPE}
   \n${RENT_PERIOD}
+  \n${FEE_ADVERT}
   \n${PAYMENTS}
   \n${CONTACTS}
   \n${ADDRESS}`
@@ -170,6 +206,7 @@ export default function ModalSendWhatsapp({
     | 'rent-quality-survey'
     | 'store-info'
     | 'hello'
+    | 'google-maps-comment'
 
   const CLIENT_NOT_FOUND = `${WELCOME}
   \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
@@ -196,6 +233,12 @@ export default function ModalSendWhatsapp({
   const QUALITY_SURVEY = `${WELCOME}
   \nAyudanos a mejorar el servicio con esta breve encuesta.
   \nhttps://forms.gle/1kBa9yeZyP9rc6YeA
+  \n${AGRADECIMIENTOS}
+  \n${CONTACTS}
+  `
+  const GOOGLE_MAPS_COMMENT = `${WELCOME}
+  \n¿Te gusto el servicio? Dejanos un comentario en Google Maps
+  \nhttps://www.google.com/maps/place/Lavarenta/@24.1505656,-110.3167882,21z/data=!4m11!1m2!2m1!1slavarneta+bcs!3m7!1s0x86afd345060536b7:0xdc0f005597766de0!8m2!3d24.1506412!4d-110.3166235!9m1!1b1!16s%2Fg%2F11b6bgc0l8?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
   `
@@ -240,6 +283,10 @@ export default function ModalSendWhatsapp({
     {
       type: 'hello',
       content: ` `
+    },
+    {
+      type: 'google-maps-comment',
+      content: GOOGLE_MAPS_COMMENT
     }
   ]
 
@@ -254,7 +301,8 @@ export default function ModalSendWhatsapp({
       { label: 'Recibo', value: 'receipt-rent' },
       { label: 'No encontrado', value: 'not-found' },
       { label: 'Encuesta', value: 'rent-quality-survey' },
-      { label: 'Información', value: 'store-info' }
+      { label: 'Información', value: 'store-info' },
+      { label: 'Google Maps', value: 'google-maps-comment' }
     ]
   }
   if (order?.type === order_type.REPAIR) {

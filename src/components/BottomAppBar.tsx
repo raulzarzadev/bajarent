@@ -11,6 +11,7 @@ import ScreenNewOrder from './ScreenOrderNew'
 import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
+import StackMyItems from './StackMyItems'
 
 const Tab = createBottomTabNavigator()
 
@@ -36,7 +37,8 @@ const BottomAppBar = () => {
               Components: 'components',
               MyOrders: 'myOrders',
               StackOrders: 'orders',
-              StackConsolidated: 'orders'
+              StackConsolidated: 'orders',
+              StackMyItems: 'washMachine'
             }
             return (
               <Icon
@@ -78,6 +80,16 @@ const BottomAppBar = () => {
           // tabBarButton:
           //   !canSeeOrders || !isAuthenticated ? () => null : undefined
         })}
+      />
+
+      <Tab.Screen
+        name="StackMyItems"
+        options={{
+          title: 'Artículos',
+          headerShown: false
+          // tabBarButton: () => null
+        }}
+        component={StackMyItems}
       />
 
       <Tab.Screen

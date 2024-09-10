@@ -2,11 +2,7 @@ import BaseType from './BaseType'
 import { CategoryType } from './RentItem'
 
 export enum ItemStatuses {
-  // available = 'available',
   rented = 'rented',
-  //maintenance = 'maintenance',
-  //sold = 'sold',
-  //stock = 'stock',
   pickedUp = 'pickedUp',
   retired = 'retired'
 }

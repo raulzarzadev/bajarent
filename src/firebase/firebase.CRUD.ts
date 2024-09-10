@@ -14,6 +14,7 @@ import {
   deleteDoc,
   doc,
   DocumentData,
+  DocumentSnapshot,
   getDoc,
   getDocFromCache,
   getDocFromServer,
@@ -31,6 +32,7 @@ import {
   where,
   writeBatch
 } from 'firebase/firestore'
+import { dateFormat } from '../libs/utils-date'
 
 export type GetItemsOps = {
   justRefs?: boolean
@@ -248,6 +250,7 @@ export class FirebaseCRUD {
     } catch (error) {
       docSnap = await getDocFromServer(ref)
     }
+    //this.showSnapshot(docSnap)
     this.showDataSource(
       docSnap.metadata.fromCache,
       this.collectionName,
@@ -270,6 +273,8 @@ export class FirebaseCRUD {
     } else {
       querySnapshot = await getDocs(q)
     }
+
+    this.showSnapshot(querySnapshot)
     this.showDataSource(
       querySnapshot.metadata.fromCache,
       this.collectionName,
@@ -348,6 +353,7 @@ export class FirebaseCRUD {
     const q = doc(this.db, this.collectionName, itemId)
 
     onSnapshot(q, (snapshotDoc) => {
+      this.showSnapshot(snapshotDoc)
       this.showDataSource(
         snapshotDoc.metadata.fromCache,
         this.collectionName,
@@ -373,6 +379,7 @@ export class FirebaseCRUD {
         this.collectionName,
         'listenItems'
       )
+      this.showSnapshot(querySnapshot)
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
       })
@@ -382,6 +389,7 @@ export class FirebaseCRUD {
 
   async listenUserItems(filters: QueryConstraint[] = [], cb: CallableFunction) {
     const userId = getAuth().currentUser?.uid
+
     this.listenItems([where('userId', '==', userId), ...filters], cb)
   }
 
@@ -452,15 +460,12 @@ export class FirebaseCRUD {
     } else {
       querySnapshot = await getDocs(q)
     }
-    this.showDataSource(
-      querySnapshot.metadata.fromCache,
-      this.collectionName,
-      'getItemsByRef'
-    )
+
     if (ops?.justRefs) {
       return querySnapshot.docs.map((doc) => doc.ref)
     }
 
+    this.showSnapshot(querySnapshot)
     this.showDataSource(
       querySnapshot.metadata.fromCache,
       this.collectionName,
@@ -496,6 +501,8 @@ export class FirebaseCRUD {
       this.collectionName,
       'getItemsInCollection'
     )
+    this.showSnapshot(querySnapshot)
+
     querySnapshot.forEach((doc) => {
       res.push(this.normalizeItem(doc))
     })
@@ -521,7 +528,7 @@ export class FirebaseCRUD {
     if (ops?.justRefs) return ref
 
     const docSnap = await getDoc(ref)
-
+    this.showSnapshot(docSnap)
     this.showDataSource(
       docSnap.metadata.fromCache,
       this.collectionName,
@@ -659,6 +666,12 @@ export class FirebaseCRUD {
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
     onSnapshot(queryRef, (querySnapshot) => {
+      this.showSnapshot(querySnapshot, subCollection)
+      this.showDataSource(
+        querySnapshot.metadata.fromCache,
+        `${this.collectionName}/${subCollection}`,
+        'listenItemsInSubCollection'
+      )
       const res: any[] = []
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
@@ -672,8 +685,65 @@ export class FirebaseCRUD {
   // -------------------------------------------------------------> Helpers
 
   showDataSource(isFromCache: any, collection: string, method: string) {
+    if (process.env.PRE_PRODUCTION !== 'true') return
     const source = isFromCache ? 'cache' : 'server'
     console.log(`${source} ${method} ${collection} `)
+  }
+  showSnapshot(
+    querySnapshot:
+      | QuerySnapshot<DocumentData, DocumentData>
+      | DocumentSnapshot<DocumentData>,
+
+    subCollection = ''
+  ) {
+    if (process.env.PRE_PRODUCTION !== 'true') return
+    let totalSize = 0
+    if (querySnapshot instanceof DocumentSnapshot) {
+      const docData = querySnapshot.data()
+      const docSize = new TextEncoder().encode(JSON.stringify(docData)).length
+      totalSize += docSize
+      console.log(
+        'document',
+        `${this.collectionName}${subCollection ? `/${subCollection}` : ''}`
+      )
+      const sizeHumanReadable = (totalSize / 1024).toFixed(2) // kb
+      console.log('Size', `${sizeHumanReadable} bytes`)
+      return
+    }
+    querySnapshot.forEach((doc) => {
+      const docData = doc.data()
+      const docSize = new TextEncoder().encode(JSON.stringify(docData)).length
+      totalSize += docSize
+    })
+    //console.log(querySnapshot.query._query.filters.map((f) => f))
+    //@ts-ignore
+    const filters = querySnapshot.query._query.filters.map((f) => {
+      const formattedDate = f?.value?.timestampValue
+        ? dateFormat(f.value.timestampValue, 'ddMMMyy', true)
+        : null
+
+      const booleanValue =
+        typeof f?.value?.booleanValue === 'boolean'
+          ? `${f.value.booleanValue}`
+          : null
+
+      const arrayValues =
+        f?.value?.arrayValue?.values?.map((v) => v?.stringValue)?.join(', ') ||
+        null
+
+      const stringValues = f?.value?.stringValue
+
+      return `${f?.field?.segments[0]} ${f?.op} ${
+        stringValues || formattedDate || booleanValue || arrayValues
+      }`
+    })
+    console.log(
+      'collection',
+      `${this.collectionName}${subCollection ? `/${subCollection}` : ''}`
+    )
+    console.log('filters', filters)
+    const sizeHumanReadable = (totalSize / 1024).toFixed(2) //
+    console.log('Size', `(${querySnapshot.size}) ${sizeHumanReadable}kb`)
   }
 
   transformAnyToDate = (date: unknown): Date | null => {
