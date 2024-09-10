@@ -67,12 +67,7 @@ const ScreenStore = (props) => {
               show: canViewCashbox,
               icon: 'cashbox'
             },
-            {
-              title: 'Areas',
-              content: <TabStoreSections />,
-              show: true,
-              icon: 'windows'
-            },
+
             {
               title: 'Cuentas',
               content: (
@@ -109,8 +104,15 @@ const ScreenStore = (props) => {
             },
             {
               title: 'Staff',
-              content: <TabAreas {...props} />,
-              show: canViewSections
+              content: <TabStaff {...props} />,
+              show: canViewSections,
+              icon: 'profile'
+            },
+            {
+              title: 'Areas',
+              content: <TabStoreSections />,
+              show: true,
+              icon: 'windows'
             },
             {
               title: 'Artículos',
@@ -340,11 +342,11 @@ const TabCashbox = () => {
   )
 }
 
-const TabAreas = (props) => {
-  const { navigate } = useNavigation()
+const TabStaff = (props) => {
+  // const { navigate } = useNavigation()
   return (
     <View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      {/* <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button
           label="Areas"
           onPress={() => {
@@ -355,7 +357,7 @@ const TabAreas = (props) => {
           disabled={false}
           icon={'components'}
         />
-      </View>
+      </View> */}
       <ScreenStaffE {...props} />
     </View>
   )
