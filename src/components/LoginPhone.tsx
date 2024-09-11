@@ -7,6 +7,7 @@ import PhoneInput from './InputPhone'
 import theme from '../theme'
 import { fbErrorToCode } from '../firebase/errors'
 import InputCode from './InputCode2'
+import ups_text from '../../Constants.ts/ups_text'
 
 const PhoneLogin = () => {
   const [phone, setPhone] = React.useState('')
@@ -45,7 +46,7 @@ const PhoneLogin = () => {
       })
       .catch((error) => {
         setError(
-          `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code} ${
+          `${ups_text} Codigo:  ${fbErrorToCode(error).code} ${
             __DEV__ ? fbErrorToCode(error).text : ''
           }`
         )
@@ -80,7 +81,7 @@ const PhoneLogin = () => {
           // Error; SMS not sent
           // ...
           setError(
-            `¡Ups! Algo no salio bien. Codigo:  ${fbErrorToCode(error).code} ${
+            `${ups_text} Codigo:  ${fbErrorToCode(error).code} ${
               __DEV__ ? fbErrorToCode(error).text : ''
             }`
           )

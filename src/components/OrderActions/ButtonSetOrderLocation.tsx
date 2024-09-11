@@ -10,6 +10,7 @@ import InputTextStyled from '../InputTextStyled'
 import { gStyles } from '../../styles'
 import InputLocation from '../InputLocation'
 import containCoordinates from '../../libs/containCoordinates'
+import ups_text from '../../../Constants.ts/ups_text'
 
 export const ButtonSetOrderLocation = () => {
   const { order } = useOrderDetails()
@@ -40,9 +41,7 @@ export const ButtonSetOrderLocation = () => {
         await ServiceOrders.update(order.id, { coords })
       } else {
         console.error(shortened_url, message)
-        setError(
-          'Ups! no se pudieron obtener las coordenadas. Intentalo mas tarde'
-        )
+        setError(`${ups_text} Intentalo mas tarde`)
         return await new Promise((resolve) => {
           setTimeout(() => {
             setError(null)

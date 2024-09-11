@@ -2,6 +2,7 @@ import { Component, ReactNode } from 'react'
 import { ServiceAppErrors } from '../firebase/ServiceAppErrors'
 import { NavigationProp } from '@react-navigation/native'
 import { Platform } from 'react-native'
+import ups_text from '../../Constants.ts/ups_text'
 interface Props {
   fallback?: ReactNode
   children?: ReactNode
@@ -80,7 +81,7 @@ class ErrorBoundary extends Component<Props, State> {
               placeContent: 'center'
             }}
           >
-            <p>¡Ups! Hubo un problema.</p>
+            <p>{ups_text}</p>
             <p>{this?.state?.componentName}</p>
             {/* <p>{this?.state?.error?.message}</p> */}
             <div>
