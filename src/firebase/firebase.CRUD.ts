@@ -250,12 +250,10 @@ export class FirebaseCRUD {
     } catch (error) {
       docSnap = await getDocFromServer(ref)
     }
-    //this.showSnapshot(docSnap)
-    this.showDataSource(
-      docSnap.metadata.fromCache,
-      this.collectionName,
-      'getItem'
-    )
+
+    //* <------ Show getting data in DEV mode
+    this.showSnapshot(docSnap)
+
     return this.normalizeItem(docSnap)
   }
 
@@ -274,12 +272,8 @@ export class FirebaseCRUD {
       querySnapshot = await getDocs(q)
     }
 
+    //* <------ Show getting data in DEV mode
     this.showSnapshot(querySnapshot)
-    this.showDataSource(
-      querySnapshot.metadata.fromCache,
-      this.collectionName,
-      'getItems'
-    )
 
     if (ops?.justRefs) {
       return querySnapshot.docs.map((doc) => doc.ref)
@@ -337,12 +331,11 @@ export class FirebaseCRUD {
 
     const querySnapshot = await getDocs(q)
     const res: any[] = []
+
+    //* <------ Show getting data in DEV mode
+    this.showSnapshot(querySnapshot)
+
     querySnapshot.forEach((doc) => {
-      this.showDataSource(
-        querySnapshot.metadata.fromCache,
-        this.collectionName,
-        'getUserItems'
-      )
       res.push(this.normalizeItem(doc))
     })
     return res
@@ -353,12 +346,9 @@ export class FirebaseCRUD {
     const q = doc(this.db, this.collectionName, itemId)
 
     onSnapshot(q, (snapshotDoc) => {
+      //* <------ Show getting data in DEV mode
       this.showSnapshot(snapshotDoc)
-      this.showDataSource(
-        snapshotDoc.metadata.fromCache,
-        this.collectionName,
-        'listenItem'
-      )
+
       cb(this.normalizeItem(snapshotDoc))
     })
   }
@@ -374,12 +364,10 @@ export class FirebaseCRUD {
     const q = query(collection(this.db, this.collectionName), ...filters)
     onSnapshot(q, (querySnapshot) => {
       const res: any[] = []
-      this.showDataSource(
-        querySnapshot.metadata.fromCache,
-        this.collectionName,
-        'listenItems'
-      )
+
+      //* <------ Show getting data in DEV mode
       this.showSnapshot(querySnapshot)
+
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
       })
@@ -466,12 +454,9 @@ export class FirebaseCRUD {
       return querySnapshot.docs.map((doc) => doc.ref)
     }
 
+    //* <------ Show getting data in DEV mode
     this.showSnapshot(querySnapshot)
-    this.showDataSource(
-      querySnapshot.metadata.fromCache,
-      this.collectionName,
-      'getRefItems'
-    )
+
     querySnapshot.forEach((doc) => {
       res.push(doc)
     })
@@ -504,11 +489,8 @@ export class FirebaseCRUD {
     if (ops?.justRefs) return querySnapshot?.docs?.map((doc) => doc?.ref)
 
     const res: any[] = []
-    this.showDataSource(
-      querySnapshot.metadata.fromCache,
-      this.collectionName,
-      'getItemsInCollection'
-    )
+
+    //* <------ Show getting data in DEV mode
     this.showSnapshot(querySnapshot)
 
     querySnapshot.forEach((doc) => {
@@ -536,12 +518,9 @@ export class FirebaseCRUD {
     if (ops?.justRefs) return ref
 
     const docSnap = await getDoc(ref)
+
+    //* <------ Show getting data in DEV mode
     this.showSnapshot(docSnap)
-    this.showDataSource(
-      docSnap.metadata.fromCache,
-      this.collectionName,
-      'getItemInCollection'
-    )
 
     return this.normalizeItem(docSnap)
   }
@@ -649,11 +628,10 @@ export class FirebaseCRUD {
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
       })
-      this.showDataSource(
-        querySnapshot.metadata.fromCache,
-        this.collectionName,
-        'listenRefItems'
-      )
+
+      //* <------ Show getting data in DEV mode
+      this.showSnapshot(querySnapshot)
+
       cb(res)
     })
   }
@@ -674,12 +652,9 @@ export class FirebaseCRUD {
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
     onSnapshot(queryRef, (querySnapshot) => {
-      this.showSnapshot(querySnapshot, subCollection)
-      this.showDataSource(
-        querySnapshot.metadata.fromCache,
-        `${this.collectionName}/${subCollection}`,
-        'listenItemsInSubCollection'
-      )
+      //* <------ Show getting data in DEV mode
+      this.showSnapshot(querySnapshot)
+
       const res: any[] = []
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
@@ -692,11 +667,12 @@ export class FirebaseCRUD {
 
   // -------------------------------------------------------------> Helpers
 
-  showDataSource(isFromCache: any, collection: string, method: string) {
-    if (process.env.PRE_PRODUCTION !== 'true') return
-    const source = isFromCache ? 'cache' : 'server'
-    console.log(`${source} ${method} ${collection} `)
-  }
+  // showDataSource(isFromCache: any, collection: string, method: string) {
+  //   return null
+  //   if (process.env.PRE_PRODUCTION !== 'true') return
+  //   const source = isFromCache ? 'cache' : 'server'
+  //   console.log(`${source} ${method} ${collection} `)
+  // }
   showSnapshot(
     querySnapshot:
       | QuerySnapshot<DocumentData, DocumentData>
@@ -706,16 +682,11 @@ export class FirebaseCRUD {
   ) {
     if (process.env.PRE_PRODUCTION !== 'true') return
     let totalSize = 0
+
     if (querySnapshot instanceof DocumentSnapshot) {
       const docData = querySnapshot.data()
       const docSize = new TextEncoder().encode(JSON.stringify(docData)).length
       totalSize += docSize
-      console.log(
-        'document',
-        `${this.collectionName}${subCollection ? `/${subCollection}` : ''}`
-      )
-      const sizeHumanReadable = (totalSize / 1024).toFixed(2) // kb
-      console.log('Size', `${sizeHumanReadable} bytes`)
       return
     }
     querySnapshot.forEach((doc) => {
@@ -745,13 +716,15 @@ export class FirebaseCRUD {
         stringValues || formattedDate || booleanValue || arrayValues
       }`
     })
-    console.log(
-      'collection',
-      `${this.collectionName}${subCollection ? `/${subCollection}` : ''}`
-    )
-    console.log('filters', filters)
-    const sizeHumanReadable = (totalSize / 1024).toFixed(2) //
-    console.log('Size', `(${querySnapshot.size}) ${sizeHumanReadable}kb`)
+    //@ts-ignore
+    const segments = querySnapshot?.query?._query?.path?.segments?.join('/')
+
+    console.log([
+      segments,
+      querySnapshot.metadata.fromCache,
+      `${(totalSize / 1024).toFixed(2)}kb`,
+      filters
+    ])
   }
 
   transformAnyToDate = (date: unknown): Date | null => {
