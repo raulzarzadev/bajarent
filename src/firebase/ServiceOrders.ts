@@ -144,11 +144,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     // Implementa tu método personalizado
   }
 
-  async getByStore(storeId: string) {
-    return await this.findMany([
-      where('storeId', '==', storeId)
-      // where('type', '==', order_type.RENT)
-    ])
+  async getByStore(storeId: string, ops?: GetItemsOps) {
+    return await this.findMany(
+      [
+        where('storeId', '==', storeId)
+        // where('type', '==', order_type.RENT)
+      ],
+      ops
+    )
   }
 
   listenUnsolved(storeId: string, cb: CallableFunction) {

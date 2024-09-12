@@ -84,10 +84,10 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       const TO_DATE = toDate || TODAY_NIGHT
 
       //* GET RENT STORE ORDERS
-      const orders: Partial<OrderType>[] = await ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.RENT)
-      ])
+      const orders: Partial<OrderType>[] = await ServiceOrders.findMany(
+        [where('storeId', '==', storeId), where('type', '==', order_type.RENT)],
+        { fromCache: true }
+      )
 
       const createdIntDate = orders.filter(
         (order) =>
@@ -114,41 +114,59 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       progress?.(10)
 
       //* GET UNSOLVED REPORTS
-      const reportsUnsolved = await ServiceComments.getReportsUnsolved(storeId)
+      const reportsUnsolved = await ServiceComments.getReportsUnsolved(
+        storeId,
+        { fromCache: true }
+      )
       progress?.(20)
       //* GET SOLVED REPORTS
-      const reportsSolvedToday = await ServiceComments.findMany([
-        where('type', '==', 'report'),
-        where('solved', '==', true),
-        where('solvedAt', '>=', FROM_DATE),
-        where('solvedAt', '<=', TO_DATE)
-      ])
+      const reportsSolvedToday = await ServiceComments.findMany(
+        [
+          where('type', '==', 'report'),
+          where('solved', '==', true),
+          where('solvedAt', '>=', FROM_DATE),
+          where('solvedAt', '<=', TO_DATE)
+        ],
+        { fromCache: true }
+      )
       progress?.(30)
 
       //* GET ALL DATE PAYMENTS
-      const { payments } = await getBalancePayments({
-        storeId,
-        fromDate: FROM_DATE,
-        toDate: TO_DATE,
-        section: [],
-        type: 'full'
-      })
+      const { payments } = await getBalancePayments(
+        {
+          storeId,
+          fromDate: FROM_DATE,
+          toDate: TO_DATE,
+          section: [],
+          type: 'full'
+        },
+        { fromCache: true }
+      )
       progress?.(40)
 
       //* GET AVAILABLE ITEMS
-      const availableItems = await ServiceStoreItems.getAvailable({ storeId })
-      const createItemsInDate = await ServiceStoreItems.getFieldBetweenDates({
-        storeId,
-        field: 'createdAt',
-        fromDate: FROM_DATE,
-        toDate: TO_DATE
-      })
-      const retiredItemsInDate = await ServiceStoreItems.getFieldBetweenDates({
-        storeId,
-        field: 'retiredAt',
-        fromDate: FROM_DATE,
-        toDate: TO_DATE
-      })
+      const availableItems = await ServiceStoreItems.getAvailable(
+        { storeId },
+        { fromCache: true }
+      )
+      const createItemsInDate = await ServiceStoreItems.getFieldBetweenDates(
+        {
+          storeId,
+          field: 'createdAt',
+          fromDate: FROM_DATE,
+          toDate: TO_DATE
+        },
+        { fromCache: true }
+      )
+      const retiredItemsInDate = await ServiceStoreItems.getFieldBetweenDates(
+        {
+          storeId,
+          field: 'retiredAt',
+          fromDate: FROM_DATE,
+          toDate: TO_DATE
+        },
+        { fromCache: true }
+      )
 
       const cancelledOrdersInDate = await ServiceOrders.getFieldBetweenDates(
         {

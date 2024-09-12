@@ -7,6 +7,7 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import asDate from './utils-date'
 import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
+import { GetItemsOps } from '../firebase/firebase.CRUD'
 
 export const balanceTotals = (balance: BalanceType) => {
   return payments_amount(balance.payments)
@@ -220,13 +221,10 @@ export const calculateSectionBalance = async ({
   }
 }
 
-export const getBalancePayments = async ({
-  section,
-  fromDate,
-  toDate,
-  type,
-  storeId
-}) => {
+export const getBalancePayments = async (
+  { section, fromDate, toDate, type, storeId },
+  ops?: GetItemsOps
+) => {
   /* ******************************************** 
  //* Is necessary get the orders from the section to define section payments           
    *******************************************rz */
@@ -234,11 +232,14 @@ export const getBalancePayments = async ({
   // //* 1.- Filter payments by date from server
   try {
     const paymentsByDate: PaymentType[] =
-      (await ServicePayments.findMany([
-        where('storeId', '==', storeId),
-        where('createdAt', '>=', fromDate),
-        where('createdAt', '<=', toDate)
-      ]).catch((e) => console.error({ e }))) || []
+      (await ServicePayments.findMany(
+        [
+          where('storeId', '==', storeId),
+          where('createdAt', '>=', fromDate),
+          where('createdAt', '<=', toDate)
+        ],
+        ops
+      ).catch((e) => console.error({ e }))) || []
     //* 2.- Find orders from payments, remove duplicates , remove nullish
     const paymentOrders = Array.from(
       new Set(paymentsByDate.map((p) => p.orderId))

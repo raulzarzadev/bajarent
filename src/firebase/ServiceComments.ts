@@ -1,6 +1,7 @@
 import { limit, orderBy, where } from 'firebase/firestore'
 import { CommentType } from '../types/CommentType'
 import { FirebaseGenericService } from './genericService'
+import { GetItemsOps } from './firebase.CRUD'
 
 type Type = CommentType
 
@@ -112,12 +113,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     )
   }
 
-  getReportsUnsolved(storeId: string) {
-    return this.findMany([
-      where('storeId', '==', storeId),
-      where('type', '==', 'report'),
-      where('solved', '==', false)
-    ])
+  getReportsUnsolved(storeId: string, ops?: GetItemsOps) {
+    return this.findMany(
+      [
+        where('storeId', '==', storeId),
+        where('type', '==', 'report'),
+        where('solved', '==', false)
+      ],
+      ops
+    )
   }
 
   getOrderUnsolvedReports(orderId) {

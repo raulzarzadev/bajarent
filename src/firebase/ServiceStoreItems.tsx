@@ -220,22 +220,28 @@ export class ServiceStoreItemsClass {
     return Promise.all(promises).then((res) => res.flat())
   }
 
-  async getFieldBetweenDates({
-    storeId,
-    field,
-    fromDate,
-    toDate
-  }: {
-    storeId: string
-    fromDate: Date
-    field: 'createdAt' | 'updatedAt' | 'retiredAt'
-    toDate: Date
-  }) {
-    return ServiceStores.getItemsInCollection({
-      parentId: storeId,
-      subCollection: SUB_COLLECTION,
-      filters: [where(field, '>=', fromDate), where(field, '<=', toDate)]
-    })
+  async getFieldBetweenDates(
+    {
+      storeId,
+      field,
+      fromDate,
+      toDate
+    }: {
+      storeId: string
+      fromDate: Date
+      field: 'createdAt' | 'updatedAt' | 'retiredAt'
+      toDate: Date
+    },
+    ops?: GetItemsOps
+  ) {
+    return ServiceStores.getItemsInCollection(
+      {
+        parentId: storeId,
+        subCollection: SUB_COLLECTION,
+        filters: [where(field, '>=', fromDate), where(field, '<=', toDate)]
+      },
+      ops
+    )
   }
 
   async customMethod() {
