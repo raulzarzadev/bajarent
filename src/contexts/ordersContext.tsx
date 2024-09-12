@@ -127,7 +127,8 @@ export const OrdersContextProvider = ({
           sections: [],
           reports: [...reports, ...important],
           getExpireTomorrow
-        }
+        },
+        { fromCache: true }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
@@ -136,12 +137,16 @@ export const OrdersContextProvider = ({
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {
       //* get orders from sections where  sectionsAssigned contains sections
-      const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
-        getBySections: true,
-        sections: employee.sectionsAssigned,
-        reports: [...reports, ...important],
-        getExpireTomorrow
-      })
+      const orders = await ServiceOrders.getUnsolvedByStore(
+        storeId,
+        {
+          getBySections: true,
+          sections: employee.sectionsAssigned,
+          reports: [...reports, ...important],
+          getExpireTomorrow
+        },
+        { fromCache: true }
+      )
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)
     } else {
@@ -152,7 +157,6 @@ export const OrdersContextProvider = ({
 
   oc++
   if (__DEV__) console.log({ oc })
-
   return (
     <OrdersContext.Provider
       value={{

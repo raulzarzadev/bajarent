@@ -723,7 +723,8 @@ export class FirebaseCRUD {
       segments,
       querySnapshot.metadata.fromCache,
       `${(totalSize / 1024).toFixed(2)}kb`,
-      filters
+      filters,
+      querySnapshot.size
     ])
   }
 

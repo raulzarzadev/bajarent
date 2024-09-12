@@ -212,7 +212,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ])
   }
 
-  getList(ids: string[], ops: { sections?: string[] } = {}): Promise<Type[]> {
+  getList(
+    ids: string[],
+    ops: GetItemsOps & { sections?: string[] } = {}
+  ): Promise<Type[]> {
     const sections = ops?.sections || []
     if (!ids || ids?.length === 0) return Promise.resolve([])
     // if(ids.length>30) return Promise.reject('Max 30 ids')
@@ -344,14 +347,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       getBySections: boolean
       reports: CommentType[]
       getExpireTomorrow?: boolean
-    }
+    },
+    ops?: GetItemsOps
   ) {
-    // const TODAY_ALL_DAY = new Date(new Date().setHours(23, 59, 59, 999))
-    // const TOMORROW_ALL_DAY = addDays(TODAY_ALL_DAY, 1)
-    // To work properly this should find in all day and tomorrow all day new Date(new Date().setHours(23, 59, 59, 999))
     const TODAY = new Date(new Date().setHours(23, 59, 59, 999))
     const TOMORROW = addDays(TODAY, 1)
-    const DAY_AFTER_TOMORROW = addDays(TODAY, 2)
 
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),
@@ -385,18 +385,18 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       filterRepairs.push(where('assignToSection', 'in', sections))
       filterExpiredRents.push(where('assignToSection', 'in', sections))
     }
-    const rentPending = await this.findMany([
-      ...filterRentPending,
-      where('storeId', '==', storeId)
-    ])
-    const expiredRents = await this.findMany([
-      ...filterExpiredRents,
-      where('storeId', '==', storeId)
-    ])
-    const repairs = await this.findMany([
-      ...filterRepairs,
-      where('storeId', '==', storeId)
-    ])
+    const rentPending = await this.findMany(
+      [...filterRentPending, where('storeId', '==', storeId)],
+      ops
+    )
+    const expiredRents = await this.findMany(
+      [...filterExpiredRents, where('storeId', '==', storeId)],
+      ops
+    )
+    const repairs = await this.findMany(
+      [...filterRepairs, where('storeId', '==', storeId)],
+      ops
+    )
     const unsolvedOrders = [...rentPending, ...repairs, ...expiredRents]
 
     //* *** 1 *** get reports and set the ids, to get reports from the database
@@ -408,7 +408,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       )
     )
     //* IF is getBySection just take the reported orders by sections
-    let reportedOrders = await this.getList(ordersWithReportsIds, { sections })
+    let reportedOrders = await this.getList(ordersWithReportsIds, {
+      sections,
+      ...(ops || {})
+    })
 
     //*  *** 2 *** remove reported orders from unsolved orders
     const removeReportedFromUnsolved = unsolvedOrders.filter(
