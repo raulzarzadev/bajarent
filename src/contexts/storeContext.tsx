@@ -84,8 +84,6 @@ const StoreContextProvider = ({ children }) => {
   const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
   const [staff, setStaff] = useState<StaffType[]>([])
-  const [payments, setPayments] = useState<PaymentType[]>([])
-  const [storeItems, setStoreItems] = useState<Partial<ItemType>[]>(undefined)
 
   const [storePrices, setStorePrices] =
     useState<Partial<PriceType>[]>(undefined)
@@ -146,8 +144,8 @@ const StoreContextProvider = ({ children }) => {
       userStores: stores,
       storeSections: sections,
       fetchPrices,
-      payments,
-      items: storeItems,
+      payments: [],
+      items: [],
       handleToggleJustActiveOrders: () => {},
       handleSetMyStaffId: () => {},
       orders: [],
@@ -164,10 +162,7 @@ const StoreContextProvider = ({ children }) => {
       storePrices,
       stores,
       sections,
-      fetchPrices,
-      payments,
-      storeItems
-      //fetchItems
+      fetchPrices
     ]
   )
   sc++
