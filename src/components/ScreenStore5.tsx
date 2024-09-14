@@ -267,7 +267,7 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
-  const [date, setDate] = useState(new Date())
+  // const [date, setDate] = useState(new Date())
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleGetLastBalanceInDate = (date: Date) => {
@@ -317,7 +317,7 @@ const TabCashbox = () => {
         debounce={400}
         label="Cuentas"
         onChangeDate={(date) => {
-          setDate(date)
+          // setDate(date)
           handleGetLastBalanceInDate(date)
         }}
         documentDate={balance?.createdAt}

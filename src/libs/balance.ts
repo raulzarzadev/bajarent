@@ -139,7 +139,6 @@ export const calculateSectionBalance = async ({
   const ordersIdsWithSolvedReports = Array.from(
     new Set(reportsUnsolved.map((r) => r.orderId))
   )
-  console.log({ reportsUnsolved })
 
   const ordersWithSolvedReports = await ServiceOrders.getList(
     ordersIdsWithSolvedReports

@@ -75,6 +75,18 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
     if (process.env.PRE_PRODUCTION) console.time('createV2')
     const { fromDate, toDate, progress } = ops || {}
 
+    // CACHE OPTIONS
+    const getFromCache = {
+      orders: false,
+      unsolvedReports: true,
+      solvedReports: true,
+      payments: false,
+      availableItems: false,
+      createdItems: true,
+      retiredItems: true,
+      cancelledOrders: true
+    }
+
     try {
       progress?.(1)
       const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))
@@ -86,7 +98,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       //* GET RENT STORE ORDERS
       const orders: Partial<OrderType>[] = await ServiceOrders.findMany(
         [where('storeId', '==', storeId), where('type', '==', order_type.RENT)],
-        { fromCache: true }
+        { fromCache: getFromCache.orders }
       )
 
       const createdIntDate = orders.filter(
@@ -94,7 +106,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
           isAfter(asDate(order.createdAt), asDate(FROM_DATE)) &&
           isBefore(asDate(order.createdAt), asDate(TO_DATE))
       )
-      console.log({ createdIntDate })
+      // console.log({ createdIntDate })
 
       //* GET ORDER EXTENSIONS IN DATES
 
@@ -116,7 +128,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
       //* GET UNSOLVED REPORTS
       const reportsUnsolved = await ServiceComments.getReportsUnsolved(
         storeId,
-        { fromCache: true }
+        { fromCache: getFromCache.unsolvedReports }
       )
       progress?.(20)
       //* GET SOLVED REPORTS
@@ -127,7 +139,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
           where('solvedAt', '>=', FROM_DATE),
           where('solvedAt', '<=', TO_DATE)
         ],
-        { fromCache: true }
+        { fromCache: getFromCache.solvedReports }
       )
       progress?.(30)
 
@@ -140,14 +152,14 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
           section: [],
           type: 'full'
         },
-        { fromCache: true }
+        { fromCache: getFromCache.payments }
       )
       progress?.(40)
 
       //* GET AVAILABLE ITEMS
       const availableItems = await ServiceStoreItems.getAvailable(
         { storeId },
-        { fromCache: true }
+        { fromCache: getFromCache.availableItems }
       )
       const createItemsInDate = await ServiceStoreItems.getFieldBetweenDates(
         {
@@ -156,7 +168,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
           fromDate: FROM_DATE,
           toDate: TO_DATE
         },
-        { fromCache: true }
+        { fromCache: getFromCache.createdItems }
       )
       const retiredItemsInDate = await ServiceStoreItems.getFieldBetweenDates(
         {
@@ -165,7 +177,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
           fromDate: FROM_DATE,
           toDate: TO_DATE
         },
-        { fromCache: true }
+        { fromCache: getFromCache.retiredItems }
       )
 
       const cancelledOrdersInDate = await ServiceOrders.getFieldBetweenDates(
@@ -175,7 +187,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
           fromDate: FROM_DATE,
           toDate: TO_DATE
         },
-        { justRefs: true }
+        { justRefs: true, fromCache: getFromCache.cancelledOrders }
       )
 
       //* GROUP BY SECTIONS
