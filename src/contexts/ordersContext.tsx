@@ -127,8 +127,8 @@ export const OrdersContextProvider = ({
           sections: [],
           reports: [...reports, ...important],
           getExpireTomorrow
-        },
-        { fromCache: true }
+        }
+        //{ fromCache: true }
       )
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,

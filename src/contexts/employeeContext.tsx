@@ -85,7 +85,10 @@ export const EmployeeContextProvider = ({ children }) => {
         fromDate: startDate(date),
         toDate: endDate(date)
       },
-      { justRefs: true, fromCache: true }
+      {
+        justRefs: true
+        // fromCache: true
+      }
     ).then((orders) => {
       setDelivered(orders)
     })
@@ -96,7 +99,10 @@ export const EmployeeContextProvider = ({ children }) => {
         fromDate: startDate(date),
         toDate: endDate(date)
       },
-      { justRefs: true, fromCache: true }
+      {
+        justRefs: true
+        //fromCache: true
+      }
     ).then((orders) => {
       setRenewed(orders)
     })
@@ -107,7 +113,11 @@ export const EmployeeContextProvider = ({ children }) => {
         fromDate: startDate(date),
         toDate: endDate(date)
       },
-      { justRefs: true, fromCache: true }
+      {
+        justRefs: true
+
+        // fromCache: true
+      }
     ).then((orders) => {
       setPickedUp(orders)
     })
@@ -120,8 +130,8 @@ export const EmployeeContextProvider = ({ children }) => {
         toDate: endDate(new Date()),
         storeId,
         userId
-      },
-      { fromCache: true }
+      }
+      //{ fromCache: true }
     )
       .then(setPayments)
       .catch(console.error)
