@@ -78,13 +78,13 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
     // CACHE OPTIONS
     const getFromCache = {
       orders: false,
-      unsolvedReports: true,
-      solvedReports: true,
+      unsolvedReports: false,
+      solvedReports: false,
       payments: false,
       availableItems: false,
-      createdItems: true,
-      retiredItems: true,
-      cancelledOrders: true
+      createdItems: false,
+      retiredItems: false,
+      cancelledOrders: false
     }
 
     try {

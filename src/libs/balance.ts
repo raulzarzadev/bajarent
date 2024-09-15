@@ -23,7 +23,7 @@ export const balanceOrders = async ({
   //orders: OrderType[]
 }): Promise<BalanceOrders> => {
   //* YOU CANT FILTER ORDERS BY USER OR DATE BECAUSE YOU ARE VALIDATING DIFFERENT THINGS
-  console.log({ values })
+  // console.log({ values })
   let ordersCreated = []
   let ordersPickup = []
   let ordersDelivered = []

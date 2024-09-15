@@ -144,8 +144,8 @@ export const OrdersContextProvider = ({
           sections: employee.sectionsAssigned,
           reports: [...reports, ...important],
           getExpireTomorrow
-        },
-        { fromCache: true }
+        }
+        // { fromCache: true }
       )
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)
