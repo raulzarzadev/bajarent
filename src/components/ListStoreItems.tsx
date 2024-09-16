@@ -161,7 +161,7 @@ const ListStoreItems = ({
 
   useEffect(() => {
     if (storeId) {
-      fetchItems({ fromCache: false })
+      fetchItems({ fromCache: true })
     }
   }, [storeId])
 
