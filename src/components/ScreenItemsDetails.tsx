@@ -21,12 +21,17 @@ const ScreenItemsDetails = ({ route }) => {
   const [item, setItem] = useState(undefined)
   const { storeId, categories, storeSections } = useStore()
   const { employee } = useEmployee()
+
   useEffect(() => {
     if (employee) {
-      fetchItem()
+      fetchItem(id)
     }
-  }, [employee])
-  const fetchItem = () => {
+    return () => {
+      setItem(undefined)
+    }
+  }, [employee, id])
+
+  const fetchItem = (id) => {
     ServiceStoreItems.get({ storeId, itemId: id }).then((res) => {
       const formatted = formatItems([res], categories, storeSections)
       setItem(formatted[0])
@@ -45,7 +50,7 @@ const ScreenItemsDetails = ({ route }) => {
         <ItemDetailsE
           item={item}
           onAction={() => {
-            fetchItem()
+            fetchItem(id)
           }}
         />
         <ItemHistory itemId={item.id} />

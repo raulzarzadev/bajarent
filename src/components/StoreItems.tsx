@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { gStyles } from '../styles'
 import ListStoreItems from './ListStoreItems'
 
 const StoreItems = () => {
