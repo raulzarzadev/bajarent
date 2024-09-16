@@ -138,12 +138,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('createdAt', '<=', new Date(new Date().setHours(23, 59, 59, 999)))
     ])
   }
-  getByDate(storeId: string, date: Date = new Date()) {
-    return this.findMany([
-      where('storeId', '==', storeId),
-      where('createdAt', '>=', new Date(date.setHours(0, 0, 0, 0))),
-      where('createdAt', '<=', new Date(date.setHours(23, 59, 59, 999)))
-    ])
+  getByDate(storeId: string, date: Date = new Date(), ops?: GetItemsOps) {
+    return this.findMany(
+      [
+        where('storeId', '==', storeId),
+        where('createdAt', '>=', new Date(date.setHours(0, 0, 0, 0))),
+        where('createdAt', '<=', new Date(date.setHours(23, 59, 59, 999)))
+      ],
+      ops
+    )
   }
   orderReports(orderId: string) {
     return this.findMany([

@@ -11,10 +11,12 @@ import { CommentRow } from './RowComment'
 import Loading from './Loading'
 import theme from '../theme'
 import DisabledView from './DisabledView'
+import { ServiceComments } from '../firebase/ServiceComments'
+import { useAuth } from '../contexts/authContext'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
-  //const { storeId } = useAuth()
+  const { storeId } = useAuth()
   //const { payments, staff } = useStore()
   const [loading, setLoading] = React.useState(false)
   // const {
@@ -26,9 +28,11 @@ const ListMovements = () => {
     try {
       setLoading(true)
       setDate(newDate)
-      // const res = await ServiceComments.getByDate(storeId, new Date(newDate))
+      const res = await ServiceComments.getByDate(storeId, new Date(newDate), {
+        fromCache: true
+      })
       setLoading(false)
-      setData([])
+      setData(res)
     } catch (error) {
       console.error(error)
     }
@@ -37,11 +41,11 @@ const ListMovements = () => {
     handleChangeDate(date)
   }, [])
 
-  return (
-    <View>
-      <DisabledView />
-    </View>
-  )
+  // return (
+  //   <View>
+  //     <DisabledView />
+  //   </View>
+  // )
 
   //console.log({ data })
 
