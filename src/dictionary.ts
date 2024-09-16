@@ -199,6 +199,8 @@ const labels = {
   retire: 'Baja',
   canDeleteExtension: 'Eliminar extensiones',
   unassigned: 'sin asignar',
+  exchangeDelivery: 'Entrega (cambio)',
+  exchangePickup: 'Recogida (cambio)',
   ' ': '',
   '': ''
 } as const
