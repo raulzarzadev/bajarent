@@ -155,15 +155,11 @@ const ListStoreItems = ({
     return res
   }
 
-  // useEffect(() => {
-  //   //  fetchItems({ fromCache: true })
-  // }, [allItemsSections])
-
   useEffect(() => {
     if (storeId) {
       fetchItems({ fromCache: true })
     }
-  }, [storeId])
+  }, [storeId, allItemsSections])
 
   const [errors, setErrors] = useState<{ rentedItems?: string }>({})
 
