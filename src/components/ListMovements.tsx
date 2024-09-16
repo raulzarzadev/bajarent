@@ -29,7 +29,7 @@ const ListMovements = () => {
       setLoading(true)
       setDate(newDate)
       const res = await ServiceComments.getByDate(storeId, new Date(newDate), {
-        fromCache: true
+        // fromCache: true
       })
       setLoading(false)
       setData(res)
