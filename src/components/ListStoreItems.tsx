@@ -49,6 +49,7 @@ const ListStoreItems = ({
   const { storeId, categories, storeSections } = useStore()
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
+
   const handleDeleteItems = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
       try {
@@ -84,7 +85,7 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    fetchItems({ fromCache: true })
+    // fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }
@@ -139,10 +140,6 @@ const ListStoreItems = ({
     }
   }
 
-  useEffect(() => {
-    fetchItems({ fromCache: true })
-  }, [allItemsSections])
-
   const handleAddInventoryEntry = async (ids: string[]) => {
     const promises = ids.map(async (id) => {
       try {
@@ -153,13 +150,18 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    fetchItems({ fromCache: true })
+    // fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }
+
+  // useEffect(() => {
+  //   //  fetchItems({ fromCache: true })
+  // }, [allItemsSections])
+
   useEffect(() => {
     if (storeId) {
-      fetchItems({ fromCache: true })
+      fetchItems({ fromCache: false })
     }
   }, [storeId])
 
@@ -191,7 +193,7 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    fetchItems({ fromCache: true })
+    //  fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }
