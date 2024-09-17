@@ -57,6 +57,7 @@ export const ButtonSetOrderLocation = () => {
 
   return (
     <ButtonConfirm
+      modalTitle="Actualizar ubicación"
       openDisabled={loading}
       openLabel="Actualizar ubicación"
       icon={order?.coords ? 'location' : 'locationOff'}

@@ -106,14 +106,14 @@ const ModalSelectLocation = ({
         variant="ghost"
         onPress={async () => {
           modal.toggleOpen()
-          const res = await getLocation()
-          if (res?.status === 'granted' && res.coords) {
-            const lat = res?.coords?.lat
-            const lon = res?.coords?.lon
-            setValue(`${lat},${lon}`)
-          } else {
-            setValue(null)
-          }
+          // const res = await getLocation()
+          // if (res?.status === 'granted' && res.coords) {
+          //   const lat = res?.coords?.lat
+          //   const lon = res?.coords?.lon
+          //   setValue(`${lat},${lon}`)
+          // } else {
+          //   setValue(null)
+          // }
         }}
       />
       <StyledModal {...modal}>
