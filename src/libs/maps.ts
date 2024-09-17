@@ -1,7 +1,10 @@
 import { ItemMap } from '../components/ItemsMap'
 import theme, { colors } from '../theme'
+import CoordsType from '../types/CoordsType'
 import { ItemBase } from '../types/ItemType'
 import OrderType, { order_status, order_type } from '../types/OrderType'
+
+export type CoordsStringType = `${number}, ${number}`
 
 export const isCoordinates = (str: string): boolean => {
   const regex = /^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$/
@@ -10,7 +13,7 @@ export const isCoordinates = (str: string): boolean => {
 
 export const getCoordinates = async (
   location = ''
-): Promise<[number, number]> | null => {
+): Promise<CoordsType | null> | null => {
   const isLocationCoordinates = isCoordinates(location)
   const isShortUrl = location.match(/^https:\/\/\S+/)
   if (isLocationCoordinates) {
@@ -24,6 +27,13 @@ export const getCoordinates = async (
     return null
   }
 }
+
+export const getCoordinatesAsString = (
+  coords: CoordsType
+): CoordsStringType => {
+  return `${coords[0]}, ${coords[1]}`
+}
+
 export const formatItemsMaps = async (
   orders: OrderType[]
 ): Promise<ItemMap[]> => {

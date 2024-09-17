@@ -11,6 +11,7 @@ import { gStyles } from '../../styles'
 import InputLocation from '../InputLocation'
 import containCoordinates from '../../libs/containCoordinates'
 import ups_text from '../../../Constants.ts/ups_text'
+import { getCoordinates, getCoordinatesAsString } from '../../libs/maps'
 
 export const ButtonSetOrderLocation = () => {
   const { order } = useOrderDetails()
@@ -70,7 +71,10 @@ export const ButtonSetOrderLocation = () => {
       <View style={{ marginVertical: 16 }}>
         <InputLocation
           value={newLocation}
-          setValue={setNewLocation}
+          setValue={(coords) => {
+            const stringCoords = getCoordinatesAsString(coords)
+            setNewLocation(stringCoords)
+          }}
           helperText="Pega la URL de Google Maps o busca las coordenadas"
         />
         {/* <InputTextStyled onChangeText={setNewLocation} value={newLocation} /> */}

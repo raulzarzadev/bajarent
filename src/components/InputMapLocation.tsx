@@ -257,8 +257,8 @@ function DraggableMarker({
 
         if (marker != null) {
           const coords: [number, number] = [
-            marker.getLatLng().lat,
-            marker.getLatLng().lng
+            marker.getLatLng()?.lat,
+            marker.getLatLng()?.lng
           ]
           setPosition(coords)
           setCenter(coords)

@@ -7,6 +7,7 @@ import { TimePriceType } from './PriceType'
 import { ExtendReason } from '../firebase/ServiceOrders'
 import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
+import CoordsType from './CoordsType'
 export type ContactType = {
   name: string
   phone: string
@@ -14,6 +15,7 @@ export type ContactType = {
   isOriginal?: boolean
   isFavorite?: boolean
 }
+
 export type OrderBase = {
   colorLabel?: string
   type: TypeOfOrderType
@@ -41,7 +43,7 @@ export type OrderBase = {
   betweenStreets?: string
   neighborhood?: string
   location?: string
-  coords?: [number, number]
+  coords?: CoordsType
   /**
    * @deprecated use references instead
    */

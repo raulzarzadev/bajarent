@@ -9,6 +9,7 @@ import FormikInputImage from './FormikInputImage'
 import InputImagePicker from './InputImagePicker'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import InputLocation from './InputLocation'
+import { getCoordinatesAsString } from '../libs/maps'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
@@ -58,7 +59,9 @@ const ScreenOrderRenew = ({ route }) => {
             helperText={'Ubicación de la casa'}
             value={order?.location}
             setValue={(value) => {
-              ServiceOrders.update(orderId, { location: value })
+              ServiceOrders.update(orderId, {
+                location: getCoordinatesAsString(value)
+              })
                 .then(console.log)
                 .catch(console.error)
             }}

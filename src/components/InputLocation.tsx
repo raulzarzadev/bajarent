@@ -5,13 +5,15 @@ import {
   Text,
   View
 } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import InputMapLocation from './InputMapLocation'
+import { getCoordinates } from '../libs/maps'
+import CoordsType from '../types/CoordsType'
 
 const InputLocation = ({
   value,
@@ -21,13 +23,20 @@ const InputLocation = ({
   address
 }: {
   value: string
-  setValue: (value: string) => void
+  setValue: (value: CoordsType) => void
   helperText: string
   neighborhood?: string
   address?: string
 }) => {
   const { getLocation, loading, location } = useLocation()
-
+  const [coords, setCoords] = useState<CoordsType>(null)
+  useEffect(() => {
+    if (value) {
+      getCoordinates(value).then((coords) => {
+        setCoords(coords)
+      })
+    }
+  })
   return (
     <View>
       <Text>📍 Ubicación</Text>
@@ -36,14 +45,18 @@ const InputLocation = ({
         <InputTextStyled
           placeholder="Ubicación"
           value={value}
-          onChangeText={setValue}
+          onChangeText={(text) => {
+            getCoordinates(text).then((coords) => {
+              setValue(coords)
+            })
+          }}
           helperText={helperText}
           containerStyle={{ flex: 1 }}
         />
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
           <ModalSelectLocation
             setValue={setValue}
-            value={value as `${number},${number}`}
+            value={coords}
             defaultSearch={
               neighborhood || address
                 ? `${address || ''}${neighborhood ? ',' + neighborhood : ''}`
@@ -65,9 +78,9 @@ const InputLocation = ({
                 if (res?.status === 'granted' && res.coords) {
                   const lat = res?.coords?.lat
                   const lon = res?.coords?.lon
-                  setValue(`${lat},${lon}`)
+                  setValue([lat, lon])
                 } else {
-                  setValue('')
+                  setValue(null)
                 }
               }}
             />
@@ -83,43 +96,27 @@ const ModalSelectLocation = ({
   value,
   defaultSearch
 }: {
-  setValue: (location: `${number},${number}`) => void
-  value: `${number},${number}`
+  setValue: (location: CoordsType) => void
+  value: CoordsType
   defaultSearch: string
 }) => {
-  const { getLocation, loading, location } = useLocation()
   const modal = useModal({ title: 'Selecciona la ubicación' })
-  const coords: [number, number] = useMemo(() => {
-    if (value) {
-      const [lat, lon] = value.split(',')
-      return [Number(lat), Number(lon)]
-    }
-    return null
-  }, [value])
+  const coords = value
 
   return (
     <>
       <Button
         justIcon
-        //disabled={location?.status === 'denied'}
         icon={'map'}
         variant="ghost"
         onPress={async () => {
           modal.toggleOpen()
-          // const res = await getLocation()
-          // if (res?.status === 'granted' && res.coords) {
-          //   const lat = res?.coords?.lat
-          //   const lon = res?.coords?.lon
-          //   setValue(`${lat},${lon}`)
-          // } else {
-          //   setValue(null)
-          // }
         }}
       />
       <StyledModal {...modal}>
         <InputMapLocation
-          setLocation={(coors: [number, number]) => {
-            setValue(`${coors[0]},${coors[1]}`)
+          setLocation={(coords) => {
+            setValue(coords)
           }}
           location={coords}
           defaultSearch={defaultSearch}
