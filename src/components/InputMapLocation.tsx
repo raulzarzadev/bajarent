@@ -38,6 +38,7 @@ const InputMapLocation = ({
     setMapCenter(center)
     setLocation?.(center)
   }
+  console.log({ mapCenter, location })
 
   const INPUT_HEIGHT = 40
 

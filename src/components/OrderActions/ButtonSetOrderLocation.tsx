@@ -26,7 +26,6 @@ export const ButtonSetOrderLocation = () => {
       await ServiceOrders.update(order.id, { location })
     }
     const { containCoords, coords } = containCoordinates(location)
-    console.log({ containCoords, coords })
     setLoading(true)
     if (containCoords) {
       await ServiceOrders.update(order.id, { coords })

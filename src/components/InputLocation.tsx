@@ -33,10 +33,12 @@ const InputLocation = ({
   useEffect(() => {
     if (value) {
       getCoordinates(value).then((coords) => {
+        console.log({ value, coords })
         setCoords(coords)
       })
     }
-  })
+  }, [])
+
   return (
     <View>
       <Text>📍 Ubicación</Text>

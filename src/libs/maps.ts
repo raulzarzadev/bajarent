@@ -3,6 +3,8 @@ import theme, { colors } from '../theme'
 import CoordsType from '../types/CoordsType'
 import { ItemBase } from '../types/ItemType'
 import OrderType, { order_status, order_type } from '../types/OrderType'
+import containCoordinates from './containCoordinates'
+import unShortUrl from './unShortUrl'
 
 export type CoordsStringType = `${number}, ${number}`
 
@@ -21,6 +23,11 @@ export const getCoordinates = async (
     return [parseFloat(coords[0]), parseFloat(coords[1])]
   } else if (isShortUrl) {
     console.log('is a url', { isShortUrl })
+    const { unshortened_url, success } = await unShortUrl(location)
+    if (success) {
+      const { coords } = containCoordinates(unshortened_url)
+      return coords
+    }
     //const coords = await getCoordinatesFromShortUrl(location)
     return null
   } else {
