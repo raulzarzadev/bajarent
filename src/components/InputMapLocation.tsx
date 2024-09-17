@@ -7,6 +7,7 @@ import InputTextStyled from './InputTextStyled'
 import useDebounce from '../hooks/useDebunce'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
+import CoordsType from '../types/CoordsType'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({
@@ -25,20 +26,17 @@ const InputMapLocation = ({
   location,
   defaultSearch
 }: {
-  location?: [number, number]
-  setLocation?: (coords: [number, number]) => void
+  location?: CoordsType
+  setLocation?: (coords: CoordsType) => void
   defaultSearch?: string
 }) => {
-  const INITIAL_POSITION: [number, number] = location || [
-    24.145708, -110.311002
-  ]
+  const INITIAL_POSITION: CoordsType = location || [24.145708, -110.311002]
   const [mapCenter, setMapCenter] = useState(INITIAL_POSITION)
 
-  const handleSetCenter = (center: [number, number]) => {
+  const handleSetCenter = (center: CoordsType) => {
     setMapCenter(center)
     setLocation?.(center)
   }
-  console.log({ mapCenter, location })
 
   const INPUT_HEIGHT = 40
 
@@ -111,7 +109,7 @@ const SearchAddressLocation = ({
   defaultSearch
 }: {
   setOptions?: (options: NominatimResult[]) => void
-  setLocation?: (coords: [number, number]) => void
+  setLocation?: (coords: CoordsType) => void
   maxResults?: number
   defaultSearch?: string
 }) => {
@@ -136,7 +134,7 @@ const SearchAddressLocation = ({
 
         setOptions?.(slicedResult)
         const { lat, lon } = data[0]
-        const newCenter: [number, number] = [parseFloat(lat), parseFloat(lon)]
+        const newCenter: CoordsType = [parseFloat(lat), parseFloat(lon)]
         // setLocation(newCenter)
       } else {
         // alert('No se encontraron resultados')
@@ -224,7 +222,7 @@ const SearchAddressLocation = ({
                 style={{ padding: 4, marginVertical: 4 }}
                 key={response.place_id}
                 onPress={() => {
-                  const newCenter: [number, number] = [
+                  const newCenter: CoordsType = [
                     parseFloat(response.lat),
                     parseFloat(response.lon)
                   ]
@@ -245,8 +243,8 @@ function DraggableMarker({
   center,
   setCenter
 }: {
-  center: [number, number]
-  setCenter: (center: [number, number]) => void
+  center: CoordsType
+  setCenter: (center: CoordsType) => void
 }) {
   const [position, setPosition] = useState(center)
   const markerRef = useRef(null)
@@ -257,7 +255,7 @@ function DraggableMarker({
         const marker = markerRef.current
 
         if (marker != null) {
-          const coords: [number, number] = [
+          const coords: CoordsType = [
             marker.getLatLng()?.lat,
             marker.getLatLng()?.lng
           ]
