@@ -89,7 +89,7 @@ const StoreContextProvider = ({ children }) => {
     useState<Partial<PriceType>[]>(undefined)
 
   const fetchPrices = async () => {
-    const prices = await ServicePrices.getByStore(storeId, { fromCache: true })
+    const prices = await ServicePrices.getByStore(storeId, { fromCache: false })
     setStorePrices(prices)
   }
 
