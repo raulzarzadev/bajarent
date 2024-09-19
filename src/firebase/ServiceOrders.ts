@@ -391,15 +391,24 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const rentPending = await this.findMany(
       [...filterRentPending, where('storeId', '==', storeId)],
       ops
-    )
+    ).catch((e) => {
+      console.log('Error getting reported orders', e)
+      return []
+    })
     const expiredRents = await this.findMany(
       [...filterExpiredRents, where('storeId', '==', storeId)],
       ops
-    )
+    ).catch((e) => {
+      console.log('Error getting reported orders', e)
+      return []
+    })
     const repairs = await this.findMany(
       [...filterRepairs, where('storeId', '==', storeId)],
       ops
-    )
+    ).catch((e) => {
+      console.log('Error getting reported orders', e)
+      return []
+    })
     const unsolvedOrders = [...rentPending, ...repairs, ...expiredRents]
 
     //* *** 1 *** get reports and set the ids, to get reports from the database
@@ -414,6 +423,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     let reportedOrders = await this.getList(ordersWithReportsIds, {
       sections,
       ...(ops || {})
+    }).catch((e) => {
+      console.log('Error getting reported orders', e)
+      return []
     })
 
     //*  *** 2 *** remove reported orders from unsolved orders
@@ -475,11 +487,19 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       return this.findMany(
         [where('clientId', '==', clientId), where('storeId', '==', storeId)],
         { justRefs: true }
-      ).then((res) => res?.map(({ id }) => id))
+      )
+        .then((res) => res?.map(({ id }) => id))
+        .catch((e) => {
+          console.log('Error getting reported orders', e)
+          return []
+        })
     return this.findMany([
       where('clientId', '==', clientId),
       where('storeId', '==', storeId)
-    ])
+    ]).catch((e) => {
+      console.log('Error getting reported orders', e)
+      return []
+    })
   }
   async customMethod() {
     // Implementa tu método personalizado

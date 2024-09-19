@@ -120,6 +120,7 @@ export const OrdersContextProvider = ({
 
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
     if (typeOfOrders === 'all') {
+      console.log('all orders')
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
         storeId,
         {
@@ -129,13 +130,17 @@ export const OrdersContextProvider = ({
           getExpireTomorrow
         }
         //{ fromCache: true }
-      )
+      ).catch((e) => {
+        console.log(e)
+        return []
+      })
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
         reports: [...reports, ...important]
       })
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {
+      console.log('mine orders')
       //* get orders from sections where  sectionsAssigned contains sections
       const orders = await ServiceOrders.getUnsolvedByStore(
         storeId,
@@ -146,10 +151,14 @@ export const OrdersContextProvider = ({
           getExpireTomorrow
         }
         // { fromCache: true }
-      )
+      ).catch((e) => {
+        console.log(e)
+        return []
+      })
       const formatted = formatOrders({ orders, reports: reports })
       setOrders(formatted)
     } else {
+      console.log('no orders')
       // * do not get any order
       setOrders([])
     }
