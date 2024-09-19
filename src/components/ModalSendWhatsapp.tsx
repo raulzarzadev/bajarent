@@ -136,6 +136,13 @@ export default function ModalSendWhatsapp({
     return ''
   }
 
+  const SOCIALS = store?.socialMedia
+    ?.map((s) => `${s.type || ''}: ${s.value || ''}`)
+    ?.join('\n')
+
+  const SOCIAL_MEDIA = `📲 Síguenos en nuestras redes sociales:
+  ${SOCIALS || ''}`
+
   const RENT_EXPIRE_DATE = `${WELCOME}
   \n${ORDER_TYPE}  ${expireDateString(order)}
   \n${BANK_INFO}
@@ -191,10 +198,12 @@ export default function ModalSendWhatsapp({
 
   const STORE_INFO = `
   \n${store?.name}
+  \n${BANK_INFO}
   \n${ADDRESS}
   \n${SCHEDULE}
   \n${CONTACTS}
-  \n${BANK_INFO}
+  \n${SOCIAL_MEDIA}
+  
   \n${AGRADECIMIENTOS}
   `
   type MessageType =
@@ -311,7 +320,8 @@ export default function ModalSendWhatsapp({
       { label: 'Recibo', value: 'receipt-repair' },
       { label: 'No encontrado', value: 'not-found' },
       { label: 'Recogido', value: 'repair-picked-up' },
-      { label: 'Información', value: 'store-info' }
+      { label: 'Información', value: 'store-info' },
+      { label: 'Google Maps', value: 'google-maps-comment' }
     ]
   }
 
