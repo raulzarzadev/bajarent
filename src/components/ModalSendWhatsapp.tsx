@@ -228,9 +228,8 @@ export default function ModalSendWhatsapp({
   const REPAIR_PICKED_UP = `
   \n${WELCOME}
   \n${ORDER_TYPE}
-  \n📆${ORDER_DATES}
-  \n🔧 *Información del aparato*
-  🛠️ Marca: ${order?.itemBrand || ''}
+  \n⬆️🔧 Se recogió para servicio el  📆${dFormat(order.repairingAt)}
+  \n🛠️ Marca: ${order?.itemBrand || ''}
   #️⃣ Serie: ${order?.itemSerial || ''} 
   🧾 Falla: ${order?.repairInfo || ''}
   💲 Cotización:  $${order?.repairTotal || 0}
@@ -413,12 +412,13 @@ export default function ModalSendWhatsapp({
   )
 }
 
+const dFormat = (date: Date) =>
+  date ? dateFormat(asDate(date), 'dd/MMM/yy HH:mm') : ''
+
 const getReceiptDates = (order: OrderType): string => {
   if (!order) return ''
   const isRent = order?.type === order_type.RENT
   const isRepair = order?.type === order_type.REPAIR
-
-  const dFormat = (date: Date) => dateFormat(asDate(date), 'dd/MMM/yy HH:mm')
 
   let dates = [`Creada ${dFormat(order.createdAt)}`]
   if (isRent) {
