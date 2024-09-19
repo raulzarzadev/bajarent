@@ -420,13 +420,17 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       )
     )
     //* IF is getBySection just take the reported orders by sections
-    let reportedOrders = await this.getList(ordersWithReportsIds, {
-      sections,
-      ...(ops || {})
-    }).catch((e) => {
-      console.log('Error getting reported orders', e)
-      return []
-    })
+    let reportedOrders = []
+    //* if ordersWithReportsIds dont get list
+    if (ordersWithReportsIds.length > 0) {
+      reportedOrders = await this.getList(ordersWithReportsIds, {
+        sections,
+        ...(ops || {})
+      }).catch((e) => {
+        console.log('Error getting reported orders', e)
+        return []
+      })
+    }
 
     //*  *** 2 *** remove reported orders from unsolved orders
     const removeReportedFromUnsolved = unsolvedOrders.filter(
