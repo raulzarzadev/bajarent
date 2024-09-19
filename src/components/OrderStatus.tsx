@@ -29,6 +29,11 @@ const OrderStatus = ({
   if (!order) return <Text>Orden no encontrada</Text>
   const isRent = order.type === 'RENT'
   const isReported = order?.hasNotSolvedReports
+  const olderUnsolvedReport = order?.comments?.find(
+    (comment) => comment?.type === 'report' && !comment?.solved
+  )
+  const olderUnsolvedReportDate = olderUnsolvedReport?.createdAt || ''
+  // console.log(olderUnsolvedReport)
   const hasImportantComments = order.comments?.some(
     (comment) => comment.type === 'important' && !comment.solved
   )
@@ -237,7 +242,7 @@ const OrderStatus = ({
       {isReported && (
         <Chip
           style={[chipStyles]}
-          title={''}
+          title={formatDate(asDate(olderUnsolvedReportDate), 'dd/MMM')}
           color={theme.error}
           icon="report"
           size={chipSize}
