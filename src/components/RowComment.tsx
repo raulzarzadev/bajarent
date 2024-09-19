@@ -11,7 +11,7 @@ import { useStore } from '../contexts/storeContext'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { FormattedComment } from '../types/CommentType'
 import Button from './Button'
-import { fromNow } from '../libs/utils-date'
+import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 
 export const CommentRow = ({
@@ -87,8 +87,19 @@ export const CommentRow = ({
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
-          <View style={{ width: 55 }}>
-            <Text style={[gStyles.helper]}>{fromNow(comment?.createdAt)}</Text>
+          <View
+            style={{ marginRight: 4 }}
+            //style={{ width: 55 }}
+          >
+            {/* <Text style={[gStyles.helper]}>
+              {dateFormat(comment?.createdAt, 'dd/MM HH:mm')}
+            </Text> */}
+            <Text style={[gStyles.helper]}>
+              <Text style={[gStyles.helper, { marginRight: 4 }]}>
+                {dateFormat(comment?.createdAt, 'dd/MM HH:mm')}
+              </Text>
+              {fromNow(comment?.createdAt)}
+            </Text>
           </View>
           <View
             style={{
