@@ -186,7 +186,9 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
 
   useEffect(() => {
-    if (canViewAllItems) {
+    if (disabledEmployee) {
+      return setItems([])
+    } else if (canViewAllItems) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: 'all',
@@ -203,7 +205,7 @@ export const EmployeeContextProvider = ({ children }) => {
         }
       })
     }
-  }, [isEmployee])
+  }, [isEmployee, disabledEmployee])
 
   const value = useMemo(
     () => ({
