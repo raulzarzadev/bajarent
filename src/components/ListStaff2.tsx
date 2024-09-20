@@ -34,6 +34,11 @@ const ListStaff = ({
   return (
     <View>
       <LoadingList
+        sortFields={[
+          { key: 'name', label: 'Nombre' },
+          { key: 'position', label: 'NickName' },
+          { key: 'disabled', label: 'Habilitado' }
+        ]}
         ComponentRow={({ item }) => (
           <StaffRow
             staff={item}
@@ -88,6 +93,8 @@ const StaffRow = ({
     {
       component: (
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+          <InputDisabledStaff staffId={staff.id} />
+
           {handleSubtract && (
             <Button
               size="small"
@@ -126,8 +133,6 @@ const StaffRow = ({
               disabled={!canEditStaff}
             />
           )}
-
-          <InputDisabledStaff staffId={staff.id} />
         </View>
       ),
       width: 'rest'

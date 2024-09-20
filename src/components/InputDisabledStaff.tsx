@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import InputSwitch from './InputSwitch'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { useEmployee } from '../contexts/employeeContext'
 
 const InputDisabledStaff = ({ staffId }) => {
   const { staff: staffs } = useStore()
+  const { permissions } = useEmployee()
+  const canDisabledStaff = permissions.isAdmin || permissions.isOwner
   const staff = staffs.find((staff) => staff.id === staffId)
   const [staffDisabled, setStaffDisabled] = useState(staff?.disabled)
   const [inputDisabled, setInputDisabled] = useState(false)
@@ -23,18 +25,14 @@ const InputDisabledStaff = ({ staffId }) => {
   }
 
   return (
-    <View>
-      <InputSwitch
-        disabled={inputDisabled}
-        value={!staffDisabled}
-        setValue={(value) => {
-          toggleDisabled(!value)
-        }}
-      />
-    </View>
+    <InputSwitch
+      disabled={inputDisabled || !canDisabledStaff}
+      value={!staffDisabled}
+      setValue={(value) => {
+        toggleDisabled(!value)
+      }}
+    />
   )
 }
 
 export default InputDisabledStaff
-
-const styles = StyleSheet.create({})
