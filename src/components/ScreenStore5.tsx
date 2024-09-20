@@ -49,27 +49,21 @@ const ScreenStore = (props) => {
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
 
   //&& (canViewCashbox || canViewSections || canViewOrders)
+  const CheckedTab = <P extends object>(Tab: React.ComponentType<P>) => {
+    const Component = withDisabledCheck(Tab)
+    return Component
+  }
 
-  const TabCashboxWithCheckEmployeeDisabled: React.FC = () => {
-    const Component = withDisabledCheck(TabCashbox)
-    return <Component />
-  }
-  const TabStaffWithCheckEmployeeDisabled: React.FC = () => {
-    const Component = withDisabledCheck(TabStaff)
-    return <Component />
-  }
-  const TabSectionsWithCheckEmployeeDisabled: React.FC = () => {
-    const Component = withDisabledCheck(TabStoreSections)
-    return <Component />
-  }
-  const TabItemsWithCheckEmployeeDisabled: React.FC = () => {
-    const Component = withDisabledCheck(TabItems)
-    return <Component />
-  }
-  const TabItemsMapWithCheckEmployeeDisabled: React.FC = () => {
-    const Component = withDisabledCheck(StoreTabMap)
-    return <Component />
-  }
+  const CheckedTabMovements = CheckedTab(TabMovements)
+  const CheckedTabSections = CheckedTab(TabStoreSections)
+  const CheckedTabCashbox = CheckedTab(TabCashbox)
+  const CheckedTabStaff = CheckedTab(TabStaff)
+  const CheckedTabItems = CheckedTab(TabItems)
+  const CheckedTabMap = CheckedTab(StoreTabMap)
+  const CheckedTabClients = CheckedTab(TabClients)
+  const CheckedTabOrders = CheckedTab(TabOrders)
+  const CheckedStoreCounts = CheckedTab(StoreCounts)
+
   return (
     <ScrollView>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
@@ -85,70 +79,52 @@ const ScreenStore = (props) => {
 
             {
               title: 'Caja',
-              content: <TabCashboxWithCheckEmployeeDisabled />,
+              content: <CheckedTabCashbox />,
               show: canViewCashbox,
               icon: 'cashbox'
             },
 
             {
               title: 'Cuentas',
-              content: (
-                <View>
-                  <DisabledView />
-                </View>
-                // <View
-                //   style={{
-                //     maxWidth: 800,
-                //     margin: 'auto',
-                //     marginTop: 16,
-                //     width: '100%'
-                //   }}
-                // >
-                //   <StoreCounts />
-                // </View>
-              ),
-              show: canViewCashbox
+              content: <CheckedStoreCounts />,
+              show: false
             },
             {
               title: 'Ordenes',
-              content: <TabOrders />,
+              content: <CheckedTabOrders />,
               show: canViewOrders
             },
             {
               title: 'Clientes',
-              content: <TabClients />,
+              content: <CheckedTabClients />,
               show: canViewOrders
             },
             {
               title: 'Movimientos',
-              content: <TabMovements />,
+              content: <CheckedTabMovements />,
               show: canViewMovements
             },
             {
               title: 'Staff',
-              content: <TabStaffWithCheckEmployeeDisabled {...props} />,
+              content: <CheckedTabStaff {...props} />,
               show: canViewSections,
               icon: 'profile'
             },
             {
               title: 'Areas',
-              content: <TabSectionsWithCheckEmployeeDisabled />,
+              content: <CheckedTabSections />,
               show: true,
               icon: 'windows'
             },
             {
               title: 'Artículos',
-              content: <TabItemsWithCheckEmployeeDisabled />,
+              content: <CheckedTabItems />,
               show: canManageItems
             },
             {
               title: 'Mapa',
-              content: (
-                <View>
-                  <TabItemsMapWithCheckEmployeeDisabled />
-                </View>
-              ),
-              show: canManageItems
+              content: <CheckedTabMap />,
+              show: false
             }
           ]}
         />
