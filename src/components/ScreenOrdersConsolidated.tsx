@@ -1,6 +1,7 @@
 import React from 'react'
 import { ListOrdersConsolidatedE } from './ListOrdersConsolidated'
 import { ScrollView } from 'react-native'
+import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 
 const ScreenOrdersConsolidated = () => {
   return (
@@ -10,4 +11,4 @@ const ScreenOrdersConsolidated = () => {
   )
 }
 
-export default ScreenOrdersConsolidated
+export default withDisabledCheck(ScreenOrdersConsolidated)
