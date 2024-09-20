@@ -96,14 +96,21 @@ export const OrdersContextProvider = ({
   }
 
   useEffect(() => {
-    //* avoid get orders when employee is disabled
-    if (isEmployee && !disabledEmployee) {
-      handleGetOrders()
-      handleGetConsolidates()
-    } else {
+    //* is disbaled and is not admin or owner do not get any order
+    if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
       setOrders([])
       setConsolidatedOrders(undefined)
+    } else {
+      handleGetOrders()
+      handleGetConsolidates()
     }
+
+    // if (isEmployee && !disabledEmployee) {
+
+    // } else {
+    //   setOrders([])
+    //   setConsolidatedOrders(undefined)
+    // }
   }, [isEmployee, disabledEmployee])
 
   useEffect(() => {

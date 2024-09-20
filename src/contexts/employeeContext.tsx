@@ -67,7 +67,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const [isOwner, setIsOwner] = useState(false)
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [loading, setLoading] = useState(false)
-  const [disabledEmployee, setDisabledEmployee] = useState(!!employee?.disabled)
+  const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
   const [isEmployee, setIsEmployee] = useState(false)
 
   const handleUpdate = () => {
@@ -186,9 +186,7 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
 
   useEffect(() => {
-    if (disabledEmployee) {
-      return setItems([])
-    } else if (canViewAllItems) {
+    if (canViewAllItems) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: 'all',
@@ -205,7 +203,7 @@ export const EmployeeContextProvider = ({ children }) => {
         }
       })
     }
-  }, [isEmployee, disabledEmployee])
+  }, [isEmployee])
 
   const value = useMemo(
     () => ({
