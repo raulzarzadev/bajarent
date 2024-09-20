@@ -49,6 +49,8 @@ export type BaseStaffType = {
   sectionsAssigned?: string[]
   store?: Partial<StoreType>
 
+  disabled?: boolean
+
   /**
    * @deprecated use permissions.isOwner instead
    */

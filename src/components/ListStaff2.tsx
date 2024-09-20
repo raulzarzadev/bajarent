@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Switch } from 'react-native'
 import React from 'react'
-import List, { LoadingList } from './List'
+import { LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
 import StaffType from '../types/StaffType'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
 import ListRow, { ListRowField } from './ListRow'
+import InputDisabledStaff from './InputDisabledStaff'
 
 const ListStaff = ({
   staff = [],
@@ -125,6 +126,8 @@ const StaffRow = ({
               disabled={!canEditStaff}
             />
           )}
+
+          <InputDisabledStaff staffId={staff.id} />
         </View>
       ),
       width: 'rest'
