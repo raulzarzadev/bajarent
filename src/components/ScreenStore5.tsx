@@ -21,13 +21,9 @@ import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
 import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
-import ListClients from './ListClients'
-import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import HeaderDate from './HeaderDate'
-import DateCounts from './DateCounts'
 import StoreCounts from './StoreCounts'
 import StoreTabMap from './StoreTabMap'
-import StoreWorkshop from './StoreWorkshop'
 import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
@@ -97,7 +93,7 @@ const ScreenStore = (props) => {
             {
               title: 'Clientes',
               content: <CheckedTabClients />,
-              show: canViewOrders
+              show: false
             },
             {
               title: 'Movimientos',
@@ -216,19 +212,7 @@ const StoreNumbersRow = () => {
 }
 
 const TabClients = () => {
-  const { storeId } = useStore()
-  // const [clients, setClients] = useState([])
-  // useEffect(() => {
-  //   ServiceStoreClients.getAll(storeId).then((res) => {
-  //     setClients(res)
-  //   })
-  // }, [])
-  return (
-    <View>
-      <DisabledView />
-      {/* <ListClients clients={clients} /> */}
-    </View>
-  )
+  return <DisabledView />
 }
 
 const TabCashbox = () => {
