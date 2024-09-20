@@ -230,6 +230,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       }
       return Promise.all(promises).then((res) => res.flat())
     } else {
+      //FIXME: this make an error if the union on "IN" es more than 30
       const filters = [where(documentId(), 'in', ids)]
       if (sections?.length > 0)
         filters.push(where('assignToSection', 'in', sections))
