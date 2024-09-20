@@ -96,6 +96,7 @@ export const OrdersContextProvider = ({
   }
 
   useEffect(() => {
+    //* avoid get orders when employee is disabled
     if (isEmployee && !disabledEmployee) {
       handleGetOrders()
       handleGetConsolidates()
