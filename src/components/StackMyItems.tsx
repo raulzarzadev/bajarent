@@ -2,7 +2,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ScreenItemNew from './ScreenItemNew'
 import ScreenItemsDetails from './ScreenItemsDetails'
 import { ScreenItemEditE } from './ScreenItemEdit'
-import { ListItemsSectionsE } from './ListItemsSections'
 import ScreenMyItems from './ScreenMyItems'
 
 const Stack = createStackNavigator()

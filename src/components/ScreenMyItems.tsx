@@ -1,7 +1,8 @@
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView } from 'react-native'
 import React from 'react'
 import { useEmployee } from '../contexts/employeeContext'
 import { ListMyItemsE } from './ListMyItems'
+import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 
 const ScreenMyItems = () => {
   const { items } = useEmployee()
@@ -12,6 +13,4 @@ const ScreenMyItems = () => {
   )
 }
 
-export default ScreenMyItems
-
-const styles = StyleSheet.create({})
+export default withDisabledCheck(ScreenMyItems)

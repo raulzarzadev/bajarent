@@ -5,6 +5,7 @@ import useOrders from '../hooks/useOrders'
 import { useState } from 'react'
 import { useEmployee } from '../contexts/employeeContext'
 import { ScrollView, Text } from 'react-native'
+import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   useStore() //*<---- FIXME: if you remove this everything will break
@@ -60,4 +61,4 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   )
 }
 
-export default ScreenOrders
+export default withDisabledCheck(ScreenOrders)
