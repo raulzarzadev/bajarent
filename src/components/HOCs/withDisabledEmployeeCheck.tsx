@@ -15,7 +15,7 @@ const withDisabledCheck = <P extends object>(
     const { disabledEmployee } = useEmployee()
     const { ...otherProps } = props
 
-    if (disabledEmployee === true || disabledEmployee === undefined) {
+    if (disabledEmployee === true) {
       return <DisabledEmployee />
     }
 

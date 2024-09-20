@@ -67,7 +67,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const [isOwner, setIsOwner] = useState(false)
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [loading, setLoading] = useState(false)
-  const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
+  const [disabledEmployee, setDisabledEmployee] = useState(!!employee?.disabled)
   const [isEmployee, setIsEmployee] = useState(false)
 
   const handleUpdate = () => {
