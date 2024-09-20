@@ -27,6 +27,7 @@ export type EmployeeContextType = {
     handleUpdate: () => void
   }
   isEmployee?: boolean
+  disabledEmployee?: boolean
   permissions: {
     canCancelPickedUp?: boolean
     isAdmin: boolean
@@ -58,10 +59,19 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
+  const { store, staff, storeSections, storeId, categories } = useStore()
 
+  const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
+  const [assignedSections, setAssignedSections] = useState<string[]>([])
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isOwner, setIsOwner] = useState(false)
   const [payments, setPayments] = useState<PaymentType[]>([])
   const [loading, setLoading] = useState(false)
+  const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
+  const [isEmployee, setIsEmployee] = useState(false)
+
   const handleUpdate = () => {
+    console.log('updating orders from employee')
     setLoading(true)
     handleGetOrders()
     handleGetPayments()
@@ -136,14 +146,7 @@ export const EmployeeContextProvider = ({ children }) => {
       .then(setPayments)
       .catch(console.error)
   }
-  const { store, staff, storeSections, storeId, categories } = useStore()
 
-  const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
-  const [assignedSections, setAssignedSections] = useState<string[]>([])
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isOwner, setIsOwner] = useState(false)
-
-  const [isEmployee, setIsEmployee] = useState(false)
   useEffect(() => {
     setIsOwner(store && store?.createdBy === user?.id)
     const employee = staff?.find(
@@ -151,6 +154,7 @@ export const EmployeeContextProvider = ({ children }) => {
     )
 
     if (employee) {
+      setDisabledEmployee(employee.disabled)
       setIsEmployee(true)
       const sectionsAssigned = storeSections
         ?.filter(({ staff }) => staff?.includes(employee?.id))
@@ -208,6 +212,7 @@ export const EmployeeContextProvider = ({ children }) => {
         ? { ...employee, sectionsAssigned: assignedSections }
         : undefined,
       isEmployee,
+      disabledEmployee,
       permissions: {
         isAdmin: !!isAdmin,
         isOwner: isOwner,
@@ -246,7 +251,15 @@ export const EmployeeContextProvider = ({ children }) => {
         canViewAllItems
       }
     }),
-    [employee, isAdmin, isOwner, store, assignedSections, items]
+    [
+      employee,
+      isAdmin,
+      isOwner,
+      store,
+      assignedSections,
+      items,
+      disabledEmployee
+    ]
   )
 
   em++

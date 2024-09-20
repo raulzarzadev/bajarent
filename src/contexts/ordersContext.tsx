@@ -45,7 +45,7 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const { employee, permissions, isEmployee } = useEmployee()
+  const { employee, permissions, isEmployee, disabledEmployee } = useEmployee()
   const { storeId, store } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
@@ -96,11 +96,14 @@ export const OrdersContextProvider = ({
   }
 
   useEffect(() => {
-    if (isEmployee) {
+    if (isEmployee && !disabledEmployee) {
       handleGetOrders()
       handleGetConsolidates()
+    } else {
+      setOrders([])
+      setConsolidatedOrders(undefined)
     }
-  }, [isEmployee])
+  }, [isEmployee, disabledEmployee])
 
   useEffect(() => {
     if (store) {
@@ -116,6 +119,10 @@ export const OrdersContextProvider = ({
   const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
     // await handleGetConsolidates()
+    // if (disabledEmployee) {
+    //   console.log('employee is disabled')
+    //   return setOrders([])
+    // }
     const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
 
     const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'

@@ -26,9 +26,9 @@ const InputDisabledStaff = ({ staffId }) => {
     <View>
       <InputSwitch
         disabled={inputDisabled}
-        value={staffDisabled}
+        value={!staffDisabled}
         setValue={(value) => {
-          toggleDisabled(value)
+          toggleDisabled(!value)
         }}
       />
     </View>
