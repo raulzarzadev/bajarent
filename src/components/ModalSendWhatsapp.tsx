@@ -228,7 +228,7 @@ export default function ModalSendWhatsapp({
   const REPAIR_PICKED_UP = `
   \n${WELCOME}
   \n${ORDER_TYPE}
-  \n⬆️🔧 Se recogió para servicio el  📆${dFormat(order.repairingAt)}
+  \n⬆️🔧 Se recogió para servicio el  📆${dFormat(order?.repairingAt)}
   \n🛠️ Marca: ${order?.itemBrand || ''}
   #️⃣ Serie: ${order?.itemSerial || ''} 
   🧾 Falla: ${order?.repairInfo || ''}
