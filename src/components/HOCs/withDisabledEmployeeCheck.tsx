@@ -3,7 +3,7 @@ import DisabledEmployee from '../DisabledEmployee'
 import { useEmployee } from '../../contexts/employeeContext'
 
 interface WithDisabledCheckProps {
-  isDisabled: boolean
+  // isDisabled: boolean
 }
 
 const withDisabledCheck = <P extends object>(

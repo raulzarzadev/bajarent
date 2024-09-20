@@ -30,6 +30,7 @@ import StoreTabMap from './StoreTabMap'
 import StoreWorkshop from './StoreWorkshop'
 import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
+import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -48,6 +49,27 @@ const ScreenStore = (props) => {
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
 
   //&& (canViewCashbox || canViewSections || canViewOrders)
+
+  const TabCashboxWithCheckEmployeeDisabled: React.FC = () => {
+    const Component = withDisabledCheck(TabCashbox)
+    return <Component />
+  }
+  const TabStaffWithCheckEmployeeDisabled: React.FC = () => {
+    const Component = withDisabledCheck(TabStaff)
+    return <Component />
+  }
+  const TabSectionsWithCheckEmployeeDisabled: React.FC = () => {
+    const Component = withDisabledCheck(TabStoreSections)
+    return <Component />
+  }
+  const TabItemsWithCheckEmployeeDisabled: React.FC = () => {
+    const Component = withDisabledCheck(TabItems)
+    return <Component />
+  }
+  const TabItemsMapWithCheckEmployeeDisabled: React.FC = () => {
+    const Component = withDisabledCheck(StoreTabMap)
+    return <Component />
+  }
   return (
     <ScrollView>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
@@ -63,7 +85,7 @@ const ScreenStore = (props) => {
 
             {
               title: 'Caja',
-              content: <TabCashbox />,
+              content: <TabCashboxWithCheckEmployeeDisabled />,
               show: canViewCashbox,
               icon: 'cashbox'
             },
@@ -104,27 +126,26 @@ const ScreenStore = (props) => {
             },
             {
               title: 'Staff',
-              content: <TabStaff {...props} />,
+              content: <TabStaffWithCheckEmployeeDisabled {...props} />,
               show: canViewSections,
               icon: 'profile'
             },
             {
               title: 'Areas',
-              content: <TabStoreSections />,
+              content: <TabSectionsWithCheckEmployeeDisabled />,
               show: true,
               icon: 'windows'
             },
             {
               title: 'Artículos',
-              content: <TabItems />,
+              content: <TabItemsWithCheckEmployeeDisabled />,
               show: canManageItems
             },
             {
               title: 'Mapa',
               content: (
                 <View>
-                  <DisabledView />
-                  {/* <StoreTabMap /> */}
+                  <TabItemsMapWithCheckEmployeeDisabled />
                 </View>
               ),
               show: canManageItems
