@@ -112,7 +112,8 @@ export enum permissions_store {
   canCancelPayments,
   canValidatePayments,
   canDeleteItems,
-  canManageItems
+  canManageItems,
+  disabledStaff
 }
 
 export enum permissions_items {

@@ -201,6 +201,7 @@ const labels = {
   unassigned: 'sin asignar',
   exchangeDelivery: 'Entrega (cambio)',
   exchangePickup: 'Recogida (cambio)',
+  disabledStaff: 'Deshabilitar Staff',
   ' ': '',
   '': ''
 } as const

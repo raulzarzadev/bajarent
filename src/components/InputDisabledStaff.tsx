@@ -7,7 +7,11 @@ import { useEmployee } from '../contexts/employeeContext'
 const InputDisabledStaff = ({ staffId }) => {
   const { staff: staffs } = useStore()
   const { permissions } = useEmployee()
-  const canDisabledStaff = permissions.isAdmin || permissions.isOwner
+  const canDisabledStaff =
+    permissions.isAdmin ||
+    permissions.isOwner ||
+    permissions?.store?.disabledStaff
+
   const staff = staffs.find((staff) => staff.id === staffId)
   const [staffDisabled, setStaffDisabled] = useState(staff?.disabled)
   const [inputDisabled, setInputDisabled] = useState(false)
