@@ -9,10 +9,15 @@ import Button from './Button'
 import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
 import ModalCurrentWork from './ModalCurrentWork'
+import { useEmployee } from '../contexts/employeeContext'
 
 const MyStaffLabel = () => {
   const { user } = useAuth()
   const { myStaffId, staff, store } = useStore()
+  const {
+    disabledEmployee,
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
   const label = staff?.find((s) => s.id === myStaffId)?.position || user?.name
   const navigation = useNavigation()
 
@@ -38,6 +43,8 @@ const MyStaffLabel = () => {
       )}
       {store && (
         <Button
+          //* disabled for disabledEmployees and not admin or owner
+          disabled={disabledEmployee && !(isAdmin || isOwner)}
           icon="add"
           onPress={() => {
             // @ts-ignore
