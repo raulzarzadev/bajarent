@@ -97,7 +97,10 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 
       //* GET RENT STORE ORDERS
       const orders: Partial<OrderType>[] = await ServiceOrders.findMany(
-        [where('storeId', '==', storeId), where('type', '==', order_type.RENT)],
+        [
+          where('storeId', '==', storeId),
+          where('type', 'in', [order_type.RENT, order_type.REPAIR])
+        ],
         { fromCache: getFromCache.orders }
       )
 
