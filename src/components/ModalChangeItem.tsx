@@ -90,17 +90,19 @@ const ModalChangeItem = ({
             /> */}
             {viewAllItems ? (
               <ListItemsSectionsE
-                onPressItem={(e) => {
-                  setItemSelected(e)
-                }}
+                // onPressItem={(e) => {
+                //   setItemSelected(e)
+                // }}
                 itemSelected={itemSelected}
+                selectOnPress={setItemSelected}
               />
             ) : (
               <ListAssignedItemsE
-                onPressItem={(e) => {
-                  setItemSelected(e)
-                }}
+                // onPressItem={(e) => {
+                //   setItemSelected(e)
+                // }}
                 itemSelected={itemSelected}
+                selectOnPress={setItemSelected}
               />
             )}
           </View>

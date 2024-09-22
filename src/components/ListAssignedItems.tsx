@@ -17,14 +17,19 @@ export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']
   onPressItem?: (itemId: string) => void
   itemSelected?: string
+  /**
+   * @deprecated use selectOnPress instead
+   */
   onSelectItem?: (itemId: string) => void
   layout?: 'row' | 'flex'
+  selectOnPress?: SectionItem['selectOnPress']
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
   const onSelectItem = props?.onSelectItem
   const itemSelected = props?.itemSelected
   const categoryId = props?.categoryId
+  const selectOnPress = props?.selectOnPress
 
   const { items: availableItems } = useEmployee()
   const { categories, storeSections } = useStore()
@@ -46,6 +51,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
         onPressItem={onPressItem}
         onSelectItem={onSelectItem}
         layout={props?.layout}
+        selectOnPress={selectOnPress}
       />
     </View>
   )
@@ -57,13 +63,15 @@ export type RowSectionItemsProps = {
   onPressItem?: (itemId: string) => void
   onSelectItem?: (itemId: string) => void
   layout?: 'row' | 'flex'
+  selectOnPress?: SectionItem['selectOnPress']
 }
 const RowSectionItems = ({
   items,
   itemSelected,
   onPressItem,
   onSelectItem,
-  layout = 'row'
+  layout = 'row',
+  selectOnPress
 }: RowSectionItemsProps) => {
   const sortByNumber = (a: ItemType, b: ItemType) =>
     parseFloat(a.number) - parseFloat(b.number)
@@ -84,6 +92,7 @@ const RowSectionItems = ({
               onPress={() => {
                 onPressItem?.(item.id)
               }}
+              selectOnPress={selectOnPress}
             />
           ))}
         </View>
@@ -104,6 +113,7 @@ const RowSectionItems = ({
               onPress={() => {
                 onPressItem?.(item.id)
               }}
+              selectOnPress={selectOnPress}
             />
             <View style={{ padding: 2, marginTop: 2 }}>
               {!!onSelectItem && (
@@ -124,22 +134,25 @@ const RowSectionItems = ({
     )
 }
 
-export const SectionItem = ({
-  item,
-  selected,
-  onPress
-}: {
+export type SectionItem = {
   item: Partial<ItemType>
   selected?: boolean
   onPress?: () => void
-}) => {
+  selectOnPress?: (itemId: string) => void
+}
+export const SectionItem = ({
+  item,
+  selected,
+  onPress,
+  selectOnPress
+}: SectionItem) => {
   const modal = useModal({ title: `Acciones de artículo` })
   const OPACITY = 33
   return (
     <>
       <Pressable
         onPress={() => {
-          modal.toggleOpen()
+          selectOnPress ? selectOnPress(item.id) : modal.toggleOpen()
         }}
         style={{
           width: 120,
