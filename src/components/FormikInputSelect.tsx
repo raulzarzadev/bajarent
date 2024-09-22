@@ -33,9 +33,13 @@ const FormikInputSelect = ({
         }}
       />
       {!!helperText && !meta.error && (
-        <Text style={gStyles.helper}>{helperText}</Text>
+        <Text style={gStyles.inputHelper}>{helperText}</Text>
       )}
-      {!!meta.error && <Text style={gStyles.helperError}>{meta.error}</Text>}
+      {!!meta.error && (
+        <Text style={[gStyles.inputHelper, gStyles.helperError]}>
+          {meta.error}
+        </Text>
+      )}
     </View>
   )
 }

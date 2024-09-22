@@ -10,6 +10,7 @@ import theme, { BORDER_RADIUS, PADDING } from '../theme'
 import { useEffect, useState } from 'react'
 import Button from './Button'
 import Icon, { IconName } from './Icon'
+import { gStyles } from '../styles'
 
 /**
  * Componente de entrada de texto estilizado.
@@ -125,7 +126,7 @@ const InputTextStyled = ({
       </View>
 
       {!!helperText && (
-        <Text style={[baseStyle.helperText, { color: theme[helperTextColor] }]}>
+        <Text style={[gStyles.inputHelper, { color: theme[helperTextColor] }]}>
           {helperText}
         </Text>
       )}

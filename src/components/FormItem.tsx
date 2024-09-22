@@ -9,12 +9,16 @@ import FormikInputSelect from './FormikInputSelect'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
 import { useEmployee } from '../contexts/employeeContext'
+import TextInfo from './TextInfo'
+import theme from '../theme'
 
 const FormItem = ({
+  fromOrder,
   onSubmit,
   progress,
   values = {}
 }: {
+  fromOrder: boolean
   values?: Partial<ItemType>
   onSubmit?: (values: ItemType) => Promise<any> | void
   progress?: number
@@ -50,7 +54,8 @@ const FormItem = ({
     label: asCapitalize(dictionary(status)),
     value: status
   }))
-  const canEditItemStatus = permissions.isAdmin || permissions.isOwner
+  const canEditItemStatus =
+    permissions.isAdmin || permissions.isOwner || fromOrder
   return (
     <Formik
       initialValues={{ ...defaultValues }}
@@ -60,19 +65,38 @@ const FormItem = ({
     >
       {({ handleSubmit }) => (
         <View>
-          <FormikInputSelect
-            placeholder="Seleccionar estado"
-            name={'status'}
-            options={itemStatusOptions}
-            disabled={!canEditItemStatus}
-          />
-          <View style={styles.input}>
-            <FormikInputValue
-              disabled
-              label="Numero"
-              name={'number'}
-              placeholder="Numero"
+          {fromOrder && (
+            <TextInfo
+              defaultVisible
+              text="Estos datos se escriben de forma automática"
             />
+          )}
+          <View
+            style={{
+              borderWidth: fromOrder ? 2 : 0,
+              borderColor: theme.info,
+              padding: 2,
+              paddingVertical: 8,
+              borderRadius: 4,
+              opacity: fromOrder ? 0.5 : 1
+            }}
+          >
+            <FormikInputSelect
+              placeholder="Seleccionar estado"
+              name={'status'}
+              options={itemStatusOptions}
+              disabled={!canEditItemStatus}
+              helperText="Solo se puede editar si eres administrador"
+            />
+            <View style={styles.input}>
+              <FormikInputValue
+                disabled
+                label="Numero"
+                name={'number'}
+                placeholder="Numero"
+                helperText="No se puede editar. Se crea de forma automáitca"
+              />
+            </View>
           </View>
           <View style={styles.input}>
             <FormikInputValue

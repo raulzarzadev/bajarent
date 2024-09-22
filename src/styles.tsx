@@ -65,5 +65,10 @@ export const gStyles = StyleSheet.create({
     padding: PADDING * 3,
     width: '100%',
     placeholderTextColor: theme.neutral // Set placeholder text color to transparent
+  },
+  inputHelper: {
+    fontSize: 10,
+    opacity: 0.7,
+    color: theme.black
   }
 })

@@ -31,7 +31,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
 
   const [itemSelected, setItemSelected] = useState<null | string>(null)
   const [progress, setProgress] = useState(0)
-  const createModal = useModal({ title: 'Asignar o crear artículo' })
+  const createModal = useModal({ title: 'Crear artículo' })
 
   const orderItemInfo = order.items.find((i) => i.id === itemId)
 
@@ -159,6 +159,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
             <Text style={gStyles.h2}>Crea un artítculo nuevo</Text>
 
             <FormItem
+              fromOrder
               values={{
                 ...formatNewItem({
                   order,
@@ -172,7 +173,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
               }}
               progress={progress}
             />
-            <Text style={[gStyles.h2, { marginTop: 16 }]}>o</Text>
+            {/* <Text style={[gStyles.h2, { marginTop: 16 }]}>o</Text>
             <Text style={[gStyles.h2, { marginBottom: 16 }]}>
               Asigna alguno
             </Text>
@@ -188,7 +189,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
               onPress={() => {
                 handleAssignItem()
               }}
-            ></Button>
+            ></Button> */}
           </>
         )}
       </StyledModal>
