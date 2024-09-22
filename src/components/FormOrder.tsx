@@ -210,7 +210,7 @@ const FormOrderA = ({
                 setLoading(false)
               })
           }}
-          validate={(values) => {
+          validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
             if (!values.fullName) errors.fullName = 'Nombre necesario'
             if (!values.phone || values.phone.length < 12)
@@ -220,8 +220,11 @@ const FormOrderA = ({
               store?.orderFields?.[values.type]?.itemsMax
             const ITEMS_MIN_BY_ORDER =
               store?.orderFields?.[values.type]?.itemsMin
+
+            //* <- Validate items quantity if is required
             const VALIDATE_ITEMS_QTY =
-              store?.orderFields?.[values.type]?.validateItemsQty
+              store?.orderFields?.[values.type]?.validateItemsQty &&
+              values.hasDelivered
             /* ********************************************
              * Very Important to validate items quantity
              *******************************************rz */
