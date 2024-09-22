@@ -10,6 +10,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useOrderDetails } from '../contexts/orderContext'
 import { order_status, order_type } from '../types/OrderType'
+import { gStyles } from '../styles'
 
 const ModalChangeItem = ({
   itemId,
@@ -46,6 +47,13 @@ const ModalChangeItem = ({
   //* if is rent and not delivered return null
   if (order.type === order_type.RENT && order.status !== order_status.DELIVERED)
     return null
+
+  const itemRow = order?.items?.find((e) => e?.id === itemId)
+
+  const itemExist = !(itemRow.number === 'SN')
+
+  console.log({ order, itemExist })
+
   return (
     <View>
       <ButtonConfirm
@@ -61,28 +69,42 @@ const ModalChangeItem = ({
         justIcon
         modalTitle="Cambiar artículo"
       >
-        <View>
-          <TextInfo
-            type="warning"
-            text="Sí el artículo que recojes NO existe, NO se creara uno nuevo. Asegurate de crearlo antes de cambiarlo sí es necesario"
-            defaultVisible
-          />
-          {viewAllItems ? (
-            <ListItemsSectionsE
-              onPressItem={(e) => {
-                setItemSelected(e)
-              }}
-              itemSelected={itemSelected}
-            />
-          ) : (
-            <ListAssignedItemsE
-              onPressItem={(e) => {
-                setItemSelected(e)
-              }}
-              itemSelected={itemSelected}
-            />
-          )}
-        </View>
+        {!itemExist && (
+          <>
+            <TextInfo
+              defaultVisible={true}
+              type="error"
+              text="Artículo no existe"
+            ></TextInfo>
+            <Text style={[gStyles.h3, { marginVertical: 8 }]}>
+              Crea un artículo para poder cambiarlo.
+            </Text>
+          </>
+        )}
+        {itemExist && (
+          <View>
+            {/* <TextInfo
+              type="warning"
+              text="Sí el artículo que recojes NO existe, NO se creara uno nuevo. Asegurate de crearlo antes de cambiarlo sí es necesario"
+              defaultVisible={true}
+            /> */}
+            {viewAllItems ? (
+              <ListItemsSectionsE
+                onPressItem={(e) => {
+                  setItemSelected(e)
+                }}
+                itemSelected={itemSelected}
+              />
+            ) : (
+              <ListAssignedItemsE
+                onPressItem={(e) => {
+                  setItemSelected(e)
+                }}
+                itemSelected={itemSelected}
+              />
+            )}
+          </View>
+        )}
       </ButtonConfirm>
     </View>
   )
