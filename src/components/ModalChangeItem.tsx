@@ -52,7 +52,7 @@ const ModalChangeItem = ({
 
   const itemExist = !(itemRow.number === 'SN')
 
-  console.log({ order, itemExist })
+  console.log({ itemSelected })
 
   return (
     <View>
@@ -63,6 +63,8 @@ const ModalChangeItem = ({
         }}
         confirmLabel="Cambiar"
         confirmVariant="outline"
+        confirmDisabled={!itemSelected}
+        confirmDisabledHelper="Selecciona un artículo"
         openSize="small"
         openColor="info"
         icon="swap"

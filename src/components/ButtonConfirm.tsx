@@ -4,6 +4,7 @@ import Button, { ButtonProps } from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ButtonIcon, { IconButtonProps } from './ButtonIcon'
+import { gStyles } from '../styles'
 
 const ButtonConfirm = ({
   openLabel,
@@ -21,7 +22,8 @@ const ButtonConfirm = ({
   openSize,
   openDisabled,
   confirmDisabled,
-  onOpen
+  onOpen,
+  confirmDisabledHelper
 }: {
   openLabel?: string
   modalTitle?: string
@@ -39,6 +41,7 @@ const ButtonConfirm = ({
   openSize?: ButtonProps['size']
   openDisabled?: ButtonProps['disabled']
   onOpen?: () => void
+  confirmDisabledHelper?: string
 }) => {
   const modal = useModal({ title: modalTitle })
   const [sending, setSending] = React.useState(false)
@@ -77,6 +80,11 @@ const ButtonConfirm = ({
           </Text>
         )}
         {children}
+        {confirmDisabled && confirmDisabledHelper && (
+          <Text style={[gStyles.helperError, { textAlign: 'center' }]}>
+            *{confirmDisabledHelper}
+          </Text>
+        )}
         <View style={styles.buttons}>
           {/* <Button buttonStyles={{}} onPress={modal.toggleOpen}>
             Cancelar
