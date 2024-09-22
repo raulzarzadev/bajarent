@@ -134,7 +134,7 @@ const FormikSelectCategories = ({
             <ListAssignedItemsE
               categoryId={category?.id}
               itemSelected={itemSelected}
-              onSelectItem={(id) => {
+              selectOnPress={(id) => {
                 if (itemSelected === id) {
                   setItemSelected('')
                 } else {
@@ -145,6 +145,8 @@ const FormikSelectCategories = ({
                 ).category
                 setCategory(categories.find((cat) => cat.id === itemCategory))
               }}
+              // onSelectItem={(id) => {
+              // }}
             />
           </View>
           {!!selectPrice && (
