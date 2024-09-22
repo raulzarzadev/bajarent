@@ -23,7 +23,9 @@ const ButtonConfirm = ({
   openDisabled,
   confirmDisabled,
   onOpen,
-  confirmDisabledHelper
+  confirmDisabledHelper,
+  cancelButton = false,
+  handleCancel = () => console.log('cancel')
 }: {
   openLabel?: string
   modalTitle?: string
@@ -42,6 +44,8 @@ const ButtonConfirm = ({
   openDisabled?: ButtonProps['disabled']
   onOpen?: () => void
   confirmDisabledHelper?: string
+  cancelButton?: boolean
+  handleCancel?: () => void
 }) => {
   const modal = useModal({ title: modalTitle })
   const [sending, setSending] = React.useState(false)
@@ -86,9 +90,17 @@ const ButtonConfirm = ({
           </Text>
         )}
         <View style={styles.buttons}>
-          {/* <Button buttonStyles={{}} onPress={modal.toggleOpen}>
-            Cancelar
-          </Button> */}
+          {cancelButton && (
+            <Button
+              variant="ghost"
+              onPress={() => {
+                modal.toggleOpen()
+                handleCancel()
+              }}
+            >
+              Cancelar
+            </Button>
+          )}
           <Button
             id={'confirmButton'}
             buttonStyles={{}}

@@ -11,6 +11,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useOrderDetails } from '../contexts/orderContext'
 import { order_status, order_type } from '../types/OrderType'
 import { gStyles } from '../styles'
+import theme from '../theme'
 
 const ModalChangeItem = ({
   itemId,
@@ -62,7 +63,8 @@ const ModalChangeItem = ({
           handleChangeItem()
         }}
         confirmLabel="Cambiar"
-        confirmVariant="outline"
+        confirmVariant="filled"
+        confirmColor="primary"
         confirmDisabled={!itemSelected}
         confirmDisabledHelper="Selecciona un artículo"
         openSize="small"
@@ -70,6 +72,10 @@ const ModalChangeItem = ({
         icon="swap"
         justIcon
         modalTitle="Cambiar artículo"
+        cancelButton
+        handleCancel={() => {
+          setItemSelected(undefined)
+        }}
       >
         {!itemExist && (
           <>
