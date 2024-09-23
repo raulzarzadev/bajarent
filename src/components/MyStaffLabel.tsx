@@ -16,8 +16,9 @@ const MyStaffLabel = () => {
   const { myStaffId, staff, store } = useStore()
   const {
     disabledEmployee,
-    permissions: { isAdmin, isOwner }
+    permissions: { isAdmin, isOwner, orders }
   } = useEmployee()
+  const canCreateNewOrders = orders?.canCreate
   const label = staff?.find((s) => s.id === myStaffId)?.position || user?.name
   const navigation = useNavigation()
 
@@ -41,7 +42,7 @@ const MyStaffLabel = () => {
           buttonStyles={{ marginRight: 12 }}
         ></Button>
       )}
-      {store && (
+      {store && canCreateNewOrders && (
         <Button
           //* disabled for disabledEmployees and not admin or owner
           disabled={disabledEmployee && !(isAdmin || isOwner)}
