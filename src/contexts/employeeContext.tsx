@@ -229,7 +229,7 @@ export const EmployeeContextProvider = ({ children }) => {
         canDeleteOrders:
           isAdmin || isOwner || !!employee?.permissions?.order?.canDelete,
         canDeleteItems:
-          isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems,
+          isAdmin || isOwner || !!employee?.permissions?.items?.canDelete,
         canManageItems: canViewAllItems,
         canViewAllOrders:
           !!employee?.permissions?.order?.canViewAll || isAdmin || isOwner,
