@@ -54,7 +54,10 @@ const FormItem = ({
     value: status
   }))
   const canEditItemStatus =
-    permissions.isAdmin || permissions.isOwner || fromOrder
+    permissions.isAdmin ||
+    permissions.isOwner ||
+    permissions.items.canCreate ||
+    fromOrder
   return (
     <Formik
       initialValues={{ ...defaultValues }}
@@ -85,7 +88,7 @@ const FormItem = ({
               name={'status'}
               options={itemStatusOptions}
               disabled={!canEditItemStatus}
-              helperText="Solo se puede editar si eres administrador"
+              helperText="Solo se puede editar si eres administrador o tienes permisos"
             />
             <View style={styles.input}>
               <FormikInputValue
