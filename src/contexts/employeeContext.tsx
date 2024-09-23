@@ -177,9 +177,6 @@ export const EmployeeContextProvider = ({ children }) => {
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
-  const canManageItems =
-    isAdmin || isOwner || !!employee?.permissions?.store?.canManageItems
-
   //* You can view all items if you are an admin, owner or have the permission to view all items
   //* otherwise you can only view the items assigned to your sections
   const canViewAllItems =
@@ -233,7 +230,7 @@ export const EmployeeContextProvider = ({ children }) => {
           isAdmin || isOwner || !!employee?.permissions?.order?.canDelete,
         canDeleteItems:
           isAdmin || isOwner || !!employee?.permissions?.store?.canDeleteItems,
-        canManageItems,
+        canManageItems: canViewAllItems,
         canViewAllOrders:
           !!employee?.permissions?.order?.canViewAll || isAdmin || isOwner,
         canDeleteExtension:
