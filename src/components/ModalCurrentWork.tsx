@@ -40,6 +40,9 @@ const ModalCurrentWork = () => {
             justIcon
           />
         </View>
+
+        <ProgressWorkDetails />
+
         <BalanceAmountsE payments={payments} />
 
         <View
@@ -90,8 +93,16 @@ const ModalCurrentWork = () => {
     </View>
   )
 }
-
-const ProgressWork = ({ progress = 0 }) => {
+const ProgressWorkDetails = () => {
+  return (
+    <View style={{ marginVertical: 16 }}>
+      <ProgressWork progress={75} label={'Pedidos'} />
+      <ProgressWork progress={25} label={'Reportes'} />
+      <ProgressWork progress={50} label={'Vencidas'} />
+    </View>
+  )
+}
+const ProgressWork = ({ progress = 0, label = '' }) => {
   //* if progress less than 25% color is error, if less than 50% color is warning, if less than 75% color is primary, else color is success
   const color =
     progress < 25
@@ -107,11 +118,12 @@ const ProgressWork = ({ progress = 0 }) => {
       style={{
         flexDirection: 'column',
         justifyContent: 'center',
-        alignContent: 'center'
+        alignContent: 'center',
+        marginTop: 4
       }}
     >
       <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
-        {progress.toFixed(0)}%
+        {label} {progress.toFixed(0)}%
       </Text>
       <ProgressBar progress={progress} color={color} />
     </View>
