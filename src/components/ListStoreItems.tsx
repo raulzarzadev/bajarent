@@ -9,7 +9,7 @@ import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
-import { formatItems } from '../contexts/employeeContext'
+import { formatItems, useEmployee } from '../contexts/employeeContext'
 import {
   onAssignItem,
   onChangeItemSection,
@@ -41,7 +41,7 @@ const ListStoreItems = ({
 }) => {
   const { navigate } = useNavigation()
   const { params } = useRoute()
-
+  const { permissions } = useEmployee()
   //@ts-ignore
   const listItems = params?.ids
 
@@ -265,22 +265,22 @@ const ListStoreItems = ({
           </View>
         )}
         sideButtons={[
-          {
-            icon: 'location',
-            onPress() {
-              // @ts-ignore
-              navigate('ScreenItemsMap')
-            },
-            label: 'Mapa',
-            visible: true
-          },
+          // {
+          //   icon: 'location',
+          //   onPress() {
+          //     // @ts-ignore
+          //     navigate('ScreenItemsMap')
+          //   },
+          //   label: 'Mapa',
+          //   visible: true
+          // },
           {
             icon: 'add',
             onPress() {
               toItems({ screenNew: true })
             },
             label: 'Agregar',
-            visible: true
+            visible: permissions.items.canCreate
           }
           // {
           //   icon: 'refresh',
