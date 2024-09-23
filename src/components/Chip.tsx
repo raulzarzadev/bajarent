@@ -13,6 +13,7 @@ const Chip = ({
   maxWidth,
   icon,
   iconColor,
+  iconSize,
   ...props
 }: Omit<ChipProps, 'icon'> & {
   title: string
@@ -23,7 +24,7 @@ const Chip = ({
   icon?: IconName
   iconColor?: string
   maxWidth?: ViewStyle['maxWidth']
-  iconSize?: 'sm' | 'md' | 'lg'
+  iconSize?: 'xs' | 'sm' | 'md' | 'lg'
   onPress?: () => void
 }) => {
   const sizes = {
@@ -45,12 +46,12 @@ const Chip = ({
     }
   }
 
-  const iconSize = {
-    xs: 15,
-    sm: 15,
+  const iconSizes = {
+    xs: 12,
+    sm: 14,
     md: 16,
-    lg: 18
-  }[size]
+    lg: 20
+  }
 
   return (
     <RNEChip
@@ -73,7 +74,11 @@ const Chip = ({
       }}
       icon={
         icon ? (
-          <Icon icon={icon} color={titleColor} size={iconSize} />
+          <Icon
+            icon={icon}
+            color={titleColor}
+            size={iconSizes[iconSize || size]}
+          />
         ) : undefined
       }
       iconRight={false}
