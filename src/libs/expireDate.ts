@@ -143,7 +143,7 @@ export const addCustomTime = ({
   return null
 }
 
-export type LabelRentType = `${number} ${string}` | ''
+export type LabelRentType = `${number}${string}` | ''
 
 export const translateTime = (
   time: TimePriceType,
@@ -172,7 +172,7 @@ export const translateTime = (
   const amountNumber = parseInt(amount)
   let unitCount = amountNumber === 1 ? units[unit] : units[unit] + 's'
   if (ops?.shortLabel) {
-    return `${amountNumber} ${shortUnits[unit]}`
+    return `${amountNumber}${shortUnits[unit]}`
   }
   if (unit === 'month') {
     return `${amountNumber} ${amountNumber === 1 ? 'mes' : 'meses'}`

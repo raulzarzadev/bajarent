@@ -63,7 +63,7 @@ const OrderDirectives = ({
     >
       <ChooseLabel colorLabel={order?.colorLabel} orderId={order?.id} />
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
-      <View style={{ width: 60 }}>
+      <View style={{ width: 70 }}>
         <Chip
           style={[styles.chip]}
           title={orderType}
@@ -71,8 +71,8 @@ const OrderDirectives = ({
           color={theme?.transparent}
           // iconColor={iconColor(order?.type)}
           // titleColor={theme.black}
-          titleColor={iconColor(order?.type)}
-          size="sm"
+          // titleColor={iconColor(order?.type)}
+          size="lg"
         ></Chip>
       </View>
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
