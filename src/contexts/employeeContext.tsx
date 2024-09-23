@@ -281,21 +281,25 @@ export const EmployeeContextProvider = ({ children }) => {
     ]
   )
 
+  const todayWork = {
+    pickedUp: pickedUp,
+    delivered: delivered,
+    renewed: renewed,
+    resolvedReports,
+    payments,
+    handleUpdate,
+    authorizedOrders
+  }
+
+  console.log({ todayWork })
+
   em++
   if (__DEV__) console.log({ em })
   return (
     <EmployeeContext.Provider
       value={{
         ...value,
-        todayWork: {
-          pickedUp: pickedUp,
-          delivered: delivered,
-          renewed: renewed,
-          resolvedReports,
-          payments,
-          handleUpdate,
-          authorizedOrders
-        }
+        todayWork
       }}
     >
       {children}

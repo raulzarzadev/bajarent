@@ -36,9 +36,16 @@ const useProgressWork = (initialValue: number = 0) => {
     )
 
     setProgressExpired(
-      calculateProgress(renewed?.length + pickedUp.length, expired?.length)
+      calculateProgress(renewed?.length + pickedUp?.length, expired?.length)
     )
-  }, [resolvedReports, pendingReports, authorizedOrders])
+  }, [
+    resolvedReports,
+    pendingReports,
+    authorizedOrders,
+    pickedUp,
+    renewed,
+    delivered
+  ])
 
   return {
     progressTotal,
