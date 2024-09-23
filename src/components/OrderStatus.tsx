@@ -1,20 +1,10 @@
 import React from 'react'
 import theme, { colors } from '../theme'
 import Chip, { Size } from './Chip'
-import { Text, View, ViewStyle } from 'react-native'
+import { Text, ViewStyle } from 'react-native'
 import OrderType, { order_status } from '../types/OrderType'
-import {
-  formatDate,
-  isBefore,
-  isToday,
-  isTomorrow,
-  isYesterday
-} from 'date-fns'
-import asDate, {
-  dateFormat,
-  fromNow,
-  isBeforeYesterday
-} from '../libs/utils-date'
+import { formatDate, isBefore, isToday } from 'date-fns'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 const OrderStatus = ({
@@ -33,7 +23,6 @@ const OrderStatus = ({
     (comment) => comment?.type === 'report' && !comment?.solved
   )
   const olderUnsolvedReportDate = olderUnsolvedReport?.createdAt || ''
-  // console.log(olderUnsolvedReport)
   const hasImportantComments = order.comments?.some(
     (comment) => comment.type === 'important' && !comment.solved
   )
@@ -57,9 +46,7 @@ const OrderStatus = ({
   const rentPickedUp = order.type === 'RENT' && isPickedUp
   const repairPickedUp = order.type === 'REPAIR' && isPickedUp
   const repairDelivered = order.type === 'REPAIR' && isDelivered
-  const rentAuthorized = order.type === 'RENT' && isAuthorized
-  const repairAuthorized = order.type === 'REPAIR' && isAuthorized
-  const saleAuthorized = order.type === 'SALE' && isAuthorized
+
   const isRenewed =
     order.type === 'RENT' &&
     (order.isRenewed || order?.status === order_status.RENEWED)
@@ -68,25 +55,6 @@ const OrderStatus = ({
     !order?.expireAt &&
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
-  const scheduledAt = order?.scheduledAt
-  const scheduledLabel = () => {
-    const scheduledAt = order?.scheduledAt
-    if (isBeforeYesterday(asDate(scheduledAt))) {
-      return `📅 ${dateFormat(asDate(scheduledAt), '*dd/MMM')}`
-    }
-    if (isYesterday(asDate(scheduledAt))) {
-      return `📅 Ayer`
-    }
-    if (isToday(asDate(scheduledAt))) {
-      return `📅 Hoy`
-    }
-    if (isTomorrow(asDate(scheduledAt))) {
-      return `📅 Mañana`
-    }
-    if (scheduledAt) {
-      return `📅 ${dateFormat(asDate(scheduledAt), 'dd/MMM')}`
-    }
-  }
 
   return (
     <>
@@ -152,31 +120,16 @@ const OrderStatus = ({
           size={chipSize}
         />
       )}
-      {rentAuthorized && (
+      {isAuthorized && (
         <Chip
           style={[chipStyles]}
-          title={'Pedido'}
+          title={`${dateFormat(asDate(order?.scheduledAt), 'dd/MMM')}`}
           color={theme.warning}
           size={chipSize}
+          icon="calendar"
         />
       )}
-      {repairAuthorized && (
-        <Chip
-          style={[chipStyles]}
-          title={'Pedido'}
-          color={theme.success}
-          size={chipSize}
-          titleColor={colors.white}
-        />
-      )}
-      {saleAuthorized && (
-        <Chip
-          style={[chipStyles]}
-          title={'Pedido'}
-          color={theme.warning}
-          size={chipSize}
-        />
-      )}
+
       {repairDelivered && (
         <Chip
           style={[chipStyles]}
@@ -257,15 +210,6 @@ const OrderStatus = ({
           color={theme.warning}
           size={chipSize}
           titleColor={theme.accent}
-        />
-      )}
-
-      {!!scheduledAt && isAuthorized && (
-        <Chip
-          style={[chipStyles]}
-          title={scheduledLabel()}
-          color={colors.transparent}
-          size={chipSize}
         />
       )}
     </>
