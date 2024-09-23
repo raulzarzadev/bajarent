@@ -664,6 +664,28 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 
     return this.findMany(filters, ops)
   }
+  getAuthorized = async (
+    {
+      storeId,
+      sections
+    }: {
+      storeId: string
+      sections?: string[] | 'all'
+    },
+    ops?: GetItemsOps
+  ) => {
+    let filters = [
+      where('storeId', '==', storeId),
+      where('status', '==', order_status.AUTHORIZED)
+    ]
+    if (sections === 'all') {
+      return []
+    } else if (Array.isArray(sections) && sections.length > 0) {
+      filters.push(where('assignToSection', 'in', sections))
+    }
+    return this.findMany(filters, ops)
+  }
+
   getFieldBetweenDates = async (
     {
       storeId,

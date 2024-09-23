@@ -14,7 +14,7 @@ import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isToday } from 'date-fns'
 import PaymentType from '../types/PaymentType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { where } from 'firebase/firestore'
@@ -28,6 +28,7 @@ export type EmployeeContextType = {
     payments: PaymentType[]
     resolvedReports?: OrderType[]
     handleUpdate: () => void
+    authorizedOrders: OrderType[]
   }
   isEmployee?: boolean
   disabledEmployee?: boolean
@@ -74,7 +75,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
   const [isEmployee, setIsEmployee] = useState(false)
   const [resolvedReports, setResolvedReports] = useState<OrderType[]>([])
-
+  const [authorizedOrders, setAuthorizedOrders] = useState<OrderType[]>([])
   const handleUpdate = () => {
     console.log('updating orders from employee')
     setLoading(true)
@@ -145,6 +146,12 @@ export const EmployeeContextProvider = ({ children }) => {
       ]
       //{ fromCache: getFromCache.solvedReports }
     ).then(setResolvedReports)
+    ServiceOrders.getAuthorized({
+      storeId,
+      sections: canViewAllOrders ? 'all' : assignedSections
+    }).then((orders) => {
+      setAuthorizedOrders(orders)
+    })
   }
 
   const handleGetPayments = () => {
@@ -195,7 +202,8 @@ export const EmployeeContextProvider = ({ children }) => {
   //* otherwise you can only view the items assigned to your sections
   const canViewAllItems =
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
-
+  const canViewAllOrders =
+    isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
   useEffect(() => {
     if (canViewAllItems) {
       ServiceStoreItems.listenAvailableBySections({
@@ -246,8 +254,7 @@ export const EmployeeContextProvider = ({ children }) => {
         canDeleteItems:
           isAdmin || isOwner || !!employee?.permissions?.items?.canDelete,
         canManageItems: canViewAllItems,
-        canViewAllOrders:
-          !!employee?.permissions?.order?.canViewAll || isAdmin || isOwner,
+        canViewAllOrders,
         canDeleteExtension:
           isAdmin ||
           isOwner ||
@@ -286,7 +293,8 @@ export const EmployeeContextProvider = ({ children }) => {
           renewed: renewed,
           resolvedReports,
           payments,
-          handleUpdate
+          handleUpdate,
+          authorizedOrders
         }
       }}
     >

@@ -45,8 +45,8 @@ const ModalCurrentWork = () => {
         </View>
 
         <ProgressWorkDetails
-          // progressNew={progressNew}
-          // progressExpired={progressExpired}
+          progressNew={progressNew}
+          progressExpired={progressExpired}
           progressReports={progressReports}
         />
 
@@ -107,9 +107,9 @@ const ProgressWorkDetails = ({
 }) => {
   return (
     <View style={{ marginVertical: 16 }}>
-      {/* <ProgressWork progress={progressNew} label={'Pedidos'} /> */}
+      <ProgressWork progress={progressNew} label={'Pedidos'} />
       <ProgressWork progress={progressReports} label={'Reportes'} />
-      {/* <ProgressWork progress={progressExpired} label={'Vencidas'} /> */}
+      <ProgressWork progress={progressExpired} label={'Vencidas'} />
     </View>
   )
 }

@@ -3,20 +3,27 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import { useEmployee } from '../contexts/employeeContext'
 
 const useProgressWork = (initialValue: number = 0) => {
+  const NUMBER_OF_METRICS = 3
   const { todayWork } = useEmployee()
   const [progressNew, setProgressNew] = useState(initialValue)
   const [progressReports, setProgressReports] = useState(initialValue)
   const [progressExpired, setProgressExpired] = useState(initialValue)
   const [progressTotal, setTotal] = useState(initialValue)
-
   const { orders = [] } = useOrdersCtx()
   const pendingReports = orders?.filter((o) => o?.hasNotSolvedReports)
-
-  const { pickedUp, delivered, renewed, payments, resolvedReports } =
-    todayWork || {}
+  const expired = orders?.filter((o) => o.isExpired)
+  const {
+    pickedUp,
+    delivered,
+    renewed,
+    payments,
+    resolvedReports,
+    authorizedOrders
+  } = todayWork || {}
 
   useEffect(() => {
-    const total = progressNew + progressReports + progressExpired //* /3 the number of metrics used
+    const total =
+      (progressNew + progressReports + progressExpired) / NUMBER_OF_METRICS //*the number of metrics used
     setTotal(total)
   }, [progressNew, progressReports, progressExpired])
 
@@ -24,8 +31,14 @@ const useProgressWork = (initialValue: number = 0) => {
     setProgressReports(
       calculateProgress(resolvedReports?.length, pendingReports?.length)
     )
-    // setProgressNew(calculateProgress(pickedUp?.length, pendingReports?.length))
-  }, [resolvedReports, pendingReports])
+    setProgressNew(
+      calculateProgress(delivered?.length, authorizedOrders?.length)
+    )
+
+    setProgressExpired(
+      calculateProgress(renewed?.length + pickedUp.length, expired?.length)
+    )
+  }, [resolvedReports, pendingReports, authorizedOrders])
 
   return {
     progressTotal,
