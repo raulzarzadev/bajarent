@@ -13,7 +13,6 @@ import { CategoryType } from '../types/RentItem'
 import ButtonIcon from './ButtonIcon'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
-import { CardPrice } from './FormSelectItem'
 import { PriceType } from '../types/PriceType'
 import { useStore } from '../contexts/storeContext'
 import ModalFormPrice from './ModalFormPrice'
@@ -21,6 +20,7 @@ import useCategories from '../hooks/useCategories'
 import { priceTimeInSeconds } from '../libs/expireDate'
 import StoreItems from './StoreItems'
 import { sortPricesByTime } from '../libs/prices'
+import { CardPrice } from './FormSelectPrice'
 
 const ScreenItems = () => {
   return (
