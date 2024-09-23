@@ -2,7 +2,7 @@ import React from 'react'
 import { ListSideButton, LoadingList } from './List'
 import { useNavigation } from '@react-navigation/native'
 import { RowOrderE, RowOrderType } from './RowOrder'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
 import { useStore } from '../contexts/storeContext'
 import { CollectionSearch } from '../hooks/useFilter'
@@ -46,7 +46,8 @@ const ListOrders = ({
         itemsNumbers: o?.items
           ?.map((i) => i?.number)
           .sort((a, b) => a.localeCompare(b))
-          .join(', ')
+          .join(', '),
+        isAuthorized: o?.status === order_status.AUTHORIZED
         //  assignedToSection
       }
       return o?.id ? order : null
@@ -89,6 +90,16 @@ const ListOrders = ({
           { field: 'status', label: 'Status' },
 
           { field: 'colorLabel', label: 'Color' },
+
+          //* Boolean filters
+          {
+            field: 'isAuthorized',
+            label: 'Pedido',
+            boolean: true,
+            icon: 'calendar',
+            color: theme.warning,
+            titleColor: theme.accent
+          },
           {
             field: 'hasNotSolvedReports',
             label: 'Reportes ',

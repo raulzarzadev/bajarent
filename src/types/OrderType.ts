@@ -143,6 +143,7 @@ export type OrderBase = {
    *******************************************rz */
   statuses?: boolean
   isDelivered?: boolean
+  isAuthorized?: boolean
 
   /**
    * @deprecated use hasNotSolvedReports instead
