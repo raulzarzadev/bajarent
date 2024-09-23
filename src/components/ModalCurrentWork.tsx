@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import StyledModal from './StyledModal'
 import CurrencyAmount from './CurrencyAmount'
@@ -11,6 +11,7 @@ import Button from './Button'
 import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
 import { useEmployee } from '../contexts/employeeContext'
+import ProgressBar from './ProgressBar'
 
 const ModalCurrentWork = () => {
   const { todayWork } = useEmployee()
@@ -24,6 +25,7 @@ const ModalCurrentWork = () => {
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
+        <ProgressWork progress={75} />
         <CurrencyAmount
           style={gStyles.tBold}
           amount={payments_amount(payments).total}
@@ -85,6 +87,33 @@ const ModalCurrentWork = () => {
           />
         </View>
       </StyledModal>
+    </View>
+  )
+}
+
+const ProgressWork = ({ progress = 0 }) => {
+  //* if progress less than 25% color is error, if less than 50% color is warning, if less than 75% color is primary, else color is success
+  const color =
+    progress < 25
+      ? 'error'
+      : progress < 50
+      ? 'warning'
+      : progress < 75
+      ? 'success'
+      : 'primary'
+
+  return (
+    <View
+      style={{
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center'
+      }}
+    >
+      <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
+        {progress.toFixed(0)}%
+      </Text>
+      <ProgressBar progress={progress} color={color} />
     </View>
   )
 }
