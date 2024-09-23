@@ -18,7 +18,7 @@ const FormItem = ({
   progress,
   values = {}
 }: {
-  fromOrder: boolean
+  fromOrder?: boolean
   values?: Partial<ItemType>
   onSubmit?: (values: ItemType) => Promise<any> | void
   progress?: number
