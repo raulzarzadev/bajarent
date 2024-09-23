@@ -16,6 +16,8 @@ import PaymentType from '../types/PaymentType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType from '../types/OrderType'
 import { ServicePayments } from '../firebase/ServicePayments'
+import { ServiceComments } from '../firebase/ServiceComments'
+import { where } from 'firebase/firestore'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -24,6 +26,7 @@ export type EmployeeContextType = {
     delivered: OrderType[]
     renewed: OrderType[]
     payments: PaymentType[]
+    resolvedReports?: OrderType[]
     handleUpdate: () => void
   }
   isEmployee?: boolean
@@ -60,7 +63,8 @@ let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
   const { store, staff, storeSections, storeId, categories } = useStore()
-
+  const FROM_DATE = startDate(new Date())
+  const TO_DATE = endDate(new Date())
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
@@ -69,6 +73,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
   const [isEmployee, setIsEmployee] = useState(false)
+  const [resolvedReports, setResolvedReports] = useState<OrderType[]>([])
 
   const handleUpdate = () => {
     console.log('updating orders from employee')
@@ -131,6 +136,15 @@ export const EmployeeContextProvider = ({ children }) => {
     ).then((orders) => {
       setPickedUp(orders)
     })
+    ServiceComments.findMany(
+      [
+        where('type', '==', 'report'),
+        where('solved', '==', true),
+        where('solvedAt', '>=', FROM_DATE),
+        where('solvedAt', '<=', TO_DATE)
+      ]
+      //{ fromCache: getFromCache.solvedReports }
+    ).then(setResolvedReports)
   }
 
   const handleGetPayments = () => {
@@ -210,6 +224,7 @@ export const EmployeeContextProvider = ({ children }) => {
         : undefined,
       isEmployee,
       disabledEmployee,
+
       permissions: {
         isAdmin: !!isAdmin,
         isOwner: isOwner,
@@ -269,6 +284,7 @@ export const EmployeeContextProvider = ({ children }) => {
           pickedUp: pickedUp,
           delivered: delivered,
           renewed: renewed,
+          resolvedReports,
           payments,
           handleUpdate
         }

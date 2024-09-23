@@ -12,6 +12,7 @@ import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
 import { useEmployee } from '../contexts/employeeContext'
 import ProgressBar from './ProgressBar'
+import useProgressWork from '../hooks/useProgressWork'
 
 const ModalCurrentWork = () => {
   const { todayWork } = useEmployee()
@@ -21,11 +22,13 @@ const ModalCurrentWork = () => {
   const payments = todayWork?.payments
   const handleUpdate = todayWork?.handleUpdate
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
+  const { progressExpired, progressNew, progressReports, progressTotal } =
+    useProgressWork()
 
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
-        <ProgressWork progress={75} />
+        <ProgressWork progress={progressTotal} />
         <CurrencyAmount
           style={gStyles.tBold}
           amount={payments_amount(payments).total}
@@ -41,7 +44,11 @@ const ModalCurrentWork = () => {
           />
         </View>
 
-        <ProgressWorkDetails />
+        <ProgressWorkDetails
+          // progressNew={progressNew}
+          // progressExpired={progressExpired}
+          progressReports={progressReports}
+        />
 
         <BalanceAmountsE payments={payments} />
 
@@ -93,12 +100,16 @@ const ModalCurrentWork = () => {
     </View>
   )
 }
-const ProgressWorkDetails = () => {
+const ProgressWorkDetails = ({
+  progressNew = 0,
+  progressReports = 0,
+  progressExpired = 0
+}) => {
   return (
     <View style={{ marginVertical: 16 }}>
-      <ProgressWork progress={75} label={'Pedidos'} />
-      <ProgressWork progress={25} label={'Reportes'} />
-      <ProgressWork progress={50} label={'Vencidas'} />
+      {/* <ProgressWork progress={progressNew} label={'Pedidos'} /> */}
+      <ProgressWork progress={progressReports} label={'Reportes'} />
+      {/* <ProgressWork progress={progressExpired} label={'Vencidas'} /> */}
     </View>
   )
 }
