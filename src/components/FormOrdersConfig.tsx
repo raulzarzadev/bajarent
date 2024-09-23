@@ -75,22 +75,32 @@ const FormOrdersConfig = ({
                   >
                     {dictionary(type)}
                   </Text>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flexDirection: 'column' }}>
                     <FormikCheckbox
                       label="Items por orden"
                       name={`orderFields.${type}.validateItemsQty`}
                     ></FormikCheckbox>
                     {values?.orderFields?.[type]?.validateItemsQty && (
-                      <View style={{ flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly',
+                          marginTop: gSpace(1)
+                        }}
+                      >
                         <FormikInputValue
                           name={`orderFields.${type}.itemsMin`}
                           type="number"
+                          style={{ width: 80 }}
                           placeholder="Mínimo "
+                          helperText="Minimo"
                         ></FormikInputValue>
                         <FormikInputValue
                           name={`orderFields.${type}.itemsMax`}
                           type="number"
+                          style={{ width: 80 }}
                           placeholder="Máximo "
+                          helperText="Máximo"
                         ></FormikInputValue>
                       </View>
                     )}
