@@ -265,29 +265,20 @@ const ListStoreItems = ({
           </View>
         )}
         sideButtons={[
-          // {
-          //   icon: 'location',
-          //   onPress() {
-          //     // @ts-ignore
-          //     navigate('ScreenItemsMap')
-          //   },
-          //   label: 'Mapa',
-          //   visible: true
-          // },
           {
             icon: 'add',
             onPress() {
               toItems({ screenNew: true })
             },
             label: 'Agregar',
-            visible: permissions.items.canCreate
+            visible: permissions?.items?.canCreate
+          },
+          {
+            icon: 'refresh',
+            onPress: () => fetchItems(),
+            label: 'Refrescar',
+            visible: true
           }
-          // {
-          //   icon: 'refresh',
-          //   onPress: () => fetchItems(),
-          //   label: 'Refrescar',
-          //   visible: true
-          // }
         ]}
         data={formattedItems}
         filters={[
