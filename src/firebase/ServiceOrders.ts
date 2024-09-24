@@ -566,7 +566,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     storeId,
     userId,
     fromDate,
-    toDate
+    toDate,
+    sections
   }: {
     status: OrderType['status']
     storeId: string
@@ -574,6 +575,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     userId: string
     fromDate: Date
     toDate: Date
+    sections?: string[]
   }) => {
     const filters = [
       where('storeId', '==', storeId),
@@ -585,6 +587,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     if (userId) filters.push(where(formatField, '==', userId))
     if (fromDate) filters.push(where(field, '>=', fromDate))
     if (toDate) filters.push(where(field, '<=', toDate))
+    if (sections?.length > 0)
+      filters.push(where('assignToSection', 'in', sections))
     return filters
   }
 
@@ -644,12 +648,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       storeId,
       userId,
       fromDate,
-      toDate
+      toDate,
+      sections
     }: {
       storeId: string
-      userId: string
+      userId?: string
       fromDate: Date
       toDate: Date
+      sections?: string[]
     },
     ops?: GetItemsOps
   ) {
@@ -659,7 +665,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       userId,
       fromDate,
       toDate,
-      field: 'pickedUpAt'
+      field: 'pickedUpAt',
+      sections
     })
 
     return this.findMany(filters, ops)
