@@ -14,8 +14,14 @@ import ProgressBar from './ProgressBar'
 import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 
 const ModalCurrentWork = () => {
-  const { payments, pickedUpOrders, deliveredOrders, renewedOrders, progress } =
-    useCurrentWorkCtx()
+  const {
+    payments,
+    pickedUpOrders,
+    deliveredOrders,
+    renewedOrders,
+    progress,
+    handleRefresh
+  } = useCurrentWorkCtx()
 
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
 
@@ -34,6 +40,7 @@ const ModalCurrentWork = () => {
             //disabled={loading}
             icon="refresh"
             onPress={() => {
+              handleRefresh()
               // handleUpdate()
             }}
             justIcon
