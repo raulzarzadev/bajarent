@@ -9,6 +9,7 @@ import { ThemeProvider } from './src/contexts/themeContext'
 import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { OrdersContextProvider } from './src/contexts/ordersContext'
 import ErrorBoundary from './src/components/ErrorBoundary'
+import { CurrentWorkProvider } from './src/contexts/currentWorkContext'
 
 export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {
@@ -52,9 +53,11 @@ export default function App() {
           <StoreContextProvider>
             <EmployeeContextProvider>
               <OrdersContextProvider>
-                <ThemeProvider>
-                  <BottomAppBarE />
-                </ThemeProvider>
+                <CurrentWorkProvider>
+                  <ThemeProvider>
+                    <BottomAppBarE />
+                  </ThemeProvider>
+                </CurrentWorkProvider>
               </OrdersContextProvider>
             </EmployeeContextProvider>
           </StoreContextProvider>

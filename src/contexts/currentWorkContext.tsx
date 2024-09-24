@@ -11,14 +11,13 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from './storeContext'
 import { useEmployee } from './employeeContext'
 import { endDate, startDate } from '../libs/utils-date'
+import PaymentType from '../types/PaymentType'
 
-interface CurrentWorkContextProps {
-  currentWork: CurrentWorks
-}
+// interface CurrentWorkContextProps {
+//   currentWork: CurrentWorks
+// }
 
-const CurrentWorkContext = createContext<CurrentWorkContextProps | undefined>(
-  undefined
-)
+const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
 
 export type CurrentWorks = {
   pickedUpOrders: Partial<OrderType>[]
@@ -27,7 +26,7 @@ export type CurrentWorks = {
   authorizedOrders: Partial<OrderType>[]
   solvedReported: Partial<OrderType>[]
   unsolvedReported: Partial<OrderType>[]
-  payments: Partial<OrderType>[]
+  payments: Partial<PaymentType>[]
 }
 
 export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
@@ -35,9 +34,9 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [date, setDate] = useState(new Date())
   const { storeId } = useStore()
-  const {
-    employee: { sectionsAssigned }
-  } = useEmployee()
+  const { employee } = useEmployee()
+
+  const sectionsAssigned = employee?.sectionsAssigned || []
 
   const { orders } = useOrdersCtx()
   const [currentWork, setCurrentWork] = useState<CurrentWorks>({
@@ -76,13 +75,13 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   }, [orders])
 
   return (
-    <CurrentWorkContext.Provider value={{ currentWork }}>
+    <CurrentWorkContext.Provider value={{ ...currentWork }}>
       {children}
     </CurrentWorkContext.Provider>
   )
 }
 
-export const useCurrentWork = (): CurrentWorkContextProps => {
+export const useCurrentWorkCtx = (): CurrentWorks => {
   const context = useContext(CurrentWorkContext)
   if (!context) {
     throw new Error('useCurrentWork must be used within a CurrentWorkProvider')

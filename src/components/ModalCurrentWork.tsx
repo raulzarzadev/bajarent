@@ -10,17 +10,14 @@ import Button from './Button'
 
 import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
-import { useEmployee } from '../contexts/employeeContext'
 import ProgressBar from './ProgressBar'
 import useCurrentWork from '../hooks/useCurrentWork'
+import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 
 const ModalCurrentWork = () => {
-  const { todayWork } = useEmployee()
-  const pickedUp = todayWork?.pickedUp
-  const delivered = todayWork?.delivered
-  const renewed = todayWork?.renewed
-  const payments = todayWork?.payments
-  const handleUpdate = todayWork?.handleUpdate
+  const { payments, pickedUpOrders, deliveredOrders, renewedOrders } =
+    useCurrentWorkCtx()
+
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
   const { progressExpired, progressNew, progressReports, progressTotal } =
     useCurrentWork()
@@ -39,7 +36,9 @@ const ModalCurrentWork = () => {
           <Button
             //disabled={loading}
             icon="refresh"
-            onPress={handleUpdate}
+            onPress={() => {
+              // handleUpdate()
+            }}
             justIcon
           />
         </View>
@@ -64,30 +63,30 @@ const ModalCurrentWork = () => {
             defaultTab={null}
             tabs={[
               {
-                title: `Recogidas: ${pickedUp?.length || 0}`,
+                title: `Recogidas: ${pickedUpOrders?.length || 0}`,
                 content: (
                   <TabOrderList
-                    orders={pickedUp}
+                    orders={pickedUpOrders}
                     onRedirect={modalCurrentWork.toggleOpen}
                   />
                 ),
                 show: true
               },
               {
-                title: `Entregadas: ${delivered?.length || 0}`,
+                title: `Entregadas: ${deliveredOrders?.length || 0}`,
                 content: (
                   <TabOrderList
-                    orders={delivered}
+                    orders={deliveredOrders}
                     onRedirect={modalCurrentWork.toggleOpen}
                   />
                 ),
                 show: true
               },
               {
-                title: `Renovadas: ${renewed?.length || 0}`,
+                title: `Renovadas: ${renewedOrders?.length || 0}`,
                 content: (
                   <TabOrderList
-                    orders={renewed}
+                    orders={renewedOrders}
                     onRedirect={modalCurrentWork.toggleOpen}
                   />
                 ),

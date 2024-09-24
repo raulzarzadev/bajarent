@@ -7,7 +7,7 @@ import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
 
-export type BalanceAmountsProps = { payments: PaymentType[] }
+export type BalanceAmountsProps = { payments: Partial<PaymentType>[] }
 const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   const cashPayments = payments?.filter((p) => p.method === 'cash')
   const cardPayments = payments?.filter((p) => p.method === 'card')

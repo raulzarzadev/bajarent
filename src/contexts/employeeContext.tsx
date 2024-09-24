@@ -10,22 +10,12 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { CategoryType } from '../types/RentItem'
 import { SectionType } from '../types/SectionType'
-import asDate, { endDate, startDate } from '../libs/utils-date'
+import asDate from '../libs/utils-date'
 import { isToday } from 'date-fns'
-import PaymentType from '../types/PaymentType'
-import OrderType from '../types/OrderType'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
-  todayWork?: {
-    pickedUp: OrderType[]
-    delivered: OrderType[]
-    renewed: OrderType[]
-    payments: PaymentType[]
-    resolvedReports?: OrderType[]
-    handleUpdate: () => void
-    authorizedOrders: OrderType[]
-  }
+
   isEmployee?: boolean
   disabledEmployee?: boolean
   permissions: {

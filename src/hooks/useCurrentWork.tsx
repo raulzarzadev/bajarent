@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { useEmployee } from '../contexts/employeeContext'
+import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 
 const useCurrentWork = (initialValue: number = 0) => {
   const NUMBER_OF_METRICS = 3
-  const { todayWork } = useEmployee()
+  const {
+    pickedUpOrders,
+    authorizedOrders,
+    deliveredOrders,
+    renewedOrders,
+    solvedReported,
+    unsolvedReported
+  } = useCurrentWorkCtx()
   const [progressNew, setProgressNew] = useState(initialValue)
   const [progressReports, setProgressReports] = useState(initialValue)
   const [progressExpired, setProgressExpired] = useState(initialValue)
@@ -12,8 +20,6 @@ const useCurrentWork = (initialValue: number = 0) => {
   const { orders = [] } = useOrdersCtx()
   const pendingReports = orders?.filter((o) => o?.hasNotSolvedReports)
   const expired = orders?.filter((o) => o.isExpired)
-  const { pickedUp, delivered, renewed, resolvedReports, authorizedOrders } =
-    todayWork || {}
 
   useEffect(() => {
     const total =
@@ -22,31 +28,35 @@ const useCurrentWork = (initialValue: number = 0) => {
   }, [progressNew, progressReports, progressExpired])
 
   console.log({
-    resolvedReports,
+    solvedReported,
     pendingReports,
     authorizedOrders,
-    pickedUp,
-    renewed,
-    delivered
+    pickedUpOrders,
+    renewedOrders,
+    deliveredOrders,
+    unsolvedReported
   })
   useEffect(() => {
     setProgressReports(
-      calculateProgress(resolvedReports?.length, pendingReports?.length)
+      calculateProgress(solvedReported?.length, pendingReports?.length)
     )
     setProgressNew(
-      calculateProgress(delivered?.length, authorizedOrders?.length)
+      calculateProgress(deliveredOrders?.length, authorizedOrders?.length)
     )
 
     setProgressExpired(
-      calculateProgress(renewed?.length + pickedUp?.length, expired?.length)
+      calculateProgress(
+        renewedOrders?.length + pickedUpOrders?.length,
+        expired?.length
+      )
     )
   }, [
-    resolvedReports,
+    solvedReported,
     pendingReports,
     authorizedOrders,
-    pickedUp,
-    renewed,
-    delivered
+    pickedUpOrders,
+    renewedOrders,
+    deliveredOrders
   ])
 
   return {
