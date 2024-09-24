@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { useEmployee } from '../contexts/employeeContext'
 
-const useProgressWork = (initialValue: number = 0) => {
+const useCurrentWork = (initialValue: number = 0) => {
   const NUMBER_OF_METRICS = 3
   const { todayWork } = useEmployee()
   const [progressNew, setProgressNew] = useState(initialValue)
@@ -12,14 +12,8 @@ const useProgressWork = (initialValue: number = 0) => {
   const { orders = [] } = useOrdersCtx()
   const pendingReports = orders?.filter((o) => o?.hasNotSolvedReports)
   const expired = orders?.filter((o) => o.isExpired)
-  const {
-    pickedUp,
-    delivered,
-    renewed,
-    payments,
-    resolvedReports,
-    authorizedOrders
-  } = todayWork || {}
+  const { pickedUp, delivered, renewed, resolvedReports, authorizedOrders } =
+    todayWork || {}
 
   useEffect(() => {
     const total =
@@ -27,6 +21,14 @@ const useProgressWork = (initialValue: number = 0) => {
     setTotal(total)
   }, [progressNew, progressReports, progressExpired])
 
+  console.log({
+    resolvedReports,
+    pendingReports,
+    authorizedOrders,
+    pickedUp,
+    renewed,
+    delivered
+  })
   useEffect(() => {
     setProgressReports(
       calculateProgress(resolvedReports?.length, pendingReports?.length)
@@ -55,7 +57,7 @@ const useProgressWork = (initialValue: number = 0) => {
   }
 }
 
-export default useProgressWork
+export default useCurrentWork
 function calculateProgress(done = 0, pending = 0) {
   // Calculate the total number of orders
   const total = done + pending

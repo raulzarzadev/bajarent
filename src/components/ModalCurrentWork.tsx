@@ -12,7 +12,7 @@ import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
 import { useEmployee } from '../contexts/employeeContext'
 import ProgressBar from './ProgressBar'
-import useProgressWork from '../hooks/useProgressWork'
+import useCurrentWork from '../hooks/useCurrentWork'
 
 const ModalCurrentWork = () => {
   const { todayWork } = useEmployee()
@@ -23,7 +23,7 @@ const ModalCurrentWork = () => {
   const handleUpdate = todayWork?.handleUpdate
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
   const { progressExpired, progressNew, progressReports, progressTotal } =
-    useProgressWork()
+    useCurrentWork()
 
   return (
     <View style={{ marginRight: 8 }}>

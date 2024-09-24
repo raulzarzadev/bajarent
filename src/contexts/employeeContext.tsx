@@ -64,18 +64,18 @@ let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
   const { store, staff, storeSections, storeId, categories } = useStore()
-  const FROM_DATE = startDate(new Date())
-  const TO_DATE = endDate(new Date())
+  // const FROM_DATE = startDate(new Date())
+  // const TO_DATE = endDate(new Date())
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
-  const [payments, setPayments] = useState<PaymentType[]>([])
+  // const [payments, setPayments] = useState<PaymentType[]>([])
   const [loading, setLoading] = useState(false)
   const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
   const [isEmployee, setIsEmployee] = useState(false)
-  const [resolvedReports, setResolvedReports] = useState<OrderType[]>([])
-  const [authorizedOrders, setAuthorizedOrders] = useState<OrderType[]>([])
+  // const [resolvedReports, setResolvedReports] = useState<OrderType[]>([])
+  // const [authorizedOrders, setAuthorizedOrders] = useState<OrderType[]>([])
   const handleUpdate = () => {
     console.log('updating orders from employee')
     setLoading(true)
@@ -89,83 +89,82 @@ export const EmployeeContextProvider = ({ children }) => {
 
   const userId = user?.id
 
-  const [pickedUp, setPickedUp] = useState<OrderType[]>([])
-  const [delivered, setDelivered] = useState<OrderType[]>([])
-  const [renewed, setRenewed] = useState<OrderType[]>([])
+  // const [pickedUp, setPickedUp] = useState<OrderType[]>([])
+  // const [delivered, setDelivered] = useState<OrderType[]>([])
+  // const [renewed, setRenewed] = useState<OrderType[]>([])
 
   const handleGetOrders = () => {
-    ServiceOrders.getDelivered(
-      {
-        storeId,
-        userId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      },
-      {
-        justRefs: true
-        // fromCache: true
-      }
-    ).then((orders) => {
-      setDelivered(orders)
-    })
-    ServiceOrders.getRenewed(
-      {
-        storeId,
-        userId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      },
-      {
-        justRefs: true
-        //fromCache: true
-      }
-    ).then((orders) => {
-      setRenewed(orders)
-    })
-    ServiceOrders.getPickedUp(
-      {
-        storeId,
-        userId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      },
-      {
-        justRefs: true
-
-        // fromCache: true
-      }
-    ).then((orders) => {
-      setPickedUp(orders)
-    })
-    ServiceComments.findMany(
-      [
-        where('type', '==', 'report'),
-        where('solved', '==', true),
-        where('solvedAt', '>=', FROM_DATE),
-        where('solvedAt', '<=', TO_DATE)
-      ]
-      //{ fromCache: getFromCache.solvedReports }
-    ).then(setResolvedReports)
-    ServiceOrders.getAuthorized({
-      storeId,
-      sections: canViewAllOrders ? 'all' : assignedSections
-    }).then((orders) => {
-      setAuthorizedOrders(orders)
-    })
+    // ServiceOrders.getDelivered(
+    //   {
+    //     storeId,
+    //     userId,
+    //     fromDate: startDate(date),
+    //     toDate: endDate(date)
+    //   },
+    //   {
+    //     justRefs: true
+    //     // fromCache: true
+    //   }
+    // ).then((orders) => {
+    //   setDelivered(orders)
+    // })
+    // ServiceOrders.getRenewed(
+    //   {
+    //     storeId,
+    //     userId,
+    //     fromDate: startDate(date),
+    //     toDate: endDate(date)
+    //   },
+    //   {
+    //     justRefs: true
+    //     //fromCache: true
+    //   }
+    // ).then((orders) => {
+    //   setRenewed(orders)
+    // })
+    // ServiceOrders.getPickedUp(
+    //   {
+    //     storeId,
+    //     userId,
+    //     fromDate: startDate(date),
+    //     toDate: endDate(date)
+    //   },
+    //   {
+    //     justRefs: true
+    //     // fromCache: true
+    //   }
+    // ).then((orders) => {
+    //   setPickedUp(orders)
+    // })
+    // ServiceComments.findMany(
+    //   [
+    //     where('type', '==', 'report'),
+    //     where('solved', '==', true),
+    //     where('solvedAt', '>=', FROM_DATE),
+    //     where('solvedAt', '<=', TO_DATE)
+    //   ]
+    //   //{ fromCache: getFromCache.solvedReports }
+    // ).then(setResolvedReports)
+    // ServiceOrders.getAuthorized({
+    //   storeId,
+    //   sections: canViewAllOrders ? 'all' : assignedSections
+    // }).then((orders) => {
+    //   setAuthorizedOrders(orders)
+    // })
   }
 
   const handleGetPayments = () => {
-    ServicePayments.getBetweenDates(
-      {
-        fromDate: startDate(new Date()),
-        toDate: endDate(new Date()),
-        storeId,
-        userId
-      }
-      //{ fromCache: true }
-    )
-      .then(setPayments)
-      .catch(console.error)
+    // ServicePayments.getBetweenDates(
+    //   {
+    //     fromDate: startDate(new Date()),
+    //     toDate: endDate(new Date()),
+    //     storeId,
+    //     userId
+    //   }
+    //   //{ fromCache: true }
+    // )
+    //   .then(setPayments)
+    //   .catch(console.error)
   }
 
   useEffect(() => {
@@ -281,25 +280,25 @@ export const EmployeeContextProvider = ({ children }) => {
     ]
   )
 
-  const todayWork = {
-    pickedUp: pickedUp,
-    delivered: delivered,
-    renewed: renewed,
-    resolvedReports,
-    payments,
-    handleUpdate,
-    authorizedOrders
-  }
+  // const todayWork = {
+  //   pickedUp: pickedUp,
+  //   delivered: delivered,
+  //   renewed: renewed,
+  //   resolvedReports,
+  //   payments,
+  //   handleUpdate,
+  //   authorizedOrders
+  // }
 
-  console.log({ todayWork })
+  // console.log({ todayWork })
 
   em++
   if (__DEV__) console.log({ em })
   return (
     <EmployeeContext.Provider
       value={{
-        ...value,
-        todayWork
+        ...value
+        // todayWork
       }}
     >
       {children}
