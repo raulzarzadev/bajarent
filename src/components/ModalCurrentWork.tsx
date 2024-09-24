@@ -12,6 +12,7 @@ import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
 import ProgressBar from './ProgressBar'
 import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
+import ListOrders from './ListOrders'
 
 const ModalCurrentWork = () => {
   const {
@@ -88,7 +89,14 @@ const ModalCurrentWork = () => {
   )
 }
 const ProgressWorkDetails = () => {
-  const { progress } = useCurrentWorkCtx()
+  const {
+    progress,
+    deliveredOrders,
+    solvedReported,
+    pickedUpOrders,
+    renewedOrders
+  } = useCurrentWorkCtx()
+
   return (
     <View
       style={{
@@ -97,25 +105,35 @@ const ProgressWorkDetails = () => {
         justifyContent: 'space-evenly'
       }}
     >
-      <ProgressWork progress={progress.new} label={'Pedidos'} />
-      {/* <ModalProgressWorkDetails modalTitle={'Pedidos'}>
-      </ModalProgressWorkDetails> */}
+      <ModalOrdersListOfProgressWork
+        progress={progress.new}
+        label={'Pedidos'}
+        orders={deliveredOrders}
+      />
 
-      <ProgressWork progress={progress.reports} label={'Reportes'} />
-      <ProgressWork progress={progress.expired} label={'Vencidas'} />
+      <ModalOrdersListOfProgressWork
+        progress={progress.reports}
+        label={'Reportes'}
+        orders={solvedReported}
+      />
+      <ModalOrdersListOfProgressWork
+        progress={progress.expired}
+        label={'Vencidas'}
+        orders={[...pickedUpOrders, ...renewedOrders]}
+      />
     </View>
   )
 }
-const ModalProgressWorkDetails = ({ children, modalTitle }) => {
-  const modal = useModal({ title: modalTitle })
+
+const ModalOrdersListOfProgressWork = ({ progress, label, orders = [] }) => {
+  const modal = useModal({ title: label })
   return (
     <>
-      <Pressable onPress={modal.toggleOpen}>{children}</Pressable>
+      <Pressable onPress={modal.toggleOpen}>
+        <ProgressWork progress={progress} label={label} />
+      </Pressable>
       <StyledModal {...modal}>
-        <Text>Contendio</Text>
-        <View
-          style={{ height: 600, width: 200, backgroundColor: 'red' }}
-        ></View>
+        <ListOrders orders={orders} />
       </StyledModal>
     </>
   )

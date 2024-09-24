@@ -202,8 +202,8 @@ const getCurrentWork = async ({
     deliveredOrders: delivered,
     renewedOrders: renewed,
     authorizedOrders: authorized,
-    solvedReported: [],
-    unsolvedReported: [],
+    solvedReported,
+    unsolvedReported,
     payments: [],
     progress: {
       new: newOrders,
