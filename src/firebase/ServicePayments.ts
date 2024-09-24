@@ -88,6 +88,26 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       storeId: retirement.storeId
     })
   }
+
+  //* FIXME - here you should get the payments in the orders that are assigned here
+  async getBySections({
+    storeId,
+    sections,
+    fromDate,
+    toDate
+  }: {
+    storeId: string
+    sections: string[]
+    fromDate: Date
+    toDate: Date
+  }) {
+    return this.getItems([
+      where('storeId', '==', storeId),
+      where('sectionId', 'in', sections),
+      where('createdAt', '>=', fromDate),
+      where('createdAt', '<=', toDate)
+    ])
+  }
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

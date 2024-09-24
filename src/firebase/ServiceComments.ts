@@ -165,13 +165,46 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       cb
     )
   }
+  listenReports(storeId: string, cb: CallableFunction) {
+    return this.listenMany(
+      [
+        where('storeId', '==', storeId),
+        where('type', '==', 'report')
+        // where('solved', '==', false)
+      ],
+      cb
+    )
+  }
   getSolvedReports(storeId: string) {
     const filters = [
       where('storeId', '==', storeId),
       where('type', '==', 'report'),
       where('solved', '==', true)
     ]
-
+    return this.findMany(filters)
+  }
+  getReports({
+    storeId,
+    solvedToday = false,
+    solved
+  }: {
+    storeId: string
+    solvedToday?: boolean
+    solved?: boolean
+  }) {
+    let filters = [
+      where('storeId', '==', storeId),
+      where('type', '==', 'report')
+    ]
+    if (solved !== undefined) {
+      filters.push(where('solved', '==', solved))
+    }
+    if (solvedToday) {
+      filters.push(
+        where('solvedAt', '>=', new Date(new Date().setHours(0, 0, 0, 0))),
+        where('solvedAt', '<=', new Date(new Date().setHours(23, 59, 59, 999)))
+      )
+    }
     return this.findMany(filters)
   }
 }

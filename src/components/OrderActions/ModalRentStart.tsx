@@ -69,7 +69,6 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
           errors={(() => {
             const errors = {}
             if (VALIDATE_ITEMS_QTY) {
-              console.log({ itemsCount, ITEMS_MAX_BY_ORDER })
               if (toMuchItems) {
                 errors[
                   'items'

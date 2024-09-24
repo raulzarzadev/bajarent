@@ -11,21 +11,18 @@ import Button from './Button'
 import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
 import ProgressBar from './ProgressBar'
-import useCurrentWork from '../hooks/useCurrentWork'
 import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 
 const ModalCurrentWork = () => {
-  const { payments, pickedUpOrders, deliveredOrders, renewedOrders } =
+  const { payments, pickedUpOrders, deliveredOrders, renewedOrders, progress } =
     useCurrentWorkCtx()
 
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
-  const { progressExpired, progressNew, progressReports, progressTotal } =
-    useCurrentWork()
 
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
-        <ProgressWork progress={progressTotal} />
+        <ProgressWork progress={progress.total} />
         <CurrencyAmount
           style={gStyles.tBold}
           amount={payments_amount(payments).total}
@@ -44,9 +41,9 @@ const ModalCurrentWork = () => {
         </View>
 
         <ProgressWorkDetails
-          progressNew={progressNew}
-          progressExpired={progressExpired}
-          progressReports={progressReports}
+          progressNew={progress.new}
+          progressExpired={progress.expired}
+          progressReports={progress.reports}
         />
 
         <BalanceAmountsE payments={payments} />

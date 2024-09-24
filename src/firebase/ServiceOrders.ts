@@ -597,10 +597,12 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       storeId,
       userId,
       fromDate,
+      sections,
       toDate
     }: {
       storeId: string
-      userId: string
+      userId?: string
+      sections?: string[]
       fromDate: Date
       toDate: Date
     },
@@ -612,6 +614,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       userId,
       fromDate,
       toDate,
+      sections,
       field: 'deliveredAt'
     })
 
@@ -623,12 +626,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       storeId,
       userId,
       fromDate,
+      sections,
       toDate
     }: {
       storeId: string
-      userId: string
+      userId?: string
       fromDate: Date
       toDate: Date
+      sections?: string[]
     },
     ops?: GetItemsOps
   ) {
@@ -638,6 +643,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       userId,
       fromDate,
       toDate,
+      sections,
       field: 'renewedAt'
     })
 
