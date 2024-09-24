@@ -32,7 +32,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     return this.listenMany([where('orderId', '==', orderId)], callback)
   }
   //#region list
-  list = async (list: string[] = [], moreFilters = []) => {
+  list = async (list: string[] = []) => {
     if (!list.length) return []
     const MAX_BATCH_SIZE = 30 // Ajustar según las limitaciones de la base de datos/API
     const batches = []
@@ -42,7 +42,36 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     const results = []
     for (const batch of batches) {
       const batchResults = await this.getItems([
-        where('id', 'in', batch),
+        where(documentId(), 'in', batch)
+      ])
+      results.push(...batchResults)
+    }
+    return results
+    if (!list.length) return []
+    return this.getItems([where(documentId(), 'in', list)])
+  }
+  //#endregion
+
+  //#region getInList
+  getInList = async ({
+    list = [],
+    moreFilters = [],
+    field = ''
+  }: {
+    list: string[]
+    moreFilters: any[]
+    field: string
+  }) => {
+    if (!list.length) return []
+    const MAX_BATCH_SIZE = 30 // Ajustar según las limitaciones de la base de datos/API
+    const batches = []
+    for (let i = 0; i < list.length; i += MAX_BATCH_SIZE) {
+      batches.push(list.slice(i, i + MAX_BATCH_SIZE))
+    }
+    const results = []
+    for (const batch of batches) {
+      const batchResults = await this.getItems([
+        where(field, 'in', batch),
         ...moreFilters
       ]).catch((error) => {
         console.error('Error getting batch:', error)
@@ -52,7 +81,6 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     }
     return results
   }
-
   async getToday(storeId: string) {
     return this.getItems([
       where('storeId', '==', storeId),
@@ -141,16 +169,21 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     },
     ops?: GetItemsOps
   ) {
-    //console.log({ request })
     let filters = [
       where('storeId', '==', storeId),
       where('createdAt', '>=', fromDate),
       where('createdAt', '<=', toDate)
     ]
-    const request = await this.list(inOrders, filters)
-    console.log({ request })
-    // if (userId) filters.push(where('createdBy', '==', userId))
-    // return this.getItems(filters, ops)
+    if (userId) filters.push(where('createdBy', '==', userId))
+    if (inOrders.length) {
+      const request = await this.getInList({
+        list: inOrders,
+        field: 'orderId',
+        moreFilters: filters
+      })
+      return request
+    }
+    return this.getItems(filters, ops)
   }
   async listenBetweenDates({
     fromDate,

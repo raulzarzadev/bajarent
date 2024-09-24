@@ -204,7 +204,6 @@ const getCurrentWork = async ({
     toDate: endDate(date),
     storeId,
     inOrders: [...renewed.map(({ id }) => id), ...delivered.map(({ id }) => id)]
-    // sections: sectionsAssigned
   })
 
   const total = (newOrders + reports + expired) / NUMBER_OF_METRICS //*the number of metrics used
@@ -215,7 +214,7 @@ const getCurrentWork = async ({
     authorizedOrders: authorized,
     solvedReported,
     unsolvedReported,
-    payments: [],
+    payments: solvedExpiredPaymentsPromise,
     progress: {
       new: newOrders,
       reports,
