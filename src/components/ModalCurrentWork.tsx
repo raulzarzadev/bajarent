@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlexStyle, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import StyledModal from './StyledModal'
 import CurrencyAmount from './CurrencyAmount'
@@ -28,18 +28,14 @@ const ModalCurrentWork = () => {
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
-        <ProgressWork progress={progress.total} />
+        <ProgressWork progress={progress.total} size="lg" />
         <CurrencyAmount
-          style={gStyles.tBold}
+          style={gStyles.helper}
           amount={payments_amount(payments).total}
         />
       </Pressable>
       <StyledModal {...modalCurrentWork}>
-        <ProgressWorkDetails
-          progressNew={progress.new}
-          progressExpired={progress.expired}
-          progressReports={progress.reports}
-        />
+        <ProgressWorkDetails />
 
         <BalanceAmountsE payments={payments} />
 
@@ -91,20 +87,50 @@ const ModalCurrentWork = () => {
     </View>
   )
 }
-const ProgressWorkDetails = ({
-  progressNew = 0,
-  progressReports = 0,
-  progressExpired = 0
-}) => {
+const ProgressWorkDetails = () => {
+  const { progress } = useCurrentWorkCtx()
   return (
-    <View style={{ marginVertical: 16 }}>
-      <ProgressWork progress={progressNew} label={'Pedidos'} />
-      <ProgressWork progress={progressReports} label={'Reportes'} />
-      <ProgressWork progress={progressExpired} label={'Vencidas'} />
+    <View
+      style={{
+        marginVertical: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+      }}
+    >
+      <ProgressWork progress={progress.new} label={'Pedidos'} />
+      {/* <ModalProgressWorkDetails modalTitle={'Pedidos'}>
+      </ModalProgressWorkDetails> */}
+
+      <ProgressWork progress={progress.reports} label={'Reportes'} />
+      <ProgressWork progress={progress.expired} label={'Vencidas'} />
     </View>
   )
 }
-const ProgressWork = ({ progress = 0, label = '' }) => {
+const ModalProgressWorkDetails = ({ children, modalTitle }) => {
+  const modal = useModal({ title: modalTitle })
+  return (
+    <>
+      <Pressable onPress={modal.toggleOpen}>{children}</Pressable>
+      <StyledModal {...modal}>
+        <Text>Contendio</Text>
+        <View
+          style={{ height: 600, width: 200, backgroundColor: 'red' }}
+        ></View>
+      </StyledModal>
+    </>
+  )
+}
+const ProgressWork = ({
+  progress = 0,
+  label = '',
+  width = 'auto',
+  size = 'md'
+}: {
+  progress: number
+  label?: string
+  width?: FlexStyle['width']
+  size?: 'sm' | 'md' | 'lg'
+}) => {
   //* if progress less than 25% color is error, if less than 50% color is warning, if less than 75% color is primary, else color is success
   const color =
     progress < 25
@@ -121,13 +147,14 @@ const ProgressWork = ({ progress = 0, label = '' }) => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignContent: 'center',
-        marginTop: 4
+        marginTop: 4,
+        width
       }}
     >
-      <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
+      <Text style={[{ textAlign: 'center' }]}>
         {label} {progress.toFixed(0)}%
       </Text>
-      <ProgressBar progress={progress} color={color} />
+      <ProgressBar progress={progress} color={color} size={size} />
     </View>
   )
 }
