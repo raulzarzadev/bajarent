@@ -35,18 +35,6 @@ const ModalCurrentWork = () => {
         />
       </Pressable>
       <StyledModal {...modalCurrentWork}>
-        <View style={{ margin: 'auto' }}>
-          <Button
-            //disabled={loading}
-            icon="refresh"
-            onPress={() => {
-              handleRefresh()
-              // handleUpdate()
-            }}
-            justIcon
-          />
-        </View>
-
         <ProgressWorkDetails
           progressNew={progress.new}
           progressExpired={progress.expired}

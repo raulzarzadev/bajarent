@@ -413,21 +413,27 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     const unsolvedOrders = [...rentPending, ...repairs, ...expiredRents]
 
     //* *** 1 *** get reports and set the ids, to get reports from the database
-    const ordersWithReportsIds = Array.from(
+    const ordersWithReportsAndImportantUnsolved = Array.from(
       new Set(
         reports
-          ?.filter(({ type }) => type === 'report' || type === 'important')
+          ?.filter(
+            ({ type, solved }) =>
+              (type === 'report' || type === 'important') && solved === false
+          )
           ?.map(({ orderId }) => orderId)
       )
     )
     //* IF is getBySection just take the reported orders by sections
     let reportedOrders = []
-    //* if ordersWithReportsIds dont get list
-    if (ordersWithReportsIds.length > 0) {
-      reportedOrders = await this.getList(ordersWithReportsIds, {
-        sections,
-        ...(ops || {})
-      }).catch((e) => {
+    //* if ordersWithReportsAndImportantUnsolved dont get list
+    if (ordersWithReportsAndImportantUnsolved.length > 0) {
+      reportedOrders = await this.getList(
+        ordersWithReportsAndImportantUnsolved,
+        {
+          sections,
+          ...(ops || {})
+        }
+      ).catch((e) => {
         console.log('Error getting reported orders', e)
         return []
       })
