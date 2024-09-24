@@ -49,7 +49,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const sectionsAssigned = employee?.sectionsAssigned || []
 
   const { orders } = useOrdersCtx()
-
   const [currentWork, setCurrentWork] = useState<CurrentWorks>({
     pickedUpOrders: [],
     deliveredOrders: [],
@@ -195,6 +194,18 @@ const getCurrentWork = async ({
     renewed?.length + pickedUp?.length,
     expiredOrders?.length
   )
+
+  /*
+  Para tener todas los pagos, debemos tener en cuenta los pagos de las nuevas rentas y los pagos de las renovacioones de 
+   */
+
+  const solvedExpiredPaymentsPromise = await ServicePayments.getBetweenDates({
+    fromDate: startDate(date),
+    toDate: endDate(date),
+    storeId,
+    inOrders: [...renewed.map(({ id }) => id), ...delivered.map(({ id }) => id)]
+    // sections: sectionsAssigned
+  })
 
   const total = (newOrders + reports + expired) / NUMBER_OF_METRICS //*the number of metrics used
   return {

@@ -6,23 +6,14 @@ import useModal from '../hooks/useModal'
 import { BalanceAmountsE } from './BalanceAmounts'
 import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
-import Button from './Button'
 
-import Tabs from './Tabs'
 import SpanOrder from './SpanOrder'
 import ProgressBar from './ProgressBar'
 import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 import ListOrders from './ListOrders'
 
 const ModalCurrentWork = () => {
-  const {
-    payments,
-    pickedUpOrders,
-    deliveredOrders,
-    renewedOrders,
-    progress,
-    handleRefresh
-  } = useCurrentWorkCtx()
+  const { payments, progress } = useCurrentWorkCtx()
 
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
 
@@ -37,53 +28,7 @@ const ModalCurrentWork = () => {
       </Pressable>
       <StyledModal {...modalCurrentWork}>
         <ProgressWorkDetails />
-
         <BalanceAmountsE payments={payments} />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            flexWrap: 'wrap',
-            marginTop: 16
-          }}
-        >
-          <Tabs
-            defaultTab={null}
-            tabs={[
-              {
-                title: `Recogidas: ${pickedUpOrders?.length || 0}`,
-                content: (
-                  <TabOrderList
-                    orders={pickedUpOrders}
-                    onRedirect={modalCurrentWork.toggleOpen}
-                  />
-                ),
-                show: true
-              },
-              {
-                title: `Entregadas: ${deliveredOrders?.length || 0}`,
-                content: (
-                  <TabOrderList
-                    orders={deliveredOrders}
-                    onRedirect={modalCurrentWork.toggleOpen}
-                  />
-                ),
-                show: true
-              },
-              {
-                title: `Renovadas: ${renewedOrders?.length || 0}`,
-                content: (
-                  <TabOrderList
-                    orders={renewedOrders}
-                    onRedirect={modalCurrentWork.toggleOpen}
-                  />
-                ),
-                show: true
-              }
-            ]}
-          />
-        </View>
       </StyledModal>
     </View>
   )
@@ -100,9 +45,10 @@ const ProgressWorkDetails = () => {
   return (
     <View
       style={{
-        marginVertical: 16,
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        flexWrap: 'wrap',
+        marginVertical: 16
       }}
     >
       <ModalOrdersListOfProgressWork
@@ -128,14 +74,14 @@ const ProgressWorkDetails = () => {
 const ModalOrdersListOfProgressWork = ({ progress, label, orders = [] }) => {
   const modal = useModal({ title: label })
   return (
-    <>
+    <View style={{ marginVertical: 6 }}>
       <Pressable onPress={modal.toggleOpen}>
         <ProgressWork progress={progress} label={label} />
       </Pressable>
       <StyledModal {...modal}>
         <ListOrders orders={orders} />
       </StyledModal>
-    </>
+    </View>
   )
 }
 const ProgressWork = ({
