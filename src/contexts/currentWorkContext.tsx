@@ -195,28 +195,20 @@ const getCurrentWork = async ({
         solvedReportsOrdersPromises
       ])
 
-    const reports = calculateProgress(
-      reportedSolved?.length,
-      unsolvedReported?.length
-    )
-
-    const newOrders = calculateProgress(delivered?.length, authorized?.length)
-
-    const expired = calculateProgress(
-      renewed?.length + pickedUp?.length,
-      expiredOrders?.length
-    )
-
     /*
-  Para tener todas los pagos, debemos tener en cuenta los pagos de las nuevas rentas y los pagos de las renovacioones de 
+  Para tener todas los pagos, debemos tener en cuenta los pagos 
+  de las nuevas rentas y los pagos de las renovacioones de 
    */
 
-    const ordersInSectionAssigned = [...renewed, ...delivered].filter((o) => {
+    const solvedOrders = [...renewed, ...delivered].filter((o) => {
       return sectionsAssigned.includes(o.assignToSection)
     })
+    const solvedReportsInSectionAssigned = reportedSolved.filter((o) =>
+      sectionsAssigned.includes(o.assignToSection)
+    )
 
-    const solvedOrdersPayments = await ServicePayments.getInList({
-      list: ordersInSectionAssigned.map(({ id }) => id),
+    const paidOrders = await ServicePayments.getInList({
+      list: solvedOrders.map(({ id }) => id),
       field: 'orderId',
       moreFilters: [
         where('createdAt', '>=', startDate(date)),
@@ -224,20 +216,33 @@ const getCurrentWork = async ({
       ]
     })
 
-    const total = (newOrders + reports + expired) / NUMBER_OF_METRICS //*the number of metrics used
+    const reports = calculateProgress(
+      reportedSolved?.length,
+      unsolvedReported?.length
+    )
+
+    const newOrders = calculateProgress(delivered?.length, authorized?.length)
+
+    const expiredProgress = calculateProgress(
+      renewed?.length + pickedUp?.length,
+      expiredOrders?.length
+    )
+
+    const total = (newOrders + reports + expiredProgress) / NUMBER_OF_METRICS //*the number of metrics used
+
     return {
       pickedUpOrders: pickedUp,
       deliveredOrders: delivered,
       renewedOrders: renewed,
       authorizedOrders: authorized,
-      solvedReported: reportedSolved,
+      solvedReported: solvedReportsInSectionAssigned,
       unsolvedReported,
-      payments: solvedOrdersPayments,
+      payments: paidOrders,
       expiredOrders,
       progress: {
         new: newOrders,
         reports,
-        expired,
+        expired: expiredProgress,
         total
       }
     }
