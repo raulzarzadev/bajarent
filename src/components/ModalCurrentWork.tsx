@@ -66,7 +66,6 @@ const ProgressWorkDetails = () => {
     expiredOrders,
     sections
   } = useCurrentWorkCtx()
-  console.log({ solvedReported })
   return (
     <View>
       {sections.map((sectionId) => (
