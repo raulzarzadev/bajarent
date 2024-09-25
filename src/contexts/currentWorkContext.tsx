@@ -24,6 +24,7 @@ export type CurrentWorks = {
   authorizedOrders: Partial<OrderType>[]
   solvedReported: Partial<OrderType>[]
   unsolvedReported: Partial<OrderType>[]
+  expiredOrders: Partial<OrderType>[]
   payments: Partial<PaymentType>[]
   progress: {
     new: number
@@ -51,6 +52,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
     solvedReported: [],
     unsolvedReported: [],
     payments: [],
+    expiredOrders: [],
     progress: {
       new: 0,
       reports: 0,
@@ -75,6 +77,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
         solvedReported: [],
         unsolvedReported: [],
         payments: [],
+        expiredOrders: [],
         progress: {
           new: 0,
           reports: 0,
@@ -218,6 +221,7 @@ const getCurrentWork = async ({
     solvedReported,
     unsolvedReported,
     payments: solvedExpiredPaymentsPromise,
+    expiredOrders,
     progress: {
       new: newOrders,
       reports,

@@ -46,11 +46,16 @@ const ProgressWorkDetails = () => {
   const {
     progress,
     deliveredOrders,
+    authorizedOrders,
     solvedReported,
+    unsolvedReported,
     pickedUpOrders,
-    renewedOrders
+    renewedOrders,
+    expiredOrders
   } = useCurrentWorkCtx()
-
+  const progressFraction = (progress: number, total: number) => {
+    return `${progress}/${total}`
+  }
   return (
     <View
       style={{
@@ -62,33 +67,47 @@ const ProgressWorkDetails = () => {
     >
       <ModalOrdersListOfProgressWork
         progress={progress.new}
-        label={'Pedidos'}
-        orders={deliveredOrders}
+        label={`Entregadas`}
+        orders={authorizedOrders}
+        doneOrders={deliveredOrders}
       />
 
       <ModalOrdersListOfProgressWork
-        progress={progress.reports}
-        label={'Reportes'}
-        orders={solvedReported}
+        progress={progress.expired}
+        label={'Renovadas'}
+        orders={expiredOrders}
+        doneOrders={[...pickedUpOrders, ...renewedOrders]}
       />
       <ModalOrdersListOfProgressWork
-        progress={progress.expired}
-        label={'Vencidas'}
-        orders={[...pickedUpOrders, ...renewedOrders]}
+        progress={progress.reports}
+        label={'Reportes'}
+        orders={unsolvedReported}
+        doneOrders={solvedReported}
       />
     </View>
   )
 }
 
-const ModalOrdersListOfProgressWork = ({ progress, label, orders = [] }) => {
+const ModalOrdersListOfProgressWork = ({
+  progress,
+  label,
+  orders = [],
+  doneOrders = []
+}) => {
   const modal = useModal({ title: label })
   return (
     <View style={{ marginVertical: 6 }}>
       <Pressable onPress={modal.toggleOpen}>
-        <ProgressWork progress={progress} label={label} />
+        <ProgressWork
+          progress={progress}
+          label={label}
+          underLabel={`${doneOrders?.length || 0}/${
+            doneOrders?.length || 0 + orders?.length || 0
+          }`}
+        />
       </Pressable>
       <StyledModal {...modal}>
-        <ListOrders orders={orders} />
+        <ListOrders orders={doneOrders} />
       </StyledModal>
     </View>
   )
@@ -97,12 +116,14 @@ const ProgressWork = ({
   progress = 0,
   label = '',
   width = 'auto',
-  size = 'md'
+  size = 'md',
+  underLabel = ''
 }: {
   progress: number
   label?: string
   width?: FlexStyle['width']
   size?: 'sm' | 'md' | 'lg'
+  underLabel?: string
 }) => {
   //* if progress less than 25% color is error, if less than 50% color is warning, if less than 75% color is primary, else color is success
   const color =
@@ -128,6 +149,11 @@ const ProgressWork = ({
         {label} {progress.toFixed(0)}%
       </Text>
       <ProgressBar progress={progress} color={color} size={size} />
+      {underLabel && (
+        <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
+          {underLabel}
+        </Text>
+      )}
     </View>
   )
 }
