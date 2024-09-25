@@ -177,10 +177,14 @@ const getCurrentWork = async ({
       storeId,
       fromDate: startDate(new Date()),
       toDate: endDate(new Date())
-    }).then((reports) => {
-      const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
-      return ordersIds.map((orderId) => ServiceOrders.get(orderId))
     })
+      .then((reports) => {
+        const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
+        return ordersIds.map((orderId) => ServiceOrders.get(orderId))
+      })
+      .then((ordersPromises) => {
+        return Promise.all(ordersPromises)
+      })
 
     const [pickedUp, delivered, renewed, authorized, reportedSolved] =
       await Promise.all([

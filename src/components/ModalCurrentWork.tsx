@@ -66,7 +66,7 @@ const ProgressWorkDetails = () => {
     expiredOrders,
     sections
   } = useCurrentWorkCtx()
-
+  console.log({ solvedReported })
   return (
     <View>
       {sections.map((sectionId) => (
@@ -88,6 +88,7 @@ const ProgressWorkDetails = () => {
         <ModalOrdersListOfProgressWork
           progress={progress.new}
           label={`Entregadas`}
+          modalTitle="Pedidos entregados"
           pendingOrders={authorizedOrders}
           doneOrders={deliveredOrders}
         />
@@ -95,12 +96,14 @@ const ProgressWorkDetails = () => {
         <ModalOrdersListOfProgressWork
           progress={progress.expired}
           label={'Renovadas'}
+          modalTitle={'Renovadas / Recogidas'}
           pendingOrders={expiredOrders}
           doneOrders={[...pickedUpOrders, ...renewedOrders]}
         />
         <ModalOrdersListOfProgressWork
           progress={progress.reports}
           label={'Reportes'}
+          modalTitle="Reportes resueltos"
           pendingOrders={unsolvedReported}
           doneOrders={solvedReported}
         />
@@ -113,9 +116,10 @@ const ModalOrdersListOfProgressWork = ({
   progress,
   label,
   pendingOrders = [],
-  doneOrders = []
+  doneOrders = [],
+  modalTitle = ''
 }) => {
-  const modal = useModal({ title: label })
+  const modal = useModal({ title: modalTitle || label })
   const underLabel = `${doneOrders.length}/${
     doneOrders.length + pendingOrders.length
   }`
