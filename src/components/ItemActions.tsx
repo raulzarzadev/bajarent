@@ -250,7 +250,7 @@ const ItemActions = ({
           <View style={{ margin: 2 }}>
             <ButtonConfirm
               openDisabled={disabled || disabledInventory}
-              modalTitle="Verificar inventrio"
+              modalTitle="Verificar inventario"
               icon="inventory"
               openVariant={checkedInventoryToday ? 'filled' : 'outline'}
               openColor={checkedInventoryToday ? 'success' : 'primary'}
