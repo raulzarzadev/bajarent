@@ -11,8 +11,11 @@ import SpanOrder from './SpanOrder'
 import ProgressBar from './ProgressBar'
 import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 import ListOrders from './ListOrders'
+import { useEmployee } from '../contexts/employeeContext'
+import DisabledEmployee from './DisabledEmployee'
 
 const ModalCurrentWork = () => {
+  const { employee } = useEmployee()
   const { payments, progress } = useCurrentWorkCtx()
 
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
@@ -27,8 +30,14 @@ const ModalCurrentWork = () => {
         />
       </Pressable>
       <StyledModal {...modalCurrentWork}>
-        <ProgressWorkDetails />
-        <BalanceAmountsE payments={payments} />
+        {employee?.disabled ? (
+          <DisabledEmployee></DisabledEmployee>
+        ) : (
+          <>
+            <ProgressWorkDetails />
+            <BalanceAmountsE payments={payments} />
+          </>
+        )}
       </StyledModal>
     </View>
   )

@@ -13,12 +13,7 @@ import { useEmployee } from './employeeContext'
 import asDate, { endDate, startDate } from '../libs/utils-date'
 import PaymentType from '../types/PaymentType'
 import { ServicePayments } from '../firebase/ServicePayments'
-import { ServiceComments } from '../firebase/ServiceComments'
 import { isToday } from 'date-fns'
-
-// interface CurrentWorkContextProps {
-//   currentWork: CurrentWorks
-// }
 
 const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
 
@@ -36,7 +31,6 @@ export type CurrentWorks = {
     expired: number
     total: number
   }
-  handleRefresh?: () => void
 }
 
 export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
@@ -66,7 +60,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   })
 
   useEffect(() => {
-    if (orders?.length) {
+    if (orders?.length && !employee.disabled) {
       handleSetData()
     }
   }, [orders])
@@ -98,15 +92,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <CurrentWorkContext.Provider
-      value={{
-        ...currentWork,
-        handleRefresh: () => {
-          console.log('refreshing do noting')
-          //  handleSetData()
-        }
-      }}
-    >
+    <CurrentWorkContext.Provider value={currentWork}>
       {children}
     </CurrentWorkContext.Provider>
   )
