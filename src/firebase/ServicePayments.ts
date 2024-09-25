@@ -1,4 +1,10 @@
-import { where, documentId, limit, orderBy } from 'firebase/firestore'
+import {
+  where,
+  documentId,
+  limit,
+  orderBy,
+  QueryConstraint
+} from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
 import PaymentType from '../types/PaymentType'
 import { subDays } from 'date-fns'
@@ -59,8 +65,8 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     field = ''
   }: {
     list: string[]
-    moreFilters: any[]
     field: string
+    moreFilters?: QueryConstraint[]
   }) => {
     if (!list.length) return []
     const MAX_BATCH_SIZE = 30 // Ajustar según las limitaciones de la base de datos/API
