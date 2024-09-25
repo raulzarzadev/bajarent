@@ -13,6 +13,7 @@ import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 import ListOrders from './ListOrders'
 import { useEmployee } from '../contexts/employeeContext'
 import DisabledEmployee from './DisabledEmployee'
+import { useStore } from '../contexts/storeContext'
 
 const ModalCurrentWork = () => {
   /**
@@ -53,6 +54,7 @@ const ModalCurrentWork = () => {
   )
 }
 const ProgressWorkDetails = () => {
+  const { storeSections } = useStore()
   const {
     progress,
     deliveredOrders,
@@ -61,37 +63,48 @@ const ProgressWorkDetails = () => {
     unsolvedReported,
     pickedUpOrders,
     renewedOrders,
-    expiredOrders
+    expiredOrders,
+    sections
   } = useCurrentWorkCtx()
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        flexWrap: 'wrap',
-        marginVertical: 16
-      }}
-    >
-      <ModalOrdersListOfProgressWork
-        progress={progress.new}
-        label={`Entregadas`}
-        pendingOrders={authorizedOrders}
-        doneOrders={deliveredOrders}
-      />
+    <View>
+      {sections.map((sectionId) => (
+        <View key={sectionId}>
+          <Text style={[gStyles.h2, { textAlign: 'center' }]}>
+            {storeSections.find((s) => s.id === sectionId)?.name}
+          </Text>
+        </View>
+      ))}
 
-      <ModalOrdersListOfProgressWork
-        progress={progress.expired}
-        label={'Renovadas'}
-        pendingOrders={expiredOrders}
-        doneOrders={[...pickedUpOrders, ...renewedOrders]}
-      />
-      <ModalOrdersListOfProgressWork
-        progress={progress.reports}
-        label={'Reportes'}
-        pendingOrders={unsolvedReported}
-        doneOrders={solvedReported}
-      />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          flexWrap: 'wrap',
+          marginVertical: 16
+        }}
+      >
+        <ModalOrdersListOfProgressWork
+          progress={progress.new}
+          label={`Entregadas`}
+          pendingOrders={authorizedOrders}
+          doneOrders={deliveredOrders}
+        />
+
+        <ModalOrdersListOfProgressWork
+          progress={progress.expired}
+          label={'Renovadas'}
+          pendingOrders={expiredOrders}
+          doneOrders={[...pickedUpOrders, ...renewedOrders]}
+        />
+        <ModalOrdersListOfProgressWork
+          progress={progress.reports}
+          label={'Reportes'}
+          pendingOrders={unsolvedReported}
+          doneOrders={solvedReported}
+        />
+      </View>
     </View>
   )
 }
@@ -103,11 +116,6 @@ const ModalOrdersListOfProgressWork = ({
   doneOrders = []
 }) => {
   const modal = useModal({ title: label })
-  console.log(
-    'pending, done',
-    pendingOrders.length,
-    doneOrders.length + pendingOrders.length
-  )
   const underLabel = `${doneOrders.length}/${
     doneOrders.length + pendingOrders.length
   }`

@@ -236,6 +236,7 @@ export enum TypeOrder {
   SALE = 'SALE',
   REPAIR = 'REPAIR'
 }
+export type TypeOrderType = keyof typeof TypeOrder
 
 export const IconOrderType = {
   [TypeOrder.RENT]: '📦',

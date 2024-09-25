@@ -4,6 +4,7 @@ import OrderType, {
   ORDER_STATUS_UNSOLVED,
   OrderExtensionType,
   TypeOrder,
+  TypeOrderType,
   order_status
 } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
@@ -573,7 +574,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     userId,
     fromDate,
     toDate,
-    sections
+    sections,
+    type
   }: {
     status: OrderType['status']
     storeId: string
@@ -582,6 +584,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     fromDate: Date
     toDate: Date
     sections?: string[]
+    type?: TypeOrderType
   }) => {
     const filters = [
       where('storeId', '==', storeId),
@@ -595,6 +598,9 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     if (toDate) filters.push(where(field, '<=', toDate))
     if (sections?.length > 0)
       filters.push(where('assignToSection', 'in', sections))
+    if (type) {
+      filters.push(where('type', '==', type))
+    }
     return filters
   }
 
@@ -604,13 +610,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       userId,
       fromDate,
       sections,
-      toDate
+      toDate,
+      orderType
     }: {
       storeId: string
       userId?: string
       sections?: string[]
       fromDate: Date
       toDate: Date
+      orderType?: TypeOrderType
     },
     ops?: GetItemsOps
   ): Promise<OrderType[]> {
@@ -621,7 +629,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       fromDate,
       toDate,
       sections,
-      field: 'deliveredAt'
+      field: 'deliveredAt',
+      type: orderType
     })
 
     return this.findMany(filters, ops)
@@ -633,13 +642,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       userId,
       fromDate,
       sections,
-      toDate
+      toDate,
+      orderType
     }: {
       storeId: string
       userId?: string
       fromDate: Date
       toDate: Date
       sections?: string[]
+      orderType?: TypeOrderType
     },
     ops?: GetItemsOps
   ): Promise<OrderType[]> {
@@ -650,7 +661,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       fromDate,
       toDate,
       sections,
-      field: 'renewedAt'
+      field: 'renewedAt',
+      type: orderType
     })
 
     return this.findMany(filters, ops)
@@ -661,13 +673,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       userId,
       fromDate,
       toDate,
-      sections
+      sections,
+      orderType
     }: {
       storeId: string
       userId?: string
       fromDate: Date
       toDate: Date
       sections?: string[]
+      orderType?: TypeOrderType
     },
     ops?: GetItemsOps
   ): Promise<OrderType[]> {
@@ -678,7 +692,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       fromDate,
       toDate,
       field: 'pickedUpAt',
-      sections
+      sections,
+      type: orderType
     })
 
     return this.findMany(filters, ops)
@@ -686,10 +701,12 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   getAuthorized = async (
     {
       storeId,
-      sections
+      sections,
+      orderType
     }: {
       storeId: string
       sections?: string[] | 'all'
+      orderType?: TypeOrderType
     },
     ops?: GetItemsOps
   ): Promise<OrderType[]> => {
@@ -697,6 +714,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('storeId', '==', storeId),
       where('status', '==', order_status.AUTHORIZED)
     ]
+
+    if (orderType) {
+      filters.push(where('type', '==', orderType))
+    }
+
     if (sections === 'all') {
       return []
     } else if (Array.isArray(sections) && sections.length > 0) {
