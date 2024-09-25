@@ -14,6 +14,7 @@ import asDate, { endDate, startDate } from '../libs/utils-date'
 import PaymentType from '../types/PaymentType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { isToday } from 'date-fns'
+import { where } from 'firebase/firestore'
 
 const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
 
@@ -105,6 +106,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
       sectionsAssigned,
       solvedReported: solvedReported,
       unsolvedReported: unsolvedReported,
+
       expiredOrders
     }).then((data) => {
       setCurrentWork(data)
@@ -205,12 +207,19 @@ const getCurrentWork = async ({
   Para tener todas los pagos, debemos tener en cuenta los pagos de las nuevas rentas y los pagos de las renovacioones de 
    */
 
-  const solvedExpiredPaymentsPromise = await ServicePayments.getBetweenDates({
-    fromDate: startDate(date),
-    toDate: endDate(date),
-    storeId,
-    inOrders: [...renewed.map(({ id }) => id), ...delivered.map(({ id }) => id)]
+  const ordersInSectionAssigned = [...renewed, ...delivered].filter((o) => {
+    return sectionsAssigned.includes(o.assignToSection)
   })
+
+  const solvedOrdersPayments = await ServicePayments.getInList({
+    list: ordersInSectionAssigned.map(({ id }) => id),
+    field: 'orderId',
+    moreFilters: [
+      where('createdAt', '>=', startDate(date)),
+      where('createdAt', '<=', endDate(date))
+    ]
+  })
+  console.log({ solvedOrdersPayments })
 
   const total = (newOrders + reports + expired) / NUMBER_OF_METRICS //*the number of metrics used
   return {
@@ -220,7 +229,7 @@ const getCurrentWork = async ({
     authorizedOrders: authorized,
     solvedReported,
     unsolvedReported,
-    payments: solvedExpiredPaymentsPromise,
+    payments: solvedOrdersPayments,
     expiredOrders,
     progress: {
       new: newOrders,

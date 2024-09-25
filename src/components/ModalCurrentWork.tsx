@@ -15,9 +15,19 @@ import { useEmployee } from '../contexts/employeeContext'
 import DisabledEmployee from './DisabledEmployee'
 
 const ModalCurrentWork = () => {
+  /**
+   *
+   * This component is a modal that shows the progress of the current work of the employee.
+   * 1. shows the progress of delivered/pedidos
+   * 2. shows the progress of (renewed + pickedUp)/expired
+   * 3. shows the progress of reports solved/unsolved
+   * 4. shows the total amount of payments in the sections assigned to the employee
+   * 5. if is admin shows the total amount of payments in the store
+   * 6. if is admin shows the total of orders progress
+   *
+   */
   const { employee, permissions } = useEmployee()
   const { payments, progress } = useCurrentWorkCtx()
-
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
   if (!permissions?.canSeeCurrentWork) return <></>
   return (
@@ -53,9 +63,7 @@ const ProgressWorkDetails = () => {
     renewedOrders,
     expiredOrders
   } = useCurrentWorkCtx()
-  const progressFraction = (progress: number, total: number) => {
-    return `${progress}/${total}`
-  }
+
   return (
     <View
       style={{
@@ -149,7 +157,7 @@ const ProgressWork = ({
         {label} {progress.toFixed(0)}%
       </Text>
       <ProgressBar progress={progress} color={color} size={size} />
-      {underLabel && (
+      {!!underLabel && (
         <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
           {underLabel}
         </Text>

@@ -67,25 +67,38 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     list: string[]
     field: string
     moreFilters?: QueryConstraint[]
-  }) => {
+  }): Promise<PaymentType[]> => {
     if (!list.length) return []
     const MAX_BATCH_SIZE = 30 // Ajustar según las limitaciones de la base de datos/API
     const batches = []
     for (let i = 0; i < list.length; i += MAX_BATCH_SIZE) {
       batches.push(list.slice(i, i + MAX_BATCH_SIZE))
     }
-    const results = []
-    for (const batch of batches) {
-      const batchResults = await this.getItems([
-        where(field, 'in', batch),
-        ...moreFilters
-      ]).catch((error) => {
-        console.error('Error getting batch:', error)
-        return []
-      })
-      results.push(...batchResults)
+    // const results = []
+    const promises = batches.map((batch) =>
+      this.getItems([where(field, 'in', batch), ...moreFilters]).catch(
+        (error) => {
+          console.error('Error getting batch:', error)
+          return []
+        }
+      )
+    )
+    try {
+      const results = await Promise.all(promises)
+      return results.flat()
+    } catch (error) {
+      console.error('Error getting batch:', error)
     }
-    return results
+    // for (const batch of batches) {
+    //   const batchResults = await this.getItems([
+    //     where(field, 'in', batch),
+    //     ...moreFilters
+    //   ]).catch((error) => {
+    //     console.error('Error getting batch:', error)
+    //     return []
+    //   })
+    //   results.push(...batchResults)
+    // }
   }
   async getToday(storeId: string) {
     return this.getItems([

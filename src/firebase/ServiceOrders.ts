@@ -613,7 +613,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       toDate: Date
     },
     ops?: GetItemsOps
-  ) {
+  ): Promise<OrderType[]> {
     const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
       status: order_status.DELIVERED,
       storeId,
@@ -642,7 +642,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       sections?: string[]
     },
     ops?: GetItemsOps
-  ) {
+  ): Promise<OrderType[]> {
     const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
       status: order_status.DELIVERED,
       storeId,
@@ -670,7 +670,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       sections?: string[]
     },
     ops?: GetItemsOps
-  ) {
+  ): Promise<OrderType[]> {
     const filters = ServiceOrdersClass.createFilterToGetOrderFieldValue({
       status: order_status.PICKED_UP,
       storeId,
@@ -692,7 +692,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       sections?: string[] | 'all'
     },
     ops?: GetItemsOps
-  ) => {
+  ): Promise<OrderType[]> => {
     let filters = [
       where('storeId', '==', storeId),
       where('status', '==', order_status.AUTHORIZED)
@@ -718,7 +718,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       toDate: Date
     },
     ops?: GetItemsOps
-  ) => {
+  ): Promise<OrderType[]> => {
     const filters = [
       where('storeId', '==', storeId),
       where(field, '>=', fromDate),
