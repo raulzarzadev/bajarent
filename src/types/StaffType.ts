@@ -110,6 +110,7 @@ export enum permissions_store {
   canEditStaff,
   canCancelPayments,
   canValidatePayments,
+  canSeeCurrentWork,
   //canViewItems,
   //canDeleteItems,
   //canManageItems,

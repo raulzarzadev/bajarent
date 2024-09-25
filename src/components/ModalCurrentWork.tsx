@@ -15,11 +15,11 @@ import { useEmployee } from '../contexts/employeeContext'
 import DisabledEmployee from './DisabledEmployee'
 
 const ModalCurrentWork = () => {
-  const { employee } = useEmployee()
+  const { employee, permissions } = useEmployee()
   const { payments, progress } = useCurrentWorkCtx()
 
   const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
-
+  if (!permissions?.canSeeCurrentWork) return <></>
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
