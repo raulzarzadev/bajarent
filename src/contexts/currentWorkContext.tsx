@@ -60,12 +60,29 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   })
 
   useEffect(() => {
-    if (orders?.length && !employee.disabled) {
-      handleSetData()
+    if (orders?.length) {
+      handleSetData({ disabledEmployee: employee?.disabled })
     }
-  }, [orders])
+  }, [orders, employee?.disabled])
 
-  const handleSetData = () => {
+  const handleSetData = ({ disabledEmployee = false }) => {
+    if (disabledEmployee) {
+      return setCurrentWork({
+        pickedUpOrders: [],
+        deliveredOrders: [],
+        renewedOrders: [],
+        authorizedOrders: [],
+        solvedReported: [],
+        unsolvedReported: [],
+        payments: [],
+        progress: {
+          new: 0,
+          reports: 0,
+          expired: 0,
+          total: 0
+        }
+      })
+    }
     const expiredOrders = orders?.filter(
       (order) => order.expiresToday || order?.isExpired
     )
