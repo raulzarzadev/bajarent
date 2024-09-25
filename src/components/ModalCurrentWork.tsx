@@ -76,20 +76,20 @@ const ProgressWorkDetails = () => {
       <ModalOrdersListOfProgressWork
         progress={progress.new}
         label={`Entregadas`}
-        orders={authorizedOrders}
+        pendingOrders={authorizedOrders}
         doneOrders={deliveredOrders}
       />
 
       <ModalOrdersListOfProgressWork
         progress={progress.expired}
         label={'Renovadas'}
-        orders={expiredOrders}
+        pendingOrders={expiredOrders}
         doneOrders={[...pickedUpOrders, ...renewedOrders]}
       />
       <ModalOrdersListOfProgressWork
         progress={progress.reports}
         label={'Reportes'}
-        orders={unsolvedReported}
+        pendingOrders={unsolvedReported}
         doneOrders={solvedReported}
       />
     </View>
@@ -99,19 +99,25 @@ const ProgressWorkDetails = () => {
 const ModalOrdersListOfProgressWork = ({
   progress,
   label,
-  orders = [],
+  pendingOrders = [],
   doneOrders = []
 }) => {
   const modal = useModal({ title: label })
+  console.log(
+    'pending, done',
+    pendingOrders.length,
+    doneOrders.length + pendingOrders.length
+  )
+  const underLabel = `${doneOrders.length}/${
+    doneOrders.length + pendingOrders.length
+  }`
   return (
     <View style={{ marginVertical: 6 }}>
       <Pressable onPress={modal.toggleOpen}>
         <ProgressWork
           progress={progress}
           label={label}
-          underLabel={`${doneOrders?.length || 0}/${
-            doneOrders?.length || 0 + orders?.length || 0
-          }`}
+          underLabel={underLabel}
         />
       </Pressable>
       <StyledModal {...modal}>
