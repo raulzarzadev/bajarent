@@ -21,7 +21,23 @@ import { isToday } from 'date-fns'
 import { where } from 'firebase/firestore'
 
 const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
-
+const defaultCurrentWork: CurrentWorks = {
+  sections: [],
+  pickedUpOrders: [],
+  deliveredOrders: [],
+  renewedOrders: [],
+  authorizedOrders: [],
+  solvedReported: [],
+  unsolvedReported: [],
+  payments: [],
+  expiredOrders: [],
+  progress: {
+    new: 0,
+    reports: 0,
+    expired: 0,
+    total: 0
+  }
+}
 export type CurrentWorks = {
   sections: string[]
   pickedUpOrders: Partial<OrderType>[]
@@ -50,23 +66,8 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const sectionsAssigned = employee?.sectionsAssigned || []
 
   const { orders } = useOrdersCtx()
-  const [currentWork, setCurrentWork] = useState<CurrentWorks>({
-    sections: [],
-    pickedUpOrders: [],
-    deliveredOrders: [],
-    renewedOrders: [],
-    authorizedOrders: [],
-    solvedReported: [],
-    unsolvedReported: [],
-    payments: [],
-    expiredOrders: [],
-    progress: {
-      new: 0,
-      reports: 0,
-      expired: 0,
-      total: 0
-    }
-  })
+  const [currentWork, setCurrentWork] =
+    useState<CurrentWorks>(defaultCurrentWork)
 
   useEffect(() => {
     if (orders?.length) {
@@ -76,23 +77,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleSetData = ({ disabledEmployee = false }) => {
     if (disabledEmployee) {
-      return setCurrentWork({
-        sections: sectionsAssigned,
-        pickedUpOrders: [],
-        deliveredOrders: [],
-        renewedOrders: [],
-        authorizedOrders: [],
-        solvedReported: [],
-        unsolvedReported: [],
-        payments: [],
-        expiredOrders: [],
-        progress: {
-          new: 0,
-          reports: 0,
-          expired: 0,
-          total: 0
-        }
-      })
+      return setCurrentWork(defaultCurrentWork)
     }
     const expiredOrders = orders?.filter(
       (order) => order.expiresToday || order?.isExpired
@@ -253,6 +238,7 @@ const getCurrentWork = async ({
     }
   } catch (error) {
     console.log('error', error)
+    return defaultCurrentWork
   }
   // setCurrentWork()
 }

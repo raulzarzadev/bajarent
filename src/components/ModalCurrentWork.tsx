@@ -34,10 +34,10 @@ const ModalCurrentWork = () => {
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
-        <ProgressWork progress={progress.total} size="lg" />
+        <ProgressWork progress={progress?.total} size="lg" />
         <CurrencyAmount
           style={gStyles.helper}
-          amount={payments_amount(payments).total}
+          amount={payments_amount(payments)?.total}
         />
       </Pressable>
       <StyledModal {...modalCurrentWork}>
