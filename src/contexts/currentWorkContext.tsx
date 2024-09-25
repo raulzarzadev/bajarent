@@ -5,11 +5,7 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import OrderType, {
-  order_type,
-  TypeOrder,
-  TypeOrderType
-} from '../types/OrderType'
+import OrderType, { TypeOrder, TypeOrderType } from '../types/OrderType'
 import { useOrdersCtx } from './ordersContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from './storeContext'
@@ -19,6 +15,7 @@ import PaymentType from '../types/PaymentType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { isToday } from 'date-fns'
 import { where } from 'firebase/firestore'
+import { ServiceComments } from '../firebase/ServiceComments'
 
 const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
 const defaultCurrentWork: CurrentWorks = {
@@ -86,17 +83,11 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
     const unsolvedReported = orders.filter((o) =>
       o.comments.find((c) => c.type === 'report' && !c.solved)
     )
-    const solvedReported = orders.filter((o) =>
-      o.comments.find(
-        (c) => c.type === 'report' && c.solved && isToday(asDate(c.solvedAt))
-      )
-    )
 
     getCurrentWork({
       date,
       storeId,
       sectionsAssigned,
-      solvedReported: solvedReported,
       unsolvedReported: unsolvedReported,
       orderType: TypeOrder.RENT,
       expiredOrders
@@ -140,7 +131,6 @@ const getCurrentWork = async ({
   storeId = '',
   sectionsAssigned = [],
   date = new Date(),
-  solvedReported = [],
   unsolvedReported = [],
   expiredOrders = [],
   orderType
@@ -149,7 +139,6 @@ const getCurrentWork = async ({
   sectionsAssigned: string[]
   date: Date
   orderType?: TypeOrderType
-  solvedReported: Partial<OrderType>[]
   unsolvedReported: Partial<OrderType>[]
   expiredOrders: Partial<OrderType>[]
 }) => {
@@ -184,17 +173,29 @@ const getCurrentWork = async ({
       orderType
     })
 
-    const [pickedUp, delivered, renewed, authorized] = await Promise.all([
-      pickedUpPromise,
-      deliveredPromise,
-      renewedPromise,
-      authorizedPromise
-    ])
+    const solvedReportsOrdersPromises = ServiceComments.getSolvedReportsByDate({
+      storeId,
+      fromDate: startDate(new Date()),
+      toDate: endDate(new Date())
+    }).then((reports) => {
+      const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
+      return ordersIds.map((orderId) => ServiceOrders.get(orderId))
+    })
+
+    const [pickedUp, delivered, renewed, authorized, reportedSolved] =
+      await Promise.all([
+        pickedUpPromise,
+        deliveredPromise,
+        renewedPromise,
+        authorizedPromise,
+        solvedReportsOrdersPromises
+      ])
 
     const reports = calculateProgress(
-      solvedReported?.length,
+      reportedSolved?.length,
       unsolvedReported?.length
     )
+
     const newOrders = calculateProgress(delivered?.length, authorized?.length)
 
     const expired = calculateProgress(
@@ -225,7 +226,7 @@ const getCurrentWork = async ({
       deliveredOrders: delivered,
       renewedOrders: renewed,
       authorizedOrders: authorized,
-      solvedReported,
+      solvedReported: reportedSolved,
       unsolvedReported,
       payments: solvedOrdersPayments,
       expiredOrders,

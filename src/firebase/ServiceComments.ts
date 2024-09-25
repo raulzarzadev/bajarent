@@ -183,6 +183,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ]
     return this.findMany(filters)
   }
+  getSolvedReportsByDate({ storeId, fromDate, toDate }) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('type', '==', 'report'),
+      where('solved', '==', true),
+      where('solvedAt', '>=', fromDate),
+      where('solvedAt', '<=', toDate)
+    ])
+  }
   getReports({
     storeId,
     solvedToday = false,
