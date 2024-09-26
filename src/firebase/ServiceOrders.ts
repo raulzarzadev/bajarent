@@ -596,11 +596,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     if (userId) filters.push(where(formatField, '==', userId))
     if (fromDate) filters.push(where(field, '>=', fromDate))
     if (toDate) filters.push(where(field, '<=', toDate))
-    if (sections?.length > 0)
-      filters.push(where('assignToSection', 'in', sections))
     if (type) {
       filters.push(where('type', '==', type))
     }
+
+    if (Array.isArray(sections) && sections.length > 0) {
+      filters.push(where('assignToSection', 'in', sections))
+    }
+
     return filters
   }
 
@@ -705,7 +708,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       orderType
     }: {
       storeId: string
-      sections?: string[] | 'all'
+      sections?: string[]
       orderType?: TypeOrderType
     },
     ops?: GetItemsOps
@@ -719,11 +722,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       filters.push(where('type', '==', orderType))
     }
 
-    if (sections === 'all') {
-      return []
-    } else if (Array.isArray(sections) && sections.length > 0) {
+    if (Array.isArray(sections) && sections.length > 0) {
       filters.push(where('assignToSection', 'in', sections))
     }
+
     return this.findMany(filters, ops)
   }
 

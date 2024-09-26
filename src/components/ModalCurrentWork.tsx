@@ -12,6 +12,7 @@ import ListOrders from './ListOrders'
 import { useEmployee } from '../contexts/employeeContext'
 import DisabledEmployee from './DisabledEmployee'
 import { useStore } from '../contexts/storeContext'
+import ErrorBoundary from './ErrorBoundary'
 
 const ModalCurrentWork = () => {
   /**
@@ -68,7 +69,7 @@ const ProgressWorkDetails = ({ onPressOrderRow }) => {
   } = useCurrentWorkCtx()
   return (
     <View>
-      {sections.map((sectionId) => (
+      {sections?.map((sectionId) => (
         <View key={sectionId}>
           <Text style={[gStyles.h2, { textAlign: 'center' }]}>
             {storeSections.find((s) => s.id === sectionId)?.name}
@@ -199,5 +200,9 @@ const ProgressWork = ({
     </View>
   )
 }
-
+export const ModalCurrentWorkE = (props) => (
+  <ErrorBoundary componentName="ModalCurrentWork">
+    <ModalCurrentWork {...props} />
+  </ErrorBoundary>
+)
 export default ModalCurrentWork

@@ -8,7 +8,7 @@ import theme from '../theme'
 import Button from './Button'
 import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
-import ModalCurrentWork from './ModalCurrentWork'
+import { ModalCurrentWorkE } from './ModalCurrentWork'
 import { useEmployee } from '../contexts/employeeContext'
 
 const MyStaffLabel = () => {
@@ -30,7 +30,7 @@ const MyStaffLabel = () => {
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <ModalCurrentWork />
+      <ModalCurrentWorkE />
       {__DEV__ && (
         <Button
           icon="broom"

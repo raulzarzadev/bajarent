@@ -206,7 +206,9 @@ const getCurrentWork = async ({
       sectionsAssigned.includes(o.assignToSection)
     )
     const unsolvedReportedInSectionAssigned = unsolvedReported.filter((o) =>
-      sectionsAssigned.includes(o.assignToSection)
+      sectionsAssigned.length > 0
+        ? sectionsAssigned.includes(o.assignToSection)
+        : true
     )
 
     const paidOrders = await ServicePayments.getInList({
