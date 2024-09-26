@@ -8,19 +8,23 @@ import { useStore } from '../contexts/storeContext'
 import { CollectionSearch } from '../hooks/useFilter'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
+import useMyNav from '../hooks/useMyNav'
 
 export type ListOrderProps = {
   orders: OrderType[]
   defaultOrdersIds?: string[]
   sideButtons?: ListSideButton[]
   collectionSearch?: CollectionSearch
+  onPressRow?: () => void
 }
 const ListOrders = ({
   orders,
   defaultOrdersIds,
   sideButtons = [],
-  collectionSearch
+  collectionSearch,
+  onPressRow
 }: ListOrderProps) => {
+  const { toOrders } = useMyNav()
   const { navigate } = useNavigation()
   const { storeSections } = useStore()
 
@@ -65,11 +69,8 @@ const ListOrders = ({
         defaultSortBy="folio"
         defaultOrder="des"
         onPressRow={(id) => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'OrderDetails',
-            params: { orderId: id }
-          })
+          toOrders({ id })
+          onPressRow?.()
         }}
         sortFields={[
           //{ key: 'priority', label: 'Prioridad' },

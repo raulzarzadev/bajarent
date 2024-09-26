@@ -1,4 +1,4 @@
-import { FlexStyle, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlexStyle, Pressable, Text, View } from 'react-native'
 import React from 'react'
 import StyledModal from './StyledModal'
 import CurrencyAmount from './CurrencyAmount'
@@ -45,7 +45,9 @@ const ModalCurrentWork = () => {
           <DisabledEmployee></DisabledEmployee>
         ) : (
           <>
-            <ProgressWorkDetails />
+            <ProgressWorkDetails
+              onPressOrderRow={modalCurrentWork.toggleOpen}
+            />
             <BalanceAmountsE payments={payments} />
           </>
         )}
@@ -53,7 +55,7 @@ const ModalCurrentWork = () => {
     </View>
   )
 }
-const ProgressWorkDetails = () => {
+const ProgressWorkDetails = ({ onPressOrderRow }) => {
   const { storeSections } = useStore()
   const {
     progress,
@@ -90,6 +92,7 @@ const ProgressWorkDetails = () => {
           modalTitle="Pedidos entregados"
           pendingOrders={authorizedOrders}
           doneOrders={deliveredOrders}
+          onPressRow={onPressOrderRow}
         />
 
         <ModalOrdersListOfProgressWork
@@ -98,6 +101,7 @@ const ProgressWorkDetails = () => {
           modalTitle={'Renovadas / Recogidas'}
           pendingOrders={expiredOrders}
           doneOrders={[...pickedUpOrders, ...renewedOrders]}
+          onPressRow={onPressOrderRow}
         />
         <ModalOrdersListOfProgressWork
           progress={progress.reports}
@@ -105,6 +109,7 @@ const ProgressWorkDetails = () => {
           modalTitle="Reportes resueltos"
           pendingOrders={unsolvedReported}
           doneOrders={solvedReported}
+          onPressRow={onPressOrderRow}
         />
       </View>
     </View>
@@ -116,7 +121,15 @@ const ModalOrdersListOfProgressWork = ({
   label,
   pendingOrders = [],
   doneOrders = [],
-  modalTitle = ''
+  modalTitle = '',
+  onPressRow
+}: {
+  progress: number
+  label: string
+  pendingOrders?: any[]
+  doneOrders?: any[]
+  modalTitle?: string
+  onPressRow?: () => void
 }) => {
   const modal = useModal({ title: modalTitle || label })
   const underLabel = `${doneOrders.length}/${
@@ -132,7 +145,13 @@ const ModalOrdersListOfProgressWork = ({
         />
       </Pressable>
       <StyledModal {...modal}>
-        <ListOrders orders={doneOrders} />
+        <ListOrders
+          orders={doneOrders}
+          onPressRow={() => {
+            onPressRow?.()
+            modal.toggleOpen()
+          }}
+        />
       </StyledModal>
     </View>
   )
@@ -183,23 +202,4 @@ const ProgressWork = ({
   )
 }
 
-const TabOrderList = ({ orders, onRedirect }) => {
-  return (
-    <View style={{ paddingHorizontal: 8, marginVertical: 16 }}>
-      {orders.map((order) => (
-        <View key={order.id} style={{ marginVertical: 4 }}>
-          <SpanOrder
-            orderId={order.id}
-            showName
-            redirect
-            onRedirect={onRedirect}
-          />
-        </View>
-      ))}
-    </View>
-  )
-}
-
 export default ModalCurrentWork
-
-const styles = StyleSheet.create({})
