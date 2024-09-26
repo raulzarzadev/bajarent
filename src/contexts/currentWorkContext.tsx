@@ -61,7 +61,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [date, setDate] = useState(new Date())
   const { storeId } = useStore()
-  const { employee } = useEmployee()
+  const { employee, permissions } = useEmployee()
 
   const sectionsAssigned = employee?.sectionsAssigned || []
 
@@ -70,27 +70,49 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
     useState<CurrentWorks>(defaultCurrentWork)
 
   useEffect(() => {
-    if (orders?.length) {
-      handleSetData({ disabledEmployee: employee?.disabled })
+    if (orders) {
+      handleSetData({
+        disabledEmployee: employee?.disabled,
+        allowGetInfoFromAllOrders: permissions.isAdmin || permissions.isOwner
+      })
     }
   }, [orders, employee?.disabled])
 
-  const handleSetData = ({ disabledEmployee = false }) => {
+  const handleSetData = ({
+    disabledEmployee = false,
+    allowGetInfoFromAllOrders = false
+  }) => {
     if (disabledEmployee) {
+      console.log('disabled employee')
       return setCurrentWork(defaultCurrentWork)
     }
-
-    console.log({ sectionsAssigned })
-
-    getCurrentWork({
-      date,
-      storeId,
-      sectionsAssigned,
-      orderType: TypeOrder.RENT,
-      currentOrders: orders
-    }).then((data) => {
-      setCurrentWork({ ...data })
-    })
+    if (allowGetInfoFromAllOrders) {
+      console.log('get as admin')
+      getCurrentWork({
+        date,
+        storeId,
+        sectionsAssigned,
+        orderType: TypeOrder.RENT,
+        currentOrders: orders
+      }).then((data) => {
+        setCurrentWork({ ...data })
+      })
+      return
+    }
+    if (employee.sectionsAssigned.length > 0) {
+      console.log('get by sections')
+      getCurrentWork({
+        date,
+        storeId,
+        sectionsAssigned,
+        orderType: TypeOrder.RENT,
+        currentOrders: orders
+      }).then((data) => {
+        setCurrentWork({ ...data })
+      })
+      return
+    }
+    console.log('do not get any')
   }
 
   return (
