@@ -91,7 +91,7 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
       orderType: TypeOrder.RENT,
       expiredOrders
     }).then((data) => {
-      setCurrentWork({ ...data, sections: sectionsAssigned })
+      setCurrentWork({ ...data })
     })
   }
 
@@ -205,6 +205,9 @@ const getCurrentWork = async ({
     const solvedReportsInSectionAssigned = reportedSolved.filter((o) =>
       sectionsAssigned.includes(o.assignToSection)
     )
+    const unsolvedReportedInSectionAssigned = unsolvedReported.filter((o) =>
+      sectionsAssigned.includes(o.assignToSection)
+    )
 
     const paidOrders = await ServicePayments.getInList({
       list: solvedOrders.map(({ id }) => id),
@@ -216,7 +219,7 @@ const getCurrentWork = async ({
     })
 
     const reports = calculateProgress(
-      reportedSolved?.length,
+      solvedReportsInSectionAssigned?.length,
       unsolvedReported?.length
     )
 
@@ -235,9 +238,10 @@ const getCurrentWork = async ({
       renewedOrders: renewed,
       authorizedOrders: authorized,
       solvedReported: solvedReportsInSectionAssigned,
-      unsolvedReported,
+      unsolvedReported: unsolvedReportedInSectionAssigned,
       payments: paidOrders,
       expiredOrders,
+      sections: sectionsAssigned,
       progress: {
         new: newOrders,
         reports,
