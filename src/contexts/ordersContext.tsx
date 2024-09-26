@@ -98,27 +98,16 @@ export const OrdersContextProvider = ({
   useEffect(() => {
     //* is disbaled and is not admin or owner do not get any order
     if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
-      setOrders([])
-      setConsolidatedOrders(undefined)
+      setOrders(null)
+      setConsolidatedOrders(null)
     } else {
       handleGetOrders()
       handleGetConsolidates()
     }
-
-    // if (isEmployee && !disabledEmployee) {
-
-    // } else {
-    //   setOrders([])
-    //   setConsolidatedOrders(undefined)
-    // }
   }, [isEmployee, disabledEmployee])
 
   useEffect(() => {
     if (store) {
-      // ServiceComments.getReports({ storeId }).then((res) => {
-      //   setReports(res)
-      // })
-
       ServiceComments.listenImportantUnsolved(storeId, (reports) => {
         setImportant(reports)
       })
@@ -131,14 +120,12 @@ export const OrdersContextProvider = ({
       storeId,
       solvedToday: true
     }).then((res) => {
-      //setReports(res)
       return res
     })
     const reportsUnsolved = await ServiceComments.getReports({
       storeId,
       solved: false
     }).then((res) => {
-      // setReports(res)
       return res
     })
 
@@ -191,7 +178,7 @@ export const OrdersContextProvider = ({
     } else {
       console.log('no orders')
       // * do not get any order
-      setOrders([])
+      setOrders(null)
     }
   }
 
