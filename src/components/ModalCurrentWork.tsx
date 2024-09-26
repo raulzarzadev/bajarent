@@ -188,7 +188,7 @@ const ProgressWork = ({
         width
       }}
     >
-      <Text style={[{ textAlign: 'center' }]}>
+      <Text style={[{ textAlign: 'center' }, gStyles.tBold]}>
         {label} {progress.toFixed(0)}%
       </Text>
       <ProgressBar progress={progress} color={color} size={size} />
