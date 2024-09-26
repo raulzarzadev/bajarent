@@ -6,8 +6,6 @@ import useModal from '../hooks/useModal'
 import { BalanceAmountsE } from './BalanceAmounts'
 import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
-
-import SpanOrder from './SpanOrder'
 import ProgressBar from './ProgressBar'
 import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
 import ListOrders from './ListOrders'

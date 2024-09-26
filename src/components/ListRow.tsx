@@ -2,7 +2,6 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
 import theme from '../theme'
 export type ListRowField = {
-  //field: string
   width: ViewStyle['width'] | 'rest'
   component: ReactNode
 }
