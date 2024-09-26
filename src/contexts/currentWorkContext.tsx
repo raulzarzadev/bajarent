@@ -5,7 +5,11 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import OrderType, { TypeOrder, TypeOrderType } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  TypeOrder,
+  TypeOrderType
+} from '../types/OrderType'
 import { useOrdersCtx } from './ordersContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from './storeContext'
@@ -75,21 +79,15 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
     if (disabledEmployee) {
       return setCurrentWork(defaultCurrentWork)
     }
-    const expiredOrders = orders?.filter(
-      (order) => order.expiresToday || order?.isExpired
-    )
 
-    const unsolvedReported = orders.filter((o) =>
-      o.comments.find((c) => c.type === 'report' && !c.solved)
-    )
+    console.log({ sectionsAssigned })
 
     getCurrentWork({
       date,
       storeId,
       sectionsAssigned,
-      unsolvedReported: unsolvedReported,
       orderType: TypeOrder.RENT,
-      expiredOrders
+      currentOrders: orders
     }).then((data) => {
       setCurrentWork({ ...data })
     })
@@ -130,17 +128,16 @@ const getCurrentWork = async ({
   storeId = '',
   sectionsAssigned = [],
   date = new Date(),
-  unsolvedReported = [],
-  expiredOrders = [],
-  orderType
+  orderType,
+  currentOrders = []
 }: {
   storeId: string
   sectionsAssigned: string[]
   date: Date
   orderType?: TypeOrderType
-  unsolvedReported: Partial<OrderType>[]
-  expiredOrders: Partial<OrderType>[]
+  currentOrders: Partial<OrderType>[]
 }) => {
+  // if sectionsAssigned.length is 0, should will get info of all orders
   try {
     const NUMBER_OF_METRICS = 3
     const pickedUpPromise = ServiceOrders.getPickedUp({
@@ -166,18 +163,13 @@ const getCurrentWork = async ({
       orderType
     })
 
-    const authorizedPromise = ServiceOrders.getAuthorized({
-      storeId,
-      sections: sectionsAssigned,
-      orderType
-    })
-
     const solvedReportsOrdersPromises = ServiceComments.getSolvedReportsByDate({
       storeId,
       fromDate: startDate(new Date()),
       toDate: endDate(new Date())
     })
       .then((reports) => {
+        console.log({ reports })
         const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
         return ordersIds.map((orderId) => ServiceOrders.get(orderId))
       })
@@ -185,30 +177,29 @@ const getCurrentWork = async ({
         return Promise.all(ordersPromises)
       })
 
-    const [pickedUp, delivered, renewed, authorized, reportedSolved] =
-      await Promise.all([
-        pickedUpPromise,
-        deliveredPromise,
-        renewedPromise,
-        authorizedPromise,
-        solvedReportsOrdersPromises
-      ])
+    const [pickedUp, delivered, renewed, reportedSolved] = await Promise.all([
+      pickedUpPromise,
+      deliveredPromise,
+      renewedPromise,
+      solvedReportsOrdersPromises
+    ])
 
-    /*
-  Para tener todas los pagos, debemos tener en cuenta los pagos 
-  de las nuevas rentas y los pagos de las renovacioones de 
-   */
+    const authorized = currentOrders.filter(
+      (o) => o.status === order_status.AUTHORIZED
+    )
 
     const solvedOrders = [...renewed, ...delivered].filter((o) => {
-      return sectionsAssigned.includes(o.assignToSection)
+      return sectionsAssigned.length > 0
+        ? sectionsAssigned.includes(o.assignToSection)
+        : true
     })
     const solvedReportsInSectionAssigned = reportedSolved.filter((o) =>
-      sectionsAssigned.includes(o.assignToSection)
-    )
-    const unsolvedReportedInSectionAssigned = unsolvedReported.filter((o) =>
       sectionsAssigned.length > 0
         ? sectionsAssigned.includes(o.assignToSection)
         : true
+    )
+    const unsolvedReportedInSectionAssigned = currentOrders.filter(
+      (o) => o.hasNotSolvedReports
     )
 
     const paidOrders = await ServicePayments.getInList({
@@ -222,11 +213,13 @@ const getCurrentWork = async ({
 
     const reports = calculateProgress(
       solvedReportsInSectionAssigned?.length,
-      unsolvedReported?.length
+      unsolvedReportedInSectionAssigned?.length
     )
 
     const newOrders = calculateProgress(delivered?.length, authorized?.length)
-
+    const expiredOrders = currentOrders.filter(
+      (o) => o.expiresToday || o.isExpired
+    )
     const expiredProgress = calculateProgress(
       renewed?.length + pickedUp?.length,
       expiredOrders?.length
