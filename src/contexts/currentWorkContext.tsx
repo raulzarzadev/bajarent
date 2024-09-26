@@ -68,7 +68,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const { orders } = useOrdersCtx()
   const [currentWork, setCurrentWork] =
     useState<CurrentWorks>(defaultCurrentWork)
-  console.log({ orders })
   useEffect(() => {
     if (orders) {
       handleSetData({
