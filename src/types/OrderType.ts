@@ -133,6 +133,12 @@ export type OrderBase = {
   extensions?: Record<string, OrderExtensionType>
 
   /* ******************************************** 
+             QUICK ACTIONS               
+   *******************************************rz */
+  markedToCollect?: boolean
+  markedToCharge?: boolean
+
+  /* ******************************************** 
              Extend expire feature               
    *******************************************rz */
   extendReason?: string

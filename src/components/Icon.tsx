@@ -73,9 +73,13 @@ import {
 } from 'react-icons/go'
 import { LiaToolsSolid } from 'react-icons/lia'
 import { CgSmartHomeWashMachine } from 'react-icons/cg'
+import { PiArrowFatLinesUpLight } from 'react-icons/pi'
+import { RiMoneyDollarCircleLine } from 'react-icons/ri'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  pickUpIt: PiArrowFatLinesUpLight,
+  chargeIt: RiMoneyDollarCircleLine,
   washMachine: CgSmartHomeWashMachine,
   inventory: MdOutlineInventory,
   history: MdOutlineHistory,
