@@ -56,8 +56,26 @@ const OrderStatus = ({
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
 
+  const pickup = order?.markedToCollect
+  const charge = order?.markedToCharge
   return (
     <>
+      {pickup && (
+        <Chip
+          color=""
+          titleColor={theme.secondary}
+          title={''}
+          icon="pickUpIt"
+        ></Chip>
+      )}
+      {charge && (
+        <Chip
+          color=""
+          titleColor={theme.success}
+          title={''}
+          icon="chargeIt"
+        ></Chip>
+      )}
       {isRenewed && (
         <Chip
           style={[chipStyles]}
