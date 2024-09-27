@@ -6,11 +6,7 @@ import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
 import ListRow, { ListRowField } from './ListRow'
-import Icon from './Icon'
-import ButtonConfirm from './ButtonConfirm'
-import { ModalSendWhatsappE } from './ModalSendWhatsapp'
-import { ContactsList } from './OrderContacts'
-import { OrderProvider } from '../contexts/orderContext'
+import { ModalOrderQuickActionsE } from './ModalOrderQuickActions'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -23,37 +19,11 @@ export type RowOrderProps = {
   showTodayAmount?: boolean
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
-  const contacts = order.contacts as ContactType[]
-  const favoritePhone = contacts?.find((c) => c?.isFavorite)
-  const mainPhone = order.phone
-
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
       width: 'auto',
-      component: (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            height: '100%',
-            alignItems: 'center'
-          }}
-        >
-          <ButtonConfirm
-            modalTitle="Acciones "
-            justIcon
-            openSize="xs"
-            icon="verticalDots"
-            openVariant="ghost"
-            hideConfirm
-          >
-            <OrderProvider orderId={order.id}>
-              <ContactsList />
-            </OrderProvider>
-          </ButtonConfirm>
-        </View>
-      )
+      component: <ModalOrderQuickActionsE orderId={order.id} />
     },
     {
       width: bigScreen ? 'rest' : 100,
