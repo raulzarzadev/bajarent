@@ -190,7 +190,6 @@ const getCurrentWork = async ({
       toDate: endDate(new Date())
     })
       .then((reports) => {
-        console.log({ reports })
         const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
         return ordersIds.map((orderId) => ServiceOrders.get(orderId))
       })
@@ -209,6 +208,10 @@ const getCurrentWork = async ({
       (o) => o.status === order_status.AUTHORIZED
     )
 
+    const unsolvedReportedInSectionAssigned = currentOrders
+      .filter((o) => o.type === orderType)
+      .filter((o) => o.hasNotSolvedReports)
+
     const solvedOrders = [...renewed, ...delivered].filter((o) => {
       return sectionsAssigned.length > 0
         ? sectionsAssigned.includes(o.assignToSection)
@@ -218,9 +221,6 @@ const getCurrentWork = async ({
       sectionsAssigned.length > 0
         ? sectionsAssigned.includes(o.assignToSection)
         : true
-    )
-    const unsolvedReportedInSectionAssigned = currentOrders.filter(
-      (o) => o.hasNotSolvedReports
     )
 
     const paidOrders = await ServicePayments.getInList({
