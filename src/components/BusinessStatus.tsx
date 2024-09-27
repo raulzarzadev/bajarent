@@ -159,21 +159,21 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       {balance?.sections
         ?.sort((a, b) => {
           const aName =
-            storeSections.find((s) => s.id === a.section)?.name || a.section
+            storeSections.find((s) => s.id === a.section)?.name || a?.section
           const bName =
-            storeSections.find((s) => s.id === b.section)?.name || b.section
+            storeSections.find((s) => s.id === b.section)?.name || b?.section
           return aName.localeCompare(bName)
         })
         .map((balanceRow: BalanceRowType) => {
-          const inRentItems = balanceRow.inRent.length || 0
-          const inStockItems = balanceRow.inStock.length || 0
+          const inRentItems = balanceRow?.inRent?.length || 0
+          const inStockItems = balanceRow?.inStock?.length || 0
 
           if (allFieldsAreEmpty(balanceRow)) return null
           return (
-            <View key={balanceRow.section}>
+            <View key={balanceRow?.section}>
               <Pressable
                 onPress={() => {
-                  handleSelectRow(balanceRow.section)
+                  handleSelectRow(balanceRow?.section)
                 }}
               >
                 <ListRow

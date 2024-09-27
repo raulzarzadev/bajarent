@@ -13,6 +13,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import DisabledEmployee from './DisabledEmployee'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
+import TextInfo from './TextInfo'
 
 const ModalCurrentWork = () => {
   /**
@@ -28,7 +29,7 @@ const ModalCurrentWork = () => {
    */
   const { employee, permissions } = useEmployee()
   const { payments, progress } = useCurrentWorkCtx()
-  const modalCurrentWork = useModal({ title: 'Trabajo de hoy' })
+  const modalCurrentWork = useModal({ title: 'Trabajo de hoy (rentas)' })
   if (!permissions?.canSeeCurrentWork) return <></>
   return (
     <View style={{ marginRight: 8 }}>

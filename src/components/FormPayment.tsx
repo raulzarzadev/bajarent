@@ -8,6 +8,7 @@ import Button from './Button'
 import FormikInputValue from './FormikInputValue'
 import FormikInputImage from './FormikInputImage'
 import { gStyles } from '../styles'
+import FormikErrorsList from './FormikErrorsList'
 
 const FormPayment = ({
   onSubmit,
@@ -46,6 +47,9 @@ const FormPayment = ({
         if (values.method === 'transfer' && !values.reference) {
           errors.reference = 'Registra una referencia'
         }
+        if (values.method === 'transfer' && !values.image) {
+          errors.image = 'Agrega un comprobante'
+        }
         return errors
       }}
     >
@@ -75,17 +79,13 @@ const FormPayment = ({
                 />
               </View>
             )}
-            {Object.entries(errors).map(([field, message]) => (
-              <Text
-                key={field}
-                style={[gStyles.helperError, { textAlign: 'center' }]}
-              >
-                *{message as string}
-              </Text>
-            ))}
+            <FormikErrorsList />
+
             <View style={styles.repairItemForm}>
               <Button
-                disabled={submitting || isSubmitting}
+                disabled={
+                  submitting || isSubmitting || !!Object.keys(errors).length
+                }
                 onPress={async () => {
                   handleSubmit()
                 }}
