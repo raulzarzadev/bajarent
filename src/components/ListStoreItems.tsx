@@ -229,12 +229,6 @@ const ListStoreItems = ({
             },
             label: 'Agregar',
             visible: permissions?.items?.canCreate
-          },
-          {
-            icon: 'refresh',
-            onPress: () => fetchItems(),
-            label: 'Refrescar',
-            visible: true
           }
         ]}
         data={formattedItems}
