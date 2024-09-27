@@ -9,6 +9,7 @@ import FormikInputValue from './FormikInputValue'
 import FormikInputImage from './FormikInputImage'
 import { gStyles } from '../styles'
 import FormikErrorsList from './FormikErrorsList'
+import { useEmployee } from '../contexts/employeeContext'
 
 const FormPayment = ({
   onSubmit,
@@ -17,6 +18,7 @@ const FormPayment = ({
   onSubmit: (values: Partial<PaymentType>) => Promise<any> | void
   values?: Partial<PaymentType>
 }) => {
+  const { permissions } = useEmployee()
   const initialValues: Partial<PaymentType> = {
     method: values?.method || 'cash',
     amount: values?.amount || 0,
@@ -47,7 +49,11 @@ const FormPayment = ({
         if (values.method === 'transfer' && !values.reference) {
           errors.reference = 'Registra una referencia'
         }
-        if (values.method === 'transfer' && !values.image) {
+        if (
+          values.method === 'transfer' &&
+          !values.image &&
+          permissions?.orders?.shouldUploadTransferReceipt
+        ) {
           errors.image = 'Agrega un comprobante'
         }
         return errors
