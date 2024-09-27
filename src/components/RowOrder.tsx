@@ -23,7 +23,19 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
   const fields: ListRowField[] = [
     {
       width: 'auto',
-      component: <ModalOrderQuickActionsE orderId={order.id} />
+      component: (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          <ModalOrderQuickActionsE orderId={order.id} />
+        </View>
+      )
     },
     {
       width: bigScreen ? 'rest' : 100,

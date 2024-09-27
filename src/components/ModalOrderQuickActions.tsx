@@ -46,7 +46,7 @@ const QuickActions = () => {
         onPress={() => {
           ServiceOrders.update(order.id, { markedToCollect: !collectIt })
         }}
-        label={collectIt ? 'Marcada para recoger' : 'Marcar para recoger'}
+        label={'Recoger'}
       />
       <Button
         variant={chargeIt ? 'filled' : 'ghost'}
@@ -55,7 +55,7 @@ const QuickActions = () => {
         onPress={() => {
           ServiceOrders.update(order.id, { markedToCharge: !chargeIt })
         }}
-        label={chargeIt ? 'Pasar a cobrar' : 'Marcar para cobrar'}
+        label={'Cobrar'}
       />
     </View>
   )
