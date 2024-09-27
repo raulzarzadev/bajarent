@@ -105,6 +105,7 @@ const labels = {
   canSentWS: 'Enviar WS',
   canReorder: 'Pedir de nuevo',
   canUnAuthorize: 'Desautorizar',
+  shouldUploadTransferReceipt: 'Req comp trans',
   canUndo: 'Deshacer',
   showOrderTotal: 'Monto total',
   showOrderTime: 'Tiempo',
