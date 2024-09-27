@@ -53,7 +53,6 @@ const OrderProvider = ({
     }
   }, [_orderId])
 
-  console.log('iniciando ', { order })
   return (
     <OrderContext.Provider value={{ order, setOrder, payments }}>
       {children}
