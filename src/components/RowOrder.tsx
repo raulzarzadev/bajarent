@@ -1,4 +1,4 @@
-import { Dimensions, Text, View } from 'react-native'
+import { Dimensions, Pressable, Text, View } from 'react-native'
 import React from 'react'
 import OrderType from '../types/OrderType'
 import ClientName from './ClientName'
@@ -6,6 +6,9 @@ import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
 import ListRow, { ListRowField } from './ListRow'
+import Icon from './Icon'
+import ButtonConfirm from './ButtonConfirm'
+import { ModalSendWhatsappE } from './ModalSendWhatsapp'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -18,8 +21,33 @@ export type RowOrderProps = {
   showTodayAmount?: boolean
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
+  const whatsappPhone = ''
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
+    {
+      width: 'auto',
+      component: (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            height: '100%',
+            alignItems: 'center'
+          }}
+        >
+          <ButtonConfirm
+            modalTitle="Acciones "
+            justIcon
+            openSize="xs"
+            icon="verticalDots"
+            openVariant="ghost"
+            hideConfirm
+          >
+            <ModalSendWhatsappE whatsappPhone={whatsappPhone} />
+          </ButtonConfirm>
+        </View>
+      )
+    },
     {
       width: bigScreen ? 'rest' : 100,
       component: (

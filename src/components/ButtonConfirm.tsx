@@ -22,6 +22,7 @@ const ButtonConfirm = ({
   openSize,
   openDisabled,
   confirmDisabled,
+  hideConfirm,
   onOpen,
   confirmDisabledHelper,
   cancelButton = false,
@@ -45,6 +46,7 @@ const ButtonConfirm = ({
   onOpen?: () => void
   confirmDisabledHelper?: string
   cancelButton?: boolean
+  hideConfirm?: boolean
   handleCancel?: () => void
 }) => {
   const modal = useModal({ title: modalTitle })
@@ -101,27 +103,29 @@ const ButtonConfirm = ({
               Cancelar
             </Button>
           )}
-          <Button
-            id={'confirmButton'}
-            buttonStyles={{}}
-            color={confirmColor}
-            variant={confirmVariant}
-            disabled={sending || confirmDisabled}
-            onPress={async () => {
-              setSending(true)
-              await handleConfirm()
-                .then((r) => {
-                  //console.log({r})
-                })
-                .catch((e) => console.error(e))
-                .finally(() => {
-                  setSending(false)
-                  modal.toggleOpen()
-                })
-            }}
-          >
-            {confirmLabel}
-          </Button>
+          {!hideConfirm && (
+            <Button
+              id={'confirmButton'}
+              buttonStyles={{}}
+              color={confirmColor}
+              variant={confirmVariant}
+              disabled={sending || confirmDisabled}
+              onPress={async () => {
+                setSending(true)
+                await handleConfirm()
+                  .then((r) => {
+                    //console.log({r})
+                  })
+                  .catch((e) => console.error(e))
+                  .finally(() => {
+                    setSending(false)
+                    modal.toggleOpen()
+                  })
+              }}
+            >
+              {confirmLabel}
+            </Button>
+          )}
         </View>
       </StyledModal>
     </View>
