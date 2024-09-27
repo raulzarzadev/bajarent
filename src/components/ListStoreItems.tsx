@@ -25,6 +25,7 @@ import asDate from '../libs/utils-date'
 import InputAssignSection from './InputAssingSection'
 import { SectionType } from '../types/SectionType'
 import { gStyles } from '../styles'
+import { useItemsCtx } from '../contexts/itemsContext'
 
 const OPACITY_ROW_COLOR = '66'
 
@@ -45,6 +46,25 @@ const ListStoreItems = ({
   //@ts-ignore
   const listItems = params?.ids
 
+  const { items } = useItemsCtx()
+
+  const filteredItems = items?.filter((item) => {
+    // * FILTER BY LIST
+    if (listItems?.length > 0) return listItems.includes(item.id)
+    // * FILTER BY SECTION
+    if (allItemsSections?.length > 0) {
+      if (!allItemsSections.includes(item.assignedSection)) return false
+    }
+    // * FILTER BY AVAILABLE
+    if (getAllAvailable) {
+      if (item.status !== 'pickedUp') return false
+    }
+    // * FILTER BY ALL ITEMS
+    if (!allItems) {
+      if (item.status === 'retired') return false
+    }
+    return true
+  })
   const { toItems } = useMyNav()
   const { storeId, categories, storeSections } = useStore()
   const { user } = useAuth()
@@ -61,13 +81,11 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    // fetchItems()
+
     setLoading(false)
     return res
   }
   const handleRetireItem = async (ids: string[]) => {
-    //if any item here is in rent, cancel the action
-    const items = await ServiceStoreItems.getList({ storeId, ids })
     const rentedItems = items.filter((item) => item.status === 'rented')
     if (rentedItems.length) {
       setErrors({ rentedItems: 'cant retire rented items' })
@@ -85,59 +103,9 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    // fetchItems({ fromCache: true })
+
     setLoading(false)
     return res
-  }
-  const [items, setItems] = useState<Partial<ItemType>[]>([])
-
-  const fetchItems = async (props?: { fromCache?: boolean }) => {
-    const { fromCache } = props || {}
-    if (Array.isArray(listItems) && listItems.length > 0) {
-      ServiceStoreItems.getList(
-        { storeId, ids: listItems },
-        { fromCache }
-      ).then((res) => {
-        setItems(res)
-      })
-      return
-    }
-    if (allItems) {
-      ServiceStoreItems.getAll({ storeId }, { fromCache }).then((res) => {
-        setItems(res)
-      })
-      return
-    }
-
-    if (allItemsSections?.length) {
-      ServiceStoreItems.getAll(
-        {
-          storeId,
-          sections: allItemsSections
-        },
-        { fromCache }
-      ).then((res) => {
-        setItems(res)
-      })
-      return
-    }
-    if (availableItemsSections?.length) {
-      ServiceStoreItems.getAvailable(
-        {
-          storeId,
-          sections: availableItemsSections
-        },
-        { fromCache }
-      ).then((res) => {
-        setItems(res)
-      })
-      return
-    }
-    if (getAllAvailable) {
-      ServiceStoreItems.getAvailable({ storeId }, { fromCache }).then((res) => {
-        setItems(res)
-      })
-    }
   }
 
   const handleAddInventoryEntry = async (ids: string[]) => {
@@ -150,24 +118,13 @@ const ListStoreItems = ({
       }
     })
     const res = await Promise.all(promises)
-    // fetchItems({ fromCache: true })
     setLoading(false)
     return res
   }
 
-  useEffect(() => {
-    if (storeId) {
-      fetchItems({ fromCache: false })
-    }
-  }, [storeId, allItemsSections])
-
   const [errors, setErrors] = useState<{ rentedItems?: string }>({})
 
-  const formattedItems = formatItems(
-    items?.map((item) => ({ ...item, id: item.id })),
-    categories,
-    storeSections
-  )
+  const formattedItems = formatItems(filteredItems, categories, storeSections)
 
   const handleAssignItems = async (
     ids: string[],

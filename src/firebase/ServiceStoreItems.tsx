@@ -40,9 +40,9 @@ export class ServiceStoreItemsClass {
       storeId,
       sections,
       justActive
-    }: { storeId: string; sections?: string[]; justActive: true },
+    }: { storeId: string; sections?: string[]; justActive?: true },
     ops?: GetItemsOps
-  ) {
+  ): Promise<Type[]> {
     const filters = []
     if (sections?.length) {
       filters.push(where('assignedSection', 'in', sections))
@@ -52,19 +52,26 @@ export class ServiceStoreItemsClass {
         where('status', 'in', [ItemStatuses.rented, ItemStatuses.pickedUp])
       )
     }
-    return ServiceStores.getItemsInCollection(
-      {
-        parentId: storeId,
-        subCollection: SUB_COLLECTION,
-        filters
-      }
-      // {
-      //   parentId: storeId,
-      //   subCollection: SUB_COLLECTION,
-      //   filters: filters.length > 0 ? filters : undefined
-      // },
-      // ops
+
+    const storeItemsRef = ServiceStores.getSubCollectionRef(
+      storeId,
+      SUB_COLLECTION
     )
+    return ServiceStores.getRefItems(
+      {
+        collectionRef: storeItemsRef,
+        filters
+      },
+      ops
+    )
+    // return ServiceStores.getItemsInCollection(
+    //   {
+    //     parentId: storeId,
+    //     subCollection: SUB_COLLECTION,
+    //     filters
+    //   },
+    //   ops
+    // )
   }
 
   async getAvailable(

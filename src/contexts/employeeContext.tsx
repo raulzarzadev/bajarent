@@ -195,7 +195,7 @@ export const formatItems = (
   categories: Partial<CategoryType>[],
   sections: SectionType[]
 ) => {
-  return items.map((item) => ({
+  return items?.map((item) => ({
     ...item,
     id: item?.id,
     categoryName:

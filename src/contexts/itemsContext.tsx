@@ -8,11 +8,12 @@ import React, {
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from './storeContext'
+import { useEmployee } from './employeeContext'
 
 export type Item = ItemType
 
 interface ItemsContextProps {
-  items: Item[]
+  items?: Partial<ItemType>[] | null
   addItem: (item: Item) => void
   removeItem: (id: number) => void
 }
@@ -22,13 +23,27 @@ const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
 export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
-  const [items, setItems] = useState<Item[]>([])
+  const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const { storeId } = useStore()
+  const {
+    permissions: {
+      items: { canViewAllItems },
+      isAdmin,
+      isOwner
+    }
+  } = useEmployee()
+  const getAllItems = isAdmin || isOwner || canViewAllItems
   useEffect(() => {
-    ServiceStoreItems.getAll({ storeId, justActive: true }).then((res) => {
-      setItems(res)
-    })
-  }, [])
+    if (storeId && getAllItems)
+      ServiceStoreItems.getAll({ storeId, justActive: true })
+        .then((res) => {
+          setItems(res)
+        })
+        .catch((err) => {
+          console.error(err)
+          setItems(null)
+        })
+  }, [storeId, getAllItems])
 
   const addItem = (item: Item) => {
     // setItems((prevItems) => [...prevItems, item])
@@ -37,7 +52,6 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const removeItem = (id: number) => {
     //setItems((prevItems) => prevItems.filter((item) => item.id !== id))
   }
-  console.log({ items })
 
   return (
     <ItemsContext.Provider value={{ items, addItem, removeItem }}>
@@ -46,7 +60,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   )
 }
 
-export const useItems = (): ItemsContextProps => {
+export const useItemsCtx = (): ItemsContextProps => {
   const context = useContext(ItemsContext)
   if (!context) {
     throw new Error('useItems must be used within an ItemsProvider')
