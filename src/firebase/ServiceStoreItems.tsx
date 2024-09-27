@@ -1,12 +1,13 @@
-import { collection, documentId, where } from 'firebase/firestore'
+import { collection, documentId, query, where } from 'firebase/firestore'
 import { ServiceStores } from './ServiceStore'
-import ItemType from '../types/ItemType'
+import ItemType, { ItemStatuses } from '../types/ItemType'
 import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
 import { db } from './main'
 import { FormattedResponse, GetItemsOps } from './firebase.CRUD'
 type Type = Partial<ItemType>
 type Field = keyof Type
 const SUB_COLLECTION = 'items'
+
 export class ServiceStoreItemsClass {
   async add({ storeId, item }: { storeId: string; item: Type }): Promise<{
     newItem: Type
@@ -35,30 +36,37 @@ export class ServiceStoreItemsClass {
   }
 
   async getAll(
-    { storeId, sections }: { storeId: string; sections?: string[] },
+    {
+      storeId,
+      sections,
+      justActive
+    }: { storeId: string; sections?: string[]; justActive: true },
     ops?: GetItemsOps
   ) {
     const filters = []
     if (sections?.length) {
       filters.push(where('assignedSection', 'in', sections))
     }
+    if (justActive) {
+      filters.push(
+        where('status', 'in', [ItemStatuses.rented, ItemStatuses.pickedUp])
+      )
+    }
     return ServiceStores.getItemsInCollection(
       {
         parentId: storeId,
         subCollection: SUB_COLLECTION,
-        filters: filters.length > 0 ? filters : undefined
-      },
-      ops
+        filters
+      }
+      // {
+      //   parentId: storeId,
+      //   subCollection: SUB_COLLECTION,
+      //   filters: filters.length > 0 ? filters : undefined
+      // },
+      // ops
     )
   }
 
-  // async getActive(storeId: string) {
-  //   return ServiceStores.getItemsInCollection({
-  //     parentId: storeId,
-  //     subCollection: SUB_COLLECTION,
-  //     filters: [where('isActive', '==', true)]
-  //   })
-  // }
   async getAvailable(
     {
       storeId,
