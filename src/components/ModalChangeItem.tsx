@@ -53,8 +53,6 @@ const ModalChangeItem = ({
 
   const itemExist = !(itemRow.number === 'SN')
 
-  console.log({ itemSelected })
-
   return (
     <View>
       <ButtonConfirm

@@ -443,7 +443,7 @@ export class FirebaseCRUD {
     const res: any[] = []
     const q: Query<DocumentData> = query(collectionRef, ...filters)
     let querySnapshot: QuerySnapshot<DocumentData, DocumentData>
-    console.log('fromCacheRef', ops?.fromCache)
+    // console.log('fromCacheRef', ops?.fromCache)
     if (ops?.fromCache) {
       querySnapshot = await getDocsFromCache(q)
     } else {

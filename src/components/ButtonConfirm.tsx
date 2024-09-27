@@ -110,7 +110,9 @@ const ButtonConfirm = ({
             onPress={async () => {
               setSending(true)
               await handleConfirm()
-                .then((r) => console.log(r))
+                .then((r) => {
+                  //console.log({r})
+                })
                 .catch((e) => console.error(e))
                 .finally(() => {
                   setSending(false)
