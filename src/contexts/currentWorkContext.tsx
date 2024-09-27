@@ -204,9 +204,9 @@ const getCurrentWork = async ({
       solvedReportsOrdersPromises
     ])
 
-    const authorized = currentOrders.filter(
-      (o) => o.status === order_status.AUTHORIZED
-    )
+    const authorized = currentOrders
+      .filter((o) => o.type === orderType)
+      .filter((o) => o.status === order_status.AUTHORIZED)
 
     const unsolvedReportedInSectionAssigned = currentOrders
       .filter((o) => o.type === orderType)
