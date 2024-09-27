@@ -1,6 +1,6 @@
 import { Dimensions, Pressable, Text, View } from 'react-native'
 import React from 'react'
-import OrderType from '../types/OrderType'
+import OrderType, { ContactType } from '../types/OrderType'
 import ClientName from './ClientName'
 import { gStyles } from '../styles'
 import OrderDirectives from './OrderDirectives'
@@ -9,6 +9,7 @@ import ListRow, { ListRowField } from './ListRow'
 import Icon from './Icon'
 import ButtonConfirm from './ButtonConfirm'
 import { ModalSendWhatsappE } from './ModalSendWhatsapp'
+import { ContactsList } from './OrderContacts'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -21,7 +22,10 @@ export type RowOrderProps = {
   showTodayAmount?: boolean
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
-  const whatsappPhone = ''
+  const contacts = order.contacts as ContactType[]
+  const favoritePhone = contacts?.find((c) => c?.isFavorite)
+  const mainPhone = order.phone
+
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
@@ -43,7 +47,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             openVariant="ghost"
             hideConfirm
           >
-            <ModalSendWhatsappE whatsappPhone={whatsappPhone} />
+            <ContactsList />
           </ButtonConfirm>
         </View>
       )
