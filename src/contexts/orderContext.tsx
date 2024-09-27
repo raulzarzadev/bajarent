@@ -25,27 +25,35 @@ interface OrderContextProps {
 const OrderContext = createContext<OrderContextProps>({})
 
 // Create the OrderContext provider component
-const OrderProvider = ({ children }: { children: ReactNode }) => {
+const OrderProvider = ({
+  children,
+  orderId
+}: {
+  children: ReactNode
+  orderId?: OrderType['id']
+}) => {
   const route = useRoute()
   //@ts-ignore
-  const orderId = route?.params?.orderId
+  const _orderId = orderId || route?.params?.orderId
   const [order, setOrder] = useState<Order>()
 
   const [payments, setPayments] = useState<PaymentType[]>([])
   useEffect(() => {
-    if (orderId) {
-      ServicePayments.listenByOrder(orderId, setPayments)
+    if (_orderId) {
+      ServicePayments.listenByOrder(_orderId, setPayments)
     }
     return () => {}
-  }, [orderId])
+  }, [_orderId])
 
   useEffect(() => {
-    if (orderId) {
-      listenFullOrderData(orderId, (order) => {
+    if (_orderId) {
+      listenFullOrderData(_orderId, (order) => {
         setOrder(order)
       })
     }
-  }, [orderId])
+  }, [_orderId])
+
+  console.log('iniciando ', { order })
   return (
     <OrderContext.Provider value={{ order, setOrder, payments }}>
       {children}

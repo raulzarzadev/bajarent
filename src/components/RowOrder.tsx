@@ -10,6 +10,7 @@ import Icon from './Icon'
 import ButtonConfirm from './ButtonConfirm'
 import { ModalSendWhatsappE } from './ModalSendWhatsapp'
 import { ContactsList } from './OrderContacts'
+import { OrderProvider } from '../contexts/orderContext'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -47,7 +48,9 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             openVariant="ghost"
             hideConfirm
           >
-            <ContactsList />
+            <OrderProvider orderId={order.id}>
+              <ContactsList />
+            </OrderProvider>
           </ButtonConfirm>
         </View>
       )

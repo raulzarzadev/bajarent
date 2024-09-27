@@ -53,14 +53,14 @@ export const ContactsList = () => {
   const { order } = useOrderDetails()
   const handleMarkAsFavorite = (contactId: ContactType['id']) => {
     onMarkContactAsFavorite({
-      contact: contacts.find(({ id }) => contactId === id),
+      contact: contacts?.find(({ id }) => contactId === id),
       orderId: order.id,
-      isFavorite: !contacts.find(({ id }) => contactId === id)?.isFavorite
+      isFavorite: !contacts?.find(({ id }) => contactId === id)?.isFavorite
     })
   }
   const handleDeleteContact = (contactId: ContactType['id']) => {
     onRemoveContact({
-      contact: contacts.find(({ id }) => contactId === id),
+      contact: contacts?.find(({ id }) => contactId === id),
       orderId: order.id
     })
   }
@@ -72,7 +72,7 @@ export const ContactsList = () => {
   const contacts = order?.contacts as ContactType[]
   return (
     <View>
-      <ContactRow contact={{ phone: order.phone, name: '' }} />
+      <ContactRow contact={{ phone: order?.phone, name: '' }} />
       {contacts?.sort(sortById).map((contact, i) => (
         <ContactRow
           contact={contact}

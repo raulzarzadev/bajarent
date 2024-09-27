@@ -33,6 +33,7 @@ export default function ModalSendWhatsapp({
   // const [order, setOrder] = useState<OrderType>()
   const { order, payments } = useOrderDetails()
   const phone = whatsappPhone
+
   const invalidPhone = !phone || phone?.length < 10
   const { store } = useStore()
   const item = order?.items?.[0]
@@ -375,17 +376,6 @@ export default function ModalSendWhatsapp({
           </View>
         )}
         <Text style={{ marginVertical: 12 }}>{message}</Text>
-
-        {invalidPhone && (
-          <Text
-            style={[
-              gStyles.helper,
-              { color: theme.error, textAlign: 'center', marginVertical: 6 }
-            ]}
-          >
-            Numero de telefono invalido
-          </Text>
-        )}
 
         {invalidPhone && (
           <Text
