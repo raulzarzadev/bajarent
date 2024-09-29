@@ -14,6 +14,7 @@ import DisabledEmployee from './DisabledEmployee'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import TextInfo from './TextInfo'
+import SectionProgressWork from './SectionProgressWork'
 
 const ModalCurrentWork = () => {
   /**
@@ -58,7 +59,6 @@ const ModalCurrentWork = () => {
 const ProgressWorkDetails = ({ onPressOrderRow }) => {
   const { storeSections } = useStore()
   const {
-    progress,
     deliveredOrders,
     authorizedOrders,
     solvedReported,
@@ -77,86 +77,20 @@ const ProgressWorkDetails = ({ onPressOrderRow }) => {
           </Text>
         </View>
       ))}
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          flexWrap: 'wrap',
-          marginVertical: 16
-        }}
-      >
-        <ModalOrdersListOfProgressWork
-          progress={progress.new}
-          label={`Entregadas`}
-          modalTitle="Pedidos entregados"
-          pendingOrders={authorizedOrders}
-          doneOrders={deliveredOrders}
-          onPressRow={onPressOrderRow}
-        />
-
-        <ModalOrdersListOfProgressWork
-          progress={progress.expired}
-          label={'Renovadas'}
-          modalTitle={'Renovadas / Recogidas'}
-          pendingOrders={expiredOrders}
-          doneOrders={[...pickedUpOrders, ...renewedOrders]}
-          onPressRow={onPressOrderRow}
-        />
-        <ModalOrdersListOfProgressWork
-          progress={progress.reports}
-          label={'Reportes'}
-          modalTitle="Reportes resueltos"
-          pendingOrders={unsolvedReported}
-          doneOrders={solvedReported}
-          onPressRow={onPressOrderRow}
-        />
-      </View>
+      <SectionProgressWork
+        authorized={authorizedOrders}
+        delivered={deliveredOrders}
+        expired={expiredOrders}
+        resolved={[...renewedOrders, ...pickedUpOrders]}
+        reported={unsolvedReported}
+        reportedSolved={solvedReported}
+        onPressOrderRow={onPressOrderRow}
+      />
     </View>
   )
 }
 
-const ModalOrdersListOfProgressWork = ({
-  progress,
-  label,
-  pendingOrders = [],
-  doneOrders = [],
-  modalTitle = '',
-  onPressRow
-}: {
-  progress: number
-  label: string
-  pendingOrders?: any[]
-  doneOrders?: any[]
-  modalTitle?: string
-  onPressRow?: () => void
-}) => {
-  const modal = useModal({ title: modalTitle || label })
-  const underLabel = `${doneOrders.length}/${
-    doneOrders.length + pendingOrders.length
-  }`
-  return (
-    <View style={{ marginVertical: 6 }}>
-      <Pressable onPress={modal.toggleOpen}>
-        <ProgressWork
-          progress={progress}
-          label={label}
-          underLabel={underLabel}
-        />
-      </Pressable>
-      <StyledModal {...modal}>
-        <ListOrders
-          orders={doneOrders}
-          onPressRow={() => {
-            onPressRow?.()
-            modal.toggleOpen()
-          }}
-        />
-      </StyledModal>
-    </View>
-  )
-}
-const ProgressWork = ({
+export const ProgressWork = ({
   progress = 0,
   label = '',
   width = 'auto',

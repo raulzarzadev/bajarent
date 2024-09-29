@@ -19,6 +19,7 @@ import PaymentType from '../types/PaymentType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
 import { ServiceComments } from '../firebase/ServiceComments'
+import { calculateProgress } from '../libs/currentWork'
 
 const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
 const defaultCurrentWork: CurrentWorks = {
@@ -129,22 +130,6 @@ export const useCurrentWorkCtx = (): CurrentWorks => {
   return context
 }
 
-function calculateProgress(done = 0, pending = 0) {
-  // Calculate the total number of orders
-  const total = done + pending
-
-  // If there are no orders (done + pending is 0), the progress is 100
-  if (total === 0) {
-    return 100
-  }
-
-  // Calculate the progress based on done orders over the total
-  const progress = (done / total) * 100
-
-  // Round the progress to two decimal places if needed
-  return Math.round(progress * 100) / 100
-}
-
 const getCurrentWork = async ({
   storeId = '',
   sectionsAssigned = [],
@@ -160,7 +145,6 @@ const getCurrentWork = async ({
 }) => {
   // if sectionsAssigned.length is 0, should will get info of all orders
   try {
-    const NUMBER_OF_METRICS = 3
     const pickedUpPromise = ServiceOrders.getPickedUp({
       storeId,
       sections: sectionsAssigned,
@@ -184,7 +168,7 @@ const getCurrentWork = async ({
       orderType
     })
 
-    const solvedReportsOrdersPromises = ServiceComments.getSolvedReportsByDate({
+    const reportedOrderPromises = ServiceComments.getSolvedReportsByDate({
       storeId,
       fromDate: startDate(new Date()),
       toDate: endDate(new Date())
@@ -201,7 +185,7 @@ const getCurrentWork = async ({
       pickedUpPromise,
       deliveredPromise,
       renewedPromise,
-      solvedReportsOrdersPromises
+      reportedOrderPromises
     ])
 
     const authorized = currentOrders
@@ -232,21 +216,37 @@ const getCurrentWork = async ({
       ]
     })
 
-    const reports = calculateProgress(
+    const reportedProgress = calculateProgress(
       solvedReportsInSectionAssigned?.length,
       unsolvedReportedInSectionAssigned?.length
     )
 
-    const newOrders = calculateProgress(delivered?.length, authorized?.length)
+    const deliveredProgress = calculateProgress(
+      delivered?.length,
+      authorized?.length
+    )
+
     const expiredOrders = currentOrders.filter(
       (o) => o.expiresToday || o.isExpired
     )
+
     const expiredProgress = calculateProgress(
       renewed?.length + pickedUp?.length,
       expiredOrders?.length
     )
 
-    const total = (newOrders + reports + expiredProgress) / NUMBER_OF_METRICS //*the number of metrics used
+    const doneOrders =
+      delivered?.length +
+      renewed?.length +
+      pickedUp?.length +
+      solvedReportsInSectionAssigned?.length
+
+    const pendingOrders =
+      authorized?.length +
+      expiredOrders?.length +
+      unsolvedReportedInSectionAssigned?.length
+
+    const total = calculateProgress(doneOrders, pendingOrders)
 
     return {
       pickedUpOrders: pickedUp,
@@ -259,8 +259,8 @@ const getCurrentWork = async ({
       expiredOrders,
       sections: sectionsAssigned,
       progress: {
-        new: newOrders,
-        reports,
+        new: deliveredProgress,
+        reports: reportedProgress,
         expired: expiredProgress,
         total
       }
