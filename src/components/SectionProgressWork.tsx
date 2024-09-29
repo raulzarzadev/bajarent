@@ -25,10 +25,6 @@ const SectionProgressWork = ({
   reportedSolved: Partial<OrderType>[]
   onPressOrderRow: () => void
 }) => {
-  const sectionProgress = calculateProgress(
-    delivered.length + resolved.length + reportedSolved.length,
-    authorized.length + expired.length + reported.length
-  )
   return (
     <View>
       <View

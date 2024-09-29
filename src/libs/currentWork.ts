@@ -7,6 +7,7 @@
 export function calculateProgress(done = 0, pending = 0) {
   if (done < 0) return 0
   const total = done + pending
+  if (done === 0 && pending === 0) return 100
   if (total === 0) return 0
   const progress = (done / total) * 100
   return progress

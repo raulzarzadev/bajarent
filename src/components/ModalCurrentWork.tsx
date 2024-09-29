@@ -68,6 +68,9 @@ const ProgressWorkDetails = ({ onPressOrderRow }) => {
     expiredOrders,
     sections
   } = useCurrentWorkCtx()
+  const {
+    permissions: { isAdmin, isOwner }
+  } = useEmployee()
   return (
     <View>
       {sections?.map((sectionId) => (
@@ -77,6 +80,9 @@ const ProgressWorkDetails = ({ onPressOrderRow }) => {
           </Text>
         </View>
       ))}
+      {sections.length === 0 && (
+        <Text style={[gStyles.h2, { textAlign: 'center' }]}>Todas</Text>
+      )}
       <SectionProgressWork
         authorized={authorizedOrders}
         delivered={deliveredOrders}
@@ -86,6 +92,74 @@ const ProgressWorkDetails = ({ onPressOrderRow }) => {
         reportedSolved={solvedReported}
         onPressOrderRow={onPressOrderRow}
       />
+      {(isAdmin || isOwner) && (
+        <SectionsCurrentWork onPressOrderRow={onPressOrderRow} />
+      )}
+    </View>
+  )
+}
+
+const SectionsCurrentWork = ({ onPressOrderRow }) => {
+  const { storeSections } = useStore()
+  const {
+    authorizedOrders,
+    deliveredOrders,
+    expiredOrders,
+    renewedOrders,
+    pickedUpOrders,
+    solvedReported,
+    unsolvedReported
+  } = useCurrentWorkCtx()
+  return (
+    <View>
+      {storeSections.map((section) => {
+        const authorized = authorizedOrders.filter(
+          (order) => order.assignToSection === section.id
+        )
+        const delivered = deliveredOrders.filter(
+          (order) => order.assignToSection === section.id
+        )
+        const expired = expiredOrders.filter(
+          (order) => order.assignToSection === section.id
+        )
+        const resolved = [...renewedOrders, ...pickedUpOrders].filter(
+          (order) => order.assignToSection === section.id
+        )
+        const reported = unsolvedReported.filter(
+          (order) => order.assignToSection === section.id
+        )
+        const reportedSolved = solvedReported.filter(
+          (order) => order.assignToSection === section.id
+        )
+        if (
+          [
+            ...authorized,
+            ...delivered,
+            ...expired,
+            ...resolved,
+            ...reported,
+            ...reportedSolved
+          ].length === 0
+        )
+          return null
+
+        return (
+          <View key={section.id}>
+            <Text style={[gStyles.h2, { textAlign: 'center' }]}>
+              {section.name}
+            </Text>
+            <SectionProgressWork
+              onPressOrderRow={onPressOrderRow}
+              authorized={authorized}
+              delivered={delivered}
+              expired={expired}
+              resolved={resolved}
+              reported={reported}
+              reportedSolved={reportedSolved}
+            />
+          </View>
+        )
+      })}
     </View>
   )
 }
