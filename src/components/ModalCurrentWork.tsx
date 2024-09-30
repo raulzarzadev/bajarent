@@ -130,7 +130,7 @@ const ModalOrders = ({
   label: string
   orders: OrderType[]
 }) => {
-  const modalOrders = useModal({ title: 'Pedidos' })
+  const modalOrders = useModal({ title: label })
   return (
     <View>
       <Pressable onPress={modalOrders.toggleOpen}>
