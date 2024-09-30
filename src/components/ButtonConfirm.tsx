@@ -108,6 +108,7 @@ const ButtonConfirm = ({
               id={'confirmButton'}
               buttonStyles={{}}
               color={confirmColor}
+              icon={icon}
               variant={confirmVariant}
               disabled={sending || confirmDisabled}
               onPress={async () => {

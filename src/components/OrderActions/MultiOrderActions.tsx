@@ -18,6 +18,7 @@ import SpanCopy from '../SpanCopy'
 import InputAssignSection from '../InputAssingSection'
 import { useStore } from '../../contexts/storeContext'
 import ButtonConfirm from '../ButtonConfirm'
+import ModalEditMultiOrders from './ModalEditMultiOrders'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -62,6 +63,7 @@ const MultiOrderActions = ({
   const buttons = [
     <ModalExcelRows ordersIds={ordersIds} />,
     <ModalAssignOrders ordersIds={ordersIds} />,
+    <ModalEditMultiOrders ordersIds={ordersIds} />,
     canCancel && (
       <ButtonConfirm
         confirmLabel="Cancelar"

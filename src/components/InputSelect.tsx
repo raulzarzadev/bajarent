@@ -1,6 +1,6 @@
 import RNPickerSelect from 'react-native-picker-select'
 import { gStyles } from '../styles'
-import { View, ViewStyle } from 'react-native'
+import { Text, View, ViewStyle } from 'react-native'
 import theme from '../theme'
 export type SelectOption = {
   label: string
@@ -14,7 +14,8 @@ const InputSelect = ({
   style,
   value,
   placeholder = 'Seleccionar ...',
-  disabled = false
+  disabled = false,
+  helperText
 }: {
   options?: SelectOptions
   onChangeValue?: (value) => void
@@ -22,9 +23,10 @@ const InputSelect = ({
   style?: ViewStyle
   placeholder?: string
   disabled?: boolean
+  helperText?: string
 }) => {
   return (
-    <View style={{ flexDirection: 'row', flex: 1 }}>
+    <View style={{ flexDirection: 'column', flex: 1 }}>
       <RNPickerSelect
         disabled={disabled}
         value={value}
@@ -43,6 +45,7 @@ const InputSelect = ({
         items={options}
         placeholder={{ label: placeholder, value: '' }}
       />
+      {!!helperText && <Text style={gStyles.inputHelper}>{helperText}</Text>}
     </View>
   )
 }
