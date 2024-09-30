@@ -75,8 +75,14 @@ import { LiaToolsSolid } from 'react-icons/lia'
 import { CgSmartHomeWashMachine } from 'react-icons/cg'
 import { PiArrowFatLinesUpLight } from 'react-icons/pi'
 import { GiReceiveMoney } from 'react-icons/gi'
+import { GoHomeFill } from 'react-icons/go'
+import { MdPendingActions } from 'react-icons/md'
+import { TfiWorld } from 'react-icons/tfi'
+
 // https://react-icons.github.io/react-icons/
 const icons = {
+  www: TfiWorld,
+  pending: MdPendingActions,
   pickUpIt: PiArrowFatLinesUpFill,
   chargeIt: GiReceiveMoney,
   washMachine: CgSmartHomeWashMachine,
@@ -172,7 +178,7 @@ const icons = {
   sale: IoPricetagsOutline,
   wrench: FaWrench,
   truck: FaTruckPickup,
-  home: MdHome,
+  home: GoHomeFill,
   calendarTime: LuCalendarClock,
   siren: PiSiren,
   report: PiSiren,

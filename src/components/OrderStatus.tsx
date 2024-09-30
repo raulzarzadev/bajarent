@@ -69,7 +69,7 @@ const OrderStatus = ({
       {isCancelled && (
         <Chip
           style={[chipStyles]}
-          title={'Cancelada'}
+          title={dateFormat(asDate(order?.cancelledAt), 'dd/MMM')}
           color={theme.transparent}
           size={chipSize}
           icon={'cancel'}
@@ -95,8 +95,8 @@ const OrderStatus = ({
       )}
       {rentPickedUp && (
         <Chip
-          style={[chipStyles, { opacity: 0.2 }]}
-          title={dateFormat(asDate(order?.pickedUpAt), 'dd / MMM')}
+          style={[chipStyles]}
+          title={dateFormat(asDate(order?.pickedUpAt), 'dd/MMM')}
           color={theme.transparent}
           size={chipSize}
           icon="truck"
@@ -115,7 +115,8 @@ const OrderStatus = ({
       {isPending && (
         <Chip
           style={[chipStyles]}
-          title={'Pendiente'}
+          title={`${dateFormat(asDate(order?.createdAt), 'dd/MMM')}`}
+          icon="www"
           color={theme.transparent}
           size={chipSize}
         />

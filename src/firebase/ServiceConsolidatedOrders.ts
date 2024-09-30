@@ -119,6 +119,7 @@ const formatConsolidateOrder = (
   expireAt: string | null
   pickedUpAt: string | null
   deliveredAt: string | null
+  cancelledAt: string | null
 } => {
   return {
     fullName: order?.fullName || '',
@@ -150,9 +151,20 @@ const formatConsolidateOrder = (
     // @ts-ignore
     pickedUpAt: order?.pickedUpAt ? asDate(order?.pickedUpAt).getTime() : null,
     // @ts-ignore
+
     deliveredAt: order?.deliveredAt
       ? asDate(order?.deliveredAt).getTime()
       : null,
+    // @ts-ignore
+    cancelledAt: order?.cancelledAt
+      ? asDate(order?.cancelledAt).getTime()
+      : null,
+    // @ts-ignore
+
+    scheduledAt: order?.scheduledAt
+      ? asDate(order?.scheduledAt).getTime()
+      : null,
+
     extensions: order?.extensions || {},
     payments: payments
     //colorLabel: order?.colorLabel || ''

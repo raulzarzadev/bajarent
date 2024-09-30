@@ -33,7 +33,7 @@ export const dateFormat = (
   returnNullIfInvalid = false
 ): string => {
   if (!date && returnNullIfInvalid) return null
-  if (!date) return 'n/d' //* not a date
+  if (!date) return '' //* not a date
   const value = date instanceof Timestamp ? date.toDate() : date
   const res = fnsFormat(value, strFormat || 'dd/MMM/yy', {
     locale: es
