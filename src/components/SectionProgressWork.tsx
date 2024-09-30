@@ -55,7 +55,7 @@ const SectionProgressWork = ({
         />
         <ModalOrdersListOfProgressWork
           label={'Reportes'}
-          icon={'report'}
+          //  icon={'report'}
           modalTitle="Reportes resueltos"
           pendingOrders={reported}
           doneOrders={reportedSolved}
