@@ -48,7 +48,7 @@ import {
   IoPersonAddOutline
 } from 'react-icons/io5'
 import { LuComponent } from 'react-icons/lu'
-import { PiUserList } from 'react-icons/pi'
+import { PiArrowFatLinesUpFill, PiUserList } from 'react-icons/pi'
 import { FaRegWindowRestore } from 'react-icons/fa6'
 import { FaChevronDown, FaChevronUp, FaTools } from 'react-icons/fa'
 import { LiaBroomSolid } from 'react-icons/lia'
@@ -74,12 +74,11 @@ import {
 import { LiaToolsSolid } from 'react-icons/lia'
 import { CgSmartHomeWashMachine } from 'react-icons/cg'
 import { PiArrowFatLinesUpLight } from 'react-icons/pi'
-import { RiMoneyDollarCircleLine } from 'react-icons/ri'
-
+import { GiReceiveMoney } from 'react-icons/gi'
 // https://react-icons.github.io/react-icons/
 const icons = {
-  pickUpIt: PiArrowFatLinesUpLight,
-  chargeIt: RiMoneyDollarCircleLine,
+  pickUpIt: PiArrowFatLinesUpFill,
+  chargeIt: GiReceiveMoney,
   washMachine: CgSmartHomeWashMachine,
   inventory: MdOutlineInventory,
   history: MdOutlineHistory,

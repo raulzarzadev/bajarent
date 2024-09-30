@@ -22,6 +22,21 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
+      width: 12,
+      component: (
+        <View
+          style={{
+            width: 12,
+            height: '100%',
+            borderBottomLeftRadius: 4,
+            borderTopLeftRadius: 4,
+            backgroundColor: order.colorLabel,
+            marginHorizontal: 0
+          }}
+        ></View>
+      )
+    },
+    {
       width: 'auto',
       component: (
         <View
@@ -31,6 +46,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             alignItems: 'center',
             width: '100%',
             height: '100%'
+            //backgroundColor: order.colorLabel,
           }}
         >
           <ModalOrderQuickActionsE orderId={order.id} />
@@ -89,7 +105,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
       )
     }
   ]
-  return <ListRow fields={fields} style={{ marginVertical: 2, padding: 1 }} />
+  return <ListRow fields={fields} style={{ marginVertical: 2, padding: 0 }} />
 }
 
 export default RowOrder

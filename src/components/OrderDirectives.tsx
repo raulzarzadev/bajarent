@@ -14,6 +14,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
 import { IconName } from './Icon'
+import { useOrderDetails } from '../contexts/orderContext'
 
 const OrderDirectives = ({
   order
@@ -61,7 +62,11 @@ const OrderDirectives = ({
         flexWrap: 'wrap'
       }}
     >
-      <ChooseLabel colorLabel={order?.colorLabel} orderId={order?.id} />
+      <View style={{ width: 60 }}>
+        <OrderLabels order={order} />
+      </View>
+
+      {/* <ChooseLabel colorLabel={order?.colorLabel} orderId={order?.id} /> */}
       {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <View style={{ width: 60 }}>
         <Chip
@@ -90,49 +95,37 @@ const OrderDirectives = ({
   )
 }
 
-const ChooseLabel = ({ colorLabel, orderId }) => {
-  const modal = useModal({ title: 'Seleccionar un color' })
-  const colorsOptions = [
-    { label: 'Rojo', value: colors.red, color: colors.red },
-    { label: 'Azul', value: colors.blue, color: colors.blue },
-    { label: 'Verde', value: colors.green, color: colors.green },
-    { label: 'Amarillo', value: colors.yellow, color: colors.yellow },
-    { label: 'sin', value: '' }
-  ]
-  useEffect(() => {
-    setColor(colorLabel)
-  }, [colorLabel])
-  const [color, setColor] = useState(colorLabel)
-  const handleSelectColor = async (color) => {
-    setColor(color)
-    modal.toggleOpen()
-    await ServiceOrders.update(orderId, { colorLabel: color })
-      .then(console.log)
-      .catch(console.error)
-  }
+const OrderLabels = ({ order }) => {
+  const collect = order?.markedToCollect
+  const charge = order?.markedToCharge
   return (
-    <View>
-      <View>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around'
+      }}
+    >
+      {collect && (
         <Chip
-          style={[styles.chip, { marginLeft: 6 }]}
-          title="🏷️"
-          color={color}
-          titleColor={theme.secondary}
+          color={theme.secondary}
+          titleColor={theme.white}
+          title={''}
+          icon="pickUpIt"
           size="sm"
-          onPress={modal.toggleOpen}
+          iconSize="lg"
         ></Chip>
-      </View>
-
-      <StyledModal {...modal}>
-        <View>
-          <InputRadios
-            layout="row"
-            options={colorsOptions}
-            setValue={handleSelectColor}
-            value={color}
-          />
-        </View>
-      </StyledModal>
+      )}
+      {charge && (
+        <Chip
+          color={theme.success}
+          titleColor={theme.white}
+          title={''}
+          icon="chargeIt"
+          size="sm"
+          iconSize="lg"
+        ></Chip>
+      )}
     </View>
   )
 }
