@@ -1,4 +1,10 @@
-import { FlexStyle, Pressable, Text, View } from 'react-native'
+import {
+  FlexStyle,
+  Pressable,
+  Text,
+  useWindowDimensions,
+  View
+} from 'react-native'
 import React from 'react'
 import StyledModal from './StyledModal'
 import CurrencyAmount from './CurrencyAmount'
@@ -17,7 +23,8 @@ import TextInfo from './TextInfo'
 import SectionProgressWork from './SectionProgressWork'
 import OrderType from '../types/OrderType'
 import Icon, { IconName } from './Icon'
-
+import { Dimensions } from 'react-native'
+const modalSize = Dimensions.get('window')?.width > 500 ? 'md' : 'full'
 const ModalCurrentWork = () => {
   /**
    *
@@ -36,6 +43,7 @@ const ModalCurrentWork = () => {
     title: 'Trabajo de hoy (rentas)'
   })
   if (!permissions?.canSeeCurrentWork) return <></>
+
   return (
     <View style={{ marginRight: 8 }}>
       <Pressable onPress={modalCurrentWork.toggleOpen}>
@@ -45,7 +53,7 @@ const ModalCurrentWork = () => {
           amount={payments_amount(payments)?.total}
         />
       </Pressable>
-      <StyledModal {...modalCurrentWork} size="full">
+      <StyledModal {...modalCurrentWork} size={modalSize}>
         {employee?.disabled ? (
           <DisabledEmployee></DisabledEmployee>
         ) : (

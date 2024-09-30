@@ -22,6 +22,7 @@ const ModalOrderQuickActions = ({ orderId }: ModalOrderQuickActionsProps) => {
       hideConfirm
     >
       <OrderProvider orderId={orderId}>
+        <TextInfo text="Lista de contactos. Envía WhatsApp a marca de forma mas rápida, sin entrar a la orden" />
         <ContactsList />
         <QuickActions />
       </OrderProvider>
@@ -36,9 +37,9 @@ const QuickActions = () => {
 
   return (
     <View>
-      <TextInfo text="Puedes agregar un color para clasificarlas. Puedes filtrarlas tambien por color seleccionado en la sección de filtros" />
+      <TextInfo text="Etiquetas de color. Clasificalas y filtralas por color." />
       <OrderChangeLabel currentColor={order?.colorLabel} orderId={order?.id} />
-      <TextInfo text="Agrega indicadores rápidos, que te indican acciones pendientes para esta orden" />
+      <TextInfo text="Acciones rápidas. Te ayudarán a saber las acciones pendientes de esta orden" />
       <View
         style={{
           flexDirection: 'row',
