@@ -10,6 +10,7 @@ import TextInfo from '../TextInfo'
 import { gStyles } from '../../styles'
 import ButtonConfirm from '../ButtonConfirm'
 import { useEmployee } from '../../contexts/employeeContext'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ModalEditMultiOrders = ({ ordersIds = [] }) => {
   const modal = useModal({ title: 'Editar ordenes' })
@@ -129,7 +130,16 @@ const ModalEditMultiOrders = ({ ordersIds = [] }) => {
             openLabel="Editar"
             confirmLabel="Confirmar"
             handleConfirm={async () => {
-              console.log('edit orders', ordersIds, form)
+              const promises = ordersIds.map((id) => {
+                return ServiceOrders.update(id, form)
+              })
+              try {
+                const res = await Promise.all(promises)
+                console.log({ res })
+                return res
+              } catch (error) {
+                console.log(error)
+              }
             }}
             confirmColor="error"
             confirmVariant="outline"
