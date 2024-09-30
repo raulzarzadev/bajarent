@@ -35,11 +35,11 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     //* 1. get all data
     progress(10)
     const storeOrders = await ServiceOrders.getByStore(storeId, {
-      fromCache: true
+      // fromCache: true
     })
     progress(20)
     const payments = await ServicePayments.getByStore(storeId, {
-      fromCache: true
+      // fromCache: true
     })
     progress(30)
     //* 2. format data
