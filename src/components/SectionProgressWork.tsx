@@ -7,6 +7,7 @@ import { ProgressWork } from './ModalCurrentWork'
 import OrderType from '../types/OrderType'
 import { calculateProgress } from '../libs/currentWork'
 import { gStyles } from '../styles'
+import { IconName } from './Icon'
 
 const SectionProgressWork = ({
   authorized,
@@ -31,12 +32,13 @@ const SectionProgressWork = ({
         style={{
           flexDirection: 'row',
           justifyContent: 'space-evenly',
-          flexWrap: 'wrap',
-          marginVertical: 16
+          flexWrap: 'wrap'
+          // marginVertical: 16
         }}
       >
         <ModalOrdersListOfProgressWork
           label={`Entregadas`}
+          // icon={'home'}
           modalTitle="Pedidos entregados"
           pendingOrders={authorized}
           doneOrders={delivered}
@@ -44,7 +46,8 @@ const SectionProgressWork = ({
         />
 
         <ModalOrdersListOfProgressWork
-          label={'Renovadas'}
+          label={'Vencidas'}
+          // icon={'alarm'}
           modalTitle={'Renovadas / Recogidas'}
           pendingOrders={expired}
           doneOrders={resolved}
@@ -52,6 +55,7 @@ const SectionProgressWork = ({
         />
         <ModalOrdersListOfProgressWork
           label={'Reportes'}
+          icon={'report'}
           modalTitle="Reportes resueltos"
           pendingOrders={reported}
           doneOrders={reportedSolved}
@@ -75,14 +79,16 @@ const ModalOrdersListOfProgressWork = ({
   pendingOrders = [],
   doneOrders = [],
   modalTitle = '',
-  onPressRow
+  onPressRow,
+  icon
 }: {
   //progress: number
-  label: string
+  label?: string
   pendingOrders?: any[]
   doneOrders?: any[]
   modalTitle?: string
   onPressRow?: () => void
+  icon?: IconName
 }) => {
   const modal = useModal({ title: modalTitle || label })
   const underLabel = `${doneOrders.length}/${
@@ -96,6 +102,7 @@ const ModalOrdersListOfProgressWork = ({
           progress={progress}
           label={label}
           underLabel={underLabel}
+          icon={icon}
         />
       </Pressable>
       <StyledModal {...modal}>

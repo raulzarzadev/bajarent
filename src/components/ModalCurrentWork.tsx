@@ -15,6 +15,8 @@ import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import TextInfo from './TextInfo'
 import SectionProgressWork from './SectionProgressWork'
+import OrderType from '../types/OrderType'
+import Icon, { IconName } from './Icon'
 
 const ModalCurrentWork = () => {
   /**
@@ -30,7 +32,9 @@ const ModalCurrentWork = () => {
    */
   const { employee, permissions } = useEmployee()
   const { payments, progress } = useCurrentWorkCtx()
-  const modalCurrentWork = useModal({ title: 'Trabajo de hoy (rentas)' })
+  const modalCurrentWork = useModal({
+    title: 'Trabajo de hoy (rentas)'
+  })
   if (!permissions?.canSeeCurrentWork) return <></>
   return (
     <View style={{ marginRight: 8 }}>
@@ -41,7 +45,7 @@ const ModalCurrentWork = () => {
           amount={payments_amount(payments)?.total}
         />
       </Pressable>
-      <StyledModal {...modalCurrentWork}>
+      <StyledModal {...modalCurrentWork} size="full">
         {employee?.disabled ? (
           <DisabledEmployee></DisabledEmployee>
         ) : (
@@ -83,18 +87,52 @@ const ProgressWorkDetails = ({ onPressOrderRow }) => {
       {sections.length === 0 && (
         <Text style={[gStyles.h2, { textAlign: 'center' }]}>Todas</Text>
       )}
-      <SectionProgressWork
-        authorized={authorizedOrders}
-        delivered={deliveredOrders}
-        expired={expiredOrders}
-        resolved={[...renewedOrders, ...pickedUpOrders]}
-        reported={unsolvedReported}
-        reportedSolved={solvedReported}
-        onPressOrderRow={onPressOrderRow}
-      />
+      <View style={{ marginVertical: 8, marginBottom: 16 }}>
+        <SectionProgressWork
+          authorized={authorizedOrders}
+          delivered={deliveredOrders}
+          expired={expiredOrders}
+          resolved={[...renewedOrders, ...pickedUpOrders]}
+          reported={unsolvedReported}
+          reportedSolved={solvedReported}
+          onPressOrderRow={onPressOrderRow}
+        />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+          <ModalOrders
+            label="Recogidas"
+            orders={pickedUpOrders as OrderType[]}
+          />
+          <ModalOrders
+            label="Renovadas"
+            orders={renewedOrders as OrderType[]}
+          />
+        </View>
+      </View>
       {(isAdmin || isOwner) && (
         <SectionsCurrentWork onPressOrderRow={onPressOrderRow} />
       )}
+    </View>
+  )
+}
+
+const ModalOrders = ({
+  label,
+  orders = []
+}: {
+  label: string
+  orders: OrderType[]
+}) => {
+  const modalOrders = useModal({ title: 'Pedidos' })
+  return (
+    <View>
+      <Pressable onPress={modalOrders.toggleOpen}>
+        <Text style={gStyles.tBold}>
+          {label} {orders?.length}
+        </Text>
+      </Pressable>
+      <StyledModal {...modalOrders}>
+        <ListOrders orders={orders} />
+      </StyledModal>
     </View>
   )
 }
@@ -169,13 +207,15 @@ export const ProgressWork = ({
   label = '',
   width = 'auto',
   size = 'md',
-  underLabel = ''
+  underLabel = '',
+  icon
 }: {
   progress: number
   label?: string
   width?: FlexStyle['width']
   size?: 'sm' | 'md' | 'lg'
   underLabel?: string
+  icon?: IconName
 }) => {
   //* if progress less than 25% color is error, if less than 50% color is warning, if less than 75% color is primary, else color is success
   const color =
@@ -198,6 +238,7 @@ export const ProgressWork = ({
       }}
     >
       <Text style={[{ textAlign: 'center' }, gStyles.tBold]}>
+        {icon && <Icon icon={icon} size={14} />}
         {label} {progress.toFixed(0)}%
       </Text>
       <ProgressBar progress={progress} color={color} size={size} />
