@@ -5,6 +5,8 @@ import { uploadFile } from '../firebase/files'
 import { colors } from '../theme'
 import Button from './Button'
 import pica from 'pica'
+import ImagePreview from './ImagePreview'
+import ProgressBar from './ProgressBar'
 
 const MIN_SIZE = 100000
 export default function InputImagePicker({
@@ -120,11 +122,12 @@ export default function InputImagePicker({
   return (
     <View
       style={{
-        // flex: 1,
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: 50,
-        backgroundColor: colors.transparent
+        backgroundColor: colors.transparent,
+        width: '100%'
       }}
     >
       {progress === -1 && (
@@ -140,71 +143,19 @@ export default function InputImagePicker({
           Error al subir archivo
         </Text>
       )}
-      {progress > 0 && (
-        <Text
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            textAlign: 'center'
-          }}
-        >
-          {progress}%
-        </Text>
-      )}
-      {/* <Pressable
-        onPress={pickImage}
-        style={{
-          width: '100%',
-          padding: 4,
-          justifyContent: 'center',
-          alignItems: 'center',
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          borderRadius: 4,
-          backgroundColor: theme.primary,
-          
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ textAlign: 'center' }}>{label}</Text>
-          <Icon icon="addImage" />
-        </View>
-      </Pressable> */}
 
-      {!!image && (
-        <Image
-          source={{ uri: image }}
-          style={{
-            width: '100%',
-            minHeight: 200,
-            opacity: progress === 100 ? 1 : 0.5
-          }}
-        />
-      )}
+      <ImagePreview image={value} width={'100%'} height={100} />
+      <ProgressBar progress={progress} hideWhenFull />
       <View
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: `${progress}%`,
-          backgroundColor: colors.gray,
-          opacity: progress === 100 ? 0 : 0.5,
-          zIndex: 1
+          width: '100%'
         }}
-      ></View>
-      <View style={{ position: 'absolute', bottom: 4, zIndex: 10 }}>
+      >
         <Button
           onPress={() => {
             pickImage()
           }}
+          fullWidth
           label={label}
           icon="addImage"
           size="xs"

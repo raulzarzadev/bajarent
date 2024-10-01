@@ -80,24 +80,25 @@ const FormRentDelivery = ({
               {ORDER_FIELDS.includes('location') && (
                 <InputLocationFormik name="location" />
               )}
-              {ORDER_FIELDS.includes('imageID') && (
-                <View style={{ marginVertical: 8 }}>
-                  <FormikInputImage
-                    name="imageID"
-                    label="Subir identificación"
-                  />
-                </View>
-              )}
-              {ORDER_FIELDS.includes('imageHouse') && (
-                <View style={{ marginVertical: 8 }}>
-                  <FormikInputImage name="imageHouse" label="Subir fachada " />
-                </View>
-              )}
-              {ORDER_FIELDS.includes('signature') && (
-                <View style={{ marginVertical: 8 }}>
-                  <FormikInputSignature name="signature" />
-                </View>
-              )}
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
+              >
+                {ORDER_FIELDS.includes('imageID') && (
+                  <View style={{ marginVertical: 8, width: 100 }}>
+                    <FormikInputImage name="imageID" label="ID" />
+                  </View>
+                )}
+                {ORDER_FIELDS.includes('imageHouse') && (
+                  <View style={{ marginVertical: 8, width: 100 }}>
+                    <FormikInputImage name="imageHouse" label="Casa" />
+                  </View>
+                )}
+                {ORDER_FIELDS.includes('signature') && (
+                  <View style={{ marginVertical: 8, width: 100 }}>
+                    <FormikInputSignature name="signature" />
+                  </View>
+                )}
+              </View>
 
               <Button
                 buttonStyles={{ marginVertical: 12 }}

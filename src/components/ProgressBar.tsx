@@ -6,12 +6,14 @@ const ProgressBar = ({
   progress = 0,
   color = 'primary',
   trackColor = 'info',
-  size = 'md'
+  size = 'md',
+  hideWhenFull = false
 }: {
   progress: number
   color?: Colors
   trackColor?: Colors
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  hideWhenFull?: boolean
 }) => {
   const sizes = {
     sm: 2,
@@ -19,6 +21,8 @@ const ProgressBar = ({
     lg: 6,
     xl: 8
   }
+  if (hideWhenFull && progress === 100) return null
+
   return (
     <View
       style={{
@@ -33,7 +37,7 @@ const ProgressBar = ({
           height: sizes[size],
           backgroundColor: theme[color],
           borderRadius: 8,
-          width: `${progress}%`
+          width: `${progress || 0}%`
         }}
       />
     </View>

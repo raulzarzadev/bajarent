@@ -33,7 +33,7 @@ const ImagePreview = ({
   const modal = useModal({ title: title })
   if (!image) return <></>
   return (
-    <View>
+    <>
       <Pressable
         onPress={modal.toggleOpen}
         style={{
@@ -94,7 +94,7 @@ const ImagePreview = ({
           }}
         />
       </StyledModal>
-    </View>
+    </>
   )
 }
 

@@ -46,7 +46,7 @@ const InputSignature = ({
         onPress={modal.toggleOpen}
         label="Firmar"
         icon="signature"
-        size="small"
+        size="xs"
         disabled={disabled}
         variant={!value ? 'ghost' : 'filled'}
       ></Button>
