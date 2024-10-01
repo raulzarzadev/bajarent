@@ -24,7 +24,7 @@ const ImagePreview = ({
 }: {
   image: string
   title?: string
-  width?: number
+  width?: number | `${number}%`
   height?: number
   fullscreen?: boolean
   icon?: IconName

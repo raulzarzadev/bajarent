@@ -1,18 +1,21 @@
 import React, { useEffect, useRef } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import SignatureScreen from 'react-signature-canvas'
 import Button from './Button'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
+import ImagePreview from './ImagePreview'
 
 const InputSignature = ({
   setValue,
   value,
-  disabled
+  disabled,
+  minHeight = 400
 }: {
   setValue: (signature: string) => void
   value: string
   disabled?: boolean
+  minHeight?: number
 }) => {
   const ref = useRef<SignatureScreen>(null)
 
@@ -21,23 +24,33 @@ const InputSignature = ({
   }
 
   const handleConfirm = () => {
-    const res = ref.current.toDataURL()
+    const res = ref.current.getTrimmedCanvas().toDataURL('image/png')
     setValue?.(res)
     modal.toggleOpen()
   }
+
+  useEffect(() => {
+    if (value && ref.current) {
+      ref.current.fromDataURL(value)
+    }
+  }, [value])
 
   const modal = useModal({ title: 'Firma' })
 
   return (
     <View>
+      {!!value && (
+        <ImagePreview image={value} title="Firma" height={100} width={'100%'} />
+      )}
       <Button
         onPress={modal.toggleOpen}
         label="Firmar"
         icon="signature"
         size="small"
         disabled={disabled}
+        variant={!value ? 'ghost' : 'filled'}
       ></Button>
-      <StyledModal {...modal}>
+      <StyledModal {...modal} size="full">
         <View
           style={{
             borderWidth: 3,
@@ -50,7 +63,12 @@ const InputSignature = ({
             elevation: 5
           }}
         >
-          <SignatureScreen ref={ref} />
+          <SignatureScreen
+            ref={ref}
+            canvasProps={{
+              style: { width: '100%', minHeight }
+            }}
+          />
         </View>
         <View
           style={{
@@ -76,13 +94,5 @@ const InputSignature = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
 
 export default InputSignature
