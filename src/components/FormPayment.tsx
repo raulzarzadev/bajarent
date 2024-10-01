@@ -10,6 +10,10 @@ import FormikInputImage from './FormikInputImage'
 import { gStyles } from '../styles'
 import FormikErrorsList from './FormikErrorsList'
 import { useEmployee } from '../contexts/employeeContext'
+import FormikInputSelect from './FormikInputSelect'
+import { useStore } from '../contexts/storeContext'
+import FormikInputDate from './FormikInputDate'
+import { dateFormat } from '../libs/utils-date'
 
 const FormPayment = ({
   onSubmit,
@@ -18,6 +22,7 @@ const FormPayment = ({
   onSubmit: (values: Partial<PaymentType>) => Promise<any> | void
   values?: Partial<PaymentType>
 }) => {
+  const { store } = useStore()
   const { permissions } = useEmployee()
   const initialValues: Partial<PaymentType> = {
     method: values?.method || 'cash',
@@ -30,6 +35,16 @@ const FormPayment = ({
       dictionary(method).charAt(0).toUpperCase() + dictionary(method).slice(1),
     value: method
   }))
+  const references = store.bankAccounts.map((account) => {
+    const ref = `${account.label} ${account.value.substring(
+      account.value.length - 4
+    )}`
+    return {
+      label: ref,
+      value: ref
+    }
+  })
+
   const [submitting, setSubmitting] = React.useState(false)
   return (
     <Formik
@@ -76,7 +91,14 @@ const FormPayment = ({
             </View>
             {values.method === 'transfer' && (
               <View style={styles.repairItemForm}>
-                <FormikInputValue name="reference" placeholder="Referencia" />
+                {/* <FormikInputValue name="reference" placeholder="Referencia" /> */}
+                <FormikInputSelect
+                  options={references}
+                  name="reference"
+                  placeholder="Selecciona una cuenta"
+                  helperText="Cuenta de depósito"
+                />
+                <FormikInputDate name="date" withTime />
                 <FormikInputImage
                   name="image"
                   onUploading={(progress) => {

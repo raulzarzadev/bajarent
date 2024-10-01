@@ -1,8 +1,7 @@
-import { Image, ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import CurrencyAmount from './CurrencyAmount'
-import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import dictionary from '../dictionary'
 import ErrorBoundary from './ErrorBoundary'
@@ -11,7 +10,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import InputTextStyled from './InputTextStyled'
 import { useAuth } from '../contexts/authContext'
 import SpanUser from './SpanUser'
-import { dateFormat, fromNow } from '../libs/utils-date'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import { colors } from '../theme'
 import Loading from './Loading'
 import Button from './Button'
@@ -36,8 +35,6 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
     ServicePayments.get(id).then((res) => setPayment(res))
   }
 
-  const userName =
-    staff.find((s) => s.userId === payment?.createdBy)?.name || 'sin nombre'
   const [reason, setReason] = useState('')
   const isCanceled = payment?.canceled
 
@@ -60,6 +57,15 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
             orderId={payment.orderId}
           />
         </View>
+        <View style={{ justifyContent: 'center', margin: 'auto' }}>
+          <ImagePreview
+            image={payment?.image}
+            title="Comprobante"
+            fullscreen
+            height={40}
+            width={40}
+          />
+        </View>
         <CurrencyAmount style={gStyles.h1} amount={payment?.amount} />
 
         {!!payment?.method && (
@@ -73,45 +79,22 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
             {dictionary(payment?.method)}
           </Text>
         )}
+        <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+          Referencia:
+        </Text>
         {!!payment?.reference && (
-          <Text style={[{ textAlign: 'center', marginVertical: 8 }]}>
-            Referencia: {payment?.reference}
+          <Text style={[{ textAlign: 'center', marginBottom: 8 }, gStyles.h3]}>
+            {payment?.reference}{' '}
+            {dateFormat(asDate(payment.date), 'dd/MMM/yy HH:MM')}
           </Text>
         )}
-
-        {!!payment?.createdAt && (
-          <Text style={{ textAlign: 'center', marginTop: 16 }}>
-            <DateCell date={payment?.createdAt} />
-          </Text>
-        )}
-
-        {!!payment?.createdBy && (
-          <View style={{ justifyContent: 'center' }}>
-            <Text
-              style={[
-                gStyles.helper,
-                { textAlign: 'center', marginBottom: 16 }
-              ]}
-            >
-              Cobrado por: <Text>{userName}</Text>
-            </Text>
-          </View>
-        )}
-        {/* {!!payment?.image && (
-        <Image
-          source={{ uri: payment?.image }}
-          style={{ flex: 1, minHeight: 150, marginVertical: 2 }}
-        />
-      )} */}
-        <View style={{ justifyContent: 'center', margin: 'auto' }}>
-          <ImagePreview image={payment?.image} title="Comprobante" fullscreen />
+        <View style={{ marginVertical: 12 }}>
+          <PaymentVerify
+            payment={payment}
+            showData
+            onVerified={handleGetPayment}
+          />
         </View>
-
-        <PaymentVerify
-          payment={payment}
-          showData
-          onVerified={handleGetPayment}
-        />
 
         <Button
           variant="ghost"
@@ -155,6 +138,7 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
             openLabel="Cancelar pago"
             modalTitle="Cancelar pago"
             openColor="error"
+            icon={'cancel'}
             openVariant="outline"
             confirmLabel="Cancelar"
             confirmColor="error"
@@ -177,22 +161,6 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
             />
           </ButtonConfirm>
         )}
-
-        {/* <View style={{ justifyContent: 'center', margin: 'auto' }}>
-        {order === undefined && <ActivityIndicator />}
-        {order === null && <Text>Orden no encontrada</Text>}
-        {!!order && <OrderDirectives order={order} />}
-        <Button
-          variant="ghost"
-          onPress={() => {
-            navigation.navigate('StackOrders', {
-              screen: 'OrderDetails',
-              params: { orderId: order?.id }
-            })
-          }}
-          label="Ver orden"
-        ></Button>
-      </View> */}
       </View>
     </ScrollView>
   )

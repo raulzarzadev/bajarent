@@ -23,11 +23,13 @@ const ButtonConfirm = ({
   openDisabled,
   confirmDisabled,
   hideConfirm,
+  confirmIcon,
   onOpen,
   confirmDisabledHelper,
   cancelButton = false,
   handleCancel = () => console.log('cancel')
 }: {
+  confirmIcon?: IconButtonProps['icon']
   openLabel?: string
   modalTitle?: string
   confirmLabel?: string
@@ -108,7 +110,7 @@ const ButtonConfirm = ({
               id={'confirmButton'}
               buttonStyles={{}}
               color={confirmColor}
-              icon={icon}
+              icon={confirmIcon || icon}
               variant={confirmVariant}
               disabled={sending || confirmDisabled}
               onPress={async () => {

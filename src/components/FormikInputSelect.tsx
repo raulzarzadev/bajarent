@@ -31,15 +31,17 @@ const FormikInputSelect = ({
         onChangeValue={(value) => {
           helpers.setValue(value)
         }}
+        helperText={meta.error || helperText}
+        helperTextColor={meta.error ? 'error' : 'black'}
       />
-      {!!helperText && !meta.error && (
+      {/* {!!helperText && !meta.error && (
         <Text style={gStyles.inputHelper}>{helperText}</Text>
       )}
       {!!meta.error && (
         <Text style={[gStyles.inputHelper, gStyles.helperError]}>
           {meta.error}
         </Text>
-      )}
+      )} */}
     </View>
   )
 }

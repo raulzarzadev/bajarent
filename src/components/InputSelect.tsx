@@ -2,6 +2,7 @@ import RNPickerSelect from 'react-native-picker-select'
 import { gStyles } from '../styles'
 import { Text, View, ViewStyle } from 'react-native'
 import theme from '../theme'
+import { HelperTextColors } from './InputTextStyled'
 export type SelectOption = {
   label: string
   value: string
@@ -15,7 +16,8 @@ const InputSelect = ({
   value,
   placeholder = 'Seleccionar ...',
   disabled = false,
-  helperText
+  helperText,
+  helperTextColor = 'black'
 }: {
   options?: SelectOptions
   onChangeValue?: (value) => void
@@ -24,6 +26,7 @@ const InputSelect = ({
   placeholder?: string
   disabled?: boolean
   helperText?: string
+  helperTextColor?: HelperTextColors
 }) => {
   return (
     <View style={{ flexDirection: 'column', flex: 1 }}>
@@ -45,7 +48,11 @@ const InputSelect = ({
         items={options}
         placeholder={{ label: placeholder, value: '' }}
       />
-      {!!helperText && <Text style={gStyles.inputHelper}>{helperText}</Text>}
+      {!!helperText && (
+        <Text style={[gStyles.inputHelper, { color: theme[helperTextColor] }]}>
+          {helperText}
+        </Text>
+      )}
     </View>
   )
 }

@@ -50,7 +50,11 @@ const PaymentVerify = ({
           alignItems: 'center'
         }}
       >
-        {showData && <Text style={{ marginRight: 8 }}>¿Pago verificado?</Text>}
+        {/* {showData && (
+          <Text style={{ marginRight: 8 }}>
+            {isVerified ? 'Verificado' : 'Verificar'}
+          </Text>
+        )} */}
         {isVerified ? (
           <ButtonConfirm
             openDisabled={!canValidatePayments}
@@ -59,7 +63,9 @@ const PaymentVerify = ({
             openVariant="filled"
             openColor="success"
             icon="done"
-            justIcon
+            confirmIcon={'cancel'}
+            //justIcon
+            openLabel="Verificado"
             text="¿Invalidar pago?"
             handleConfirm={async () => {
               return await handleVerifyPayment(paymentId)
@@ -74,9 +80,10 @@ const PaymentVerify = ({
             openSize="xs"
             modalTitle="Verifcar pago"
             openVariant="ghost"
-            openColor="neutral"
+            openLabel="Verificar"
+            //openColor="neutral"
             icon="done"
-            justIcon
+            // justIcon
             text="¿El pago es correcto?"
             handleConfirm={async () => {
               return await handleVerifyPayment(paymentId)
@@ -88,7 +95,7 @@ const PaymentVerify = ({
       </View>
       {!!showData && (
         <View>
-          {!!verifiedAt && (
+          {!!verifiedAt && isVerified && (
             <SpanMetadata
               layout="column"
               createdAt={verifiedAt}
