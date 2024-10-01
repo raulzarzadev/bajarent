@@ -37,6 +37,8 @@ import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
+import InputSignature from './InputSignature'
+import ImagePreview from './ImagePreview'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -56,6 +58,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       setDefaultAmount(multiItemOrderAmount)
     }
   }, [])
+
   return (
     <View>
       <OrderMetadata order={order} />
@@ -87,7 +90,14 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           clientId={order.clientId}
         />
       </View>
-
+      {/* <ImagePreview
+        title="Firma"
+        justIcon
+        icon="signature"
+        image={order?.signature}
+        height={50}
+        width={50}
+      /> */}
       <OrderContacts />
       <OrderImages order={order} />
 

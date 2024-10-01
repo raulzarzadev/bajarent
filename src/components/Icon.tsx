@@ -78,10 +78,12 @@ import { GiReceiveMoney } from 'react-icons/gi'
 import { GoHomeFill } from 'react-icons/go'
 import { MdPendingActions } from 'react-icons/md'
 import { TfiWorld } from 'react-icons/tfi'
+import { PiSignatureDuotone } from 'react-icons/pi'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
   www: TfiWorld,
+  signature: PiSignatureDuotone,
   pending: MdPendingActions,
   pickUpIt: PiArrowFatLinesUpFill,
   chargeIt: GiReceiveMoney,

@@ -8,8 +8,8 @@ import TextInfo from '../TextInfo'
 import { gSpace } from '../../styles'
 import { onRentFinish } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
-import RowOrderItem from '../RowOrderItem'
 import CardItem from '../CardItem'
+import InputSignUp from '../InputSignature'
 
 const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()

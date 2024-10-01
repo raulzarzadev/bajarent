@@ -31,6 +31,8 @@ export type OrderBase = {
   lastName: string
   fullName: string
 
+  signature?: string
+
   email: string
   phone: string
 

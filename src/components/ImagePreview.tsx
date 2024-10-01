@@ -10,6 +10,7 @@ import React from 'react'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import { colors } from '../theme'
+import Icon, { IconName } from './Icon'
 const { height: deviceHeight } = Dimensions.get('window')
 
 const ImagePreview = ({
@@ -17,41 +18,66 @@ const ImagePreview = ({
   title = 'Imagen',
   width = 150,
   height = 150,
-  fullscreen = false
+  fullscreen = false,
+  justIcon = false,
+  icon
 }: {
   image: string
   title?: string
   width?: number
   height?: number
   fullscreen?: boolean
+  icon?: IconName
+  justIcon?: boolean
 }) => {
   const modal = useModal({ title: title })
   if (!image) return <></>
   return (
-    <>
-      <Pressable onPress={modal.toggleOpen}>
-        <Image
-          source={{ uri: image }}
-          style={{
-            backgroundColor: colors.lightGray,
-            //ligth shadow
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            borderRadius: 4,
+    <View>
+      <Pressable
+        onPress={modal.toggleOpen}
+        style={{
+          width,
+          height,
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          borderRadius: 4
+        }}
+      >
+        {justIcon ? (
+          <Icon icon={icon} size={30} />
+        ) : (
+          <Image
+            source={{ uri: image }}
+            style={{
+              backgroundColor: colors.lightGray,
+              //ligth shadow
+              shadowColor: '#000',
+              // shadowOffset: {
+              //   width: 0,
+              //   height: 2
+              // },
+              // shadowOpacity: 0.25,
+              // shadowRadius: 3.84,
+              // borderRadius: 4,
+              width,
+              height,
+              flex: 1,
+              minHeight: height,
+              marginVertical: 2,
 
-            flex: 1,
-            minHeight: height,
-            marginVertical: 2,
-            width,
-            height,
-            resizeMode: 'contain'
-          }}
-        />
+              resizeMode: 'contain'
+            }}
+          />
+        )}
       </Pressable>
       <StyledModal {...modal}>
         <Image
@@ -68,7 +94,7 @@ const ImagePreview = ({
           }}
         />
       </StyledModal>
-    </>
+    </View>
   )
 }
 

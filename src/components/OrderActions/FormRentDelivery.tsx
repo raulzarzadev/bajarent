@@ -10,6 +10,8 @@ import FormikSelectCategories from '../FormikSelectCategories'
 import { getOrderFields } from '../FormOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
+import InputSignUp from '../InputSignature'
+import FormikInputSignature from '../FormikInputSignature'
 
 const FormRentDelivery = ({
   initialValues,
@@ -31,6 +33,7 @@ const FormRentDelivery = ({
   const ORDER_FIELDS = getOrderFields({
     ...orderFields
   })
+  console.log({ ORDER_FIELDS })
 
   return (
     <View>
@@ -48,10 +51,11 @@ const FormRentDelivery = ({
           }
         }}
       >
-        {({ handleSubmit, dirty }) => {
+        {({ handleSubmit, dirty, values }) => {
           useEffect(() => {
             setDirty?.(dirty)
           }, [dirty])
+          console.log({ values })
 
           const disabledUpdate = loading || !dirty
           return (
@@ -87,6 +91,11 @@ const FormRentDelivery = ({
               {ORDER_FIELDS.includes('imageHouse') && (
                 <View style={{ marginVertical: 8 }}>
                   <FormikInputImage name="imageHouse" label="Subir fachada " />
+                </View>
+              )}
+              {ORDER_FIELDS.includes('signature') && (
+                <View style={{ marginVertical: 8 }}>
+                  <FormikInputSignature name="signature" />
                 </View>
               )}
 

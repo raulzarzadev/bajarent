@@ -25,6 +25,8 @@ import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
 import FormikErrorsList from './FormikErrorsList'
 import FormikAssignSection from './FormikAssingSection'
+import InputSignature from './InputSignature'
+import FormikInputSignature from './FormikInputSignature'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -38,6 +40,9 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   ,
   'imageID',
   'imageHouse',
+
+  'signature',
+
   'assignIt',
 
   'hasDelivered',
@@ -528,6 +533,7 @@ const FormFieldsA = ({
       />
     ),
     assignIt: <FormikAssignSection name={'assignToSection'} />,
+    signature: <FormikInputSignature name="signature" />,
     quoteDetails: (
       <>
         <View style={[styles.item]}>
