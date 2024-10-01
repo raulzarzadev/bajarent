@@ -8,7 +8,7 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { where } from 'firebase/firestore'
 import { json2csv } from 'json-2-csv'
 import asDate, { dateFormat } from '../libs/utils-date'
-import OrderType, { order_type } from '../types/OrderType'
+import OrderType, { ContactType, order_type } from '../types/OrderType'
 import { getUserName } from './SpanUser'
 import { currentRentPeriod } from '../libs/orders'
 import dictionary from '../dictionary'
@@ -110,22 +110,29 @@ const formatRentsToCSV = (rents, staff) => {
     date ? dateFormat(asDate(date), 'yyyy-MM-dd HH:mm:ss') : ''
   const formatUser = (userId) => getUserName(staff, userId) || ''
   return rents.map((rent: Partial<OrderType>) => {
+    const contacts = (rent?.contacts as ContactType[]) || []
     return {
       type: dictionary(rent?.type) || '',
       status: dictionary(rent?.status) || '',
       folio: rent?.folio || '',
       note: rent?.note || '',
+      items:
+        rent?.items
+          ?.map((item) => `${item?.number || ''} ${item?.serial || ''}`)
+          .join(', ') ||
+        '' ||
+        '',
       fullName: rent?.fullName || '',
       //email: rent?.email || '',
-      phone: rent?.phone || '',
-      street: rent?.street || '',
+      phone:
+        `${rent?.phone} ${contacts?.length > 0 ? ', ' : ''}${contacts
+          ?.map((c) => `${c?.phone || ''}`)
+          .join(', ')}` || '',
+      address: rent?.address || '',
       neighborhood: rent?.neighborhood || '',
-      location: rent?.location || '',
+      coords: rent?.coords || '',
       time: currentRentPeriod(rent) || '',
-      // items:
-      //   rent?.items?.map((item) => item.categoryName).join(', ') ||
-      //   '' ||
-      //   '',
+
       deliveredAt: formatDate(rent.deliveredAt) || '',
       expireAt: formatDate(rent.expireAt) || '',
       // pickedUpAt: formatDate(rent.pickedUpAt) || '',
