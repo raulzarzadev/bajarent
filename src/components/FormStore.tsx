@@ -149,58 +149,7 @@ const FormStore = ({
           />
 
           <Separator />
-          <Text style={gStyles.h3}>Teléfono fijo</Text>
-          <View style={styles.input}>
-            <FormikInputPhone
-              name={'phone'}
-              helperText="Numero de telefono principal"
-            />
-          </View>
-          <Text style={gStyles.h3}>Teléfono celular</Text>
-          <View style={styles.input}>
-            <FormikInputPhone
-              name={'mobile'}
-              helperText="Numero de telefono movil (whatsapp)"
-            />
-          </View>
-          <Separator />
-          <Text style={gStyles.h2}>Información bancaria</Text>
-          <Text style={gStyles.h3}>Titular </Text>
-          <View style={styles.input}>
-            <FormikInputValue name={'accountHolder'} placeholder="Titular" />
-          </View>
 
-          <Text style={gStyles.h3}>Cuenta principal</Text>
-          <View style={styles.input}>
-            <FormikInputValue name={'bankInfo.0.bank'} placeholder="Banco" />
-          </View>
-          <View style={styles.input}>
-            <FormikInputValue
-              name={'bankInfo.0.clabe'}
-              placeholder="Cuenta clabe"
-            />
-          </View>
-          <Text style={gStyles.h3}>Cuenta secundaria</Text>
-          <View style={styles.input}>
-            <FormikInputValue name={'bankInfo.1.bank'} placeholder="Banco" />
-          </View>
-          <View style={styles.input}>
-            <FormikInputValue
-              name={'bankInfo.1.clabe'}
-              placeholder="Cuenta clabe"
-            />
-          </View>
-          <Text style={gStyles.h3}>Cuenta secundaria</Text>
-          <View style={styles.input}>
-            <FormikInputValue name={'bankInfo.2.bank'} placeholder="Banco" />
-          </View>
-          <View style={styles.input}>
-            <FormikInputValue
-              name={'bankInfo.2.clabe'}
-              placeholder="Cuenta clabe"
-            />
-          </View>
-          <Separator />
           <Text style={gStyles.h3}>Visibilidad</Text>
 
           <Text style={gStyles.helper}>

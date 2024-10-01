@@ -324,21 +324,8 @@ const TabCashbox = () => {
 }
 
 const TabStaff = (props) => {
-  // const { navigate } = useNavigation()
   return (
     <View>
-      {/* <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <Button
-          label="Areas"
-          onPress={() => {
-            //@ts-ignore
-            navigate('StackSections')
-          }}
-          variant="ghost"
-          disabled={false}
-          icon={'components'}
-        />
-      </View> */}
       <ScreenStaffE {...props} />
     </View>
   )
