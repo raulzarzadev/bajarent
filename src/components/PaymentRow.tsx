@@ -8,6 +8,7 @@ import { colors } from '../theme'
 import PaymentVerify from './PaymentVerify'
 import PaymentType from '../types/PaymentType'
 import SpanStoreSection from './SpanStoreSection'
+import ImagePreview from './ImagePreview'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 const RowPayment = ({
   item,
@@ -63,11 +64,11 @@ const RowPayment = ({
         <Text>{item?.createdByName}</Text>
       </View>
       <View style={{ width: 80 }}>
-        {typeof item?.verified === 'boolean' && (
+        {/* {typeof item?.verified === 'boolean' && (
           <View style={{ margin: 'auto' }}>
-            <PaymentVerify payment={item} onVerified={onVerified} />
+          <PaymentVerify payment={item} onVerified={onVerified} />
           </View>
-        )}
+          )} */}
         <CurrencyAmount
           amount={isRetirement ? -1 * item?.amount : item?.amount}
         />
@@ -75,6 +76,8 @@ const RowPayment = ({
           {item?.canceled && 'Cancelado'}
         </Text>
       </View>
+      <ImagePreview image={item.image} width={40} height={40} />
+      <PaymentVerify payment={item} onVerified={onVerified} />
     </View>
   )
 }

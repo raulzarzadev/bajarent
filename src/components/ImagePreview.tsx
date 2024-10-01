@@ -45,7 +45,7 @@ const ImagePreview = ({
             borderRadius: 4,
 
             flex: 1,
-            minHeight: 150,
+            minHeight: height,
             marginVertical: 2,
             width,
             height,
