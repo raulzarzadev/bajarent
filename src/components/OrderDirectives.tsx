@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType, { order_type } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import dictionary from '../dictionary'
 import theme, { colors } from '../theme'
 import Chip from './Chip'
@@ -38,17 +38,7 @@ const OrderDirectives = ({
       return 'wrench'
     }
   }
-  const iconColor = (type: OrderType['type']) => {
-    if (type === order_type.RENT) {
-      return colors.blue
-    }
-    if (type === order_type.SALE) {
-      return colors.green
-    }
-    if (type === order_type.REPAIR) {
-      return colors.amber
-    }
-  }
+
   const orderType = `${currentRentPeriod(order, {
     shortLabel: true
   })}`
@@ -57,7 +47,6 @@ const OrderDirectives = ({
     <View
       style={{
         flexDirection: 'row',
-        // //  justifyContent: 'flex-start',
         alignItems: 'center',
         flexWrap: 'wrap'
       }}
@@ -65,19 +54,12 @@ const OrderDirectives = ({
       <View style={{ width: 60 }}>
         <OrderLabels order={order} />
       </View>
-
-      {/* <ChooseLabel colorLabel={order?.colorLabel} orderId={order?.id} /> */}
-      {/* {ICON ? <Text>{ICON}</Text> : null} */}
       <View style={{ width: 60 }}>
         <Chip
           style={[styles.chip]}
           title={orderType}
           icon={TypeIcon(order?.type)}
           color={theme?.transparent}
-          // iconColor={iconColor(order?.type)}
-          // titleColor={theme.black}
-          // titleColor={iconColor(order?.type)}
-          // size="lg"
           iconSize="sm"
         ></Chip>
       </View>
@@ -95,7 +77,11 @@ const OrderDirectives = ({
   )
 }
 
-const OrderLabels = ({ order }) => {
+const OrderLabels = ({
+  order
+}: {
+  order: Partial<OrderType> | Partial<ConsolidatedOrderType>
+}) => {
   const collect = order?.markedToCollect
   const charge = order?.markedToCharge
   return (
@@ -106,7 +92,7 @@ const OrderLabels = ({ order }) => {
         justifyContent: 'space-around'
       }}
     >
-      {collect && (
+      {collect && !(order.status === order_status.PICKED_UP) && (
         <Chip
           color={theme.secondary}
           titleColor={theme.white}

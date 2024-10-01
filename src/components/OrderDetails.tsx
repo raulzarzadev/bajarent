@@ -36,6 +36,7 @@ import { OrderActionsE } from './OrderActions/OrderActions2'
 import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
+import OrderBigStatus from './OrderBigStatus'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -61,6 +62,8 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       <View style={{ justifyContent: 'center', margin: 'auto' }}>
         <OrderDirectivesE order={order} />
       </View>
+      <OrderBigStatus />
+
       <View
         style={{
           padding: 4,
@@ -84,34 +87,6 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           clientId={order.clientId}
         />
       </View>
-      {order.status === order_status.CANCELLED && (
-        <View style={{ marginVertical: 8 }}>
-          <View
-            style={{
-              borderWidth: 2,
-              borderColor: colors.red,
-              padding: 4,
-              borderRadius: 9999
-            }}
-          >
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 43,
-                textAlignVertical: 'center',
-                color: colors.red
-              }}
-            >
-              Cancelada!
-            </Text>
-          </View>
-          <View>
-            <Text style={{ textAlign: 'center', marginTop: 4 }}>
-              Motivo: {order?.cancelledReason || ''}
-            </Text>
-          </View>
-        </View>
-      )}
 
       <OrderContacts />
       <OrderImages order={order} />
