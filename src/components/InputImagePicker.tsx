@@ -145,7 +145,7 @@ export default function InputImagePicker({
       )}
 
       <ImagePreview image={value} width={'100%'} height={100} />
-      <ProgressBar progress={progress} hideWhenFull />
+      <ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
       <View
         style={{
           width: '100%'

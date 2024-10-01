@@ -33,7 +33,7 @@ const ImagePreview = ({
   const modal = useModal({ title: title })
   if (!image) return <></>
   return (
-    <>
+    <View style={{ width, height }}>
       <Pressable
         onPress={modal.toggleOpen}
         style={{
@@ -59,15 +59,8 @@ const ImagePreview = ({
             source={{ uri: image }}
             style={{
               backgroundColor: colors.lightGray,
-              //ligth shadow
               shadowColor: '#000',
-              // shadowOffset: {
-              //   width: 0,
-              //   height: 2
-              // },
-              // shadowOpacity: 0.25,
-              // shadowRadius: 3.84,
-              // borderRadius: 4,
+
               width,
               height,
               flex: 1,
@@ -94,7 +87,7 @@ const ImagePreview = ({
           }}
         />
       </StyledModal>
-    </>
+    </View>
   )
 }
 
