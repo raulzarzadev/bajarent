@@ -5,7 +5,7 @@ import InputValueFormik from './FormikInputValue'
 import OrderType, { TypeOrder, order_type } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './FormikInputPhone'
-import InputDate from './InputDate'
+import InputDate, { InputDateE } from './InputDate'
 import asDate from '../libs/utils-date'
 import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './FormikInputRadios'
@@ -483,7 +483,7 @@ const FormFieldsA = ({
       />
     ),
     scheduledAt: (
-      <InputDate
+      <InputDateE
         label="Fecha"
         value={asDate(values.scheduledAt) || new Date()}
         setValue={(value) =>

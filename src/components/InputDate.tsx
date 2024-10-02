@@ -5,7 +5,17 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Button, { ButtonProps } from './Button'
 import asDate, { dateFormat } from '../libs/utils-date'
 import { IconName } from './Icon'
-
+import ErrorBoundary from './ErrorBoundary'
+export type InputDateProps = {
+  label?: string
+  icon?: IconName
+  value: Date
+  setValue: (value: Date) => void
+  format?: string
+  withTime?: boolean
+  size?: ButtonProps['size']
+  openButtonProps?: Partial<ButtonProps>
+}
 type PickerTime = { hours: number; minutes: number }
 export default function InputDate({
   label = '',
@@ -16,16 +26,7 @@ export default function InputDate({
   icon = 'calendar',
   size,
   openButtonProps
-}: {
-  label?: string
-  icon?: IconName
-  value: Date
-  setValue: (value: Date) => void
-  format?: string
-  withTime?: boolean
-  size?: ButtonProps['size']
-  openButtonProps?: Partial<ButtonProps>
-}) {
+}: InputDateProps) {
   const nowDate = new Date()
 
   const [open, setOpen] = React.useState(false)
@@ -105,6 +106,12 @@ export default function InputDate({
     </>
   )
 }
+
+export const InputDateE = (props: InputDateProps) => (
+  <ErrorBoundary componentName="InputDate">
+    <InputDate {...props} />
+  </ErrorBoundary>
+)
 
 const TimePicker = ({
   time,
