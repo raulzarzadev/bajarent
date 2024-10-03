@@ -60,8 +60,7 @@ const OrderBigStatus = () => {
       {isAuthorized && (
         <Badge
           color={'success'}
-          // description={`Autorizada ${order.scheduledAt}`}
-          title={`Autorizada ${dateFormat(asDate(authorizedAt), 'dd/MM')}`}
+          title={`Pedido ${dateFormat(asDate(authorizedAt), 'dd/MM')}`}
           icon="calendarTime"
         />
       )}
