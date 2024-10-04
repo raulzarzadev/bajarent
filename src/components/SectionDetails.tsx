@@ -14,9 +14,11 @@ import ErrorBoundary from './ErrorBoundary'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
 import ListStoreItems from './ListStoreItems'
+import useMyNav from '../hooks/useMyNav'
 
 const SectionDetails = ({ section }: { section: SectionType }) => {
   const { staff } = useStore()
+  const { toSections } = useMyNav()
   const navigation = useNavigation()
   const {
     permissions: { canEditStaff }
@@ -69,10 +71,7 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
           icon="edit"
           color="secondary"
           onPress={() => {
-            // @ts-ignore
-            navigation.navigate('ScreenSectionsEdit', {
-              sectionId: section?.id
-            })
+            toSections({ id: section.id, screenEdit: true })
           }}
           disabled={!canEditSection}
         ></ButtonIcon>

@@ -123,11 +123,51 @@ const useMyNav = () => {
     //@ts-ignore
     navigate('Profile')
   }
+
+  const toSections = ({
+    id,
+    screenNew,
+    screenEdit
+  }: {
+    id?: string
+    screenNew?: boolean
+    screenEdit?: boolean
+  }) => {
+    if (screenEdit && id) {
+      //@ts-ignore
+      navigate('StackSections', {
+        screen: 'ScreenSectionsEdit',
+        params: {
+          id
+        }
+      })
+      return
+    }
+
+    if (screenNew) {
+      //@ts-ignore
+      navigate('StackSections', {
+        screen: 'ScreenSectionSNew'
+      })
+      return
+    } else if (id) {
+      //@ts-ignore
+      navigate('StackSections', {
+        screen: 'ScreenSectionSDetails',
+        params: {
+          id
+        }
+      })
+      return
+    }
+  }
+
   return {
     toItems,
     toOrders,
     toPayments,
-    toProfile
+    toProfile,
+    toSections
   }
 }
 

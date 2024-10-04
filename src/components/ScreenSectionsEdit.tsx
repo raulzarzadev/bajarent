@@ -5,9 +5,8 @@ import { ServiceSections } from '../firebase/ServiceSections'
 import { useStore } from '../contexts/storeContext'
 
 const ScreenSectionsEdit = ({ navigation, route }) => {
-  const sectionId = route.params.sectionId
+  const sectionId = route.params.id
   const section = useStore().storeSections.find((s) => s.id === sectionId)
-
   return (
     <View style={styles.container}>
       <FormSection
