@@ -386,9 +386,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     }
 
     if (getBySections) {
-      filterRentPending.push(where('assignToSection', 'in', sections))
-      filterRepairs.push(where('assignToSection', 'in', sections))
-      filterExpiredRents.push(where('assignToSection', 'in', sections))
+      if (sections.length === 0) {
+        console.log('sections is empty', sections)
+      } else {
+        filterRentPending.push(where('assignToSection', 'in', sections))
+        filterRepairs.push(where('assignToSection', 'in', sections))
+        filterExpiredRents.push(where('assignToSection', 'in', sections))
+      }
     }
     const rentPending = await this.findMany(
       [...filterRentPending, where('storeId', '==', storeId)],
