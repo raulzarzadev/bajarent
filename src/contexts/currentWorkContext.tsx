@@ -70,17 +70,20 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const [currentWork, setCurrentWork] =
     useState<CurrentWorks>(defaultCurrentWork)
   useEffect(() => {
+    console.log({ sectionsAssigned })
     if (orders) {
       handleSetData({
         disabledEmployee: employee?.disabled,
-        allowGetInfoFromAllOrders: permissions.isAdmin || permissions.isOwner
+        allowGetInfoFromAllOrders: permissions.isAdmin || permissions.isOwner,
+        sectionsAssigned
       })
     }
-  }, [orders, employee?.disabled])
+  }, [orders, employee?.disabled, sectionsAssigned])
 
   const handleSetData = ({
     disabledEmployee = false,
-    allowGetInfoFromAllOrders = false
+    allowGetInfoFromAllOrders = false,
+    sectionsAssigned
   }) => {
     if (disabledEmployee) {
       console.log('disabled employee')
