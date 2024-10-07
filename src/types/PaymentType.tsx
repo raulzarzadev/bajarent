@@ -34,8 +34,8 @@ export type PaymentBase = {
 type PaymentType = PaymentBase & BaseType
 
 export enum payment_methods {
+  TRANSFER = 'transfer',
   CASH = 'cash',
-  CARD = 'card',
-  TRANSFER = 'transfer'
+  CARD = 'card'
 }
 export default PaymentType

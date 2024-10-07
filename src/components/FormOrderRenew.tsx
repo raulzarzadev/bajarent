@@ -22,7 +22,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
   const items = order?.items || []
   const [payment, setPayment] = useState<Partial<PaymentType>>({
-    method: 'cash',
+    method: 'transfer',
     amount: 0
   })
   const [newItems, setNewItems] = useState<OrderType['items']>(items)

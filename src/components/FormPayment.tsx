@@ -24,11 +24,12 @@ const FormPayment = ({
 }) => {
   const { store } = useStore()
   const { permissions } = useEmployee()
+  const defaultAmount = values?.amount || 0
   const initialValues: Partial<PaymentType> = {
-    method: values?.method || 'cash',
-    amount: values?.amount || 0,
-    reference: values?.reference || '',
-    ...values
+    ...values,
+    method: values?.method || 'transfer',
+    amount: 0,
+    reference: values?.reference || ''
   }
   const methods = Object.values(payment_methods).map((method) => ({
     label:
@@ -78,18 +79,33 @@ const FormPayment = ({
       }}
     >
       {({ handleSubmit, values, isSubmitting, setSubmitting, errors }) => {
+        const diffAmount = defaultAmount - values.amount
+        // si es menor a 0, deberia decir, faltan $200, si es mayor $sobran y si es igual deberia decir la "la cantidad es correcta"
+
+        const labelDiffAmount =
+          diffAmount === 0
+            ? 'La cantidad es correcta'
+            : diffAmount > 0
+            ? `Faltan $${diffAmount.toFixed(2)}`
+            : `Sobran $${Math.abs(diffAmount).toFixed(2)}`
         return (
           <>
             <View style={styles.repairItemForm}>
               <InputRadiosFormik options={methods} name="method" />
             </View>
 
+            <Text style={{}}>
+              Confirmar cantidad: <Text>${defaultAmount.toFixed(2)}</Text>
+            </Text>
+
             <View style={styles.repairItemForm}>
               <FormikInputValue
                 type="number"
                 name="amount"
                 keyboardType="numeric"
-                placeholder="Total $ "
+                placeholder="$0.00 "
+                helperText={labelDiffAmount}
+                // helperText={`Confirmar cantidad: $${defaultAmount.toFixed(2)}`}
               />
             </View>
             {values.method === 'transfer' && (
