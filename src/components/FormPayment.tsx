@@ -35,7 +35,7 @@ const FormPayment = ({
       dictionary(method).charAt(0).toUpperCase() + dictionary(method).slice(1),
     value: method
   }))
-  const references = store.bankAccounts.map((account) => {
+  const references = store?.bankAccounts?.map((account) => {
     const ref = `${account.label} ${account.value.substring(
       account.value.length - 4
     )}`
@@ -63,6 +63,9 @@ const FormPayment = ({
         }
         if (values.method === 'transfer' && !values.reference) {
           errors.reference = 'Registra una referencia'
+        }
+        if (values.method === 'transfer' && references.length === 0) {
+          errors.reference = 'Debes registrar una cuenta bancaria en la tienda'
         }
         if (
           values.method === 'transfer' &&
