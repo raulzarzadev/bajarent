@@ -13,8 +13,10 @@ import useModal from '../hooks/useModal'
 import PaymentType from '../types/PaymentType'
 import { onComment, onExtend_V2, onPay } from '../libs/order-actions'
 import { useNavigation } from '@react-navigation/native'
-import FormikInputImage from './FormikInputImage'
 import theme from '../theme'
+import CurrencyAmount from './CurrencyAmount'
+import { gStyles } from '../styles'
+import { dateFormat } from '../libs/utils-date'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
@@ -102,49 +104,84 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
           onSubmit(values)
         }}
       >
-        {({ handleSubmit, values }) => (
-          <View>
-            <FormikSelectCategories
-              name="items"
-              selectPrice
-              label="Articulos"
-            />
+        {({ handleSubmit, values }) => {
+          const currentPriceSelected = values?.items?.[0]?.priceSelected
+          return (
+            <View>
+              <FormikSelectCategories
+                name="items"
+                selectPrice
+                label="Articulos"
+              />
 
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-around' }}
-            >
-              {/* <DateCell label="Fecha de vencimiento" date={order.expireAt} /> */}
-              {values?.items?.[0]?.priceSelected && (
-                <DateCell
-                  dateBold
-                  label="Nuevo vencimiento"
-                  date={expireDate2({
-                    startedAt: order?.expireAt,
-                    price: values?.items?.[0]?.priceSelected
-                  })}
-                  borderColor={theme.success}
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+              >
+                {/* <DateCell label="Fecha de vencimiento" date={order.expireAt} /> */}
+                {/* {currentPriceSelected && (
+                  <DateCell
+                    dateBold
+                    label="Nuevo vencimiento"
+                    date={expireDate2({
+                      startedAt: order?.expireAt,
+                      price: currentPriceSelected
+                    })}
+                    borderColor={theme.success}
+                  />
+                )} */}
+              </View>
+
+              <View style={{ marginVertical: 16 }}>
+                <InputCheckbox
+                  label="Agrega pago"
+                  value={addPay}
+                  setValue={() => {
+                    setAddPay(!addPay)
+                  }}
                 />
-              )}
-            </View>
-
-            <View style={{ marginVertical: 16 }}>
-              <InputCheckbox
-                label="Agrega pago"
-                value={addPay}
-                setValue={() => {
-                  setAddPay(!addPay)
+              </View>
+              <View style={{ justifyContent: 'center' }}>
+                <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
+                  Renovar por:
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginBottom: 8
+                  }}
+                >
+                  <Text style={gStyles.h2}>
+                    {translateTime(currentPriceSelected.time)}{' '}
+                  </Text>
+                  <CurrencyAmount
+                    style={gStyles.h2}
+                    amount={currentPriceSelected.amount}
+                  />
+                </View>
+                <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+                  Expira el:{' '}
+                </Text>
+                <Text style={[gStyles.h2, { marginBottom: 8 }]}>
+                  {dateFormat(
+                    expireDate2({
+                      startedAt: order?.expireAt,
+                      price: currentPriceSelected
+                    }),
+                    'dd/MMM'
+                  )}
+                </Text>
+              </View>
+              <Button
+                disabled={submitting}
+                onPress={() => {
+                  handleSubmit()
                 }}
+                label="Renovar"
               />
             </View>
-            <Button
-              disabled={submitting}
-              onPress={() => {
-                handleSubmit()
-              }}
-              label="Renovar"
-            />
-          </View>
-        )}
+          )
+        }}
       </Formik>
       <StyledModal {...modalPayment}>
         <FormPayment
