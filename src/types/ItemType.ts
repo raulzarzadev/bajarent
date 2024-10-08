@@ -29,6 +29,7 @@ export type ItemBase = {
   retiredBy?: string
   lastInventoryAt?: Date
   lastInventoryBy?: string
+  workshopStatus?: 'inProgress' | 'pending' | 'finished'
 }
 
 type ItemType = BaseType & ItemBase

@@ -12,6 +12,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
+import ScreenWorkshop from './ScreenWorkshop'
 
 const Tab = createBottomTabNavigator()
 
@@ -38,7 +39,8 @@ const BottomAppBar = () => {
               MyOrders: 'myOrders',
               StackOrders: 'orders',
               StackConsolidated: 'orders',
-              StackMyItems: 'washMachine'
+              StackMyItems: 'washMachine',
+              Workshop: 'tools'
             }
             return (
               <Icon
@@ -90,6 +92,15 @@ const BottomAppBar = () => {
           // tabBarButton: () => null
         }}
         component={StackMyItems}
+      />
+      <Tab.Screen
+        name="Workshop"
+        options={{
+          title: 'Taller',
+          headerShown: false
+          // tabBarButton: () => null
+        }}
+        component={ScreenWorkshop}
       />
 
       <Tab.Screen

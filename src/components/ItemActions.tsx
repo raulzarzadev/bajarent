@@ -23,6 +23,7 @@ import Icon from './Icon'
 import theme from '../theme'
 import SpanUser from './SpanUser'
 import CardItem, { SquareItem } from './CardItem'
+import ModalFixItem from './ModalFixItem'
 
 type Actions =
   | 'details'
@@ -47,7 +48,6 @@ const ItemActions = ({
 }) => {
   const itemId = item?.id
   const itemSection = item?.assignedSection || ''
-  const needFix = item?.needFix
   const checkedInventoryToday = isToday(asDate(item?.lastInventoryAt))
   const { storeSections, storeId } = useStore()
 
@@ -65,26 +65,6 @@ const ItemActions = ({
       sectionId,
       sectionName: storeSections.find(({ id }) => id === sectionId)?.name
     })
-  }
-  const handleMarkAsNeedFix = async () => {
-    ServiceStoreItems.updateField({
-      storeId,
-      itemId,
-      field: 'needFix',
-      value: !needFix
-    })
-
-    ServiceStoreItems.addEntry({
-      storeId,
-      itemId,
-      entry: {
-        type: needFix ? 'fix' : 'report',
-        content: needFix ? `${comment}` : `${comment}`,
-        itemId
-      }
-    })
-
-    setComment('')
   }
 
   const handleAddItemEntry = async () => {
@@ -294,48 +274,11 @@ const ItemActions = ({
         )}
 
         {actions.includes('fix') && (
-          <View style={{ margin: 2 }}>
-            {needFix ? (
-              <ButtonConfirm
-                openDisabled={disabled || disabledFix}
-                icon="wrench"
-                openColor={'error'}
-                openVariant={'filled'}
-                handleConfirm={async () => {
-                  onAction?.('fix')
-                  return await handleMarkAsNeedFix()
-                }}
-              >
-                <Text style={gStyles.h3}>Reparada</Text>
-                <InputTextStyled
-                  style={{ marginVertical: 6 }}
-                  placeholder="Descripción"
-                  label="Descripción"
-                  onChangeText={(value) => setComment(value)}
-                ></InputTextStyled>
-              </ButtonConfirm>
-            ) : (
-              <ButtonConfirm
-                openDisabled={disabled || disabledFix}
-                icon="wrench"
-                openColor={'primary'}
-                openVariant={'outline'}
-                handleConfirm={async () => {
-                  onAction?.('fix')
-                  return await handleMarkAsNeedFix()
-                }}
-                confirmColor="error"
-              >
-                <Text style={gStyles.h3}>Necesita reparación</Text>
-                <InputTextStyled
-                  style={{ marginVertical: 6 }}
-                  placeholder="Descripción"
-                  label="Descripción"
-                  onChangeText={(value) => setComment(value)}
-                ></InputTextStyled>
-              </ButtonConfirm>
-            )}
-          </View>
+          <ModalFixItem
+            item={item}
+            disabled={disabled}
+            disabledFix={disabledFix}
+          />
         )}
       </View>
     </View>
