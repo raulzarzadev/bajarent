@@ -70,7 +70,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const [currentWork, setCurrentWork] =
     useState<CurrentWorks>(defaultCurrentWork)
   useEffect(() => {
-    console.log({ sectionsAssigned })
     if (orders) {
       handleSetData({
         disabledEmployee: employee?.disabled,
