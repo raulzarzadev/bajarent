@@ -18,8 +18,11 @@ const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { store } = useAuth()
-  const { permissions } = useEmployee()
-
+  const { permissions, employee } = useEmployee()
+  const viewWorksheets =
+    employee?.rol === 'technician' ||
+    permissions?.isAdmin ||
+    permissions?.isOwner
   const showProfileButton = true
   const showOrdersButton = !!store
   const showStoreButton = !!store
@@ -97,7 +100,8 @@ const BottomAppBar = () => {
         name="Workshop"
         options={{
           title: 'Taller',
-          headerShown: false
+          headerShown: false,
+          tabBarButton: viewWorksheets ? undefined : () => null
           // tabBarButton: () => null
         }}
         component={ScreenWorkshop}
