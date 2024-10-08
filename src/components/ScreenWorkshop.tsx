@@ -8,9 +8,10 @@ import { useItemsCtx } from '../contexts/itemsContext'
 import RowWorkshopItems from './RowWorkshopItems'
 
 const ScreenWorkshop = () => {
-  const { items = [] } = useItemsCtx()
-
-  const itemsPickedUp = items.filter((item) => item.status === 'pickedUp')
+  const { workshopItems } = useItemsCtx()
+  const itemsPickedUp = workshopItems.filter(
+    (item) => item.status === 'pickedUp'
+  )
 
   const itemsNeedFix = itemsPickedUp.filter(
     (item) =>
@@ -21,7 +22,9 @@ const ScreenWorkshop = () => {
     (item) => item.workshopStatus === 'inProgress'
   )
   const itemsFinished = itemsPickedUp.filter(
-    (item) => item.workshopStatus === 'finished'
+    (item) =>
+      item.workshopStatus === 'finished' ||
+      (!item.workshopStatus && !item.needFix)
   )
   const { categories, storeSections } = useStore()
   const formattedPendingItems = formatItems(
@@ -43,11 +46,17 @@ const ScreenWorkshop = () => {
   return (
     <View>
       <Text style={gStyles.h1}>Taller</Text>
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>Pendientes</Text>
+      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
+        Pendientes {`(${formattedPendingItems?.length || 0})`}
+      </Text>
       <RowWorkshopItems items={formattedPendingItems} />
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>En Reparación</Text>
+      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
+        En Reparación {`(${formattedInProgressItems?.length || 0})`}
+      </Text>
       <RowWorkshopItems items={formattedInProgressItems} />
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>Terminadas</Text>
+      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
+        Terminadas {`(${formattedFinishedItems?.length || 0})`}
+      </Text>
       <RowWorkshopItems items={formattedFinishedItems} />
     </View>
   )

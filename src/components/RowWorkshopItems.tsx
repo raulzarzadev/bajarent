@@ -17,13 +17,20 @@ const RowWorkshopItems = ({ items }: RowWorkshopItemsProps) => {
     parseFloat(a.number) - parseFloat(b.number)
 
   return (
-    <FlatList
-      style={{ margin: 'auto', maxWidth: '100%', paddingBottom: 12 }}
-      horizontal
-      data={items.sort(sortByNumber)}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <WorkshopItem item={item} />}
-    />
+    <View
+      style={[
+        {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          minHeight: 74
+        }
+      ]}
+    >
+      {items.sort(sortByNumber).map((item) => (
+        <WorkshopItem key={item.id} item={item} />
+      ))}
+    </View>
   )
 }
 

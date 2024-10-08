@@ -24,6 +24,7 @@ import theme from '../theme'
 import SpanUser from './SpanUser'
 import CardItem, { SquareItem } from './CardItem'
 import ModalFixItem from './ModalFixItem'
+import InputAssignSection from './InputAssingSection'
 
 type Actions =
   | 'details'
@@ -58,7 +59,7 @@ const ItemActions = ({
   const currentSection = storeSections.find(
     ({ id }) => id === itemSection
   )?.name
-  const handleChangeItemSection = async () => {
+  const handleChangeItemSection = async ({ sectionId }) => {
     return await onChangeItemSection({
       storeId,
       itemId,
@@ -173,33 +174,15 @@ const ItemActions = ({
 
         {actions?.includes('assign') && (
           <View style={{ margin: 2 }}>
-            <ButtonConfirm
-              openDisabled={disabled || disabledAssign}
-              openLabel={currentSection || 'Asignar'}
-              icon="swap"
-              openVariant="outline"
-              confirmLabel="Cambiar"
-              handleConfirm={async () => {
+            <InputAssignSection
+              disabled={disabled || disabledAssign}
+              currentSection={sectionId}
+              setNewSection={async ({ sectionId }) => {
+                setSectionId(sectionId)
                 onAction?.('assign')
-                return await handleChangeItemSection()
+                return await handleChangeItemSection({ sectionId })
               }}
-            >
-              <InputRadios
-                layout="row"
-                label="Selecciona un area"
-                setValue={(sectionId) => {
-                  setSectionId(sectionId)
-                }}
-                containerStyle={{ marginVertical: 6 }}
-                value={sectionId}
-                options={storeSections.map(({ id, name }) => {
-                  return {
-                    label: name,
-                    value: id
-                  }
-                })}
-              />
-            </ButtonConfirm>
+            />
           </View>
         )}
 
