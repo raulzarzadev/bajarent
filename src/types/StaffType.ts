@@ -36,6 +36,15 @@ export type StaffPinnedRow = {
   [id: string]: PinnedRow
 }
 
+export enum staff_roles {
+  admin = 'admin',
+  technician = 'technician',
+  driver = 'driver',
+  reception = 'reception'
+}
+
+export type StaffRoles = keyof typeof staff_roles
+
 export type old_StaffPermissionType = StaffPermissionType
 export type BaseStaffType = {
   storeId: string
@@ -48,6 +57,8 @@ export type BaseStaffType = {
   phone?: string
   sectionsAssigned?: string[]
   store?: Partial<StoreType>
+
+  rol: StaffRoles
 
   disabled?: boolean
 
