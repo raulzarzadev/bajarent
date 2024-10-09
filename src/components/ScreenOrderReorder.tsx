@@ -33,7 +33,8 @@ const ScreenOrderReorder = ({ route }) => {
     imageID: originalOrder?.imageID || '',
     indications: originalOrder?.indications || '',
     street: originalOrder?.street || '',
-    expireAt: null
+    expireAt: null,
+    references: originalOrder?.references || ''
     // description: originalOrder?.description || '', //* describe the failure
     //items: originalOrder?.items || [],
     //item: originalOrder?.item || null,

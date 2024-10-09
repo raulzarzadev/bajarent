@@ -100,9 +100,8 @@ const BottomAppBar = () => {
         name="Workshop"
         options={{
           title: 'Taller',
-          headerShown: false,
+          // headerShown: false,
           tabBarButton: viewWorksheets ? undefined : () => null
-          // tabBarButton: () => null
         }}
         component={ScreenWorkshop}
       />
