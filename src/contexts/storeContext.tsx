@@ -21,9 +21,6 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { PriceType } from '../types/PriceType'
-import { MovementType, RepairType } from '../components/StoreWorkshop'
-import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
-import asDate, { dateFormat } from '../libs/utils-date'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -131,7 +128,7 @@ const StoreContextProvider = ({ children }) => {
 
   //#region useMemo
 
-  const value = useMemo(
+  const value: StoreContextType = useMemo(
     () => ({
       store,
       storeId,
@@ -148,7 +145,13 @@ const StoreContextProvider = ({ children }) => {
           id: 'workshop',
           name: 'Taller',
           storeId,
-          description: 'Taller de reparaciones'
+          description: 'Taller de reparaciones',
+          icon: 'tools',
+          staff: [],
+          createdBy: 'admin',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          updatedBy: 'admin'
         }
       ],
       fetchPrices,

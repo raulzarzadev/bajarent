@@ -80,8 +80,8 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
     })
     setText('')
   }
-  const handleAssignToSection = ({ sectionId, sectionName }) => {
-    ServiceStoreItems.update({
+  const handleAssignToSection = async ({ sectionId, sectionName }) => {
+    return await ServiceStoreItems.update({
       itemId: item.id,
       itemData: {
         assignedSection: sectionId,
@@ -153,9 +153,14 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
             />
 
             <InputAssignSection
-              setNewSection={({ sectionId, sectionName }) =>
-                handleAssignToSection({ sectionId, sectionName })
-              }
+              setNewSection={async ({ sectionId, sectionName }) => {
+                try {
+                  await handleAssignToSection({ sectionId, sectionName })
+                } catch (error) {
+                  console.log('error', error)
+                }
+                return
+              }}
             />
           </View>
         )}
