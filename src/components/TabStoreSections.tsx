@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import Tabs, { TabType } from './Tabs'
-import StoreWorkshop from './StoreWorkshop2'
 import { useStore } from '../contexts/storeContext'
 import { SectionDetailsE } from './SectionDetails'
 
@@ -27,5 +26,3 @@ const TabStoreSections = () => {
 }
 
 export default TabStoreSections
-
-const styles = StyleSheet.create({})

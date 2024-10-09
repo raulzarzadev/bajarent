@@ -38,7 +38,6 @@ const RowWorkshopItems = ({ items }: RowWorkshopItemsProps) => {
 
 const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
   const modal = useModal({ title: `Acciones de ${item?.number || 'SN'}` })
-  const [text, setText] = useState('')
   const { toItems } = useMyNav()
   const { storeId } = useStore()
   const handleStartRepair = () => {
@@ -60,25 +59,9 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
   }
   const handleFinishRepair = () => {
     modal.toggleOpen()
-    markItemAsNeedFix({
-      itemId: item.id,
-      storeId,
-      needsFix: false,
-      comment: text
-    })
-
-    setText('')
   }
   const handleBackToRepair = () => {
     modal.toggleOpen()
-    markItemAsNeedFix({
-      itemId: item.id,
-      storeId,
-      needsFix: true,
-      comment: text,
-      markAsRepairing: true
-    })
-    setText('')
   }
   const handleAssignToSection = async ({ sectionId, sectionName }) => {
     return await ServiceStoreItems.update({
@@ -118,6 +101,7 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
         <CardItem item={item} />
       </Pressable>
       <StyledModal {...modal}>
+        <CardItem item={item} showFixNeeded />
         <Button
           variant="ghost"
           onPress={() => {

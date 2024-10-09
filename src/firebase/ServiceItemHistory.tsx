@@ -130,6 +130,7 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
       filters
     })
   }
+
   async getLastFixEntry({ itemId, storeId }) {
     const entries = await this.getRefItems({
       collectionRef: collection(
