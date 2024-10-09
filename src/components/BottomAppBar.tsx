@@ -27,6 +27,11 @@ const BottomAppBar = () => {
   const showOrdersButton = !!store
   const showStoreButton = !!store
   const showConsolidated = permissions.canViewAllOrders
+  const viewItemsTab =
+    permissions.items.canViewAllItems ||
+    permissions.items.canViewMyItems ||
+    permissions.isAdmin ||
+    permissions.isOwner
   return (
     <Tab.Navigator
       //initialRouteName="StackOrders"
@@ -91,8 +96,8 @@ const BottomAppBar = () => {
         name="StackMyItems"
         options={{
           title: 'Artículos',
-          headerShown: false
-          // tabBarButton: () => null
+          headerShown: false,
+          tabBarButton: viewItemsTab ? undefined : () => null
         }}
         component={StackMyItems}
       />

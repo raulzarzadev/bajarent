@@ -133,7 +133,8 @@ export enum permissions_items {
   canCreate,
   canEdit,
   canDelete,
-  canViewAllItems
+  canViewAllItems,
+  canViewMyItems
 }
 
 export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>

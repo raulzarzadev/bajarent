@@ -129,6 +129,7 @@ const labels = {
    * PERMISSIONS ITEMS V2
    *******************************************rz */
   canViewAllItems: 'Ver todos ',
+  canViewMyItems: 'Mis artículos',
   /* ********************************************
    * OTHERS
    *******************************************rz */
