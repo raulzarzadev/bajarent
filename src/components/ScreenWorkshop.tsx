@@ -27,14 +27,15 @@ const ScreenWorkshop = () => {
 
   const itemsNeedFix = itemsPickedUp.filter(
     (item) =>
-      item.needFix && ['finished', 'inProgress'].includes(item.workshopStatus)
+      item.needFix &&
+      ['finished', 'inProgress', ''].includes(item?.workshopStatus || '')
   )
   const itemsInProgress = itemsPickedUp.filter(
     (item) => item.workshopStatus === 'inProgress'
   )
   const itemsFinished = itemsPickedUp.filter(
     (item) =>
-      !item.needFix && !['finished', 'inProgress'].includes(item.workshopStatus)
+      !item.needFix && !['pending', 'inProgress'].includes(item?.workshopStatus)
   )
   const { categories, storeSections } = useStore()
 
