@@ -78,7 +78,16 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
     })
     setText('')
   }
-
+  const handleAssignToSection = ({ sectionId, sectionName }) => {
+    ServiceStoreItems.update({
+      itemId: item.id,
+      itemData: {
+        assignedSection: sectionId,
+        assignedSectionName: sectionName
+      },
+      storeId
+    })
+  }
   const { needFix, finished, inProgress } = splitItems({ items: [item] })
 
   const fixPending = needFix.find((i) => i.id === item.id)
@@ -133,7 +142,11 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
               handleFix={() => handleBackToRepair()}
             />
 
-            <InputAssignSection />
+            <InputAssignSection
+              setNewSection={({ sectionId, sectionName }) =>
+                handleAssignToSection({ sectionId, sectionName })
+              }
+            />
           </View>
         )}
       </StyledModal>
