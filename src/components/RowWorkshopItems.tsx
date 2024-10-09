@@ -10,6 +10,7 @@ import InputAssignSection from './InputAssingSection'
 import { useState } from 'react'
 import ModalFixItem, { markItemAsNeedFix } from './ModalFixItem'
 import { splitItems } from './ScreenWorkshop'
+import useMyNav from '../hooks/useMyNav'
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
 }
@@ -38,6 +39,7 @@ const RowWorkshopItems = ({ items }: RowWorkshopItemsProps) => {
 const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
   const modal = useModal({ title: `Acciones de ${item?.number || 'SN'}` })
   const [text, setText] = useState('')
+  const { toItems } = useMyNav()
   const { storeId } = useStore()
   const handleStartRepair = () => {
     modal.toggleOpen()
@@ -116,6 +118,14 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
         <CardItem item={item} />
       </Pressable>
       <StyledModal {...modal}>
+        <Button
+          variant="ghost"
+          onPress={() => {
+            modal.toggleOpen()
+            toItems({ id: item.id })
+          }}
+          label="Detalles"
+        ></Button>
         {fixPending && (
           <Button
             label="Comenzar reparación"
