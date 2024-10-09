@@ -20,8 +20,12 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { calculateProgress } from '../libs/currentWork'
-
-const CurrentWorkContext = createContext<CurrentWorks | undefined>(undefined)
+import { ServiceCurrentWork } from '../firebase/ServiceCurrentWork'
+export type CurrentWorkContextType = {
+  currentWork?: CurrentWorks
+  setDate: (date: Date) => void
+}
+const CurrentWorkContext = createContext<CurrentWorkContextType>(undefined)
 const defaultCurrentWork: CurrentWorks = {
   sections: [],
   pickedUpOrders: [],
@@ -70,7 +74,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const [currentWork, setCurrentWork] =
     useState<CurrentWorks>(defaultCurrentWork)
   useEffect(() => {
-    console.log({ sectionsAssigned })
     if (orders) {
       handleSetData({
         disabledEmployee: employee?.disabled,
@@ -79,6 +82,18 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
       })
     }
   }, [orders, employee?.disabled, sectionsAssigned])
+
+  useEffect(() => {
+    if (storeId)
+      ServiceCurrentWork.getBetweenDates({
+        storeId,
+        fromDate: startDate(date),
+        toDate: endDate(date)
+      }).then((data: CurrentWorks[]) => {
+        console.log({ data })
+        setCurrentWork(data?.[0])
+      })
+  }, [date, storeId])
 
   const handleSetData = ({
     disabledEmployee = false,
@@ -119,13 +134,13 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <CurrentWorkContext.Provider value={currentWork}>
+    <CurrentWorkContext.Provider value={{ currentWork, setDate }}>
       {children}
     </CurrentWorkContext.Provider>
   )
 }
 
-export const useCurrentWorkCtx = (): CurrentWorks => {
+export const useCurrentWorkCtx = (): CurrentWorkContextType => {
   const context = useContext(CurrentWorkContext)
   if (!context) {
     throw new Error('useCurrentWork must be used within a CurrentWorkProvider')

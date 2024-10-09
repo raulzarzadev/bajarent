@@ -1,11 +1,5 @@
-import {
-  FlexStyle,
-  Pressable,
-  Text,
-  useWindowDimensions,
-  View
-} from 'react-native'
-import React from 'react'
+import { FlexStyle, Pressable, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
 import StyledModal from './StyledModal'
 import CurrencyAmount from './CurrencyAmount'
 import useModal from '../hooks/useModal'
@@ -13,17 +7,19 @@ import { BalanceAmountsE } from './BalanceAmounts'
 import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
 import ProgressBar from './ProgressBar'
-import { useCurrentWorkCtx } from '../contexts/currentWorkContext'
+import { CurrentWorks, useCurrentWorkCtx } from '../contexts/currentWorkContext'
 import ListOrders from './ListOrders'
 import { useEmployee } from '../contexts/employeeContext'
 import DisabledEmployee from './DisabledEmployee'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
-import TextInfo from './TextInfo'
 import SectionProgressWork from './SectionProgressWork'
 import OrderType from '../types/OrderType'
 import Icon, { IconName } from './Icon'
 import { Dimensions } from 'react-native'
+import HeaderDate from './HeaderDate'
+import { ServiceCurrentWork } from '../firebase/ServiceCurrentWork'
+import { endDate, startDate } from '../libs/utils-date'
 const modalSize = Dimensions.get('window')?.width > 500 ? 'md' : 'full'
 const ModalCurrentWork = () => {
   /**
@@ -38,7 +34,8 @@ const ModalCurrentWork = () => {
    *
    */
   const { employee, permissions } = useEmployee()
-  const { payments, progress } = useCurrentWorkCtx()
+  const { currentWork, setDate } = useCurrentWorkCtx()
+  const { payments = [], progress = { total: 0 } } = currentWork || {}
   const modalCurrentWork = useModal({
     title: 'Trabajo de hoy (rentas)'
   })
@@ -58,6 +55,8 @@ const ModalCurrentWork = () => {
           <DisabledEmployee></DisabledEmployee>
         ) : (
           <>
+            <HeaderDate label="" onChangeDate={setDate} />
+
             <ProgressWorkDetails
               onPressOrderRow={modalCurrentWork.toggleOpen}
             />
@@ -69,30 +68,43 @@ const ModalCurrentWork = () => {
   )
 }
 const ProgressWorkDetails = ({ onPressOrderRow }) => {
+  const { currentWork } = useCurrentWorkCtx()
   const { storeSections } = useStore()
-  const {
-    deliveredOrders,
-    authorizedOrders,
-    solvedReported,
-    unsolvedReported,
-    pickedUpOrders,
-    renewedOrders,
-    expiredOrders,
-    sections
-  } = useCurrentWorkCtx()
+  return (
+    <View>
+      <CurrentWork
+        currentWork={currentWork}
+        storeSections={storeSections}
+        onPressOrderRow={onPressOrderRow}
+      />
+    </View>
+  )
+}
+
+const CurrentWork = ({ currentWork, storeSections, onPressOrderRow }) => {
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
+  const {
+    deliveredOrders = [],
+    authorizedOrders = [],
+    solvedReported = [],
+    unsolvedReported = [],
+    pickedUpOrders = [],
+    renewedOrders = [],
+    expiredOrders = [],
+    sections = []
+  } = currentWork || {}
   return (
     <View>
       {sections?.map((sectionId) => (
         <View key={sectionId}>
           <Text style={[gStyles.h2, { textAlign: 'center' }]}>
-            {storeSections.find((s) => s.id === sectionId)?.name}
+            {storeSections?.find((s) => s.id === sectionId)?.name}
           </Text>
         </View>
       ))}
-      {sections.length === 0 && (
+      {sections?.length === 0 && (
         <Text style={[gStyles.h2, { textAlign: 'center' }]}>Todas</Text>
       )}
       <View style={{ marginVertical: 8, marginBottom: 16 }}>
@@ -148,13 +160,15 @@ const ModalOrders = ({
 const SectionsCurrentWork = ({ onPressOrderRow }) => {
   const { storeSections } = useStore()
   const {
-    authorizedOrders,
-    deliveredOrders,
-    expiredOrders,
-    renewedOrders,
-    pickedUpOrders,
-    solvedReported,
-    unsolvedReported
+    currentWork: {
+      authorizedOrders = [],
+      deliveredOrders = [],
+      expiredOrders = [],
+      renewedOrders = [],
+      pickedUpOrders = [],
+      solvedReported = [],
+      unsolvedReported = []
+    } = {}
   } = useCurrentWorkCtx()
   return (
     <View>
@@ -185,7 +199,7 @@ const SectionsCurrentWork = ({ onPressOrderRow }) => {
             ...resolved,
             ...reported,
             ...reportedSolved
-          ].length === 0
+          ]?.length === 0
         )
           return null
 

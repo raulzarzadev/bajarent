@@ -3,6 +3,7 @@ import React from 'react'
 import Button from './Button'
 import { gSpace, gStyles } from '../styles'
 import { useEmployee } from '../contexts/employeeContext'
+import ModalCloseOperations from '../ModalCloseOperations'
 
 const ScreenCashbox = ({ navigation }) => {
   const {

@@ -27,6 +27,7 @@ import StoreTabMap from './StoreTabMap'
 import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
+import ModalCloseOperations from '../ModalCloseOperations'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -293,6 +294,7 @@ const TabCashbox = () => {
           }}
           variant="ghost"
         />
+        <ModalCloseOperations />
       </View>
       <HeaderDate
         debounce={400}
