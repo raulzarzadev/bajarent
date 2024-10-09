@@ -16,6 +16,7 @@ import useMyNav from '../hooks/useMyNav'
 import Button from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
+import ItemType from '../types/ItemType'
 
 const ScreenWorkshop = () => {
   const { workshopItems } = useItemsCtx()
@@ -23,20 +24,12 @@ const ScreenWorkshop = () => {
     (item) => item.status === 'pickedUp'
   )
 
-  console.log({ itemsPickedUp })
+  const { needFix, inProgress, finished } = splitItems({ items: itemsPickedUp })
 
-  const itemsNeedFix = itemsPickedUp.filter(
-    (item) =>
-      item.needFix &&
-      ['finished', 'inProgress', ''].includes(item?.workshopStatus || '')
-  )
-  const itemsInProgress = itemsPickedUp.filter(
-    (item) => item.workshopStatus === 'inProgress'
-  )
-  const itemsFinished = itemsPickedUp.filter(
-    (item) =>
-      !item.needFix && !['pending', 'inProgress'].includes(item?.workshopStatus)
-  )
+  const itemsNeedFix = needFix
+  const itemsInProgress = inProgress
+  const itemsFinished = finished
+
   const { categories, storeSections } = useStore()
 
   const formattedPendingItems = formatItems(
@@ -158,6 +151,29 @@ const WorkshopMovements = () => {
       />
     </View>
   )
+}
+
+export const splitItems = ({ items = [] }: { items: Partial<ItemType>[] }) => {
+  if (!items.length)
+    return {
+      needFix: [],
+      inProgress: [],
+      finished: []
+    }
+  const needFix = items.filter(
+    (item) => item.needFix && item.workshopStatus !== 'inProgress'
+  )
+  const inProgress = items.filter(
+    (item) => item.workshopStatus === 'inProgress'
+  )
+  const finished = items.filter(
+    (item) => !item.needFix || item.workshopStatus === 'finished'
+  )
+  return {
+    needFix,
+    inProgress,
+    finished
+  }
 }
 
 export default ScreenWorkshop

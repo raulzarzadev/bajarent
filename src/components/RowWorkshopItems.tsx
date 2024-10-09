@@ -9,6 +9,7 @@ import { useStore } from '../contexts/storeContext'
 import InputAssignSection from './InputAssingSection'
 import { useState } from 'react'
 import ModalFixItem, { markItemAsNeedFix } from './ModalFixItem'
+import { splitItems } from './ScreenWorkshop'
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
 }
@@ -78,13 +79,12 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
     setText('')
   }
 
-  const fixPending =
-    item.needFix &&
-    ['finished', 'inProgress', ''].includes(item?.workshopStatus || '')
+  const { needFix, finished, inProgress } = splitItems({ items: [item] })
 
-  const fixInProgress = item?.workshopStatus === 'inProgress'
-  const fixFinished =
-    !item.needFix && !['pending', 'inProgress'].includes(item?.workshopStatus)
+  const fixPending = needFix.find((i) => i.id === item.id)
+  const fixInProgress = inProgress.find((i) => i.id === item.id)
+  const fixFinished = finished.find((i) => i.id === item.id)
+
   return (
     <View>
       <Pressable
