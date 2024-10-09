@@ -10,13 +10,12 @@ import { useStore } from './contexts/storeContext'
 const ModalCloseOperations = () => {
   const modal = useModal({ title: 'Cerrar operación' })
   const { storeId } = useStore()
-  const currentWork = useCurrentWorkCtx()
+  const { currentWork } = useCurrentWorkCtx()
   const handleConfirmCloseOps = async () => {
     //* Create daily progress registry
     //* Restrict access to employees
     try {
       const res = await ServiceCurrentWork.add({ storeId, currentWork })
-      console.log({ res })
     } catch (error) {
       console.log('error', error)
     }
