@@ -10,6 +10,7 @@ import { v4 as uidGenerator } from 'uuid'
 import {
   addDoc,
   collection,
+  collectionGroup,
   CollectionReference,
   deleteDoc,
   doc,
@@ -261,6 +262,7 @@ export class FirebaseCRUD {
    * * get all documents in a collection implementing filters
    * @param filters: where(itemField,'==','value')
    */
+
   async getItems(filters: QueryConstraint[], ops?: GetItemsOps) {
     this.validateFilters(filters, this.collectionName)
     const q: Query = query(collection(this.db, this.collectionName), ...filters)

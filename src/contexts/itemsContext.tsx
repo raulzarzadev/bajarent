@@ -17,6 +17,7 @@ interface ItemsContextProps {
   workshopItems?: Partial<ItemType>[] | null
   addItem: (item: Item) => void
   removeItem: (id: number) => void
+  workshopMovements?: unknown[]
 }
 
 const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
@@ -27,6 +28,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
   const { storeId } = useStore()
+
   const {
     permissions: {
       items: { canViewAllItems },
@@ -61,6 +63,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
           setItems(null)
         })
   }, [storeId, getAllItems])
+  const [workshopMovements, setWorkshopMovements] = useState<unknown[]>([])
 
   const addItem = (item: Item) => {
     // setItems((prevItems) => [...prevItems, item])
@@ -72,7 +75,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <ItemsContext.Provider
-      value={{ items, addItem, removeItem, workshopItems }}
+      value={{ items, addItem, removeItem, workshopItems, workshopMovements }}
     >
       {children}
     </ItemsContext.Provider>

@@ -1,4 +1,4 @@
-import { FlatList, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import ItemType from '../types/ItemType'
 import Button from './Button'
 import CardItem from './CardItem'
@@ -82,7 +82,9 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
     item.workshopStatus === 'pending' &&
     (item.needFix || item.workshopStatus === 'pending')
   const fixInProgress = item?.workshopStatus === 'inProgress'
-  const fixFinished = item?.workshopStatus === 'finished'
+  const fixFinished =
+    item.workshopStatus === 'finished' ||
+    (!item.workshopStatus && !item.needFix)
 
   return (
     <View>

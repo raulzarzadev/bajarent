@@ -18,6 +18,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
+  console.log({ id })
   const [item, setItem] = useState(undefined)
   const { storeId, categories, storeSections } = useStore()
   const { employee } = useEmployee()

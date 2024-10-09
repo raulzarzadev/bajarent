@@ -1,53 +1,39 @@
 import React, { useEffect } from 'react'
 import { LoadingList } from './List'
-//import { ServiceComments } from '../firebase/ServiceComments'
-//import { useAuth } from '../contexts/authContext'
-// import { useStore } from '../contexts/storeContext'
 import { FormattedComment } from '../types/CommentType'
-//import { useOrdersCtx } from '../contexts/ordersContext'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { CommentRow } from './RowComment'
 import Loading from './Loading'
 import theme from '../theme'
-import DisabledView from './DisabledView'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  //const { payments, staff } = useStore()
   const [loading, setLoading] = React.useState(false)
-  // const {
-  //   consolidatedOrders: { orders }
-  // } = useOrdersCtx()
-
   const [date, setDate] = React.useState(new Date())
+
   const handleChangeDate = async (newDate: Date) => {
     try {
       setLoading(true)
       setDate(newDate)
-      const res = await ServiceComments.getByDate(storeId, new Date(newDate), {
-        // fromCache: true
-      })
+      const res = await ServiceComments.getByDate(
+        storeId,
+        new Date(newDate),
+        {}
+      )
       setLoading(false)
       setData(res)
     } catch (error) {
       console.error(error)
     }
   }
+
   useEffect(() => {
     handleChangeDate(date)
   }, [])
-
-  // return (
-  //   <View>
-  //     <DisabledView />
-  //   </View>
-  // )
-
-  //console.log({ data })
 
   return (
     <View>
