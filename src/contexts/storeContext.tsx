@@ -142,7 +142,15 @@ const StoreContextProvider = ({ children }) => {
         prices: storePrices?.filter((p) => p.categoryId === cat.id)
       })),
       userStores: stores,
-      storeSections: sections,
+      storeSections: [
+        ...sections,
+        {
+          id: 'workshop',
+          name: 'Taller',
+          storeId,
+          description: 'Taller de reparaciones'
+        }
+      ],
       fetchPrices,
       payments: [],
       items: [],

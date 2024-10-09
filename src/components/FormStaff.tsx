@@ -10,10 +10,12 @@ const screenWidth = Dimensions.get('window').width
 import {
   permissionsOrderKeys,
   permissionsStoreKeys,
-  permissionsItemsKeys
+  permissionsItemsKeys,
+  staff_roles
 } from '../types/StaffType'
 import { gStyles } from '../styles'
 import FormEmployeeSections from './FormEmployeeSections'
+import FormikInputSelect from './FormikInputSelect'
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
 
@@ -58,6 +60,17 @@ const FormStaff = ({
               name={'position'}
               placeholder="Puesto"
               helperText="Nombre, referencia o puesto que desempeñara"
+            />
+          </View>
+
+          <View style={styles.input}>
+            <FormikInputSelect
+              name="rol"
+              placeholder="Selecciona un rol"
+              options={Object.keys(staff_roles).map((key) => ({
+                label: dictionary(key),
+                value: key
+              }))}
             />
           </View>
 

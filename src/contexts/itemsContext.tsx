@@ -14,8 +14,10 @@ export type Item = ItemType
 
 interface ItemsContextProps {
   items?: Partial<ItemType>[] | null
+  workshopItems?: Partial<ItemType>[] | null
   addItem: (item: Item) => void
   removeItem: (id: number) => void
+  workshopMovements?: unknown[]
 }
 
 const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
@@ -24,15 +26,32 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
+  const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
   const { storeId } = useStore()
+
   const {
     permissions: {
       items: { canViewAllItems },
       isAdmin,
       isOwner
-    }
+    },
+    employee
   } = useEmployee()
+
   const getAllItems = isAdmin || isOwner || canViewAllItems
+
+  useEffect(() => {
+    if (employee?.rol === 'technician') {
+      ServiceStoreItems.listenAvailableBySections({
+        storeId,
+        userSections: ['workshop'],
+        cb: (res) => {
+          setWorkshopItems(res)
+        }
+      })
+    }
+  }, [employee?.rol])
+
   useEffect(() => {
     if (storeId && getAllItems)
       ServiceStoreItems.getAll({ storeId, justActive: true })
@@ -44,6 +63,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
           setItems(null)
         })
   }, [storeId, getAllItems])
+  const [workshopMovements, setWorkshopMovements] = useState<unknown[]>([])
 
   const addItem = (item: Item) => {
     // setItems((prevItems) => [...prevItems, item])
@@ -54,7 +74,9 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <ItemsContext.Provider value={{ items, addItem, removeItem }}>
+    <ItemsContext.Provider
+      value={{ items, addItem, removeItem, workshopItems, workshopMovements }}
+    >
       {children}
     </ItemsContext.Provider>
   )

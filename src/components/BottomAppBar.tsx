@@ -12,13 +12,17 @@ import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
+import ScreenWorkshop from './ScreenWorkshop'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { store } = useAuth()
-  const { permissions } = useEmployee()
-
+  const { permissions, employee } = useEmployee()
+  const viewWorksheets =
+    employee?.rol === 'technician' ||
+    permissions?.isAdmin ||
+    permissions?.isOwner
   const showProfileButton = true
   const showOrdersButton = !!store
   const showStoreButton = !!store
@@ -38,7 +42,8 @@ const BottomAppBar = () => {
               MyOrders: 'myOrders',
               StackOrders: 'orders',
               StackConsolidated: 'orders',
-              StackMyItems: 'washMachine'
+              StackMyItems: 'washMachine',
+              Workshop: 'tools'
             }
             return (
               <Icon
@@ -90,6 +95,16 @@ const BottomAppBar = () => {
           // tabBarButton: () => null
         }}
         component={StackMyItems}
+      />
+      <Tab.Screen
+        name="Workshop"
+        options={{
+          title: 'Taller',
+          headerShown: false,
+          tabBarButton: viewWorksheets ? undefined : () => null
+          // tabBarButton: () => null
+        }}
+        component={ScreenWorkshop}
       />
 
       <Tab.Screen

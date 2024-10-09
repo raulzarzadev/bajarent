@@ -202,9 +202,9 @@ export const formatItems = (
       categories.find((cat) => cat.id === item?.category)?.name || '',
     assignedSectionName:
       sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
-    needFix: !!item.needFix,
+    needFix: !!item?.needFix,
     isRented: !!(item?.status === 'rented'),
     isPickedUp: !!(item?.status === 'pickedUp'),
-    checkedInInventory: isToday(asDate(item.lastInventoryAt))
+    checkedInInventory: isToday(asDate(item?.lastInventoryAt))
   }))
 }

@@ -1,3 +1,5 @@
+import { te } from 'date-fns/locale'
+
 const labels = {
   canceled: 'Cancelada',
   pending: 'Pendiente',
@@ -204,6 +206,12 @@ const labels = {
   exchangeDelivery: 'Entrega (cambio)',
   exchangePickup: 'Recogida (cambio)',
   disabledStaff: 'Deshabilitar Staff',
+
+  //**Staff roles */
+  admin: 'Admin',
+  technician: 'Técnico',
+  driver: 'Repartidor',
+  reception: 'Recepción',
   ' ': '',
   '': ''
 } as const
