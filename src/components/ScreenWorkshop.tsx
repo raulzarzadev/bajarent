@@ -18,25 +18,26 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 
 const ScreenWorkshop = () => {
-  const { workshopItems, workshopMovements } = useItemsCtx()
+  const { workshopItems } = useItemsCtx()
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
 
+  console.log({ itemsPickedUp })
+
   const itemsNeedFix = itemsPickedUp.filter(
     (item) =>
-      item.workshopStatus === 'pending' &&
-      (item.needFix || item.workshopStatus === 'pending')
+      item.needFix && ['finished', 'inProgress'].includes(item.workshopStatus)
   )
   const itemsInProgress = itemsPickedUp.filter(
     (item) => item.workshopStatus === 'inProgress'
   )
   const itemsFinished = itemsPickedUp.filter(
     (item) =>
-      item.workshopStatus === 'finished' ||
-      (!item.workshopStatus && !item.needFix)
+      !item.needFix && !['finished', 'inProgress'].includes(item.workshopStatus)
   )
   const { categories, storeSections } = useStore()
+
   const formattedPendingItems = formatItems(
     itemsNeedFix,
     categories,

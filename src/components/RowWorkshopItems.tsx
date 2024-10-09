@@ -79,13 +79,11 @@ const WorkshopItem = ({ item }: { item: Partial<ItemType> }) => {
   }
 
   const fixPending =
-    item.workshopStatus === 'pending' &&
-    (item.needFix || item.workshopStatus === 'pending')
+    item.needFix && ['finished', 'pending'].includes(item.workshopStatus)
+
   const fixInProgress = item?.workshopStatus === 'inProgress'
   const fixFinished =
-    item.workshopStatus === 'finished' ||
-    (!item.workshopStatus && !item.needFix)
-
+    !item.needFix && !['finished', 'inProgress'].includes(item.workshopStatus)
   return (
     <View>
       <Pressable

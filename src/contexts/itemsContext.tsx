@@ -51,7 +51,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
       })
     }
   }, [employee?.rol])
-
+  console.log({ workshopItems })
   useEffect(() => {
     if (storeId && getAllItems)
       ServiceStoreItems.getAll({ storeId, justActive: true })
