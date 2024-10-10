@@ -38,7 +38,7 @@ const OrderStatus = ({
 
   const isCancelled = order?.status === order_status.CANCELLED
   const isAuthorized = order?.status === order_status.AUTHORIZED
-  const isPending = order?.status === order_status.PENDING
+  //const isPending = order?.status === order_status.PENDING
 
   const isRepairing = order?.status === order_status.REPAIRING
   const isPickedUp = order?.status === order_status.PICKED_UP
@@ -55,7 +55,7 @@ const OrderStatus = ({
     !order?.expireAt &&
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
-
+  const pendingMarketOrder = order?.pendingMarketOrder
   return (
     <>
       {isRenewed && (
@@ -112,7 +112,7 @@ const OrderStatus = ({
         />
       )}
 
-      {isPending && (
+      {pendingMarketOrder && (
         <Chip
           style={[chipStyles]}
           title={`${dateFormat(asDate(order?.createdAt), 'dd/MMM')}`}

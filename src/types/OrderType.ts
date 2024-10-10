@@ -21,6 +21,7 @@ export type OrderBase = {
   type: TypeOfOrderType
 
   marketOrder?: boolean // * this option us true when the order is created from the web market
+  pendingMarketOrder?: boolean //
 
   clientId: string
   note: string

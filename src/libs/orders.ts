@@ -5,7 +5,6 @@ import { LabelRentType, expireDate2, translateTime } from './expireDate'
 import asDate from './utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { TimePriceType } from '../types/PriceType'
-import { Order } from '../DATA'
 import { ExtendReason } from '../firebase/ServiceOrders'
 
 export const formatOrders = ({
@@ -39,7 +38,13 @@ export const formatOrders = ({
   return ordersWithExpireDate
 }
 
-export const formatOrder = ({ order, comments = [] }) => {
+export const formatOrder = ({
+  order,
+  comments = []
+}: {
+  order: Partial<OrderType>
+  comments: CommentType[]
+}) => {
   const orderComments = comments?.filter(
     (comment) => comment?.orderId === order?.id
   )
@@ -63,7 +68,9 @@ export const formatOrder = ({ order, comments = [] }) => {
       isExpired,
       expireAt,
       expiresToday,
-      expiresTomorrow: isTomorrow(asDate(expireAt))
+      expiresTomorrow: isTomorrow(asDate(expireAt)),
+      pendingMarketOrder:
+        order?.status === order_status.PENDING && order.marketOrder
     }
   }
   if (order?.type === 'REPAIR') {
