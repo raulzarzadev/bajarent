@@ -19,6 +19,9 @@ export type ContactType = {
 export type OrderBase = {
   colorLabel?: string
   type: TypeOfOrderType
+
+  marketOrder?: boolean // * this option us true when the order is created from the web market
+
   clientId: string
   note: string
 

@@ -7,6 +7,7 @@ import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
 import ListRow, { ListRowField } from './ListRow'
 import { ModalOrderQuickActionsE } from './ModalOrderQuickActions'
+import Icon from './Icon'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -99,8 +100,13 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
     {
       width: bigScreen ? 300 : 'rest',
       component: (
-        <View>
+        <View style={{ position: 'relative' }}>
           <OrderDirectives order={order} />
+          {order?.marketOrder && (
+            <View style={{ position: 'absolute', top: 2, right: 2 }}>
+              <Icon icon="www" size={8} />
+            </View>
+          )}
         </View>
       )
     }

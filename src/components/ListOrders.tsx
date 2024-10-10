@@ -93,6 +93,7 @@ const ListOrders = ({
           { field: 'colorLabel', label: 'Color' },
 
           //* Boolean filters
+
           {
             field: 'isAuthorized',
             label: 'Pedido',
