@@ -99,6 +99,13 @@ const FormCategoryA = ({
 
               <View style={[styles.input]}>
                 <FormikCheckbox
+                  name={'marketForm.location'}
+                  label={'Ubicación'}
+                />
+              </View>
+
+              <View style={[styles.input]}>
+                <FormikCheckbox
                   name={'marketForm.imageId'}
                   label={'Imagen del ID'}
                 />
