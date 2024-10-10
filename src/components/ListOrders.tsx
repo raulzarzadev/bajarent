@@ -93,7 +93,14 @@ const ListOrders = ({
           { field: 'colorLabel', label: 'Color' },
 
           //* Boolean filters
-
+          {
+            field: 'pendingMarketOrder',
+            label: 'Pedido de mercado',
+            boolean: true,
+            icon: 'www',
+            color: theme.transparent,
+            titleColor: theme.accent
+          },
           {
             field: 'isAuthorized',
             label: 'Pedido',
