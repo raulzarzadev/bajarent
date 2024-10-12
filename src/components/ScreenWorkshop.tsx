@@ -1,7 +1,6 @@
 import { View, Text, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { gStyles } from '../styles'
-import { formatItems } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import { useItemsCtx } from '../contexts/itemsContext'
 import RowWorkshopItems from './RowWorkshopItems'
@@ -16,9 +15,18 @@ import Button from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ItemType from '../types/ItemType'
+import ErrorBoundary from './ErrorBoundary'
+import {
+  formatItems,
+  formatItemsFromRepair,
+  splitItems
+} from '../libs/workshop.libs'
+import Divider from './Divider'
 
 const ScreenWorkshop = () => {
-  const { workshopItems } = useItemsCtx()
+  const { workshopItems, repairOrders } = useItemsCtx()
+  console.log({ repairOrders })
+
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
@@ -46,25 +54,83 @@ const ScreenWorkshop = () => {
     categories,
     storeSections
   )
+  const formatRepairItems = formatItemsFromRepair({
+    repairOrders,
+    categories,
+    storeSections
+  })
+  const {
+    shouldPickup,
+    needFix: repairNeedFix,
+    inProgress: repairInProgress,
+    finished: repairFinished
+  } = splitItems({ items: formatRepairItems })
+
   return (
-    <ScrollView>
+    <ScrollView style={{ maxWidth: 800, width: '100%', margin: 'auto' }}>
       <View style={{ maxWidth: 200, marginLeft: 'auto' }}>
         <ModalViewMovements />
       </View>
-      <Text style={gStyles.h1}>Taller</Text>
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
-        Pendientes {`(${formattedPendingItems?.length || 0})`}
-      </Text>
-      <RowWorkshopItems items={formattedPendingItems} />
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
-        En Reparación {`(${formattedInProgressItems?.length || 0})`}
-      </Text>
-      <RowWorkshopItems items={formattedInProgressItems} />
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
-        Terminadas {`(${formattedFinishedItems?.length || 0})`}
-      </Text>
-      <RowWorkshopItems items={formattedFinishedItems} />
+      <RepairStepE title="Por recoger" repairItems={shouldPickup} />
+
+      <RepairStepE
+        title="Pendientes"
+        rentItems={formattedPendingItems}
+        repairItems={repairNeedFix}
+      />
+
+      <RepairStepE
+        title="En reparación"
+        rentItems={formattedInProgressItems}
+        repairItems={repairInProgress}
+      />
+
+      <RepairStepE
+        title="Terminadas"
+        rentItems={formattedFinishedItems}
+        repairItems={repairFinished}
+      />
     </ScrollView>
+  )
+}
+
+export type RepairStepProps = {
+  title: string
+  rentItems?: Partial<ItemType>[]
+  repairItems?: Partial<ItemType>[]
+}
+export const RepairStepE = (props: RepairStepProps) => (
+  <ErrorBoundary componentName="RepairStep">
+    <RepairStep {...props} />
+  </ErrorBoundary>
+)
+const RepairStep = ({
+  title,
+  rentItems = [],
+  repairItems = []
+}: RepairStepProps) => {
+  return (
+    <View style={{ marginBottom: 16 }}>
+      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
+        {title} {`(${rentItems?.length + repairItems?.length})`}
+      </Text>
+      <View style={{ paddingLeft: 16 }}>
+        {rentItems.length > 0 && (
+          <View>
+            <RowWorkshopItems items={rentItems} />
+          </View>
+        )}
+        {repairItems.length > 0 && (
+          <View style={{ marginTop: 8 }}>
+            <Text style={[{ textAlign: 'left' }]}>
+              Reparaciones ({repairItems.length})
+            </Text>
+            <RowWorkshopItems items={repairItems} />
+          </View>
+        )}
+      </View>
+      <Divider />
+    </View>
   )
 }
 
@@ -152,27 +218,10 @@ const WorkshopMovements = () => {
   )
 }
 
-export const splitItems = ({ items = [] }: { items: Partial<ItemType>[] }) => {
-  if (!items.length)
-    return {
-      needFix: [],
-      inProgress: [],
-      finished: []
-    }
-  const needFix = items.filter(
-    (item) => item.needFix && item.workshopStatus !== 'inProgress'
-  )
-  const inProgress = items.filter(
-    (item) => item.workshopStatus === 'inProgress'
-  )
-  const finished = items.filter(
-    (item) => !item.needFix || item.workshopStatus === 'finished'
-  )
-  return {
-    needFix,
-    inProgress,
-    finished
-  }
-}
+export const ScreenWorkshopE = (props) => (
+  <ErrorBoundary componentName="ScreenWorkshop">
+    <ScreenWorkshop {...props} />
+  </ErrorBoundary>
+)
 
 export default ScreenWorkshop

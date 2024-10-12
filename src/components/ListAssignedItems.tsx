@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { formatItems, useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { gSpace, gStyles } from '../styles'
@@ -12,6 +12,7 @@ import StyledModal from './StyledModal'
 import ItemActions from './ItemActions'
 import CardItem from './CardItem'
 import Button from './Button'
+import { formatItems } from '../libs/workshop.libs'
 
 export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']

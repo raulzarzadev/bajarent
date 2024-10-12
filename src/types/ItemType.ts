@@ -1,4 +1,5 @@
 import BaseType from './BaseType'
+import OrderType, { ContactType, OrderQuoteType } from './OrderType'
 import { CategoryType } from './RentItem'
 
 export enum ItemStatuses {
@@ -29,9 +30,27 @@ export type ItemBase = {
   retiredBy?: string
   lastInventoryAt?: Date
   lastInventoryBy?: string
-  workshopStatus?: 'inProgress' | 'pending' | 'finished'
+  workshopStatus?:
+    | 'inProgress'
+    | 'pending'
+    | 'finished'
+    | 'shouldPickup'
+    | 'delivered'
 }
 
 type ItemType = BaseType & ItemBase
-
+export type ExternalRepairItemsProps = {
+  repairDetails: {
+    failDescription?: string
+    quotes?: OrderQuoteType[]
+    clientName?: string
+    contacts: ContactType[]
+    address?: string
+    location?: string
+  }
+  isExternalRepair?: boolean
+  orderId: string
+  workshopStatus: ItemBase['workshopStatus']
+}
+export type ItemExternalRepairProps = ItemType & ExternalRepairItemsProps
 export default ItemType

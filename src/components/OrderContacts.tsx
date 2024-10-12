@@ -85,7 +85,7 @@ export const ContactsList = () => {
   )
 }
 
-const ContactRow = ({
+export const ContactRow = ({
   contact,
   handleMarkAsFavorite,
   handleDeleteContact

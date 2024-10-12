@@ -8,10 +8,7 @@ import { useAuth } from './authContext'
 import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import { CategoryType } from '../types/RentItem'
-import { SectionType } from '../types/SectionType'
-import asDate from '../libs/utils-date'
-import { isToday } from 'date-fns'
+import { formatItems } from '../libs/workshop.libs'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -188,23 +185,4 @@ export const EmployeeContextProvider = ({ children }) => {
 
 export const useEmployee = () => {
   return useContext(EmployeeContext)
-}
-
-export const formatItems = (
-  items: Partial<ItemType>[],
-  categories: Partial<CategoryType>[],
-  sections: SectionType[]
-) => {
-  return items?.map((item) => ({
-    ...item,
-    id: item?.id,
-    categoryName:
-      categories.find((cat) => cat.id === item?.category)?.name || '',
-    assignedSectionName:
-      sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
-    needFix: !!item?.needFix,
-    isRented: !!(item?.status === 'rented'),
-    isPickedUp: !!(item?.status === 'pickedUp'),
-    checkedInInventory: isToday(asDate(item?.lastInventoryAt))
-  }))
 }

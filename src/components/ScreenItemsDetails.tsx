@@ -13,8 +13,9 @@ import DateCell from './DateCell'
 import SpanUser from './SpanUser'
 import dictionary from '../dictionary'
 import SpanOrder from './SpanOrder'
-import { formatItems, useEmployee } from '../contexts/employeeContext'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { formatItems } from '../libs/workshop.libs'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id

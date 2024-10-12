@@ -93,7 +93,8 @@ export const onPickup = async ({ orderId, userId }) => {
     status: order_status.PICKED_UP,
     pickedUpAt: new Date(),
     pickedUpBy: userId,
-    isDelivered: false
+    isDelivered: false,
+    workshopStatus: 'pending'
   })
     .then(() => {
       console.log('pickup')
@@ -106,7 +107,8 @@ export const onRepairStart = async ({ orderId, userId }) => {
     status: order_status.REPAIRING,
     repairingAt: new Date(),
     repairingBy: userId,
-    isRepairing: true
+    isRepairing: true,
+    workshopStatus: 'pending'
   })
     .then(() => {
       console.log('repairing')
@@ -119,7 +121,8 @@ export const onRepairFinish = async ({ orderId, userId }) => {
     status: order_status.REPAIRED,
     repairedAt: new Date(),
     repairedBy: userId,
-    isRepairing: false
+    isRepairing: false,
+    workshopStatus: 'finished'
   })
     .then(() => {
       console.log('repaired')
@@ -131,7 +134,8 @@ export const onRepairDelivery = async ({ orderId, userId }) => {
     status: order_status.DELIVERED,
     deliveredAt: new Date(),
     deliveredBy: userId,
-    isDelivered: true
+    isDelivered: true,
+    workshopStatus: 'delivered'
   })
     .then(() => {
       console.log('delivery')

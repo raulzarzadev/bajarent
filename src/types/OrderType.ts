@@ -8,6 +8,7 @@ import { ExtendReason } from '../firebase/ServiceOrders'
 import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
+import ItemType from './ItemType'
 export type ContactType = {
   name: string
   phone: string
@@ -74,6 +75,8 @@ export type OrderBase = {
   item: RentItem
   expireAt?: Date | null
   isExpired?: boolean
+
+  workshopStatus?: ItemType['workshopStatus']
 
   expiresToday?: boolean
   expiresTomorrow?: boolean

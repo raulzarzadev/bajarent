@@ -7,7 +7,7 @@ import { gStyles } from '../styles'
 import { RowSectionItemsE, SectionItem } from './ListAssignedItems'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import useMyNav from '../hooks/useMyNav'
-import { formatItems, useEmployee } from '../contexts/employeeContext'
+import { formatItems } from '../libs/workshop.libs'
 export type ListItemsSectionsProps = {
   onPressItem?: (itemId: string) => void
   itemSelected?: string

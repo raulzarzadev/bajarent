@@ -9,9 +9,8 @@ import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
-import { formatItems, useEmployee } from '../contexts/employeeContext'
+import { useEmployee } from '../contexts/employeeContext'
 import {
-  onAssignItem,
   onChangeItemSection,
   onCheckInInventory,
   onRetireItem
@@ -26,6 +25,7 @@ import InputAssignSection from './InputAssingSection'
 import { SectionType } from '../types/SectionType'
 import { gStyles } from '../styles'
 import { useItemsCtx } from '../contexts/itemsContext'
+import { formatItems } from '../libs/workshop.libs'
 
 const OPACITY_ROW_COLOR = '66'
 

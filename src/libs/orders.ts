@@ -18,7 +18,10 @@ export const formatOrders = ({
 }) => {
   const ordersWithExpireDate = orders
     .map((order) => {
-      const formattedOrder = formatOrder({ order, comments: reports })
+      const formattedOrder = formatOrder({
+        order: order as OrderType,
+        comments: reports
+      })
       return formattedOrder
     })
     // remove duplicates
@@ -42,7 +45,7 @@ export const formatOrder = ({
   order,
   comments = []
 }: {
-  order: Partial<OrderType>
+  order: OrderType
   comments: CommentType[]
 }) => {
   const orderComments = comments?.filter(

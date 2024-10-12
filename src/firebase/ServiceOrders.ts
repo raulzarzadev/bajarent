@@ -733,6 +733,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.findMany(filters, ops)
   }
 
+  listenRepairUnsolved = async (
+    { storeId, cb }: { storeId: string; cb: CallableFunction },
+    ops?: GetItemsOps
+  ) => {
+    const filters = [
+      where('storeId', '==', storeId),
+      where('type', '==', TypeOrder.REPAIR),
+      where('status', 'in', [
+        order_status.PENDING,
+        order_status.AUTHORIZED,
+        order_status.REPAIRING,
+        order_status.REPAIRED
+      ])
+    ]
+    return this.listenMany(filters, cb)
+  }
+
   getFieldBetweenDates = async (
     {
       storeId,

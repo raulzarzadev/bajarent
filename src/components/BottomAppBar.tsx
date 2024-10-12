@@ -12,7 +12,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
-import ScreenWorkshop from './ScreenWorkshop'
+import { ScreenWorkshopE } from './ScreenWorkshop'
 
 const Tab = createBottomTabNavigator()
 
@@ -108,7 +108,7 @@ const BottomAppBar = () => {
           // headerShown: false,
           tabBarButton: viewWorksheets ? undefined : () => null
         }}
-        component={ScreenWorkshop}
+        component={ScreenWorkshopE}
       />
 
       <Tab.Screen

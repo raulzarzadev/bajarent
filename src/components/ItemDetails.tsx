@@ -104,7 +104,6 @@ export const ItemFixDetails = ({
     md: 14,
     lg: 18
   }
-  console.log({ lastFixEntry })
   if (lastFixEntry === undefined) return null
   return (
     <View>
