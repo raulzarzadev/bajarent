@@ -441,12 +441,14 @@ export const onAssignOrder = async ({
   orderId,
   sectionId,
   sectionName,
-  storeId
+  storeId,
+  fromSectionName
 }: {
   orderId: OrderType['id']
   sectionId: string
   sectionName: string
   storeId: StoreType['id']
+  fromSectionName?: string
 }) => {
   const res = await ServiceOrders.update(orderId, {
     assignToSection: sectionId,
@@ -454,7 +456,9 @@ export const onAssignOrder = async ({
   })
   onComment({
     orderId,
-    content: `Asignada a ${sectionName}`,
+    content: `Asignada${
+      !!fromSectionName ? ` de ${fromSectionName}` : ''
+    } a ${sectionName}`,
     type: 'comment',
     storeId,
     isOrderMovement: true

@@ -64,7 +64,8 @@ const ItemActions = ({
       storeId,
       itemId,
       sectionId,
-      sectionName: storeSections.find(({ id }) => id === sectionId)?.name
+      sectionName: storeSections.find(({ id }) => id === sectionId)?.name,
+      fromSectionId: itemSection
     })
   }
 

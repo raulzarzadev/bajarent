@@ -25,7 +25,6 @@ import Divider from './Divider'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
-  console.log({ repairOrders })
 
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
@@ -86,7 +85,7 @@ const ScreenWorkshop = () => {
       />
 
       <RepairStepE
-        title="Terminadas"
+        title="Listas para entrega"
         rentItems={formattedFinishedItems}
         repairItems={repairFinished}
       />
@@ -115,11 +114,7 @@ const RepairStep = ({
         {title} {`(${rentItems?.length + repairItems?.length})`}
       </Text>
       <View style={{ paddingLeft: 16 }}>
-        {rentItems.length > 0 && (
-          <View>
-            <RowWorkshopItems items={rentItems} />
-          </View>
-        )}
+        {rentItems.length > 0 && <RowWorkshopItems items={rentItems} />}
         {repairItems.length > 0 && (
           <View style={{ marginTop: 8 }}>
             <Text style={[{ textAlign: 'left' }]}>

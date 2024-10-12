@@ -13,11 +13,17 @@ import useMyNav from '../hooks/useMyNav'
 
 import { gStyles } from '../styles'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { onPickup, onRepairFinish, onRepairStart } from '../libs/order-actions'
+import {
+  onAssignOrder,
+  onPickup,
+  onRepairFinish,
+  onRepairStart
+} from '../libs/order-actions'
 import { useAuth } from '../contexts/authContext'
 import { splitItems } from '../libs/workshop.libs'
 import { ContactRow, ContactsList } from './OrderContacts'
 import LinkLocation from './LinkLocation'
+import { onChangeItemSection } from '../firebase/actions/item-actions'
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
 }
@@ -112,14 +118,23 @@ const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
     modal.toggleOpen()
   }
   const handleAssignToSection = async ({ sectionId, sectionName }) => {
-    return await ServiceStoreItems.update({
-      itemId: item.id,
-      itemData: {
-        assignedSection: sectionId,
-        assignedSectionName: sectionName
-      },
-      storeId
-    })
+    if (item.isExternalRepair) {
+      return await onAssignOrder({
+        orderId: item.orderId,
+        sectionId,
+        sectionName,
+        storeId,
+        fromSectionName: 'Taller'
+      })
+    } else {
+      return await onChangeItemSection({
+        storeId,
+        itemId: item.id,
+        sectionId,
+        sectionName,
+        fromSectionId: 'workshop'
+      })
+    }
   }
   const { needFix, finished, inProgress } = splitItems({ items: [item] })
 
@@ -165,7 +180,7 @@ const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
                   Dirección:
                 </Text>
                 <View style={{ flexDirection: 'row' }}>
-                  {item.repairDetails.location && (
+                  {!!item.repairDetails.location && (
                     <LinkLocation location={item.repairDetails.location} />
                   )}
                   <Text>{item?.repairDetails?.address}</Text>
@@ -193,7 +208,9 @@ const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
               )}
               {item?.repairDetails?.quotes?.map((q) => {
                 return (
-                  <Text style={{ marginVertical: 2 }}>{q.description}</Text>
+                  <Text style={{ marginVertical: 2 }} key={q.id}>
+                    {q.description}
+                  </Text>
                 )
               })}
             </View>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
@@ -140,5 +140,3 @@ export const ItemDetailsE = (props) => (
 )
 
 export default ItemDetails
-
-const styles = StyleSheet.create({})

@@ -132,13 +132,16 @@ const ListStoreItems = ({
     sectionName: SectionType['name']
   ) => {
     setLoading(true)
+
     const promises = ids.map(async (id) => {
       try {
         return onChangeItemSection({
           itemId: id,
           storeId,
           sectionId,
-          sectionName
+          sectionName,
+          fromSectionId: formattedItems.find((item) => item.id === id)
+            ?.assignedSection
         })
       } catch (error) {
         console.error({ error })

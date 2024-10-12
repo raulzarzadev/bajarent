@@ -84,18 +84,23 @@ export const onChangeItemSection = async ({
   storeId,
   itemId,
   sectionId,
-  sectionName
+  sectionName,
+  fromSectionId
 }: {
   storeId: string
   itemId: string
   sectionId: string
   sectionName?: string
+  fromSectionName?: string
+  fromSectionId?: string
 }) => {
   onRegistryEntry({
     itemId,
     storeId,
     type: 'assignment',
-    content: `Se asigno al area ${sectionName || sectionId}`
+    content: `Se asigno al area  ${sectionName || sectionId}`,
+    fromSectionId,
+    toSectionId: sectionId
   })
   return await ServiceStoreItems.updateField({
     storeId,
@@ -234,13 +239,17 @@ export const onRegistryEntry = async ({
   itemId,
   type,
   orderId = '',
-  content = ''
+  content = '',
+  fromSectionId = '',
+  toSectionId = ''
 }: {
   storeId: string
   itemId: string
   type: ItemHistoryType['type']
   orderId?: string
   content?: string
+  fromSectionId?: string
+  toSectionId?: string
 }) => {
   return await ServiceItemHistory.addEntry({
     storeId,
@@ -248,7 +257,9 @@ export const onRegistryEntry = async ({
     entry: {
       type,
       orderId,
-      content
+      content,
+      fromSectionId,
+      toSectionId
     }
   })
 }
