@@ -170,7 +170,7 @@ const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
         <CardItem item={item} showSerialNumber />
       </Pressable>
       <StyledModal {...modal}>
-        <CardItem item={item} showSerialNumber />
+        <CardItem item={item} showSerialNumber showFixNeeded />
         {!!item?.isExternalRepair && (
           <View style={{ marginVertical: 16 }}>
             <View>
@@ -221,55 +221,63 @@ const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
             </View>
           </View>
         )}
-
-        <Button
-          variant="ghost"
-          onPress={() => {
-            modal.toggleOpen()
-
-            if (item.isExternalRepair) {
-              toOrders({ id: item.orderId })
-            } else {
-              toItems({ id: item.id })
-            }
-          }}
-          label="Detalles"
-        ></Button>
-        {shouldPickup && (
+        <View style={{ marginVertical: 8, width: '100%' }}>
           <Button
-            label="Recoger"
+            variant="ghost"
             onPress={() => {
-              handlePickup()
-            }}
-          ></Button>
-        )}
+              modal.toggleOpen()
 
-        {fixPending && (
-          <Button
-            label="Comenzar reparación"
-            onPress={handleStartRepair}
+              if (item.isExternalRepair) {
+                toOrders({ id: item.orderId })
+              } else {
+                toItems({ id: item.id })
+              }
+            }}
+            label="Detalles"
           ></Button>
+        </View>
+        {shouldPickup && (
+          <View style={{ marginVertical: 8, width: '100%' }}>
+            <Button
+              label="Recoger"
+              onPress={() => {
+                handlePickup()
+              }}
+            ></Button>
+          </View>
+        )}
+        {fixPending && (
+          <View style={{ marginVertical: 8, width: '100%' }}>
+            <Button
+              label="Comenzar reparación"
+              onPress={handleStartRepair}
+            ></Button>
+          </View>
         )}
         {fixInProgress && (
           <View>
-            <Button label="Pendiente" onPress={handleMarkAsPending}></Button>
-            {item.isExternalRepair ? (
-              <Button
-                onPress={handleFinishRepair}
-                label="Lista para entregar"
-              ></Button>
-            ) : (
-              <ModalFixItem
-                item={item}
-                disabled={false}
-                disabledFix={false}
-                handleFix={() => handleFinishRepair()}
-              />
-            )}
+            <View style={{ marginVertical: 8, width: '100%' }}>
+              <Button label="Pendiente" onPress={handleMarkAsPending}></Button>
+            </View>
+            <View style={{ marginVertical: 8, width: '100%' }}>
+              {item.isExternalRepair ? (
+                <Button
+                  onPress={handleFinishRepair}
+                  label="Lista para entregar"
+                ></Button>
+              ) : (
+                <ModalFixItem
+                  item={item}
+                  disabled={false}
+                  disabledFix={false}
+                  handleFix={() => handleFinishRepair()}
+                />
+              )}
+            </View>
           </View>
         )}
         {fixFinished && (
-          <View>
+          <View style={{ marginVertical: 8, width: '100%' }}>
             <ModalFixItem
               item={item}
               disabled={false}

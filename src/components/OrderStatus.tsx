@@ -79,9 +79,11 @@ const OrderStatus = ({
       {isRepaired && (
         <Chip
           style={[chipStyles]}
-          title={'Reparado'}
-          color={theme.warning}
+          title={'Listo'}
+          color={theme.success}
+          titleColor="white"
           size={chipSize}
+          icon="done"
         />
       )}
       {repairPickedUp && (
@@ -109,6 +111,7 @@ const OrderStatus = ({
           color={theme.secondary}
           size={chipSize}
           titleColor={colors.white}
+          icon="tools"
         />
       )}
 

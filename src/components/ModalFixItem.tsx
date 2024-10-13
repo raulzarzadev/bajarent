@@ -36,7 +36,7 @@ const ModalFixItem = ({
   return (
     <View>
       <View style={{ margin: 2 }}>
-        {needFix ? (
+        {!!needFix ? (
           <ButtonConfirm
             openDisabled={disabled || disabledFix}
             icon="wrench"
