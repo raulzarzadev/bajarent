@@ -30,11 +30,16 @@ export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
   title?: string
   showScheduledTime?: boolean
+  sortFunction?: (
+    a: ItemExternalRepairProps,
+    b: ItemExternalRepairProps
+  ) => number
 }
 const RowWorkshopItems = ({
   items,
   title,
-  showScheduledTime
+  showScheduledTime,
+  sortFunction
 }: RowWorkshopItemsProps) => {
   const sortByNumber = (
     a: ItemExternalRepairProps,
@@ -56,7 +61,7 @@ const RowWorkshopItems = ({
           }
         ]}
       >
-        {items.sort(sortByNumber).map((item) => (
+        {items.sort(sortFunction || sortByNumber).map((item) => (
           <View
             key={item.id}
             style={{ maxWidth: 90, width: '100%', marginRight: 2 }}

@@ -149,6 +149,9 @@ const RepairStep = ({
             items={repairItems}
             title={title}
             showScheduledTime={showScheduledTime}
+            sortFunction={(a, b) =>
+              asDate(a.scheduledAt).getTime() - asDate(b.scheduledAt).getTime()
+            }
           />
         )}
       </View>
