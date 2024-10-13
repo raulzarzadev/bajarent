@@ -78,10 +78,11 @@ const ListOrders = ({
           { key: 'note', label: 'Contrato' },
           { key: 'fullName', label: 'Nombre' },
           { key: 'neighborhood', label: 'Colonia' },
+          { key: 'scheduledAt', label: 'Programado' },
+          { key: 'expireAt', label: 'Vencimiento' },
           { key: 'status', label: 'Status' },
           { key: 'assignToSection', label: 'Area' },
           { key: 'type', label: 'Tipo' },
-          { key: 'expireAt', label: 'Vencimiento' },
           { key: 'colorLabel', label: 'Color' },
           { key: 'itemsNumbers', label: 'Item' }
         ]}

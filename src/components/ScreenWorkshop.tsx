@@ -89,6 +89,7 @@ const ScreenWorkshop = () => {
         <RepairStepE
           justShow={'repairs'}
           title="Por recoger"
+          showScheduledTime
           repairItems={shouldPickup}
         />
       )}
@@ -112,6 +113,7 @@ const ScreenWorkshop = () => {
         title="Listas para entrega"
         rentItems={formattedFinishedItems}
         repairItems={repairFinished}
+        showScheduledTime
       />
     </ScrollView>
   )
@@ -122,6 +124,7 @@ export type RepairStepProps = {
   rentItems?: Partial<ItemType>[]
   repairItems?: Partial<ItemType>[]
   justShow?: 'rents' | 'repairs'
+  showScheduledTime?: boolean
 }
 export const RepairStepE = (props: RepairStepProps) => (
   <ErrorBoundary componentName="RepairStep">
@@ -132,7 +135,8 @@ const RepairStep = ({
   title,
   rentItems = [],
   repairItems = [],
-  justShow
+  justShow,
+  showScheduledTime
 }: RepairStepProps) => {
   return (
     <View style={{ marginBottom: 16 }}>
@@ -141,7 +145,11 @@ const RepairStep = ({
           <RowWorkshopItems items={rentItems} title={title} />
         )}
         {justShow === 'repairs' && (
-          <RowWorkshopItems items={repairItems} title={title} />
+          <RowWorkshopItems
+            items={repairItems}
+            title={title}
+            showScheduledTime={showScheduledTime}
+          />
         )}
       </View>
       <Divider />

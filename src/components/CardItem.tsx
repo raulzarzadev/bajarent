@@ -5,22 +5,26 @@ import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
 import { ItemFixDetails } from './ItemDetails'
+import asDate, { dateFormat } from '../libs/utils-date'
 export type CartItemType = {
-  item: Partial<ItemType>
+  item: Partial<ItemType & { scheduledAt?: Date }>
   showAssignedSection?: boolean
   showSerialNumber?: boolean
   showFixTime?: boolean
   showFixNeeded?: boolean
+  showScheduledTime?: boolean
 }
 const CardItem = ({
   item,
   showAssignedSection,
   showSerialNumber,
   showFixNeeded,
-  showFixTime = true
+  showFixTime = true,
+  showScheduledTime
 }: CartItemType) => {
   // console.log({ item })
   const sectionName = item?.assignedSectionName || 'Sin asignar'
+
   return (
     <View
       style={{
@@ -28,30 +32,53 @@ const CardItem = ({
       }}
     >
       <View
-        style={{ height: 16, flexDirection: 'row', justifyContent: 'flex-end' }}
+        style={{
+          height: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
       >
-        {item.status === 'rented' && (
-          <ItemIcon
-            icon="home"
-            iconColor={colors.green}
-            badgeColor={colors.transparent}
-          />
+        {showScheduledTime && item.scheduledAt ? (
+          <Text style={[gStyles.tCenter, gStyles.helper]}>
+            <Icon icon="calendar" size={8} />{' '}
+            {dateFormat(asDate(item.scheduledAt), 'dd/MMM')}
+          </Text>
+        ) : (
+          <View></View>
         )}
-        {item.status === 'pickedUp' && (
-          <ItemIcon
-            icon="truck"
-            iconColor={colors.darkBlue}
-            badgeColor={colors.transparent}
-          />
-        )}
-        {item?.needFix && (
-          <ItemIcon
-            icon="wrench"
-            iconColor={colors.red}
-            badgeColor={colors.transparent}
-          />
-        )}
+        <View
+          style={{
+            height: 16,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          {item.status === 'rented' && (
+            <ItemIcon
+              icon="home"
+              iconColor={colors.green}
+              badgeColor={colors.transparent}
+            />
+          )}
+          {item.status === 'pickedUp' && (
+            <ItemIcon
+              icon="truck"
+              iconColor={colors.darkBlue}
+              badgeColor={colors.transparent}
+            />
+          )}
+          {item?.needFix && (
+            <ItemIcon
+              icon="wrench"
+              iconColor={colors.red}
+              badgeColor={colors.transparent}
+            />
+          )}
+        </View>
       </View>
+
       <Text style={[gStyles.tCenter, gStyles.helper]}>
         {item.categoryName}{' '}
       </Text>

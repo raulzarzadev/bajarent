@@ -51,6 +51,7 @@ export type ExternalRepairItemsProps = {
   isExternalRepair?: boolean
   orderId: string
   workshopStatus: ItemBase['workshopStatus']
+  scheduledAt?: Date
 }
 export type ItemExternalRepairProps = ItemType & ExternalRepairItemsProps
 export default ItemType

@@ -125,7 +125,8 @@ export const formatItemsFromRepair = ({
             : order?.location || ''
         },
         isExternalRepair: true,
-        orderId: order?.id
+        orderId: order?.id,
+        scheduledAt: asDate(order?.scheduledAt)
       }
     }
   )

@@ -1,5 +1,8 @@
 import { Pressable, Text, View } from 'react-native'
-import ItemType, { ItemExternalRepairProps } from '../types/ItemType'
+import ItemType, {
+  ExternalRepairItemsProps,
+  ItemExternalRepairProps
+} from '../types/ItemType'
 import Button from './Button'
 import CardItem from './CardItem'
 import StyledModal from './StyledModal'
@@ -26,10 +29,17 @@ import { onChangeItemSection } from '../firebase/actions/item-actions'
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
   title?: string
+  showScheduledTime?: boolean
 }
-const RowWorkshopItems = ({ items, title }: RowWorkshopItemsProps) => {
-  const sortByNumber = (a: ItemType, b: ItemType) =>
-    parseFloat(a.number) - parseFloat(b.number)
+const RowWorkshopItems = ({
+  items,
+  title,
+  showScheduledTime
+}: RowWorkshopItemsProps) => {
+  const sortByNumber = (
+    a: ItemExternalRepairProps,
+    b: ItemExternalRepairProps
+  ) => parseFloat(a.number) - parseFloat(b.number)
 
   return (
     <View>
@@ -51,7 +61,7 @@ const RowWorkshopItems = ({ items, title }: RowWorkshopItemsProps) => {
             key={item.id}
             style={{ maxWidth: 90, width: '100%', marginRight: 2 }}
           >
-            <WorkshopItem item={item} />
+            <WorkshopItem item={item} showScheduledTime={showScheduledTime} />
           </View>
         ))}
       </View>
@@ -59,7 +69,13 @@ const RowWorkshopItems = ({ items, title }: RowWorkshopItemsProps) => {
   )
 }
 
-const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
+const WorkshopItem = ({
+  item,
+  showScheduledTime
+}: {
+  item: Partial<ItemExternalRepairProps>
+  showScheduledTime?: boolean
+}) => {
   // is two types of items in the workshop. External repair and internal/rent repair
   // external items has isExternalRepair props and it should modify the order when an action is handle
   // it should provides a workshopStatus prop to know the status of the item ✅
@@ -167,10 +183,19 @@ const WorkshopItem = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {
           width: '100%'
         }}
       >
-        <CardItem item={item} showSerialNumber />
+        <CardItem
+          item={item}
+          showSerialNumber
+          showScheduledTime={showScheduledTime}
+        />
       </Pressable>
       <StyledModal {...modal}>
-        <CardItem item={item} showSerialNumber showFixNeeded />
+        <CardItem
+          item={item}
+          showSerialNumber
+          showFixNeeded
+          showScheduledTime={showScheduledTime}
+        />
         {!!item?.isExternalRepair && (
           <View style={{ marginVertical: 16 }}>
             <View>
