@@ -35,8 +35,8 @@ export type ItemHistoryBase = {
   orderId?: string
   content: string
   itemId: string
-  toSectionId: string
-  fromSectionId: string
+  toSectionId?: string
+  fromSectionId?: string
 }
 export type ItemHistoryType = ItemHistoryBase & BaseType
 

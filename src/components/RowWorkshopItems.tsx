@@ -26,30 +26,36 @@ import LinkLocation from './LinkLocation'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
+  title?: string
 }
-const RowWorkshopItems = ({ items }: RowWorkshopItemsProps) => {
+const RowWorkshopItems = ({ items, title }: RowWorkshopItemsProps) => {
   const sortByNumber = (a: ItemType, b: ItemType) =>
     parseFloat(a.number) - parseFloat(b.number)
 
   return (
-    <View
-      style={[
-        {
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'flex-start',
-          minHeight: 74
-        }
-      ]}
-    >
-      {items.sort(sortByNumber).map((item) => (
-        <View
-          key={item.id}
-          style={{ maxWidth: 90, width: '100%', marginRight: 2 }}
-        >
-          <WorkshopItem item={item} />
-        </View>
-      ))}
+    <View>
+      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
+        {title} {`(${items.length || 0})`}
+      </Text>
+      <View
+        style={[
+          {
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            minHeight: 74
+          }
+        ]}
+      >
+        {items.sort(sortByNumber).map((item) => (
+          <View
+            key={item.id}
+            style={{ maxWidth: 90, width: '100%', marginRight: 2 }}
+          >
+            <WorkshopItem item={item} />
+          </View>
+        ))}
+      </View>
     </View>
   )
 }

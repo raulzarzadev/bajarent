@@ -22,6 +22,7 @@ import {
   splitItems
 } from '../libs/workshop.libs'
 import Divider from './Divider'
+import { Switch } from 'react-native-elements'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
@@ -65,26 +66,49 @@ const ScreenWorkshop = () => {
     finished: repairFinished
   } = splitItems({ items: formatRepairItems })
 
+  const [showRent, setShowRent] = useState(true)
+
   return (
     <ScrollView style={{ maxWidth: 800, width: '100%', margin: 'auto' }}>
       <View style={{ maxWidth: 200, marginLeft: 'auto' }}>
         <ModalViewMovements />
       </View>
-      <RepairStepE title="Por recoger" repairItems={shouldPickup} />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '100%',
+          marginBottom: 12
+        }}
+      >
+        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>Reparaciones</Text>
+        <Switch onValueChange={setShowRent} value={showRent} />
+        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>De renta</Text>
+      </View>
+      {!showRent && (
+        <RepairStepE
+          justShow={'repairs'}
+          title="Por recoger"
+          repairItems={shouldPickup}
+        />
+      )}
 
       <RepairStepE
+        justShow={showRent ? 'rents' : 'repairs'}
         title="Pendientes"
         rentItems={formattedPendingItems}
         repairItems={repairNeedFix}
       />
 
       <RepairStepE
+        justShow={showRent ? 'rents' : 'repairs'}
         title="En reparación"
         rentItems={formattedInProgressItems}
         repairItems={repairInProgress}
       />
 
       <RepairStepE
+        justShow={showRent ? 'rents' : 'repairs'}
         title="Listas para entrega"
         rentItems={formattedFinishedItems}
         repairItems={repairFinished}
@@ -97,6 +121,7 @@ export type RepairStepProps = {
   title: string
   rentItems?: Partial<ItemType>[]
   repairItems?: Partial<ItemType>[]
+  justShow?: 'rents' | 'repairs'
 }
 export const RepairStepE = (props: RepairStepProps) => (
   <ErrorBoundary componentName="RepairStep">
@@ -106,22 +131,17 @@ export const RepairStepE = (props: RepairStepProps) => (
 const RepairStep = ({
   title,
   rentItems = [],
-  repairItems = []
+  repairItems = [],
+  justShow
 }: RepairStepProps) => {
   return (
     <View style={{ marginBottom: 16 }}>
-      <Text style={[gStyles.h2, { textAlign: 'left' }]}>
-        {title} {`(${rentItems?.length + repairItems?.length})`}
-      </Text>
       <View style={{ paddingLeft: 16 }}>
-        {rentItems.length > 0 && <RowWorkshopItems items={rentItems} />}
-        {repairItems.length > 0 && (
-          <View style={{ marginTop: 8 }}>
-            <Text style={[{ textAlign: 'left' }]}>
-              Reparaciones ({repairItems.length})
-            </Text>
-            <RowWorkshopItems items={repairItems} />
-          </View>
+        {justShow === 'rents' && (
+          <RowWorkshopItems items={rentItems} title={title} />
+        )}
+        {justShow === 'repairs' && (
+          <RowWorkshopItems items={repairItems} title={title} />
         )}
       </View>
       <Divider />
@@ -200,10 +220,6 @@ const WorkshopMovements = () => {
               }
             ]}
           />
-          // <View style={{ flexDirection: 'row', width: '100%' }}>
-          //   <Text style={{ width: 100 }}>{item?.type} </Text>
-          //   <Text style={{ width: 100 }}>{item?.content}</Text>
-          // </View>
         )}
         rowsPerPage={10}
         data={movements}
