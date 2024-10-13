@@ -101,11 +101,9 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
     sectionsAssigned
   }) => {
     if (disabledEmployee) {
-      console.log('disabled employee')
       return setCurrentWork(defaultCurrentWork)
     }
     if (allowGetInfoFromAllOrders) {
-      console.log('get as admin')
       getCurrentWork({
         date,
         storeId,
@@ -118,7 +116,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
       return
     }
     if (employee.sectionsAssigned.length > 0) {
-      console.log('get by sections')
       getCurrentWork({
         date,
         storeId,
@@ -130,7 +127,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
       })
       return
     }
-    console.log('do not get any')
   }
 
   return (

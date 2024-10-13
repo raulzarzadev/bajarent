@@ -11,7 +11,6 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useOrderDetails } from '../contexts/orderContext'
 import { order_status, order_type } from '../types/OrderType'
 import { gStyles } from '../styles'
-import theme from '../theme'
 
 const ModalChangeItem = ({
   itemId,

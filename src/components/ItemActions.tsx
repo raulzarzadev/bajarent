@@ -3,7 +3,6 @@ import React from 'react'
 import Button from './Button'
 import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
-import InputRadios from './InputRadios'
 import {
   onChangeItemSection,
   onCheckInInventory,
@@ -22,7 +21,7 @@ import asDate, { dateFormat } from '../libs/utils-date'
 import Icon from './Icon'
 import theme from '../theme'
 import SpanUser from './SpanUser'
-import CardItem, { SquareItem } from './CardItem'
+import { SquareItem } from './CardItem'
 import ModalFixItem from './ModalFixItem'
 import InputAssignSection from './InputAssingSection'
 

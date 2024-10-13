@@ -15,13 +15,12 @@ import { gStyles } from '../styles'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import {
   onAssignOrder,
-  onPickup,
   onRepairFinish,
   onRepairStart
 } from '../libs/order-actions'
 import { useAuth } from '../contexts/authContext'
 import { splitItems } from '../libs/workshop.libs'
-import { ContactRow, ContactsList } from './OrderContacts'
+import { ContactRow } from './OrderContacts'
 import LinkLocation from './LinkLocation'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
 export type RowWorkshopItemsProps = {

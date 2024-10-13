@@ -37,8 +37,6 @@ import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
-import InputSignature from './InputSignature'
-import ImagePreview from './ImagePreview'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)

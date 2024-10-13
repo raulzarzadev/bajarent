@@ -1,5 +1,5 @@
 import { View, Text, Dimensions } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ListE } from './List'
 import ItemType from '../types/ItemType'
 import ListRow, { ListRowField } from './ListRow'

@@ -12,8 +12,7 @@ import {
   onMarkContactAsFavorite,
   onRemoveContact
 } from '../libs/order-actions'
-import ButtonIcon from './ButtonIcon'
-import OrderType, { ContactType } from '../types/OrderType'
+import { ContactType } from '../types/OrderType'
 import ButtonConfirm from './ButtonConfirm'
 
 const OrderContacts = () => {
