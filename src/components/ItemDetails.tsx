@@ -43,9 +43,18 @@ const ItemDetails = ({
         {dateFormat(asDate(item?.lastInventoryAt), 'dd/MMM/yy HH:mm')} por{' '}
         <SpanUser userId={item?.lastInventoryBy} />
       </Text>
-      <Text style={[gStyles.tCenter, { marginVertical: 6 }]}>
+      <Text style={[gStyles.tCenter, { marginTop: 6 }]}>
         <Text style={gStyles.h1}>{asCapitalize(dictionary(item.status))}</Text>
       </Text>
+      {item.workshopStatus &&
+        item.assignedSection === 'workshop' &&
+        item.status === 'pickedUp' && (
+          <Text style={[gStyles.tCenter, { marginBottom: 6 }]}>
+            <Text style={gStyles.helper}>
+              {asCapitalize(dictionary(item.workshopStatus))}
+            </Text>
+          </Text>
+        )}
 
       <View style={{ marginBottom: 8 }}>
         <ItemActions
