@@ -2,7 +2,11 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './FormikInputValue'
-import OrderType, { TypeOrder, order_type } from '../types/OrderType'
+import OrderType, {
+  TypeOrder,
+  order_type,
+  repair_order_types
+} from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './FormikInputPhone'
 import InputDate, { InputDateE } from './InputDate'
@@ -15,7 +19,7 @@ import FormikCheckbox from './FormikCheckbox'
 import ErrorBoundary from './ErrorBoundary'
 import { gSpace, gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
-import dictionary from '../dictionary'
+import dictionary, { asCapitalize } from '../dictionary'
 import InputTextStyled from './InputTextStyled'
 import theme from '../theme'
 import FormikAssignOrder from './FormikAssignOrder'
@@ -27,6 +31,7 @@ import FormikErrorsList from './FormikErrorsList'
 import FormikAssignSection from './FormikAssingSection'
 import InputSignature from './InputSignature'
 import FormikInputSignature from './FormikInputSignature'
+import FormikInputSelect from './FormikInputSelect'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -269,6 +274,18 @@ const FormOrderA = ({
                   label="Tipo de orden"
                   disabled={isRenew}
                 />
+                {values.type === order_type.REPAIR && (
+                  <FormikInputSelect
+                    name="repairType"
+                    placeholder="Tipo de reparación"
+                    options={Object.entries(repair_order_types).map(
+                      ([key, value]) => ({
+                        label: dictionary(value),
+                        value
+                      })
+                    )}
+                  />
+                )}
 
                 <FormFields
                   fields={getOrderFields(
@@ -396,11 +413,13 @@ const FormFieldsA = ({
   //#region InputFields
   const inputFields: Record<FormOrderFields, ReactNode> = {
     type: (
-      <InputRadiosFormik
-        name="type"
-        options={ordersTypesAllowed}
-        label="Tipo de orden"
-      />
+      <>
+        <InputRadiosFormik
+          name="type"
+          options={ordersTypesAllowed}
+          label="Tipo de orden"
+        />
+      </>
     ),
     sheetRow: (
       <>

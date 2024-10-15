@@ -1,3 +1,5 @@
+import { repair_order_types } from './types/OrderType'
+
 const labels = {
   canceled: 'Cancelada',
   pending: 'Pendiente',
@@ -217,7 +219,14 @@ const labels = {
   driver: 'Repartidor',
   reception: 'Recepción',
   ' ': '',
-  '': ''
+  '': '',
+
+  //**Repair types  roles */
+  [repair_order_types.REPAIR_WARRANTY]: 'Garantía de reparación',
+  [repair_order_types.SALE_WARRANTY]: 'Garantía de venta',
+  [repair_order_types.CLIENT_FREQUENT]: 'Nuevo cliente',
+  [repair_order_types.CLIENT_NEW]: 'Cliente frecuente',
+  [repair_order_types.CLIENT_VIP]: 'Cliente VIP'
 } as const
 const labels_lowercase = Object.keys(labels).reduce((acc, key) => {
   const lowerKey = key.toLowerCase()
@@ -228,10 +237,15 @@ const labels_lowercase = Object.keys(labels).reduce((acc, key) => {
 
 export type Labels = keyof typeof labels_lowercase
 
-const dictionary = (value: Labels) => {
+const dictionary = (value: Labels, ops?: { toLowerCase?: boolean }) => {
+  const toLowerCase = ops?.toLowerCase
   if (!labels[value] || value === ' ') return value
-  const lowerValue = value.toLowerCase()
-  return labels_lowercase[lowerValue]
+  if (toLowerCase) {
+    const lowerValue = value.toLowerCase()
+    return labels_lowercase[lowerValue]
+  } else {
+    return labels[value]
+  }
 }
 
 export const asCapitalize = (string: string) => {

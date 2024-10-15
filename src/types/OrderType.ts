@@ -17,6 +17,16 @@ export type ContactType = {
   isFavorite?: boolean
 }
 
+export enum repair_order_types {
+  REPAIR_WARRANTY = 'REPAIR_WARRANTY',
+  SALE_WARRANTY = 'SALE_WARRANTY',
+  CLIENT_NEW = 'CLIENT_NEW',
+  CLIENT_FREQUENT = 'CLIENT_FREQUENT',
+  CLIENT_VIP = 'CLIENT_VIP'
+}
+
+export type RepairOrderType = keyof typeof repair_order_types
+
 export type OrderBase = {
   colorLabel?: string
   type: TypeOfOrderType
@@ -26,6 +36,8 @@ export type OrderBase = {
 
   clientId: string
   note: string
+
+  repairType?: RepairOrderType
 
   folio: number
   status: OrderStatus
@@ -205,16 +217,28 @@ export enum order_status {
   EXPIRED_TOMORROW = 'EXPIRED_TOMORROW'
 }
 
-/**
- * @deprecated use TypeOrder instead
- */
+// /**
+//  * @deprecated use TypeOrder instead
+//  */
 export enum order_type {
   RENT = 'RENT',
   SALE = 'SALE',
   REPAIR = 'REPAIR',
+  /**
+   * @deprecated use RENT instead
+   */
   STORE_RENT = 'STORE_RENT',
+  /**
+   * @deprecated use RENT instead
+   */
   DELIVERY_RENT = 'DELIVERY_RENT',
+  /**
+   * @deprecated use SALE instead
+   */
   DELIVERY_SALE = 'DELIVERY_SALE',
+  /**
+   * @deprecated use RENT instead
+   */
   MULTI_RENT = 'MULTI_RENT'
 }
 export const orders_should_expire = [
@@ -246,6 +270,9 @@ export default OrderType
  *Start using typeOrder instead of order_type reduce options to select order form
  *******************************************rz */
 
+/**
+ * @deprecated use order_type instead
+ */
 export enum TypeOrder {
   RENT = 'RENT',
   SALE = 'SALE',
