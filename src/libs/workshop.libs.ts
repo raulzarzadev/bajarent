@@ -23,7 +23,7 @@ export const splitItems = ({
     }
   const needFix = items.filter(
     (item) =>
-      (item?.needFix || (!item.needFix && item.status === 'pickedUp')) &&
+      (item?.needFix || (item.needFix && item.status === 'pickedUp')) &&
       ['pending'].includes(item?.workshopStatus)
   )
   const inProgress = items.filter(
