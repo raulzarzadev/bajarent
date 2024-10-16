@@ -88,15 +88,6 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
         </View>
       )
     },
-    // {
-    //   field: 'items',
-    //   width: '15%',
-    //   component: (
-    //     <View>
-    //       <></>
-    //     </View>
-    //   )
-    // },
     {
       width: bigScreen ? 300 : 'rest',
       component: <OrderDirectives order={order} />

@@ -1,20 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
 import OrderType, { order_status, order_type } from '../types/OrderType'
-import dictionary from '../dictionary'
 import theme, { colors } from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import InputRadios from './InputRadios'
-import { useEffect, useState } from 'react'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
 import Icon, { IconName } from './Icon'
-import { useOrderDetails } from '../contexts/orderContext'
 
 const OrderDirectives = ({
   order

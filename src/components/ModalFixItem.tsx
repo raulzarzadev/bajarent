@@ -7,6 +7,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import ItemType from '../types/ItemType'
 
+const MIN_COMMENT_LENGTH = 10
 export type HandleFixProps = {
   comment: string
 }
@@ -73,7 +74,8 @@ const ModalFixItem = ({
               return await handleMarkAsNeedFix()
             }}
             confirmColor="error"
-            modalTitle="Describe de la falla"
+            modalTitle="Describe la falla"
+            confirmDisabled={isLongEnough(comment, MIN_COMMENT_LENGTH)}
           >
             <InputTextStyled
               style={{ marginVertical: 6 }}
@@ -81,11 +83,21 @@ const ModalFixItem = ({
               label="Descripción"
               onChangeText={(value) => setComment(value)}
             ></InputTextStyled>
+            {isLongEnough(comment, MIN_COMMENT_LENGTH) && (
+              <Text style={[gStyles.tError, { marginBottom: 8 }]}>
+                *La descripción debe tener al menos {MIN_COMMENT_LENGTH}{' '}
+                caracteres
+              </Text>
+            )}
           </ButtonConfirm>
         )}
       </View>
     </View>
   )
+}
+
+export const isLongEnough = (text: string, length: number) => {
+  return text.length < length
 }
 
 export const markItemAsNeedFix = async ({
