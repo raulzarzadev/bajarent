@@ -1,8 +1,5 @@
 import { Pressable, Text, View } from 'react-native'
-import ItemType, {
-  ExternalRepairItemsProps,
-  ItemExternalRepairProps
-} from '../types/ItemType'
+import ItemType, { ItemExternalRepairProps } from '../types/ItemType'
 import Button from './Button'
 import CardItem from './CardItem'
 import StyledModal from './StyledModal'
@@ -67,7 +64,7 @@ const RowWorkshopItems = ({
         {items.sort(sortFunction || sortByNumber).map((item) => (
           <View
             key={item.id}
-            style={{ maxWidth: 90, width: '100%', marginRight: 2 }}
+            style={{ maxWidth: 100, width: '100%', marginRight: 2 }}
           >
             <WorkshopItem item={item} showScheduledTime={showScheduledTime} />
           </View>
@@ -186,7 +183,7 @@ const WorkshopItem = ({
   const shouldPickup = item.workshopStatus === 'shouldPickup'
 
   return (
-    <View style={{ width: '100%' }}>
+    <View style={{ width: '100%', height: '100%' }}>
       <Pressable
         onPress={modal.toggleOpen}
         style={{
@@ -202,7 +199,8 @@ const WorkshopItem = ({
           shadowOpacity: 0.22,
           shadowRadius: 2.22,
           elevation: 3,
-          width: '100%'
+          width: '100%',
+          height: '100%'
         }}
       >
         <CardItem

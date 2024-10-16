@@ -30,7 +30,8 @@ const CardItem = ({
   return (
     <View
       style={{
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flex: 1
       }}
     >
       <View
@@ -44,7 +45,7 @@ const CardItem = ({
         {showScheduledTime && item.scheduledAt ? (
           <Text style={[gStyles.tCenter, gStyles.helper]}>
             <Icon icon="calendar" size={8} />{' '}
-            {dateFormat(asDate(item.scheduledAt), 'dd/MM HH:mm')}
+            {dateFormat(asDate(item.scheduledAt), 'dd/MM Ha')?.toLowerCase()}
           </Text>
         ) : (
           <View></View>
@@ -94,7 +95,15 @@ const CardItem = ({
         <Text style={[gStyles.tCenter]}>{sectionName}</Text>
       )}
       {showRepairInfo && !!item?.repairInfo && (
-        <Text style={[gStyles.tCenter, gStyles.tError, gStyles.helper]}>
+        <Text
+          style={[
+            gStyles.tCenter,
+            gStyles.tError,
+            gStyles.helper,
+            { marginVertical: 2 }
+          ]}
+          numberOfLines={3}
+        >
           *{item?.repairInfo}
         </Text>
       )}
