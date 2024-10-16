@@ -64,7 +64,12 @@ const RowWorkshopItems = ({
         {items.sort(sortFunction || sortByNumber).map((item) => (
           <View
             key={item.id}
-            style={{ maxWidth: 100, width: '100%', marginRight: 2 }}
+            style={{
+              maxWidth: 100,
+              width: '100%',
+              marginRight: 2,
+              marginBottom: 4
+            }}
           >
             <WorkshopItem item={item} showScheduledTime={showScheduledTime} />
           </View>

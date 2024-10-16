@@ -99,16 +99,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
     // },
     {
       width: bigScreen ? 300 : 'rest',
-      component: (
-        <View style={{ position: 'relative' }}>
-          <OrderDirectives order={order} />
-          {order?.marketOrder && (
-            <View style={{ position: 'absolute', top: 2, right: 2 }}>
-              <Icon icon="www" size={8} />
-            </View>
-          )}
-        </View>
-      )
+      component: <OrderDirectives order={order} />
     }
   ]
   return <ListRow fields={fields} style={{ marginVertical: 2, padding: 0 }} />

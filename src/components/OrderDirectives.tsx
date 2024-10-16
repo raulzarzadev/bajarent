@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
-import { IconName } from './Icon'
+import Icon, { IconName } from './Icon'
 import { useOrderDetails } from '../contexts/orderContext'
 
 const OrderDirectives = ({
@@ -48,9 +48,15 @@ const OrderDirectives = ({
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        position: 'relative'
       }}
     >
+      {order.marketOrder && (
+        <View style={{ position: 'absolute', top: 4, right: 4 }}>
+          <Icon icon="www" size={12} />
+        </View>
+      )}
       <View style={{ width: 60 }}>
         <OrderLabels order={order} />
       </View>
