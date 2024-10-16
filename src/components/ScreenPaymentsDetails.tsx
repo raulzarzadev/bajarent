@@ -19,7 +19,9 @@ import PaymentType from '../types/PaymentType'
 import SpanMetadata from './SpanMetadata'
 import PaymentVerify from './PaymentVerify'
 import ImagePreview from './ImagePreview'
+import TextInfo from './TextInfo'
 
+const CANCELED_REASON_MIN_LENGTH = 10
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
   const { staff } = useStore()
@@ -154,11 +156,28 @@ const ScreenPaymentsDetails = ({ route, navigation }) => {
               })
             }}
           >
-            <InputTextStyled
-              placeholder="Motivo"
-              onChangeText={setReason}
-              value={reason}
-            />
+            <TextInfo
+              defaultVisible
+              text="¿Estás seguro de que deseas cancelar este pago?"
+            ></TextInfo>
+            <View style={{ marginVertical: 8 }}>
+              <InputTextStyled
+                label="Motivo de cancelación"
+                placeholder="Escribe el motivo de cancelación"
+                onChangeText={(value) => {
+                  setReason(value)
+                }}
+                helperTextColor={
+                  reason.length < CANCELED_REASON_MIN_LENGTH ? 'error' : 'black'
+                }
+                helperText={`${
+                  reason.length < CANCELED_REASON_MIN_LENGTH
+                    ? 'Mínimo 10 caracteres'
+                    : ''
+                }`}
+                value={reason}
+              />
+            </View>
           </ButtonConfirm>
         )}
       </View>

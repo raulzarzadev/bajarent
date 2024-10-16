@@ -27,6 +27,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { or } from 'firebase/firestore'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
 import containsCoordinates from '../../libs/containCoordinates'
+import TextInfo from '../TextInfo'
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -43,6 +44,9 @@ export type OrderCommonActionsType = {
   }
   userId: string
 }
+
+const CANCELED_REASON_MIN_LENGTH = 10
+
 const OrderCommonActions = ({
   storeId,
   actionsAllowed,
@@ -168,38 +172,51 @@ const OrderCommonActions = ({
         icon="edit"
       />
     ),
+
+    canCopy && <ButtonCopyRow orderId={orderId} />,
     canDelete && <ButtonDeleteOrder orderId={orderId} />,
     canCancel && (
       <ButtonConfirm
         openLabel="Cancelar"
         modalTitle="Cancelar orden"
         openVariant="outline"
-        openColor="info"
+        openColor="error"
         openSize="small"
         icon="cancel"
         confirmLabel="Cancelar orden"
         confirmVariant="outline"
-        confirmColor="info"
+        confirmColor="error"
+        confirmDisabled={cancelledReason.length < CANCELED_REASON_MIN_LENGTH}
         handleConfirm={async () => {
           return await handleCancel()
         }}
       >
-        <Text>
-          Cancelar orden. Si necesitas retomarla en cualquer momento debes tener
-          permiso para autorizar ordenes o pidele a tu administrador que lo
-          haga.
-        </Text>
-        <InputTextStyled
-          label="Motivo de cancelación"
-          placeholder="Escribe el motivo de cancelación"
-          onChangeText={(value) => {
-            setCancelledReason(value)
-          }}
-          value={cancelledReason}
-        />
+        <TextInfo
+          defaultVisible
+          text="Si necesitas retomarla más tarde. Pulsa Autorizar o pidele a tu admin que lo haga. "
+        ></TextInfo>
+        <View style={{ marginVertical: 8 }}>
+          <InputTextStyled
+            label="Motivo de cancelación"
+            placeholder="Escribe el motivo de cancelación"
+            onChangeText={(value) => {
+              setCancelledReason(value)
+            }}
+            helperTextColor={
+              cancelledReason.length < CANCELED_REASON_MIN_LENGTH
+                ? 'error'
+                : 'black'
+            }
+            helperText={`${
+              cancelledReason.length < CANCELED_REASON_MIN_LENGTH
+                ? 'Mínimo 10 caracteres'
+                : ''
+            }`}
+            value={cancelledReason}
+          />
+        </View>
       </ButtonConfirm>
     ),
-    canCopy && <ButtonCopyRow orderId={orderId} />,
     false && (
       <>
         <ButtonConfirm
