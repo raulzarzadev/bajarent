@@ -79,13 +79,13 @@ export default function ModalSendWhatsapp({
   const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:\n${PHONES}
 `
 
-  const AGRADECIMIENTOS = `De antemano le agradecemos su atención 🙏🏼`
+  const AGRADECIMIENTOS = `*${store.name}* agradece su preferencia 🙏🏼`
 
   const RENT_PERIOD = `Periodo contratado: ${
     translateTime(order?.items?.[0]?.priceSelected?.time) || ''
   }
 
-  ⏳ Inicio: ${orderStringDates(order).deliveredAt}
+  ➡ Inicio: ${orderStringDates(order).deliveredAt}
   🔚 Vencimiento: ${dateFormat(asDate(orderExpiresAt), 'EEEE dd MMMM yy')}`
 
   const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
@@ -144,7 +144,8 @@ export default function ModalSendWhatsapp({
   const SOCIAL_MEDIA = `📲 Síguenos en nuestras redes sociales:
   ${SOCIALS || ''}`
 
-  const RENT_EXPIRE_DATE = `${WELCOME}
+  const RENT_EXPIRE_DATE = `🚨 *ALERTA DE VENCIMIENTO* 
+  \n${WELCOME}
   \n${ORDER_TYPE}  ${expireDateString(order)}
   \n${BANK_INFO}
   \nEnviar su comprobante al Whatsapp  ${
@@ -156,8 +157,11 @@ export default function ModalSendWhatsapp({
   \n${AGRADECIMIENTOS}
   `
 
-  const RENT_RECEIPT = `${WELCOME}
-  \n${ORDER_TYPE}
+  const RECEIPT_START = `🧾 *RECIBO DE PAGO*
+  \n${WELCOME}
+  \nTipo de servicio: *${dictionary(order?.type)}*`
+
+  const RENT_RECEIPT = `${RECEIPT_START}
   \n${RENT_PERIOD}
   \n${FEE_ADVERT}
   \n${PAYMENTS}
@@ -182,9 +186,7 @@ export default function ModalSendWhatsapp({
   const ORDER_DATES = `Fechas
   \n${getReceiptDates(order)}`
 
-  const REPAIR_RECEIPT = `
-  \n${WELCOME}
-  \n${ORDER_TYPE}
+  const REPAIR_RECEIPT = `${RECEIPT_START}
   \n📆${ORDER_DATES}
   \n🔧 *Información del aparato*
   🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
@@ -245,8 +247,9 @@ export default function ModalSendWhatsapp({
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
   `
-  const GOOGLE_MAPS_COMMENT = `${WELCOME}
-  \n¿Te gusto el servicio? Dejanos un comentario en Google Maps
+  const GOOGLE_MAPS_COMMENT = `🌟 *COMPARTE * 
+  \n${WELCOME}
+  \nSi te gusto el servicio y quieres recomendarnos, deja un comentario en Google Maps
   \nhttps://www.google.com/maps/place/Lavarenta/@24.1505656,-110.3167882,21z/data=!4m11!1m2!2m1!1slavarneta+bcs!3m7!1s0x86afd345060536b7:0xdc0f005597766de0!8m2!3d24.1506412!4d-110.3166235!9m1!1b1!16s%2Fg%2F11b6bgc0l8?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
