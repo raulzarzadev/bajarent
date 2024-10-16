@@ -7,6 +7,9 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import ItemType from '../types/ItemType'
 
+export type HandleFixProps = {
+  comment: string
+}
 const ModalFixItem = ({
   item,
   disabled,
@@ -16,21 +19,26 @@ const ModalFixItem = ({
   item: Partial<ItemType>
   disabled?: boolean
   disabledFix?: boolean
-  handleFix?: () => void
+  handleFix?: (handleFixProps?: HandleFixProps) => void
 }) => {
   const needFix = item?.needFix
 
   const { storeId } = useStore()
   const [comment, setComment] = React.useState('')
   const handleMarkAsNeedFix = async () => {
-    await markItemAsNeedFix({
-      itemId: item.id,
-      storeId,
-      needsFix: !needFix,
-      comment
-    })
-    setComment('')
-    handleFix?.()
+    if (item.isExternalRepair) {
+      handleFix?.({ comment })
+      setComment('')
+    } else {
+      await markItemAsNeedFix({
+        itemId: item.id,
+        storeId,
+        needsFix: !needFix,
+        comment
+      })
+      handleFix?.({ comment })
+      setComment('')
+    }
   }
 
   return (

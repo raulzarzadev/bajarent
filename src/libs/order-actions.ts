@@ -102,13 +102,22 @@ export const onPickup = async ({ orderId, userId }) => {
     .catch(console.error)
 }
 
-export const onRepairStart = async ({ orderId, userId }) => {
+export const onRepairStart = async ({
+  orderId,
+  userId,
+  comment
+}: {
+  orderId: string
+  userId: string
+  comment?: string
+}) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.REPAIRING,
     repairingAt: new Date(),
     repairingBy: userId,
     isRepairing: true,
-    workshopStatus: 'pending'
+    workshopStatus: 'pending',
+    repairInfo: comment || ''
   })
     .then(() => {
       console.log('repairing')
@@ -385,17 +394,6 @@ export const onAddQuote = async ({
     quotes: arrayUnion({ ...newQuote, id: quiteId })
   })
 }
-export const onRemoveQuote = async ({
-  quote,
-  orderId
-}: {
-  quote: OrderQuoteType
-  orderId: OrderType['id']
-}) => {
-  return ServiceOrders.update(orderId, {
-    quotes: arrayRemove(quote)
-  })
-}
 
 export const onAddContact = async ({
   contact,
@@ -479,5 +477,68 @@ export const onChangeOrderItemTime = async ({
     orderId,
     itemId,
     newPrice: priceSelected
+  })
+}
+//#region ORDER QUOTES
+
+export const onEditQuote = async ({
+  oldQuote,
+  newQuoteProps,
+  orderId
+}: {
+  oldQuote: OrderQuoteType
+  newQuoteProps: OrderQuoteType
+  orderId: OrderType['id']
+}) => {
+  await onRemoveQuote({ quote: oldQuote, orderId })
+  return ServiceOrders.update(orderId, {
+    quotes: arrayUnion({ quote: { ...oldQuote, ...newQuoteProps } })
+  })
+}
+export const onMarkQuoteAsDone = async ({
+  quoteId,
+  orderId
+}: {
+  quoteId: OrderQuoteType['id']
+  orderId: OrderType['id']
+}) => {
+  try {
+    const quotes = (await ServiceOrders.get(orderId).then((res) => {
+      return res?.quotes
+    })) as OrderQuoteType[]
+
+    const newQuotes: OrderQuoteType[] = quotes.map((quote) => {
+      if (quote.id === quoteId) {
+        return { ...quote, doneAt: !!quote.doneAt ? null : new Date() }
+      }
+      return quote
+    })
+
+    return ServiceOrders.update(orderId, {
+      quotes: newQuotes
+    })
+
+    // if (!quote) return console.error('Quote not found')
+    // await onRemoveQuote({ quote, orderId })
+    // return ServiceOrders.update(orderId, {
+    //   quotes: arrayUnion({
+    //     ...quote,
+    //     doneAt: !!quote.doneAt ? null : new Date()
+    //   })
+    // })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onRemoveQuote = async ({
+  quote,
+  orderId
+}: {
+  quote: OrderQuoteType
+  orderId: OrderType['id']
+}) => {
+  return ServiceOrders.update(orderId, {
+    quotes: arrayRemove(quote)
   })
 }

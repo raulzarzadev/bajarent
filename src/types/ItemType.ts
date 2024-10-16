@@ -36,6 +36,8 @@ export type ItemBase = {
     | 'finished'
     | 'shouldPickup'
     | 'delivered'
+  isExternalRepair?: boolean
+  repairInfo?: string
 }
 
 type ItemType = BaseType & ItemBase
@@ -48,7 +50,6 @@ export type ExternalRepairItemsProps = {
     address?: string
     location?: string
   }
-  isExternalRepair?: boolean
   orderId: string
   workshopStatus: ItemBase['workshopStatus']
   scheduledAt?: Date

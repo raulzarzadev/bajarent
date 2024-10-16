@@ -74,6 +74,9 @@ export const formatItemsFromRepair = ({
 }): Partial<ItemType>[] => {
   const items: Partial<ItemExternalRepairProps>[] = repairOrders.map(
     (order) => {
+      if (order.folio === 99) {
+        console.log({ order })
+      }
       const needFix =
         order.status === order_status.REPAIRING ||
         order.status === order_status.AUTHORIZED
@@ -111,6 +114,7 @@ export const formatItemsFromRepair = ({
         brand: item?.brand || '',
         serial: item?.serial || '',
         workshopStatus,
+        repairInfo: order?.repairInfo || item?.failDescription || '',
         repairDetails: {
           failDescription: item?.failDescription || order?.description || '',
           quotes: (order?.quotes as OrderQuoteType[]) || [],

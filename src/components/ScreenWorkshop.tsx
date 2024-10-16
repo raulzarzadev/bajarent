@@ -26,7 +26,6 @@ import { Switch } from 'react-native-elements'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
-
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
@@ -66,7 +65,7 @@ const ScreenWorkshop = () => {
     finished: repairFinished
   } = splitItems({ items: formatRepairItems })
 
-  const [showRent, setShowRent] = useState(true)
+  const [showRent, setShowRent] = useState(false)
 
   return (
     <ScrollView style={{ maxWidth: 800, width: '100%', margin: 'auto' }}>

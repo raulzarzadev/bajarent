@@ -19,13 +19,16 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import {
   onAssignOrder,
   onRepairFinish,
-  onRepairStart
+  onRepairStart,
+  onMarkQuoteAsDone
 } from '../libs/order-actions'
 import { useAuth } from '../contexts/authContext'
 import { splitItems } from '../libs/workshop.libs'
 import { ContactRow } from './OrderContacts'
 import LinkLocation from './LinkLocation'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
+import InputCheckbox from './InputCheckbox'
+import asDate, { dateFormat } from '../libs/utils-date'
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
   title?: string
@@ -87,7 +90,7 @@ const WorkshopItem = ({
   // item should provides a orderId props to know the order that is related to ✅
 
   const modal = useModal({
-    title: `${item.isExternalRepair ? 'Reparacion' : 'Renta'} ${
+    title: `${item.isExternalRepair ? 'Reparación' : 'Renta'} ${
       item?.number || 'SN'
     }`
   })
@@ -97,9 +100,13 @@ const WorkshopItem = ({
   const userId = user?.id
 
   const handlePickup = async () => {
-    modal.toggleOpen()
-    if (item.isExternalRepair) {
-      onRepairStart({ orderId: item.orderId, userId })
+    try {
+      modal.toggleOpen()
+      if (item.isExternalRepair) {
+        onRepairStart({ orderId: item.orderId, userId })
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
   const handleStartRepair = () => {
@@ -140,8 +147,17 @@ const WorkshopItem = ({
     }
     modal.toggleOpen()
   }
-  const handleBackToRepair = () => {
+  const handleBackToRepair = ({ comment }: { comment: string }) => {
     modal.toggleOpen()
+    if (item.isExternalRepair) {
+      onRepairStart({
+        orderId: item.orderId,
+        userId,
+        comment
+      })
+    } else {
+      //* this case is handled by the modalFixItem
+    }
   }
   const handleAssignToSection = async ({ sectionId, sectionName }) => {
     if (item.isExternalRepair) {
@@ -168,6 +184,7 @@ const WorkshopItem = ({
   const fixInProgress = inProgress.find((i) => i.id === item.id)
   const fixFinished = finished.find((i) => i.id === item.id)
   const shouldPickup = item.workshopStatus === 'shouldPickup'
+
   return (
     <View style={{ width: '100%' }}>
       <Pressable
@@ -192,6 +209,7 @@ const WorkshopItem = ({
           item={item}
           showSerialNumber
           showScheduledTime={showScheduledTime}
+          showRepairInfo
         />
       </Pressable>
       <StyledModal {...modal}>
@@ -200,7 +218,21 @@ const WorkshopItem = ({
           showSerialNumber
           showFixNeeded
           showScheduledTime={showScheduledTime}
+          showRepairInfo
         />
+        <Button
+          variant="ghost"
+          onPress={() => {
+            modal.toggleOpen()
+
+            if (item.isExternalRepair) {
+              toOrders({ id: item.orderId })
+            } else {
+              toItems({ id: item.id })
+            }
+          }}
+          label="Detalles"
+        ></Button>
         {!!item?.isExternalRepair && (
           <View style={{ marginVertical: 16 }}>
             <View>
@@ -232,7 +264,7 @@ const WorkshopItem = ({
               </View>
             </View>
             <Text style={[gStyles.h3, { textAlign: 'left' }]}>Falla:</Text>
-            <Text style={{ marginBottom: 6 }}>
+            <Text style={[{ marginBottom: 6 }, gStyles.tError]}>
               {item?.repairDetails?.failDescription}
             </Text>
             <View>
@@ -243,29 +275,36 @@ const WorkshopItem = ({
               )}
               {item?.repairDetails?.quotes?.map((q) => {
                 return (
-                  <Text style={{ marginVertical: 2 }} key={q.id}>
-                    {q.description}
-                  </Text>
+                  <View
+                    key={q.id}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                      marginVertical: 4
+                    }}
+                  >
+                    <InputCheckbox
+                      disabled={item.workshopStatus !== 'inProgress'}
+                      value={!!q.doneAt}
+                      setValue={() => {
+                        onMarkQuoteAsDone({
+                          orderId: item.orderId,
+                          quoteId: q.id
+                        })
+                      }}
+                      label={`${q.description} ${
+                        q.doneAt
+                          ? dateFormat(asDate(q.doneAt), 'ddMMM HH:mm')
+                          : ''
+                      }`}
+                    />
+                  </View>
                 )
               })}
             </View>
           </View>
         )}
-        <View style={{ marginVertical: 8, width: '100%' }}>
-          <Button
-            variant="ghost"
-            onPress={() => {
-              modal.toggleOpen()
 
-              if (item.isExternalRepair) {
-                toOrders({ id: item.orderId })
-              } else {
-                toItems({ id: item.id })
-              }
-            }}
-            label="Detalles"
-          ></Button>
-        </View>
         {shouldPickup && (
           <View style={{ marginVertical: 8, width: '100%' }}>
             <Button
@@ -279,7 +318,7 @@ const WorkshopItem = ({
         {fixPending && (
           <View style={{ marginVertical: 8, width: '100%' }}>
             <Button
-              label="Comenzar reparación"
+              label="Iniciar reparación"
               onPress={handleStartRepair}
             ></Button>
           </View>
@@ -291,10 +330,18 @@ const WorkshopItem = ({
             </View>
             <View style={{ marginVertical: 8, width: '100%' }}>
               {item.isExternalRepair ? (
-                <Button
-                  onPress={handleFinishRepair}
-                  label="Lista para entregar"
-                ></Button>
+                <>
+                  {item.repairDetails.quotes?.some((q) => !q.doneAt) && (
+                    <Text style={[gStyles.tError, { marginBottom: 8 }]}>
+                      *Faltan reparaciones por hacer
+                    </Text>
+                  )}
+                  <Button
+                    onPress={handleFinishRepair}
+                    label="Lista para entregar"
+                    disabled={item.repairDetails.quotes?.some((q) => !q.doneAt)}
+                  ></Button>
+                </>
               ) : (
                 <ModalFixItem
                   item={item}
@@ -312,7 +359,7 @@ const WorkshopItem = ({
               item={item}
               disabled={false}
               disabledFix={false}
-              handleFix={() => handleBackToRepair()}
+              handleFix={({ comment }) => handleBackToRepair({ comment })}
             />
 
             <InputAssignSection

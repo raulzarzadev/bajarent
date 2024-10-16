@@ -13,6 +13,7 @@ export type CartItemType = {
   showFixTime?: boolean
   showFixNeeded?: boolean
   showScheduledTime?: boolean
+  showRepairInfo?: boolean
 }
 const CardItem = ({
   item,
@@ -20,7 +21,8 @@ const CardItem = ({
   showSerialNumber,
   showFixNeeded,
   showFixTime = true,
-  showScheduledTime
+  showScheduledTime,
+  showRepairInfo
 }: CartItemType) => {
   // console.log({ item })
   const sectionName = item?.assignedSectionName || 'Sin asignar'
@@ -42,7 +44,7 @@ const CardItem = ({
         {showScheduledTime && item.scheduledAt ? (
           <Text style={[gStyles.tCenter, gStyles.helper]}>
             <Icon icon="calendar" size={8} />{' '}
-            {dateFormat(asDate(item.scheduledAt), 'dd/MMM')}
+            {dateFormat(asDate(item.scheduledAt), 'dd/MM HH:mm')}
           </Text>
         ) : (
           <View></View>
@@ -90,6 +92,11 @@ const CardItem = ({
       )}
       {showAssignedSection && (
         <Text style={[gStyles.tCenter]}>{sectionName}</Text>
+      )}
+      {showRepairInfo && !!item?.repairInfo && (
+        <Text style={[gStyles.tCenter, gStyles.tError, gStyles.helper]}>
+          *{item?.repairInfo}
+        </Text>
       )}
       {showFixNeeded && item?.needFix && (
         <ItemFixDetails itemId={item?.id} size="sm" showTime={showFixTime} />

@@ -197,6 +197,8 @@ export type OrderQuoteType = {
   description?: string
   amount?: number
   id?: string
+  doneAt?: Date | null
+  doneBy?: string | null
 }
 
 export enum order_status {
