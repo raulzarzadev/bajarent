@@ -175,7 +175,7 @@ const OrderStatus = ({
           titleColor={colors.white}
         />
       )}
-      {true && (
+      {expiresOnMonday && (
         <Chip
           style={[chipStyles]}
           title={'VL'}
