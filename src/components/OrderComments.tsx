@@ -11,8 +11,9 @@ import { CommentType } from './ListComments'
 import { FormattedComment } from '../types/CommentType'
 import formatComments from '../libs/formatComments'
 import asDate from '../libs/utils-date'
-import InputRadios from './InputRadios'
+//import InputRadios from './InputRadios'
 import { CommentRow } from './RowComment'
+import InputRadios from './Inputs/InputRadios'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { orders, staff } = useStore()
@@ -104,13 +105,38 @@ const InputComment = ({
       >
         <View
           style={{
-            justifyContent: 'center',
             alignItems: 'center',
             marginRight: gSpace(2),
-            flexDirection: 'row'
+            flexDirection: 'row',
+            flex: 1
           }}
         >
           <InputRadios
+            onChange={(value) => {
+              setCommentType(value)
+            }}
+            options={[
+              {
+                label: 'Normal',
+                color: colors.blue,
+                value: 'comment',
+                iconLabel: 'comment'
+              },
+              {
+                label: 'Imp',
+                color: colors.yellow,
+                value: 'important',
+                iconLabel: 'warning'
+              },
+              {
+                label: 'Reporte',
+                color: colors.red,
+                value: 'report',
+                iconLabel: 'report'
+              }
+            ]}
+          />
+          {/* <InputRadios
             value={commentType}
             layout="row"
             setValue={(value) => {
@@ -133,7 +159,7 @@ const InputComment = ({
                 value: 'report'
               }
             ]}
-          />
+          /> */}
         </View>
 
         <Button

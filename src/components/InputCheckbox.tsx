@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import createId from '../libs/createId'
 import Icon, { IconName } from './Icon'
+import theme from '../theme'
 
 const InputCheckbox = ({
   label,
@@ -12,7 +13,8 @@ const InputCheckbox = ({
   textStyle,
   color,
   disabled,
-  iconLabel
+  iconLabel,
+  iconCheck
 }: {
   label?: string
   setValue: (value: boolean) => void
@@ -22,6 +24,7 @@ const InputCheckbox = ({
   color?: string
   disabled?: boolean
   iconLabel?: IconName
+  iconCheck?: IconName
 }) => {
   const componentId = createId()
   const capitalizedLabel =
@@ -59,6 +62,17 @@ const InputCheckbox = ({
         },
         textStyle
       ]}
+      // iconComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
+      iconComponent={
+        iconCheck ? (
+          <Icon icon={iconCheck} color={theme.white} size={20} />
+        ) : undefined
+      }
+      innerIconStyle={{
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
       isChecked={isChecked}
       disabled={disabled}
       onPress={(isChecked: boolean) => {

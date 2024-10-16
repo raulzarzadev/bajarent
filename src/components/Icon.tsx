@@ -79,6 +79,9 @@ import { GoHomeFill } from 'react-icons/go'
 import { MdPendingActions } from 'react-icons/md'
 import { TfiWorld } from 'react-icons/tfi'
 import { PiSignatureDuotone } from 'react-icons/pi'
+import { View } from 'react-native'
+import theme from '../theme'
+import { BiCommentDots } from 'react-icons/bi'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -189,7 +192,9 @@ const icons = {
   starHalf: MdStarHalf,
   starEmpty: MdOutlineStarBorder,
   target: MdMyLocation,
-  tools: LiaToolsSolid
+  tools: LiaToolsSolid,
+  comment: BiCommentDots,
+  none: null
 } as const
 
 export type IconName = keyof typeof icons
@@ -198,10 +203,11 @@ const Icon = ({
   size = 30,
   ...props
 }: {
-  icon: IconName
+  icon: IconName | 'none'
   color?: string
   size?: number
 }) => {
+  if (icon === 'none') return null
   const Component = icons[icon]
   if (!Component) return <>Icon</>
   return <Component size={size} {...props} />

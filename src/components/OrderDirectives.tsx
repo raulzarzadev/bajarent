@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
 import OrderType, { order_status, order_type } from '../types/OrderType'
-import theme, { colors } from '../theme'
+import theme from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
