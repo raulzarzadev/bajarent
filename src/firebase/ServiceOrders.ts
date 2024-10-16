@@ -12,7 +12,7 @@ import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { addDays } from 'date-fns'
+import { addDays, isSaturday } from 'date-fns'
 import { createUUID } from '../libs/createId'
 import { auth } from './auth'
 import { expireDate2 } from '../libs/expireDate'
@@ -356,7 +356,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ops?: GetItemsOps
   ) {
     const TODAY = new Date(new Date().setHours(23, 59, 59, 999))
-    const TOMORROW = addDays(TODAY, 1)
+
+    const TOMORROW = isSaturday(TODAY) // get orders on sunday to expire on monday because is the next working day
+      ? addDays(TODAY, 2)
+      : addDays(TODAY, 1)
 
     const filterRentPending = [
       where('type', '==', TypeOrder.RENT),

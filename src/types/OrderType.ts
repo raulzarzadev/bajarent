@@ -92,6 +92,7 @@ export type OrderBase = {
 
   expiresToday?: boolean
   expiresTomorrow?: boolean
+  expiresOnMonday?: boolean
 
   comments: CommentType[]
 

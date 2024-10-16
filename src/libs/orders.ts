@@ -1,4 +1,4 @@
-import { formatDate, isBefore, isToday, isTomorrow } from 'date-fns'
+import { formatDate, isBefore, isMonday, isToday, isTomorrow } from 'date-fns'
 import { CommentType } from '../types/CommentType'
 import OrderType, { order_status, OrderExtensionType } from '../types/OrderType'
 import { LabelRentType, expireDate2, translateTime } from './expireDate'
@@ -65,13 +65,13 @@ export const formatOrder = ({
 
     return {
       ...order,
-
       comments: orderComments,
       hasNotSolvedReports: reportsNotSolved,
       isExpired,
       expireAt,
       expiresToday,
       expiresTomorrow: isTomorrow(asDate(expireAt)),
+      expiresOnMonday: isMonday(asDate(expireAt)),
       pendingMarketOrder:
         order?.status === order_status.PENDING && order.marketOrder
     }

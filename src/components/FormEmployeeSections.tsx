@@ -37,20 +37,28 @@ const FormEmployeeSections = ({ employeeId }: { employeeId: string }) => {
           <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
             Areas asignadas
           </Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-evenly'
+            }}
+          >
             {storeSections?.map(({ name, staff, id }) => (
-              <InputCheckbox
-                key={id}
-                disabled={loading}
-                label={name}
-                setValue={(checked) => {
-                  handleUpdateEmployeeSections({
-                    sectionId: id,
-                    add: checked
-                  })
-                }}
-                value={staff?.includes(employeeId) || false}
-              />
+              <View style={{ margin: 4 }}>
+                <InputCheckbox
+                  key={id}
+                  disabled={loading}
+                  label={name}
+                  setValue={(checked) => {
+                    handleUpdateEmployeeSections({
+                      sectionId: id,
+                      add: checked
+                    })
+                  }}
+                  value={staff?.includes(employeeId) || false}
+                />
+              </View>
             ))}
           </View>
         </>

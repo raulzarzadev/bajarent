@@ -131,9 +131,14 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
                 )} */}
               </View>
 
-              <View style={{ marginVertical: 16 }}>
+              <View
+                style={{
+                  marginVertical: 16,
+                  margin: 'auto'
+                }}
+              >
                 <InputCheckbox
-                  label="Agrega pago"
+                  label="Agregar pago"
                   value={addPay}
                   setValue={() => {
                     setAddPay(!addPay)

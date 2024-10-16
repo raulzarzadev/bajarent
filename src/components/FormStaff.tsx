@@ -82,7 +82,11 @@ const FormStaff = ({
           <Text>Permisos especiales</Text>
           <View>
             <FormikCheckbox
-              style={{ width: checkboxWidth, marginVertical: 4 }}
+              style={{
+                width: checkboxWidth,
+                marginVertical: 4,
+                marginHorizontal: 'auto'
+              }}
               name={`permissions.isAdmin`}
               label={'Admin'}
             />

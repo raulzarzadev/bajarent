@@ -56,6 +56,9 @@ const OrderStatus = ({
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
   const pendingMarketOrder = order?.pendingMarketOrder
+
+  const expiresOnMonday = order?.expiresOnMonday
+
   return (
     <>
       {isRenewed && (
@@ -166,6 +169,16 @@ const OrderStatus = ({
         <Chip
           style={[chipStyles]}
           title={'VM'}
+          color={theme.success}
+          icon={'alarm'}
+          size={chipSize}
+          titleColor={colors.white}
+        />
+      )}
+      {true && (
+        <Chip
+          style={[chipStyles]}
+          title={'VL'}
           color={theme.success}
           icon={'alarm'}
           size={chipSize}
