@@ -30,7 +30,7 @@ const CardItem = ({
   return (
     <View
       style={{
-        justifyContent: 'space-between',
+        //justifyContent: 'space-between',
         flex: 1
       }}
     >
