@@ -73,7 +73,6 @@ import {
 } from 'react-icons/go'
 import { LiaToolsSolid } from 'react-icons/lia'
 import { CgSmartHomeWashMachine } from 'react-icons/cg'
-import { PiArrowFatLinesUpLight } from 'react-icons/pi'
 import { GiReceiveMoney } from 'react-icons/gi'
 import { GoHomeFill } from 'react-icons/go'
 import { MdPendingActions } from 'react-icons/md'
