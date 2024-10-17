@@ -79,8 +79,6 @@ import { GoHomeFill } from 'react-icons/go'
 import { MdPendingActions } from 'react-icons/md'
 import { TfiWorld } from 'react-icons/tfi'
 import { PiSignatureDuotone } from 'react-icons/pi'
-import { View } from 'react-native'
-import theme from '../theme'
 import { BiCommentDots } from 'react-icons/bi'
 
 // https://react-icons.github.io/react-icons/

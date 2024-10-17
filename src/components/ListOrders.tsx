@@ -142,6 +142,14 @@ const ListOrders = ({
             icon: 'alarm',
             color: theme.warning,
             titleColor: theme.accent
+          },
+          {
+            field: 'expiresOnMonday',
+            label: 'Vence el lunes ',
+            boolean: true,
+            icon: 'up',
+            color: theme.transparent,
+            titleColor: theme.black
           }
         ]}
         ComponentMultiActions={({ ids }) => {
