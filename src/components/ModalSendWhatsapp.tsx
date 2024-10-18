@@ -13,6 +13,7 @@ import OrderType, {
 import dictionary from '../dictionary'
 import asDate, {
   dateFormat,
+  endDate,
   fromNow,
   isAfterTomorrow,
   isBeforeYesterday
@@ -40,12 +41,16 @@ export default function ModalSendWhatsapp({
   const FEE_PER_DAY = 100
   const getLateFee = ({
     expireDate,
-    feePerDay = 100
+    feePerDay = 100,
+    atTheEndOfDay
   }: {
     expireDate: Date
     feePerDay: number
+    atTheEndOfDay?: boolean
   }): { days: number; amount: number } => {
-    const expireAt = asDate(expireDate)
+    const expireAt = atTheEndOfDay
+      ? endDate(asDate(expireDate))
+      : asDate(expireDate)
     const today = new Date()
     const days = Math.ceil(
       (today.getTime() - expireAt?.getTime()) / (1000 * 3600 * 24)
@@ -97,7 +102,8 @@ export default function ModalSendWhatsapp({
   //******** MESSAGES
   const fee = getLateFee({
     expireDate: asDate(order?.expireAt),
-    feePerDay: FEE_PER_DAY
+    feePerDay: FEE_PER_DAY,
+    atTheEndOfDay: true // avoid fee if the date of expire is today
   })
 
   // const FEE_ADVERT = `\n\nRecargos: $${FEE_PER_DAY}mxn x día de retraso 📆 \n${
