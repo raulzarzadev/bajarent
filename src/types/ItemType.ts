@@ -1,6 +1,7 @@
 import BaseType from './BaseType'
-import OrderType, { ContactType, OrderQuoteType } from './OrderType'
+import { ContactType, OrderQuoteType } from './OrderType'
 import { CategoryType } from './RentItem'
+import { WorkshopFlow } from './WorkshopType'
 
 export enum ItemStatuses {
   rented = 'rented',
@@ -38,6 +39,8 @@ export type ItemBase = {
     | 'delivered'
   isExternalRepair?: boolean
   repairInfo?: string
+  workshopFlow?: WorkshopFlow
+  [key: string]: any
 }
 
 type ItemType = BaseType & ItemBase
@@ -52,7 +55,9 @@ export type ExternalRepairItemsProps = {
   }
   orderId: string
   workshopStatus: ItemBase['workshopStatus']
+
   scheduledAt?: Date
 }
+
 export type ItemExternalRepairProps = ItemType & ExternalRepairItemsProps
 export default ItemType

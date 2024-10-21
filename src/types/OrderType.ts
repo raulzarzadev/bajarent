@@ -9,6 +9,7 @@ import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import ItemType from './ItemType'
+import { WorkshopFlow } from './WorkshopType'
 export type ContactType = {
   name: string
   phone: string
@@ -89,6 +90,7 @@ export type OrderBase = {
   isExpired?: boolean
 
   workshopStatus?: ItemType['workshopStatus']
+  workshopFlow?: WorkshopFlow
 
   expiresToday?: boolean
   expiresTomorrow?: boolean
@@ -122,7 +124,11 @@ export type OrderBase = {
 
   hasDelivered?: boolean
 
+  failDescription?: string
   //* to repair orders
+  /**
+   * @deprecated use failDescription instead
+   */
   description?: string
   itemBrand?: string
   itemSerial?: string
@@ -135,6 +141,9 @@ export type OrderBase = {
   repairingAt?: Date
 
   repairTotal?: number
+  /**
+   * @deprecated use failDescription instead
+   */
   repairInfo?: string
   quoteBy?: string
 
@@ -182,6 +191,7 @@ export type OrderBase = {
   isRepairing?: boolean
   isDeleted?: boolean
   isExtended?: boolean
+  [key: string]: any
 }
 export type OrderExtensionType = {
   id: string

@@ -21,6 +21,7 @@ export const splitItems = ({
       finished: [],
       shouldPickup: []
     }
+
   const needFix = items.filter(
     (item) =>
       item.needFix &&
@@ -31,7 +32,7 @@ export const splitItems = ({
     (item) => item.workshopStatus === 'inProgress'
   )
   const finished = items.filter(
-    (item) => !item.needFix || item.workshopStatus === 'finished'
+    (item) => !item.needFix && item.workshopStatus === 'finished'
   )
   const shouldPickup = items.filter(
     (item) => item.workshopStatus === 'shouldPickup'
@@ -59,7 +60,8 @@ export const formatItems = (
     needFix: !!item?.needFix,
     isRented: !!(item?.status === 'rented'),
     isPickedUp: !!(item?.status === 'pickedUp'),
-    checkedInInventory: isToday(asDate(item?.lastInventoryAt))
+    checkedInInventory: isToday(asDate(item?.lastInventoryAt)),
+    workshopFlow: item?.workshopFlow
   }))
 }
 
@@ -74,35 +76,32 @@ export const formatItemsFromRepair = ({
 }): Partial<ItemType>[] => {
   const items: Partial<ItemExternalRepairProps>[] = repairOrders.map(
     (order) => {
-      if (order.folio === 99) {
-        console.log({ order })
-      }
       const needFix =
         order.status === order_status.REPAIRING ||
         order.status === order_status.AUTHORIZED
 
-      const workshopStatus = (() => {
-        const workshopStatuses = {
-          //  [order_status.REPAIRING]: 'inProgress',
-          [order_status.AUTHORIZED]: 'shouldPickup',
-          [order_status.REPAIRING]: 'pending',
-          [order_status.REPAIRED]: 'finished'
-        }
+      // const workshopStatus = (() => {
+      //   const workshopStatuses = {
+      //     //  [order_status.REPAIRING]: 'inProgress',
+      //     [order_status.AUTHORIZED]: 'shouldPickup',
+      //     [order_status.REPAIRING]: 'pending',
+      //     [order_status.REPAIRED]: 'finished'
+      //   }
 
-        if (
-          order.status === order_status.REPAIRING &&
-          order.workshopStatus === 'inProgress'
-        )
-          return 'inProgress'
+      //   if (
+      //     order.status === order_status.REPAIRING &&
+      //     order.workshopStatus === 'inProgress'
+      //   )
+      //     return 'inProgress'
 
-        if (order.status === order_status.AUTHORIZED) return 'shouldPickup'
-        if (order.status === order_status.REPAIRING) return 'pending'
-        if (order.status === order_status.REPAIRED) return 'finished'
-        return workshopStatuses[order.status]
-      })()
+      //   if (order.status === order_status.AUTHORIZED) return 'shouldPickup'
+      //   if (order.status === order_status.REPAIRING) return 'pending'
+      //   if (order.status === order_status.REPAIRED) return 'finished'
+      //   return workshopStatuses[order.status]
+      // })()
 
       const item = order.item
-      return {
+      const formattedItem = {
         id: order?.id,
         categoryName:
           categories.find((cat) => cat.id === item?.categoryId)?.name || '',
@@ -113,7 +112,8 @@ export const formatItemsFromRepair = ({
         number: String(order.folio) || '',
         brand: item?.brand || '',
         serial: item?.serial || '',
-        workshopStatus,
+        workshopStatus: order.workshopStatus,
+        workshopFlow: order?.workshopFlow || {},
         repairInfo: order?.repairInfo || item?.failDescription || '',
         repairDetails: {
           failDescription: item?.failDescription || order?.description || '',
@@ -135,6 +135,10 @@ export const formatItemsFromRepair = ({
         orderId: order?.id,
         scheduledAt: asDate(order?.scheduledAt)
       }
+      if (order.folio === 105) {
+        console.log({ formattedItem, order })
+      }
+      return formattedItem
     }
   )
   return items

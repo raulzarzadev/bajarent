@@ -26,6 +26,15 @@ import LinkLocation from './LinkLocation'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
 import InputCheckbox from './InputCheckbox'
 import asDate, { dateFormat } from '../libs/utils-date'
+import {
+  onWorkshopRepairFinish,
+  onWorkshopRepairPending,
+  onWorkshopRepairPickUp,
+  onWorkshopRepairStart
+} from '../firebase/actions/workshop-actions'
+import { useState } from 'react'
+import theme from '../theme'
+
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
   title?: string
@@ -34,12 +43,16 @@ export type RowWorkshopItemsProps = {
     a: ItemExternalRepairProps,
     b: ItemExternalRepairProps
   ) => number
+  onItemPress?: (item: Partial<ItemType['id']>) => void
+  selectedItem?: Partial<ItemType['id']>
 }
 const RowWorkshopItems = ({
   items,
   title,
   showScheduledTime,
-  sortFunction
+  sortFunction,
+  onItemPress,
+  selectedItem
 }: RowWorkshopItemsProps) => {
   const sortByNumber = (
     a: ItemExternalRepairProps,
@@ -71,7 +84,12 @@ const RowWorkshopItems = ({
               marginBottom: 4
             }}
           >
-            <WorkshopItem item={item} showScheduledTime={showScheduledTime} />
+            <WorkshopItem
+              item={item}
+              showScheduledTime={showScheduledTime}
+              onItemPress={onItemPress}
+              selectedItem={selectedItem}
+            />
           </View>
         ))}
       </View>
@@ -81,10 +99,14 @@ const RowWorkshopItems = ({
 
 const WorkshopItem = ({
   item,
-  showScheduledTime
+  showScheduledTime,
+  onItemPress,
+  selectedItem
 }: {
   item: Partial<ItemExternalRepairProps>
   showScheduledTime?: boolean
+  onItemPress?: (item: Partial<ItemType['id']>) => void
+  selectedItem?: Partial<ItemType['id']>
 }) => {
   // is two types of items in the workshop. External repair and internal/rent repair
   // external items has isExternalRepair props and it should modify the order when an action is handle
@@ -101,62 +123,62 @@ const WorkshopItem = ({
   const { user } = useAuth()
   const userId = user?.id
 
-  const handlePickup = async () => {
-    try {
-      modal.toggleOpen()
-      if (item.isExternalRepair) {
-        onRepairStart({ orderId: item.orderId, userId })
-      }
-    } catch (error) {
-      console.log(error)
-    }
+  const handlePickup = async ({ failDescription }) => {
+    onWorkshopRepairPending({
+      storeId,
+      itemId: item.id,
+      orderId: item.orderId,
+      isExternalRepair: item.isExternalRepair,
+      failDescription
+    })
   }
   const handleStartRepair = () => {
-    modal.toggleOpen()
-    if (item.isExternalRepair) {
-      ServiceOrders.update(item.orderId, {
-        workshopStatus: 'inProgress'
-      })
-    } else {
-      ServiceStoreItems.update({
-        itemId: item.id,
-        itemData: { workshopStatus: 'inProgress' },
-        storeId
-      })
-    }
+    onWorkshopRepairStart({
+      storeId,
+      itemId: item.id,
+      orderId: item.orderId,
+      isExternalRepair: item.isExternalRepair
+    })
   }
 
-  const handleMarkAsPending = () => {
+  const handleMarkAsPending = ({ failDescription }) => {
     modal.toggleOpen()
-    if (item.isExternalRepair) {
-      ServiceOrders.update(item.orderId, {
-        workshopStatus: 'pending'
-      })
-    } else {
-      ServiceStoreItems.update({
-        itemId: item.id,
-        itemData: { workshopStatus: 'pending' },
-        storeId
-      })
-    }
+    onWorkshopRepairPickUp({
+      storeId,
+      itemId: item.id,
+      orderId: item.orderId,
+      isExternalRepair: item.isExternalRepair,
+      failDescription
+    })
   }
   const handleFinishRepair = () => {
-    if (item.isExternalRepair) {
-      ServiceOrders.update(item.orderId, {
-        workshopStatus: 'finished'
-      })
-      onRepairFinish({ orderId: item.orderId, userId })
-    }
     modal.toggleOpen()
+    onWorkshopRepairFinish({
+      storeId,
+      itemId: item.id,
+      orderId: item.orderId,
+      isExternalRepair: item.isExternalRepair
+    })
   }
-  const handleBackToRepair = ({ comment }: { comment: string }) => {
+  const handleBackToRepair = ({
+    failDescription
+  }: {
+    failDescription: string
+  }) => {
     modal.toggleOpen()
+    onWorkshopRepairPickUp({
+      storeId,
+      itemId: item.id,
+      orderId: item.orderId,
+      failDescription,
+      isExternalRepair: item.isExternalRepair
+    })
     if (item.isExternalRepair) {
-      onRepairStart({
-        orderId: item.orderId,
-        userId,
-        comment
-      })
+      // onRepairStart({
+      //   orderId: item.orderId,
+      //   userId,
+      //   comment
+      // })
     } else {
       //* this case is handled by the modalFixItem
     }
@@ -187,14 +209,22 @@ const WorkshopItem = ({
   const fixFinished = finished.find((i) => i.id === item.id)
   const shouldPickup = item.workshopStatus === 'shouldPickup'
 
+  const showBackToRepairOnceFinished =
+    item.repairDetails.quotes.length > 0
+      ? item.repairDetails.quotes?.some((q) => !q.doneAt)
+      : true
   return (
     <View style={{ width: '100%', height: '100%' }}>
       <Pressable
-        onPress={modal.toggleOpen}
+        onPress={() => {
+          onItemPress?.(item.id)
+          console.log(item.id)
+          modal.toggleOpen()
+        }}
         style={{
           padding: 2,
           margin: 2,
-          backgroundColor: 'white',
+          backgroundColor: selectedItem === item?.id ? theme.info : 'white',
           borderRadius: 8,
           shadowColor: '#000',
           shadowOffset: {
@@ -313,7 +343,7 @@ const WorkshopItem = ({
             <Button
               label="Recoger"
               onPress={() => {
-                handlePickup()
+                handlePickup({ failDescription: item.repairInfo })
               }}
             ></Button>
           </View>
@@ -329,12 +359,19 @@ const WorkshopItem = ({
         {fixInProgress && (
           <View>
             <View style={{ marginVertical: 8, width: '100%' }}>
-              <Button label="Pendiente" onPress={handleMarkAsPending}></Button>
+              <Button
+                label="Pendiente"
+                onPress={() =>
+                  handleMarkAsPending({
+                    failDescription: item.repairInfo
+                  })
+                }
+              ></Button>
             </View>
             <View style={{ marginVertical: 8, width: '100%' }}>
               {item.isExternalRepair ? (
                 <>
-                  {item.repairDetails.quotes?.some((q) => !q.doneAt) && (
+                  {showBackToRepairOnceFinished && (
                     <Text style={[gStyles.tError, { marginBottom: 8 }]}>
                       *Faltan reparaciones por hacer
                     </Text>
@@ -342,7 +379,7 @@ const WorkshopItem = ({
                   <Button
                     onPress={handleFinishRepair}
                     label="Lista para entregar"
-                    disabled={item.repairDetails.quotes?.some((q) => !q.doneAt)}
+                    disabled={showBackToRepairOnceFinished}
                   ></Button>
                 </>
               ) : (
@@ -362,7 +399,9 @@ const WorkshopItem = ({
               item={item}
               disabled={false}
               disabledFix={false}
-              handleFix={({ comment }) => handleBackToRepair({ comment })}
+              handleFix={({ comment }) =>
+                handleBackToRepair({ failDescription: comment })
+              }
             />
 
             <InputAssignSection

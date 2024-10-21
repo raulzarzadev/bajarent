@@ -23,47 +23,46 @@ import {
 } from '../libs/workshop.libs'
 import Divider from './Divider'
 import { Switch } from 'react-native-elements'
+import { ca } from 'react-native-paper-dates'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
-
-  const { needFix, inProgress, finished } = splitItems({ items: itemsPickedUp })
-
-  const itemsNeedFix = needFix
-  const itemsInProgress = inProgress
-  const itemsFinished = finished
+  const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
 
   const { categories, storeSections } = useStore()
 
-  const formattedPendingItems = formatItems(
-    itemsNeedFix,
-    categories,
-    storeSections
-  )
-  const formattedInProgressItems = formatItems(
-    itemsInProgress,
-    categories,
-    storeSections
-  )
-  const formattedFinishedItems = formatItems(
-    itemsFinished,
-    categories,
-    storeSections
-  )
-  const formatRepairItems = formatItemsFromRepair({
+  const formattedItems = formatItems(itemsPickedUp, categories, storeSections)
+  const formattedOrders = formatItemsFromRepair({
     repairOrders,
     categories,
     storeSections
   })
-  const {
-    shouldPickup,
-    needFix: repairNeedFix,
-    inProgress: repairInProgress,
-    finished: repairFinished
-  } = splitItems({ items: formatRepairItems })
+
+  const itemsPending = formattedItems.filter(
+    (i) => i.workshopStatus === 'pending' || !i.workshopStatus
+  )
+  const itemsInProgress = formattedItems.filter(
+    (i) => i.workshopStatus === 'inProgress'
+  )
+  const itemsFinished = formattedItems.filter(
+    (i) => i.workshopStatus === 'finished'
+  )
+
+  const ordersShouldPickup = formattedOrders.filter(
+    (i) => i.workshopStatus === 'shouldPickup' || !i.workshopStatus
+  )
+  const ordersPending = formattedOrders.filter(
+    (i) => i.workshopStatus === 'pending'
+  )
+  const ordersInProgress = formattedOrders.filter(
+    (i) => i.workshopStatus === 'inProgress'
+  )
+  const ordersFinished = formattedOrders.filter(
+    (i) => i.workshopStatus === 'finished'
+  )
 
   const [showRent, setShowRent] = useState(false)
 
@@ -89,30 +88,38 @@ const ScreenWorkshop = () => {
           justShow={'repairs'}
           title="Por recoger"
           showScheduledTime
-          repairItems={shouldPickup}
+          repairItems={ordersShouldPickup}
+          onItemPress={setItemPressed}
+          selectedItem={itemPressed}
         />
       )}
 
       <RepairStepE
         justShow={showRent ? 'rents' : 'repairs'}
         title="Pendientes"
-        rentItems={formattedPendingItems}
-        repairItems={repairNeedFix}
+        rentItems={itemsPending}
+        repairItems={ordersPending}
+        onItemPress={setItemPressed}
+        selectedItem={itemPressed}
       />
 
       <RepairStepE
         justShow={showRent ? 'rents' : 'repairs'}
         title="En reparación"
-        rentItems={formattedInProgressItems}
-        repairItems={repairInProgress}
+        rentItems={itemsInProgress}
+        repairItems={ordersInProgress}
+        onItemPress={setItemPressed}
+        selectedItem={itemPressed}
       />
 
       <RepairStepE
         justShow={showRent ? 'rents' : 'repairs'}
         title="Listas para entrega"
-        rentItems={formattedFinishedItems}
-        repairItems={repairFinished}
+        rentItems={itemsFinished}
+        repairItems={ordersFinished}
         showScheduledTime
+        onItemPress={setItemPressed}
+        selectedItem={itemPressed}
       />
     </ScrollView>
   )
@@ -124,6 +131,8 @@ export type RepairStepProps = {
   repairItems?: Partial<ItemType>[]
   justShow?: 'rents' | 'repairs'
   showScheduledTime?: boolean
+  onItemPress?: (id: string) => void
+  selectedItem?: Partial<ItemType['id']>
 }
 export const RepairStepE = (props: RepairStepProps) => (
   <ErrorBoundary componentName="RepairStep">
@@ -135,13 +144,20 @@ const RepairStep = ({
   rentItems = [],
   repairItems = [],
   justShow,
-  showScheduledTime
+  showScheduledTime,
+  onItemPress,
+  selectedItem
 }: RepairStepProps) => {
   return (
     <View style={{ marginBottom: 16 }}>
       <View style={{ paddingLeft: 16 }}>
         {justShow === 'rents' && (
-          <RowWorkshopItems items={rentItems} title={title} />
+          <RowWorkshopItems
+            items={rentItems}
+            title={title}
+            onItemPress={onItemPress}
+            selectedItem={selectedItem}
+          />
         )}
         {justShow === 'repairs' && (
           <RowWorkshopItems
@@ -151,6 +167,8 @@ const RepairStep = ({
             sortFunction={(a, b) =>
               asDate(a.scheduledAt).getTime() - asDate(b.scheduledAt).getTime()
             }
+            onItemPress={onItemPress}
+            selectedItem={selectedItem}
           />
         )}
       </View>
@@ -190,6 +208,7 @@ const WorkshopMovements = () => {
         storeId,
         items
       }).then((res) => {
+        console.log({ res })
         setMovements(
           res.sort(
             (a, b) =>
