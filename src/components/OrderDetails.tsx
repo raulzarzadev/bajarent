@@ -39,6 +39,7 @@ import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  console.log({ order })
   const [defaultAmount, setDefaultAmount] = useState(0)
   useEffect(() => {
     if (order?.type === order_type.REPAIR) {

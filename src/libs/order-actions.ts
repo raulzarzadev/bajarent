@@ -25,20 +25,23 @@ export const onComment = async ({
   storeId,
   content,
   type,
-  isOrderMovement = false
+  isOrderMovement = false,
+  variant = 'regular_comment'
 }: {
   orderId: string
   storeId: string
   content: string
   type: CommentType['type']
   isOrderMovement?: boolean
+  variant?: CommentType['variant']
 }) => {
   return await ServiceOrders.addComment({
     storeId,
     orderId,
     type,
     content,
-    isOrderMovement
+    isOrderMovement,
+    variant
   })
     .then(() => {
       console.log('comment')
@@ -142,7 +145,8 @@ export const onRepairPickup = async ({ orderId, userId, storeId }) => {
         orderId: orderId,
         content: 'Recogida',
         storeId,
-        type: 'comment'
+        type: 'comment',
+        variant: 'workshop_flow'
       })
       console.log('repair pickup')
     })
@@ -172,7 +176,8 @@ export const onRepairStart = async ({
         content: 'Reparacion iniciada',
         type: 'comment',
         storeId: orderId,
-        isOrderMovement: true
+        isOrderMovement: true,
+        variant: 'workshop_flow'
       })
       console.log('repairing')
     })
@@ -194,7 +199,8 @@ export const onRepairFinish = async ({ orderId, userId }) => {
         content: 'Reparacion terminada',
         type: 'comment',
         storeId: orderId,
-        isOrderMovement: true
+        isOrderMovement: true,
+        variant: 'workshop_flow'
       })
     })
     .catch(console.error)
@@ -202,7 +208,7 @@ export const onRepairFinish = async ({ orderId, userId }) => {
 export const onRepairCancelPickup = async ({ orderId, userId, storeId }) => {
   onAuthorize({ orderId, userId, storeId, repairCanceled: true })
 }
-export const onRepairDelivery = async ({ orderId, userId }) => {
+export const onRepairDelivery = async ({ orderId, userId, storeId }) => {
   if (!userId) return console.error('no userId')
   return await ServiceOrders.update(orderId, {
     status: order_status.DELIVERED,
@@ -212,7 +218,13 @@ export const onRepairDelivery = async ({ orderId, userId }) => {
     workshopStatus: 'delivered'
   })
     .then(() => {
-      console.log('delivery')
+      onComment({
+        content: 'Reparacion entregada',
+        orderId,
+        type: 'comment',
+        variant: 'workshop_flow',
+        storeId
+      }).catch(console.error)
     })
     .catch(console.error)
 }

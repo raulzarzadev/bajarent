@@ -24,6 +24,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
       staff,
       orders
     })
+    console.log({ comments })
     setOrderComments(formattedComments)
   }
   const [orderComments, setOrderComments] = useState([])

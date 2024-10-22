@@ -99,8 +99,9 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
           onPress={async () => {
             await onRepairDelivery({
               orderId: order.id,
-              userId: user.id
-            }).catch(console.error)
+              userId: user.id,
+              storeId
+            })
           }}
         />
       </View>

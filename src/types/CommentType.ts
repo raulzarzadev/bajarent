@@ -1,3 +1,4 @@
+import { ItemHistoryVariantType } from '../firebase/ServiceItemHistory'
 import BaseType from './BaseType'
 import { order_type } from './OrderType'
 
@@ -26,7 +27,7 @@ export type CommentBase = {
 
   itemId?: string
   solvedComment?: string
-
+  variant?: CommentVariantType
   isReport?: boolean
   isImportant?: boolean
   isPayment?: boolean
@@ -35,6 +36,12 @@ export type CommentBase = {
 
   createdByName?: string
 }
+export enum comment_variant {
+  workshop_flow = 'workshop_flow',
+  rent_flow = 'rent_flow',
+  regular_comment = 'regular_comment'
+}
+export type CommentVariantType = keyof typeof comment_variant
 
 export type FormattedComment = CommentBase &
   BaseType & {

@@ -69,13 +69,15 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     storeId,
     type,
     content,
-    isOrderMovement = false
+    isOrderMovement = false,
+    variant = 'regular_comment'
   }: {
     storeId: string
     orderId: string
     type: CommentType['type']
     content: string
     isOrderMovement?: boolean
+    variant?: CommentType['variant']
   }) {
     if (!orderId) return console.error('No orderId provided')
     if (!storeId) return console.error('No storeId provided')
@@ -88,7 +90,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       type,
       content,
       solved: false,
-      isOrderMovement
+      isOrderMovement,
+      variant
     }
 
     return await ServiceComments.create(comment)

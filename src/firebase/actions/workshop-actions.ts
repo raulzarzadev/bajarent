@@ -8,7 +8,6 @@ import {
   onRepairStart
 } from '../../libs/order-actions'
 import { ServiceItemHistory } from '../ServiceItemHistory'
-import { ServiceOrders } from '../ServiceOrders'
 import { ServiceStoreItems } from '../ServiceStoreItems'
 
 //* REPAIR ITEMS/ORDERS STEPS
@@ -213,7 +212,8 @@ export const onWorkshopDeliveryRepair = async ({
     if (isExternalRepair) {
       onRepairDelivery({
         orderId,
-        userId
+        userId,
+        storeId
       })
     } else {
       ServiceItemHistory.addEntry({

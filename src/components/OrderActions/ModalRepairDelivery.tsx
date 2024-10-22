@@ -3,16 +3,14 @@ import React from 'react'
 import StyledModal from '../StyledModal'
 import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
-import { onComment, onRepairDelivery } from '../../libs/order-actions'
+import { onRepairDelivery } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
-import FormRepairDelivery from './FormRepairDelivery'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
 
-  const { user } = useAuth()
+  const { user, storeId } = useAuth()
 
   const handleRepairDelivery = async () => {
     //*pickup items
@@ -20,20 +18,12 @@ const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
 
     await onRepairDelivery({
       orderId: order.id,
-      userId: user.id
+      userId: user.id,
+      storeId
     })
-      .then((res) => console.log({ res }))
-      .catch(console.error)
-    await onComment({
-      content: 'Reparación entregada',
-      orderId: order.id,
-      storeId: order.storeId,
-      type: 'comment'
-    })
+
     return
   }
-
-  const item = order.item
 
   return (
     <View>
