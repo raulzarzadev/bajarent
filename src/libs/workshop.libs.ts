@@ -79,6 +79,12 @@ export const formatItemsFromRepair = ({
 }): Partial<ItemType>[] => {
   const items: Partial<ItemExternalRepairProps>[] = repairOrders.map(
     (order) => {
+      console.log(order.workshopStatus)
+      const workshopStatus =
+        //@ts-ignore
+        order.workshopStatus === 'inProgress'
+          ? 'pickedUp'
+          : order.workshopStatus
       const needFix =
         order.status === order_status.REPAIRING ||
         order.status === order_status.AUTHORIZED
@@ -95,7 +101,7 @@ export const formatItemsFromRepair = ({
         number: String(order.folio) || '',
         brand: item?.brand || '',
         serial: item?.serial || '',
-        workshopStatus: order.workshopStatus || 'pending',
+        workshopStatus: workshopStatus || 'pending',
         workshopFlow: order?.workshopFlow || {},
         repairInfo: order?.repairInfo || item?.failDescription || '',
         repairDetails: {

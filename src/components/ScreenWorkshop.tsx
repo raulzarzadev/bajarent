@@ -35,7 +35,7 @@ const ScreenWorkshop = () => {
     categories,
     storeSections
   })
-  console.log({ formattedItems })
+  console.log({ formattedOrders })
 
   //* <---- Rent items repairs
   const itemsPending = formattedItems.filter(
@@ -81,9 +81,14 @@ const ScreenWorkshop = () => {
           marginBottom: 12
         }}
       >
-        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>Reparaciones</Text>
+        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
+          {' '}
+          {`(${formattedOrders.length}) `}Reparaciones
+        </Text>
         <Switch onValueChange={setShowRent} value={showRent} />
-        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>De renta</Text>
+        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
+          De renta {`(${formattedItems.length}) `}
+        </Text>
       </View>
       {!showRent && (
         <RepairStepE
