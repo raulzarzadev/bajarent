@@ -16,14 +16,9 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ItemType from '../types/ItemType'
 import ErrorBoundary from './ErrorBoundary'
-import {
-  formatItems,
-  formatItemsFromRepair,
-  splitItems
-} from '../libs/workshop.libs'
+import { formatItems, formatItemsFromRepair } from '../libs/workshop.libs'
 import Divider from './Divider'
 import { Switch } from 'react-native-elements'
-import { ca } from 'react-native-paper-dates'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
@@ -33,33 +28,38 @@ const ScreenWorkshop = () => {
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
 
   const { categories, storeSections } = useStore()
-
   const formattedItems = formatItems(itemsPickedUp, categories, storeSections)
   const formattedOrders = formatItemsFromRepair({
     repairOrders,
     categories,
     storeSections
   })
+  console.log({ formattedOrders, repairOrders })
 
   const itemsPending = formattedItems.filter(
     (i) => i.workshopStatus === 'pending' || !i.workshopStatus
   )
+
   const itemsInProgress = formattedItems.filter(
-    (i) => i.workshopStatus === 'inProgress'
+    (i) => i.workshopStatus === 'started'
   )
+
   const itemsFinished = formattedItems.filter(
     (i) => i.workshopStatus === 'finished'
   )
 
   const ordersShouldPickup = formattedOrders.filter(
-    (i) => i.workshopStatus === 'shouldPickup' || !i.workshopStatus
+    (i) => i.workshopStatus === 'pending' || !i.workshopStatus
   )
+
   const ordersPending = formattedOrders.filter(
-    (i) => i.workshopStatus === 'pending'
+    (i) => i.workshopStatus === 'pickedUp'
   )
+
   const ordersInProgress = formattedOrders.filter(
-    (i) => i.workshopStatus === 'inProgress'
+    (i) => i.workshopStatus === 'started'
   )
+
   const ordersFinished = formattedOrders.filter(
     (i) => i.workshopStatus === 'finished'
   )

@@ -173,7 +173,7 @@ export class ServiceStoreItemsClass {
       parentId: storeId,
       subCollection: SUB_COLLECTION,
       itemId,
-      field,
+      field: field as string,
       value
     })
       .then((res) => res)

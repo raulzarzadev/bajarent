@@ -17,7 +17,6 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
   const items = order?.items || []
   const handleRentFinish = async () => {
     //*pickup items
-    //onPickUp order it's ok
     modal.setOpen(false)
     onRentFinish({ order, userId: user.id })
   }

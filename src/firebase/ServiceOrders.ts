@@ -5,7 +5,8 @@ import OrderType, {
   OrderExtensionType,
   TypeOrder,
   TypeOrderType,
-  order_status
+  order_status,
+  order_type
 } from '../types/OrderType'
 import { FirebaseGenericService } from './genericService'
 
@@ -598,11 +599,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('status', '==', status)
     ]
     //* Replace last to words of fields by ""By"
-
-    const formatField = field.replace(/At/g, 'By')
+    const fieldString = String(field)
+    const formatField = fieldString.replace(/At/g, 'By')
     if (userId) filters.push(where(formatField, '==', userId))
-    if (fromDate) filters.push(where(field, '>=', fromDate))
-    if (toDate) filters.push(where(field, '<=', toDate))
+    if (fromDate) filters.push(where(fieldString, '>=', fromDate))
+    if (toDate) filters.push(where(fieldString, '<=', toDate))
     if (type) {
       filters.push(where('type', '==', type))
     }
@@ -742,10 +743,11 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   ) => {
     const filters = [
       where('storeId', '==', storeId),
-      where('type', '==', TypeOrder.REPAIR),
+      where('type', '==', order_type.REPAIR),
       where('status', 'in', [
-        order_status.PENDING,
         order_status.AUTHORIZED,
+        order_status.PENDING,
+        order_status.PICKED_UP,
         order_status.REPAIRING,
         order_status.REPAIRED
       ])
@@ -769,8 +771,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   ): Promise<OrderType[]> => {
     const filters = [
       where('storeId', '==', storeId),
-      where(field, '>=', fromDate),
-      where(field, '<=', toDate)
+      where(field as string, '>=', fromDate),
+      where(field as string, '<=', toDate)
     ]
     return this.findMany(filters, ops)
   }

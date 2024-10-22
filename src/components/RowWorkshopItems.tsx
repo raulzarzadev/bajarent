@@ -4,36 +4,17 @@ import Button from './Button'
 import CardItem from './CardItem'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import { useStore } from '../contexts/storeContext'
-import InputAssignSection from './InputAssingSection'
-import ModalFixItem from './ModalFixItem'
-
 import useMyNav from '../hooks/useMyNav'
 
 import { gStyles } from '../styles'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import {
-  onAssignOrder,
-  onRepairFinish,
-  onRepairStart,
-  onMarkQuoteAsDone
-} from '../libs/order-actions'
-import { useAuth } from '../contexts/authContext'
-import { splitItems } from '../libs/workshop.libs'
+import { onMarkQuoteAsDone } from '../libs/order-actions'
 import { ContactRow } from './OrderContacts'
 import LinkLocation from './LinkLocation'
-import { onChangeItemSection } from '../firebase/actions/item-actions'
 import InputCheckbox from './InputCheckbox'
 import asDate, { dateFormat } from '../libs/utils-date'
-import {
-  onWorkshopRepairFinish,
-  onWorkshopRepairPending,
-  onWorkshopRepairPickUp,
-  onWorkshopRepairStart
-} from '../firebase/actions/workshop-actions'
-import { useState } from 'react'
+
 import theme from '../theme'
+import WorkshopItemActions from './WorkshopItemActions'
 
 export type RowWorkshopItemsProps = {
   items: Partial<ItemType>[]
@@ -119,100 +100,7 @@ const WorkshopItem = ({
     }`
   })
   const { toItems, toOrders } = useMyNav()
-  const { storeId } = useStore()
-  const { user } = useAuth()
-  const userId = user?.id
 
-  const handlePickup = async ({ failDescription }) => {
-    onWorkshopRepairPending({
-      storeId,
-      itemId: item.id,
-      orderId: item.orderId,
-      isExternalRepair: item.isExternalRepair,
-      failDescription
-    })
-  }
-  const handleStartRepair = () => {
-    onWorkshopRepairStart({
-      storeId,
-      itemId: item.id,
-      orderId: item.orderId,
-      isExternalRepair: item.isExternalRepair
-    })
-  }
-
-  const handleMarkAsPending = ({ failDescription }) => {
-    modal.toggleOpen()
-    onWorkshopRepairPickUp({
-      storeId,
-      itemId: item.id,
-      orderId: item.orderId,
-      isExternalRepair: item.isExternalRepair,
-      failDescription
-    })
-  }
-  const handleFinishRepair = () => {
-    modal.toggleOpen()
-    onWorkshopRepairFinish({
-      storeId,
-      itemId: item.id,
-      orderId: item.orderId,
-      isExternalRepair: item.isExternalRepair
-    })
-  }
-  const handleBackToRepair = ({
-    failDescription
-  }: {
-    failDescription: string
-  }) => {
-    modal.toggleOpen()
-    onWorkshopRepairPickUp({
-      storeId,
-      itemId: item.id,
-      orderId: item.orderId,
-      failDescription,
-      isExternalRepair: item.isExternalRepair
-    })
-    if (item.isExternalRepair) {
-      // onRepairStart({
-      //   orderId: item.orderId,
-      //   userId,
-      //   comment
-      // })
-    } else {
-      //* this case is handled by the modalFixItem
-    }
-  }
-  const handleAssignToSection = async ({ sectionId, sectionName }) => {
-    if (item.isExternalRepair) {
-      return await onAssignOrder({
-        orderId: item.orderId,
-        sectionId,
-        sectionName,
-        storeId,
-        fromSectionName: 'Taller'
-      })
-    } else {
-      return await onChangeItemSection({
-        storeId,
-        itemId: item.id,
-        sectionId,
-        sectionName,
-        fromSectionId: 'workshop'
-      })
-    }
-  }
-  const { needFix, finished, inProgress } = splitItems({ items: [item] })
-
-  const fixPending = needFix.find((i) => i.id === item.id)
-  const fixInProgress = inProgress.find((i) => i.id === item.id)
-  const fixFinished = finished.find((i) => i.id === item.id)
-  const shouldPickup = item.workshopStatus === 'shouldPickup'
-
-  const showBackToRepairOnceFinished =
-    item.repairDetails.quotes.length > 0
-      ? item.repairDetails.quotes?.some((q) => !q.doneAt)
-      : true
   return (
     <View style={{ width: '100%', height: '100%' }}>
       <Pressable
@@ -317,7 +205,7 @@ const WorkshopItem = ({
                     }}
                   >
                     <InputCheckbox
-                      disabled={item.workshopStatus !== 'inProgress'}
+                      disabled={item.workshopStatus !== 'started'}
                       value={!!q.doneAt}
                       setValue={() => {
                         onMarkQuoteAsDone({
@@ -338,84 +226,7 @@ const WorkshopItem = ({
           </View>
         )}
 
-        {shouldPickup && (
-          <View style={{ marginVertical: 8, width: '100%' }}>
-            <Button
-              label="Recoger"
-              onPress={() => {
-                handlePickup({ failDescription: item.repairInfo })
-              }}
-            ></Button>
-          </View>
-        )}
-        {fixPending && (
-          <View style={{ marginVertical: 8, width: '100%' }}>
-            <Button
-              label="Iniciar reparación"
-              onPress={handleStartRepair}
-            ></Button>
-          </View>
-        )}
-        {fixInProgress && (
-          <View>
-            <View style={{ marginVertical: 8, width: '100%' }}>
-              <Button
-                label="Pendiente"
-                onPress={() =>
-                  handleMarkAsPending({
-                    failDescription: item.repairInfo
-                  })
-                }
-              ></Button>
-            </View>
-            <View style={{ marginVertical: 8, width: '100%' }}>
-              {item.isExternalRepair ? (
-                <>
-                  {showBackToRepairOnceFinished && (
-                    <Text style={[gStyles.tError, { marginBottom: 8 }]}>
-                      *Faltan reparaciones por hacer
-                    </Text>
-                  )}
-                  <Button
-                    onPress={handleFinishRepair}
-                    label="Lista para entregar"
-                    disabled={showBackToRepairOnceFinished}
-                  ></Button>
-                </>
-              ) : (
-                <ModalFixItem
-                  item={item}
-                  disabled={false}
-                  disabledFix={false}
-                  handleFix={() => handleFinishRepair()}
-                />
-              )}
-            </View>
-          </View>
-        )}
-        {fixFinished && (
-          <View style={{ marginVertical: 8, width: '100%' }}>
-            <ModalFixItem
-              item={item}
-              disabled={false}
-              disabledFix={false}
-              handleFix={({ comment }) =>
-                handleBackToRepair({ failDescription: comment })
-              }
-            />
-
-            <InputAssignSection
-              setNewSection={async ({ sectionId, sectionName }) => {
-                try {
-                  await handleAssignToSection({ sectionId, sectionName })
-                } catch (error) {
-                  console.log('error', error)
-                }
-                return
-              }}
-            />
-          </View>
-        )}
+        <WorkshopItemActions item={item} />
       </StyledModal>
     </View>
   )

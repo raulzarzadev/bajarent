@@ -1,5 +1,13 @@
 //* <------------------ UPDATE ITEM WORKSHOP STATUS
 
+import {
+  onRepairCancelPickup,
+  onRepairDelivery,
+  onRepairFinish,
+  onRepairPickup,
+  onRepairStart
+} from '../../libs/order-actions'
+import { ServiceItemHistory } from '../ServiceItemHistory'
 import { ServiceOrders } from '../ServiceOrders'
 import { ServiceStoreItems } from '../ServiceStoreItems'
 
@@ -21,24 +29,27 @@ export type WorkshopActionProps = {
   orderId?: string
   isExternalRepair?: boolean
   failDescription?: string
+  userId: string
 }
+
+/**
+ *
+ * @param param0 Mark as PENDING TO PICK UP an item or order
+ */
 export const onWorkshopRepairPending = async ({
   storeId,
   itemId,
   orderId,
   failDescription,
-  isExternalRepair
-}) => {
+  isExternalRepair,
+  userId
+}: WorkshopActionProps) => {
   try {
     if (isExternalRepair) {
-      ServiceOrders.update(orderId, {
-        ['workshopFlow.pendingAt']: new Date(),
-        ['workshopFlow.pickedUpAt']: null,
-        ['workshopFlow.startedAt']: null,
-        ['workshopFlow.finishedAt']: null,
-        ['workshopFlow.deliveredAt']: null,
-        workshopStatus: 'pending',
-        failDescription
+      onRepairCancelPickup({
+        orderId,
+        userId,
+        storeId
       })
     } else {
       ServiceStoreItems.update({
@@ -60,24 +71,34 @@ export const onWorkshopRepairPending = async ({
   }
 }
 
+/**
+ *
+ * @param param0 Mark as PICKED UP and ready to start Repair an item or order
+ */
 export const onWorkshopRepairPickUp = async ({
   storeId,
   itemId,
   orderId,
   isExternalRepair,
-  failDescription
-}) => {
+  failDescription,
+  userId
+}: WorkshopActionProps) => {
   try {
     if (isExternalRepair) {
-      ServiceOrders.update(orderId, {
-        ['workshopFlow.pickedUpAt']: new Date(),
-        ['workshopFlow.startedAt']: null,
-        ['workshopFlow.finishedAt']: null,
-        ['workshopFlow.deliveredAt']: null,
-        workshopStatus: 'pending',
-        failDescription
+      onRepairPickup({
+        orderId,
+        userId,
+        storeId
       })
     } else {
+      ServiceItemHistory.addEntry({
+        storeId,
+        itemId,
+        entry: {
+          type: 'workshop',
+          variant: 'repair_picked_up'
+        }
+      })
       ServiceStoreItems.update({
         itemId,
         storeId,
@@ -86,7 +107,7 @@ export const onWorkshopRepairPickUp = async ({
           ['workshopFlow.startedAt']: null,
           ['workshopFlow.finishedAt']: null,
           ['workshopFlow.deliveredAt']: null,
-          workshopStatus: 'pending',
+          workshopStatus: 'pickedUp',
           failDescription
         }
       })
@@ -95,22 +116,33 @@ export const onWorkshopRepairPickUp = async ({
     console.error(error)
   }
 }
-
+/**
+ *
+ * @param param0 Mark as REPAIR STARTED  to start Repair an item or order
+ */
 export const onWorkshopRepairStart = async ({
   storeId,
   itemId,
   orderId,
-  isExternalRepair
-}) => {
+  isExternalRepair,
+  failDescription,
+  userId
+}: WorkshopActionProps) => {
   try {
     if (isExternalRepair) {
-      ServiceOrders.update(orderId, {
-        ['workshopFlow.startedAt']: new Date(),
-        ['workshopFlow.finishedAt']: null,
-        ['workshopFlow.deliveredAt']: null,
-        workshopStatus: 'inProgress'
+      onRepairStart({
+        orderId,
+        userId
       })
     } else {
+      ServiceItemHistory.addEntry({
+        storeId,
+        itemId,
+        entry: {
+          type: 'workshop',
+          variant: 'repair_started'
+        }
+      })
       ServiceStoreItems.update({
         itemId,
         storeId,
@@ -118,7 +150,8 @@ export const onWorkshopRepairStart = async ({
           ['workshopFlow.startedAt']: new Date(),
           ['workshopFlow.finishedAt']: null,
           ['workshopFlow.deliveredAt']: null,
-          workshopStatus: 'inProgress'
+          workshopStatus: 'started',
+          failDescription
         }
       })
     }
@@ -126,23 +159,33 @@ export const onWorkshopRepairStart = async ({
     console.error(error)
   }
 }
-
+/**
+ *
+ * @param param0 Mark as REPAIR FINISHED  to start Repair an item or order
+ */
 export const onWorkshopRepairFinish = async ({
   storeId,
   itemId,
   orderId,
-  isExternalRepair
+  isExternalRepair,
+  userId
 }: WorkshopActionProps) => {
   try {
     if (isExternalRepair) {
-      console.log('finish order', { orderId })
-      ServiceOrders.update(orderId, {
-        'workshopFlow.finishedAt': new Date(),
-        'workshopFlow.deliveredAt': null,
-        workshopStatus: 'finished'
+      onRepairFinish({
+        orderId,
+        userId
       })
     } else {
       console.log('finish item')
+      ServiceItemHistory.addEntry({
+        storeId,
+        itemId,
+        entry: {
+          type: 'workshop',
+          variant: 'repair_finished'
+        }
+      })
       ServiceStoreItems.update({
         itemId,
         storeId,
@@ -157,25 +200,40 @@ export const onWorkshopRepairFinish = async ({
     console.error(error)
   }
 }
-export const onWorkshopRepairDelivered = async ({
+
+export const onWorkshopDeliveryRepair = async ({
   storeId,
   itemId,
   orderId,
-  isExternalRepair
-}) => {
+  isExternalRepair,
+  failDescription,
+  userId
+}: WorkshopActionProps) => {
   try {
     if (isExternalRepair) {
-      ServiceOrders.update(orderId, {
-        ['workshopFlow.deliveredAt']: new Date(),
-        workshopStatus: 'finished'
+      onRepairDelivery({
+        orderId,
+        userId
       })
     } else {
+      ServiceItemHistory.addEntry({
+        storeId,
+        itemId,
+        entry: {
+          type: 'workshop',
+          variant: 'repair_delivered'
+        }
+      })
       ServiceStoreItems.update({
         itemId,
         storeId,
         itemData: {
+          ['workshopFlow.pickedUpAt']: new Date(),
+          ['workshopFlow.startedAt']: null,
+          ['workshopFlow.finishedAt']: null,
           ['workshopFlow.deliveredAt']: new Date(),
-          workshopStatus: 'finished'
+          workshopStatus: 'delivered',
+          failDescription
         }
       })
     }

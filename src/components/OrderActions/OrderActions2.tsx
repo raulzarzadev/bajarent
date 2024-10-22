@@ -9,10 +9,10 @@ import ModalRentStart from './ModalRentStart'
 import ModalRentFinish from './ModalRentFinish'
 import { gSpace, gStyles } from '../../styles'
 import {
-  onAuthorize,
   onComment,
   onRepairDelivery,
-  onRepairFinish
+  onRepairFinish,
+  onRepairCancelPickup
 } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useEffect, useState } from 'react'
@@ -24,6 +24,7 @@ import { useEmployee } from '../../contexts/employeeContext'
 import { ItemStatuses } from '../../types/ItemType'
 import { ServiceItemHistory } from '../../firebase/ServiceItemHistory'
 import { onRegistryEntry } from '../../firebase/actions/item-actions'
+import { useStore } from '../../contexts/storeContext'
 
 //* repaired
 function OrderActions() {
@@ -46,7 +47,7 @@ export const OrderActionsE = (props) => (
 
 const RepairOrderActions = ({ order }: { order: OrderType }) => {
   const { user } = useAuth()
-
+  const { storeId } = useStore()
   const status = order?.status
   const isDelivered = status === order_status.DELIVERED
   const isRepaired = status === order_status.REPAIRED
@@ -64,9 +65,11 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
           unselectedLabel="Pedido"
           color="success"
           onPress={async () => {
-            await onAuthorize({ orderId: order.id, userId: user.id }).catch(
-              console.error
-            )
+            onRepairCancelPickup({
+              orderId: order.id,
+              userId: user.id,
+              storeId
+            })
           }}
         />
         <ButtonAction

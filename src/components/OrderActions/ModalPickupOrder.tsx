@@ -5,7 +5,7 @@ import OrderType from '../../types/OrderType'
 import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
 import TextInfo from '../TextInfo'
-import { onComment, onPickup } from '../../libs/order-actions'
+import { onRentPickup } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { onPickUpItem } from '../../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
@@ -68,15 +68,7 @@ const ModalPickupOrder = ({
         .catch(console.error)
     })
     //* pickup order
-    await onPickup({ orderId, userId: user.id })
-
-    //* create movement
-    await onComment({
-      orderId: order.id,
-      content: 'Recogida',
-      storeId,
-      type: 'comment'
-    })
+    await onRentPickup({ orderId, userId: user.id, storeId })
   }
 
   return (

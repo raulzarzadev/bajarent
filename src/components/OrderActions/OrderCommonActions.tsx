@@ -1,16 +1,14 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import {
   onAuthorize,
   onCancel,
-  onComment,
   onDelete,
   onSetStatuses
 } from '../../libs/order-actions'
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
-import { CommentType } from '../ListComments'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
 import { ModalSendWhatsappE } from '../ModalSendWhatsapp'
@@ -21,12 +19,7 @@ import ErrorBoundary from '../ErrorBoundary'
 import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
 import { ContactType } from '../../types/OrderType'
-import unShortUrl from '../../libs/unShortUrl'
-import extractCoordsFromUrl from '../../libs/extractCoordsFromUrl'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
-import { or } from 'firebase/firestore'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
-import containsCoordinates from '../../libs/containCoordinates'
 import TextInfo from '../TextInfo'
 export type OrderCommonActionsType = {
   storeId: string
@@ -53,15 +46,6 @@ const OrderCommonActions = ({
   orderId,
   userId
 }: OrderCommonActionsType) => {
-  const onOrderComment = ({
-    content,
-    type = 'comment'
-  }: {
-    content: string
-    type?: CommentType['type']
-  }) => {
-    onComment({ orderId, content, storeId, type })
-  }
   const { order } = useOrderDetails()
   const { navigate, goBack } = useNavigation()
   const [cancelledReason, setCancelledReason] = useState('')
@@ -102,13 +86,10 @@ const OrderCommonActions = ({
     }
   }
   const handleAuthorize = async () => {
-    await onAuthorize({ orderId, userId })
-    onOrderComment({ content: 'Autorizada' })
+    await onAuthorize({ orderId, userId, storeId })
   }
   const handleCancel = async () => {
-    return await onCancel({ orderId, userId, cancelledReason }).then(() => {
-      onOrderComment({ content: 'Cancelada' })
-    })
+    return await onCancel({ orderId, userId, cancelledReason, storeId })
   }
 
   const handleUpdateStatuses = async () => {

@@ -1,7 +1,7 @@
 import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import {
-  onPickUpItem,
+  onRentPickupItem,
   onRegistryEntry,
   onRentItem
 } from '../firebase/actions/item-actions'
@@ -46,13 +46,34 @@ export const onComment = async ({
     .catch(console.error)
 }
 
-export const onAuthorize = async ({ orderId, userId }) => {
+export const onAuthorize = async ({
+  orderId,
+  userId,
+  storeId,
+  repairCanceled
+}: {
+  orderId: string
+  userId: string
+  storeId: string
+  repairCanceled?: boolean
+}) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.AUTHORIZED,
     authorizedAt: new Date(),
-    authorizedBy: userId
+    authorizedBy: userId,
+    workshopFlow: {
+      pendingAt: new Date()
+    },
+    workshopStatus: 'pending'
   })
     .then((res) => {
+      onComment({
+        orderId,
+        storeId,
+        content: repairCanceled ? 'Marcada como pedido' : 'Autorizada',
+        type: 'comment',
+        isOrderMovement: true
+      })
       console.log('authorize')
     })
     .catch(console.error)
@@ -88,16 +109,42 @@ export const onDelivery = async ({
     .catch(console.error)
 }
 
-export const onPickup = async ({ orderId, userId }) => {
+export const onRentPickup = async ({ orderId, userId, storeId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.PICKED_UP,
     pickedUpAt: new Date(),
     pickedUpBy: userId,
-    isDelivered: false,
-    workshopStatus: 'pending'
+    isDelivered: false
+    // workshopStatus: 'pickedUp'
   })
     .then(() => {
+      onComment({
+        orderId: orderId,
+        content: 'Recogida',
+        storeId,
+        type: 'comment'
+      })
       console.log('pickup')
+    })
+    .catch(console.error)
+}
+export const onRepairPickup = async ({ orderId, userId, storeId }) => {
+  return await ServiceOrders.update(orderId, {
+    status: order_status.PICKED_UP,
+    repairPickedUpAt: new Date(),
+    repairPickedUpBy: userId,
+    isRepairPickedUp: true,
+    workshopStatus: 'pickedUp',
+    'workshopFlow.pickedUpAt': new Date()
+  })
+    .then(() => {
+      onComment({
+        orderId: orderId,
+        content: 'Recogida',
+        storeId,
+        type: 'comment'
+      })
+      console.log('repair pickup')
     })
     .catch(console.error)
 }
@@ -116,10 +163,17 @@ export const onRepairStart = async ({
     repairingAt: new Date(),
     repairingBy: userId,
     isRepairing: true,
-    workshopStatus: 'pending',
+    workshopStatus: 'started',
     repairInfo: comment || ''
   })
     .then(() => {
+      onComment({
+        orderId,
+        content: 'Reparacion iniciada',
+        type: 'comment',
+        storeId: orderId,
+        isOrderMovement: true
+      })
       console.log('repairing')
     })
     .catch(console.error)
@@ -131,14 +185,25 @@ export const onRepairFinish = async ({ orderId, userId }) => {
     repairedAt: new Date(),
     repairedBy: userId,
     isRepairing: false,
-    workshopStatus: 'finished'
+    workshopStatus: 'finished',
+    'workshopFlow.finishedAt': new Date()
   })
     .then(() => {
-      console.log('repaired')
+      onComment({
+        orderId,
+        content: 'Reparacion terminada',
+        type: 'comment',
+        storeId: orderId,
+        isOrderMovement: true
+      })
     })
     .catch(console.error)
 }
+export const onRepairCancelPickup = async ({ orderId, userId, storeId }) => {
+  onAuthorize({ orderId, userId, storeId, repairCanceled: true })
+}
 export const onRepairDelivery = async ({ orderId, userId }) => {
+  if (!userId) return console.error('no userId')
   return await ServiceOrders.update(orderId, {
     status: order_status.DELIVERED,
     deliveredAt: new Date(),
@@ -163,7 +228,12 @@ export const onRenew = async ({ orderId, renewedTo = '', userId }) => {
     .then(console.log)
     .catch(console.error)
 }
-export const onCancel = async ({ orderId, userId, cancelledReason = '' }) => {
+export const onCancel = async ({
+  orderId,
+  userId,
+  cancelledReason = '',
+  storeId
+}) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.CANCELLED,
     cancelledAt: new Date(),
@@ -172,6 +242,12 @@ export const onCancel = async ({ orderId, userId, cancelledReason = '' }) => {
     cancelledReason
   })
     .then(() => {
+      onComment({
+        content: `Cancelada. ${cancelledReason}`,
+        storeId,
+        orderId,
+        type: 'comment'
+      })
       console.log('cancel')
     })
     .catch(console.error)
@@ -279,7 +355,7 @@ export const onRentFinish = async ({
     return console.error('Order is not a rent order')
   try {
     const promises = items?.map(async (item) => {
-      return onPickUpItem({
+      return onRentPickupItem({
         storeId,
         itemId: item.id,
         orderId: order.id,
@@ -298,15 +374,7 @@ export const onRentFinish = async ({
       .catch(console.error)
 
     //* pickup order
-    await onPickup({ orderId, userId })
-
-    //* create movement
-    await onComment({
-      orderId,
-      storeId,
-      content: 'Recogida',
-      type: 'comment'
-    })
+    await onRentPickup({ orderId, userId, storeId })
   } catch (error) {
     console.error(error)
   }

@@ -28,15 +28,11 @@ export const splitItems = ({
       (item.workshopStatus === 'pending' || item.status === 'pickedUp')
   )
 
-  const inProgress = items.filter(
-    (item) => item.workshopStatus === 'inProgress'
-  )
+  const inProgress = items.filter((item) => item.workshopStatus === 'started')
   const finished = items.filter(
     (item) => !item.needFix && item.workshopStatus === 'finished'
   )
-  const shouldPickup = items.filter(
-    (item) => item.workshopStatus === 'shouldPickup'
-  )
+  const shouldPickup = items.filter((item) => item.workshopStatus === 'pending')
   return {
     needFix,
     inProgress,
@@ -80,26 +76,6 @@ export const formatItemsFromRepair = ({
         order.status === order_status.REPAIRING ||
         order.status === order_status.AUTHORIZED
 
-      // const workshopStatus = (() => {
-      //   const workshopStatuses = {
-      //     //  [order_status.REPAIRING]: 'inProgress',
-      //     [order_status.AUTHORIZED]: 'shouldPickup',
-      //     [order_status.REPAIRING]: 'pending',
-      //     [order_status.REPAIRED]: 'finished'
-      //   }
-
-      //   if (
-      //     order.status === order_status.REPAIRING &&
-      //     order.workshopStatus === 'inProgress'
-      //   )
-      //     return 'inProgress'
-
-      //   if (order.status === order_status.AUTHORIZED) return 'shouldPickup'
-      //   if (order.status === order_status.REPAIRING) return 'pending'
-      //   if (order.status === order_status.REPAIRED) return 'finished'
-      //   return workshopStatuses[order.status]
-      // })()
-
       const item = order.item
       const formattedItem = {
         id: order?.id,
@@ -135,9 +111,7 @@ export const formatItemsFromRepair = ({
         orderId: order?.id,
         scheduledAt: asDate(order?.scheduledAt)
       }
-      if (order.folio === 105) {
-        console.log({ formattedItem, order })
-      }
+
       return formattedItem
     }
   )

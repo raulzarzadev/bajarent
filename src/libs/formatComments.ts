@@ -43,7 +43,8 @@ export default function formatComments({
         exchangeDelivery: `${itemNumber} Entregada (cambio)`,
         exchangePickup: `${itemNumber} Recogida (cambio)`,
         custom: `${itemNumber} ${movement.content}`,
-        inventory: `${itemNumber} Inventario`
+        inventory: `${itemNumber} Inventario`,
+        workshop: `${itemNumber} Movimiento de taller`
       }
       return {
         ...movement,

@@ -9,7 +9,7 @@ import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import ItemType from './ItemType'
-import { WorkshopFlow } from './WorkshopType'
+import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 export type ContactType = {
   name: string
   phone: string
@@ -89,7 +89,7 @@ export type OrderBase = {
   expireAt?: Date | null
   isExpired?: boolean
 
-  workshopStatus?: ItemType['workshopStatus']
+  workshopStatus?: WorkshopStatus
   workshopFlow?: WorkshopFlow
 
   expiresToday?: boolean

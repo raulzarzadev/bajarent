@@ -120,7 +120,7 @@ export const markItemAsNeedFix = async ({
       itemData: {
         needFix: needsFix,
         workshopStatus: markAsRepairing
-          ? 'inProgress'
+          ? 'started'
           : needsFix
           ? 'pending'
           : 'finished'

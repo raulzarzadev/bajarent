@@ -31,13 +31,24 @@ export type ItemHistoryBase = {
     | 'reactivate'
     | 'custom'
     | 'inventory'
+    | 'workshop'
 
   orderId?: string
   content: string
   itemId: string
-  toSectionId: string
+  toSectionId?: string
   fromSectionId?: string
+  variant?: ItemHistoryVariantType
 }
+export enum history_item_variant {
+  repair_started = 'repair_started',
+  repair_finished = 'repair_finished',
+  repair_pending = 'repair_pending',
+  repair_picked_up = 'repair_picked_up',
+  repair_delivered = 'repair_delivered'
+}
+
+export type ItemHistoryVariantType = keyof typeof history_item_variant
 export type ItemHistoryType = ItemHistoryBase & BaseType
 
 type Type = ItemHistoryType

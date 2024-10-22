@@ -9,7 +9,6 @@ import { useOrderDetails } from '../../contexts/orderContext'
 
 const ModalRepairFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
-  const storeId = order?.storeId
 
   const { user } = useAuth()
 
@@ -21,17 +20,7 @@ const ModalRepairFinish = ({ modal }: { modal: ReturnModal }) => {
       orderId: order.id,
       userId: user.id
     })
-
-    //* create movement
-    await onComment({
-      orderId: order.id,
-      content: 'Reparación terminada',
-      storeId,
-      type: 'comment'
-    })
   }
-
-  const item = order.item
 
   return (
     <View>

@@ -88,14 +88,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           clientId={order.clientId}
         />
       </View>
-      {/* <ImagePreview
-        title="Firma"
-        justIcon
-        icon="signature"
-        image={order?.signature}
-        height={50}
-        width={50}
-      /> */}
+
       <OrderContacts />
       <OrderImages order={order} />
 
@@ -139,21 +132,25 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       {/*
        //* ORDER ACTIONS FLOW DEPENDS ON ORDER TYPE
        */}
-      <OrderActionsE />
+      {!(order.status === order_status.CANCELLED) && (
+        <>
+          <OrderActionsE />
+          <View
+            style={{
+              maxWidth: 190,
+              marginHorizontal: 'auto',
+              marginBottom: 16
+            }}
+          >
+            <ModalPayment
+              orderId={order.id}
+              storeId={order.storeId}
+              defaultAmount={defaultAmount}
+            />
+          </View>
+        </>
+      )}
 
-      <View
-        style={{
-          maxWidth: 190,
-          marginHorizontal: 'auto',
-          marginBottom: 16
-        }}
-      >
-        <ModalPayment
-          orderId={order.id}
-          storeId={order.storeId}
-          defaultAmount={defaultAmount}
-        />
-      </View>
       <OrderPayments orderId={order.id} />
 
       <ErrorBoundary componentName="OrderActions">
@@ -187,6 +184,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           />
         )}
       </ErrorBoundary>
+
       <ErrorBoundary componentName="OrderComments">
         <OrderComments orderId={order.id} />
       </ErrorBoundary>

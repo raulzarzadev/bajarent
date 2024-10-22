@@ -1,11 +1,9 @@
 import { Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import Button from '../Button'
-import { handleCancel } from './libs/order_actions'
 import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
-import { onAssignOrder } from '../../libs/order-actions'
-import { useOrdersCtx } from '../../contexts/ordersContext'
+import { onAssignOrder, onCancel } from '../../libs/order-actions'
 import { gStyles } from '../../styles'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import useModal from '../../hooks/useModal'
@@ -31,24 +29,18 @@ const MultiOrderActions = ({
   const {
     permissions: { orders: permissionsOrder, isOwner, isAdmin }
   } = useEmployee()
-  const { handleRefresh, orders } = useOrdersCtx()
-
-  const [loading, setLoading] = React.useState(false)
 
   const canCancel = permissionsOrder?.canCancel || isOwner || isAdmin
   const canDelete = permissionsOrder?.canDelete || isOwner || isAdmin
 
-  // const timeOut = () => {
-  //   setTimeout(() => {
-  //     setLoading(false)
-  //     handleRefresh()
-  //   }, 3000)
-  // }
-
   const handleCancelOrders = async () => {
-    setLoading(true)
     const res = ordersIds.map((id) =>
-      handleCancel({ orderId: id, storeId, userId: user.id || '' })
+      onCancel({
+        orderId: id,
+        userId: user.id,
+        cancelledReason: 'Cancelado en lote',
+        storeId
+      })
     )
     return await Promise.all(res)
   }

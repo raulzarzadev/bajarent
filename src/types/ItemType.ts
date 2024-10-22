@@ -1,7 +1,7 @@
 import BaseType from './BaseType'
 import { ContactType, OrderQuoteType } from './OrderType'
 import { CategoryType } from './RentItem'
-import { WorkshopFlow } from './WorkshopType'
+import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 
 export enum ItemStatuses {
   rented = 'rented',
@@ -31,12 +31,7 @@ export type ItemBase = {
   retiredBy?: string
   lastInventoryAt?: Date
   lastInventoryBy?: string
-  workshopStatus?:
-    | 'inProgress'
-    | 'pending'
-    | 'finished'
-    | 'shouldPickup'
-    | 'delivered'
+  workshopStatus?: WorkshopStatus
   isExternalRepair?: boolean
   repairInfo?: string
   workshopFlow?: WorkshopFlow
