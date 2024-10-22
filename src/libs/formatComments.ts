@@ -59,7 +59,8 @@ export default function formatComments({
           staff.find(
             ({ id, userId }) =>
               id === movement.createdBy || userId === movement.createdBy
-          )?.name || ''
+          )?.name || '',
+        variant: movement.variant || 'regular_comment'
       } as FormattedComment
     }
   )
