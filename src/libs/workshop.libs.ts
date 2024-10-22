@@ -58,7 +58,7 @@ export const formatItems = (
     isPickedUp: !!(item?.status === 'pickedUp'),
     checkedInInventory: isToday(asDate(item?.lastInventoryAt)),
     workshopFlow: item?.workshopFlow,
-    workshopStatus: item?.workshopStatus || 'pending'
+    workshopStatus: item?.workshopStatus || 'pickedUp'
   }))
 }
 
