@@ -1,7 +1,7 @@
 import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import {
-  onRentPickupItem,
+  onPickUpItem,
   onRegistryEntry,
   onRentItem
 } from '../firebase/actions/item-actions'
@@ -355,7 +355,7 @@ export const onRentFinish = async ({
     return console.error('Order is not a rent order')
   try {
     const promises = items?.map(async (item) => {
-      return onRentPickupItem({
+      return onPickUpItem({
         storeId,
         itemId: item.id,
         orderId: order.id,
