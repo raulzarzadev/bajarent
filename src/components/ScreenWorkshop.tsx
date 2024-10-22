@@ -5,7 +5,6 @@ import { useStore } from '../contexts/storeContext'
 import { useItemsCtx } from '../contexts/itemsContext'
 import RowWorkshopItems from './RowWorkshopItems'
 import HeaderDate from './HeaderDate'
-import { ServiceItemHistory } from '../firebase/ServiceItemHistory'
 import asDate, { dateFormat, endDate, startDate } from '../libs/utils-date'
 import List from './List'
 import ListRow from './ListRow'
@@ -68,65 +67,67 @@ const ScreenWorkshop = () => {
   const [showRent, setShowRent] = useState(false)
 
   return (
-    <ScrollView style={{ maxWidth: 800, width: '100%', margin: 'auto' }}>
-      <View style={{ maxWidth: 200, marginLeft: 'auto' }}>
+    <ScrollView style={{ width: '100%', margin: 'auto' }}>
+      {/* <View style={{ maxWidth: 200, marginLeft: 'auto' }}>
         <ModalViewMovements />
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          width: '100%',
-          marginBottom: 12
-        }}
-      >
-        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
-          {' '}
-          {`(${formattedOrders.length}) `}Reparaciones
-        </Text>
-        <Switch onValueChange={setShowRent} value={showRent} />
-        <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
-          De renta {`(${formattedItems.length}) `}
-        </Text>
-      </View>
-      {!showRent && (
+      </View> */}
+      <View style={{ maxWidth: 800, marginHorizontal: 'auto', width: '100%' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            width: '100%',
+            marginBottom: 12
+          }}
+        >
+          <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
+            {' '}
+            {`(${formattedOrders.length}) `}Reparaciones
+          </Text>
+          <Switch onValueChange={setShowRent} value={showRent} />
+          <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
+            De renta {`(${formattedItems.length}) `}
+          </Text>
+        </View>
+        {!showRent && (
+          <RepairStepE
+            justShow={'repairs'}
+            title="Por recoger"
+            showScheduledTime
+            repairItems={ordersShouldPickup}
+            onItemPress={setItemPressed}
+            selectedItem={itemPressed}
+          />
+        )}
+
         <RepairStepE
-          justShow={'repairs'}
-          title="Por recoger"
-          showScheduledTime
-          repairItems={ordersShouldPickup}
+          justShow={showRent ? 'rents' : 'repairs'}
+          title="Pendientes"
+          rentItems={itemsPending}
+          repairItems={ordersPending}
           onItemPress={setItemPressed}
           selectedItem={itemPressed}
         />
-      )}
 
-      <RepairStepE
-        justShow={showRent ? 'rents' : 'repairs'}
-        title="Pendientes"
-        rentItems={itemsPending}
-        repairItems={ordersPending}
-        onItemPress={setItemPressed}
-        selectedItem={itemPressed}
-      />
+        <RepairStepE
+          justShow={showRent ? 'rents' : 'repairs'}
+          title="En reparación"
+          rentItems={itemsInProgress}
+          repairItems={ordersInProgress}
+          onItemPress={setItemPressed}
+          selectedItem={itemPressed}
+        />
 
-      <RepairStepE
-        justShow={showRent ? 'rents' : 'repairs'}
-        title="En reparación"
-        rentItems={itemsInProgress}
-        repairItems={ordersInProgress}
-        onItemPress={setItemPressed}
-        selectedItem={itemPressed}
-      />
-
-      <RepairStepE
-        justShow={showRent ? 'rents' : 'repairs'}
-        title="Listas para entrega"
-        rentItems={itemsFinished}
-        repairItems={ordersFinished}
-        showScheduledTime
-        onItemPress={setItemPressed}
-        selectedItem={itemPressed}
-      />
+        <RepairStepE
+          justShow={showRent ? 'rents' : 'repairs'}
+          title="Listas para entrega"
+          rentItems={itemsFinished}
+          repairItems={ordersFinished}
+          showScheduledTime
+          onItemPress={setItemPressed}
+          selectedItem={itemPressed}
+        />
+      </View>
     </ScrollView>
   )
 }
