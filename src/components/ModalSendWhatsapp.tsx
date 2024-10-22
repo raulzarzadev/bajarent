@@ -63,9 +63,13 @@ export default function ModalSendWhatsapp({
   }
   //*********  MEMES
   const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
-  const ORDER_TYPE = `Su servicio📄 de ${
-    dictionary(order?.type)?.toUpperCase() || ''
-  } ${item?.categoryName ? `de ${item?.categoryName}` : ''}: *${order?.folio}* `
+
+  const ORDER_TYPE = `Tipo de servicio: *${dictionary(
+    order?.type
+  )}*\nArtículo: *${item?.categoryName || 'Lavadora'}*\nFolio: *${
+    order?.folio
+  }*`
+
   const BANK_INFO = `Favor de transferir 💸  únicamente a cualquiera de las siguientes cuentas a nombre de ${
     store?.name
   } y/o ${store?.accountHolder || ''}:
@@ -122,23 +126,25 @@ export default function ModalSendWhatsapp({
     const date = asDate(order?.expireAt)
 
     if (isToday(date)) {
-      return `*VENCE HOY* 😔. ${FEE_ADVERT}`
+      return `Su contrato *VENCE HOY* 😔. ${FEE_ADVERT}`
     }
     if (isTomorrow(date)) {
-      return `*VENCE MAÑANA* 😔. ${FEE_ADVERT}`
+      return `Su contrato *VENCE MAÑANA* 😔. ${FEE_ADVERT}`
     }
     if (isAfterTomorrow(date)) {
-      return `VENCE EL ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
-        date
-      )})`
+      return `Su contrato VENCE EL ${dateFormat(
+        date,
+        'EEEE dd MMMM yy'
+      )} (${fromNow(date)})`
     }
     // Su servicio📄 de RENTA de Lavadora: 1706 tiene
     // "X" dias de atraso y un adeudo de (X dias x $100)
 
     if (isBeforeYesterday(date)) {
-      return `VENCIÓ el ${dateFormat(date, 'EEEE dd MMMM yy')} (${fromNow(
-        date
-      )}) ${FEE_ADVERT}`
+      return `Su contrato VENCIÓ el ${dateFormat(
+        date,
+        'EEEE dd MMMM yy'
+      )} (${fromNow(date)}) ${FEE_ADVERT}`
     }
     return ''
   }
@@ -152,7 +158,8 @@ export default function ModalSendWhatsapp({
 
   const RENT_EXPIRE_DATE = `🚨 *ALERTA DE VENCIMIENTO* 
   \n${WELCOME}
-  \n${ORDER_TYPE}  ${expireDateString(order)}
+  \n${ORDER_TYPE}
+  \n${expireDateString(order)}
   \n${BANK_INFO}
   \nEnviar su comprobante al Whatsapp  ${
     store?.mobile
@@ -165,7 +172,7 @@ export default function ModalSendWhatsapp({
 
   const RECEIPT_START = `🧾 *RECIBO DE PAGO*
   \n${WELCOME}
-  \nTipo de servicio: *${dictionary(order?.type)}*`
+  \n${ORDER_TYPE}`
 
   const RENT_RECEIPT = `${RECEIPT_START}
   \n${RENT_PERIOD}
