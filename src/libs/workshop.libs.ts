@@ -49,7 +49,9 @@ export const formatItems = (
   return items?.map((item) => {
     const workshopStatus =
       //@ts-ignore
-      item?.workshopStatus === 'inProgress' ? 'pickedUp' : item?.workshopStatus
+      ['inProgress', 'pending'].includes(item?.workshopStatus)
+        ? 'pickedUp'
+        : item?.workshopStatus
 
     return {
       ...item,

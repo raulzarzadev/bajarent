@@ -35,7 +35,6 @@ const ScreenWorkshop = () => {
     categories,
     storeSections
   })
-  console.log({ formattedOrders })
 
   //* <---- Rent items repairs
   const itemsPending = formattedItems.filter(
