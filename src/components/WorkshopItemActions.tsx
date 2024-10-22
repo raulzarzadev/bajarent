@@ -19,10 +19,13 @@ const WorkshopItemActions = ({
   item: Partial<ItemExternalRepairProps>
 }) => {
   const workshopStatus = item?.workshopStatus
+  const failDescription =
+    item?.repairDetails?.failDescription || item?.repairInfo
   const { storeId } = useStore()
   const { user } = useAuth()
   if (workshopStatus === workshop_status.pending) {
     //* this should move to picked up
+
     return (
       <View style={{ marginVertical: 8, width: '100%' }}>
         <Button
@@ -30,11 +33,10 @@ const WorkshopItemActions = ({
           onPress={() => {
             onWorkshopRepairPickUp({
               storeId,
-              itemId: item.id,
-              orderId: item.orderId,
-              isExternalRepair: item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              itemId: item?.id,
+              orderId: item?.orderId,
+              isExternalRepair: item?.isExternalRepair,
+              failDescription,
               userId: user.id
             })
           }}
@@ -55,8 +57,7 @@ const WorkshopItemActions = ({
               itemId: item.id,
               orderId: item.orderId,
               isExternalRepair: item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              failDescription,
               userId: user.id
             })
           }}
@@ -68,9 +69,8 @@ const WorkshopItemActions = ({
               storeId,
               itemId: item.id,
               orderId: item.orderId,
-              isExternalRepair: item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              isExternalRepair: item?.isExternalRepair,
+              failDescription,
               userId: user?.id
             })
           }}
@@ -92,8 +92,7 @@ const WorkshopItemActions = ({
               itemId: item.id,
               orderId: item.orderId,
               isExternalRepair: item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              failDescription,
               userId: user.id
             })
           }}
@@ -106,8 +105,7 @@ const WorkshopItemActions = ({
               itemId: item.id,
               orderId: item.orderId,
               isExternalRepair: item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              failDescription,
               userId: user?.id
             })
           }}
@@ -128,8 +126,7 @@ const WorkshopItemActions = ({
               itemId: item.id,
               orderId: item.orderId,
               isExternalRepair: item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              failDescription,
               userId: user?.id
             })
           }}
@@ -142,8 +139,7 @@ const WorkshopItemActions = ({
               itemId: item.id,
               orderId: item.orderId,
               isExternalRepair: !!item.isExternalRepair,
-              failDescription:
-                item.repairDetails.failDescription || item.repairInfo || '',
+              failDescription,
               userId: user?.id
             })
           }}

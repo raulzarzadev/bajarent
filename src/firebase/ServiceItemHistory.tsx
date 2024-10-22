@@ -11,6 +11,8 @@ import BaseType from '../types/BaseType'
 import { endDate, startDate } from '../libs/utils-date'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import ItemType from '../types/ItemType'
+import { comment_variant } from '../types/CommentType'
+import { ServiceComments } from './ServiceComments'
 
 const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'

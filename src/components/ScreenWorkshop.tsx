@@ -19,6 +19,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { formatItems, formatItemsFromRepair } from '../libs/workshop.libs'
 import Divider from './Divider'
 import { Switch } from 'react-native-elements'
+import { ServiceComments } from '../firebase/ServiceComments'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
@@ -34,10 +35,11 @@ const ScreenWorkshop = () => {
     categories,
     storeSections
   })
-  console.log({ formattedOrders, repairOrders })
+  console.log({ formattedItems })
 
+  //* <---- Rent items repairs
   const itemsPending = formattedItems.filter(
-    (i) => i.workshopStatus === 'pending' || !i.workshopStatus
+    (i) => i.workshopStatus === 'pickedUp' || !i.workshopStatus
   )
 
   const itemsInProgress = formattedItems.filter(
@@ -47,7 +49,7 @@ const ScreenWorkshop = () => {
   const itemsFinished = formattedItems.filter(
     (i) => i.workshopStatus === 'finished'
   )
-
+  //* <---- External repairs
   const ordersShouldPickup = formattedOrders.filter(
     (i) => i.workshopStatus === 'pending' || !i.workshopStatus
   )
@@ -202,11 +204,10 @@ const WorkshopMovements = () => {
 
   useEffect(() => {
     if (storeId && items?.length > 0) {
-      ServiceItemHistory.getWorkshopDateMovements({
+      ServiceComments.getWorkshopDateMovements({
         fromDate: startDate(date),
         toDate: endDate(date),
-        storeId,
-        items
+        storeId
       }).then((res) => {
         console.log({ res })
         setMovements(

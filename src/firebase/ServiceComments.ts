@@ -1,5 +1,5 @@
-import { limit, orderBy, where } from 'firebase/firestore'
-import { CommentType } from '../types/CommentType'
+import { limit, orderBy, QueryConstraint, where } from 'firebase/firestore'
+import { comment_variant, CommentType } from '../types/CommentType'
 import { FirebaseGenericService } from './genericService'
 import { GetItemsOps } from './firebase.CRUD'
 
@@ -191,6 +191,16 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('solvedAt', '>=', fromDate),
       where('solvedAt', '<=', toDate)
     ])
+  }
+  getWorkshopDateMovements({ fromDate, toDate, storeId }) {
+    let commentFilters: QueryConstraint[] = [
+      orderBy('createdAt', 'desc'),
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', fromDate),
+      where('createdAt', '<=', toDate),
+      where('variant', '==', comment_variant.workshop_flow)
+    ]
+    return this.findMany(commentFilters)
   }
   getReports({
     storeId,

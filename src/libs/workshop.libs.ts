@@ -46,20 +46,26 @@ export const formatItems = (
   categories: Partial<CategoryType>[],
   sections: SectionType[]
 ) => {
-  return items?.map((item) => ({
-    ...item,
-    id: item?.id,
-    categoryName:
-      categories.find((cat) => cat.id === item?.category)?.name || '',
-    assignedSectionName:
-      sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
-    needFix: !!item?.needFix,
-    isRented: !!(item?.status === 'rented'),
-    isPickedUp: !!(item?.status === 'pickedUp'),
-    checkedInInventory: isToday(asDate(item?.lastInventoryAt)),
-    workshopFlow: item?.workshopFlow,
-    workshopStatus: item?.workshopStatus || 'pickedUp'
-  }))
+  return items?.map((item) => {
+    const workshopStatus =
+      //@ts-ignore
+      item?.workshopStatus === 'inProgress' ? 'pickedUp' : item?.workshopStatus
+
+    return {
+      ...item,
+      id: item?.id,
+      categoryName:
+        categories.find((cat) => cat.id === item?.category)?.name || '',
+      assignedSectionName:
+        sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
+      needFix: !!item?.needFix,
+      isRented: !!(item?.status === 'rented'),
+      isPickedUp: !!(item?.status === 'pickedUp'),
+      checkedInInventory: isToday(asDate(item?.lastInventoryAt)),
+      workshopFlow: item?.workshopFlow,
+      workshopStatus: workshopStatus || 'pickedUp'
+    }
+  })
 }
 
 export const formatItemsFromRepair = ({
@@ -89,7 +95,7 @@ export const formatItemsFromRepair = ({
         number: String(order.folio) || '',
         brand: item?.brand || '',
         serial: item?.serial || '',
-        workshopStatus: order.workshopStatus,
+        workshopStatus: order.workshopStatus || 'pending',
         workshopFlow: order?.workshopFlow || {},
         repairInfo: order?.repairInfo || item?.failDescription || '',
         repairDetails: {
