@@ -4,7 +4,7 @@ import ItemType from '../types/ItemType'
 import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
-import { ItemFixDetails, ItemFixDetailsE } from './ItemDetails'
+import { ItemFixDetailsE } from './ItemDetails'
 import asDate, { dateFormat } from '../libs/utils-date'
 import ErrorBoundary from './ErrorBoundary'
 export type CartItemType = {

@@ -24,7 +24,7 @@ export const ModalPayment = ({
     amount: defaultAmount,
     reference: '',
     date: new Date(),
-    method: 'cash',
+    method: 'transfer',
     storeId,
     orderId
   }
