@@ -4,7 +4,6 @@ import { workshop_status } from '../types/WorkshopType'
 import Button from './Button'
 import {
   onWorkshopDeliveryRepair,
-  onWorkshopRepairFinish,
   onWorkshopRepairPending,
   onWorkshopRepairPickUp,
   onWorkshopRepairStart
@@ -15,6 +14,7 @@ import { useAuth } from '../contexts/authContext'
 import InputAssignSection from './InputAssingSection'
 import { onAssignOrder } from '../libs/order-actions'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
+import ModalFixItem from './ModalFixItem'
 
 const WorkshopItemActions = ({
   item
@@ -72,20 +72,22 @@ const WorkshopItemActions = ({
     //* this should move to finished
     return (
       <View style={{ marginVertical: 8, width: '100%' }}>
-        <Button
-          label="Regresar al cliente"
-          variant="ghost"
-          onPress={() => {
-            onWorkshopRepairPending({
-              storeId,
-              itemId: item.id,
-              orderId: item.orderId,
-              isExternalRepair: item.isExternalRepair,
-              failDescription,
-              userId: user.id
-            })
-          }}
-        ></Button>
+        {isExternalRepair && (
+          <Button
+            label="Regresar al cliente"
+            variant="ghost"
+            onPress={() => {
+              onWorkshopRepairPending({
+                storeId,
+                itemId: item.id,
+                orderId: item.orderId,
+                isExternalRepair: item.isExternalRepair,
+                failDescription,
+                userId: user.id
+              })
+            }}
+          ></Button>
+        )}
         <Button
           label="Iniciar reparación"
           onPress={() => {
@@ -121,19 +123,7 @@ const WorkshopItemActions = ({
             })
           }}
         ></Button>
-        <Button
-          label="Terminar reparación"
-          onPress={() => {
-            onWorkshopRepairFinish({
-              storeId,
-              itemId: item.id,
-              orderId: item.orderId,
-              isExternalRepair: item.isExternalRepair,
-              failDescription,
-              userId: user?.id
-            })
-          }}
-        ></Button>
+        <ModalFixItem item={item} />
       </View>
     )
   }
@@ -141,21 +131,6 @@ const WorkshopItemActions = ({
     //* this should move back to inProgress
     return (
       <View style={{ marginVertical: 8, width: '100%' }}>
-        <Button
-          variant="ghost"
-          label="Regresar a reparación"
-          onPress={() => {
-            onWorkshopRepairStart({
-              storeId,
-              itemId: item.id,
-              orderId: item.orderId,
-              isExternalRepair: item.isExternalRepair,
-              failDescription,
-              userId: user?.id
-            })
-          }}
-        ></Button>
-
         <View style={{ marginVertical: 8, width: '100%' }}>
           <InputAssignSection
             setNewSection={async ({ sectionId, sectionName }) => {
@@ -168,23 +143,42 @@ const WorkshopItemActions = ({
             }}
           />
         </View>
+        {!isExternalRepair && <ModalFixItem item={item} />}
 
         {isExternalRepair && (
-          <View style={{ marginVertical: 8, width: '100%' }}>
-            <Button
-              label="Entregar "
-              onPress={() => {
-                onWorkshopDeliveryRepair({
-                  storeId,
-                  itemId: item.id,
-                  orderId: item.orderId,
-                  isExternalRepair: !!item.isExternalRepair,
-                  failDescription,
-                  userId: user?.id
-                })
-              }}
-            ></Button>
-          </View>
+          <>
+            <View style={{ marginVertical: 8, width: '100%' }}>
+              <Button
+                variant="ghost"
+                label="Regresar a reparación"
+                onPress={() => {
+                  onWorkshopRepairStart({
+                    storeId,
+                    itemId: item.id,
+                    orderId: item.orderId,
+                    isExternalRepair: item.isExternalRepair,
+                    failDescription,
+                    userId: user?.id
+                  })
+                }}
+              ></Button>
+            </View>
+            <View style={{ marginVertical: 8, width: '100%' }}>
+              <Button
+                label="Entregar "
+                onPress={() => {
+                  onWorkshopDeliveryRepair({
+                    storeId,
+                    itemId: item.id,
+                    orderId: item.orderId,
+                    isExternalRepair: !!item.isExternalRepair,
+                    failDescription,
+                    userId: user?.id
+                  })
+                }}
+              ></Button>
+            </View>
+          </>
         )}
       </View>
     )

@@ -8,7 +8,6 @@ import { ExtendReason } from '../firebase/ServiceOrders'
 import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
-import ItemType from './ItemType'
 import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 export type ContactType = {
   name: string
@@ -124,12 +123,6 @@ export type OrderBase = {
 
   hasDelivered?: boolean
 
-  failDescription?: string
-  //* to repair orders
-  /**
-   * @deprecated use failDescription instead
-   */
-  description?: string
   itemBrand?: string
   itemSerial?: string
 
@@ -139,12 +132,20 @@ export type OrderBase = {
 
   repairingBy?: string
   repairingAt?: Date
-
   repairTotal?: number
+
+  //* to repair orders
+  /**
+   * @deprecated use failDescription instead
+   */
+  description?: string
   /**
    * @deprecated use failDescription instead
    */
   repairInfo?: string
+
+  failDescription?: string
+
   quoteBy?: string
 
   quotes?: FieldValue | OrderQuoteType[]

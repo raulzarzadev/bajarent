@@ -4,8 +4,9 @@ import ItemType from '../types/ItemType'
 import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
-import { ItemFixDetails } from './ItemDetails'
+import { ItemFixDetails, ItemFixDetailsE } from './ItemDetails'
 import asDate, { dateFormat } from '../libs/utils-date'
+import ErrorBoundary from './ErrorBoundary'
 export type CartItemType = {
   item: Partial<ItemType & { scheduledAt?: Date }>
   showAssignedSection?: boolean
@@ -24,9 +25,8 @@ const CardItem = ({
   showScheduledTime,
   showRepairInfo
 }: CartItemType) => {
-  // console.log({ item })
   const sectionName = item?.assignedSectionName || 'Sin asignar'
-
+  console.log({ item })
   return (
     <View
       style={{
@@ -108,11 +108,18 @@ const CardItem = ({
         </Text>
       )}
       {showFixNeeded && item?.needFix && (
-        <ItemFixDetails itemId={item?.id} size="sm" showTime={showFixTime} />
+        <ItemFixDetailsE itemId={item?.id} size="sm" showTime={showFixTime} />
       )}
     </View>
   )
 }
+
+export type CardItemProps = CartItemType
+export const CardItemE = (props: CardItemProps) => (
+  <ErrorBoundary componentName="CardItem">
+    <CardItem {...props} />
+  </ErrorBoundary>
+)
 
 const ItemIcon = ({
   icon,
@@ -157,7 +164,7 @@ export const SquareItem = ({
         padding: 4
       }}
     >
-      <CardItem
+      <CardItemE
         item={item}
         showAssignedSection={showAssignedSection}
         showSerialNumber={showSerialNumber}

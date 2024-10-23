@@ -104,7 +104,6 @@ export const formatItemsFromRepair = ({
         serial: item?.serial || '',
         workshopStatus: workshopStatus || 'pending',
         workshopFlow: order?.workshopFlow || {},
-        repairInfo: failDescription,
         repairDetails: {
           failDescription,
           quotes: (order?.quotes as OrderQuoteType[]) || [],

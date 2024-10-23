@@ -23,6 +23,7 @@ const ItemDetails = ({
   onAction?: () => void
   showFixTime?: boolean
 }) => {
+  console.log({ item })
   return (
     <View>
       <DocMetadata item={item} />
@@ -83,12 +84,6 @@ const ItemDetails = ({
   )
 }
 
-export type ItemFixDetailsProps = {
-  itemId: string
-  size?: 'sm' | 'md' | 'lg'
-  showTime?: boolean
-}
-
 export const ItemFixDetails = ({
   itemId,
   size = 'lg',
@@ -141,6 +136,17 @@ export const ItemFixDetails = ({
     </View>
   )
 }
+
+export type ItemFixDetailsProps = {
+  itemId: string
+  size?: 'sm' | 'md' | 'lg'
+  showTime?: boolean
+}
+export const ItemFixDetailsE = (props: ItemFixDetailsProps) => (
+  <ErrorBoundary componentName="ItemFixDetails">
+    <ItemFixDetails {...props} />
+  </ErrorBoundary>
+)
 
 export const ItemDetailsE = (props) => (
   <ErrorBoundary componentName="ItemDetails">
