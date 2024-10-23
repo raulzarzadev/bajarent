@@ -9,6 +9,8 @@ import OrderType from '../types/OrderType'
 import List from './List'
 import ListRow from './ListRow'
 import dictionary from '../dictionary'
+import DateCell from './DateCell'
+import DateLapse from './DateLapse'
 
 const ScreenWorkshopHistory = () => {
   return (
@@ -55,6 +57,8 @@ const WorkshopHistoryExternalRepairs = () => {
 
   return (
     <View>
+      <DateLapse />
+
       <View style={{ maxWidth: 800, marginHorizontal: 'auto' }}>
         <List
           filters={[]}

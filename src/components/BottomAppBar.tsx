@@ -14,16 +14,18 @@ import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { ScreenWorkshopE } from './ScreenWorkshop'
 import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
+import { StackWorkshopE } from './StackWorkshop'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
   const { store } = useAuth()
   const { permissions, employee } = useEmployee()
-  const viewWorksheets =
+  const viewWorkshop =
     employee?.rol === 'technician' ||
     permissions?.isAdmin ||
     permissions?.isOwner
+
   const showProfileButton = true
   const showOrdersButton = !!store
   const showStoreButton = !!store
@@ -105,20 +107,11 @@ const BottomAppBar = () => {
       <Tab.Screen
         name="Workshop"
         options={{
+          headerShown: false,
           title: 'Taller',
-          // headerShown: false,
-          tabBarButton: viewWorksheets ? undefined : () => null
+          tabBarButton: viewWorkshop ? undefined : () => null
         }}
-        component={ScreenWorkshopE}
-      />
-      <Tab.Screen
-        name="WorkshopHistory"
-        options={{
-          title: 'Historial de taller',
-          // headerShown: false,
-          tabBarButton: () => null
-        }}
-        component={ScreenWorkshopHistoryE}
+        component={StackWorkshopE}
       />
 
       <Tab.Screen

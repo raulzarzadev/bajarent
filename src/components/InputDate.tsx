@@ -68,7 +68,7 @@ export default function InputDate({
   const hours = date?.getHours()
   const minutes = date?.getMinutes()
   return (
-    <>
+    <View>
       <Button
         variant="outline"
         onPress={() => setOpen(true)}
@@ -103,7 +103,7 @@ export default function InputDate({
           />
         </View>
       </SafeAreaProvider>
-    </>
+    </View>
   )
 }
 
