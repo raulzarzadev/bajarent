@@ -131,16 +131,16 @@ const WorkshopItem = ({
           item={item}
           showSerialNumber
           showScheduledTime={showScheduledTime}
-          showRepairInfo
           showFixNeeded
+          showRepairInfo
         />
       </Pressable>
       <StyledModal {...modal}>
         <CardItemE
           item={item}
           showSerialNumber
-          showFixNeeded
           showScheduledTime={showScheduledTime}
+          showFixNeeded
           showRepairInfo
         />
         <Button
