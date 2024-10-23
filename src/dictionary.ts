@@ -1,6 +1,7 @@
 import { repair_order_types } from './types/OrderType'
 
 const labels = {
+  started: 'Iniciada',
   canceled: 'Cancelada',
   pending: 'Pendiente',
   finished: 'Finalizada',

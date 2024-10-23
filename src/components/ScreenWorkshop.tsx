@@ -25,6 +25,7 @@ const ScreenWorkshop = () => {
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
+  const { toWorkshop } = useMyNav()
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
 
   const { categories, storeSections } = useStore()
@@ -68,9 +69,15 @@ const ScreenWorkshop = () => {
 
   return (
     <ScrollView style={{ width: '100%', margin: 'auto' }}>
-      {/* <View style={{ maxWidth: 200, marginLeft: 'auto' }}>
-        <ModalViewMovements />
-      </View> */}
+      <View style={{ maxWidth: 200, marginLeft: 'auto' }}>
+        <Button
+          variant="ghost"
+          label="Movimientos"
+          onPress={() => {
+            toWorkshop()
+          }}
+        />
+      </View>
       <View style={{ maxWidth: 800, marginHorizontal: 'auto', width: '100%' }}>
         <View
           style={{

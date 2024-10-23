@@ -13,6 +13,7 @@ import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { ScreenWorkshopE } from './ScreenWorkshop'
+import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
 
 const Tab = createBottomTabNavigator()
 
@@ -109,6 +110,15 @@ const BottomAppBar = () => {
           tabBarButton: viewWorksheets ? undefined : () => null
         }}
         component={ScreenWorkshopE}
+      />
+      <Tab.Screen
+        name="WorkshopHistory"
+        options={{
+          title: 'Historial de taller',
+          // headerShown: false,
+          tabBarButton: () => null
+        }}
+        component={ScreenWorkshopHistoryE}
       />
 
       <Tab.Screen

@@ -156,11 +156,13 @@ export const onRepairPickup = async ({ orderId, userId, storeId }) => {
 export const onRepairStart = async ({
   orderId,
   userId,
-  comment
+  comment,
+  storeId
 }: {
   orderId: string
   userId: string
   comment?: string
+  storeId: string
 }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.REPAIRING,
@@ -175,7 +177,7 @@ export const onRepairStart = async ({
         orderId,
         content: 'Reparacion iniciada',
         type: 'comment',
-        storeId: orderId,
+        storeId,
         isOrderMovement: true,
         variant: 'workshop_flow'
       })
@@ -184,7 +186,7 @@ export const onRepairStart = async ({
     .catch(console.error)
 }
 
-export const onRepairFinish = async ({ orderId, userId }) => {
+export const onRepairFinish = async ({ orderId, userId, storeId }) => {
   return await ServiceOrders.update(orderId, {
     status: order_status.REPAIRED,
     repairedAt: new Date(),
@@ -198,7 +200,7 @@ export const onRepairFinish = async ({ orderId, userId }) => {
         orderId,
         content: 'Reparacion terminada',
         type: 'comment',
-        storeId: orderId,
+        storeId,
         isOrderMovement: true,
         variant: 'workshop_flow'
       })

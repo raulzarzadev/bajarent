@@ -81,6 +81,10 @@ const useMyNav = () => {
       return
     }
   }
+  const toWorkshop = () => {
+    //@ts-ignore
+    navigate('WorkshopHistory')
+  }
 
   const toOrders = ({
     id,
@@ -167,7 +171,8 @@ const useMyNav = () => {
     toOrders,
     toPayments,
     toProfile,
-    toSections
+    toSections,
+    toWorkshop
   }
 }
 

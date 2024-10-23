@@ -192,7 +192,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('solvedAt', '<=', toDate)
     ])
   }
-  getWorkshopDateMovements({ fromDate, toDate, storeId }) {
+  getWorkshopDateMovements({ fromDate, toDate, storeId }): Promise<Type[]> {
     let commentFilters: QueryConstraint[] = [
       orderBy('createdAt', 'desc'),
       where('storeId', '==', storeId),

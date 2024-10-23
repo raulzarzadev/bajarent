@@ -81,7 +81,6 @@ export const formatItemsFromRepair = ({
 }): Partial<ItemType>[] => {
   const items: Partial<ItemExternalRepairProps>[] = repairOrders.map(
     (order) => {
-      console.log(order.workshopStatus)
       const workshopStatus =
         //@ts-ignore
         order.workshopStatus === 'inProgress'

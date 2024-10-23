@@ -131,7 +131,8 @@ export const onWorkshopRepairStart = async ({
     if (isExternalRepair) {
       onRepairStart({
         orderId,
-        userId
+        userId,
+        storeId
       })
     } else {
       ServiceItemHistory.addEntry({
@@ -173,7 +174,8 @@ export const onWorkshopRepairFinish = async ({
     if (isExternalRepair) {
       onRepairFinish({
         orderId,
-        userId
+        userId,
+        storeId
       })
     } else {
       console.log('finish item')
