@@ -115,75 +115,81 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
               />
 
               <View
-                style={{ flexDirection: 'row', justifyContent: 'space-around' }}
-              >
-                {/* <DateCell label="Fecha de vencimiento" date={order.expireAt} /> */}
-                {/* {currentPriceSelected && (
-                  <DateCell
-                    dateBold
-                    label="Nuevo vencimiento"
-                    date={expireDate2({
-                      startedAt: order?.expireAt,
-                      price: currentPriceSelected
-                    })}
-                    borderColor={theme.success}
-                  />
-                )} */}
-              </View>
-
-              <View
                 style={{
-                  marginVertical: 16,
-                  margin: 'auto'
+                  borderWidth: 2,
+                  borderRadius: 8,
+                  borderColor: theme.error,
+                  marginVertical: 8,
+                  padding: 2
                 }}
               >
-                <InputCheckbox
-                  label="Agregar pago"
-                  value={addPay}
-                  setValue={() => {
-                    setAddPay(!addPay)
-                  }}
-                />
-              </View>
-              <View style={{ justifyContent: 'center' }}>
-                <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
-                  Renovar por:
-                </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    marginBottom: 8
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    borderColor: theme.error,
+                    padding: 6,
+                    borderStyle: 'dashed'
                   }}
                 >
-                  <Text style={gStyles.h2}>
-                    {translateTime(currentPriceSelected.time)}{' '}
-                  </Text>
-                  <CurrencyAmount
-                    style={gStyles.h2}
-                    amount={currentPriceSelected.amount}
+                  <View style={{ justifyContent: 'center' }}>
+                    <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
+                      Renovar
+                    </Text>
+                    <Text style={[{ textAlign: 'center' }, gStyles.h3]}>
+                      {order.folio} {order.fullName}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        marginBottom: 8
+                      }}
+                    >
+                      <Text style={gStyles.h2}>
+                        {translateTime(currentPriceSelected.time)}{' '}
+                      </Text>
+                      <CurrencyAmount
+                        style={gStyles.h2}
+                        amount={currentPriceSelected.amount}
+                      />
+                    </View>
+                    <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+                      Expira el:{' '}
+                    </Text>
+                    <Text style={[gStyles.h2, { marginBottom: 8 }]}>
+                      {dateFormat(
+                        expireDate2({
+                          startedAt: order?.expireAt,
+                          price: currentPriceSelected
+                        }),
+                        'dd/MMM'
+                      )}
+                    </Text>
+                    <View
+                      style={{
+                        marginVertical: 16,
+                        margin: 'auto'
+                      }}
+                    >
+                      <InputCheckbox
+                        label="Agregar pago"
+                        value={addPay}
+                        setValue={() => {
+                          setAddPay(!addPay)
+                        }}
+                      />
+                    </View>
+                  </View>
+                  <Button
+                    disabled={submitting}
+                    onPress={() => {
+                      handleSubmit()
+                    }}
+                    label="Renovar"
                   />
                 </View>
-                <Text style={[gStyles.helper, { textAlign: 'center' }]}>
-                  Expira el:{' '}
-                </Text>
-                <Text style={[gStyles.h2, { marginBottom: 8 }]}>
-                  {dateFormat(
-                    expireDate2({
-                      startedAt: order?.expireAt,
-                      price: currentPriceSelected
-                    }),
-                    'dd/MMM'
-                  )}
-                </Text>
               </View>
-              <Button
-                disabled={submitting}
-                onPress={() => {
-                  handleSubmit()
-                }}
-                label="Renovar"
-              />
             </View>
           )
         }}
