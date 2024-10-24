@@ -119,11 +119,12 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 
   /**
-   *
+   * @deprecated
    * @param orderId
    * @param {total: number, info: string, repairedBy: should be a staffId}
    * @returns
    */
+
   async repaired(
     orderId: string,
     {

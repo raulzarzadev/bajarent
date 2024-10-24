@@ -65,8 +65,6 @@ export default function InputDate({
     setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
   }
 
-  const hours = date?.getHours()
-  const minutes = date?.getMinutes()
   return (
     <View>
       <Button
@@ -80,7 +78,7 @@ export default function InputDate({
       </Button>
       {withTime && (
         <TimePicker
-          time={time || { hours, minutes }}
+          time={defaultTime}
           setTime={(time) => {
             handleSetTime(time)
           }}

@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native'
 import ItemType, { ItemExternalRepairProps } from '../types/ItemType'
 import Button from './Button'
-import CardItem from './CardItem'
+import CardItem, { CardItemE } from './CardItem'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import useMyNav from '../hooks/useMyNav'
@@ -15,18 +15,8 @@ import asDate, { dateFormat } from '../libs/utils-date'
 
 import theme from '../theme'
 import WorkshopItemActions from './WorkshopItemActions'
+import ErrorBoundary from './ErrorBoundary'
 
-export type RowWorkshopItemsProps = {
-  items: Partial<ItemType>[]
-  title?: string
-  showScheduledTime?: boolean
-  sortFunction?: (
-    a: ItemExternalRepairProps,
-    b: ItemExternalRepairProps
-  ) => number
-  onItemPress?: (item: Partial<ItemType['id']>) => void
-  selectedItem?: Partial<ItemType['id']>
-}
 const RowWorkshopItems = ({
   items,
   title,
@@ -65,7 +55,7 @@ const RowWorkshopItems = ({
               marginBottom: 4
             }}
           >
-            <WorkshopItem
+            <WorkshopItemE
               item={item}
               showScheduledTime={showScheduledTime}
               onItemPress={onItemPress}
@@ -77,18 +67,29 @@ const RowWorkshopItems = ({
     </View>
   )
 }
+export type RowWorkshopItemsProps = {
+  items: Partial<ItemType>[]
+  title?: string
+  showScheduledTime?: boolean
+  sortFunction?: (
+    a: ItemExternalRepairProps,
+    b: ItemExternalRepairProps
+  ) => number
+  onItemPress?: (item: Partial<ItemType['id']>) => void
+  selectedItem?: Partial<ItemType['id']>
+}
+export const RowWorkshopItemsE = (props: RowWorkshopItemsProps) => (
+  <ErrorBoundary componentName="RowWorkshopItems">
+    <RowWorkshopItems {...props} />
+  </ErrorBoundary>
+)
 
 const WorkshopItem = ({
   item,
   showScheduledTime,
   onItemPress,
   selectedItem
-}: {
-  item: Partial<ItemExternalRepairProps>
-  showScheduledTime?: boolean
-  onItemPress?: (item: Partial<ItemType['id']>) => void
-  selectedItem?: Partial<ItemType['id']>
-}) => {
+}: WorkshopItemProps) => {
   // is two types of items in the workshop. External repair and internal/rent repair
   // external items has isExternalRepair props and it should modify the order when an action is handle
   // it should provides a workshopStatus prop to know the status of the item ✅
@@ -126,19 +127,20 @@ const WorkshopItem = ({
           height: '100%'
         }}
       >
-        <CardItem
+        <CardItemE
           item={item}
           showSerialNumber
           showScheduledTime={showScheduledTime}
+          showFixNeeded
           showRepairInfo
         />
       </Pressable>
       <StyledModal {...modal}>
-        <CardItem
+        <CardItemE
           item={item}
           showSerialNumber
-          showFixNeeded
           showScheduledTime={showScheduledTime}
+          showFixNeeded
           showRepairInfo
         />
         <Button
@@ -186,7 +188,7 @@ const WorkshopItem = ({
             </View>
             <Text style={[gStyles.h3, { textAlign: 'left' }]}>Falla:</Text>
             <Text style={[{ marginBottom: 6 }, gStyles.tError]}>
-              {item?.repairDetails?.failDescription}
+              {/* // {item?.repairDetails?.failDescription} */}
             </Text>
             <View>
               {item?.repairDetails?.quotes?.length > 0 && (
@@ -231,4 +233,15 @@ const WorkshopItem = ({
     </View>
   )
 }
+export type WorkshopItemProps = {
+  item: Partial<ItemExternalRepairProps>
+  showScheduledTime?: boolean
+  onItemPress?: (item: Partial<ItemType['id']>) => void
+  selectedItem?: Partial<ItemType['id']>
+}
+export const WorkshopItemE = (props) => (
+  <ErrorBoundary componentName="WorkshopItem">
+    <WorkshopItem {...props} />
+  </ErrorBoundary>
+)
 export default RowWorkshopItems

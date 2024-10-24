@@ -30,6 +30,7 @@ export const ModalRepairQuote = ({
   }
 }) => {
   const { order } = useOrderDetails()
+  const failDescription = order?.failDescription || order.description || ''
   const quote = {
     info: order?.repairInfo || order?.quote?.description || '',
     total: order?.repairTotal || order?.quote?.amount || 0,
@@ -39,7 +40,7 @@ export const ModalRepairQuote = ({
       order?.items?.[0]?.categoryName ||
       order?.item?.categoryName ||
       'Sin articulo',
-    failDescription: order?.description || ''
+    failDescription
   }
   const quoteAlreadyExists = !quote || quote?.info || quote?.total
   const label = quoteAlreadyExists ? 'Modificar cotización' : 'Cotización'
@@ -142,35 +143,6 @@ export const ModalRepairQuote = ({
             })
           }}
         />
-        {/* <View style={styles.repairItemForm}>
-          <InputTextStyled
-            value={info}
-            placeholder="Descripción de reparación"
-            numberOfLines={3}
-            multiline
-            onChangeText={setInfo}
-          ></InputTextStyled>
-        </View>
-        <View style={styles.repairItemForm}>
-          <InputTextStyled
-            type="number"
-            value={total}
-            keyboardType="numeric"
-            placeholder="Total $ "
-            onChangeText={(value) => {
-              setTotal(parseFloat(value) || 0)
-            }}
-          ></InputTextStyled>
-        </View>
-        <View style={styles.repairItemForm}>
-          <Button
-            disabled={saving}
-            onPress={handleRepairFinished}
-            color="success"
-          >
-            {quoteAlreadyExists ? 'Guardar' : 'Editar'}
-          </Button>
-        </View> */}
       </StyledModal>
     </>
   )

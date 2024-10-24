@@ -98,12 +98,12 @@ export const RepairItemDetails = ({
           <Text style={styles.value}>{serial}</Text>
         </>
       )}
-      {!!failDescription && (
+      {/* {!!failDescription && (
         <>
           <Text style={styles.title}>Falla</Text>
           <Text style={styles.value}>{failDescription}</Text>
         </>
-      )}
+      )} */}
     </View>
   )
 }

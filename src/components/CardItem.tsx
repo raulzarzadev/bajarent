@@ -4,8 +4,9 @@ import ItemType from '../types/ItemType'
 import { gSpace, gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
 import { colors } from '../theme'
-import { ItemFixDetails } from './ItemDetails'
+import { ItemFixDetailsE } from './ItemDetails'
 import asDate, { dateFormat } from '../libs/utils-date'
+import ErrorBoundary from './ErrorBoundary'
 export type CartItemType = {
   item: Partial<ItemType & { scheduledAt?: Date }>
   showAssignedSection?: boolean
@@ -13,6 +14,9 @@ export type CartItemType = {
   showFixTime?: boolean
   showFixNeeded?: boolean
   showScheduledTime?: boolean
+  /**
+   * @deprecated
+   */
   showRepairInfo?: boolean
 }
 const CardItem = ({
@@ -21,12 +25,10 @@ const CardItem = ({
   showSerialNumber,
   showFixNeeded,
   showFixTime = true,
-  showScheduledTime,
-  showRepairInfo
+  showScheduledTime
 }: CartItemType) => {
-  // console.log({ item })
   const sectionName = item?.assignedSectionName || 'Sin asignar'
-
+  console.log({ item })
   return (
     <View
       style={{
@@ -94,25 +96,25 @@ const CardItem = ({
       {showAssignedSection && (
         <Text style={[gStyles.tCenter]}>{sectionName}</Text>
       )}
-      {showRepairInfo && !!item?.repairInfo && (
-        <Text
-          style={[
-            gStyles.tCenter,
-            gStyles.tError,
-            gStyles.helper,
-            { marginVertical: 2 }
-          ]}
-          numberOfLines={3}
-        >
-          *{item?.repairInfo}
-        </Text>
-      )}
+
       {showFixNeeded && item?.needFix && (
-        <ItemFixDetails itemId={item?.id} size="sm" showTime={showFixTime} />
+        <ItemFixDetailsE
+          itemId={item?.id}
+          size="sm"
+          showTime={showFixTime}
+          failDescription={item?.repairDetails?.failDescription}
+        />
       )}
     </View>
   )
 }
+
+export type CardItemProps = CartItemType
+export const CardItemE = (props: CardItemProps) => (
+  <ErrorBoundary componentName="CardItem">
+    <CardItem {...props} />
+  </ErrorBoundary>
+)
 
 const ItemIcon = ({
   icon,
@@ -157,7 +159,7 @@ export const SquareItem = ({
         padding: 4
       }}
     >
-      <CardItem
+      <CardItemE
         item={item}
         showAssignedSection={showAssignedSection}
         showSerialNumber={showSerialNumber}

@@ -6,6 +6,7 @@ import { gStyles } from '../styles'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from '../contexts/storeContext'
 import ItemType from '../types/ItemType'
+import { onFixItem, onReportItem } from '../firebase/actions/workshop-actions'
 
 const MIN_COMMENT_LENGTH = 10
 export type HandleFixProps = {
@@ -27,18 +28,22 @@ const ModalFixItem = ({
   const { storeId } = useStore()
   const [comment, setComment] = React.useState('')
   const handleMarkAsNeedFix = async () => {
-    if (item.isExternalRepair) {
-      handleFix?.({ comment })
-      setComment('')
-    } else {
-      await markItemAsNeedFix({
-        itemId: item.id,
-        storeId,
-        needsFix: !needFix,
-        comment
-      })
-      handleFix?.({ comment })
-      setComment('')
+    handleFix?.({ comment })
+    setComment('')
+    if (!item.isExternalRepair) {
+      if (needFix) {
+        onFixItem({
+          storeId,
+          itemId: item.id,
+          fixDescription: comment
+        })
+      } else {
+        onReportItem({
+          storeId,
+          itemId: item.id,
+          failDescription: comment
+        })
+      }
     }
   }
 
@@ -74,7 +79,7 @@ const ModalFixItem = ({
               return await handleMarkAsNeedFix()
             }}
             confirmColor="error"
-            modalTitle="Describe la falla"
+            modalTitle={`Describe la falla ${item.number}`}
             confirmDisabled={isLongEnough(comment, MIN_COMMENT_LENGTH)}
           >
             <InputTextStyled

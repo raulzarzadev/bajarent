@@ -23,6 +23,7 @@ const ItemDetails = ({
   onAction?: () => void
   showFixTime?: boolean
 }) => {
+  console.log({ item })
   return (
     <View>
       <DocMetadata item={item} />
@@ -83,16 +84,11 @@ const ItemDetails = ({
   )
 }
 
-export type ItemFixDetailsProps = {
-  itemId: string
-  size?: 'sm' | 'md' | 'lg'
-  showTime?: boolean
-}
-
 export const ItemFixDetails = ({
   itemId,
   size = 'lg',
-  showTime = true
+  showTime = true,
+  failDescription
 }: ItemFixDetailsProps) => {
   const [lastFixEntry, setLastFixEntry] = React.useState<ItemHistoryType>()
   const { storeId } = useStore()
@@ -105,6 +101,7 @@ export const ItemFixDetails = ({
       count: 1,
       type: 'report'
     }).then((res) => {
+      console.log({ res })
       setLastFixEntry(res[0])
     })
   }, [])
@@ -113,6 +110,15 @@ export const ItemFixDetails = ({
     md: 14,
     lg: 18
   }
+
+  if (failDescription)
+    return (
+      <Text
+        style={[gStyles.tError, gStyles.tCenter, { fontSize: textSize[size] }]}
+      >
+        {failDescription}
+      </Text>
+    )
   if (lastFixEntry === undefined) return null
   return (
     <View>
@@ -141,6 +147,18 @@ export const ItemFixDetails = ({
     </View>
   )
 }
+
+export type ItemFixDetailsProps = {
+  itemId: string
+  size?: 'sm' | 'md' | 'lg'
+  showTime?: boolean
+  failDescription?: string
+}
+export const ItemFixDetailsE = (props: ItemFixDetailsProps) => (
+  <ErrorBoundary componentName="ItemFixDetails">
+    <ItemFixDetails {...props} />
+  </ErrorBoundary>
+)
 
 export const ItemDetailsE = (props) => (
   <ErrorBoundary componentName="ItemDetails">

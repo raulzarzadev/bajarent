@@ -33,21 +33,25 @@ export type ItemBase = {
   lastInventoryBy?: string
   workshopStatus?: WorkshopStatus
   isExternalRepair?: boolean
+  /**
+   * @deprecated use repairDescription
+   */
   repairInfo?: string
+  repairDetails?: RepairDetails
   workshopFlow?: WorkshopFlow
   [key: string]: any
 }
-
+export type RepairDetails = {
+  failDescription?: string
+  quotes?: OrderQuoteType[]
+  clientName?: string
+  contacts: ContactType[]
+  address?: string
+  location?: string
+}
 type ItemType = BaseType & ItemBase
 export type ExternalRepairItemsProps = {
-  repairDetails: {
-    failDescription?: string
-    quotes?: OrderQuoteType[]
-    clientName?: string
-    contacts: ContactType[]
-    address?: string
-    location?: string
-  }
+  repairDetails: RepairDetails
   orderId: string
   workshopStatus: ItemBase['workshopStatus']
 

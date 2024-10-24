@@ -29,8 +29,10 @@ const FormPayment = ({
     ...values,
     method: values?.method || 'transfer',
     amount: 0,
-    reference: values?.reference || ''
+    reference: values?.reference || '',
+    date: values?.date || new Date()
   }
+
   const methods = Object.values(payment_methods).map((method) => ({
     label:
       dictionary(method).charAt(0).toUpperCase() + dictionary(method).slice(1),

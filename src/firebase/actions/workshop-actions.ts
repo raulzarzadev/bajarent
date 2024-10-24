@@ -51,19 +51,7 @@ export const onWorkshopRepairPending = async ({
         storeId
       })
     } else {
-      ServiceStoreItems.update({
-        itemId,
-        storeId,
-        itemData: {
-          //* ['workshopFlow.shouldPickupAt']: new Date(), <---- new Date(),//* this is not necessary for RENT items
-          ['repairInfo.failDescription']: failDescription,
-          ['workshopFlow.pickedUpAt']: null,
-          ['workshopFlow.startedAt']: null,
-          ['workshopFlow.finishedAt']: null,
-          ['workshopFlow.deliveredAt']: null,
-          workshopStatus: 'pending'
-        }
-      })
+      // onMarkItemAsNeedToBeFixed
     }
   } catch (error) {
     console.error(error)
@@ -178,15 +166,6 @@ export const onWorkshopRepairFinish = async ({
         storeId
       })
     } else {
-      console.log('finish item')
-      ServiceItemHistory.addEntry({
-        storeId,
-        itemId,
-        entry: {
-          type: 'workshop',
-          variant: 'repair_finished'
-        }
-      })
       ServiceStoreItems.update({
         itemId,
         storeId,
@@ -195,6 +174,15 @@ export const onWorkshopRepairFinish = async ({
           ['workshopFlow.deliveredAt']: null,
           workshopStatus: 'finished'
         }
+      }).then(() => {
+        ServiceItemHistory.addEntry({
+          storeId,
+          itemId,
+          entry: {
+            type: 'workshop',
+            variant: 'repair_finished'
+          }
+        })
       })
     }
   } catch (error) {
@@ -242,4 +230,67 @@ export const onWorkshopDeliveryRepair = async ({
   } catch (error) {
     console.error(error)
   }
+}
+
+export const onReportItem = async ({
+  itemId,
+  storeId,
+  failDescription
+}: {
+  itemId: string
+  storeId: string
+  failDescription: string
+}) => {
+  return ServiceStoreItems.update({
+    itemId,
+    storeId,
+    itemData: {
+      ['repairDetails.failDescription']: failDescription,
+      ['workshopFlow.pendingAt']: new Date(),
+      workshopStatus: 'pending',
+      needFix: true
+    }
+  })
+    .then(() => {
+      ServiceItemHistory.addEntry({
+        storeId,
+        itemId,
+        entry: {
+          type: 'report',
+          content: failDescription
+        }
+      }).catch(console.error)
+    })
+    .catch(console.error)
+}
+
+export const onFixItem = async ({
+  itemId,
+  storeId,
+  fixDescription
+}: {
+  itemId: string
+  storeId: string
+  fixDescription: string
+}) => {
+  return ServiceStoreItems.update({
+    itemId,
+    storeId,
+    itemData: {
+      ['workshopFlow.finishedAt']: new Date(),
+      ['workshopFlow.deliveredAt']: null,
+      workshopStatus: 'finished',
+      needFix: false
+    }
+  }).then(() => {
+    ServiceItemHistory.addEntry({
+      storeId,
+      itemId,
+      entry: {
+        type: 'workshop',
+        variant: 'repair_finished',
+        content: fixDescription
+      }
+    })
+  })
 }
