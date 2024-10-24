@@ -131,14 +131,32 @@ export const onRentPickup = async ({ orderId, userId, storeId }) => {
     })
     .catch(console.error)
 }
-export const onRepairPickup = async ({ orderId, userId, storeId }) => {
+export const onRepairPickup = async ({
+  orderId,
+  userId,
+  storeId,
+  failDescription
+}: {
+  orderId: string
+  userId: string
+  storeId: string
+  failDescription?: string
+}) => {
+  let optionalOrderUpdates: Partial<OrderType> = {}
+  if (failDescription) {
+    optionalOrderUpdates = {
+      ['item.failDescription']: failDescription
+    }
+  }
+
   return await ServiceOrders.update(orderId, {
     status: order_status.PICKED_UP,
     repairPickedUpAt: new Date(),
     repairPickedUpBy: userId,
     isRepairPickedUp: true,
     workshopStatus: 'pickedUp',
-    'workshopFlow.pickedUpAt': new Date()
+    'workshopFlow.pickedUpAt': new Date(),
+    ...optionalOrderUpdates
   })
     .then(() => {
       onComment({

@@ -28,8 +28,6 @@ const ModalFixItem = ({
   const { storeId } = useStore()
   const [comment, setComment] = React.useState('')
   const handleMarkAsNeedFix = async () => {
-    handleFix?.({ comment })
-    setComment('')
     if (!item.isExternalRepair) {
       if (needFix) {
         onFixItem({
@@ -44,7 +42,11 @@ const ModalFixItem = ({
           failDescription: comment
         })
       }
+    } else {
+      console.log('is a external repair')
     }
+    handleFix?.({ comment })
+    setComment('')
   }
 
   return (

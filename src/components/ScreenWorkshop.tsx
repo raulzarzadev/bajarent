@@ -10,6 +10,8 @@ import ErrorBoundary from './ErrorBoundary'
 import { formatItems, formatItemsFromRepair } from '../libs/workshop.libs'
 import Divider from './Divider'
 import { Switch } from 'react-native-elements'
+import useMyNav from '../hooks/useMyNav'
+import Button from './Button'
 
 const ScreenWorkshop = () => {
   const { workshopItems, repairOrders } = useItemsCtx()
@@ -79,7 +81,6 @@ const ScreenWorkshop = () => {
           }}
         >
           <Text style={[{ marginHorizontal: 4 }, gStyles.h2]}>
-            {' '}
             {`(${formattedOrders.length}) `}Reparaciones
           </Text>
           <Switch onValueChange={setShowRent} value={showRent} />
@@ -153,6 +154,7 @@ const RepairStep = ({
   onItemPress,
   selectedItem
 }: RepairStepProps) => {
+  console.log({ repairItems })
   return (
     <View style={{ marginBottom: 16 }}>
       <View style={{ paddingLeft: 16 }}>

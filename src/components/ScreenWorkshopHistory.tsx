@@ -5,12 +5,14 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { useStore } from '../contexts/storeContext'
 import asDate, { dateFormat, endDate, startDate } from '../libs/utils-date'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType from '../types/OrderType'
+import OrderType, { order_type } from '../types/OrderType'
 import List from './List'
 import ListRow from './ListRow'
 import dictionary from '../dictionary'
 import DateCell from './DateCell'
 import DateLapse from './DateLapse'
+import { gStyles } from '../styles'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 const ScreenWorkshopHistory = () => {
   return (
@@ -21,117 +23,77 @@ const ScreenWorkshopHistory = () => {
 }
 
 const WorkshopHistoryExternalRepairs = () => {
-  const { storeId } = useStore()
-
-  const [workshopDateMovements, setWorkshopDateMovements] = useState([])
-  const [orders, setOrders] = useState<Partial<OrderType[]>>([])
-
-  useEffect(() => {
-    if (storeId) {
-      ServiceComments.getWorkshopDateMovements({
-        fromDate: startDate(new Date()),
-        toDate: endDate(new Date()),
-        storeId
-      }).then((res) => {
-        setWorkshopDateMovements(res)
-        const ordersMovements = res.reduce((acc, curr) => {
-          acc.includes(curr.orderId) ? acc : acc.push(curr.orderId)
-          return acc
-        }, [])
-        ServiceOrders.getList(ordersMovements).then((res) => {
-          setOrders(res)
-        })
-      })
-    }
-  }, [storeId])
-
-  const formattedOrdersWithHistory = orders.map((order) => {
-    const orderMovements = workshopDateMovements.filter(
-      (m) => m.orderId === order.id
-    )
-    return {
-      ...order,
-      movements: orderMovements
-    }
-  })
+  const [fromDate, setFromDate] = useState(startDate(new Date()))
+  const [toDate, setToDate] = useState(endDate(new Date()))
 
   return (
     <View>
-      <DateLapse />
+      <DateLapse setFromDate={setFromDate} setToDate={setToDate} />
+      <Text style={gStyles.h3}>De reparación</Text>
+      <RepairOrdersReport
+        fromDate={startDate(fromDate)}
+        toDate={endDate(toDate)}
+      />
+    </View>
+  )
+}
 
-      <View style={{ maxWidth: 800, marginHorizontal: 'auto' }}>
-        <List
-          filters={[]}
-          data={formattedOrdersWithHistory}
-          sortFields={[]}
-          ComponentRow={({ item: order }) => {
-            const [expanded, setExpanded] = useState(false)
-            return (
-              <Pressable onPress={() => setExpanded(!expanded)}>
-                <ListRow
-                  fields={[
-                    {
-                      component: <Text>{order?.folio}</Text>,
-                      width: 80
-                    },
-                    {
-                      component: <Text>{order?.fullName}</Text>,
-                      width: 120
-                    },
-                    {
-                      component: (
-                        <Text>{dictionary(order.workshopStatus)}</Text>
-                      ),
-                      width: 80
-                    },
-                    {
-                      component: (
-                        <View>{<Text>{order?.movements?.length}</Text>}</View>
-                      ),
-                      width: 80
-                    }
-                  ]}
-                />
-                {expanded && (
-                  <View style={{ paddingLeft: 12 }}>
-                    {order?.movements?.map((movement) => (
-                      <ListRow
-                        key={movement.id}
-                        fields={[
-                          {
-                            component: (
-                              <Text>
-                                {dateFormat(
-                                  asDate(movement?.createdAt),
-                                  ' HH:mm '
-                                )}
-                              </Text>
-                            ),
-                            width: 'auto'
-                          },
-                          {
-                            component: (
-                              <Text>{dictionary(movement?.type)}</Text>
-                            ),
-                            width: 80
-                          },
-                          {
-                            component: <Text>{movement.itemNumber}</Text>,
-                            width: 50
-                          },
-                          {
-                            component: <Text>{movement?.content}</Text>,
-                            width: 'rest'
-                          }
-                        ]}
-                      />
-                    ))}
-                  </View>
-                )}
-              </Pressable>
-            )
-          }}
-        ></List>
+export const RepairOrdersReport = ({ fromDate, toDate }) => {
+  const { storeId } = useStore()
+  console.log({ fromDate, toDate })
+  const [created, setCreated] = useState<Partial<OrderType[]>>([])
+  const [cancelled, setCancelled] = useState<Partial<OrderType[]>>([])
+  const [repairStarted, setRepairStarted] = useState<Partial<OrderType[]>>([])
+
+  useEffect(() => {
+    if (storeId) {
+      //* <--- Get by created date
+      ServiceOrders.getFieldBetweenDates({
+        storeId,
+        field: 'createdAt',
+        fromDate,
+        toDate
+      }).then(setCreated)
+
+      //* <--- Get by scheduled date
+      ServiceOrders.getFieldBetweenDates({
+        storeId,
+        field: 'cancelledAt',
+        fromDate,
+        toDate
+      }).then(setCancelled)
+
+      //* <--- Get by scheduled date
+      ServiceOrders.getFieldBetweenDates({
+        storeId,
+        field: 'repairStartedAt',
+        fromDate,
+        toDate
+      }).then(setRepairStarted)
+    }
+  }, [storeId, fromDate, toDate])
+
+  console.log({ created, cancelled, repairStarted })
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-around'
+      }}
+    >
+      <View>
+        <Text>Pedidos</Text>
+      </View>
+      <View>
+        <Text>Canceladas</Text>
+      </View>
+      <View>
+        <Text>Inciadas</Text>
+      </View>
+      <View>
+        <Text>Terminadas</Text>
       </View>
     </View>
   )

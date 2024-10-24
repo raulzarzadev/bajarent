@@ -28,7 +28,7 @@ const CardItem = ({
   showScheduledTime
 }: CartItemType) => {
   const sectionName = item?.assignedSectionName || 'Sin asignar'
-  console.log({ item })
+
   return (
     <View
       style={{

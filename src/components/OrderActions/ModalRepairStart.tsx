@@ -23,7 +23,8 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
 
     await onRepairStart({
       orderId: order.id,
-      userId: user.id
+      userId: user.id,
+      storeId
     })
 
     //* create movement

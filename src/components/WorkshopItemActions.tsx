@@ -5,14 +5,17 @@ import Button from './Button'
 import {
   onWorkshopDeliveryRepair,
   onWorkshopRepairPending,
-  onWorkshopRepairPickUp,
-  onWorkshopRepairStart
+  onWorkshopRepairPickUp
 } from '../firebase/actions/workshop-actions'
 import { ItemExternalRepairProps } from '../types/ItemType'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
 import InputAssignSection from './InputAssingSection'
-import { onAssignOrder } from '../libs/order-actions'
+import {
+  onAssignOrder,
+  onRepairFinish,
+  onRepairStart
+} from '../libs/order-actions'
 import { onChangeItemSection } from '../firebase/actions/item-actions'
 import ModalFixItem from './ModalFixItem'
 
@@ -91,14 +94,21 @@ const WorkshopItemActions = ({
         <Button
           label="Iniciar reparación"
           onPress={() => {
-            onWorkshopRepairStart({
-              storeId,
-              itemId: item.id,
-              orderId: item.orderId,
-              isExternalRepair: item?.isExternalRepair,
-              failDescription,
-              userId: user?.id
-            })
+            if (item?.isExternalRepair) {
+              onRepairStart({
+                orderId: item.orderId,
+                userId: user.id,
+                storeId
+              })
+            } else {
+              onWorkshopRepairPickUp({
+                storeId,
+                itemId: item.id,
+                orderId: item.orderId,
+                failDescription,
+                userId: user.id
+              })
+            }
           }}
         ></Button>
       </View>
@@ -123,7 +133,19 @@ const WorkshopItemActions = ({
             })
           }}
         ></Button>
-        <ModalFixItem item={item} />
+        {!isExternalRepair && <ModalFixItem item={item} />}
+        {isExternalRepair && (
+          <Button
+            label="Finalizar"
+            onPress={() => {
+              onRepairFinish({
+                orderId: item.orderId,
+                userId: user.id,
+                storeId
+              })
+            }}
+          ></Button>
+        )}
       </View>
     )
   }
@@ -143,25 +165,26 @@ const WorkshopItemActions = ({
             }}
           />
         </View>
+        {/* **<--------- Regresar a reparación  ITEM */}
         {!isExternalRepair && <ModalFixItem item={item} />}
 
         {isExternalRepair && (
           <>
             <View style={{ marginVertical: 8, width: '100%' }}>
-              <Button
-                variant="ghost"
-                label="Regresar a reparación"
-                onPress={() => {
-                  onWorkshopRepairStart({
+              {/* **<--------- Regresar a reparación ORDEN */}
+              <ModalFixItem
+                item={item}
+                handleFix={({ comment }) => {
+                  onWorkshopRepairPickUp({
                     storeId,
                     itemId: item.id,
                     orderId: item.orderId,
-                    isExternalRepair: item.isExternalRepair,
-                    failDescription,
+                    isExternalRepair: true,
+                    failDescription: comment,
                     userId: user?.id
                   })
                 }}
-              ></Button>
+              />
             </View>
             <View style={{ marginVertical: 8, width: '100%' }}>
               <Button

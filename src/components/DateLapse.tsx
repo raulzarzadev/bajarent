@@ -1,13 +1,32 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import DateCounts from './DateCounts'
-import HeaderDate from './HeaderDate'
-import Button from './Button'
 import InputDate from './InputDate'
+import Icon from './Icon'
+import theme from '../theme'
 
-const DateLapse = () => {
-  const [fromDate, setFromDate] = React.useState(new Date())
-  const [toDate, setToDate] = React.useState(new Date())
+const DateLapse = ({
+  fromDate = new Date(),
+  toDate = new Date(),
+  setFromDate,
+  setToDate
+}: {
+  fromDate?: Date
+  toDate?: Date
+  setFromDate: (date: Date) => void
+  setToDate: (date: Date) => void
+}) => {
+  const [_fromDate, _setFromDate] = React.useState(fromDate)
+  const [_toDate, _setToDate] = React.useState(toDate)
+
+  const handleSetFromDate = (date: Date) => {
+    _setFromDate(date)
+    setFromDate(date)
+  }
+  const handleSetToDate = (date: Date) => {
+    _setToDate(date)
+    setToDate(date)
+  }
+
   return (
     <View
       style={{
@@ -15,14 +34,15 @@ const DateLapse = () => {
         justifyContent: 'space-around',
         width: '100%',
         margin: 'auto',
-        maxWidth: 600
+        maxWidth: 600,
+        alignItems: 'center'
       }}
     >
       <InputDate
         setValue={(value) => {
-          setFromDate(value)
+          handleSetFromDate(value)
         }}
-        value={fromDate}
+        value={_fromDate}
         format="EEE dd MMM yy"
         openButtonProps={{
           size: 'small',
@@ -30,11 +50,12 @@ const DateLapse = () => {
           uppercase: false
         }}
       />
+      <Icon icon="rowRight" color={theme.primary} />
       <InputDate
         setValue={(value) => {
-          setToDate(value)
+          handleSetToDate(value)
         }}
-        value={toDate}
+        value={_toDate}
         format="EEE dd MMM yy"
         openButtonProps={{
           size: 'small',

@@ -23,7 +23,6 @@ const ItemDetails = ({
   onAction?: () => void
   showFixTime?: boolean
 }) => {
-  console.log({ item })
   return (
     <View>
       <DocMetadata item={item} />

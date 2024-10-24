@@ -10,7 +10,7 @@ import { useOrderDetails } from '../../contexts/orderContext'
 const ModalRepairFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
 
-  const { user } = useAuth()
+  const { user, storeId } = useAuth()
 
   const handleStartRepair = async () => {
     //*pickup items
@@ -18,7 +18,8 @@ const ModalRepairFinish = ({ modal }: { modal: ReturnModal }) => {
 
     await onRepairFinish({
       orderId: order.id,
-      userId: user.id
+      userId: user.id,
+      storeId: storeId
     })
   }
 

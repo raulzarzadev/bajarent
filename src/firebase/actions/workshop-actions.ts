@@ -75,7 +75,8 @@ export const onWorkshopRepairPickUp = async ({
       onRepairPickup({
         orderId,
         userId,
-        storeId
+        storeId,
+        failDescription
       })
     } else {
       ServiceItemHistory.addEntry({
