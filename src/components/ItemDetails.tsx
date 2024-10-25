@@ -100,7 +100,6 @@ export const ItemFixDetails = ({
       count: 1,
       type: 'report'
     }).then((res) => {
-      console.log({ res })
       setLastFixEntry(res[0])
     })
   }, [])
