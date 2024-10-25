@@ -40,7 +40,6 @@ const WorkshopHistoryExternalRepairs = () => {
 
 export const RepairOrdersReport = ({ fromDate, toDate }) => {
   const { storeId } = useStore()
-  console.log({ fromDate, toDate })
   const [created, setCreated] = useState<Partial<OrderType[]>>([])
   const [cancelled, setCancelled] = useState<Partial<OrderType[]>>([])
   const [repairStarted, setRepairStarted] = useState<Partial<OrderType[]>>([])

@@ -245,9 +245,9 @@ export default function ModalSendWhatsapp({
   \n${WELCOME}
   \n${ORDER_TYPE}
   \n⬆️🔧 Se recogió para servicio el  📆${dFormat(order?.repairingAt)}
-  \n🛠️ Marca: ${order?.itemBrand || ''}
-  #️⃣ Serie: ${order?.itemSerial || ''} 
-  🧾 Falla: ${order?.repairInfo || ''}
+  \n🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
+  #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
+  🧾 Falla: ${order?.item?.failDescription || order?.failDescription || ''}
   💲 Cotización:  $${order?.repairTotal || 0}
   
   \n${CONTACTS}

@@ -136,7 +136,7 @@ const WorkshopItemActions = ({
         {!isExternalRepair && <ModalFixItem item={item} />}
         {isExternalRepair && (
           <Button
-            label="Finalizar"
+            label="Lista para entregar"
             onPress={() => {
               onRepairFinish({
                 orderId: item.orderId,

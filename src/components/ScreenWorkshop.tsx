@@ -154,7 +154,6 @@ const RepairStep = ({
   onItemPress,
   selectedItem
 }: RepairStepProps) => {
-  console.log({ repairItems })
   return (
     <View style={{ marginBottom: 16 }}>
       <View style={{ paddingLeft: 16 }}>

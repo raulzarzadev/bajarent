@@ -94,7 +94,6 @@ const WorkshopItem = ({
   // external items has isExternalRepair props and it should modify the order when an action is handle
   // it should provides a workshopStatus prop to know the status of the item ✅
   // item should provides a orderId props to know the order that is related to ✅
-
   const modal = useModal({
     title: `${item.isExternalRepair ? 'Reparación' : 'Renta'} ${
       item?.number || 'SN'
@@ -188,7 +187,7 @@ const WorkshopItem = ({
             </View>
             <Text style={[gStyles.h3, { textAlign: 'left' }]}>Falla:</Text>
             <Text style={[{ marginBottom: 6 }, gStyles.tError]}>
-              {/* // {item?.repairDetails?.failDescription} */}
+              {item?.failDescription || ''}
             </Text>
             <View>
               {item?.repairDetails?.quotes?.length > 0 && (
