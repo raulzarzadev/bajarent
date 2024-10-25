@@ -1,18 +1,12 @@
-import { View, Text, ScrollView, Pressable } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
-import { ServiceComments } from '../firebase/ServiceComments'
 import { useStore } from '../contexts/storeContext'
-import asDate, { dateFormat, endDate, startDate } from '../libs/utils-date'
+import { endDate, startDate } from '../libs/utils-date'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderType, { order_type } from '../types/OrderType'
-import List from './List'
-import ListRow from './ListRow'
-import dictionary from '../dictionary'
-import DateCell from './DateCell'
 import DateLapse from './DateLapse'
 import { gStyles } from '../styles'
-import { useOrdersCtx } from '../contexts/ordersContext'
 
 const ScreenWorkshopHistory = () => {
   return (
@@ -65,7 +59,7 @@ export const RepairOrdersReport = ({ fromDate, toDate }) => {
       //* <--- Get by scheduled date
       ServiceOrders.getFieldBetweenDates({
         storeId,
-        field: 'repairStartedAt',
+        field: 'repairingAt',
         fromDate,
         toDate
       }).then(setRepairStarted)
