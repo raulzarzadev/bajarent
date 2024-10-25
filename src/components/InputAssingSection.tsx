@@ -61,7 +61,12 @@ const InputAssignSection = ({
           }}
           containerStyle={{ marginVertical: 6 }}
           value={sectionId}
-          options={[{ label: 'Sin', value: null }, ...storeSectionOptions]}
+          options={[
+            { label: 'Sin', value: null },
+            ...storeSectionOptions.sort((a, b) =>
+              a.label.localeCompare(b.label)
+            )
+          ]}
         />
       </ButtonConfirm>
     </View>
