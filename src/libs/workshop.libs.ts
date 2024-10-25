@@ -92,10 +92,6 @@ export const formatItemsFromRepair = ({
         order.status === order_status.AUTHORIZED ||
         order.status === order_status.PICKED_UP
 
-      if (order.folio === 103) {
-        console.log({ order })
-      }
-
       const item = order.item
       const failDescription = item?.failDescription || order?.repairInfo || ''
       const formattedItem = {

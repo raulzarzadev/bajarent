@@ -5,7 +5,8 @@ import Button from './Button'
 import {
   onWorkshopDeliveryRepair,
   onWorkshopRepairPending,
-  onWorkshopRepairPickUp
+  onWorkshopRepairPickUp,
+  onWorkshopRepairStart
 } from '../firebase/actions/workshop-actions'
 import { ItemExternalRepairProps } from '../types/ItemType'
 import { useStore } from '../contexts/storeContext'
@@ -101,11 +102,12 @@ const WorkshopItemActions = ({
                 storeId
               })
             } else {
-              onWorkshopRepairPickUp({
+              onWorkshopRepairStart({
                 storeId,
                 itemId: item.id,
                 orderId: item.orderId,
                 failDescription,
+                isExternalRepair: false,
                 userId: user.id
               })
             }
