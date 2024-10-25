@@ -106,7 +106,6 @@ const WorkshopItem = ({
       <Pressable
         onPress={() => {
           onItemPress?.(item.id)
-          console.log(item.id)
           modal.toggleOpen()
         }}
         style={{
