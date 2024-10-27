@@ -282,4 +282,17 @@ export class FirebaseGenericService<T extends Identifiable> {
       cb
     })
   }
+
+  getCollectionGroup({
+    collectionName,
+    filters
+  }: {
+    collectionName: string
+    filters: QueryConstraint[]
+  }) {
+    return this.itemCRUD.getCollectionGroup({
+      collectionName,
+      filters
+    })
+  }
 }

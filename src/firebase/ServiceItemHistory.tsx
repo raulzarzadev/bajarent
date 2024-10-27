@@ -11,8 +11,7 @@ import BaseType from '../types/BaseType'
 import { endDate, startDate } from '../libs/utils-date'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import ItemType from '../types/ItemType'
-import { comment_variant } from '../types/CommentType'
-import { ServiceComments } from './ServiceComments'
+import { GetItemsOps } from './firebase.CRUD'
 
 const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'
@@ -163,6 +162,32 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
       ]
     })
     return entries[0]
+  }
+
+  getFieldBetweenDates = async (
+    {
+      storeId,
+      field,
+      fromDate,
+      toDate
+    }: {
+      storeId: string
+      field: keyof Type
+      fromDate: Date
+      toDate: Date
+    },
+    ops?: GetItemsOps
+  ): Promise<Type[]> => {
+    const filters = [
+      where('storeId', '==', storeId),
+      where(field as string, '>=', fromDate),
+      where(field as string, '<=', toDate)
+    ]
+
+    return this.getCollectionGroup({
+      collectionName: SUB_COLLECTION_2,
+      filters
+    })
   }
 
   async getWorkshopDateMovements({

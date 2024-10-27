@@ -559,6 +559,27 @@ export class FirebaseCRUD {
       })
   }
 
+  async getCollectionGroup({
+    collectionName,
+    filters
+  }: {
+    collectionName: string
+    filters: QueryConstraint[]
+  }) {
+    const q = query(collectionGroup(this.db, collectionName), ...filters)
+    const querySnapshot = await getDocs(q)
+
+    //* <------ Show getting data in DEV mode
+    this.showSnapshot(querySnapshot)
+
+    const res: any[] = []
+    querySnapshot.forEach((doc) => {
+      res.push(this.normalizeItem(doc))
+    })
+    console.log('group collection', res)
+    return res
+  }
+
   async deleteItemInCollection({
     parentId,
     parentCollection,
