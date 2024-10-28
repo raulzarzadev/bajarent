@@ -96,15 +96,24 @@ export const formatItemsFromRepair = ({
       const failDescription = item?.failDescription || order?.repairInfo || ''
       const formattedItem = {
         id: order?.id,
-        categoryName:
-          categories.find((cat) => cat.id === item?.categoryId)?.name || '',
+        needFix,
+        brand: item?.brand || '',
+
+        //*----> this names changes to adapt to the new structure
+        // serial: item?.serial || '',
+        // number: String(order.folio) || '',
+        // categoryName:
+        //   categories.find((cat) => cat.id === item?.categoryId)?.name || '',
+        // serial: item?.serial || '',
+        // number: String(order.folio) || '',
+        categoryName: String(order?.folio),
+        number: item?.serial || '',
+        serial: order?.fullName,
+        //*<----- this names changes to adapt to the new structure
+
         assignedSectionName:
           storeSections.find((sec) => sec.id === order.assignToSection)?.name ||
           '',
-        needFix,
-        number: String(order.folio) || '',
-        brand: item?.brand || '',
-        serial: item?.serial || '',
         workshopStatus: workshopStatus || 'pending',
         workshopFlow: order?.workshopFlow || {},
         failDescription,
