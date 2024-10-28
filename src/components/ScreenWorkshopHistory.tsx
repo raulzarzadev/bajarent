@@ -37,41 +37,6 @@ const WorkshopHistoryExternalRepairs = () => {
   )
 }
 
-// export const RepairedRentItems = ({
-//   fromDate = new Date(),
-//   toDate = new Date()
-// }: {
-//   fromDate: Date
-//   toDate: Date
-// }) => {
-//   const { storeId } = useStore()
-//   const [created, setCreated] = useState<Partial<any[]>>([])
-//   const [cancelled, setCancelled] = useState<Partial<any[]>>([])
-//   const [started, setStarted] = useState<Partial<any[]>>([])
-//   const [finished, setFinished] = useState<Partial<any[]>>([])
-//   useEffect(() => {
-//     if (storeId) {
-//       ServiceItemHistory.getFieldBetweenDates({
-//         field: 'createdAt',
-//         fromDate: startDate(fromDate),
-//         toDate: endDate(toDate),
-//         storeId
-//       }).then(setCreated)
-//     }
-//   }, [storeId])
-//   console.log({
-//     created,
-//     cancelled,
-//     started,
-//     finished
-//   })
-//   return (
-//     <Text>
-//       <ResumeRepairs cancelled={[]} created={[]} finished={[]} started={[]} />
-//     </Text>
-//   )
-// }
-
 export const RepairOrdersReport = ({ fromDate, toDate }) => {
   const { storeId } = useStore()
   const [created, setCreated] = useState<Partial<OrderType[]>>([])
@@ -80,37 +45,16 @@ export const RepairOrdersReport = ({ fromDate, toDate }) => {
   const [finished, setFinished] = useState<Partial<OrderType[]>>([])
   useEffect(() => {
     if (storeId) {
-      //* <--- Get by created date
-      ServiceOrders.getFieldBetweenDates({
+      ServiceOrders.getRepairOrdersFlow({
         storeId,
-        field: 'createdAt',
         fromDate,
         toDate
-      }).then(setCreated)
-
-      //* <--- Get by cancelledAt date
-      ServiceOrders.getFieldBetweenDates({
-        storeId,
-        field: 'cancelledAt',
-        fromDate,
-        toDate
-      }).then(setCancelled)
-
-      //* <--- Get by repairing date
-      ServiceOrders.getFieldBetweenDates({
-        storeId,
-        field: 'workshopFlow.startedAt',
-        fromDate,
-        toDate
-      }).then(setStarted)
-
-      //* <--- Get by finishedAt date
-      ServiceOrders.getFieldBetweenDates({
-        storeId,
-        field: 'workshopFlow.finishedAt',
-        fromDate,
-        toDate
-      }).then(setFinished)
+      }).then(({ created, cancelled, started, finished }) => {
+        setCreated(created)
+        setCancelled(cancelled)
+        setStarted(started)
+        setFinished(finished)
+      })
     }
   }, [storeId, fromDate, toDate])
 

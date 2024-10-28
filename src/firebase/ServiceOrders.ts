@@ -1,4 +1,8 @@
-import { documentId, where } from 'firebase/firestore'
+import {
+  documentId,
+  QueryFieldFilterConstraint,
+  where
+} from 'firebase/firestore'
 import OrderType, {
   ORDER_STATUS_SOLVED,
   ORDER_STATUS_UNSOLVED,
@@ -764,12 +768,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       storeId,
       field,
       fromDate,
-      toDate
+      toDate,
+      moreFilters = []
     }: {
       storeId: string
       field: keyof OrderType
       fromDate: Date
       toDate: Date
+      moreFilters?: QueryFieldFilterConstraint[]
     },
     ops?: GetItemsOps
   ): Promise<OrderType[]> => {
@@ -778,7 +784,62 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where(field as string, '>=', fromDate),
       where(field as string, '<=', toDate)
     ]
+    if (moreFilters.length > 0) {
+      filters.push(...moreFilters)
+    }
     return this.findMany(filters, ops)
+  }
+
+  getRepairOrdersFlow = async ({
+    storeId,
+    fromDate,
+    toDate
+  }): Promise<{
+    created: OrderType[]
+    cancelled: OrderType[]
+    started: OrderType[]
+    finished: OrderType[]
+  }> => {
+    const [created, cancelled, started, finished] = await Promise.all([
+      //* <--- Get by created date
+      this.getFieldBetweenDates({
+        storeId,
+        field: 'createdAt',
+        fromDate,
+        toDate,
+        moreFilters: [where('type', '==', order_type.REPAIR)]
+      }),
+      //* <--- Get by cancelledAt date
+      this.getFieldBetweenDates({
+        storeId,
+        field: 'cancelledAt',
+        fromDate,
+        toDate,
+        moreFilters: [where('type', '==', order_type.REPAIR)]
+      }),
+      //* <--- Get by repairing date
+      this.getFieldBetweenDates({
+        storeId,
+        field: 'workshopFlow.startedAt',
+        fromDate,
+        toDate,
+        moreFilters: [where('type', '==', order_type.REPAIR)]
+      }),
+      //* <--- Get by finishedAt date
+      this.getFieldBetweenDates({
+        storeId,
+        field: 'workshopFlow.finishedAt',
+        fromDate,
+        toDate,
+        moreFilters: [where('type', '==', order_type.REPAIR)]
+      })
+    ])
+    return {
+      created,
+      cancelled,
+      started,
+      finished
+    }
   }
 }
 

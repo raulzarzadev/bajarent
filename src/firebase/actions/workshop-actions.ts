@@ -72,11 +72,17 @@ export const onWorkshopRepairPickUp = async ({
 }: WorkshopActionProps) => {
   try {
     if (isExternalRepair) {
-      onRepairPickup({
+      // FIXME: pickup repair should start repair
+      // onRepairPickup({
+      //   orderId,
+      //   userId,
+      //   storeId,
+      //   failDescription
+      // })
+      onRepairStart({
         orderId,
         userId,
-        storeId,
-        failDescription
+        storeId
       })
     } else {
       ServiceItemHistory.addEntry({
