@@ -120,21 +120,23 @@ const WorkshopItemActions = ({
     //* this should move back to inProgress
     return (
       <View style={{ marginVertical: 8, width: '100%' }}>
-        <Button
-          label="Pendiente"
-          variant="ghost"
-          // icon='arrowForward'
-          onPress={() => {
-            onWorkshopRepairPickUp({
-              storeId,
-              itemId: item.id,
-              orderId: item.orderId,
-              isExternalRepair: item.isExternalRepair,
-              failDescription,
-              userId: user.id
-            })
-          }}
-        ></Button>
+        {isExternalRepair && (
+          <Button
+            label="Regresar al cliente"
+            variant="ghost"
+            onPress={() => {
+              onWorkshopRepairPending({
+                storeId,
+                itemId: item.id,
+                orderId: item.orderId,
+                isExternalRepair: item.isExternalRepair,
+                failDescription,
+                userId: user.id
+              })
+            }}
+          ></Button>
+        )}
+
         {!isExternalRepair && <ModalFixItem item={item} />}
         {isExternalRepair && (
           <Button
