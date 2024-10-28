@@ -88,46 +88,59 @@ const ScreenWorkshop = () => {
             De renta {`(${formattedItems.length}) `}
           </Text>
         </View>
-        {!showRent && (
-          <RepairStepE
-            justShow={'repairs'}
-            title="Pedidos"
-            showScheduledTime
-            repairItems={ordersShouldPickup}
-            onItemPress={setItemPressed}
-            selectedItem={itemPressed}
-          />
-        )}
-        {showRent && (
-          <RepairStepE
-            justShow={'rents'}
-            title="En reparación"
-            rentItems={itemsPending}
-            repairItems={ordersPending}
-            onItemPress={setItemPressed}
-            selectedItem={itemPressed}
-          />
-        )}
 
-        {!showRent && (
-          <RepairStepE
-            justShow={'repairs'}
-            title="En reparación"
-            repairItems={[...ordersPending, ...ordersInProgress]}
-            onItemPress={setItemPressed}
-            selectedItem={itemPressed}
-          />
+        {showRent ? (
+          <>
+            <RepairStepE
+              justShow={'rents'}
+              title="Pendientes"
+              rentItems={itemsPending}
+              onItemPress={setItemPressed}
+              selectedItem={itemPressed}
+            />
+            <RepairStepE
+              justShow={'rents'}
+              title="En reparación"
+              rentItems={itemsInProgress}
+              onItemPress={setItemPressed}
+              selectedItem={itemPressed}
+            />
+            <RepairStepE
+              justShow={'rents'}
+              title="Listas para entrega"
+              rentItems={itemsFinished}
+              showScheduledTime
+              onItemPress={setItemPressed}
+              selectedItem={itemPressed}
+            />
+          </>
+        ) : (
+          <>
+            <RepairStepE
+              justShow={'repairs'}
+              title="Pedidos"
+              showScheduledTime
+              repairItems={ordersShouldPickup}
+              onItemPress={setItemPressed}
+              selectedItem={itemPressed}
+            />
+            <RepairStepE
+              justShow={'repairs'}
+              title="En reparación"
+              repairItems={[...ordersPending, ...ordersInProgress]}
+              onItemPress={setItemPressed}
+              selectedItem={itemPressed}
+            />
+            <RepairStepE
+              justShow={'repairs'}
+              title="Listas para entrega"
+              repairItems={ordersFinished}
+              showScheduledTime
+              onItemPress={setItemPressed}
+              selectedItem={itemPressed}
+            />
+          </>
         )}
-
-        <RepairStepE
-          justShow={showRent ? 'rents' : 'repairs'}
-          title="Listas para entrega"
-          rentItems={itemsFinished}
-          repairItems={ordersFinished}
-          showScheduledTime
-          onItemPress={setItemPressed}
-          selectedItem={itemPressed}
-        />
       </View>
     </ScrollView>
   )
