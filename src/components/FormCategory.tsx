@@ -11,6 +11,8 @@ import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
 import FormikInputRadios from './FormikInputRadios'
 import { order_type } from '../types/OrderType'
+import { FormikFieldArrayE } from './FormikInputArray'
+import { useStore } from '../contexts/storeContext'
 export type FormCategoryProps = {
   defaultValues?: Partial<CategoryType>
   onSubmit?: (values: Partial<CategoryType>) => Promise<any>
@@ -21,9 +23,6 @@ const FormCategoryA = ({
     console.log(values)
   }
 }: FormCategoryProps) => {
-  console.log({ defaultValues })
-  // @ts-ignore
-
   const [sending, setSending] = React.useState(false)
 
   return (
@@ -44,6 +43,13 @@ const FormCategoryA = ({
           </View>
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
+          </View>
+          <View style={[styles.input]}>
+            <FormikFieldArrayE
+              name={'availableBrands'}
+              label={'Marcas disponibles'}
+              values={values}
+            />
           </View>
           <View style={styles.input}>
             <Text>Visible para tipo de orden: </Text>

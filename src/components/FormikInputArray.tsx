@@ -6,14 +6,7 @@ import { FormikInputPhoneE } from './FormikInputPhone'
 import FormikInputSelect from './FormikInputSelect'
 import { FieldArray } from 'formik'
 import { gStyles } from '../styles'
-
-export const FormikFieldArray = ({
-  label,
-  name,
-  values,
-  typeOptions = [],
-  shouldIncludeLabel = false
-}: {
+export type FormikFieldArrayProps = {
   label?: string
   name: string
   values: unknown
@@ -23,8 +16,16 @@ export const FormikFieldArray = ({
     type?: 'phone' | 'number' | 'text'
   }[]
   shouldIncludeLabel?: boolean
-}) => {
+}
+export const FormikFieldArray = ({
+  label,
+  name,
+  values,
+  typeOptions = [],
+  shouldIncludeLabel = false
+}: FormikFieldArrayProps) => {
   const layoutRow = Dimensions.get('window').width > 500
+
   return (
     <View>
       <Text style={gStyles.h2}>{label}</Text>
@@ -37,9 +38,7 @@ export const FormikFieldArray = ({
                 const typeExist = typeOptions.find(
                   (option) => option.value === field.type
                 )
-                const inputType = typeExist
-                  ? typeExist?.type || 'text'
-                  : undefined
+                const inputType = typeExist ? typeExist?.type || 'text' : 'text'
 
                 return (
                   <View
@@ -126,7 +125,7 @@ export const FormikFieldArray = ({
 
 export default FormikFieldArray
 
-export const FormikFieldArrayE = (props) => (
+export const FormikFieldArrayE = (props: FormikFieldArrayProps) => (
   <ErrorBoundary componentName="FormikFieldArray">
     <FormikFieldArray {...props} />
   </ErrorBoundary>
