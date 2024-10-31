@@ -47,8 +47,9 @@ const InputCheckbox = ({
       fillColor={color}
       style={[
         // { marginHorizontal: 'auto' },
-        style
-        //  disabled ? { opacity: 0.4 } : {}
+        style,
+        //  disabled ? { opacity: 0.4 } : {},
+        { padding: 6 }
       ]}
       iconStyle={{
         opacity: disabled ? 0.3 : 1
