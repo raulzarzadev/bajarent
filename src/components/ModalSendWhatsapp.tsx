@@ -262,11 +262,14 @@ export default function ModalSendWhatsapp({
   `
   const GOOGLE_MAPS_COMMENT = `🌟 *COMPARTE * 
   \n${WELCOME}
-  \nSi te gusto el servicio y quieres recomendarnos, deja un comentario en Google Maps
-  \nhttps://www.google.com/maps/place/Lavarenta/@24.1505656,-110.3167882,21z/data=!4m11!1m2!2m1!1slavarneta+bcs!3m7!1s0x86afd345060536b7:0xdc0f005597766de0!8m2!3d24.1506412!4d-110.3166235!9m1!1b1!16s%2Fg%2F11b6bgc0l8?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D
+  \nNos encantaría recibir tus comentarios. Publica una opinión en nuestro perfil.
+  \nhttps://g.page/r/CeBtdpdVAA_cEBE/review
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
   `
+
+  // \nSi te gusto el servicio y quieres recomendarnos, deja un comentario en Google Maps
+  // \nhttps://www.google.com/maps/place/Lavarenta/@24.1505656,-110.3167882,21z/data=!4m11!1m2!2m1!1slavarneta+bcs!3m7!1s0x86afd345060536b7:0xdc0f005597766de0!8m2!3d24.1506412!4d-110.3166235!9m1!1b1!16s%2Fg%2F11b6bgc0l8?entry=ttu&g_ep=EgoyMDI0MDkwNC4wIKXMDSoASAFQAw%3D%3D
 
   const messages: { type: MessageType; content: string }[] = [
     // {
