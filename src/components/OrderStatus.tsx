@@ -55,10 +55,11 @@ const OrderStatus = ({
     !order?.expireAt &&
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
+
   const pendingMarketOrder = order?.pendingMarketOrder
 
   const expiresOnMonday = order?.expiresOnMonday
-
+  console.log({ pendingMarketOrder })
   return (
     <>
       {isRenewed && (

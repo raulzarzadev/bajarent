@@ -21,6 +21,7 @@ export type CategoryBase = {
     references?: boolean
     imageId?: boolean
     scheduledAt?: boolean
+    chooseBrand?: boolean
   }
   orderType?: {
     repair?: boolean

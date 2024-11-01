@@ -88,10 +88,11 @@ export const formatOrder = ({
   if (order?.type === 'REPAIR') {
     return {
       ...order,
-
       comments: orderComments,
       expireAt: null,
-      hasNotSolvedReports: reportsNotSolved
+      hasNotSolvedReports: reportsNotSolved,
+      pendingMarketOrder:
+        order?.status === order_status.PENDING && order.marketOrder
     }
   }
   if (order?.type === 'SALE') {
@@ -100,10 +101,16 @@ export const formatOrder = ({
 
       comments: orderComments,
       expireAt: null,
-      hasNotSolvedReports: reportsNotSolved
+      hasNotSolvedReports: reportsNotSolved,
+      pendingMarketOrder:
+        order?.status === order_status.PENDING && order.marketOrder
     }
   }
-  return order
+  return {
+    ...order,
+    pendingMarketOrder:
+      order?.status === order_status.PENDING && order.marketOrder
+  }
 }
 
 export const activeOrders = (ordersFormatted: OrderType[]) => {

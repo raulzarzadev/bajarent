@@ -12,7 +12,7 @@ import ErrorBoundary from './ErrorBoundary'
 import FormikInputRadios from './FormikInputRadios'
 import { order_type } from '../types/OrderType'
 import { FormikFieldArrayE } from './FormikInputArray'
-import { useStore } from '../contexts/storeContext'
+
 export type FormCategoryProps = {
   defaultValues?: Partial<CategoryType>
   onSubmit?: (values: Partial<CategoryType>) => Promise<any>
@@ -153,6 +153,18 @@ const FormCategoryA = ({
                   <FormikCheckbox
                     name={'marketForm.scheduledAt'}
                     label={'Fecha'}
+                  />
+                </View>
+                <View style={[styles.input, styles.marketCheckbox]}>
+                  <FormikCheckbox
+                    name={'marketForm.chooseBrand'}
+                    label={'Seleccionar marca'}
+                  />
+                </View>
+                <View style={[styles.input, styles.marketCheckbox]}>
+                  <FormikCheckbox
+                    name={'marketForm.failDescription'}
+                    label={'Descripción de falla'}
                   />
                 </View>
               </View>
