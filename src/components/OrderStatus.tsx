@@ -59,7 +59,6 @@ const OrderStatus = ({
   const pendingMarketOrder = order?.pendingMarketOrder
 
   const expiresOnMonday = order?.expiresOnMonday
-  console.log({ pendingMarketOrder })
   return (
     <>
       {isRenewed && (
