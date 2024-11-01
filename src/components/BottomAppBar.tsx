@@ -12,8 +12,6 @@ import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
-import { ScreenWorkshopE } from './ScreenWorkshop'
-import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
 import { StackWorkshopE } from './StackWorkshop'
 
 const Tab = createBottomTabNavigator()

@@ -186,7 +186,8 @@ const RepairStep = ({
             title={title}
             showScheduledTime={showScheduledTime}
             sortFunction={(a, b) =>
-              asDate(a.scheduledAt).getTime() - asDate(b.scheduledAt).getTime()
+              (asDate(a?.scheduledAt)?.getTime() || 0) -
+              (asDate(b?.scheduledAt)?.getTime() || 0)
             }
             onItemPress={onItemPress}
             selectedItem={selectedItem}

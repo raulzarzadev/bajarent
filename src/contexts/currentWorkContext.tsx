@@ -90,7 +90,6 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
         fromDate: startDate(date),
         toDate: endDate(date)
       }).then((data: CurrentWorks[]) => {
-        console.log({ data })
         setCurrentWork(data?.[0])
       })
   }, [date, storeId])
