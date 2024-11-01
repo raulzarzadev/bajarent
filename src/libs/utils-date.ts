@@ -89,18 +89,14 @@ export const asDate = (
   date?: Timestamp | Date | number | string | object | null
 ): Date | null => {
   if (!date) return null
-  if (date instanceof Date) {
-    if (!isNaN(date.getTime())) return date
-    console.error('not a valid date', { date })
-    return null
-  }
+  if (date instanceof Date) return date
   if (date instanceof Timestamp) return date.toDate()
   if (typeof date === 'number') return new Date(date)
+  if (typeof date === 'object') return null
   if (typeof date === 'string') {
-    const newDate = new Date(date)
-    if (newDate.getTime()) return newDate
+    if (isNaN(new Date(date).getTime())) return null
+    return new Date(date)
   }
-  console.error('not a valid date', { date })
   return null
 }
 export default asDate

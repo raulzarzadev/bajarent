@@ -206,7 +206,7 @@ const WorkshopItem = ({
                   >
                     <InputCheckbox
                       disabled={item.workshopStatus !== 'started'}
-                      value={!!q.doneAt}
+                      value={!!q?.doneAt}
                       setValue={() => {
                         onMarkQuoteAsDone({
                           orderId: item.orderId,
@@ -214,9 +214,7 @@ const WorkshopItem = ({
                         })
                       }}
                       label={`${q.description} ${
-                        q.doneAt
-                          ? dateFormat(asDate(q.doneAt), 'ddMMM HH:mm')
-                          : ''
+                        q?.doneAt ? dateFormat(asDate(q?.doneAt), 'ddMMM') : ''
                       }`}
                     />
                   </View>

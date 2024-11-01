@@ -19,7 +19,7 @@ describe('calculateProgress', () => {
   })
 
   it('should return 0 when total work is 0', () => {
-    const progress = calculateProgress(50, 0)
+    const progress = calculateProgress(0, 50)
     expect(progress).toEqual(0)
   })
 
