@@ -15,7 +15,8 @@ import FormikInputSignature from '../FormikInputSignature'
 const FormRentDelivery = ({
   initialValues,
   onSubmit,
-  setDirty
+  setDirty,
+  submitLabel = 'Actualizar'
 }: {
   initialValues: Pick<
     OrderType,
@@ -23,6 +24,7 @@ const FormRentDelivery = ({
   >
   onSubmit: (values) => Promise<void> | void
   setDirty?: (dirty: boolean) => void
+  submitLabel?: string
 }) => {
   const { order } = useOrderDetails()
   const [loading, setLoading] = React.useState(false)
@@ -99,7 +101,7 @@ const FormRentDelivery = ({
 
               <Button
                 buttonStyles={{ marginVertical: 12 }}
-                label="Actualizar"
+                label={submitLabel}
                 disabled={disabledUpdate}
                 variant={disabledUpdate ? 'ghost' : 'filled'}
                 onPress={handleSubmit}

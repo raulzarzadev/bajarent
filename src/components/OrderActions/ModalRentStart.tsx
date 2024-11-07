@@ -56,6 +56,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
         <FormRentDelivery
           initialValues={order}
           onSubmit={async (values) => {
+            delete values.expireAt // <-- Do not update expireAt because
             await ServiceOrders.update(order.id, values)
               .then((res) => console.log(res))
               .catch((e) => console.error(e))
