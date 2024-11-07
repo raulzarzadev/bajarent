@@ -21,7 +21,8 @@ const SpanOrder = ({
   showTime,
   showLastExtension,
   showDatePaymentsAmount,
-  onRedirect
+  onRedirect,
+  showItems
 }: {
   orderId: string
   redirect?: boolean
@@ -30,10 +31,12 @@ const SpanOrder = ({
   showLastExtension?: boolean
   showDatePaymentsAmount?: Date | Timestamp
   onRedirect?: () => void
+  showItems?: boolean //<--- show item at the end of line
 }) => {
   const [order, setOrder] = useState<Partial<ConsolidatedOrderType>>()
   const { consolidatedOrders } = useOrdersCtx()
   const { toOrders } = useMyNav()
+
   useEffect(() => {
     const orderFound = consolidatedOrders?.orders?.[orderId]
     setOrder(orderFound || null)
@@ -54,6 +57,7 @@ const SpanOrder = ({
             showName={showName}
             showLastExtension={showLastExtension}
             showDatePaymentsAmount={showDatePaymentsAmount}
+            showItems
           />
         ) : (
           <Text>{orderId}</Text>
@@ -70,6 +74,7 @@ const SpanOrder = ({
           showName={showName}
           showLastExtension={showLastExtension}
           showDatePaymentsAmount={showDatePaymentsAmount}
+          showItems={showItems}
         />
       ) : (
         <Text>{orderId}</Text>
@@ -83,13 +88,15 @@ const OrderData = ({
   showName,
   showTime,
   showLastExtension,
-  showDatePaymentsAmount
+  showDatePaymentsAmount,
+  showItems
 }: {
   order: Partial<ConsolidatedOrderType>
   showName?: boolean
   showTime?: boolean
   showLastExtension?: boolean
   showDatePaymentsAmount?: Date | Timestamp
+  showItems?: boolean
 }) => {
   const dateAmounts = payments_amount(
     order?.payments?.filter((payment) =>
@@ -126,13 +133,33 @@ const OrderData = ({
       {showName && (
         <Text
           style={{
-            minWidth: 100,
+            //minWidth: 100,
             flex: 1,
             textAlignVertical: 'center'
           }}
           numberOfLines={1}
         >
-          {order?.fullName}{' '}
+          {order?.fullName}
+        </Text>
+      )}
+      {showItems && (
+        <Text
+          style={[
+            gStyles.helper,
+            gStyles.tBold,
+            {
+              //textAlignVertical: 'bottom',
+              //borderWidth: 1,
+              // borderColor: 'red',
+              // alignItems: 'stretch'
+            }
+          ]}
+        >
+          {order?.items
+            ?.map(
+              (item) => item?.number || item?.serial || item?.itemId || 'U.U'
+            ) // this means that any of the info was found
+            .join(', ')}
         </Text>
       )}
     </View>

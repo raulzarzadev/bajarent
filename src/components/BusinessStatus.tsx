@@ -400,7 +400,6 @@ const CellOrders = ({
 }: CellOrdersProps) => {
   const section = sections?.find((s) => s.section === sectionSelected)
   const orders = section?.[field] as string[]
-  const ordersUnique = removeDuplicates(orders)
   const { toOrders } = useMyNav()
   if (!orders.length) return null
 
@@ -423,6 +422,7 @@ const CellOrders = ({
             showTime
             showLastExtension
             showDatePaymentsAmount={day}
+            showItems
           />
         )
       }))}
@@ -549,7 +549,7 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
                 >
                   {translateTime(extension.time, { shortLabel: true })}
                 </Text>
-                <SpanOrder orderId={extension.orderId} showName />
+                <SpanOrder orderId={extension.orderId} showName showItems />
               </View>
             )
           }))}
@@ -580,7 +580,7 @@ const ExpandibleOrderList = ({
       items={ordersIds.map((orderId) => {
         return {
           id: orderId,
-          content: <SpanOrder orderId={orderId} showName />
+          content: <SpanOrder orderId={orderId} showName showItems />
         }
       })}
       label={label}
