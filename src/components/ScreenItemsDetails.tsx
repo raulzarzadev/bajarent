@@ -66,7 +66,7 @@ const ScreenItemsDetails = ({ route }) => {
 const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState<ItemHistoryType[]>([])
   const { storeId } = useStore()
-  const COUNT_HISTORY = 6
+  const COUNT_HISTORY = 5
   const [count, setCount] = useState(COUNT_HISTORY)
   const [disabled, setDisabled] = useState(false)
   useEffect(() => {
@@ -86,6 +86,7 @@ const ItemHistory = ({ itemId }) => {
       <InputSelect
         disabled={disabled}
         placeholder="Ultimos X registros"
+        value={count.toString()}
         options={[
           { label: 'Ultimos 5 registros', value: '5' },
           { label: 'Ultimos 20 registros', value: '20' },
@@ -103,9 +104,6 @@ const ItemHistory = ({ itemId }) => {
         }}
       />
 
-      <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
-        (últimos{COUNT_HISTORY})
-      </Text>
       {itemHistory.map((entry) => (
         <ListRow
           key={entry.id}
