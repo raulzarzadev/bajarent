@@ -16,6 +16,9 @@ import SpanOrder from './SpanOrder'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
 import { useEmployee } from '../contexts/employeeContext'
+import InputTextStyled from './InputTextStyled'
+import { set } from 'cypress/types/lodash'
+import InputSelect from './InputSelect'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
@@ -64,6 +67,8 @@ const ItemHistory = ({ itemId }) => {
   const [itemHistory, setItemHistory] = useState<ItemHistoryType[]>([])
   const { storeId } = useStore()
   const COUNT_HISTORY = 6
+  const [count, setCount] = useState(COUNT_HISTORY)
+  const [disabled, setDisabled] = useState(false)
   useEffect(() => {
     ServiceItemHistory.listenLastEntries({
       itemId,
@@ -71,13 +76,33 @@ const ItemHistory = ({ itemId }) => {
       callback: (res) => {
         setItemHistory(res)
       },
-      count: COUNT_HISTORY
+      count
     })
-  }, [])
+  }, [count])
 
   return (
     <View>
       <Text style={gStyles.h3}>Historial </Text>
+      <InputSelect
+        disabled={disabled}
+        placeholder="Ultimos X registros"
+        options={[
+          { label: 'Ultimos 5 registros', value: '5' },
+          { label: 'Ultimos 20 registros', value: '20' },
+          { label: 'Ultimos 50 registros', value: '50' },
+          { label: 'Ultimos 100 registros', value: '100' },
+          { label: 'Ultimos 200 registros', value: '200' },
+          { label: 'Ultimos 500 registros', value: '500' }
+        ]}
+        onChangeValue={(value) => {
+          setCount(parseInt(value))
+          setDisabled(true)
+          setTimeout(() => {
+            setDisabled(false)
+          }, 2000)
+        }}
+      />
+
       <Text style={[gStyles.helper, gStyles.tCenter, { marginBottom: 8 }]}>
         (últimos{COUNT_HISTORY})
       </Text>
