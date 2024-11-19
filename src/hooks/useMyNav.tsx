@@ -165,6 +165,10 @@ const useMyNav = () => {
       return
     }
   }
+  const toMessages = () => {
+    //@ts-ignore
+    navigate('ScreenMessages')
+  }
 
   return {
     toItems,
@@ -172,7 +176,8 @@ const useMyNav = () => {
     toPayments,
     toProfile,
     toSections,
-    toWorkshop
+    toWorkshop,
+    toMessages
   }
 }
 

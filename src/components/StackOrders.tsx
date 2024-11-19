@@ -9,6 +9,7 @@ import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { StackPaymentsE } from './StackPayments'
 import StackItems from './StackItems'
+import { ScreenMessagesE } from './ScreenMessages'
 
 const Stack = createStackNavigator()
 function StackOrders() {
@@ -98,6 +99,14 @@ function StackOrders() {
           //tabBarButton: () => null
         }}
         component={StackItems}
+      />
+      <Stack.Screen
+        name="ScreenMessages"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Mensajeria' //*<-- Title change if is from pedidos, reportes, balance details and more
+        })}
+        component={ScreenMessagesE}
       />
     </Stack.Navigator>
   )
