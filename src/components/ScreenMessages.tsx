@@ -61,7 +61,12 @@ export default function ScreenMessages() {
       <Button
         label="Send"
         onPress={() => {
-          sendMessage({ phone: '525543374016', message: 'adios' })
+          sendMessage({
+            phone: '525543374016',
+            message: 'adios',
+            apiKey: store.chatbot.apiKey,
+            botId: store.chatbot.id
+          })
         }}
       ></Button>
       <InputRadios

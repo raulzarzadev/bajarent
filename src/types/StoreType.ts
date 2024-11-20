@@ -55,6 +55,12 @@ export type BaseStoreType = {
 
   accountHolder?: string
   items?: StoreItems
+
+  chatbot?: {
+    id?: string
+    apiKey?: string
+    hostNumber?: string
+  }
 }
 
 export type MultiFields = {

@@ -1,8 +1,7 @@
 import formatMxWhatsappPhone from './formatMxWhatsapPhone'
 
-const sendMessage = async ({ phone, message = 'hola' }) => {
-  const endpoint = process.env.BUILDERBOT_API_ENDPOINT
-  const apiKey = process.env.BUILDERBOT_API_KEY
+const sendMessage = async ({ phone, message = 'hola', botId, apiKey }) => {
+  const endpoint = `https://www.builderbot.cloud/api/v2/${botId}/messages`
   const number = formatMxWhatsappPhone(phone)
 
   const data = {
@@ -17,26 +16,17 @@ const sendMessage = async ({ phone, message = 'hola' }) => {
     apiKey,
     message
   })
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-builderbot': apiKey
-      },
-      body: JSON.stringify(data)
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const result = await response.json()
-    return result
-  } catch (error) {
-    console.error('Error:', error)
-    throw error
-  }
+  fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-builderbot': apiKey
+    },
+    body: JSON.stringify(data)
+  })
+    .then((res) => res.json())
+    .then((response) => console.log(response))
+    .catch((error) => console.error('Error:', error))
 }
 
 export default sendMessage

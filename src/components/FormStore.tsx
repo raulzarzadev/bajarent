@@ -11,6 +11,7 @@ import ErrorBoundary from './ErrorBoundary'
 import InputLocationFormik from './InputLocationFormik'
 import { FormikFieldArrayE } from './FormikInputArray'
 import { Separator } from './Separator'
+import theme from '../theme'
 
 const FormStore = ({
   defaultValues,
@@ -54,6 +55,28 @@ const FormStore = ({
           </View>
           <View style={styles.input}>
             <InputLocationFormik name={'location'} />
+          </View>
+
+          <View
+            style={{
+              padding: 4,
+              backgroundColor: theme.white,
+              borderRadius: 8
+            }}
+          >
+            <Text style={gStyles.h3}>Chatbot</Text>
+            <View style={styles.input}>
+              <FormikInputValue name="chatbot.id" label="Bot Id" />
+            </View>
+            <View style={styles.input}>
+              <FormikInputValue name="chatbot.apiKey" label="Api Key" />
+            </View>
+            <View style={styles.input}>
+              <FormikInputValue
+                name="chatbot.hostNumber"
+                label="Numero de anfitrion"
+              />
+            </View>
           </View>
 
           <View style={styles.input}>
