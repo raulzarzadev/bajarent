@@ -50,7 +50,9 @@ export default function ScreenMessages() {
     orders.map(async (order) => {
       sendMessage({
         phone: order?.phone,
-        message: message
+        message: message,
+        apiKey: store.chatbot.apiKey,
+        botId: store.chatbot.id
       })
     })
   }
