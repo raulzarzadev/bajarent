@@ -51,8 +51,8 @@ export default function ScreenMessages() {
       sendMessage({
         phone: order?.phone,
         message: message,
-        apiKey: store.chatbot.apiKey,
-        botId: store.chatbot.id
+        apiKey: store?.chatbot?.apiKey,
+        botId: store?.chatbot?.id
       })
     })
   }
@@ -66,8 +66,8 @@ export default function ScreenMessages() {
           sendMessage({
             phone: '525543374016',
             message: 'adios',
-            apiKey: store.chatbot.apiKey,
-            botId: store.chatbot.id
+            apiKey: store?.chatbot?.apiKey,
+            botId: store?.chatbot?.id
           })
         }}
       ></Button>
