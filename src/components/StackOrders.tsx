@@ -104,7 +104,7 @@ function StackOrders() {
         name="ScreenMessages"
         options={({ route }) => ({
           //@ts-ignore
-          title: route?.params?.title || 'Mensajeria' //*<-- Title change if is from pedidos, reportes, balance details and more
+          title: route?.params?.title || 'Mensajería' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
         component={ScreenMessagesE}
       />
