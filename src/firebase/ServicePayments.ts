@@ -34,8 +34,15 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     return this.getItems([where('orderId', '==', orderId)])
   }
 
-  listenByOrder(orderId: string, callback: (items: PaymentType[]) => void) {
-    return this.listenMany([where('orderId', '==', orderId)], callback)
+  listenByOrder(
+    orderId: string,
+    callback: (items: PaymentType[]) => void,
+    { count = 1 } = {}
+  ) {
+    return this.listenMany(
+      [where('orderId', '==', orderId), limit(count)],
+      callback
+    )
   }
   //#region list
   list = async (list: string[] = []) => {

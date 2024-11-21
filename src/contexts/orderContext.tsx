@@ -19,6 +19,7 @@ interface OrderContextProps {
   order?: Order
   setOrder?: (order: Order) => void
   payments?: PaymentType[]
+  setPaymentsCount?: (count: number) => void
 }
 
 // Create the initial context
@@ -36,14 +37,16 @@ const OrderProvider = ({
   //@ts-ignore
   const _orderId = orderId || route?.params?.orderId
   const [order, setOrder] = useState<Order>()
-
+  const [paymentsCount, setPaymentsCount] = useState(1)
   const [payments, setPayments] = useState<PaymentType[]>([])
   useEffect(() => {
     if (_orderId) {
-      ServicePayments.listenByOrder(_orderId, setPayments)
+      ServicePayments.listenByOrder(_orderId, setPayments, {
+        count: paymentsCount
+      })
     }
     return () => {}
-  }, [_orderId])
+  }, [_orderId, paymentsCount])
 
   useEffect(() => {
     if (_orderId) {
@@ -54,7 +57,9 @@ const OrderProvider = ({
   }, [_orderId])
 
   return (
-    <OrderContext.Provider value={{ order, setOrder, payments }}>
+    <OrderContext.Provider
+      value={{ order, setOrder, payments, setPaymentsCount }}
+    >
       {children}
     </OrderContext.Provider>
   )

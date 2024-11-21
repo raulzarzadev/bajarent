@@ -334,7 +334,7 @@ export const OrderDates = ({
 }
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
-  const payments = useOrderDetails()?.payments
+  const { payments, setPaymentsCount } = useOrderDetails()
   const { storeId } = useStore()
   const { toPayments } = useMyNav()
   const sortByCreatedAt = (a: PaymentType, b: PaymentType) => {
@@ -342,7 +342,8 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
       ? 1
       : -1
   }
-
+  const [count, setCount] = useState(1)
+  const MAX_PAYMENTS_COUNT = 10
   return (
     <View>
       {payments?.length > 0 && (
@@ -405,6 +406,20 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
                 </View>
               </Pressable>
             ))}
+            <Button
+              size="xs"
+              fullWidth={false}
+              buttonStyles={{
+                margin: 'auto'
+              }}
+              variant="ghost"
+              disabled={count > MAX_PAYMENTS_COUNT}
+              onPress={() => {
+                setPaymentsCount(count + 5)
+                setCount(count + 5)
+              }}
+              label="mostrar más"
+            ></Button>
           </View>
         </ErrorBoundary>
       )}
