@@ -126,6 +126,7 @@ const labels = {
   canCancelPayments: 'Cancelar pagos',
   canValidatePayments: 'Validar pagos',
   canManageItems: 'Administrar artículos',
+  canSendMessages: 'Enviar mensajes',
   /* ********************************************
    * PERMISSIONS ITEMS V2
    *******************************************rz */

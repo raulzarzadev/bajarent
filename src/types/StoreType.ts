@@ -60,6 +60,7 @@ export type BaseStoreType = {
     id?: string
     apiKey?: string
     hostNumber?: string
+    enabled?: boolean
   }
 }
 

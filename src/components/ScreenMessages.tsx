@@ -10,9 +10,11 @@ import { expiredMessage } from '../libs/whatsappMessages'
 import { useStore } from '../contexts/storeContext'
 import mapEnumToOptions from '../libs/mapEnumToOptions'
 import sendMessage from '../libs/whatsapp/sendMessage'
-import Button from './Button'
+import TestMessage from './WhatsappBot/TestMessage'
+import { useEmployee } from '../contexts/employeeContext'
 
 export default function ScreenMessages() {
+  const { permissions } = useEmployee()
   const [messageType, setMessageType] = useState<MessageType>(undefined)
   const [target, setTarget] = useState<MessageTarget>(undefined)
   const { orders = [] } = useOrdersCtx()
@@ -29,7 +31,6 @@ export default function ScreenMessages() {
       setMessage(expiredMessage({ order: selectedOrders?.[0], store }))
     }
     if (target === 'soon_expire') {
-      console.log({ orders })
       const selectedOrders = orders?.filter(
         (order) =>
           order.status === order_status.DELIVERED &&
@@ -47,37 +48,36 @@ export default function ScreenMessages() {
     orders: any[]
     message: string
   }) => {
-    orders.map(async (order) => {
-      sendMessage({
-        phone: order?.phone,
-        message: message,
-        apiKey: store?.chatbot?.apiKey,
-        botId: store?.chatbot?.id
-      })
+    const TIME_BETWEEN_MESSAGES = 1000 * 10 // * 1O SECONDS
+    orders.forEach(async (order, i) => {
+      setTimeout(() => {
+        console.log('mensaje enviado')
+        sendMessage({
+          phone: order?.phone,
+          message: message,
+          apiKey: store?.chatbot?.apiKey,
+          botId: store?.chatbot?.id
+        })
+      }, TIME_BETWEEN_MESSAGES * i)
     })
   }
 
+  if (!(permissions?.isAdmin || permissions?.store?.canSendMessages))
+    return <Text>No tienes permisos para enviar mensajes</Text>
+
   return (
     <View>
-      <Text style={gStyles.h2}>Mensaje</Text>
-      <Button
-        label="Send"
-        onPress={() => {
-          sendMessage({
-            phone: '525543374016',
-            message: 'adios',
-            apiKey: store?.chatbot?.apiKey,
-            botId: store?.chatbot?.id
-          })
-        }}
-      ></Button>
+      <TestMessage />
+      <Text style={gStyles.h2}>1. Selecciona tipo de mensajes</Text>
       <InputRadios
         layout="row"
         value={messageType}
         setValue={(val) => setMessageType(val)}
         options={messageTypes}
       />
-      <Text style={gStyles.h2}>Ordenes</Text>
+      <Text style={gStyles.h2}>
+        2. Selecciona las ordenes que recibiran este mensaje
+      </Text>
       <InputRadios
         layout="row"
         value={target}
@@ -88,14 +88,23 @@ export default function ScreenMessages() {
         options={targets}
       />
       <ButtonConfirm
+        confirmDisabled={
+          !selectedOrders?.length ||
+          !messageType ||
+          !target ||
+          !message ||
+          !store?.chatbot?.apiKey ||
+          !store?.chatbot?.id
+        }
         openLabel="Enviar"
         modalTitle="Enviar mensaje"
+        confirmLabel="Enviar mensaje"
         handleConfirm={async () => {
           handleSendWhatsappToOrders({
             orders: selectedOrders,
             message
           })
-          console.log('Sending message to:', selectedOrders)
+          // console.log('Sending message to:', selectedOrders)
         }}
       >
         <Text>

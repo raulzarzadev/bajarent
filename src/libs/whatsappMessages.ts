@@ -308,7 +308,6 @@ export const expiredMessage = ({
   order: OrderType
   store: StoreType
 }) => {
-  console.log({ order })
   return `🚨 *ALERTA DE VENCIMIENTO* 
   \n${WELCOME({ customerName: order?.fullName, storeName: store?.name })}
   \n${

@@ -126,7 +126,8 @@ export enum permissions_store {
   //canViewItems,
   //canDeleteItems,
   //canManageItems,
-  disabledStaff
+  disabledStaff,
+  canSendMessages
 }
 
 export enum permissions_items {

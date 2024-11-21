@@ -57,6 +57,14 @@ const FormStore = ({
             <InputLocationFormik name={'location'} />
           </View>
 
+          <View style={styles.input}>
+            <FormikInputValue
+              name={'schedule'}
+              placeholder="Horario"
+              helperText="ej. Lun - Sab 8:00am a 6:00pm"
+            />
+          </View>
+
           <View
             style={{
               padding: 4,
@@ -65,26 +73,26 @@ const FormStore = ({
             }}
           >
             <Text style={gStyles.h3}>Chatbot</Text>
-            <View style={styles.input}>
-              <FormikInputValue name="chatbot.id" label="Bot Id" />
-            </View>
-            <View style={styles.input}>
-              <FormikInputValue name="chatbot.apiKey" label="Api Key" />
-            </View>
-            <View style={styles.input}>
-              <FormikInputValue
-                name="chatbot.hostNumber"
-                label="Numero de anfitrion"
-              />
-            </View>
-          </View>
-
-          <View style={styles.input}>
-            <FormikInputValue
-              name={'schedule'}
-              placeholder="Horario"
-              helperText="ej. Lun - Sab 8:00am a 6:00pm"
-            />
+            <FormikCheckbox
+              name="chatbot.enabled"
+              label="Activar chatbot"
+            ></FormikCheckbox>
+            {values?.chatbot?.enabled && (
+              <>
+                <View style={styles.input}>
+                  <FormikInputValue name="chatbot.id" label="Bot Id" />
+                </View>
+                <View style={styles.input}>
+                  <FormikInputValue name="chatbot.apiKey" label="Api Key" />
+                </View>
+                <View style={styles.input}>
+                  <FormikInputValue
+                    name="chatbot.hostNumber"
+                    label="Numero anfitrión"
+                  />
+                </View>
+              </>
+            )}
           </View>
           <Separator />
           <FormikFieldArrayE

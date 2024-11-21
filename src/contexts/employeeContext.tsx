@@ -121,7 +121,7 @@ export const EmployeeContextProvider = ({ children }) => {
       disabledEmployee,
 
       permissions: {
-        isAdmin: !!isAdmin,
+        isAdmin: !!isAdmin || isOwner, //* <--- Owner now is an admin always
         isOwner: isOwner,
         orders: employee?.permissions?.order || {},
         store: employee?.permissions?.store || {},

@@ -64,7 +64,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             onPress: () => {
               toMessages()
             },
-            visible: true
+            visible: permissions?.isAdmin || permissions?.store?.canSendMessages
           }
         ]}
       />
