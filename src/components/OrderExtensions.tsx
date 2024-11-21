@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import ListRow from './ListRow'
 import asDate, { dateFormat } from '../libs/utils-date'
 import SpanUser from './SpanUser'
@@ -15,9 +15,12 @@ import TextInfo from './TextInfo'
 import { OrderDates } from './OrderDetails'
 import { useEmployee } from '../contexts/employeeContext'
 import Icon from './Icon'
+import Button from './Button'
 
 const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
   const { permissions } = useEmployee()
+  const [count, setCount] = useState(2)
+  const MAX_EXTENSIONS_COUNT = 10
   const canDeleteExtension = permissions?.canDeleteExtension
   const extensionsObj = order?.extensions || {}
   const extensions = Object.values(extensionsObj).sort((a, b) => {
@@ -74,98 +77,115 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
           }
         ]}
       />
-      {extensions.map(
-        ({
-          startAt,
-          expireAt,
-          createdBy,
-          createdAt,
-          id = 'id',
-          reason,
-          time
-        }) => (
-          <View
-            key={id}
-            style={{
-              flexDirection: 'row',
-              marginVertical: 4,
-              justifyContent: 'space-around'
-            }}
-          >
-            <ListRow
-              fields={[
-                {
-                  width: 160,
-                  component: (
-                    <View
-                      style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
-                      <DateCell date={startAt} showTimeAgo={false} showTime />
-                      <View>
-                        <Icon icon="rowRight" />
+      {extensions
+        .slice(0, count)
+        .map(
+          ({
+            startAt,
+            expireAt,
+            createdBy,
+            createdAt,
+            id = 'id',
+            reason,
+            time
+          }) => (
+            <View
+              key={id}
+              style={{
+                flexDirection: 'row',
+                marginVertical: 4,
+                justifyContent: 'space-around'
+              }}
+            >
+              <ListRow
+                fields={[
+                  {
+                    width: 160,
+                    component: (
+                      <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                      >
+                        <DateCell date={startAt} showTimeAgo={false} showTime />
+                        <View>
+                          <Icon icon="rowRight" />
+                        </View>
+                        <DateCell
+                          date={expireAt}
+                          showTimeAgo={false}
+                          showTime
+                        />
                       </View>
-                      <DateCell date={expireAt} showTimeAgo={false} showTime />
-                    </View>
-                  )
-                },
+                    )
+                  },
 
-                {
-                  width: 'rest',
-                  component: (
-                    <View>
-                      <Text style={gStyles.tCenter}>{dictionary(reason)}</Text>
-                      <Text style={gStyles.tCenter} numberOfLines={1}>
-                        {translateTime(time)}
-                      </Text>
-                    </View>
-                  )
-                },
-                {
-                  width: 100,
-                  component: (
-                    <View>
-                      <SpanUser userId={createdBy} />
-                      <Text style={gStyles.helper}>
-                        {dateFormat(asDate(createdAt), 'ddMMM HH:mm')}
-                      </Text>
-                    </View>
-                  )
-                },
+                  {
+                    width: 'rest',
+                    component: (
+                      <View>
+                        <Text style={gStyles.tCenter}>
+                          {dictionary(reason)}
+                        </Text>
+                        <Text style={gStyles.tCenter} numberOfLines={1}>
+                          {translateTime(time)}
+                        </Text>
+                      </View>
+                    )
+                  },
+                  {
+                    width: 100,
+                    component: (
+                      <View>
+                        <SpanUser userId={createdBy} />
+                        <Text style={gStyles.helper}>
+                          {dateFormat(asDate(createdAt), 'ddMMM HH:mm')}
+                        </Text>
+                      </View>
+                    )
+                  },
 
-                {
-                  width: 30,
-                  component: (
-                    <View>
-                      {isTheLast(id) && canDeleteExtension && (
-                        <ButtonConfirm
-                          icon="close"
-                          justIcon
-                          openColor="error"
-                          openSize="small"
-                          confirmColor="error"
-                          confirmLabel="Eliminar extención"
-                          handleConfirm={async () => {
-                            await handleCancelExtension({
-                              extensionId: id,
-                              orderId: order.id
-                            })
-                          }}
-                        >
-                          <TextInfo
-                            type="info"
-                            text="Las extensiones solo pueden ser eliminadas una por
+                  {
+                    width: 30,
+                    component: (
+                      <View>
+                        {isTheLast(id) && canDeleteExtension && (
+                          <ButtonConfirm
+                            icon="close"
+                            justIcon
+                            openColor="error"
+                            openSize="small"
+                            confirmColor="error"
+                            confirmLabel="Eliminar extención"
+                            handleConfirm={async () => {
+                              await handleCancelExtension({
+                                extensionId: id,
+                                orderId: order.id
+                              })
+                            }}
+                          >
+                            <TextInfo
+                              type="info"
+                              text="Las extensiones solo pueden ser eliminadas una por
                             una, para evtiar conflictos de fechas"
-                          />
-                        </ButtonConfirm>
-                      )}
-                    </View>
-                  )
-                }
-              ]}
-            />
-          </View>
-        )
-      )}
+                            />
+                          </ButtonConfirm>
+                        )}
+                      </View>
+                    )
+                  }
+                ]}
+              />
+            </View>
+          )
+        )}
+      <Button
+        disabled={count > MAX_EXTENSIONS_COUNT}
+        size="xs"
+        label="mostrar más"
+        variant="ghost"
+        fullWidth={false}
+        buttonStyles={{ margin: 'auto' }}
+        onPress={() => setCount(count + 5)}
+      ></Button>
     </View>
   )
 }

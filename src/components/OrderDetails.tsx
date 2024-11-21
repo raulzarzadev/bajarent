@@ -342,7 +342,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
       ? 1
       : -1
   }
-  const [count, setCount] = useState(1)
+  const [count, setCount] = useState(2)
   const MAX_PAYMENTS_COUNT = 10
   return (
     <View>

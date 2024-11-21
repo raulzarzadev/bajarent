@@ -37,7 +37,7 @@ const OrderProvider = ({
   //@ts-ignore
   const _orderId = orderId || route?.params?.orderId
   const [order, setOrder] = useState<Order>()
-  const [paymentsCount, setPaymentsCount] = useState(1)
+  const [paymentsCount, setPaymentsCount] = useState(2)
   const [payments, setPayments] = useState<PaymentType[]>([])
   useEffect(() => {
     if (_orderId) {
