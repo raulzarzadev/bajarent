@@ -10,6 +10,8 @@ import { listenFullOrderData } from './libs/getFullOrderData'
 import { useRoute } from '@react-navigation/native'
 import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
+import { ServiceComments } from '../firebase/ServiceComments'
+import { CommentType } from '../types/CommentType'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -20,7 +22,9 @@ interface OrderContextProps {
   setOrder?: (order: Order) => void
   payments?: PaymentType[]
   setPaymentsCount?: (count: number) => void
+  setCommentsCount?: (count: number) => void
   paymentsCount?: number
+  commentsCount?: number
 }
 
 // Create the initial context
@@ -40,6 +44,10 @@ const OrderProvider = ({
   const [order, setOrder] = useState<Order>()
   const [paymentsCount, setPaymentsCount] = useState(2)
   const [payments, setPayments] = useState<PaymentType[]>([])
+
+  const [orderComments, setOrderComments] = useState<CommentType[]>([])
+  const [commentsCount, setCommentsCount] = useState(4)
+
   useEffect(() => {
     if (_orderId) {
       ServicePayments.listenByOrder(_orderId, setPayments, {
@@ -57,9 +65,30 @@ const OrderProvider = ({
     }
   }, [_orderId])
 
+  useEffect(() => {
+    if (_orderId) {
+      ServiceComments.listenLastByOrder({
+        count: commentsCount,
+        orderId: _orderId,
+        cb: (comments) => {
+          setOrderComments(comments)
+        }
+      })
+    }
+    return () => {}
+  }, [_orderId, commentsCount])
+
   return (
     <OrderContext.Provider
-      value={{ order, setOrder, payments, setPaymentsCount, paymentsCount }}
+      value={{
+        order: order ? { ...order, comments: orderComments } : undefined,
+        setOrder,
+        payments,
+        setPaymentsCount,
+        setCommentsCount,
+        paymentsCount,
+        commentsCount
+      }}
     >
       {children}
     </OrderContext.Provider>

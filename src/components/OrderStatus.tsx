@@ -23,8 +23,8 @@ const OrderStatus = ({
     (comment) => comment?.type === 'report' && !comment?.solved
   )
   const olderUnsolvedReportDate = olderUnsolvedReport?.createdAt || ''
-  const hasImportantComments = order.comments?.some(
-    (comment) => comment.type === 'important' && !comment.solved
+  const hasImportantComments = order?.comments?.some(
+    (comment) => comment?.type === 'important' && !comment?.solved
   )
 
   const isDelivered = order?.status === order_status.DELIVERED

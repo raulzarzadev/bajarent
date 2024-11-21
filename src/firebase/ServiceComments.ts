@@ -59,6 +59,25 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ])
   }
 
+  listenLastByOrder({
+    count,
+    cb,
+    orderId
+  }: {
+    orderId: string
+    count: number
+    cb: CallableFunction
+  }) {
+    return this.listenMany(
+      [
+        where('orderId', '==', orderId),
+        orderBy('createdAt', 'desc'),
+        limit(count)
+      ],
+      cb
+    )
+  }
+
   listenByOrder(orderId: string, cb: CallableFunction) {
     return this.listenMany([where('orderId', '==', orderId)], cb)
   }
@@ -201,6 +220,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('variant', '==', comment_variant.workshop_flow)
     ]
     return this.findMany(commentFilters)
+  }
+  getLastByOrder({ orderId, count }: { orderId: string; count: number }) {
+    return this.findMany([
+      where('orderId', '==', orderId),
+      orderBy('createdAt', 'desc'),
+      limit(count)
+    ])
   }
   getReports({
     storeId,

@@ -14,30 +14,15 @@ import asDate from '../libs/utils-date'
 //import InputRadios from './InputRadios'
 import { CommentRow } from './RowComment'
 import InputRadios from './Inputs/InputRadios'
+import { useOrderDetails } from '../contexts/orderContext'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
-  const { orders, staff } = useStore()
-  const [count, setCount] = useState(4)
-  const getComments = async () => {
-    const comments = await ServiceComments.getByOrder(orderId, { count: count })
-    const formattedComments: FormattedComment[] = formatComments({
-      comments,
-      staff,
-      orders
-    })
-    console.log({ comments })
-    setOrderComments(formattedComments)
-  }
-  const [orderComments, setOrderComments] = useState([])
-
-  useEffect(() => {
-    if (orderId) getComments()
-  }, [orderId, count])
-
+  const { order, setCommentsCount, commentsCount } = useOrderDetails()
+  const orderComments = order?.comments || []
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>
-      <InputComment orderId={orderId} updateComments={getComments} />
+      <InputComment orderId={orderId} />
       <View style={{ padding: 0 }}>
         <FlatList
           data={orderComments.sort(
@@ -45,17 +30,17 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
               asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
           )}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <CommentRow comment={item} refetch={getComments} />
-          )}
+          renderItem={({ item }) => <CommentRow comment={item} />}
         />
         <Button
           size="xs"
           buttonStyles={{ margin: 'auto', marginBottom: 12 }}
           fullWidth={false}
-          label="mostrar mas"
-          disabled={orderComments.length <= count}
-          onPress={() => setCount(count + 4)}
+          label="mostrar más"
+          disabled={orderComments.length < commentsCount}
+          onPress={() => {
+            setCommentsCount(commentsCount + 5)
+          }}
           variant="ghost"
         ></Button>
       </View>
@@ -89,7 +74,7 @@ const InputComment = ({
     })
       .then((res) => {
         reset()
-        updateComments()
+        updateComments?.()
       })
       .catch((res) => console.error(res))
       .finally(() => setSaving(false))
