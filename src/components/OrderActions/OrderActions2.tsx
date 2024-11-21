@@ -139,7 +139,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const orderStatus = order?.status
   const authorize =
     (permissions?.orders.canAuthorize || permissions.isAdmin) &&
-    orderStatus === 'PENDING'
+    (orderStatus === 'PENDING' || orderStatus === 'CANCELLED')
 
   const cancel =
     (permissions?.orders.canCancel || permissions.isAdmin) &&
@@ -245,10 +245,12 @@ const ButtonCancelDelivery = ({ order, user }) => {
 
 const ButtonRenew = ({ order, user }) => {
   const { toOrders } = useMyNav()
+
   return (
     <Button
       label="Renovar"
       icon="refresh"
+      color="secondary"
       onPress={async () => {
         toOrders({ screen: 'renew', id: order.id })
       }}
@@ -264,6 +266,7 @@ const ButtonDelivery = () => {
         label="Entregar"
         onPress={modalRentStart.toggleOpen}
         icon="home"
+        color="success"
       />
       <ModalRentStart modal={modalRentStart} />
     </View>

@@ -10,10 +10,14 @@ import InputImagePicker from './InputImagePicker'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import InputLocation from './InputLocation'
 import { getCoordinatesAsString } from '../libs/maps'
+import TextInfo from './TextInfo'
+import asDate from '../libs/utils-date'
+import { isToday } from 'date-fns'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
   const [order, setOrder] = useState<OrderType | null>(null)
+
   useEffect(() => {
     getFullOrderData(orderId).then((order) => setOrder(order))
   }, [])

@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { Formik } from 'formik'
 import FormikSelectCategories from './FormikSelectCategories'
 import Button from './Button'
-import DateCell from './DateCell'
 import OrderType from '../types/OrderType'
 import { expireDate2, translateTime } from '../libs/expireDate'
 import InputCheckbox from './InputCheckbox'
@@ -16,7 +15,9 @@ import { useNavigation } from '@react-navigation/native'
 import theme from '../theme'
 import CurrencyAmount from './CurrencyAmount'
 import { gStyles } from '../styles'
-import { dateFormat } from '../libs/utils-date'
+import asDate, { dateFormat } from '../libs/utils-date'
+import TextInfo from './TextInfo'
+import { isToday } from 'date-fns'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
@@ -181,6 +182,13 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
                       />
                     </View>
                   </View>
+                  {hasBeenRenewedToday(order) && (
+                    <TextInfo
+                      text="Esta orden ya fue renovada el día de hoy. ¿Desas renonvarla de nuevo?"
+                      defaultVisible
+                      type="warning"
+                    />
+                  )}
                   <Button
                     disabled={submitting}
                     onPress={() => {
@@ -208,4 +216,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
 
 export default FormOrderRenew
 
-const styles = StyleSheet.create({})
+const hasBeenRenewedToday = (order: OrderType) => {
+  const renewedAt = asDate(order.renewedAt)
+  return isToday(renewedAt)
+}
