@@ -19,6 +19,7 @@ import { PriceType, TimePriceType } from '../types/PriceType'
 import StoreType from '../types/StoreType'
 import { orderExpireAt } from './orders'
 import { createUUID } from './createId'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 export const onComment = async ({
   orderId,

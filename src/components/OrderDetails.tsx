@@ -140,9 +140,9 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       {/*
        //* ORDER ACTIONS FLOW DEPENDS ON ORDER TYPE
        */}
+      <OrderActionsE />
       {!(order.status === order_status.CANCELLED) && (
         <>
-          <OrderActionsE />
           <View
             style={{
               maxWidth: 190,

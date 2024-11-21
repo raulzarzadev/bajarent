@@ -90,13 +90,25 @@ const useMyNav = () => {
     id,
     ids,
     screenNew,
-    idsTitle
+    idsTitle,
+    screen
   }: {
     id?: string
     ids?: string[]
     screenNew?: boolean
     idsTitle?: string
+    screen?: 'renew'
   }) => {
+    if (screen === 'renew') {
+      //@ts-ignore
+      navigate('StackOrders', {
+        screen: 'RenewOrder',
+        params: {
+          orderId: id
+        }
+      })
+      return
+    }
     if (Array.isArray(ids) && ids.length > 0) {
       //@ts-ignore
       navigate('StackOrders', {

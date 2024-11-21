@@ -12,7 +12,9 @@ import {
   onComment,
   onRepairDelivery,
   onRepairFinish,
-  onRepairCancelPickup
+  onRepairCancelPickup,
+  onAuthorize,
+  onCancel
 } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useEffect, useState } from 'react'
@@ -25,6 +27,10 @@ import { ItemStatuses } from '../../types/ItemType'
 import { ServiceItemHistory } from '../../firebase/ServiceItemHistory'
 import { onRegistryEntry } from '../../firebase/actions/item-actions'
 import { useStore } from '../../contexts/storeContext'
+import { isCancel } from 'axios'
+import InputTextStyled from '../InputTextStyled'
+import { ca } from 'react-native-paper-dates'
+import useMyNav from '../../hooks/useMyNav'
 
 //* repaired
 function OrderActions() {
@@ -111,13 +117,9 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
 }
 
 const RentOrderActions = ({ order }: { order: OrderType }) => {
-  const status = order?.status
-  const isDelivered = status === order_status.DELIVERED
-
-  const isPending =
-    status === order_status.AUTHORIZED || status === order_status.PENDING
-  const isPickedUp = status === order_status.PICKED_UP
   const { permissions } = useEmployee()
+  const { user } = useAuth()
+
   useEffect(() => {
     checkIfAllItemsExists()
   }, [order.items])
@@ -137,10 +139,19 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
     setAllItemsExists(false)
   }
 
-  const canCancelPickUp = permissions?.canCancelPickedUp
+  const orderStatus = order?.status
+  const authorize =
+    permissions?.orders.canAuthorize && orderStatus === 'PENDING'
 
-  const modalRentStart = useModal({ title: 'Comenzar renta' })
-  const modalRentFinish = useModal({ title: 'Terminar renta' })
+  const cancel = permissions?.orders.canCancel && orderStatus === 'AUTHORIZED'
+  const cancelDelivery =
+    permissions?.orders.canCancelPickedUp && orderStatus === 'DELIVERED'
+  const delivery =
+    permissions?.orders.canDelivery && orderStatus === 'AUTHORIZED'
+  const pickUp = permissions?.orders.canPickup && orderStatus === 'DELIVERED'
+  const renew = permissions?.orders.canRenew && orderStatus === 'DELIVERED'
+  const cancelPickUp =
+    permissions?.orders.canCancelPickedUp && orderStatus === 'PICKED_UP'
   return (
     <>
       {!allItemsExists && (
@@ -148,138 +159,211 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
           *Algun artículo no existe
         </Text>
       )}
-      <ScrollView horizontal style={styles.scrollView}>
-        <ModalRentStart modal={modalRentStart} />
-        <ModalRentFinish modal={modalRentFinish} />
-        <View style={styles.container}>
-          {isDelivered && canCancelPickUp && (
-            <View style={{ marginVertical: 'auto' }}>
-              <ButtonConfirm
-                openLabel="Pedido "
-                confirmColor="warning"
-                confirmVariant="outline"
-                confirmLabel="Cancelar entrega"
-                icon="undo"
-                openColor="warning"
-                openVariant="outline"
-                openSize="small"
-                text="¿Estás seguro de que quieres cancelar entrega?"
-                handleConfirm={async () => {
-                  //* UPDATE ORDER
-                  ServiceOrders.update(order.id, {
-                    status: order_status.AUTHORIZED,
-                    deliveredAt: null,
-                    deliveredBy: null
-                  })
-                    .then((r) => console.log(r))
-                    .catch((e) => console.log(e)) //* COMMENT ORDER
-                  onComment({
-                    content: 'Entrega cancelada',
-                    orderId: order.id,
-                    storeId: order.storeId,
-                    type: 'comment',
-                    isOrderMovement: true
-                  })
-                    .then((r) => console.log(r))
-                    .catch((e) => console.log(e))
-                  order?.items?.forEach((item) => {
-                    //* UPDATE ITEM AND CREATE HISTORY ENTRY
-                    ServiceStoreItems.update({
-                      itemId: item.id,
-                      storeId: order.storeId,
-                      itemData: { status: ItemStatuses.pickedUp }
-                    })
-                      .then((r) => console.log(r))
-                      .catch((e) => console.log(e))
-                    onRegistryEntry({
-                      itemId: item.id,
-                      storeId: order.storeId,
-                      type: 'pickup',
-                      orderId: order.id,
-                      content: 'Entrega cancelada'
-                    })
-                      .then((r) => console.log(r))
-                      .catch((e) => console.log(e))
-                  })
-                }}
-              />
-            </View>
-          )}
-
-          {isPickedUp && canCancelPickUp && (
-            <View style={{ marginVertical: 'auto' }}>
-              <ButtonConfirm
-                openLabel="Regresar "
-                confirmColor="error"
-                confirmVariant="outline"
-                confirmLabel="Cancelar recolección"
-                icon="undo"
-                openColor="error"
-                openVariant="outline"
-                openSize="small"
-                text="¿Estás seguro de que quieres cancelar la recolección?"
-                handleConfirm={async () => {
-                  //* UPDATE ORDER
-                  ServiceOrders.update(order.id, {
-                    status: order_status.DELIVERED,
-                    pickedUpAt: null,
-                    pickedUpBy: null
-                  })
-                    .then((r) => console.log(r))
-                    .catch((e) => console.log(e)) //* COMMENT ORDER
-                  onComment({
-                    content: 'Recolección cancelada',
-                    orderId: order.id,
-                    storeId: order.storeId,
-                    type: 'comment',
-                    isOrderMovement: true
-                  })
-                    .then((r) => console.log(r))
-                    .catch((e) => console.log(e))
-                  order?.items?.forEach((item) => {
-                    //* UPDATE ITEM AND CREATE HISTORY ENTRY
-                    ServiceStoreItems.update({
-                      itemId: item.id,
-                      storeId: order.storeId,
-                      itemData: { status: ItemStatuses.rented }
-                    })
-                      .then((r) => console.log(r))
-                      .catch((e) => console.log(e))
-                    onRegistryEntry({
-                      itemId: item.id,
-                      storeId: order.storeId,
-                      type: 'delivery',
-                      orderId: order.id,
-                      content: 'Recolección cancelada'
-                    })
-                      .then((r) => console.log(r))
-                      .catch((e) => console.log(e))
-                  })
-                }}
-              />
-            </View>
-          )}
-          <ButtonAction
-            isSelected={isDelivered}
-            selectedLabel="Entregado"
-            unselectedLabel="Entregar"
-            onPress={() => {
-              modalRentStart.toggleOpen()
-            }}
-            disabled={isPickedUp}
-          />
-          <ButtonAction
-            disabled={isPending || !allItemsExists}
-            isSelected={isPickedUp}
-            selectedLabel="Recogido"
-            unselectedLabel="Recoger"
-            onPress={() => {
-              modalRentFinish.toggleOpen()
-            }}
-          />
+      <ScrollView style={[{ width: '100%', margin: 'auto' }]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            minWidth: '100%',
+            justifyContent: 'space-around'
+          }}
+        >
+          {authorize && <ButtonAuthorize order={order} user={user} />}
+          {cancel && <ButtonCancel order={order} user={user} />}
+          {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
+          {delivery && <ButtonDelivery />}
+          {pickUp && <ButtonPickUp />}
+          {renew && <ButtonRenew order={order} user={user} />}
+          {cancelPickUp && <ButtonCancelPickUp order={order} user={user} />}
         </View>
       </ScrollView>
     </>
+  )
+}
+
+const ButtonCancelDelivery = ({ order, user }) => {
+  return (
+    <View style={{ marginVertical: 'auto' }}>
+      <ButtonConfirm
+        openLabel="Pedido "
+        confirmColor="warning"
+        confirmVariant="outline"
+        confirmLabel="Cancelar entrega"
+        icon="undo"
+        openColor="warning"
+        openVariant="outline"
+        //openSize=""
+        text="¿Estás seguro de que quieres cancelar entrega?"
+        handleConfirm={async () => {
+          //* UPDATE ORDER
+          ServiceOrders.update(order.id, {
+            status: order_status.AUTHORIZED,
+            deliveredAt: null,
+            deliveredBy: null
+          })
+            .then((r) => console.log(r))
+            .catch((e) => console.log(e)) //* COMMENT ORDER
+          onComment({
+            content: 'Entrega cancelada',
+            orderId: order.id,
+            storeId: order.storeId,
+            type: 'comment',
+            isOrderMovement: true
+          })
+            .then((r) => console.log(r))
+            .catch((e) => console.log(e))
+          order?.items?.forEach((item) => {
+            //* UPDATE ITEM AND CREATE HISTORY ENTRY
+            ServiceStoreItems.update({
+              itemId: item.id,
+              storeId: order.storeId,
+              itemData: { status: ItemStatuses.pickedUp }
+            })
+              .then((r) => console.log(r))
+              .catch((e) => console.log(e))
+            onRegistryEntry({
+              itemId: item.id,
+              storeId: order.storeId,
+              type: 'pickup',
+              orderId: order.id,
+              content: 'Entrega cancelada'
+            })
+              .then((r) => console.log(r))
+              .catch((e) => console.log(e))
+          })
+        }}
+      />
+    </View>
+  )
+}
+
+const ButtonRenew = ({ order, user }) => {
+  const { toOrders } = useMyNav()
+  return (
+    <Button
+      label="Renovar"
+      icon="refresh"
+      onPress={async () => {
+        toOrders({ screen: 'renew', id: order.id })
+      }}
+    />
+  )
+}
+
+const ButtonDelivery = () => {
+  const modalRentStart = useModal({ title: 'Comenzar renta' })
+  return (
+    <View>
+      <Button
+        label="Entregar"
+        onPress={modalRentStart.toggleOpen}
+        icon="home"
+      />
+      <ModalRentStart modal={modalRentStart} />
+    </View>
+  )
+}
+const ButtonPickUp = () => {
+  const modalRentFinish = useModal({ title: 'Terminar renta' })
+  return (
+    <View>
+      <Button
+        label="Recoger"
+        onPress={modalRentFinish.toggleOpen}
+        icon="truck"
+      />
+      <ModalRentFinish modal={modalRentFinish} />
+    </View>
+  )
+}
+
+const ButtonCancel = ({ order, user }) => {
+  const [comment, setComment] = useState('')
+  return (
+    <View>
+      <View style={{ marginVertical: 'auto' }}>
+        <ButtonConfirm
+          openLabel="Cancelar "
+          confirmColor="warning"
+          confirmVariant="outline"
+          confirmLabel="Cancelar entrega"
+          icon="cancel"
+          openColor="accent"
+          openVariant="ghost"
+          // openSize="small"
+          text="¿Estás seguro de que quieres cancelar entrega?"
+          handleConfirm={async () => {
+            const res = {
+              orderId: order.id,
+              userId: user.id,
+              storeId: order.storeId,
+              cancelledReason: comment
+            }
+            onCancel(res)
+          }}
+        >
+          <InputTextStyled
+            label="Motivo"
+            onChangeText={(value) => setComment(value)}
+            value={comment}
+          ></InputTextStyled>
+        </ButtonConfirm>
+      </View>
+    </View>
+  )
+}
+const ButtonCancelPickUp = ({ order, user }) => {
+  return (
+    <View style={{ marginVertical: 'auto' }}>
+      <ButtonConfirm
+        openLabel="Regresar "
+        confirmColor="error"
+        confirmVariant="outline"
+        confirmLabel="Cancelar recolección"
+        icon="undo"
+        openColor="error"
+        openVariant="outline"
+        // openSize="small"
+        text="¿Estás seguro de que quieres cancelar la recolección?"
+        handleConfirm={async () => {
+          //* UPDATE ORDER
+          ServiceOrders.update(order.id, {
+            status: order_status.DELIVERED,
+            pickedUpAt: null,
+            pickedUpBy: null
+          })
+            .then((r) => console.log(r))
+            .catch((e) => console.log(e)) //* COMMENT ORDER
+          onComment({
+            content: 'Recolección cancelada',
+            orderId: order.id,
+            storeId: order.storeId,
+            type: 'comment',
+            isOrderMovement: true
+          })
+            .then((r) => console.log(r))
+            .catch((e) => console.log(e))
+          order?.items?.forEach((item) => {
+            //* UPDATE ITEM AND CREATE HISTORY ENTRY
+            ServiceStoreItems.update({
+              itemId: item.id,
+              storeId: order.storeId,
+              itemData: { status: ItemStatuses.rented }
+            })
+              .then((r) => console.log(r))
+              .catch((e) => console.log(e))
+            onRegistryEntry({
+              itemId: item.id,
+              storeId: order.storeId,
+              type: 'delivery',
+              orderId: order.id,
+              content: 'Recolección cancelada'
+            })
+              .then((r) => console.log(r))
+              .catch((e) => console.log(e))
+          })
+        }}
+      />
+    </View>
   )
 }
 
@@ -309,6 +393,21 @@ const ButtonAction = ({
       color={color}
       buttonStyles={styles.button}
     ></Button>
+  )
+}
+
+const ButtonAuthorize = ({ order, user }) => {
+  return (
+    <Button
+      label="Autorizar"
+      onPress={async () => {
+        await onAuthorize({
+          orderId: order.id,
+          userId: user.id,
+          storeId: order.storeId
+        })
+      }}
+    />
   )
 }
 
