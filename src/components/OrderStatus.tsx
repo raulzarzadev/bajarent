@@ -57,7 +57,6 @@ const OrderStatus = ({
     order.status === order_status.DELIVERED
 
   const pendingMarketOrder = order?.pendingMarketOrder
-
   const expiresOnMonday = order?.expiresOnMonday
   return (
     <>
@@ -209,7 +208,7 @@ const OrderStatus = ({
       )}
 
       {/* Reports and importante badges */}
-      {isReported && (
+      {isReported && !!olderUnsolvedReportDate && (
         <Chip
           style={[chipStyles]}
           title={formatDate(asDate(olderUnsolvedReportDate), 'dd/MMM')}
