@@ -17,8 +17,9 @@ import InputRadios from './Inputs/InputRadios'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { orders, staff } = useStore()
+  const [count, setCount] = useState(4)
   const getComments = async () => {
-    const comments = await ServiceComments.getByOrder(orderId)
+    const comments = await ServiceComments.getByOrder(orderId, { count: count })
     const formattedComments: FormattedComment[] = formatComments({
       comments,
       staff,
@@ -31,7 +32,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
 
   useEffect(() => {
     if (orderId) getComments()
-  }, [orderId])
+  }, [orderId, count])
 
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
@@ -48,6 +49,15 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
             <CommentRow comment={item} refetch={getComments} />
           )}
         />
+        <Button
+          size="xs"
+          buttonStyles={{ margin: 'auto', marginBottom: 12 }}
+          fullWidth={false}
+          label="mostrar mas"
+          disabled={orderComments.length < count}
+          onPress={() => setCount(count + 4)}
+          variant="ghost"
+        ></Button>
       </View>
     </View>
   )

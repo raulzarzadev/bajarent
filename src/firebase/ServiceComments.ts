@@ -47,8 +47,8 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     )
   }
 
-  async getByOrder(orderId: string) {
-    return await this.findMany([where('orderId', '==', orderId)])
+  async getByOrder(orderId: string, { count = 999 } = {}) {
+    return await this.findMany([where('orderId', '==', orderId), limit(count)])
   }
 
   getLast(storeId: string, count: number) {
