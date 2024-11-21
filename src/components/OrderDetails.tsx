@@ -37,6 +37,8 @@ import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
+import Divider from './Divider'
+import { useStore } from '../contexts/storeContext'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -103,12 +105,13 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />
       </ErrorBoundary>
-
+      <View style={{ marginTop: 8 }} />
+      <OrderActionsE />
       {order.type === order_type.RENT && (
         <ErrorBoundary componentName="OrderItems">
           <View
             style={{
-              marginVertical: 16,
+              marginVertical: 8,
               paddingBottom: 16,
               backgroundColor: theme?.base,
               width: '100%',
@@ -136,28 +139,6 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       )}
 
       {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
-
-      {/*
-       //* ORDER ACTIONS FLOW DEPENDS ON ORDER TYPE
-       */}
-      <OrderActionsE />
-      {!(order.status === order_status.CANCELLED) && (
-        <>
-          <View
-            style={{
-              maxWidth: 190,
-              marginHorizontal: 'auto',
-              marginBottom: 16
-            }}
-          >
-            <ModalPayment
-              orderId={order.id}
-              storeId={order.storeId}
-              defaultAmount={defaultAmount}
-            />
-          </View>
-        </>
-      )}
 
       <OrderPayments orderId={order.id} />
 
@@ -354,6 +335,7 @@ export const OrderDates = ({
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
   const payments = useOrderDetails()?.payments
+  const { storeId } = useStore()
   const { toPayments } = useMyNav()
   const sortByCreatedAt = (a: PaymentType, b: PaymentType) => {
     return asDate(a.createdAt).getTime() < asDate(b.createdAt).getTime()
@@ -373,7 +355,20 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
               marginTop: 8
             }}
           >
-            <Text style={gStyles.h3}>Pagos</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignContent: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: 8
+              }}
+            >
+              <Text style={[gStyles.h3, { marginRight: 8, marginBottom: 0 }]}>
+                Pagos
+              </Text>
+              <ModalPayment orderId={orderId} storeId={storeId} />
+            </View>
             {payments.sort(sortByCreatedAt)?.map((payment) => (
               <Pressable
                 onPress={() => {

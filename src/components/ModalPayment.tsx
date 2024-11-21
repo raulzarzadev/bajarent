@@ -46,9 +46,11 @@ export const ModalPayment = ({
     <>
       <Button
         onPress={modal.toggleOpen}
-        icon="money"
+        icon="add"
         size="small"
         color="success"
+        variant="ghost"
+        justIcon
       >
         {label}
       </Button>
