@@ -63,11 +63,23 @@ export default function ScreenMessages() {
   }
 
   if (!(permissions?.isAdmin || permissions?.store?.canSendMessages))
-    return <Text>No tienes permisos para enviar mensajes</Text>
-
+    return (
+      <Text style={gStyles.h2}>No tienes permisos para enviar mensajes</Text>
+    )
+  if (!store.chatbot.enabled)
+    return (
+      <View>
+        <Text style={gStyles.h2}>El chatbot no esta habilitado</Text>
+        <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+          Habilitalo en la configuración de la tienda y agrega los datos
+          necesarios para poder enviar mensajes de forma autamatica
+        </Text>
+      </View>
+    )
   return (
     <View>
       <TestMessage />
+
       <Text style={gStyles.h2}>1. Selecciona tipo de mensajes</Text>
       <InputRadios
         layout="row"

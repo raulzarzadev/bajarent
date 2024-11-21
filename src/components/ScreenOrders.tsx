@@ -9,7 +9,7 @@ import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import useMyNav from '../hooks/useMyNav'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
-  useStore() //*<---- FIXME: if you remove this everything will break
+  const { store } = useStore() //*<---- FIXME: if you remove this everything will break
 
   const hasOrderList = !!route?.params?.orders
   const { orders = [], handleRefresh: refreshOrders } = useOrdersCtx()
@@ -64,7 +64,9 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             onPress: () => {
               toMessages()
             },
-            visible: permissions?.isAdmin || permissions?.store?.canSendMessages
+            visible:
+              store?.chatbot?.enabled &&
+              (permissions?.isAdmin || permissions?.store?.canSendMessages)
           }
         ]}
       />
