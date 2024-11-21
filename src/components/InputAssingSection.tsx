@@ -41,10 +41,12 @@ const InputAssignSection = ({
   return (
     <View>
       <ButtonConfirm
+        openSize="small"
         openDisabled={disabled}
         openLabel={assignedToSectionName || 'Asignar'}
         icon="swap"
-        openVariant="outline"
+        openColor="success"
+        openVariant="filled"
         confirmLabel="Cambiar"
         handleConfirm={async () => {
           return await setNewSection({

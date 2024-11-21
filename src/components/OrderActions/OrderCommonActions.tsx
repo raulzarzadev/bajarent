@@ -109,9 +109,10 @@ const OrderCommonActions = ({
       <ModalAssignOrder orderId={orderId} section={order?.assignToSection} />
     ),
     canExtend && <AddExtendExpire orderId={orderId} storeId={storeId} />,
-    canSendWS && <ModalSendWhatsappE whatsappPhone={defaultWhatsappPhone} />,
+    // canSendWS && <ModalSendWhatsappE whatsappPhone={defaultWhatsappPhone} />,
     canReorder && (
       <Button
+        variant="outline"
         label="Re-ordenar"
         onPress={() => {
           handleReorder()
@@ -120,28 +121,31 @@ const OrderCommonActions = ({
         icon="refresh"
       />
     ),
-    canAuthorize && (
-      <Button
-        label="Autorizar"
-        onPress={() => {
-          handleAuthorize()
-        }}
-        size="small"
-      />
-    ),
-    canRenew && (
-      <Button
-        label="Renovar"
-        onPress={() => {
-          handleRenew()
-        }}
-        size="small"
-        icon="add"
-      />
-    ),
+    canCopy && <ButtonCopyRow orderId={orderId} />,
     <ButtonSetOrderLocation />
+    // canAuthorize && (
+    //   <Button
+    //     label="Autorizar"
+
+    //     onPress={() => {
+    //       handleAuthorize()
+    //     }}
+    //     size="small"
+    //   />
+    // ),
+    // canRenew && (
+    //   <Button
+    //     label="Renovar"
+    //     onPress={() => {
+    //       handleRenew()
+    //     }}
+    //     size="small"
+    //     icon="refresh"
+    //   />
+    // ),
   ]
   const buttons2 = [
+    canDelete && <ButtonDeleteOrder orderId={orderId} />,
     canEdit && (
       <Button
         size="small"
@@ -154,8 +158,6 @@ const OrderCommonActions = ({
       />
     ),
 
-    canCopy && <ButtonCopyRow orderId={orderId} />,
-    canDelete && <ButtonDeleteOrder orderId={orderId} />,
     canCancel && (
       <ButtonConfirm
         openLabel="Cancelar"

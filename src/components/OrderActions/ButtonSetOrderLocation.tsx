@@ -4,14 +4,12 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import unShortUrl from '../../libs/unShortUrl'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import extractCoordsFromUrl from '../../libs/extractCoordsFromUrl'
-import Button from '../Button'
 import ButtonConfirm from '../ButtonConfirm'
-import InputTextStyled from '../InputTextStyled'
 import { gStyles } from '../../styles'
 import InputLocation from '../InputLocation'
 import containCoordinates from '../../libs/containCoordinates'
 import ups_text from '../../../Constants.ts/ups_text'
-import { getCoordinates, getCoordinatesAsString } from '../../libs/maps'
+import { getCoordinatesAsString } from '../../libs/maps'
 
 export const ButtonSetOrderLocation = () => {
   const { order } = useOrderDetails()
@@ -57,9 +55,11 @@ export const ButtonSetOrderLocation = () => {
 
   return (
     <ButtonConfirm
+      openSize="small"
       modalTitle="Actualizar ubicación"
       openDisabled={loading}
       openLabel="Actualizar ubicación"
+      openVariant="outline"
       icon={order?.coords ? 'location' : 'locationOff'}
       handleConfirm={async () => {
         return handleSetOrderCoords()

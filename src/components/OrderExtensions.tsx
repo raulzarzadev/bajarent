@@ -178,7 +178,7 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
           )
         )}
       <Button
-        disabled={count > MAX_EXTENSIONS_COUNT}
+        disabled={count > MAX_EXTENSIONS_COUNT || count >= extensions.length}
         size="xs"
         label="mostrar más"
         variant="ghost"

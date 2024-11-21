@@ -20,6 +20,7 @@ interface OrderContextProps {
   setOrder?: (order: Order) => void
   payments?: PaymentType[]
   setPaymentsCount?: (count: number) => void
+  paymentsCount?: number
 }
 
 // Create the initial context
@@ -58,7 +59,7 @@ const OrderProvider = ({
 
   return (
     <OrderContext.Provider
-      value={{ order, setOrder, payments, setPaymentsCount }}
+      value={{ order, setOrder, payments, setPaymentsCount, paymentsCount }}
     >
       {children}
     </OrderContext.Provider>

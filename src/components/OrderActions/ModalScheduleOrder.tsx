@@ -16,7 +16,11 @@ const ModalScheduleOrder = ({ orderId = null }: { orderId: string | null }) => {
   return (
     <View>
       <InputDate
-        size="xs"
+        size="small"
+        openButtonProps={{
+          color: 'secondary',
+          variant: 'filled'
+        }}
         setValue={(d) => {
           handleSubmit(d)
         }}

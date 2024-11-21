@@ -54,7 +54,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
           buttonStyles={{ margin: 'auto', marginBottom: 12 }}
           fullWidth={false}
           label="mostrar mas"
-          disabled={orderComments.length < count}
+          disabled={orderComments.length <= count}
           onPress={() => setCount(count + 4)}
           variant="ghost"
         ></Button>

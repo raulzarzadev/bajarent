@@ -37,7 +37,6 @@ import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
-import Divider from './Divider'
 import { useStore } from '../contexts/storeContext'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
@@ -105,8 +104,12 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       <ErrorBoundary componentName="OrderAddress">
         <OrderAddress order={order} />
       </ErrorBoundary>
+
+      {/*//* <-----Order actions flow */}
       <View style={{ marginTop: 8 }} />
       <OrderActionsE />
+      {/*//* <-----Order actions flow */}
+
       {order.type === order_type.RENT && (
         <ErrorBoundary componentName="OrderItems">
           <View
@@ -334,7 +337,8 @@ export const OrderDates = ({
 }
 
 const OrderPayments = ({ orderId }: { orderId: string }) => {
-  const { payments, setPaymentsCount } = useOrderDetails()
+  const MAX_PAYMENTS_COUNT = 10
+  const { payments, setPaymentsCount, paymentsCount } = useOrderDetails()
   const { storeId } = useStore()
   const { toPayments } = useMyNav()
   const sortByCreatedAt = (a: PaymentType, b: PaymentType) => {
@@ -342,87 +346,86 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
       ? 1
       : -1
   }
-  const [count, setCount] = useState(2)
-  const MAX_PAYMENTS_COUNT = 10
+
   return (
     <View>
-      {payments?.length > 0 && (
-        <ErrorBoundary componentName="ModalPayment">
+      <ErrorBoundary componentName="ModalPayment">
+        <View
+          style={{
+            maxWidth: '100%',
+            marginHorizontal: 'auto',
+            marginVertical: 16,
+            marginTop: 8
+          }}
+        >
           <View
             style={{
-              maxWidth: '100%',
-              marginHorizontal: 'auto',
-              marginVertical: 16,
-              marginTop: 8
+              flexDirection: 'row',
+              alignContent: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginVertical: 8
             }}
           >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignContent: 'center',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginVertical: 8
-              }}
-            >
-              <Text style={[gStyles.h3, { marginRight: 8, marginBottom: 0 }]}>
-                Pagos
-              </Text>
-              <ModalPayment orderId={orderId} storeId={storeId} />
-            </View>
-            {payments.sort(sortByCreatedAt)?.map((payment) => (
-              <Pressable
-                onPress={() => {
-                  toPayments({ id: payment.id })
-                }}
-                key={payment.id}
-                style={[
-                  {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginVertical: 6,
-                    flexWrap: 'wrap',
-                    justifyContent: 'center'
-                  },
-                  payment?.canceled && {
-                    backgroundColor: colors.lightGray,
-                    opacity: 0.4
-                  }
-                ]}
-              >
-                <SpanUser userId={payment.createdBy} />
-                <Text style={{ marginHorizontal: 4 }}>
-                  {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
-                </Text>
-                <Text style={{ marginHorizontal: 4 }}>
-                  {dictionary(payment.method)}
-                </Text>
-                <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
-                {payment?.canceled && (
-                  <Text style={{ marginHorizontal: 4 }}>Cancelado</Text>
-                )}
-                <View style={{ marginLeft: 4 }}>
-                  <PaymentVerify payment={payment} />
-                </View>
-              </Pressable>
-            ))}
-            <Button
-              size="xs"
-              fullWidth={false}
-              buttonStyles={{
-                margin: 'auto'
-              }}
-              variant="ghost"
-              disabled={count > MAX_PAYMENTS_COUNT}
-              onPress={() => {
-                setPaymentsCount(count + 5)
-                setCount(count + 5)
-              }}
-              label="mostrar más"
-            ></Button>
+            <Text style={[gStyles.h3, { marginRight: 8, marginBottom: 0 }]}>
+              Pagos
+            </Text>
+            <ModalPayment orderId={orderId} storeId={storeId} />
           </View>
-        </ErrorBoundary>
-      )}
+          {payments.sort(sortByCreatedAt)?.map((payment) => (
+            <Pressable
+              onPress={() => {
+                toPayments({ id: payment.id })
+              }}
+              key={payment.id}
+              style={[
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 6,
+                  flexWrap: 'wrap',
+                  justifyContent: 'center'
+                },
+                payment?.canceled && {
+                  backgroundColor: colors.lightGray,
+                  opacity: 0.4
+                }
+              ]}
+            >
+              <SpanUser userId={payment.createdBy} />
+              <Text style={{ marginHorizontal: 4 }}>
+                {dateFormat(payment.createdAt, 'dd/MMM/yy HH:mm')}
+              </Text>
+              <Text style={{ marginHorizontal: 4 }}>
+                {dictionary(payment.method)}
+              </Text>
+              <CurrencyAmount style={gStyles.tBold} amount={payment.amount} />
+              {payment?.canceled && (
+                <Text style={{ marginHorizontal: 4 }}>Cancelado</Text>
+              )}
+              <View style={{ marginLeft: 4 }}>
+                <PaymentVerify payment={payment} />
+              </View>
+            </Pressable>
+          ))}
+          <Button
+            size="xs"
+            fullWidth={false}
+            buttonStyles={{
+              margin: 'auto'
+            }}
+            variant="ghost"
+            disabled={
+              payments?.length > MAX_PAYMENTS_COUNT ||
+              payments?.length < paymentsCount
+            }
+            onPress={() => {
+              setPaymentsCount(payments.length + 5)
+            }}
+            label="mostrar más"
+          ></Button>
+        </View>
+      </ErrorBoundary>
     </View>
   )
 }

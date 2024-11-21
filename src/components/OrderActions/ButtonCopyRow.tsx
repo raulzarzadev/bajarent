@@ -36,6 +36,7 @@ const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
       size="small"
       label="Copiar fila"
       icon="copy"
+      variant="outline"
     />
   )
 }

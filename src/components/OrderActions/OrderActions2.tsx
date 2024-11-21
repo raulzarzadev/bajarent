@@ -24,12 +24,9 @@ import ButtonConfirm from '../ButtonConfirm'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { useEmployee } from '../../contexts/employeeContext'
 import { ItemStatuses } from '../../types/ItemType'
-import { ServiceItemHistory } from '../../firebase/ServiceItemHistory'
 import { onRegistryEntry } from '../../firebase/actions/item-actions'
 import { useStore } from '../../contexts/storeContext'
-import { isCancel } from 'axios'
 import InputTextStyled from '../InputTextStyled'
-import { ca } from 'react-native-paper-dates'
 import useMyNav from '../../hooks/useMyNav'
 
 //* repaired
@@ -141,17 +138,27 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
 
   const orderStatus = order?.status
   const authorize =
-    permissions?.orders.canAuthorize && orderStatus === 'PENDING'
+    (permissions?.orders.canAuthorize || permissions.isAdmin) &&
+    orderStatus === 'PENDING'
 
-  const cancel = permissions?.orders.canCancel && orderStatus === 'AUTHORIZED'
+  const cancel =
+    (permissions?.orders.canCancel || permissions.isAdmin) &&
+    orderStatus === 'AUTHORIZED'
   const cancelDelivery =
-    permissions?.orders.canCancelPickedUp && orderStatus === 'DELIVERED'
+    (permissions?.orders.canCancelPickedUp || permissions.isAdmin) &&
+    orderStatus === 'DELIVERED'
   const delivery =
-    permissions?.orders.canDelivery && orderStatus === 'AUTHORIZED'
-  const pickUp = permissions?.orders.canPickup && orderStatus === 'DELIVERED'
-  const renew = permissions?.orders.canRenew && orderStatus === 'DELIVERED'
+    (permissions?.orders.canDelivery || permissions.isAdmin) &&
+    orderStatus === 'AUTHORIZED'
+  const pickUp =
+    (permissions?.orders.canPickup || permissions.isAdmin) &&
+    orderStatus === 'DELIVERED'
+  const renew =
+    (permissions?.orders.canRenew || permissions.isAdmin) &&
+    orderStatus === 'DELIVERED'
   const cancelPickUp =
-    permissions?.orders.canCancelPickedUp && orderStatus === 'PICKED_UP'
+    (permissions?.orders.canCancelPickedUp || permissions.isAdmin) &&
+    orderStatus === 'PICKED_UP'
   return (
     <>
       {!allItemsExists && (
