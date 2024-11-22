@@ -30,7 +30,7 @@ const ButtonConfirm = ({
   handleCancel = () => console.log('cancel'),
   progress
 }: {
-  progress: ButtonProps['progress']
+  progress?: ButtonProps['progress']
   confirmIcon?: IconButtonProps['icon']
   openLabel?: string
   modalTitle?: string

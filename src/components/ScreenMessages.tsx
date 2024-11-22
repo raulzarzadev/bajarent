@@ -9,7 +9,6 @@ import { order_status, order_type } from '../types/OrderType'
 import { expiredMessage } from '../libs/whatsappMessages'
 import { useStore } from '../contexts/storeContext'
 import mapEnumToOptions from '../libs/mapEnumToOptions'
-import sendMessage from '../libs/whatsapp/sendMessage'
 import TestMessage from './WhatsappBot/TestMessage'
 import { useEmployee } from '../contexts/employeeContext'
 import List from './List'
@@ -158,7 +157,7 @@ export default function ScreenMessages() {
             data={selectedOrders}
             ComponentRow={({ item }) => (
               <Text>
-                {item?.fullName} - {item?.folio}
+                {item?.folio} - {item?.fullName}
               </Text>
             )}
             onPressRow={(orderId) => {
