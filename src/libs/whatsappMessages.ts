@@ -310,6 +310,7 @@ export const expiredMessage = ({
 }) => {
   return `🚨 *ALERTA DE VENCIMIENTO* 
   \n${WELCOME({ customerName: order?.fullName, storeName: store?.name })}
+  \n${expireDateString(order, { feePerDay: 100 })}
   \n${
     order
       ? ORDER_DETAILS({
@@ -322,13 +323,12 @@ export const expiredMessage = ({
         })
       : ''
   }
-  \n${expireDateString(order, { feePerDay: 100 })}
   \n${BANK_INFO({ store })}
   \nEnvíe su comprobante al Whatsapp  ${
     store?.contacts?.find((c) => c.type === 'whatsapp')?.value
   } 
   \n${AGRADECIMIENTOS({ store })}
-  `
+  `.replace(/\n/g, '\r') //<--- remplace `\n` with \r to mark the end of the line
 }
 export const receiptMessage = ({
   order,
@@ -351,17 +351,15 @@ export const receiptMessage = ({
         })
       : ''
   }
-  \n${LAST_PAYMENT({ order })}
- 
-  \n${AGRADECIMIENTOS({ store })}
+  ${LAST_PAYMENT({ order })}
+  ${AGRADECIMIENTOS({ store })}
   `
 }
 
 const AGRADECIMIENTOS = ({ store }) =>
   `*${store.name}* agradece su preferencia 🙏🏼`
 
-const WELCOME = ({ customerName, storeName }) =>
-  `Estimado ${customerName} cliente de ${storeName}`
+const WELCOME = ({ customerName, storeName }) => `Estimado *${customerName}* `
 
 /**
  * Generates order details message.

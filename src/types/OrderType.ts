@@ -63,6 +63,8 @@ export type OrderBase = {
   neighborhood?: string
   location?: string
   coords?: CoordsType
+
+  sentMessages: SentMessage[]
   /**
    * @deprecated use references instead
    */
@@ -229,6 +231,13 @@ export enum order_status {
   PICKED_UP = 'PICKED_UP',
   EXPIRE_TODAY = 'EXPIRE_TODAY',
   EXPIRED_TOMORROW = 'EXPIRED_TOMORROW'
+}
+
+export type SentMessage = {
+  number: string
+  message: string
+  sentAt: Date
+  sentBy: Date
 }
 
 // /**

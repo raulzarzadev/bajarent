@@ -27,8 +27,10 @@ const ButtonConfirm = ({
   onOpen,
   confirmDisabledHelper,
   cancelButton = false,
-  handleCancel = () => console.log('cancel')
+  handleCancel = () => console.log('cancel'),
+  progress
 }: {
+  progress: ButtonProps['progress']
   confirmIcon?: IconButtonProps['icon']
   openLabel?: string
   modalTitle?: string
@@ -79,6 +81,7 @@ const ButtonConfirm = ({
           icon={icon}
           size={openSize}
           disabled={openDisabled}
+          progress={progress}
         ></Button>
       )}
       <StyledModal {...modal}>

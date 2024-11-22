@@ -12,9 +12,17 @@ import mapEnumToOptions from '../libs/mapEnumToOptions'
 import sendMessage from '../libs/whatsapp/sendMessage'
 import TestMessage from './WhatsappBot/TestMessage'
 import { useEmployee } from '../contexts/employeeContext'
+import List from './List'
+import sendOrderMessage from '../libs/whatsapp/sendOrderMessage'
+import { useAuth } from '../contexts/authContext'
+import TextInfo from './TextInfo'
 
 export default function ScreenMessages() {
   const { permissions } = useEmployee()
+  const { user } = useAuth()
+  const userId = user?.id
+  const [sending, setSending] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [messageType, setMessageType] = useState<MessageType>(undefined)
   const [target, setTarget] = useState<MessageTarget>(undefined)
   const { orders = [] } = useOrdersCtx()
@@ -30,11 +38,12 @@ export default function ScreenMessages() {
       setSelectedOrders(selectedOrders)
       setMessage(expiredMessage({ order: selectedOrders?.[0], store }))
     }
+
     if (target === 'soon_expire') {
       const selectedOrders = orders?.filter(
         (order) =>
           order.status === order_status.DELIVERED &&
-          (order.expiresToday || order.expiresTomorrow || order.expiresOnMonday)
+          (order.expiresTomorrow || order.expiresOnMonday)
       )
       setSelectedOrders(selectedOrders)
       setMessage(expiredMessage({ order: selectedOrders?.[0], store }))
@@ -43,23 +52,37 @@ export default function ScreenMessages() {
 
   const handleSendWhatsappToOrders = async ({
     orders,
-    message
+    message,
+    userId
   }: {
     orders: any[]
     message: string
+    userId: string
   }) => {
-    const TIME_BETWEEN_MESSAGES = 1000 * 10 // * 1O SECONDS
-    orders.forEach(async (order, i) => {
-      setTimeout(() => {
-        console.log('mensaje enviado')
-        sendMessage({
-          phone: order?.phone,
-          message: message,
-          apiKey: store?.chatbot?.apiKey,
-          botId: store?.chatbot?.id
-        })
-      }, TIME_BETWEEN_MESSAGES * i)
+    setSending(true)
+    const TIME_OUT_SECONDS = 5
+    const TIME_BETWEEN_MESSAGES = 1000 * TIME_OUT_SECONDS //<--- IN SECONDS
+    setProgress(0)
+    const sendMessages = orders.map((order, i) => {
+      return new Promise<void>((resolve) => {
+        setTimeout(async () => {
+          console.log('enviando mensaje a ', order?.phone)
+          await sendOrderMessage({
+            phone: order?.phone,
+            message: expiredMessage({ order, store }),
+            apiKey: store?.chatbot?.apiKey,
+            botId: store?.chatbot?.id,
+            orderId: order?.id,
+            userId
+          })
+          setProgress(((i + 1) / orders.length) * 100)
+          resolve()
+        }, i * TIME_BETWEEN_MESSAGES)
+      })
     })
+
+    await Promise.all(sendMessages)
+    setSending(false)
   }
 
   if (!(permissions?.isAdmin || permissions?.store?.canSendMessages))
@@ -73,6 +96,23 @@ export default function ScreenMessages() {
         <Text style={[gStyles.helper, { textAlign: 'center' }]}>
           Habilitalo en la configuración de la tienda y agrega los datos
           necesarios para poder enviar mensajes de forma autamatica
+        </Text>
+      </View>
+    )
+  console.log({ selectedOrders })
+  if (sending)
+    return (
+      <View>
+        <Text
+          style={[gStyles.helper, { textAlign: 'center', marginVertical: 12 }]}
+        >
+          Enviando mensajes...
+        </Text>
+        <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+          {progress.toFixed(0)}%
+        </Text>
+        <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+          No recarges la pagina hasta que haya terminado.{' '}
         </Text>
       </View>
     )
@@ -99,56 +139,105 @@ export default function ScreenMessages() {
         }}
         options={targets}
       />
-      <ButtonConfirm
-        confirmDisabled={
-          !selectedOrders?.length ||
-          !messageType ||
-          !target ||
-          !message ||
-          !store?.chatbot?.apiKey ||
-          !store?.chatbot?.id
-        }
-        openLabel="Enviar"
-        modalTitle="Enviar mensaje"
-        confirmLabel="Enviar mensaje"
-        handleConfirm={async () => {
-          handleSendWhatsappToOrders({
-            orders: selectedOrders,
-            message
-          })
-          // console.log('Sending message to:', selectedOrders)
-        }}
-      >
-        <Text>
-          Mensaje:{' '}
-          <Text style={{ fontWeight: 'bold' }}>
-            {messageTypes.find((v) => v.value === messageType)?.label || ''}
-          </Text>
-        </Text>
-        <Text>
-          Objetivo:{' '}
-          <Text style={{ fontWeight: 'bold' }}>
-            {targets.find((v) => v.value === target)?.label || ''}
-          </Text>
-        </Text>
 
-        <Text style={{ textAlign: 'center' }}>
-          <Text> Ordenes: </Text>
-          <Text style={{ fontWeight: 'bold' }}>
-            {selectedOrders?.length || 0}
-          </Text>{' '}
-          ordenes seleccionadas
-        </Text>
+      {selectedOrders.length === 0 && (
         <Text
-          style={[
-            gStyles.tBold,
-            { textAlign: 'center', marginVertical: 8, fontStyle: 'italic' }
-          ]}
+          style={[gStyles.helper, { textAlign: 'center', marginVertical: 12 }]}
         >
-          Ejemplo de mensaje:{' '}
+          No hay ordenes seleccionadas
         </Text>
-        <Text>{message}</Text>
-      </ButtonConfirm>
+      )}
+      {selectedOrders.length > 0 && (
+        <>
+          <TextInfo
+            defaultVisible
+            text="Click para eliminar una orden de la lista "
+            type="info"
+          />
+          <List
+            data={selectedOrders}
+            ComponentRow={({ item }) => (
+              <Text>
+                {item?.fullName} - {item?.folio}
+              </Text>
+            )}
+            onPressRow={(orderId) => {
+              const clearOrders = selectedOrders.filter(
+                (order) => order.id !== orderId
+              )
+              setSelectedOrders(clearOrders)
+            }}
+            filters={[]}
+            rowsPerPage={30}
+          />
+        </>
+      )}
+
+      <View style={{ marginVertical: 8, maxWidth: 120, margin: 'auto' }}>
+        <ButtonConfirm
+          progress={progress}
+          openColor="success"
+          icon="whatsapp"
+          openDisabled={
+            sending ||
+            !selectedOrders?.length ||
+            !messageType ||
+            !target ||
+            !message ||
+            !store?.chatbot?.apiKey ||
+            !store?.chatbot?.id
+          }
+          confirmDisabled={
+            !selectedOrders?.length ||
+            !messageType ||
+            !target ||
+            !message ||
+            !store?.chatbot?.apiKey ||
+            !store?.chatbot?.id
+          }
+          openLabel="Enviar"
+          modalTitle="Enviar mensaje"
+          confirmLabel="Enviar mensaje"
+          handleConfirm={async () => {
+            handleSendWhatsappToOrders({
+              orders: selectedOrders,
+              message,
+              userId
+            })
+            // console.log('Sending message to:', selectedOrders)
+          }}
+        >
+          <Text>
+            Mensaje:{' '}
+            <Text style={{ fontWeight: 'bold' }}>
+              {messageTypes.find((v) => v.value === messageType)?.label || ''}
+            </Text>
+          </Text>
+          <Text>
+            Objetivo:{' '}
+            <Text style={{ fontWeight: 'bold' }}>
+              {targets.find((v) => v.value === target)?.label || ''}
+            </Text>
+          </Text>
+
+          <Text style={{ textAlign: 'center' }}>
+            <Text> Ordenes: </Text>
+            <Text style={{ fontWeight: 'bold' }}>
+              {selectedOrders?.length || 0}
+            </Text>{' '}
+            ordenes seleccionadas
+          </Text>
+          <Text
+            style={[
+              gStyles.tBold,
+              { textAlign: 'center', marginVertical: 8, fontStyle: 'italic' }
+            ]}
+          >
+            Ejemplo de mensaje:{' '}
+          </Text>
+          <Text>{message}</Text>
+        </ButtonConfirm>
+      </View>
     </View>
   )
 }
@@ -161,7 +250,7 @@ export const ScreenMessagesE = (props: ScreenMessagesProps) => (
 
 enum MessageTargetEnum {
   expired = 'Vencidas',
-  soon_expire = 'Por vencer'
+  soon_expire = 'Por vencer (mañana,o el lunes)'
 }
 enum MessageTypeEnum {
   expire = 'Vencimiento'
