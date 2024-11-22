@@ -5,7 +5,11 @@ import { gStyles } from '../styles'
 import { useState } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import { useOrdersCtx } from '../contexts/ordersContext'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, {
+  ContactType,
+  order_status,
+  order_type
+} from '../types/OrderType'
 import { expiredMessage } from '../libs/whatsappMessages'
 import { useStore } from '../contexts/storeContext'
 import mapEnumToOptions from '../libs/mapEnumToOptions'
@@ -67,8 +71,10 @@ export default function ScreenMessages() {
     const sendMessages = orders.map((order: OrderType, i) => {
       return new Promise<void>((resolve) => {
         setTimeout(async () => {
+          const orderContacts = order?.contacts as ContactType[]
           const phone =
-            order?.contacts?.find((c) => c?.isFavorite)?.phone || order?.phone
+            orderContacts?.find((c) => c?.isFavorite)?.phone || order?.phone
+
           console.log('enviando mensaje a ', phone)
 
           await sendOrderMessage({

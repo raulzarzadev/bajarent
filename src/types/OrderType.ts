@@ -53,7 +53,7 @@ export type OrderBase = {
   email: string
   phone: string
 
-  contacts?: ContactType[]
+  contacts?: ContactType[] | FieldValue
 
   imageID: string
   imageHouse: string
