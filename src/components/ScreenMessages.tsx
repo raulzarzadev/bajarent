@@ -5,7 +5,7 @@ import { gStyles } from '../styles'
 import { useState } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import { useOrdersCtx } from '../contexts/ordersContext'
-import { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import { expiredMessage } from '../libs/whatsappMessages'
 import { useStore } from '../contexts/storeContext'
 import mapEnumToOptions from '../libs/mapEnumToOptions'
@@ -15,6 +15,8 @@ import List from './List'
 import sendOrderMessage from '../libs/whatsapp/sendOrderMessage'
 import { useAuth } from '../contexts/authContext'
 import TextInfo from './TextInfo'
+import { isToday } from 'date-fns'
+import asDate from '../libs/utils-date'
 
 export default function ScreenMessages() {
   const { permissions } = useEmployee()
@@ -62,12 +64,15 @@ export default function ScreenMessages() {
     const TIME_OUT_SECONDS = 5
     const TIME_BETWEEN_MESSAGES = 1000 * TIME_OUT_SECONDS //<--- IN SECONDS
     setProgress(0)
-    const sendMessages = orders.map((order, i) => {
+    const sendMessages = orders.map((order: OrderType, i) => {
       return new Promise<void>((resolve) => {
         setTimeout(async () => {
-          console.log('enviando mensaje a ', order?.phone)
+          const phone =
+            order?.contacts?.find((c) => c?.isFavorite)?.phone || order?.phone
+          console.log('enviando mensaje a ', phone)
+
           await sendOrderMessage({
-            phone: order?.phone,
+            phone: phone,
             message: expiredMessage({ order, store }),
             apiKey: store?.chatbot?.apiKey,
             botId: store?.chatbot?.id,
@@ -98,7 +103,6 @@ export default function ScreenMessages() {
         </Text>
       </View>
     )
-  console.log({ selectedOrders })
   if (sending)
     return (
       <View>
@@ -155,9 +159,11 @@ export default function ScreenMessages() {
           />
           <List
             data={selectedOrders}
-            ComponentRow={({ item }) => (
+            ComponentRow={({ item }: { item: OrderType }) => (
               <Text>
-                {item?.folio} - {item?.fullName}
+                {item?.folio} - {item?.fullName}{' '}
+                {item?.sentMessages?.some((m) => isToday(asDate(m?.sentAt))) &&
+                  '✅'}
               </Text>
             )}
             onPressRow={(orderId) => {

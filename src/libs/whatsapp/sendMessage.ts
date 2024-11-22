@@ -13,10 +13,9 @@ const sendMessage = async ({ phone, message = 'hola', botId, apiKey }) => {
     apiKey
   }
 
-  return axios
-    .post('https://bajarent.app/api/messages', data)
-    .then((response) => console.log(response))
-    .catch((error) => console.error(error))
+  return axios.post('https://bajarent.app/api/messages', data)
+  // .then((response) => console.log(response))
+  // .catch((error) => console.error(error))
 }
 
 export default sendMessage
