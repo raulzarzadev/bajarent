@@ -15,9 +15,22 @@ import asDate from '../libs/utils-date'
 import { CommentRow } from './RowComment'
 import InputRadios from './Inputs/InputRadios'
 import { useOrderDetails } from '../contexts/orderContext'
+import { create } from 'cypress/types/lodash'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { order, setCommentsCount, commentsCount } = useOrderDetails()
+  const sentMessagesAsComments: FormattedComment[] =
+    order?.sentMessages.map((m, i) => {
+      return {
+        content: `mensaje enviado: ${m.message}`,
+        createdAt: m.sentAt,
+        type: 'comment',
+        createdBy: m.sentBy,
+        id: `${i}`,
+        orderId: orderId,
+        storeId: order.storeId
+      }
+    }) || []
   const orderComments = order?.comments || []
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
@@ -25,9 +38,9 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
       <InputComment orderId={orderId} />
       <View style={{ padding: 0 }}>
         <FlatList
-          data={orderComments.sort(
+          data={[...orderComments, ...sentMessagesAsComments].sort(
             (a, b) =>
-              asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
+              asDate(b?.createdAt).getTime() - asDate(a?.createdAt).getTime()
           )}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <CommentRow comment={item} />}

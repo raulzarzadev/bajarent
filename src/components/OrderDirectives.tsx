@@ -8,6 +8,8 @@ import ErrorBoundary from './ErrorBoundary'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
 import Icon, { IconName } from './Icon'
+import { isToday } from 'date-fns'
+import asDate from '../libs/utils-date'
 
 const OrderDirectives = ({
   order
@@ -45,11 +47,20 @@ const OrderDirectives = ({
         position: 'relative'
       }}
     >
-      {order.marketOrder && (
-        <View style={{ position: 'absolute', top: 4, right: 4 }}>
-          <Icon icon="www" size={12} />
-        </View>
-      )}
+      <View
+        style={{ position: 'absolute', top: 4, right: 4, flexDirection: 'row' }}
+      >
+        {order?.sentMessages?.some((m) => isToday(asDate(m?.sentAt))) && (
+          <View style={{ marginHorizontal: 1 }}>
+            <Icon icon="whatsapp" size={12} color={theme.success} />
+          </View>
+        )}
+        {order.marketOrder && (
+          <View style={{ marginHorizontal: 1 }}>
+            <Icon icon="www" size={12} />
+          </View>
+        )}
+      </View>
       <View style={{ width: 60 }}>
         <OrderLabels order={order} />
       </View>

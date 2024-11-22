@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Chip from './Chip'
 import ButtonConfirm from './ButtonConfirm'
 import theme from '../theme'
@@ -64,6 +64,8 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
+  const LINES_DEFAULT = 1
+  const [numberOfLines, setNumberOfLines] = useState(LINES_DEFAULT)
 
   if (!comment) return null
 
@@ -215,9 +217,17 @@ export const CommentRow = ({
             paddingVertical: 3
           }
         ]}
+        numberOfLines={numberOfLines}
       >
-        {comment?.content}
+        {comment?.content}{' '}
       </Text>
+      {comment?.content.length > 40 && numberOfLines === LINES_DEFAULT && (
+        <Pressable onPress={() => setNumberOfLines(99)}>
+          <Text style={[{ color: theme.primary, fontWeight: 'bold' }]}>
+            ver
+          </Text>
+        </Pressable>
+      )}
     </View>
   )
 }

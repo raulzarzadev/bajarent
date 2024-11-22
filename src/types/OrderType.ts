@@ -237,7 +237,7 @@ export type SentMessage = {
   number: string
   message: string
   sentAt: Date
-  sentBy: Date
+  sentBy: string
 }
 
 // /**

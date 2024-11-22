@@ -44,7 +44,7 @@ export enum comment_variant {
 export type CommentVariantType = keyof typeof comment_variant
 
 export type FormattedComment = CommentBase &
-  BaseType & {
+  Partial<BaseType> & {
     createdByName?: string
     orderFolio?: string | number
     orderName?: string
