@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import InputRadios from './InputRadios'
 import { gStyles } from '../styles'
@@ -126,7 +126,7 @@ export default function ScreenMessages() {
       </View>
     )
   return (
-    <View>
+    <ScrollView>
       <TestMessage />
 
       <Text style={gStyles.h2}>1. Selecciona tipo de mensajes</Text>
@@ -249,7 +249,7 @@ export default function ScreenMessages() {
           <Text>{message}</Text>
         </ButtonConfirm>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 export type ScreenMessagesProps = {}
