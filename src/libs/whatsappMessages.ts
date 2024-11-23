@@ -9,6 +9,7 @@ import asDate, {
   isAfterTomorrow,
   isBeforeYesterday
 } from './utils-date'
+import PaymentType from '../types/PaymentType'
 
 // const buildWhatsappMessage = ({ store, order }) => {
 //   const phone = whatsappPhone
@@ -327,18 +328,18 @@ export const expiredMessage = ({
   \nEnvíe su comprobante al Whatsapp  ${
     store?.contacts?.find((c) => c.type === 'whatsapp')?.value
   } 
-  \n${AGRADECIMIENTOS({ store })}
+  \n${AGRADECIMIENTOS({ storeName: store?.name })}
   `.replace(/\n/g, '\r') //<--- remplace `\n` with \r to mark the end of the line
 }
 export const receiptMessage = ({
   order,
-  store
+  storeName
 }: {
-  order: OrderType
-  store: StoreType
+  order: Partial<OrderType>
+  storeName: string
 }) => {
   return `🧾 *COMPROBANTE DE PAGO* 
-  \n${WELCOME({ customerName: order?.fullName, storeName: store?.name })}
+  \n${WELCOME({ customerName: order?.fullName, storeName })}
   \n${
     !!order
       ? ORDER_DETAILS({
@@ -351,13 +352,96 @@ export const receiptMessage = ({
         })
       : ''
   }
-  ${LAST_PAYMENT({ order })}
-  ${AGRADECIMIENTOS({ store })}
-  `
+  ${LAST_PAYMENT({ lastPayment: order?.payments?.[0] })}
+  ${AGRADECIMIENTOS({ storeName })}
+  `.replace(/\n/g, '\r')
 }
 
-const AGRADECIMIENTOS = ({ store }) =>
-  `*${store.name}* agradece su preferencia 🙏🏼`
+export const rentStarted = ({
+  order,
+  storeName,
+  lastPayment
+}: {
+  order: Partial<OrderType>
+  storeName: string
+  lastPayment?: Partial<PaymentType>
+}) => {
+  return `✅ *ARTÍCULO ENTREGADO* 
+  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${
+    !!order
+      ? ORDER_DETAILS({
+          orderType: order?.type,
+          orderFolio: order?.folio,
+          orderItems:
+            order?.items
+              ?.map((i) => `${i.categoryName} ${i.number}`)
+              ?.join(', ') || order?.item?.categoryName
+        })
+      : ''
+  }
+  ${expireDateString(order, { feePerDay: 100 })}
+  ${LAST_PAYMENT({ lastPayment: lastPayment || order?.payments?.[0] })}
+  ${AGRADECIMIENTOS({ storeName })}
+  `.replace(/\n/g, '\r')
+}
+
+export const rentFinished = ({
+  order,
+  storeName
+}: {
+  order: Partial<OrderType>
+  storeName: string
+}) => {
+  return `🔚 *RENTA FINALIZADA* 
+  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${
+    !!order
+      ? ORDER_DETAILS({
+          orderType: order?.type,
+          orderFolio: order?.folio,
+          orderItems:
+            order?.items
+              ?.map((i) => `${i.categoryName} ${i.number}`)
+              ?.join(', ') || order?.item?.categoryName
+        })
+      : ''
+  }  
+  ${AGRADECIMIENTOS({ storeName })}
+  `.replace(/\n/g, '\r')
+}
+
+export const rentRenewed = ({
+  order,
+  storeName,
+  lastPayment
+}: {
+  order: Partial<OrderType>
+  storeName: string
+  lastPayment?: Partial<PaymentType>
+}) => {
+  return `🔄 *RENOVACIÓN DE RENTA* 
+  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${
+    !!order
+      ? ORDER_DETAILS({
+          orderType: order?.type,
+          orderFolio: order?.folio,
+          orderItems:
+            order?.items
+              ?.map((i) => `${i.categoryName} ${i.number}`)
+              ?.join(', ') || order?.item?.categoryName
+        })
+      : ''
+  }
+  ${expireDateString(order, { feePerDay: 100 })}
+  \n${LAST_PAYMENT({ lastPayment: lastPayment || order?.payments?.[0] })}
+  \n${AGRADECIMIENTOS({ storeName })}
+  `.replace(/\n/g, '\r')
+}
+
+const AGRADECIMIENTOS = ({ storeName }) =>
+  `*${storeName}* agradece su preferencia 🙏🏼`
 
 const WELCOME = ({ customerName, storeName }) => `Estimado *${customerName}* `
 
@@ -425,7 +509,7 @@ const expireDateString = (order, { feePerDay }) => {
 const FEE_ADVERT = ({ expireDate, feePerDay, atTheEndOfDay }) => {
   const { amount, days } = getLateFee({ expireDate, feePerDay, atTheEndOfDay })
   return amount > 0
-    ? `\n\n*Su DEUDA hasta hoy por ${days} días vencidos es de $${amount}  ($${feePerDay} x ${days} días)*`
+    ? `\n\n*DEUDA actual $${amount}*  _($${feePerDay} x ${days} días vencidos)_`
     : //: `\n\nRENOVAR o ENTREGAR a tiempo, evitara multas y recargos de *$${feePerDay}mxn x día* `
       `\nEvite *RECARGOS* al renovar o entregar a tiempo (*$${feePerDay}mxn x día*) `
 }
@@ -452,13 +536,21 @@ const getLateFee = ({
   }
 }
 
-const LAST_PAYMENT = ({ order }) => {
-  const lastPayment = order?.payments?.[0]
+const LAST_PAYMENT = ({
+  lastPayment
+}: {
+  lastPayment: Partial<PaymentType>
+}) => {
   if (!lastPayment) return ''
-  return `Último pago: $${lastPayment.amount} ${dateFormat(
-    asDate(lastPayment.date),
-    'dd MMMM yy'
-  )}`
+  return `Último pago: *$${lastPayment.amount}* _${shortMethod(
+    lastPayment.method
+  )}_ ${dateFormat(asDate(lastPayment?.createdAt), 'dd/MM/yy HH:mm')} `
+}
+export const shortMethod = (method) => {
+  if (method === 'transfer') return 'Tr'
+  if (method === 'cash') return 'Ef'
+  if (method === 'card') return 'Tj'
+  return method
 }
 
 const BANK_INFO = ({

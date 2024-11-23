@@ -21,6 +21,7 @@ import { useAuth } from '../contexts/authContext'
 import TextInfo from './TextInfo'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
+import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
 
 export default function ScreenMessages() {
   const { permissions } = useEmployee()
@@ -71,10 +72,7 @@ export default function ScreenMessages() {
     const sendMessages = orders.map((order: OrderType, i) => {
       return new Promise<void>((resolve) => {
         setTimeout(async () => {
-          const orderContacts = order?.contacts as ContactType[]
-          const phone =
-            orderContacts?.find((c) => c?.isFavorite)?.phone || order?.phone
-
+          const phone = chooseOrderPhone(order)
           console.log('enviando mensaje a ', phone)
 
           await sendOrderMessage({

@@ -40,7 +40,11 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     { count = 10 } = {}
   ) {
     return this.listenMany(
-      [where('orderId', '==', orderId), limit(count)],
+      [
+        where('orderId', '==', orderId),
+        orderBy('createdAt', 'desc'),
+        limit(count)
+      ],
       callback
     )
   }

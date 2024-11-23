@@ -9,7 +9,7 @@ import { onRentStart } from '../libs/order-actions'
 import useMyNav from '../hooks/useMyNav'
 //
 const ScreenOrderNew = ({ navigation }) => {
-  const { storeId } = useStore()
+  const { storeId, store } = useStore()
   const { user } = useAuth()
   const { toOrders } = useMyNav()
   const handleSubmit = async (values: OrderType) => {
@@ -58,7 +58,8 @@ const ScreenOrderNew = ({ navigation }) => {
             await onRentStart({
               order: { ...defaultValues, id: orderId },
               userId: user.id,
-              deliveredAt: values.scheduledAt
+              deliveredAt: values.scheduledAt,
+              store
             })
           }
         }

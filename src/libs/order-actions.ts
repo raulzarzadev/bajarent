@@ -19,7 +19,8 @@ import { PriceType, TimePriceType } from '../types/PriceType'
 import StoreType from '../types/StoreType'
 import { orderExpireAt } from './orders'
 import { createUUID } from './createId'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+
+import { onSendOrderWhatsapp } from './whatsapp/sendOrderMessage'
 
 export const onComment = async ({
   orderId,
@@ -417,11 +418,15 @@ export const onRentFinish = async ({
 export const onRentStart = async ({
   order,
   userId,
-  deliveredAt = new Date()
+  deliveredAt = new Date(),
+  store,
+  lastPayment
 }: {
   order: Partial<OrderType>
   userId: string
   deliveredAt?: Date
+  store: StoreType
+  lastPayment?: PaymentType
 }) => {
   const items = order?.items || []
   const storeId = order.storeId
@@ -481,6 +486,15 @@ export const onRentStart = async ({
   await Promise.all(registryItemsEntriesPromises)
     .then((r) => console.log(r))
     .catch((e) => console.error(e))
+
+  //***** SEND RENEW MESSAGE */
+  onSendOrderWhatsapp({
+    store,
+    order,
+    type: 'delivery',
+    userId,
+    lastPayment
+  })
 }
 
 export const onAddQuote = async ({

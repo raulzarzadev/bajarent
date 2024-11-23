@@ -15,9 +15,8 @@ import { order_type } from '../../types/OrderType'
 import FormikCheckbox from '../FormikCheckbox'
 import InputCheckbox from '../InputCheckbox'
 import FormPayment from '../FormPayment'
-import { PaymentBase } from '../../types/PaymentType'
+import PaymentType, { PaymentBase } from '../../types/PaymentType'
 import { ServicePayments } from '../../firebase/ServicePayments'
-import ModalPayment from '../ModalPayment'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { store } = useStore()
@@ -25,10 +24,14 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { user } = useAuth()
   const [isDirty, setIsDirty] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const handleRentStart = async () => {
+  const handleRentStart = async ({
+    lastPayment
+  }: {
+    lastPayment?: PaymentType
+  } = {}) => {
     //*pickup items
     setIsLoading(true)
-    await onRentStart({ order, userId: user.id })
+    await onRentStart({ order, userId: user.id, store, lastPayment })
 
     setIsLoading(false)
     modal.toggleOpen()
@@ -102,7 +105,11 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
           setAddPay={setAddPay}
           paymentModal={paymentModal}
           setPaymentModal={setPaymentModal}
-          handlePaidOrder={handleRentStart}
+          handlePaidOrder={(paymentId) => {
+            ServicePayments.get(paymentId).then((payment) => {
+              handleRentStart({ lastPayment: payment })
+            })
+          }}
         />
 
         <Button
@@ -143,12 +150,10 @@ const AddPay = ({
   }
   const handleSavePayment = async ({ values }) => {
     const amount = parseFloat(values.amount || 0)
-    await ServicePayments.orderPayment({
+    return await ServicePayments.orderPayment({
       ...values,
       amount
     })
-      .then(console.log)
-      .catch(console.error)
   }
   //const paymentModal = useModal({ title: 'Registrar pago' })
   return (
@@ -160,6 +165,7 @@ const AddPay = ({
     >
       <StyledModal
         {...paymentModal}
+        title="Registrar pago"
         open={paymentModal}
         setOpen={() => setPaymentModal(!paymentModal)}
       >
@@ -168,8 +174,8 @@ const AddPay = ({
           onSubmit={async (values) => {
             modal.toggleOpen()
             try {
-              await handleSavePayment({ values })
-              handlePaidOrder()
+              const res = await handleSavePayment({ values })
+              handlePaidOrder(res.res.id)
               return
             } catch (error) {
               console.error({ error })

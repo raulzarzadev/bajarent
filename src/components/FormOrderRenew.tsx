@@ -18,14 +18,26 @@ import { gStyles } from '../styles'
 import asDate, { dateFormat } from '../libs/utils-date'
 import TextInfo from './TextInfo'
 import { isToday } from 'date-fns'
+import sendOrderMessage, {
+  onSendOrderWhatsapp
+} from '../libs/whatsapp/sendOrderMessage'
+import { rentRenewed } from '../libs/whatsappMessages'
+import { useStore } from '../contexts/storeContext'
+import { useAuth } from '../contexts/authContext'
+import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
+import { TimePriceType, TimeType } from '../types/PriceType'
+import { ServicePayments } from '../firebase/ServicePayments'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
+  const { store } = useStore()
+  const { user } = useAuth()
   const items = order?.items || []
   const [payment, setPayment] = useState<Partial<PaymentType>>({
     method: 'transfer',
     amount: 0
   })
+
   const [newItems, setNewItems] = useState<OrderType['items']>(items)
   const [submitting, setSubmitting] = useState(false)
   const onSubmit = async (values: { items: OrderType['items'] }) => {
@@ -38,7 +50,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       modalPayment.toggleOpen()
     } else {
       setSubmitting(true)
-      await onExtend({
+      await handleExtend({
         items: values.items,
         time: values.items[0].priceSelected.time,
         startAt: order.expireAt,
@@ -57,7 +69,19 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
         })
     }
   }
-  const onExtend = async ({ items, time, startAt, orderId }) => {
+  const handleExtend = async ({
+    items,
+    time,
+    startAt,
+    orderId,
+    payment
+  }: {
+    items: OrderType['items']
+    time: TimePriceType
+    startAt: Date
+    orderId: string
+    payment?: PaymentType
+  }) => {
     await onExtend_V2({
       orderId,
       reason: 'renew',
@@ -71,24 +95,39 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       type: 'comment',
       storeId: order.storeId
     })
+
+    //***** SEND RENEW MESSAGE */
+    onSendOrderWhatsapp({
+      store,
+      order,
+      type: 'renew',
+      userId: user.id,
+      lastPayment: payment
+    })
   }
   const [addPay, setAddPay] = useState(true)
   const modalPayment = useModal({ title: 'Pago de renovación' })
   const handleSubmitPayment = async ({ payment }) => {
-    await onExtend({
-      items: newItems,
-      time: newItems[0].priceSelected.time,
-      startAt: order.expireAt,
-      orderId: order.id
-    })
-      .then(console.log)
-      .catch(console.error)
+    // 1. pay
+    // 2. handleExtend
+
     await onPay({
       storeId: order.storeId,
       orderId: order.id,
       payment
     })
-      .then(console.log)
+      .then(async (res) => {
+        const payment = await ServicePayments.get(res.res.id)
+        await handleExtend({
+          items: newItems,
+          time: newItems[0].priceSelected.time,
+          startAt: order.expireAt,
+          orderId: order.id,
+          payment
+        })
+          .then(console.log)
+          .catch(console.error)
+      })
       .catch(console.error)
       .finally(() => {
         goBack()

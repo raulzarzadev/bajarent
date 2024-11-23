@@ -5,14 +5,10 @@ import ErrorBoundary from './ErrorBoundary'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { gStyles } from '../styles'
 import FormOrderRenew from './FormOrderRenew'
-import FormikInputImage from './FormikInputImage'
 import InputImagePicker from './InputImagePicker'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import InputLocation from './InputLocation'
 import { getCoordinatesAsString } from '../libs/maps'
-import TextInfo from './TextInfo'
-import asDate from '../libs/utils-date'
-import { isToday } from 'date-fns'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
