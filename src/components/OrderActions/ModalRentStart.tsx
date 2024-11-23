@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import React from 'react'
 import StyledModal from '../StyledModal'
-import { ReturnModal } from '../../hooks/useModal'
+import useModal, { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
 import { onRentStart } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
@@ -12,6 +12,12 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ErrorsList } from '../FormikErrorsList'
 import { useStore } from '../../contexts/storeContext'
 import { order_type } from '../../types/OrderType'
+import FormikCheckbox from '../FormikCheckbox'
+import InputCheckbox from '../InputCheckbox'
+import FormPayment from '../FormPayment'
+import { PaymentBase } from '../../types/PaymentType'
+import { ServicePayments } from '../../firebase/ServicePayments'
+import ModalPayment from '../ModalPayment'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { store } = useStore()
@@ -44,6 +50,9 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     VALIDATE_ITEMS_QTY && (toMuchItems || toLittleItems)
 
   const disabledDelivery = isDirty || isLoading || disabledByCountItems
+
+  const [addPay, setAddPay] = React.useState(true)
+  const [paymentModal, setPaymentModal] = React.useState(false)
   return (
     <View>
       <StyledModal {...modal}>
@@ -86,15 +95,89 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
             return errors
           })()}
         />
+
+        {/* *** *** AGREGAR PAGO *** */}
+        <AddPay
+          addPay={addPay}
+          setAddPay={setAddPay}
+          paymentModal={paymentModal}
+          setPaymentModal={setPaymentModal}
+          handlePaidOrder={handleRentStart}
+        />
+
         <Button
           disabled={disabledDelivery}
           variant={disabledDelivery ? 'ghost' : 'filled'}
           label="Entregar"
           onPress={async () => {
-            return await handleRentStart()
+            if (addPay) {
+              setPaymentModal(true)
+              return
+            } else {
+              return await handleRentStart()
+            }
           }}
         ></Button>
       </StyledModal>
+    </View>
+  )
+}
+
+const AddPay = ({
+  addPay,
+  setAddPay,
+  paymentModal,
+  setPaymentModal,
+  handlePaidOrder
+}) => {
+  const { store } = useStore()
+  const { order } = useOrderDetails()
+  const modal = useModal()
+  const payment: PaymentBase = {
+    amount: 0,
+    reference: '',
+    date: new Date(),
+    method: 'transfer',
+    storeId: store.id,
+    orderId: order.id
+  }
+  const handleSavePayment = async ({ values }) => {
+    const amount = parseFloat(values.amount || 0)
+    await ServicePayments.orderPayment({
+      ...values,
+      amount
+    })
+      .then(console.log)
+      .catch(console.error)
+  }
+  //const paymentModal = useModal({ title: 'Registrar pago' })
+  return (
+    <View
+      style={{
+        marginVertical: 16,
+        margin: 'auto'
+      }}
+    >
+      <StyledModal
+        {...paymentModal}
+        open={paymentModal}
+        setOpen={() => setPaymentModal(!paymentModal)}
+      >
+        <FormPayment
+          values={payment}
+          onSubmit={async (values) => {
+            modal.toggleOpen()
+            try {
+              await handleSavePayment({ values })
+              handlePaidOrder()
+              return
+            } catch (error) {
+              console.error({ error })
+            }
+          }}
+        />
+      </StyledModal>
+      <InputCheckbox label="Agregar pago" setValue={setAddPay} value={addPay} />
     </View>
   )
 }

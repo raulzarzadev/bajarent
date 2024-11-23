@@ -349,7 +349,7 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
 
   return (
     <View>
-      <ErrorBoundary componentName="ModalPayment">
+      <ErrorBoundary componentName="OrderPayments">
         <View
           style={{
             maxWidth: '100%',
