@@ -20,7 +20,7 @@ import { create } from 'cypress/types/lodash'
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { order, setCommentsCount, commentsCount } = useOrderDetails()
   const sentMessagesAsComments: FormattedComment[] =
-    order?.sentMessages.map((m, i) => {
+    order?.sentMessages?.map((m, i) => {
       return {
         content: `mensaje enviado: ${m.message}`,
         createdAt: m.sentAt,
