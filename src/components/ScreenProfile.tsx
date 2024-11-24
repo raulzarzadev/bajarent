@@ -1,4 +1,10 @@
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React from 'react'
 import { useAuth } from '../contexts/authContext'
 import PhoneLogin from './LoginPhone'
@@ -9,10 +15,11 @@ import ErrorBoundary from './ErrorBoundary'
 import ChooseProfile from './ChooseProfile'
 import LoginSignUpEmail from './LoginSignupEmail'
 import { CardEmployeeE } from './CardEmployee'
+import packageJson from '../../package.json'
+import { gStyles } from '../styles'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
-
   if (user === undefined) return <ActivityIndicator />
   if (user === null)
     return (
@@ -26,6 +33,9 @@ const ScreenProfile = ({ navigation }) => {
 
   return (
     <ScrollView style={{ padding: 2 }}>
+      <Text style={[gStyles.helper, { textAlign: 'right' }]}>
+        {packageJson.version}
+      </Text>
       <ErrorBoundary componentName="CardUser">
         <CardUser
           user={user}

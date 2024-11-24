@@ -15,7 +15,7 @@
     "cy:open": "cypress open --e2e --browser chrome",
     "cy:run": "cypress run --e2e --browser chrome",
     "push:patch": "npm version patch --follow-tags && git push",
-    "push:minor": "npm version minor && git push",
+    "push:minor": "npm version minor --follow-tags && git push",
     "commit": "git status && bun type-check  && bun cy:run && git add . &&  git commit"
   },
   "dependencies": {
