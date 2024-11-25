@@ -26,14 +26,6 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
       userId: user.id,
       storeId
     })
-
-    //* create movement
-    await onComment({
-      orderId: order.id,
-      content: 'Reparación comenzada',
-      storeId,
-      type: 'comment'
-    })
   }
 
   const [dirty, setDirty] = useState(false)

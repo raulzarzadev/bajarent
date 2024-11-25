@@ -57,9 +57,9 @@ export const onSendOrderWhatsapp = ({
   userId: string
   lastPayment?: PaymentType
 }) => {
-  if (!store.chatbot.enabled) console.log('bot is disabled')
-  if (!store.chatbot.apiKey) console.log('bot api key is missing')
-  if (!store.chatbot.id) console.log('bot id is missing')
+  if (!store.chatbot.enabled) return console.log('bot is disabled')
+  if (!store.chatbot.apiKey) return console.log('bot api key is missing')
+  if (!store.chatbot.id) return console.log('bot id is missing')
 
   let message = ''
   if (type === 'renew') {
