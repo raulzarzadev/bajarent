@@ -47,6 +47,7 @@ const ChooseProfile = () => {
       navigate('CreateStore')
       return
     }
+    window?.location?.reload()
     setStoreSelectedId(id) //* <-- component state
     handleSetStoreId(id) //* <-- context state
   }

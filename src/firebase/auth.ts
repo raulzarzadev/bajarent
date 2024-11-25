@@ -172,6 +172,7 @@ export async function signInWithPassword({
 
 export async function logout() {
   clearStorage()
+  window?.location?.reload()
   return await signOut(auth)
 }
 export const clearStorage = () => {
