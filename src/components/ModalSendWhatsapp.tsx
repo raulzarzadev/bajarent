@@ -27,6 +27,8 @@ import { useOrderDetails } from '../contexts/orderContext'
 import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
 import { useAuth } from '../contexts/authContext'
 import StoreType from '../types/StoreType'
+import ButtonConfirm from './ButtonConfirm'
+import TextInfo from './TextInfo'
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
   justIcon = false,
@@ -419,7 +421,9 @@ export default function ModalSendWhatsapp({
             )
           }}
         ></Button>
-        <ButtonSendWhatsappStatatus />
+        <View style={{ marginVertical: 8 }}>
+          <ButtonSendWhatsappStatatus />
+        </View>
       </StyledModal>
     </View>
   )
@@ -432,10 +436,10 @@ export const ButtonSendWhatsappStatatus = () => {
   const [sending, setSending] = useState(false)
   if (!order) return <></>
   return (
-    <Button
-      label="Enviar estado actual de la orden"
-      disabled={sending}
-      onPress={async () => {
+    <ButtonConfirm
+      openLabel="Enviar estado actual de la orden"
+      openDisabled={sending}
+      handleConfirm={async () => {
         setSending(true)
         await onSendOrderWhatsapp({
           order: { ...order, payments },
@@ -445,7 +449,17 @@ export const ButtonSendWhatsappStatatus = () => {
         }).catch((e) => console.log(e))
         setSending(false)
       }}
-    ></Button>
+      confirmLabel="Enviar"
+      icon={'whatsapp'}
+      openColor="success"
+      confirmColor="success"
+    >
+      <TextInfo
+        text="Se enviara un whatsapp con el estado actual de la orden al teléfono marcado como favorito o al princicipal"
+        defaultVisible
+        type="info"
+      ></TextInfo>
+    </ButtonConfirm>
   )
 }
 

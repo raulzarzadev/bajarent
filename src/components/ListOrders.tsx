@@ -25,7 +25,6 @@ const ListOrders = ({
   onPressRow
 }: ListOrderProps) => {
   const { toOrders } = useMyNav()
-  const { navigate } = useNavigation()
   const { storeSections } = useStore()
 
   const formatOrders = orders
@@ -63,7 +62,7 @@ const ListOrders = ({
       <LoadingList
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
-        pinRows={true}
+        pinRows={}
         sideButtons={sideButtons}
         preFilteredIds={defaultOrdersIds}
         defaultSortBy="folio"

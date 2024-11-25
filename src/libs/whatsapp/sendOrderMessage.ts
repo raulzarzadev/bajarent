@@ -85,7 +85,7 @@ export const onSendOrderWhatsapp = async ({
       storeName: store.name
     })
   } else if (type === 'status') {
-    message = orderStaqtus({
+    message = orderStatus({
       order,
       storeName: store.name
     })
