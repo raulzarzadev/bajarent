@@ -153,7 +153,7 @@ function MyList<T extends { id: string }>({
 
   const [pinnedRowsData, setPinnedRowsData] = useState<T[]>([])
   useEffect(() => {
-    if (pinnedRows.length) {
+    if (pinnedRows?.length && pinRows) {
       getPinnedRows(pinnedRows).then((res) => {
         setPinnedRowsData(res)
       })
