@@ -62,7 +62,7 @@ const ListOrders = ({
       <LoadingList
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
-        pinRows={}
+        pinRows={false}
         sideButtons={sideButtons}
         preFilteredIds={defaultOrdersIds}
         defaultSortBy="folio"
