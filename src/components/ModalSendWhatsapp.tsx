@@ -4,7 +4,6 @@ import Button from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import { gStyles } from '../styles'
-import theme from '../theme'
 import OrderType, {
   order_status,
   order_type,
@@ -88,7 +87,7 @@ export default function ModalSendWhatsapp({
   const CONTACTS = `Cualquier aclaración y/o reporte 🛠️ favor de comunicarse a los teléfonos:\n${PHONES}
 `
 
-  const AGRADECIMIENTOS = `*${store.name}* agradece su preferencia 🙏🏼`
+  const AGRADECIMIENTOS = `*${store?.name}* agradece su preferencia 🙏🏼`
 
   const RENT_PERIOD = `Periodo contratado: ${
     translateTime(order?.items?.[0]?.priceSelected?.time) || ''
