@@ -1,7 +1,10 @@
 import { arrayUnion } from 'firebase/firestore'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import sendMessage from './sendMessage'
-import OrderType, { SentMessage } from '../../types/OrderType'
+import OrderType, {
+  OrderExtensionType,
+  SentMessage
+} from '../../types/OrderType'
 import StoreType from '../../types/StoreType'
 import { rentFinished, rentRenewed, rentStarted } from '../whatsappMessages'
 import chooseOrderPhone from './chooseOrderPhone'

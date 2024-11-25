@@ -18,15 +18,12 @@ import { gStyles } from '../styles'
 import asDate, { dateFormat } from '../libs/utils-date'
 import TextInfo from './TextInfo'
 import { isToday } from 'date-fns'
-import sendOrderMessage, {
-  onSendOrderWhatsapp
-} from '../libs/whatsapp/sendOrderMessage'
-import { rentRenewed } from '../libs/whatsappMessages'
+import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
 import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
-import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
 import { TimePriceType, TimeType } from '../types/PriceType'
 import { ServicePayments } from '../firebase/ServicePayments'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
@@ -97,9 +94,10 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     })
 
     //***** SEND RENEW MESSAGE */
+    const updatedOrder = await ServiceOrders.get(orderId)
     onSendOrderWhatsapp({
       store,
-      order,
+      order: updatedOrder,
       type: 'renew',
       userId: user.id,
       lastPayment: payment
