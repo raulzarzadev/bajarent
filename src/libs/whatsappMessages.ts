@@ -1,6 +1,6 @@
 import { isToday, isTomorrow } from 'date-fns'
 import dictionary from '../dictionary'
-import OrderType from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import StoreType from '../types/StoreType'
 import asDate, {
   dateFormat,
@@ -439,6 +439,30 @@ export const rentRenewed = ({
   \n${AGRADECIMIENTOS({ storeName })}
   `.replace(/\n/g, '\r')
 }
+export const orderStatus = ({ order, storeName }) => {
+  return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
+  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${
+    !!order
+      ? ORDER_DETAILS({
+          orderType: order?.type,
+          orderFolio: order?.folio,
+          orderItems:
+            order?.items
+              ?.map((i) => `${i.categoryName} ${i.number}`)
+              ?.join(', ') || order?.item?.categoryName
+        })
+      : ''
+  }
+  \n${
+    order.type === 'RENT'
+      ? expireDateString(order, { feePerDay: 100 })
+      : repairORderStatus({ order })
+  }
+  \n${LAST_PAYMENT({ lastPayment: order?.payments?.[0] })}
+  \n${AGRADECIMIENTOS({ storeName })}
+  `.replace(/\n/g, '\r')
+}
 
 const AGRADECIMIENTOS = ({ storeName }) =>
   `*${storeName}* agradece su preferencia 🙏🏼`
@@ -467,37 +491,37 @@ const ORDER_DETAILS = ({
     orderType
   )}*\nArtículo(s): *${orderItems}*`
 
-const expireDateString = (order, { feePerDay }) => {
+const expireDateString = (order: Partial<OrderType>, { feePerDay }) => {
   const expireDate = asDate(order?.expireAt)
 
   if (isToday(expireDate)) {
-    return `Su contrato *VENCE HOY* 😔. ${FEE_ADVERT({
+    return `Vencimiento: *HOY* 😔. \n${FEE_ADVERT({
       atTheEndOfDay: true,
       expireDate,
       feePerDay
     })}`
   }
   if (isTomorrow(expireDate)) {
-    return `Su contrato *VENCE MAÑANA* 😔. ${FEE_ADVERT({
+    return `Vencimiento: *MAÑANA* 😔. \n${FEE_ADVERT({
       atTheEndOfDay: true,
       expireDate,
       feePerDay
     })}`
   }
   if (isAfterTomorrow(expireDate)) {
-    return `Su contrato VENCE el ${dateFormat(
+    return `Vencimiento: *${dateFormat(
       expireDate,
       'EEEE dd MMMM yy'
-    )} (${fromNow(expireDate)})`
+    )}* (${fromNow(expireDate)})`
   }
   // Su servicio📄 de RENTA de Lavadora: 1706 tiene
   // "X" dias de atraso y un adeudo de (X dias x $100)
 
   if (isBeforeYesterday(expireDate)) {
-    return `Su contrato VENCIÓ el ${dateFormat(
+    return `Vencimiento: *${dateFormat(
       expireDate,
       'EEEE dd MMMM yy'
-    )} (${fromNow(expireDate)}) ${FEE_ADVERT({
+    )}* (${fromNow(expireDate)})\n ${FEE_ADVERT({
       atTheEndOfDay: true,
       expireDate,
       feePerDay
@@ -506,10 +530,34 @@ const expireDateString = (order, { feePerDay }) => {
   return ''
 }
 
+const repairORderStatus = ({ order }: { order: OrderType }) => {
+  const orderStatus = order.status
+  if (orderStatus === order_status.AUTHORIZED)
+    return `Su orden esta *EN PROCESO*`
+
+  if (orderStatus === order_status.PENDING)
+    return `Su orden esta *PENDIENTE DE AUTORIZACIÓN* `
+  if (orderStatus === order_status.CANCELLED) {
+    return `Su orden ha sido *CANCELADO*`
+  }
+  if (orderStatus === order_status.REPAIRING) {
+    return `Su orden esta *EN REPARACIÓN*`
+  }
+  if (orderStatus === order_status.PICKED_UP) {
+    return `Su orden esta *RECOGIDA*`
+  }
+  if (orderStatus === order_status.REPAIRED) {
+    return `Su orden esta *PENDIENTE DE ENTREGA*`
+  }
+  if (orderStatus === order_status.DELIVERED) {
+    return `Su orden ha sido *ENTREGADA*`
+  }
+}
+
 const FEE_ADVERT = ({ expireDate, feePerDay, atTheEndOfDay }) => {
   const { amount, days } = getLateFee({ expireDate, feePerDay, atTheEndOfDay })
   return amount > 0
-    ? `\n\n*DEUDA actual $${amount}*  _($${feePerDay} x ${days} días vencidos)_`
+    ? `\n*DEUDA actual $${amount}*  _($${feePerDay} x ${days} días vencidos)_`
     : //: `\n\nRENOVAR o ENTREGAR a tiempo, evitara multas y recargos de *$${feePerDay}mxn x día* `
       `\nEvite *RECARGOS* al renovar o entregar a tiempo (*$${feePerDay}mxn x día*) `
 }
@@ -541,7 +589,8 @@ const LAST_PAYMENT = ({
 }: {
   lastPayment: Partial<PaymentType>
 }) => {
-  if (!lastPayment) return ''
+  //TODO last valid payment
+  if (!lastPayment) return 'No se encontraron pagos'
   return `Último pago: *$${lastPayment.amount}* _${shortMethod(
     lastPayment.method
   )}_ ${dateFormat(asDate(lastPayment?.createdAt), 'dd/MM/yy HH:mm')} `

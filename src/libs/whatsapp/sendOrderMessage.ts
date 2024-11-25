@@ -6,7 +6,12 @@ import OrderType, {
   SentMessage
 } from '../../types/OrderType'
 import StoreType from '../../types/StoreType'
-import { rentFinished, rentRenewed, rentStarted } from '../whatsappMessages'
+import {
+  orderStatus,
+  rentFinished,
+  rentRenewed,
+  rentStarted
+} from '../whatsappMessages'
 import chooseOrderPhone from './chooseOrderPhone'
 import PaymentType from '../../types/PaymentType'
 
@@ -44,7 +49,7 @@ const sendOrderMessage = async ({
     })
 }
 
-export const onSendOrderWhatsapp = ({
+export const onSendOrderWhatsapp = async ({
   store,
   order,
   type,
@@ -53,7 +58,7 @@ export const onSendOrderWhatsapp = ({
 }: {
   store: StoreType
   order: Partial<OrderType>
-  type: 'renew' | 'delivery' | 'pickup'
+  type: 'renew' | 'delivery' | 'pickup' | 'status'
   userId: string
   lastPayment?: PaymentType
 }) => {
@@ -79,9 +84,14 @@ export const onSendOrderWhatsapp = ({
       order,
       storeName: store.name
     })
+  } else if (type === 'status') {
+    message = orderStaqtus({
+      order,
+      storeName: store.name
+    })
   }
 
-  sendMessage({
+  return await sendMessage({
     phone: chooseOrderPhone(order),
     message,
     apiKey: store.chatbot.apiKey,

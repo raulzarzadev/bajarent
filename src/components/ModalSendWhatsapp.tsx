@@ -24,12 +24,16 @@ import SpanCopy from './SpanCopy'
 import { isToday, isTomorrow } from 'date-fns'
 import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
+import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
+import { useAuth } from '../contexts/authContext'
+import StoreType from '../types/StoreType'
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
   justIcon = false,
   whatsappPhone
 }: ModalSendWhatsappType) {
   const modal = useModal({ title: 'Enviar mensaje' })
+  const { user } = useAuth()
   // const [order, setOrder] = useState<OrderType>()
   const { order, payments } = useOrderDetails()
   const phone = whatsappPhone
@@ -415,8 +419,33 @@ export default function ModalSendWhatsapp({
             )
           }}
         ></Button>
+        <ButtonSendWhatsappStatatus />
       </StyledModal>
     </View>
+  )
+}
+
+export const ButtonSendWhatsappStatatus = () => {
+  const { order, payments } = useOrderDetails()
+  const { store } = useStore()
+  const { user } = useAuth()
+  const [sending, setSending] = useState(false)
+  if (!order) return <></>
+  return (
+    <Button
+      label="Enviar estado actual de la orden"
+      disabled={sending}
+      onPress={async () => {
+        setSending(true)
+        await onSendOrderWhatsapp({
+          order: { ...order, payments },
+          store,
+          type: 'status',
+          userId: user.id
+        }).catch((e) => console.log(e))
+        setSending(false)
+      }}
+    ></Button>
   )
 }
 
