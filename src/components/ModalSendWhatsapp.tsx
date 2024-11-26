@@ -1,5 +1,5 @@
-import { View, Text, Linking } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Linking, Platform } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Button from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -30,6 +30,7 @@ import StoreType from '../types/StoreType'
 import ButtonConfirm from './ButtonConfirm'
 import TextInfo from './TextInfo'
 import { orderStatus } from '../libs/whatsappMessages'
+import getOperatingSystem from '../libs/myOS'
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
   justIcon = false,
