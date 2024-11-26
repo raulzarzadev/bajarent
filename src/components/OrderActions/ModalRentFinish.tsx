@@ -9,7 +9,6 @@ import { gSpace } from '../../styles'
 import { onRentFinish } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import CardItem from '../CardItem'
-import InputSignUp from '../InputSignature'
 import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
 import { useStore } from '../../contexts/storeContext'
 

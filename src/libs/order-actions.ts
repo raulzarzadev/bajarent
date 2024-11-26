@@ -487,10 +487,14 @@ export const onRentStart = async ({
     .then((r) => console.log(r))
     .catch((e) => console.error(e))
 
-  //***** SEND RENEW MESSAGE */
+  //***** SEND RENT STARTED MESSAGE */
   onSendOrderWhatsapp({
     store,
-    order,
+    order: {
+      ...order,
+      expireAt,
+      deliveredAt
+    },
     type: 'delivery',
     userId,
     lastPayment
