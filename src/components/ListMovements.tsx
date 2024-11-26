@@ -8,13 +8,14 @@ import Loading from './Loading'
 import theme from '../theme'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
 
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
+  const { store, staff } = useStore()
   const [loading, setLoading] = React.useState(false)
   const [date, setDate] = React.useState(new Date())
-
   const handleChangeDate = async (newDate: Date) => {
     try {
       setLoading(true)
@@ -25,12 +26,17 @@ const ListMovements = () => {
         {}
       )
       setLoading(false)
-      setData(res)
+      setData(
+        res.map((item) => ({
+          ...item,
+          createdByName: staff?.find(({ userId }) => userId === item?.createdBy)
+            ?.name
+        }))
+      )
     } catch (error) {
       console.error(error)
     }
   }
-
   useEffect(() => {
     handleChangeDate(date)
   }, [])

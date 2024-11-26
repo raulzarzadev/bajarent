@@ -56,7 +56,6 @@ const ModalCurrentWork = () => {
         ) : (
           <>
             <HeaderDate label="" onChangeDate={setDate} />
-
             <ProgressWorkDetails
               onPressOrderRow={modalCurrentWork.toggleOpen}
             />
