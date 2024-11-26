@@ -155,8 +155,8 @@ const ORDER_DETAILS = ({
 
 const ORDER_ITEMS = ({ order }) => {
   if (order.type === 'RENT') {
-    return `\nArticulo(s): *${order?.items
-      ?.map((i) => `${i.categoryName} ${i.number}`)
+    return `\nArtículo(s): *${order?.items
+      ?.map((i) => `${i.categoryName || ''} ${i.number || ''}`)
       ?.join(', ')}*`
   } else {
     return `Ⓜ️ Marca: *${
