@@ -106,7 +106,7 @@ const labels = {
   canStartRepair: 'Iniciar rep',
   canFinishRepair: 'Terminar rep',
   canSentWS: 'Enviar WS',
-  canReorder: 'Pedir de nuevo',
+  canReorder: 'Reordenar',
   canUnAuthorize: 'Desautorizar',
   shouldUploadTransferReceipt: 'Req comp trans',
   canUndo: 'Deshacer',
