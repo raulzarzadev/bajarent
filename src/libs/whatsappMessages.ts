@@ -1,6 +1,6 @@
 import { isToday, isTomorrow } from 'date-fns'
 import dictionary from '../dictionary'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType, { order_status, OrderQuoteType } from '../types/OrderType'
 import StoreType from '../types/StoreType'
 import asDate, {
   dateFormat,
@@ -446,14 +446,11 @@ export const orderStatus = ({ order, storeName }) => {
     !!order
       ? ORDER_DETAILS({
           orderType: order?.type,
-          orderFolio: order?.folio,
-          orderItems:
-            order?.items
-              ?.map((i) => `${i.categoryName} ${i.number}`)
-              ?.join(', ') || order?.item?.categoryName
+          orderFolio: order?.folio
         })
       : ''
   }
+  \n${ORDER_ITEMS({ order })}
   \n${
     order.type === 'RENT'
       ? expireDateString(order, { feePerDay: 100 })
@@ -480,17 +477,25 @@ const WELCOME = ({ customerName, storeName }) => `Estimado *${customerName}* `
  */
 const ORDER_DETAILS = ({
   orderType,
-  orderFolio,
-  orderItems
+  orderFolio
 }: {
   orderType: OrderType['type']
   orderFolio: OrderType['folio']
-  orderItems: string
-}) =>
-  `Folio: *${orderFolio}*\nTipo: *${dictionary(
-    orderType
-  )}*\nArtículo(s): *${orderItems}*`
+}) => `Folio: *${orderFolio}*\nTipo: *${dictionary(orderType)}*`
 
+const ORDER_ITEMS = ({ order }) => {
+  if (order.type === 'RENT') {
+    return `Articulo(s): *${order?.items
+      ?.map((i) => `${i.categoryName} ${i.number}`)
+      ?.join(', ')}*`
+  } else {
+    return `
+    Ⓜ️ Marca: *${order?.item?.brand || order?.itemBrand || ''}*
+    #️⃣ Serie: *${order?.item?.serial || order?.itemSerial || ''}*
+    ⚙️ Falla: *${order?.item?.failDescription || order?.failDescription || ''}*
+    `
+  }
+}
 const expireDateString = (order: Partial<OrderType>, { feePerDay }) => {
   const expireDate = asDate(order?.expireAt)
 
@@ -531,27 +536,40 @@ const expireDateString = (order: Partial<OrderType>, { feePerDay }) => {
 }
 
 const repairORderStatus = ({ order }: { order: OrderType }) => {
+  const orderQuotes = order.quotes as OrderQuoteType[]
   const orderStatus = order.status
+  const quotesTotal = orderQuotes.reduce(
+    (prev, curr) => prev + parseFloat(`${curr.amount}`),
+    0
+  )
+  const stringTotal = `Total: *$${quotesTotal.toFixed(2)}*`
+  const quotes = orderQuotes
+    ?.map((q) => {
+      return `${q.description} *$${parseFloat(`${q?.amount}`).toFixed(2)}* `
+    })
+    .join('\n')
+
+  let status = ''
   if (orderStatus === order_status.AUTHORIZED)
-    return `Su orden esta *EN PROCESO*`
+    status = `*AUTORIZADA* _(agendad para revisión)_`
 
   if (orderStatus === order_status.PENDING)
-    return `Su orden esta *PENDIENTE DE AUTORIZACIÓN* `
-  if (orderStatus === order_status.CANCELLED) {
-    return `Su orden ha sido *CANCELADO*`
-  }
-  if (orderStatus === order_status.REPAIRING) {
-    return `Su orden esta *EN REPARACIÓN*`
-  }
-  if (orderStatus === order_status.PICKED_UP) {
-    return `Su orden esta *RECOGIDA*`
-  }
-  if (orderStatus === order_status.REPAIRED) {
-    return `Su orden esta *PENDIENTE DE ENTREGA*`
-  }
-  if (orderStatus === order_status.DELIVERED) {
-    return `Su orden ha sido *ENTREGADA*`
-  }
+    status = `*PENDIENTE* _(en espera de confirmación del técnico)_`
+
+  if (orderStatus === order_status.CANCELLED) status = `*CANCELADA*  `
+
+  if (orderStatus === order_status.REPAIRING)
+    status = `*EN REPARACIÓN* \n${quotes} \n$${stringTotal}`
+
+  if (orderStatus === order_status.PICKED_UP)
+    status = `*RECOGIDA*  \n${quotes} \n$${stringTotal}`
+
+  if (orderStatus === order_status.REPAIRED)
+    status = `*TERMINADA* _(en espera de pago/entrega)_  \n${quotes} \n$${stringTotal}`
+
+  if (orderStatus === order_status.DELIVERED) status = `*ENTREGADA*`
+
+  return `Estado actual: ${status}`
 }
 
 const FEE_ADVERT = ({ expireDate, feePerDay, atTheEndOfDay }) => {
@@ -590,7 +608,7 @@ const LAST_PAYMENT = ({
   lastPayment: Partial<PaymentType>
 }) => {
   //TODO last valid payment
-  if (!lastPayment) return 'No se encontraron pagos'
+  if (!lastPayment) return 'Sin pagos'
   return `Último pago: *$${lastPayment.amount}* _${shortMethod(
     lastPayment.method
   )}_ ${dateFormat(asDate(lastPayment?.createdAt), 'dd/MM/yy HH:mm')} `
