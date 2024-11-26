@@ -28,6 +28,7 @@ import { onRegistryEntry } from '../../firebase/actions/item-actions'
 import { useStore } from '../../contexts/storeContext'
 import InputTextStyled from '../InputTextStyled'
 import useMyNav from '../../hooks/useMyNav'
+import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
 
 //* repaired
 function OrderActions() {
@@ -117,25 +118,6 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
   const { permissions } = useEmployee()
   const { user } = useAuth()
 
-  useEffect(() => {
-    checkIfAllItemsExists()
-  }, [order.items])
-
-  const [allItemsExists, setAllItemsExists] = useState(false)
-
-  const checkIfAllItemsExists = async () => {
-    const promises =
-      order?.items?.map((item) => {
-        return ServiceStoreItems.get({
-          itemId: item.id,
-          storeId: order.storeId
-        })
-      }) || []
-    const res = await Promise.all(promises)
-    if (res.every((r) => r)) return setAllItemsExists(true)
-    setAllItemsExists(false)
-  }
-
   const orderStatus = order?.status
   const authorize =
     (permissions?.orders.canAuthorize || permissions.isAdmin) &&
@@ -161,11 +143,6 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
     orderStatus === 'PICKED_UP'
   return (
     <>
-      {!allItemsExists && (
-        <Text style={[gStyles.tError, gStyles.tCenter]}>
-          *Algun artículo no existe
-        </Text>
-      )}
       <ScrollView style={[{ width: '100%', margin: 'auto' }]}>
         <View
           style={{
@@ -178,7 +155,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
           {cancel && <ButtonCancel order={order} user={user} />}
           {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
           {delivery && <ButtonDelivery />}
-          {pickUp && <ButtonPickUp disabled={!allItemsExists} />}
+          {pickUp && <ButtonPickUp />}
           {renew && <ButtonRenew order={order} user={user} />}
           {cancelPickUp && <ButtonCancelPickUp order={order} user={user} />}
         </View>
@@ -272,12 +249,24 @@ const ButtonDelivery = () => {
     </View>
   )
 }
-const ButtonPickUp = ({ disabled }) => {
+
+const ButtonPickUp = ({}) => {
+  const { order } = useOrderDetails()
   const modalRentFinish = useModal({ title: 'Terminar renta' })
+  const [allItemsExists, setAllItemsExists] = useState(false)
+
+  useEffect(() => {
+    checkIfAllItemsExists({ order }).then((res) => setAllItemsExists(res))
+  }, [order.items])
   return (
     <View>
+      {!allItemsExists && (
+        <Text style={[gStyles.tError, gStyles.tCenter]}>
+          *Algun artículo no existe
+        </Text>
+      )}
       <Button
-        disabled={disabled}
+        disabled={!allItemsExists}
         label="Recoger"
         onPress={modalRentFinish.toggleOpen}
         icon="truck"
