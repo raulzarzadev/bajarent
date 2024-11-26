@@ -423,7 +423,7 @@ export default function ModalSendWhatsapp({
           }}
         ></Button>
         <View style={{ marginVertical: 8 }}>
-          <ButtonSendWhatsappStatatus />
+          <ButtonSendWhatsappStatatusE />
         </View>
       </StyledModal>
     </View>
@@ -469,6 +469,14 @@ export const ButtonSendWhatsappStatatus = () => {
     </ButtonConfirm>
   )
 }
+export type ButtonSendWhatsappStatatusProps = {}
+export const ButtonSendWhatsappStatatusE = (
+  props: ButtonSendWhatsappStatatusProps
+) => (
+  <ErrorBoundary componentName="ButtonSendWhatsappStatatus">
+    <ButtonSendWhatsappStatatus {...props} />
+  </ErrorBoundary>
+)
 
 const dFormat = (date: Date) =>
   date ? dateFormat(asDate(date), 'dd/MMM/yy HH:mm') : ''
