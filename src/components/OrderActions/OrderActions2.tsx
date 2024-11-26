@@ -178,7 +178,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
           {cancel && <ButtonCancel order={order} user={user} />}
           {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
           {delivery && <ButtonDelivery />}
-          {pickUp && <ButtonPickUp />}
+          {pickUp && <ButtonPickUp disabled={!allItemsExists} />}
           {renew && <ButtonRenew order={order} user={user} />}
           {cancelPickUp && <ButtonCancelPickUp order={order} user={user} />}
         </View>
@@ -272,11 +272,12 @@ const ButtonDelivery = () => {
     </View>
   )
 }
-const ButtonPickUp = () => {
+const ButtonPickUp = ({ disabled }) => {
   const modalRentFinish = useModal({ title: 'Terminar renta' })
   return (
     <View>
       <Button
+        disabled={disabled}
         label="Recoger"
         onPress={modalRentFinish.toggleOpen}
         icon="truck"
