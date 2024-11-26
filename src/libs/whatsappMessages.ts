@@ -122,7 +122,7 @@ export const orderStatus = ({ order, storeName }) => {
   })}
   ${ORDER_ITEMS({ order })}
   \n${
-    order.type === 'RENT'
+    order && order?.type === 'RENT'
       ? expireDateString(order, { feePerDay: 100 })
       : repairORderStatus({ order })
   }
@@ -154,7 +154,7 @@ const ORDER_DETAILS = ({
 }) => `\nFolio: *${orderFolio}*\nTipo: *${dictionary(orderType)}*`
 
 const ORDER_ITEMS = ({ order }) => {
-  if (order.type === 'RENT') {
+  if (order?.type === 'RENT') {
     return `\nArtículo(s): *${order?.items
       ?.map((i) => `${i.categoryName || ''} ${i.number || ''}`)
       ?.join(', ')}*`
@@ -209,13 +209,13 @@ const expireDateString = (order: Partial<OrderType>, { feePerDay }) => {
 }
 
 const repairORderStatus = ({ order }: { order: OrderType }) => {
-  const orderQuotes = order.quotes as OrderQuoteType[]
-  const orderStatus = order.status
-  const quotesTotal = orderQuotes.reduce(
+  const orderQuotes = order?.quotes as OrderQuoteType[]
+  const orderStatus = order?.status
+  const quotesTotal = orderQuotes?.reduce(
     (prev, curr) => prev + parseFloat(`${curr.amount}`),
     0
   )
-  const stringTotal = `Total: *$${quotesTotal.toFixed(2)}*`
+  const stringTotal = `Total: *$${quotesTotal?.toFixed(2)}*`
   const quotes = orderQuotes
     ?.map((q) => {
       return `${q.description} *$${parseFloat(`${q?.amount}`).toFixed(2)}* `
