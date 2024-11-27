@@ -10,9 +10,8 @@ const sendMessage = async ({ phone, message = 'hola', botId, apiKey }) => {
   const data = {
     message: message
       //* This is a workaround to fix the line break issue on web
-      //.replace(/\n/g,
-      //  getOperatingSystem() === 'mac' ? '\r' : '\n' )
-      .replace(/\n/g, '\r'),
+      .replace(/\n/g, getOperatingSystem() === 'mac' ? '\r' : '\n'),
+    // .replace(/\n/g, '\r'),
     phone,
     botId,
     apiKey
