@@ -6,7 +6,7 @@ import OrderType, {
   TypeOrder
 } from '../types/OrderType'
 import theme, { Colors, colors } from '../theme'
-import asDate, { dateFormat } from '../libs/utils-date'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import { useOrderDetails } from '../contexts/orderContext'
 import Icon, { IconName } from './Icon'
 
@@ -39,28 +39,31 @@ const OrderBigStatus = () => {
   const isExpired = order?.isExpired && isDelivered && isRent
   const expiredAt = order?.expireAt
 
+  const dateInfo = (date) =>
+    `${dateFormat(asDate(date), 'dd MMM yy')} (${fromNow(asDate(date))})`
+
   return (
     <View style={{ marginVertical: 8 }}>
       {isCancelled && (
         <Badge
           color={'error'}
           description={`Motivo: ${order.cancelledReason}`}
-          title={`Cancelada ${dateFormat(asDate(canceledAt), 'dd/MM')}`}
+          title={`Cancelada ${dateInfo(canceledAt)}`}
           icon="cancel"
         />
       )}
-      {isDelivered && (
+      {isDelivered && !isExpired && (
         <Badge
-          color={'success'}
+          color={'info'}
           // description={`Entregada ${order.deliveredAt}`}
-          title={`Entregada ${dateFormat(asDate(deliveredAt), 'dd/MM')}`}
+          title={`Entregada ${dateInfo(deliveredAt)}`}
           icon="home"
         />
       )}
       {isAuthorized && (
         <Badge
-          color={'success'}
-          title={`Pedido ${dateFormat(asDate(authorizedAt), 'dd/MM')}`}
+          color={'warning'}
+          title={`Pedido ${dateInfo(authorizedAt)}`}
           icon="calendarTime"
         />
       )}
@@ -68,7 +71,7 @@ const OrderBigStatus = () => {
         <Badge
           color={'warning'}
           // description={`Pendiente ${order.createdAt}`}
-          title={`Pendiente ${dateFormat(asDate(pendingAt), 'dd/MM')}`}
+          title={`Pendiente ${dateInfo(pendingAt)}`}
           icon="www"
         />
       )}
@@ -76,14 +79,14 @@ const OrderBigStatus = () => {
         <Badge
           color={'secondary'}
           // description={`Reparando ${order.repairingAt}`}
-          title={`Reparando ${dateFormat(asDate(repairingAt), 'dd/MM')}`}
+          title={`Reparando ${dateInfo(repairingAt)}`}
           icon="repair"
         />
       )}
       {isPickedUp && (
         <Badge
           color={'black'}
-          title={`Recogido ${dateFormat(asDate(pickedUpAt), 'dd/MM')}`}
+          title={`Recogido ${dateInfo(pickedUpAt)}`}
           icon="truck"
         />
       )}
@@ -91,15 +94,15 @@ const OrderBigStatus = () => {
         <Badge
           color={'success'}
           // description={`Reparado ${order.repairedAt}`}
-          title={`Reparado ${dateFormat(asDate(repairedAt), 'dd/MM')}`}
+          title={`Listo ${dateInfo(repairedAt)}`}
           icon="tools"
         />
       )}
       {isExpired && (
         <Badge
-          color={'error'}
+          color={'success'}
           // description={`Reparado ${order.repairedAt}`}
-          title={`Expira ${dateFormat(asDate(expiredAt), 'dd/MM')}`}
+          title={`Venció ${dateInfo(expiredAt)}`}
           icon="alarmOff"
         />
       )}

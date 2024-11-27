@@ -230,7 +230,9 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
                     onPress={() => {
                       handleSubmit()
                     }}
-                    label="Renovar"
+                    label={`Renovar ${translateTime(
+                      currentPriceSelected.time
+                    )}`}
                   />
                 </View>
               </View>
