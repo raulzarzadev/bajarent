@@ -171,31 +171,25 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
                   }}
                 >
                   <View style={{ justifyContent: 'center' }}>
-                    <Text style={[{ textAlign: 'center' }, gStyles.helper]}>
-                      Renovar
-                    </Text>
-                    <Text style={[{ textAlign: 'center' }, gStyles.h3]}>
+                    <Text style={[{ textAlign: 'center' }]}>
                       {order.folio} {order.fullName}
                     </Text>
                     <View
                       style={{
                         flexDirection: 'row',
-                        justifyContent: 'center',
-                        marginBottom: 8
+                        justifyContent: 'center'
                       }}
                     >
-                      <Text style={gStyles.h2}>
+                      <Text style={gStyles.h1}>
                         {translateTime(currentPriceSelected.time)}{' '}
                       </Text>
-                      <CurrencyAmount
-                        style={gStyles.h2}
-                        amount={currentPriceSelected.amount}
-                      />
                     </View>
-                    <Text style={[gStyles.helper, { textAlign: 'center' }]}>
-                      Expira el:{' '}
-                    </Text>
-                    <Text style={[gStyles.h2, { marginBottom: 8 }]}>
+                    <CurrencyAmount
+                      style={{ textAlign: 'center' }}
+                      amount={currentPriceSelected.amount}
+                    />
+
+                    <Text style={[{ marginBottom: 8, textAlign: 'center' }]}>
                       {dateFormat(
                         expireDate2({
                           startedAt: order?.expireAt,
