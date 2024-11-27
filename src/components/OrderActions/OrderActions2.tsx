@@ -168,7 +168,7 @@ const ButtonCancelDelivery = ({ order, user }) => {
   return (
     <View style={{ marginVertical: 'auto' }}>
       <ButtonConfirm
-        openLabel="Pedido "
+        openLabel="Cancelar entrega"
         confirmColor="warning"
         confirmVariant="outline"
         confirmLabel="Cancelar entrega"
