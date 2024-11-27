@@ -72,7 +72,6 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       >
         <OrderDirectivesE order={order} />
       </View>
-      <OrderBigStatus />
 
       <View
         style={{
@@ -107,6 +106,8 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 
       {/*//* <-----Order actions flow */}
       <View style={{ marginTop: 8 }} />
+      <OrderBigStatus />
+
       <OrderActionsE />
       {/*//* <-----Order actions flow */}
 

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import ListRow from './ListRow'
 import asDate, { dateFormat } from '../libs/utils-date'
 import SpanUser from './SpanUser'
-import dictionary from '../dictionary'
+import dictionary, { asCapitalize } from '../dictionary'
 import { translateTime } from '../libs/expireDate'
 import DateCell from './DateCell'
 import { gStyles } from '../styles'
@@ -87,7 +87,8 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
             createdAt,
             id = 'id',
             reason,
-            time
+            time,
+            content
           }) => (
             <View
               key={id}
@@ -107,7 +108,7 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
                       >
                         <DateCell date={startAt} showTimeAgo={false} showTime />
                         <View>
-                          <Icon icon="rowRight" />
+                          <Icon icon="rowRight" size={22} />
                         </View>
                         <DateCell
                           date={expireAt}
@@ -123,8 +124,16 @@ const OrderExtensions = ({ order }: { order: Partial<OrderType> }) => {
                     component: (
                       <View>
                         <Text style={gStyles.tCenter}>
-                          {dictionary(reason)}
+                          {asCapitalize(dictionary(reason))}
                         </Text>
+                        {!!content && (
+                          <Text
+                            style={[
+                              gStyles.helper,
+                              { textAlign: 'center', paddingHorizontal: 4 }
+                            ]}
+                          >{`${content}`}</Text>
+                        )}
                         <Text style={gStyles.tCenter} numberOfLines={1}>
                           {translateTime(time)}
                         </Text>

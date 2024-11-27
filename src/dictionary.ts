@@ -28,7 +28,7 @@ const labels = {
   card: 'tarjeta',
   deposit: 'depósito',
   renewed: 'Renovada',
-  renew: 'Renovar',
+  renew: 'Renovación',
   free: 'libre',
   available: 'disponible',
   PENDING: 'Pendiente',
@@ -209,7 +209,7 @@ const labels = {
   exchangeDelivery: 'Entrega (cambio)',
   exchangePickup: 'Recogida (cambio)',
   disabledStaff: 'Deshabilitar Staff',
-
+  extension: 'extensión',
   //workshop status
   inProgress: 'En reparación',
   shouldPickup: 'Por recoger',
