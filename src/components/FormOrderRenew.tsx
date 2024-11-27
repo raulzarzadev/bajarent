@@ -180,7 +180,12 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
                         justifyContent: 'center'
                       }}
                     >
-                      <Text style={gStyles.h1}>
+                      <Text
+                        style={[
+                          gStyles.h1,
+                          { textDecorationLine: 'underline' }
+                        ]}
+                      >
                         {translateTime(currentPriceSelected.time)}{' '}
                       </Text>
                     </View>
