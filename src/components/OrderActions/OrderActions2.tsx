@@ -315,7 +315,7 @@ const ButtonCancelPickUp = ({ order, user }) => {
   return (
     <View style={{ marginVertical: 'auto' }}>
       <ButtonConfirm
-        openLabel="Regresar "
+        openLabel="Cancelar recolección "
         confirmColor="error"
         confirmVariant="outline"
         confirmLabel="Cancelar recolección"
