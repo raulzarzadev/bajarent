@@ -8,10 +8,11 @@ const sendMessage = async ({ phone, message = 'hola', botId, apiKey }) => {
   if (phone.length < 10) return console.log('Length phone number is invalid')
 
   const data = {
-    message: message
-      //* This is a workaround to fix the line break issue on web
-      //  .replace(/\n/g, getOperatingSystem() === 'mac' ? '\r' : '\n'),
-      .replace(/\n/g, '\r'),
+    message: message,
+    //* This is a workaround to fix the line break issue on web
+    //  .replace(/\n/g, getOperatingSystem() === 'mac' ? '\r' : '\n'),
+    //  .replace(/\n/g, '\r'),
+
     phone,
     botId,
     apiKey
