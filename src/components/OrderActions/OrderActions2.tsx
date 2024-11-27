@@ -168,7 +168,7 @@ const ButtonCancelDelivery = ({ order, user }) => {
   return (
     <View style={{ marginVertical: 'auto' }}>
       <ButtonConfirm
-        openLabel="Pedido "
+        openLabel="Cancelar entrega"
         confirmColor="warning"
         confirmVariant="outline"
         confirmLabel="Cancelar entrega"
@@ -315,7 +315,7 @@ const ButtonCancelPickUp = ({ order, user }) => {
   return (
     <View style={{ marginVertical: 'auto' }}>
       <ButtonConfirm
-        openLabel="Regresar "
+        openLabel="Cancelar recolección "
         confirmColor="error"
         confirmVariant="outline"
         confirmLabel="Cancelar recolección"
