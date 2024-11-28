@@ -1,3 +1,4 @@
+import { FieldValue } from 'firebase/firestore'
 import { FormOrderFields } from '../components/FormOrder'
 import BaseType from './BaseType'
 import ItemType from './ItemType'
@@ -12,7 +13,6 @@ export type BaseStoreType = {
   name: string
   description?: string
   staff?: StaffType[]
-  currentFolio?: number
   sections?: SectionType[]
   allowSections?: boolean
   allowStaff?: boolean
@@ -22,7 +22,11 @@ export type BaseStoreType = {
   address?: string
 
   schedule?: string
+
+  currentFolio?: FieldValue
   currentItemNumber?: string
+
+  currentEco?: FieldValue
   // coords?: {
   //   lat: number
   //   lon: number

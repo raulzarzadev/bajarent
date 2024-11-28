@@ -1,5 +1,6 @@
 import {
   documentId,
+  increment,
   QueryFieldFilterConstraint,
   where
 } from 'firebase/firestore'
@@ -33,30 +34,20 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }
 
   /**
-   *
    * @param order OrderType
    * @returns orderId or null in case of error
    */
   async createSerialOrder(order: Type): Promise<string> | null {
     if (!order.storeId) console.error('No storeId provided')
     try {
-      const store = await ServiceStores.get(order?.storeId)
-      const currentFolio = store?.currentFolio || 0
-      const nextFolio = currentFolio + 1
-      order.folio = nextFolio
-      /* ********************************************
-       * FIRST create order
-       *******************************************rz */
-
+      // FIRST update store
+      await ServiceStores.update(order.storeId, {
+        currentFolio: increment(1)
+      })
+      // SECOND create order
+      const currentFolio = (await ServiceStores.get(order.storeId)).currentFolio
+      order.folio = currentFolio as unknown as number
       const orderId = await super.create(order).then((res) => res.res.id)
-
-      /* ********************************************
-       * SECOND update store
-       *******************************************rz */
-      await ServiceStores.update(store.id, { currentFolio: nextFolio }).then(
-        console.log
-      )
-
       return orderId || null
     } catch (error) {
       console.log({ error })

@@ -1,4 +1,10 @@
-import { collection, documentId, query, where } from 'firebase/firestore'
+import {
+  collection,
+  documentId,
+  increment,
+  query,
+  where
+} from 'firebase/firestore'
 import { ServiceStores } from './ServiceStore'
 import ItemType, { ItemStatuses } from '../types/ItemType'
 import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
@@ -14,25 +20,42 @@ export class ServiceStoreItemsClass {
     ok: boolean
     res: any
   }> {
-    //* 1. get current number
+    //* FIRST UPDATE ECO NUMBER IN STORE
+    await ServiceStores.update(storeId, { currentEco: increment(1) })
+    //* SECOND CREATE ITEM
+    const nextNumber = (await ServiceStores.get(storeId))
+      .currentEco as unknown as number
+    const nextStringNumber = nextNumber.toString().padStart(5, '0')
+    const newItem = { ...item, number: nextStringNumber, eco: nextNumber }
+
     const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
-    const newNUmber = await ServiceStores.incrementItemNumber({
-      storeId
-    })
-    //* 2. update item number
-    await ServiceStores.update(storeId, {
-      currentItemNumber: newNUmber
-    })
-    const newItem = { ...item, number: newNUmber }
-    //* 3. create item
     const createItemRes = await ServiceStores.createRefItem({
       collectionRef,
       item: newItem
     })
-
     return { ...createItemRes, newItem } as FormattedResponse & {
       newItem: Type
     }
+
+    // //* 1. get current number
+    // const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
+    // const newNUmber = await ServiceStores.incrementItemNumber({
+    //   storeId
+    // })
+    // //* 2. update item number
+    // await ServiceStores.update(storeId, {
+    //   currentItemNumber: newNUmber
+    // })
+    // const newItem = { ...item, number: newNUmber }
+    // //* 3. create item
+    // const createItemRes = await ServiceStores.createRefItem({
+    //   collectionRef,
+    //   item: newItem
+    // })
+
+    // return { ...createItemRes, newItem } as FormattedResponse & {
+    //   newItem: Type
+    // }
   }
 
   async getAll(
