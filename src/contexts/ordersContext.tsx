@@ -17,6 +17,10 @@ import {
   ServiceConsolidatedOrders
 } from '../firebase/ServiceConsolidatedOrders'
 import { ServiceChunks } from '../firebase/ServiceChunks'
+import { ServicePayments } from '../firebase/ServicePayments'
+import { where } from 'firebase/firestore'
+import PaymentType from '../types/PaymentType'
+import { endDate, startDate } from '../libs/utils-date'
 
 export type FetchTypeOrders =
   | 'all'
@@ -35,6 +39,7 @@ export type OrdersContextType = {
   handleRefresh?: () => Promise<void> | void
   reports?: CommentType[]
   consolidatedOrders?: ConsolidatedStoreOrdersType
+  payments?: PaymentType[]
 }
 
 let oc = 0
@@ -148,6 +153,7 @@ export const OrdersContextProvider = ({
         console.log(e)
         return []
       })
+
       // console.log({ reports })
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
@@ -179,6 +185,19 @@ export const OrdersContextProvider = ({
     }
   }
 
+  const [payments, setPayments] = useState<PaymentType[]>([])
+
+  const getPayments = async ({ date = new Date() }: { date: Date }) => {
+    return await ServicePayments.findMany([
+      where('storeId', '==', storeId),
+      where('createdAt', '>=', startDate(date)),
+      where('createdAt', '<=', endDate(date))
+    ])
+  }
+  useEffect(() => {
+    getPayments({ date: new Date() }).then((res) => setPayments(res))
+  }, [storeId])
+
   oc++
   if (__DEV__) console.log({ oc })
   return (
@@ -190,7 +209,8 @@ export const OrdersContextProvider = ({
         orderTypeOptions,
         handleRefresh: handleGetOrders,
         reports,
-        consolidatedOrders
+        consolidatedOrders,
+        payments
       }}
     >
       {children}
