@@ -228,11 +228,11 @@ const TabCashbox = () => {
 
   const handleUpdateStoreStatus = async () => {
     setUpdating(true)
-    ServiceConsolidatedOrders.consolidate(storeId, {
-      progress: (p) => {
-        setProgress(p)
-      }
-    })
+    // ServiceConsolidatedOrders.consolidate(storeId, {
+    //   progress: (p) => {
+    //     setProgress(p)
+    //   }
+    // })
 
     return await ServiceBalances.createV2(storeId, {
       progress: (p) => {
