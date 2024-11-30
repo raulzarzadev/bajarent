@@ -77,7 +77,10 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
     if (orders) {
       handleSetData({
         disabledEmployee: employee?.disabled,
-        allowGetInfoFromAllOrders: permissions.isAdmin || permissions.isOwner,
+        allowGetInfoFromAllOrders:
+          permissions.isAdmin ||
+          permissions.isOwner ||
+          permissions?.store?.canSeeCurrentWork,
         sectionsAssigned
       })
     }
