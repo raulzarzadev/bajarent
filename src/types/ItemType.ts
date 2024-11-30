@@ -15,7 +15,7 @@ export type ItemBase = {
   serial: string
   brand: string
   status: ItemStatus
-  eco: number
+  eco?: number
   /**
    * @description category id
    */

@@ -13,6 +13,9 @@ import { Timestamp } from 'firebase/firestore'
 import theme from '../theme'
 import { gStyles } from '../styles'
 import useMyNav from '../hooks/useMyNav'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ServicePayments } from '../firebase/ServicePayments'
+import OrderType from '../types/OrderType'
 
 const SpanOrder = ({
   orderId,
@@ -33,14 +36,37 @@ const SpanOrder = ({
   onRedirect?: () => void
   showItems?: boolean //<--- show item at the end of line
 }) => {
-  const [order, setOrder] = useState<Partial<ConsolidatedOrderType>>()
-  const { consolidatedOrders } = useOrdersCtx()
+  const [order, setOrder] =
+    useState<Partial<ConsolidatedOrderType | OrderType>>()
+  const { consolidatedOrders, orders, payments } = useOrdersCtx()
   const { toOrders } = useMyNav()
 
   useEffect(() => {
-    const orderFound = consolidatedOrders?.orders?.[orderId]
-    setOrder(orderFound || null)
-  }, [consolidatedOrders])
+    const searchOrder = async () => {
+      // -> Search and return from CURRENT CONTEXT orders
+      const currentOrdersFound = orders.find((o) => o.id === orderId)
+      if (currentOrdersFound) {
+        return {
+          ...currentOrdersFound,
+          payments: payments?.filter((p) => p.orderId === orderId)
+        }
+      }
+
+      // -> Search and return from DATABASE orders
+      const dbOrder = await ServiceOrders.get(orderId)
+      if (dbOrder) {
+        return {
+          ...dbOrder,
+          payments: payments?.filter((p) => p.orderId === orderId)
+        }
+      }
+    }
+
+    searchOrder().then((res) => {
+      console.log({ order: res })
+      setOrder(res)
+    })
+  }, [])
 
   if (redirect) {
     return (
@@ -91,7 +117,7 @@ const OrderData = ({
   showDatePaymentsAmount,
   showItems
 }: {
-  order: Partial<ConsolidatedOrderType>
+  order: Partial<ConsolidatedOrderType | OrderType>
   showName?: boolean
   showTime?: boolean
   showLastExtension?: boolean
