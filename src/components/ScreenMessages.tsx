@@ -5,23 +5,18 @@ import { gStyles } from '../styles'
 import { useState } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import { useOrdersCtx } from '../contexts/ordersContext'
-import OrderType, {
-  ContactType,
-  order_status,
-  order_type
-} from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { expiredMessage } from '../libs/whatsappMessages'
 import { useStore } from '../contexts/storeContext'
 import mapEnumToOptions from '../libs/mapEnumToOptions'
 import TestMessage from './WhatsappBot/TestMessage'
 import { useEmployee } from '../contexts/employeeContext'
-import List from './List'
-import sendOrderMessage from '../libs/whatsapp/sendOrderMessage'
+import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
 import { useAuth } from '../contexts/authContext'
-import TextInfo from './TextInfo'
-import { isToday } from 'date-fns'
-import asDate from '../libs/utils-date'
 import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
+import ListOrders from './ListOrders'
+import asDate, { endDate } from '../libs/utils-date'
+import { isBefore, subDays } from 'date-fns'
 
 export default function ScreenMessages() {
   const { permissions } = useEmployee()
@@ -36,10 +31,21 @@ export default function ScreenMessages() {
   const [selectedOrders, setSelectedOrders] = useState<any[]>([])
   const [message, setMessage] = useState('')
 
+  const EXPIRED_DAYS = 5
+
   const handleSelectOrder = (target: MessageTarget | '') => {
     if (target === 'expired') {
       const selectedOrders = orders?.filter(
-        (order) => order.status === order_status.DELIVERED && order.isExpired
+        (order) =>
+          order.status === order_status.DELIVERED &&
+          order.isExpired &&
+          // has more tha EXPIRED_DAYS days
+          //expire at was 5 days ago
+          isBefore(
+            endDate(asDate(order.expireAt)),
+            subDays(endDate(new Date()), EXPIRED_DAYS)
+          )
+        //&& !order.expiresToday
       )
       setSelectedOrders(selectedOrders)
       setMessage(expiredMessage({ order: selectedOrders?.[0], store }))
@@ -74,21 +80,18 @@ export default function ScreenMessages() {
         setTimeout(async () => {
           const phone = chooseOrderPhone(order)
           console.log('enviando mensaje a ', phone)
-
-          await sendOrderMessage({
-            phone: phone,
-            message: expiredMessage({ order, store }),
-            apiKey: store?.chatbot?.apiKey,
-            botId: store?.chatbot?.id,
-            orderId: order?.id,
+          await onSendOrderWhatsapp({
+            order,
+            store,
+            type: 'expire',
             userId
           })
+
           setProgress(((i + 1) / orders.length) * 100)
           resolve()
         }, i * TIME_BETWEEN_MESSAGES)
       })
     })
-
     await Promise.all(sendMessages)
     setSending(false)
   }
@@ -144,42 +147,39 @@ export default function ScreenMessages() {
           setTarget(val)
           handleSelectOrder(val)
         }}
-        options={targets}
+        options={targets.with(
+          targets.findIndex((t) => t.value === 'expired'),
+          {
+            label: `Vencidas  (+${EXPIRED_DAYS} días)`,
+            value: 'expired'
+          }
+        )}
       />
 
-      {selectedOrders.length === 0 && (
+      {selectedOrders?.length === 0 && (
         <Text
           style={[gStyles.helper, { textAlign: 'center', marginVertical: 12 }]}
         >
           No hay ordenes seleccionadas
         </Text>
       )}
-      {selectedOrders.length > 0 && (
-        <>
-          <TextInfo
-            defaultVisible
-            text="Click para eliminar una orden de la lista "
-            type="info"
-          />
-          <List
-            data={selectedOrders}
-            ComponentRow={({ item }: { item: OrderType }) => (
-              <Text>
-                {item?.folio} - {item?.fullName}{' '}
-                {item?.sentMessages?.some((m) => isToday(asDate(m?.sentAt))) &&
-                  '✅'}
-              </Text>
-            )}
-            onPressRow={(orderId) => {
-              const clearOrders = selectedOrders.filter(
-                (order) => order.id !== orderId
-              )
-              setSelectedOrders(clearOrders)
-            }}
-            filters={[]}
-            rowsPerPage={30}
-          />
-        </>
+      {true && (
+        <ListOrders
+          orders={selectedOrders}
+          rowSideButtons={[
+            {
+              label: 'Eliminar',
+              onPress: (rowId) => {
+                const clearOrders = selectedOrders.filter(
+                  (order) => order.id !== rowId
+                )
+                setSelectedOrders(clearOrders)
+              },
+              icon: 'sub',
+              color: 'error'
+            }
+          ]}
+        />
       )}
 
       <View style={{ marginVertical: 8, maxWidth: 120, margin: 'auto' }}>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { ListSideButton, LoadingList } from './List'
-import { useNavigation } from '@react-navigation/native'
 import { RowOrderE, RowOrderType } from './RowOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
@@ -16,13 +15,15 @@ export type ListOrderProps = {
   sideButtons?: ListSideButton[]
   collectionSearch?: CollectionSearch
   onPressRow?: () => void
+  rowSideButtons?: ListSideButton[]
 }
 const ListOrders = ({
   orders,
   defaultOrdersIds,
   sideButtons = [],
   collectionSearch,
-  onPressRow
+  onPressRow,
+  rowSideButtons
 }: ListOrderProps) => {
   const { toOrders } = useMyNav()
   const { storeSections } = useStore()
@@ -71,6 +72,7 @@ const ListOrders = ({
           toOrders({ id })
           onPressRow?.()
         }}
+        rowSideButtons={rowSideButtons}
         sortFields={[
           //{ key: 'priority', label: 'Prioridad' },
           { key: 'folio', label: 'Folio' },

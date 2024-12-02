@@ -7,6 +7,7 @@ import OrderType, {
 } from '../../types/OrderType'
 import StoreType from '../../types/StoreType'
 import {
+  expiredMessage,
   orderStatus,
   rentFinished,
   rentRenewed,
@@ -58,7 +59,7 @@ export const onSendOrderWhatsapp = async ({
 }: {
   store: StoreType
   order: Partial<OrderType>
-  type: 'renew' | 'delivery' | 'pickup' | 'status'
+  type: 'renew' | 'delivery' | 'pickup' | 'status' | 'expire'
   userId: string
   lastPayment?: PaymentType
 }) => {
@@ -67,7 +68,12 @@ export const onSendOrderWhatsapp = async ({
   if (!store.chatbot.id) return console.log('bot id is missing')
 
   let message = ''
-  if (type === 'renew') {
+  if (type === 'expire') {
+    message = expiredMessage({
+      order,
+      store
+    })
+  } else if (type === 'renew') {
     message = rentRenewed({
       order,
       storeName: store.name,

@@ -13,7 +13,7 @@ import Icon, { IconName } from './Icon'
 
 import ErrorBoundary from './ErrorBoundary'
 import ModalFilterList, { FilterListType } from './ModalFilterList'
-import Button from './Button'
+import Button, { ButtonProps } from './Button'
 import InputCheckbox from './InputCheckbox'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
@@ -28,9 +28,10 @@ import OrderType from '../types/OrderType'
 export type ListSideButton = {
   icon: IconName
   label: string
-  onPress: () => void
+  onPress: (rowId?: string) => void
   visible?: boolean
   disabled?: boolean
+  color?: ButtonProps['color']
 }
 export type ListPops<T extends { id: string }> = {
   data: T[]
@@ -49,6 +50,7 @@ export type ListPops<T extends { id: string }> = {
   pinRows?: boolean
   onFetchMoreCount?: string
   maxWidth?: number
+  rowSideButtons?: ListSideButton[]
 }
 
 function MyList<T extends { id: string }>({
@@ -67,7 +69,8 @@ function MyList<T extends { id: string }>({
   onFetchMore,
   pinRows,
   onFetchMoreCount,
-  maxWidth = 600
+  maxWidth = 600,
+  rowSideButtons
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
@@ -204,13 +207,13 @@ function MyList<T extends { id: string }>({
                   >
                     <ComponentRow item={item} />
                   </Pressable>
+                  {/* ***************** ******* ***** UNPIN BUTTON  */}
                   <PinButton
                     handlePin={() => {
                       handleUnpinRow(item.id)
                     }}
                     unpin={true}
                   />
-                  {/* ***************** ******* ***** UNPIN BUTTON  */}
                 </View>
               )}
             />
@@ -360,7 +363,7 @@ function MyList<T extends { id: string }>({
             />
           </View>
         </View>
-        {/* TABLA OF CONTENT   */}
+        {/* MULTI-SELECT  */}
         {multiSelect && (
           <View style={{ alignSelf: 'flex-start' }}>
             <InputCheckbox
@@ -370,7 +373,7 @@ function MyList<T extends { id: string }>({
             />
           </View>
         )}
-
+        {/* CONTENT  */}
         <FlatList
           data={sortedData.slice(startIndex, endIndex)}
           renderItem={({ item }) => {
@@ -397,6 +400,27 @@ function MyList<T extends { id: string }>({
                 >
                   <ComponentRow item={item} />
                 </Pressable>
+                {rowSideButtons?.map((button, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      marginHorizontal: 2,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Button
+                      icon={button?.icon}
+                      justIcon={!!button?.icon}
+                      color={button?.color}
+                      // label={button.label}
+                      onPress={() => button?.onPress(item?.id)}
+                      size="xs"
+                      disabled={button?.disabled}
+                    ></Button>
+                  </View>
+                ))}
+
                 {pinRows && (
                   <>
                     {/* ***************** ******* ***** PIN BUTTON  */}
@@ -422,7 +446,7 @@ function MyList<T extends { id: string }>({
             )
           }}
         ></FlatList>
-
+        {/* SEE MORE   */}
         <View>
           {onFetchMore && (
             <Button
@@ -434,6 +458,8 @@ function MyList<T extends { id: string }>({
             ></Button>
           )}
         </View>
+
+        {/* PAGINATION   */}
 
         <View
           style={{

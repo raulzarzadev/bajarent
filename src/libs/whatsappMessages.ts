@@ -15,15 +15,15 @@ export const expiredMessage = ({
   order,
   store
 }: {
-  order: OrderType
+  order: Partial<OrderType>
   store: StoreType
 }) => {
   return `🚨 *ALERTA DE VENCIMIENTO* 
   \n${WELCOME({ customerName: order?.fullName, storeName: store?.name })}
   \n${expireDateString(order, { feePerDay: 100 })}
   ${ORDER_DETAILS({
-    orderType: order.type,
-    orderFolio: order.folio
+    orderType: order?.type,
+    orderFolio: order?.folio
   })}
   ${ORDER_ITEMS({ order })} 
   \n${BANK_INFO({ store })}
