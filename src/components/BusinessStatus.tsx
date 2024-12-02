@@ -332,9 +332,9 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                       label="En carro"
                     ></CellItemsE>
                   </View>
-                  <View>
+                  {/* <View>
                     <Text style={[gStyles.h2, { marginTop: 8 }]}>Pagos</Text>
-                  </View>
+                  </View> */}
                   <BalanceAmountsE payments={balanceRow.payments} />
                 </View>
               )}

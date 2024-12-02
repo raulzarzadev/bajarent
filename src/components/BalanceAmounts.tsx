@@ -14,6 +14,9 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   const transferPayments = payments?.filter((p) => p.method === 'transfer')
   const canceledPayments = payments?.filter((p) => p.canceled)
   const retirementsCount = payments?.filter((p) => p.isRetirement)
+  const retirementBonus = payments.filter((p) => p.type === 'bonus')
+  const retirementExpense = payments.filter((p) => p.type === 'expense')
+  const retirementMissing = payments.filter((p) => p.type === 'missing')
   const notVerifiedTransfers = payments?.filter(
     (p) => p.method === 'transfer' && !p.verified
   )
@@ -27,7 +30,10 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
     transfersNotVerified,
     retirements,
     incomes,
-    outcomes
+    outcomes,
+    missing,
+    expense,
+    bonus
   } = payments_amount(payments)
 
   return (
@@ -40,6 +46,21 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
         }}
       >
         <View style={styles.totals}>
+          <Text style={gStyles.tBold}>Entradas</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <LinkPayments
+              paymentsIds={allPayments.map(({ id }) => id)}
+              amount={incomes}
+              title={'VENTAS'}
+              isTotal
+            />
+          </View>
           {!!cash && (
             <View style={styles.row}>
               <LinkPayments
@@ -77,47 +98,37 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
               />
             </View>
           )}
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end'
-            }}
-          >
-            <LinkPayments
-              paymentsIds={allPayments.map(({ id }) => id)}
-              amount={incomes}
-              title={'Ingresos'}
-              isTotal
-            />
-          </View>
         </View>
-        {/* {!!outcomes && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end'
-            }}
-          >
-            <LinkPayments
-              // paymentsIds={payments.map(({ id }) => id)}
-              amount={outcomes}
-              title={'Egresos'}
-              isTotal
-            />
-          </View>
-        )} */}
-        {!!retirementsCount.length && (
+        {outcomes > 0 && <Text style={gStyles.tBold}>Salidas</Text>}
+        {bonus > 0 && (
           <View style={styles.row}>
             <LinkPayments
-              paymentsIds={retirementsCount.map(({ id }) => id)}
-              amount={outcomes * -1}
-              title={'Egresos'}
+              paymentsIds={retirementBonus.map(({ id }) => id)}
+              amount={bonus * -1}
+              title={'Bonos'}
             />
           </View>
         )}
+        {expense > 0 && (
+          <View style={styles.row}>
+            <LinkPayments
+              paymentsIds={retirementExpense.map(({ id }) => id)}
+              amount={expense * -1}
+              title={'Gastos'}
+            />
+          </View>
+        )}
+        {missing > 0 && (
+          <View style={styles.row}>
+            <LinkPayments
+              paymentsIds={retirementMissing.map(({ id }) => id)}
+              amount={missing * -1}
+              title={'Faltante'}
+            />
+          </View>
+        )}
+
+        <Text style={gStyles.tBold}>Total</Text>
         {!!canceledPayments.length && (
           <View style={styles.row}>
             <LinkPayments
@@ -128,11 +139,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           </View>
         )}
         <View style={styles.row}>
-          <LinkPayments
-            amount={total}
-            title={'Total'}
-            labelStyle={gStyles.tBold}
-          />
+          <LinkPayments amount={total} title={''} labelStyle={gStyles.tBold} />
         </View>
       </View>
     </View>
@@ -224,7 +231,7 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   amount: {
-    textAlign: 'left',
+    textAlign: 'right',
     width: 90
   }
 })

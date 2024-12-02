@@ -14,7 +14,9 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
         acc.cash -= amount
         acc.retirements += amount
         acc.outcomes += amount
-
+        p.type === 'bonus' && (acc.bonus += amount)
+        p.type === 'expense' && (acc.expense += amount)
+        p.type === 'missing' && (acc.missing += amount)
         return acc
       } else {
         //* if transfer is not verified count count as it
@@ -42,7 +44,10 @@ export const payments_amount = (payments: Partial<PaymentType>[]) => {
       transfersNotVerified: 0,
       retirements: 0,
       incomes: 0,
-      outcomes: 0
+      outcomes: 0,
+      missing: 0,
+      expense: 0,
+      bonus: 0
     }
   )
 }

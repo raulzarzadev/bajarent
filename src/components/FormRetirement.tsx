@@ -8,8 +8,14 @@ import { useStore } from '../contexts/storeContext'
 import FormikInputSelect from './FormikInputSelect'
 import FormikErrorsList from './FormikErrorsList'
 import FormikInputRadios from './FormikInputRadios'
+
+export enum type_of_retirement {
+  bonus = 'bono',
+  expense = 'gasto',
+  missing = 'faltate'
+}
 export type RetirementType = {
-  type: 'bonus' | 'expense'
+  type: keyof typeof type_of_retirement
   amount: number
   description: string
   sectionId: string
@@ -67,6 +73,10 @@ const FormRetirement = ({
                   {
                     label: 'Gasto',
                     value: 'expense'
+                  },
+                  {
+                    label: 'Faltante',
+                    value: 'missing'
                   }
                 ]}
               />
