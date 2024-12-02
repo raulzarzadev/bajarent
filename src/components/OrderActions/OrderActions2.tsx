@@ -278,19 +278,22 @@ const ButtonPickUp = ({}) => {
 
 const ButtonCancel = ({ order, user }) => {
   const [comment, setComment] = useState('')
+  const MIN_COMMENT_LENGTH = 10
   return (
     <View>
       <View style={{ marginVertical: 'auto' }}>
         <ButtonConfirm
+          modalTitle="Cancelar pedido"
           openLabel="Cancelar "
-          confirmColor="warning"
+          confirmColor="error"
           confirmVariant="outline"
-          confirmLabel="Cancelar entrega"
+          confirmLabel="Cancelar pedido "
           icon="cancel"
           openColor="accent"
           openVariant="ghost"
+          confirmDisabled={!(comment.length < MIN_COMMENT_LENGTH)}
           // openSize="small"
-          text="¿Estás seguro de que quieres cancelar entrega?"
+          text="¿Estás seguro de que quieres cancelar este pedido?"
           handleConfirm={async () => {
             const res = {
               orderId: order.id,
@@ -301,11 +304,18 @@ const ButtonCancel = ({ order, user }) => {
             onCancel(res)
           }}
         >
-          <InputTextStyled
-            label="Motivo"
-            onChangeText={(value) => setComment(value)}
-            value={comment}
-          ></InputTextStyled>
+          <View style={{ marginBottom: 8 }}>
+            <InputTextStyled
+              label="Motivo"
+              onChangeText={(value) => setComment(value)}
+              value={comment}
+              helperText={
+                comment.length < MIN_COMMENT_LENGTH &&
+                `*Mínimo ${MIN_COMMENT_LENGTH} caracteres`
+              }
+              helperTextColor="error"
+            ></InputTextStyled>
+          </View>
         </ButtonConfirm>
       </View>
     </View>
