@@ -19,6 +19,7 @@ import { translateTime } from '../libs/expireDate'
 import asDate from '../libs/utils-date'
 import { OrderExtensionType } from '../types/OrderType'
 import Button from './Button'
+import Divider from './Divider'
 
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
@@ -95,6 +96,8 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
     setRetiredItems(balance?.retiredItems || [])
   }, [balance])
 
+  console.log({ balance })
+
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
       <View
@@ -141,6 +144,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
       </View>
       {/* HEADER */}
       <ListRow
+        style={{ borderWidth: 0 }}
         fields={table.map(({ label, width }) => ({
           component: (
             <Text
@@ -154,6 +158,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
           width
         }))}
       />
+      <Divider mv={4} />
 
       {/* ROWS */}
       {balance?.sections
@@ -163,6 +168,24 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
           const bName =
             storeSections.find((s) => s.id === b.section)?.name || b?.section
           return aName.localeCompare(bName)
+        })
+        .sort((a, b) => {
+          // always put  storage at second row
+          if (a.section === 'workshop') return -1
+          if (b.section === 'workshop') return 1
+          return 0
+        })
+        .sort((a, b) => {
+          // always put all at the first row
+          if (a.section === 'all') return -1
+          if (b.section === 'all') return 1
+          return 0
+        })
+        .sort((a, b) => {
+          // always put without section at the last row
+          if (a.section === 'withoutSection') return -1
+          if (b.section === 'withoutSection') return 1
+          return 0
         })
         .map((balanceRow: BalanceRowType) => {
           const inRentItems = balanceRow?.inRent?.length || 0
@@ -178,11 +201,12 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
               >
                 <ListRow
                   style={{
-                    marginVertical: 4,
+                    marginVertical: 2,
                     backgroundColor:
                       selectedRow === balanceRow.section
                         ? 'lightblue'
-                        : 'transparent'
+                        : 'transparent',
+                    borderWidth: 0
                   }}
                   key={balanceRow.section}
                   fields={table.map(({ width, field }) => {
@@ -231,7 +255,12 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
               </Pressable>
               {selectedRow === balanceRow.section && (
                 <View>
-                  <Text style={gStyles.h2}>Detalles</Text>
+                  <Text style={gStyles.h2}>
+                    {sectionLabel({
+                      sectionId: balanceRow.section,
+                      storeSections
+                    })}
+                  </Text>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -309,11 +338,18 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
                   <BalanceAmountsE payments={balanceRow.payments} />
                 </View>
               )}
+              <Divider mv={4} />
             </View>
           )
         })}
     </View>
   )
+}
+
+const sectionLabel = ({ sectionId, storeSections }) => {
+  if (sectionId === 'all') return 'Todas'
+  if (sectionId === 'withoutSection') return 'Sin area'
+  return storeSections.find((s) => s.id === sectionId)?.name || 'S/N'
 }
 
 const allFieldsAreEmpty = (balanceRow: BalanceRowType) => {
