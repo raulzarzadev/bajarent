@@ -163,7 +163,7 @@ export default function ScreenMessages() {
           No hay ordenes seleccionadas
         </Text>
       )}
-      {true && (
+      {selectedOrders?.length > 0 && (
         <ListOrders
           orders={selectedOrders}
           rowSideButtons={[
