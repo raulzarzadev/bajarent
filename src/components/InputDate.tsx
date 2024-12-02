@@ -156,6 +156,11 @@ const TimePicker = ({
           onConfirm={onConfirm}
           hours={time?.hours || 12}
           minutes={time?.minutes || 14}
+          cancelLabel="Cancelar"
+          confirmLabel="Confirmar"
+          use24HourClock
+          label="Seleccionar hora"
+          animationType="fade"
         />
       </SafeAreaProvider>
     </>
