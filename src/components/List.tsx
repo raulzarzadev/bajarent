@@ -22,8 +22,6 @@ import { gStyles } from '../styles'
 import { getItem, setItem } from '../libs/storage'
 import { CollectionSearch } from '../hooks/useFilter'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import BaseType from '../types/BaseType'
-import OrderType from '../types/OrderType'
 
 export type ListSideButton = {
   icon: IconName
@@ -74,6 +72,15 @@ function MyList<T extends { id: string }>({
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [multiSelect, setMultiSelect] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<string[]>([])
+  const [selectAll, setSelectAll] = useState(false)
+  const [pinnedRows, setPinnedRows] = useState<string[]>([])
+  const [pinnedRowsData, setPinnedRowsData] = useState<T[]>([])
+  //* PIN ROWS
+
+  //#region hooks
 
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
     data: filteredData,
@@ -81,49 +88,14 @@ function MyList<T extends { id: string }>({
     defaultOrder
   })
 
+  const multiSelectActionsModal = useModal({ title: 'Acciones' })
+
   //* pagination
-  const [currentPage, setCurrentPage] = useState(1)
   const totalPages = Math.ceil(sortedData.length / rowsPerPage)
   const startIndex = (currentPage - 1) * rowsPerPage
   const endIndex = Math.min(startIndex + rowsPerPage, sortedData.length)
 
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
-  }
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
-  }
-
-  const [multiSelect, setMultiSelect] = useState(false)
-  const [selectedRows, setSelectedRows] = useState<string[]>([])
-  const handleMultiSelect = () => {
-    setMultiSelect(!multiSelect)
-    if (!multiSelect) setSelectedRows([])
-  }
-  const handleSelectRow = (id: string) => {
-    if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows?.filter((rowId) => rowId !== id))
-    } else {
-      setSelectedRows([...selectedRows, id])
-    }
-  }
-
-  const [selectAll, setSelectAll] = useState(false)
-  const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectedRows([])
-    } else {
-      setSelectedRows(sortedData.map((row) => row?.id))
-    }
-    setSelectAll(!selectAll)
-  }
-
-  const multiSelectActionsModal = useModal({ title: 'Acciones' })
-
-  //* PIN ROWS
-
-  const [pinnedRows, setPinnedRows] = useState<string[]>([])
+  //#region effects
 
   useEffect(() => {
     ;(async () => {
@@ -137,6 +109,54 @@ function MyList<T extends { id: string }>({
       }
     })()
   }, [data])
+
+  useEffect(() => {
+    if (pinnedRows?.length && pinRows) {
+      getPinnedRows(pinnedRows).then((res) => {
+        setPinnedRowsData(res)
+      })
+    } else {
+      setPinnedRowsData([])
+    }
+  }, [pinnedRows])
+
+  useEffect(() => {
+    if ((filteredData?.length || 0) <= 10) {
+      setCurrentPage(1)
+    }
+  }, [filteredData?.length])
+
+  //#region handlers
+
+  const handleMultiSelect = () => {
+    setMultiSelect(!multiSelect)
+    if (!multiSelect) setSelectedRows([])
+  }
+  const handleSelectRow = (id: string) => {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows?.filter((rowId) => rowId !== id))
+    } else {
+      setSelectedRows([...selectedRows, id])
+    }
+  }
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
+  }
+
+  const getPinnedRows = async (pinnedRows: string[]): Promise<T[]> => {
+    if (collectionSearch?.collectionName === 'orders') {
+      const promises = pinnedRows.map((id) => ServiceOrders.get(id))
+      const res = await Promise.all(promises)
+      return res as unknown as T[]
+    } else {
+      return []
+    }
+  }
 
   const handleUnpinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
@@ -154,31 +174,17 @@ function MyList<T extends { id: string }>({
     })
   }
 
-  const [pinnedRowsData, setPinnedRowsData] = useState<T[]>([])
-  useEffect(() => {
-    if (pinnedRows?.length && pinRows) {
-      getPinnedRows(pinnedRows).then((res) => {
-        setPinnedRowsData(res)
-      })
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedRows([])
     } else {
-      setPinnedRowsData([])
+      setSelectedRows(sortedData.map((row) => row?.id))
     }
-  }, [pinnedRows])
-
-  const getPinnedRows = async (pinnedRows: string[]): Promise<T[]> => {
-    if (collectionSearch?.collectionName === 'orders') {
-      const promises = pinnedRows.map((id) => ServiceOrders.get(id))
-      const res = await Promise.all(promises)
-      return res as unknown as T[]
-    } else {
-      return []
-    }
+    setSelectAll(!selectAll)
   }
-  useEffect(() => {
-    if ((filteredData?.length || 0) <= 10) {
-      setCurrentPage(1)
-    }
-  }, [filteredData?.length])
+
+  //#region render
+
   if (!data) return <Loading />
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -544,7 +550,7 @@ function MyList<T extends { id: string }>({
     </ScrollView>
   )
 }
-
+//#region pin button
 const PinButton = ({ handlePin, unpin = false }) => {
   return (
     <Button
@@ -564,6 +570,8 @@ const PinButton = ({ handlePin, unpin = false }) => {
     />
   )
 }
+
+//#region pagination
 
 const Pagination = ({
   currentPage,
@@ -597,6 +605,8 @@ const Pagination = ({
   )
 }
 
+//#region styles
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -623,7 +633,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   }
 })
-
+//#region error boundary
 export default function <T extends { id: string }>(props: ListPops<T>) {
   return (
     <ErrorBoundary componentName="MyList">
@@ -631,6 +641,7 @@ export default function <T extends { id: string }>(props: ListPops<T>) {
     </ErrorBoundary>
   )
 }
+//#region error boundary
 export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
   return (
     <ErrorBoundary componentName="MyList">
@@ -638,7 +649,7 @@ export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
     </ErrorBoundary>
   )
 }
-
+//#region loading list
 export const LoadingList = <T extends { id: string }>(props: ListPops<T>) => {
   const data = props?.data
   if (data === undefined)
