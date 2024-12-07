@@ -96,8 +96,6 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
     setRetiredItems(balance?.retiredItems || [])
   }, [balance])
 
-  console.log({ balance })
-
   return (
     <View style={{ padding: 6, maxWidth: 999, margin: 'auto', width: '100%' }}>
       <View

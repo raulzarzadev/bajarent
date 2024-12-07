@@ -257,7 +257,9 @@ export const onRenew = async ({ orderId, renewedTo = '', userId }) => {
     renewedAt: new Date(),
     renewedBy: userId,
     renewedTo,
-    isRenewed: true
+    isRenewed: true,
+    markedToCharge: false,
+    markedToCollect: false
   })
     .then(console.log)
     .catch(console.error)
