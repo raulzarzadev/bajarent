@@ -1,6 +1,5 @@
 import { Timestamp } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { order_status } from '../types/OrderType'
 
 export default function useSort<T>({
   data = [],
@@ -16,17 +15,10 @@ export default function useSort<T>({
   const [order, setOrder] = useState<'asc' | 'des'>(defaultOrder)
 
   useEffect(() => {
-    sortBy(defaultSortBy)
-  }, [])
-
-  useEffect(() => {
-    if (data?.length) {
-      //* this prevent infinite loop
-      setSortedData(sortData(defaultSortBy, data, defaultOrder))
-    } else {
-      setSortedData([])
+    if (data.length > 0) {
+      setSortedData(sortData(sortedBy, data, order))
     }
-  }, [data])
+  }, [sortedBy, data, order])
 
   const sortData = (field: string, data: T[], order?: 'asc' | 'des') => {
     const res = [...data].sort((a, b) => {
