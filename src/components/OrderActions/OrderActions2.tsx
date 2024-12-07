@@ -291,7 +291,7 @@ const ButtonCancel = ({ order, user }) => {
           icon="cancel"
           openColor="accent"
           openVariant="ghost"
-          confirmDisabled={!(comment.length < MIN_COMMENT_LENGTH)}
+          confirmDisabled={!(comment.length > MIN_COMMENT_LENGTH)}
           // openSize="small"
           text="¿Estás seguro de que quieres cancelar este pedido?"
           handleConfirm={async () => {
