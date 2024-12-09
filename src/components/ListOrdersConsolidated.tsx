@@ -60,7 +60,7 @@ const ListOrdersConsolidated = () => {
   const [otherConsolidates, setOtherConsolidates] = useState<
     ConsolidatedStoreOrdersType[]
   >([])
-  const [otherConsolidatedCount, setOtherConsolidatedCount] = useState(5)
+  const [otherConsolidatedCount, setOtherConsolidatedCount] = useState(10)
   useEffect(() => {
     if (storeId)
       ServiceConsolidatedOrders.getLasts({
@@ -95,7 +95,7 @@ const ListOrdersConsolidated = () => {
             size="xs"
             variant="ghost"
             onPress={() => {
-              setOtherConsolidatedCount(otherConsolidatedCount + 5)
+              setOtherConsolidatedCount(otherConsolidatedCount + 10)
             }}
             label="mas"
             icon="down"
