@@ -91,6 +91,14 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     if (process.env.PRE_PRODUCTION) console.timeEnd('consolidate')
   }
 
+  async getLasts({ storeId, count = 5 }) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      orderBy('createdAt', 'desc'),
+      limit(count)
+    ])
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

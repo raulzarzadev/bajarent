@@ -40,6 +40,11 @@ export type OrdersContextType = {
   reports?: CommentType[]
   consolidatedOrders?: ConsolidatedStoreOrdersType
   payments?: PaymentType[]
+  setOtherConsolidated?: ({
+    consolidated
+  }: {
+    consolidated: ConsolidatedStoreOrdersType
+  }) => void
 }
 
 let oc = 0
@@ -71,30 +76,35 @@ export const OrdersContextProvider = ({
     useState<ConsolidatedStoreOrdersType>()
 
   const handleGetConsolidates = async () => {
-    ServiceConsolidatedOrders.listenByStore(storeId, (res) => {
+    ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
       // console.log('lisening chunks')
-      const chunks = res[0]?.consolidatedChunks || []
-      const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
-      Promise.all(promises).then((chunksRes) => {
-        const orders = chunksRes.reduce((acc, chunk) => {
-          return { ...acc, ...chunk.orders }
-        }, {})
-
-        setConsolidatedOrders({ ...res[0], orders })
+      const { orders } = await getChunks({
+        chunks: res[0]?.consolidatedChunks || []
       })
-    })
-    // return await ServiceConsolidatedOrders.getByStore(storeId).then(
-    //   async (res) => {
-    //     const chunks = res[0]?.consolidatedChunks || []
-    //     const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
-    //     const chunksRes = await Promise.all(promises)
-    //     const orders = chunksRes.reduce((acc, chunk) => {
-    //       return { ...acc, ...chunk.orders }
-    //     }, {})
 
-    //     setConsolidatedOrders({ ...res[0], orders })
-    //   }
-    // )
+      setConsolidatedOrders({ ...res[0], orders })
+    })
+  }
+
+  const setOtherConsolidated = async ({
+    consolidated
+  }: {
+    consolidated: ConsolidatedStoreOrdersType
+  }) => {
+    const { orders } = await getChunks({
+      chunks: consolidated.consolidatedChunks || []
+    })
+    setConsolidatedOrders({ ...consolidated, orders })
+  }
+
+  const getChunks = async ({ chunks }) => {
+    const promises = chunks.map((chunk) => ServiceChunks.get(chunk))
+    return await Promise.all(promises).then((chunksRes) => {
+      const orders = chunksRes.reduce((acc, chunk) => {
+        return { ...acc, ...chunk.orders }
+      }, {})
+      return { orders }
+    })
   }
 
   useEffect(() => {
@@ -210,7 +220,8 @@ export const OrdersContextProvider = ({
         handleRefresh: handleGetOrders,
         reports,
         consolidatedOrders,
-        payments
+        payments,
+        setOtherConsolidated
       }}
     >
       {children}
