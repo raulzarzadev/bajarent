@@ -34,6 +34,9 @@ export type OrderBase = {
   marketOrder?: boolean // * this option us true when the order is created from the web market
   pendingMarketOrder?: boolean //
 
+  // * this option is marked when order wasn't fund in the system. Should disabled order actions
+  isConsolidated?: boolean
+
   clientId: string
   note: string
 
