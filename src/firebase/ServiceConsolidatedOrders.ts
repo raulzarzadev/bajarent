@@ -116,19 +116,7 @@ const splitOrdersCount = (count: number = 500, orders: any[]) => {
 }
 
 //#region FUNCTIONS
-const formatConsolidateOrder = (
-  order: OrderType,
-  payments: PaymentType[]
-): Omit<
-  Partial<OrderType>,
-  'createdAt' | 'expireAt' | 'pickedUpAt' | 'deliveredAt' | 'itemsString'
-> & {
-  createdAt: string | null
-  expireAt: string | null
-  pickedUpAt: string | null
-  deliveredAt: string | null
-  cancelledAt: string | null
-} => {
+const formatConsolidateOrder = (order: OrderType, payments: PaymentType[]) => {
   return {
     fullName: order?.fullName || '',
     phone: order?.phone || '',

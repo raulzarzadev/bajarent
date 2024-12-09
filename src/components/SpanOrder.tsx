@@ -182,9 +182,7 @@ const OrderData = ({
           ]}
         >
           {order?.items
-            ?.map(
-              (item) => item?.number || item?.serial || item?.itemId || 'U.U'
-            ) // this means that any of the info was found
+            ?.map((item) => item?.number || item?.serial || item?.id || 'U.U') // this means that any of the info was found
             .join(', ')}
         </Text>
       )}

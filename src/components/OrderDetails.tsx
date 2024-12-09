@@ -38,6 +38,7 @@ import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
 import { useStore } from '../contexts/storeContext'
+import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   console.log({ order })
@@ -58,6 +59,66 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       setDefaultAmount(multiItemOrderAmount)
     }
   }, [])
+
+  if (order?.isConsolidated) {
+    const consolidated = order as unknown as ConsolidatedOrderType
+    return (
+      <View>
+        <Text>Orden consolidada</Text>
+        <Text>Esta orden fue eliminada o no se encuentra. </Text>
+        <Text>id: {consolidated.id}</Text>
+        <Text>Folio: {consolidated.folio}</Text>
+        <Text>contrato: {consolidated.note}</Text>
+        <Text>Colonia: {consolidated.neighborhood}</Text>
+        <Text>Nombre: {consolidated.fullName}</Text>
+        <Text>Estado: {consolidated.status}</Text>
+        <Text>Fecha: {dateFormat(asDate(consolidated.createdAt))}</Text>
+        <Text>Programada: {dateFormat(asDate(consolidated.scheduledAt))}</Text>
+        <Text>Recogida: {dateFormat(asDate(consolidated.pickedUpAt))}</Text>
+        <Text>Cancelada: {dateFormat(asDate(consolidated.cancelledAt))}</Text>
+        <Text>Entregada:{dateFormat(asDate(consolidated.deliveredAt))}</Text>
+        <Text>Expira: {dateFormat(asDate(consolidated.expireAt))}</Text>
+        <Text>Items: {consolidated.itemsString}</Text>
+        <Text>Items:</Text>
+        {consolidated?.items?.map((item, i) => {
+          return (
+            <View key={i}>
+              <Text>
+                <Text>{item?.categoryName} </Text>
+                {item?.number}
+              </Text>
+            </View>
+          )
+        })}
+        <View>
+          {/**@ts-ignore */}
+          {consolidated?.comments?.map((comment) => {
+            return (
+              <View key={comment?.id}>
+                <Text>{comment.content}</Text>
+              </View>
+            )
+          })}
+        </View>
+        <Text>{consolidated?.phone}</Text>
+        <Text>
+          {Object.entries(consolidated?.extensions || {}).map(
+            ([id, extension]) => (
+              <View key={id}>
+                <Text>
+                  {dateFormat(asDate(extension?.createdAt))} -{' '}
+                  {extension?.reason} - De{' '}
+                  {dateFormat(asDate(extension?.startAt))} al{' '}
+                  {dateFormat(asDate(extension?.expireAt))}
+                </Text>
+              </View>
+            )
+          )}
+        </Text>
+        <Text>{consolidated.location}</Text>
+      </View>
+    )
+  }
 
   return (
     <View>

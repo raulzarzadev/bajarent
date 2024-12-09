@@ -19,7 +19,7 @@ import MultiOrderActions from './OrderActions/MultiOrderActions'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Button from './Button'
-type OrderWithId = Partial<ConsolidatedOrderType> & {
+export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
 }
@@ -79,6 +79,7 @@ const ListOrdersConsolidated = () => {
           {otherConsolidates.map((consolidated) => {
             return (
               <Pressable
+                key={consolidated.id}
                 onPress={() => {
                   setOtherConsolidated({ consolidated })
                   modal.toggleOpen()
@@ -273,6 +274,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     // },
     {
       width: 'rest',
+      //@ts-ignore
       component: <OrderDirectives order={order} />
     }
   ]

@@ -5,20 +5,17 @@ import theme from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
-import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { currentRentPeriod } from '../libs/orders'
 import Icon, { IconName } from './Icon'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
+import { OrderWithId } from './ListOrdersConsolidated'
 
-const OrderDirectives = ({
-  order
-}: {
-  order: Partial<OrderType> | Partial<ConsolidatedOrderType>
-}) => {
+const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   if (!order) return null
   const { storeSections } = useStore()
   const assignedSectionLabel =
+    //@ts-ignore
     order?.assignToSectionName ||
     storeSections.find(({ id }) => id === order?.assignToSection)?.name ||
     false
@@ -87,11 +84,7 @@ const OrderDirectives = ({
   )
 }
 
-const OrderLabels = ({
-  order
-}: {
-  order: Partial<OrderType> | Partial<ConsolidatedOrderType>
-}) => {
+const OrderLabels = ({ order }: { order: Partial<OrderType> }) => {
   const collect = order?.markedToCollect
   const charge = order?.markedToCharge
   return (
