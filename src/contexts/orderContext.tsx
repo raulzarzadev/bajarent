@@ -61,23 +61,6 @@ const OrderProvider = ({
 
   useEffect(() => {
     if (_orderId) {
-      listenFullOrderData(_orderId, (order) => {
-        console.log({ order })
-        if (order) return setOrder({ ...order, comments: orderComments })
-        const consolidatedOrder = consolidatedOrders?.orders[_orderId]
-        console.log({ consolidatedOrder })
-        // @ts-ignore
-        return setOrder({
-          ...consolidatedOrder,
-          isConsolidated: true,
-          comments: orderComments
-        })
-      })
-    }
-  }, [_orderId, consolidatedOrders])
-
-  useEffect(() => {
-    if (_orderId) {
       ServiceComments.listenLastByOrder({
         count: commentsCount,
         orderId: _orderId,
@@ -89,11 +72,27 @@ const OrderProvider = ({
     return () => {}
   }, [_orderId, commentsCount])
 
+  useEffect(() => {
+    if (_orderId) {
+      listenFullOrderData(_orderId, (order) => {
+        console.log({ order })
+        if (order) return setOrder({ ...order })
+        const consolidatedOrder = consolidatedOrders?.orders[_orderId]
+        console.log({ consolidatedOrder })
+        // @ts-ignore
+        return setOrder({
+          ...consolidatedOrder,
+          isConsolidated: true
+        })
+      })
+    }
+  }, [_orderId, consolidatedOrders])
+
   return (
     <OrderContext.Provider
       value={{
         //@ts-ignore
-        order,
+        order: !!order ? { ...order, comments: orderComments } : undefined,
         setOrder,
         payments,
         setPaymentsCount,
