@@ -1,4 +1,4 @@
-import { limit, orderBy, where } from 'firebase/firestore'
+import { limit, orderBy, startAfter, startAt, where } from 'firebase/firestore'
 import BaseType from '../types/BaseType'
 import OrderType from '../types/OrderType'
 import { ServiceOrders } from './ServiceOrders'
@@ -91,6 +91,14 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
     if (process.env.PRE_PRODUCTION) console.timeEnd('consolidate')
   }
 
+  async getLasts({ storeId, count = 5 }) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      orderBy('createdAt', 'desc'),
+      limit(count)
+    ])
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
@@ -108,19 +116,7 @@ const splitOrdersCount = (count: number = 500, orders: any[]) => {
 }
 
 //#region FUNCTIONS
-const formatConsolidateOrder = (
-  order: OrderType,
-  payments: PaymentType[]
-): Omit<
-  Partial<OrderType>,
-  'createdAt' | 'expireAt' | 'pickedUpAt' | 'deliveredAt' | 'itemsString'
-> & {
-  createdAt: string | null
-  expireAt: string | null
-  pickedUpAt: string | null
-  deliveredAt: string | null
-  cancelledAt: string | null
-} => {
+const formatConsolidateOrder = (order: OrderType, payments: PaymentType[]) => {
   return {
     fullName: order?.fullName || '',
     phone: order?.phone || '',

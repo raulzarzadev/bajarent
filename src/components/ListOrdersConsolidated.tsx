@@ -1,9 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { LoadingList } from './List'
 import ListRow, { ListRowField } from './ListRow'
 import {
   ConsolidatedOrderType,
+  ConsolidatedStoreOrdersType,
   ServiceConsolidatedOrders
 } from '../firebase/ServiceConsolidatedOrders'
 import { useNavigation } from '@react-navigation/native'
@@ -12,16 +13,20 @@ import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
 import OrderDirectives from './OrderDirectives'
-import asDate, { fromNow } from '../libs/utils-date'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import ErrorBoundary from './ErrorBoundary'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
-type OrderWithId = Partial<ConsolidatedOrderType> & {
+import StyledModal from './StyledModal'
+import useModal from '../hooks/useModal'
+import Button from './Button'
+export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
 }
 
 const ListOrdersConsolidated = () => {
-  const { consolidatedOrders, handleRefresh } = useOrdersCtx()
+  const { consolidatedOrders, handleRefresh, setOtherConsolidated } =
+    useOrdersCtx()
   const { storeId, storeSections } = useStore()
   const { navigate } = useNavigation()
   const orders = consolidatedOrders?.orders || {}
@@ -52,12 +57,57 @@ const ListOrdersConsolidated = () => {
     setDisabled(false)
   }
 
+  const [otherConsolidates, setOtherConsolidates] = useState<
+    ConsolidatedStoreOrdersType[]
+  >([])
+  const [otherConsolidatedCount, setOtherConsolidatedCount] = useState(10)
+  useEffect(() => {
+    if (storeId)
+      ServiceConsolidatedOrders.getLasts({
+        storeId,
+        count: otherConsolidatedCount
+      }).then((res) => {
+        setOtherConsolidates(res)
+      })
+  }, [storeId, otherConsolidatedCount])
+  const modal = useModal({ title: 'Otras consolidadas' })
+
   return (
     <ScrollView>
       <View>
-        <Text style={[gStyles.helper, gStyles.tCenter]}>
-          Última actualización {fromNow(asDate(consolidatedOrders?.createdAt))}
-        </Text>
+        <StyledModal {...modal}>
+          {otherConsolidates.map((consolidated) => {
+            return (
+              <Pressable
+                key={consolidated.id}
+                onPress={() => {
+                  setOtherConsolidated({ consolidated })
+                  modal.toggleOpen()
+                }}
+              >
+                <Text>
+                  {dateFormat(asDate(consolidated.createdAt))}{' '}
+                  <Text style={gStyles.tBold}>{consolidated.ordersCount}</Text>
+                </Text>
+              </Pressable>
+            )
+          })}
+          <Button
+            size="xs"
+            variant="ghost"
+            onPress={() => {
+              setOtherConsolidatedCount(otherConsolidatedCount + 10)
+            }}
+            label="mas"
+            icon="down"
+          ></Button>
+        </StyledModal>
+        <Pressable onPress={() => modal.toggleOpen()}>
+          <Text style={[gStyles.helper, gStyles.tCenter]}>
+            Última actualización{' '}
+            {fromNow(asDate(consolidatedOrders?.createdAt))}
+          </Text>
+        </Pressable>
         <LoadingList
           ComponentRow={({ item }) => <ComponentRow item={item} />}
           pinRows
@@ -224,6 +274,7 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     // },
     {
       width: 'rest',
+      //@ts-ignore
       component: <OrderDirectives order={order} />
     }
   ]

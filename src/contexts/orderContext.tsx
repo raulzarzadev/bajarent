@@ -12,6 +12,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import PaymentType from '../types/PaymentType'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { CommentType } from '../types/CommentType'
+import { useOrdersCtx } from './ordersContext'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -38,6 +39,7 @@ const OrderProvider = ({
   children: ReactNode
   orderId?: OrderType['id']
 }) => {
+  const { consolidatedOrders } = useOrdersCtx()
   const route = useRoute()
   //@ts-ignore
   const _orderId = orderId || route?.params?.orderId
@@ -60,10 +62,19 @@ const OrderProvider = ({
   useEffect(() => {
     if (_orderId) {
       listenFullOrderData(_orderId, (order) => {
-        setOrder(order)
+        console.log({ order })
+        if (order) return setOrder({ ...order, comments: orderComments })
+        const consolidatedOrder = consolidatedOrders?.orders[_orderId]
+        console.log({ consolidatedOrder })
+        // @ts-ignore
+        return setOrder({
+          ...consolidatedOrder,
+          isConsolidated: true,
+          comments: orderComments
+        })
       })
     }
-  }, [_orderId])
+  }, [_orderId, consolidatedOrders])
 
   useEffect(() => {
     if (_orderId) {
@@ -81,7 +92,8 @@ const OrderProvider = ({
   return (
     <OrderContext.Provider
       value={{
-        order: order ? { ...order, comments: orderComments } : undefined,
+        //@ts-ignore
+        order,
         setOrder,
         payments,
         setPaymentsCount,

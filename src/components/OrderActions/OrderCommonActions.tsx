@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
 import {
@@ -53,12 +53,9 @@ const OrderCommonActions = ({
   const canCancel = actionsAllowed?.canCancel
   const canEdit = actionsAllowed?.canEdit
   const canDelete = actionsAllowed?.canDelete
-  const canSendWS = actionsAllowed?.canSendWS
-  const canAuthorize = actionsAllowed?.canAuthorize
   const canReorder = actionsAllowed?.canReorder
   const canAssign = actionsAllowed?.canAssign
   const canExtend = actionsAllowed?.canExtend
-  const canRenew = actionsAllowed?.canRenew
   const canCopy = true
 
   const handleReorder = () => {
@@ -73,21 +70,7 @@ const OrderCommonActions = ({
     // @ts-ignore
     navigate('EditOrder', { orderId })
   }
-  const handleRenew = () => {
-    // @ts-ignore
-    navigate('RenewOrder', { orderId })
-  }
-  const handleDelete = async () => {
-    try {
-      await onDelete({ orderId })
-      goBack()
-    } catch (error) {
-      console.log({ error })
-    }
-  }
-  const handleAuthorize = async () => {
-    await onAuthorize({ orderId, userId, storeId })
-  }
+
   const handleCancel = async () => {
     return await onCancel({ orderId, userId, cancelledReason, storeId })
   }
@@ -123,26 +106,6 @@ const OrderCommonActions = ({
     ),
     canCopy && <ButtonCopyRow orderId={orderId} />,
     <ButtonSetOrderLocation />
-    // canAuthorize && (
-    //   <Button
-    //     label="Autorizar"
-
-    //     onPress={() => {
-    //       handleAuthorize()
-    //     }}
-    //     size="small"
-    //   />
-    // ),
-    // canRenew && (
-    //   <Button
-    //     label="Renovar"
-    //     onPress={() => {
-    //       handleRenew()
-    //     }}
-    //     size="small"
-    //     icon="refresh"
-    //   />
-    // ),
   ]
   const buttons2 = [
     canDelete && <ButtonDeleteOrder orderId={orderId} />,
@@ -212,6 +175,7 @@ const OrderCommonActions = ({
       </>
     )
   ]
+
   return (
     <View>
       <View

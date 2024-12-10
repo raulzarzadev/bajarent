@@ -20,7 +20,7 @@ export const listenFullOrderData = async (
   ServiceOrders.listen(orderId, async (order) => {
     await ServiceComments.listenOrderReports(orderId, (reports) => {
       const formattedOrder = formatOrder({ comments: reports, order })
-      cb({ ...formattedOrder, comments: reports })
+      cb(order ? { ...formattedOrder, comments: reports } : undefined)
     })
   })
 }

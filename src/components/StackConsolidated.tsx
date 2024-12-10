@@ -33,7 +33,7 @@ function StackConsolidated() {
       <Stack.Screen
         name="OrderDetails"
         options={{
-          title: 'Detalle de  orden'
+          title: 'Detalle de orden'
         }}
         component={ScreenOrderDetailE}
       />
