@@ -11,13 +11,18 @@ const ModalCloseOperations = () => {
   const modal = useModal({ title: 'Cerrar operación' })
   const { storeId } = useStore()
   const { currentWork } = useCurrentWorkCtx()
+  const [loading, setLoading] = React.useState(false)
   const handleConfirmCloseOps = async () => {
     //* Create daily progress registry
     //* Restrict access to employees
+    setLoading(true)
     try {
       const res = await ServiceCurrentWork.add({ storeId, currentWork })
+      setLoading(false)
     } catch (error) {
       console.log('error', error)
+
+      setLoading(false)
     }
   }
 
@@ -27,12 +32,14 @@ const ModalCloseOperations = () => {
         label="Cerrar operación"
         onPress={modal.toggleOpen}
         variant="ghost"
+        disabled={loading}
       ></Button>
       <StyledModal {...modal}>
         <Button
           onPress={handleConfirmCloseOps}
           label="Confirmar "
           variant="outline"
+          disabled={loading}
         ></Button>
       </StyledModal>
     </View>
