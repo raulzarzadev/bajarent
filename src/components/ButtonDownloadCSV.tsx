@@ -18,13 +18,16 @@ const ButtonDownloadCSV = () => {
   const modal = useModal({ title: 'Descargar CSV' })
 
   const handleDownloadRents = () => {
-    ServiceOrders.findMany([
+    return ServiceOrders.findMany([
       where('storeId', '==', storeId),
       where('type', '==', 'RENT'),
       where('status', '==', 'DELIVERED')
     ]).then((rents) => {
       const res = json2csv(formatRentsToCSV(rents, staff))
-      downloadLink({ res, fileName: 'rentas-activas' })
+      downloadLink({
+        res,
+        fileName: `rentas-activas-${dateFormat(new Date(), 'ddMMMyy')}`
+      })
     })
   }
   const handleDownloadAllRents = () => {
@@ -33,7 +36,10 @@ const ButtonDownloadCSV = () => {
       where('type', '==', 'RENT')
     ]).then((rents) => {
       const res = json2csv(formatRentsToCSV(rents, staff))
-      downloadLink({ res, fileName: 'todas-las-rentas' })
+      downloadLink({
+        res,
+        fileName: `todas-las-rentas-${dateFormat(new Date(), 'ddMMMyy')}`
+      })
     })
   }
   const handleDownloadRepairs = () => {
@@ -42,7 +48,10 @@ const ButtonDownloadCSV = () => {
       where('type', '==', order_type.REPAIR)
     ]).then((rents) => {
       const res = json2csv(formatRentsToCSV(rents, staff))
-      downloadLink({ res, fileName: 'reparaciones' })
+      downloadLink({
+        res,
+        fileName: `reparaciones-${dateFormat(new Date(), 'ddMMMyy')}`
+      })
     })
   }
   return (
