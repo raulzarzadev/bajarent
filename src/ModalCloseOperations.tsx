@@ -3,30 +3,26 @@ import React from 'react'
 import useModal from './hooks/useModal'
 import StyledModal from './components/StyledModal'
 import Button from './components/Button'
-import { useCurrentWorkCtx } from './contexts/currentWorkContext'
-//import { ServiceCurrentWork } from './firebase/ServiceCurrentWork'
 import { useStore } from './contexts/storeContext'
-import { onDownloadBackup, onDownloadRents } from './libs/downloadOrders'
-import { ServiceBalances } from './firebase/ServiceBalances2'
+import { onDownloadBackup } from './libs/downloadOrders'
+import Loading from './components/Loading'
 
 const ModalCloseOperations = () => {
   const modal = useModal({ title: 'Cerrar operación' })
   const { storeId, staff } = useStore()
-  const { currentWork } = useCurrentWorkCtx()
   const [loading, setLoading] = React.useState(false)
-  console.log({ currentWork })
   const handleConfirmCloseOps = async () => {
-    //* Create daily progress registry
-    //* Restrict access to employees
     setLoading(true)
 
-    onDownloadBackup({
+    await onDownloadBackup({
       storeId,
       storeStaff: staff
-    }).then(() => {
-      setLoading(false)
-      modal.toggleOpen()
     })
+      .then(() => {
+        setLoading(false)
+      })
+      .catch((res) => console.log(res))
+    modal.toggleOpen()
   }
 
   return (
@@ -38,6 +34,13 @@ const ModalCloseOperations = () => {
         disabled={loading}
       ></Button>
       <StyledModal {...modal}>
+        {loading && (
+          <>
+            <Text>Generando archivos</Text>
+            <Text>No cerrar ni recargar esta página</Text>
+            <Loading />
+          </>
+        )}
         <Button
           onPress={handleConfirmCloseOps}
           label="Confirmar "
