@@ -109,7 +109,7 @@ export const formatOrder = ({
   return {
     ...order,
     pendingMarketOrder:
-      order?.status === order_status.PENDING && order.marketOrder
+      order?.status === order_status.PENDING && !!order.marketOrder
   }
 }
 

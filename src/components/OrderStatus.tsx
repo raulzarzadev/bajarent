@@ -55,7 +55,7 @@ const OrderStatus = ({
     order.type === 'RENT' &&
     order.status === order_status.DELIVERED
 
-  const pendingMarketOrder = order?.pendingMarketOrder
+  const pendingMarketOrder = !!order?.pendingMarketOrder
   const expiresOnMonday = order?.expiresOnMonday
   return (
     <>

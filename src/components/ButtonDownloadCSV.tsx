@@ -18,7 +18,7 @@ const ButtonDownloadCSV = () => {
   const modal = useModal({ title: 'Descargar CSV' })
 
   const handleDownloadRents = () => {
-    ServiceOrders.findMany([
+    return ServiceOrders.findMany([
       where('storeId', '==', storeId),
       where('type', '==', 'RENT'),
       where('status', '==', 'DELIVERED')

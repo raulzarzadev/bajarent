@@ -4,26 +4,29 @@ import useModal from './hooks/useModal'
 import StyledModal from './components/StyledModal'
 import Button from './components/Button'
 import { useCurrentWorkCtx } from './contexts/currentWorkContext'
-import { ServiceCurrentWork } from './firebase/ServiceCurrentWork'
+//import { ServiceCurrentWork } from './firebase/ServiceCurrentWork'
 import { useStore } from './contexts/storeContext'
+import { onDownloadBackup, onDownloadRents } from './libs/downloadOrders'
+import { ServiceBalances } from './firebase/ServiceBalances2'
 
 const ModalCloseOperations = () => {
   const modal = useModal({ title: 'Cerrar operación' })
-  const { storeId } = useStore()
+  const { storeId, staff } = useStore()
   const { currentWork } = useCurrentWorkCtx()
   const [loading, setLoading] = React.useState(false)
+  console.log({ currentWork })
   const handleConfirmCloseOps = async () => {
     //* Create daily progress registry
     //* Restrict access to employees
     setLoading(true)
-    try {
-      const res = await ServiceCurrentWork.add({ storeId, currentWork })
-      setLoading(false)
-    } catch (error) {
-      console.log('error', error)
 
+    onDownloadBackup({
+      storeId,
+      storeStaff: staff
+    }).then(() => {
       setLoading(false)
-    }
+      modal.toggleOpen()
+    })
   }
 
   return (
