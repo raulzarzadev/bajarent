@@ -56,7 +56,7 @@ export const onDownloadBackup = async ({ storeId, storeStaff }) => {
     storeId
   })
 
-  Promise.all([rentsPromise, balancePromise])
+  return await Promise.all([rentsPromise, balancePromise])
     .then(([rentsData, balanceData]) => {
       if (!rentsData || !balanceData) {
         throw new Error('Error downloading data')
