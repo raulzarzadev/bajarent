@@ -46,7 +46,7 @@ export const balanceJSONFile = async ({ storeId }) => {
   return jsonRes
 }
 
-export const onDownloadBackup = async ({ storeId, storeStaff }) => {
+export const onDownloadBackup = async ({ storeId, storeStaff, storeName }) => {
   const rentsPromise = rentsCSVFile({
     storeId,
     storeStaff,
@@ -73,7 +73,7 @@ export const onDownloadBackup = async ({ storeId, storeStaff }) => {
         downloadLink.href = URL.createObjectURL(content)
         downloadLink.setAttribute(
           'download',
-          `respaldo-${dateFormat(new Date(), 'ddMMMyy')}.zip`
+          `${storeName}-${dateFormat(new Date(), 'ddMMMyy')}.zip`
         )
         document.body.appendChild(downloadLink)
         downloadLink.click()
