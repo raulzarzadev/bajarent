@@ -21,12 +21,16 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { PriceType } from '../types/PriceType'
+import { ServiceBalances } from '../firebase/ServiceBalances2'
+
+export type CurrentBalanceType = {}
 
 export type StoreContextType = {
   store?: null | StoreType
   setStore?: Dispatch<any>
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
+  currentBalance?: CurrentBalanceType
   /**
    * @deprecated
    */
@@ -75,6 +79,7 @@ export type StoreContextType = {
 let sc = 0
 const StoreContext = createContext<StoreContextType>({})
 const StoreContextProvider = ({ children }) => {
+  const [currentBalance, setCurrentBalance] = useState<CurrentBalanceType>({})
   //#region hooks
   const { storeId, handleSetStoreId, store, stores } = useAuth()
 
@@ -93,11 +98,17 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     if (storeId) {
       fetchPrices()
-
+      //* STORE CATEGORIES
       ServiceCategories.listenByStore(storeId, async (categories) => {
         setCategories(categories)
       })
+      //* STORE SECTIONS
       ServiceSections.listenByStore(storeId, setSections)
+
+      //* CURRENT BALANCE
+      ServiceBalances.listenLastInDate(storeId, new Date(), setCurrentBalance)
+
+      //* STORE STAFF
       ServiceStaff.listenByStore(storeId, async (staff) => {
         const staffUserInfo = await Promise.all(
           staff.map(async ({ userId, ...rest }) => {
@@ -132,12 +143,14 @@ const StoreContextProvider = ({ children }) => {
     () => ({
       store,
       storeId,
+      currentBalance,
       handleSetStoreId,
       staff: staffWithSections,
       categories: categories.map((cat) => ({
         ...cat,
         prices: storePrices?.filter((p) => p.categoryId === cat.id)
       })),
+
       userStores: stores,
       storeSections: [
         ...sections,
@@ -173,7 +186,8 @@ const StoreContextProvider = ({ children }) => {
       storePrices,
       stores,
       sections,
-      fetchPrices
+      fetchPrices,
+      currentBalance
     ]
   )
   sc++

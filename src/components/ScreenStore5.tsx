@@ -14,7 +14,7 @@ import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
 import { BusinessStatusE } from './BusinessStatus'
 import asDate from '../libs/utils-date'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType2 } from '../types/BalanceType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
@@ -40,6 +40,9 @@ const ScreenStore = (props) => {
       canManageItems
     }
   } = useEmployee()
+
+  const scrollViewRef = useRef(null)
+
   const canViewSections = true
   const canViewOrders = isAdmin || isOwner || orders.canViewAll
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
@@ -62,7 +65,7 @@ const ScreenStore = (props) => {
   const CheckedStoreCounts = CheckedTab(StoreCounts)
 
   return (
-    <ScrollView>
+    <ScrollView ref={scrollViewRef}>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
       {!!user && (
         <Tabs
@@ -218,21 +221,16 @@ const TabClients = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
-  const { storeId, storeSections } = useStore()
+  const { storeId, storeSections, currentBalance } = useStore()
   const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    handleGetLastBalanceInDate(new Date())
-  }, [])
+    setBalance(currentBalance)
+  }, [currentBalance])
 
   const handleUpdateStoreStatus = async () => {
     setUpdating(true)
-    // ServiceConsolidatedOrders.consolidate(storeId, {
-    //   progress: (p) => {
-    //     setProgress(p)
-    //   }
-    // })
 
     return await ServiceBalances.createV2(storeId, {
       progress: (p) => {
@@ -249,7 +247,6 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
-  // const [date, setDate] = useState(new Date())
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleGetLastBalanceInDate = (date: Date) => {

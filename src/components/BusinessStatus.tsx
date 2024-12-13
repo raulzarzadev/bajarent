@@ -20,11 +20,12 @@ import asDate from '../libs/utils-date'
 import { OrderExtensionType } from '../types/OrderType'
 import Button from './Button'
 import Divider from './Divider'
+import { setItem, getItem } from '../libs/storage'
 
+const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
-  const { storeSections, storeId } = useStore()
-  const { toOrders } = useMyNav()
+  const { storeSections } = useStore()
 
   const table: {
     field: keyof BalanceRowType | 'allItems'
@@ -82,13 +83,21 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
   ]
 
   const [selectedRow, setSelectedRow] = React.useState<string | null>(null)
+  useEffect(() => {
+    getItem(BALANCE_ROW_SELECTED).then((selectedRow) => {
+      setSelectedRow(selectedRow)
+    })
+  }, [])
   const handleSelectRow = (rowId: string) => {
     if (selectedRow === rowId) {
       setSelectedRow(null)
+      setItem(BALANCE_ROW_SELECTED, null)
     } else {
       setSelectedRow(rowId)
+      setItem(BALANCE_ROW_SELECTED, rowId)
     }
   }
+
   const [createdItems, setCreatedItems] = React.useState<Partial<string>[]>()
   const [retiredItems, setRetiredItems] = React.useState<Partial<string>[]>()
   useEffect(() => {

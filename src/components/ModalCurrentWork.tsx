@@ -39,6 +39,7 @@ const ModalCurrentWork = () => {
   const modalCurrentWork = useModal({
     title: 'Trabajo de hoy (rentas)'
   })
+
   if (!permissions?.canSeeCurrentWork) return <></>
 
   return (
