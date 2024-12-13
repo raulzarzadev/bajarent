@@ -9,13 +9,14 @@ import Loading from './components/Loading'
 
 const ModalCloseOperations = () => {
   const modal = useModal({ title: 'Cerrar operación' })
-  const { storeId, staff } = useStore()
+  const { storeId, staff, store } = useStore()
   const [loading, setLoading] = React.useState(false)
   const handleConfirmCloseOps = async () => {
     setLoading(true)
 
     await onDownloadBackup({
       storeId,
+      storeName: store?.name || '',
       storeStaff: staff
     })
       .then(() => {
