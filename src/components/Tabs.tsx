@@ -1,9 +1,10 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
 import { gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
+import { getItem, setItem } from '../libs/storage'
 
 export type Tab = {
   title: string
@@ -17,15 +18,31 @@ export type TabsProps = {
   tabs: Tab[]
   defaultTab?: string | null
   showProgressBar?: boolean
+  tabId?: string
 }
 
-const TabsA = ({ tabs = [], defaultTab, showProgressBar }: TabsProps) => {
-  const [selectedTab, setSelectedTab] = useState(
-    defaultTab === null ? undefined : tabs[0]?.title
-  )
+const TabsA = ({
+  tabs = [],
+  defaultTab,
+  showProgressBar,
+  tabId
+}: TabsProps) => {
   const visibleTabs = tabs.filter(({ show }) => show)
+  const initialTab = defaultTab === null ? undefined : visibleTabs[0]?.title
+
+  const [selectedTab, setSelectedTab] = useState(initialTab)
+
+  useEffect(() => {
+    getItem(`tab-${tabId}`).then((tab) => {
+      if (tab) {
+        setSelectedTab(tab)
+      }
+    })
+  }, [tabId])
+
   const handleTabPress = (tab) => {
     setSelectedTab(tab)
+    setItem(`tab-${tabId}`, tab)
     // const visibleTabs = tabs.filter(({ show }) => show)
     const tabIndexSelected = visibleTabs.findIndex(({ title }) => title === tab)
     setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
