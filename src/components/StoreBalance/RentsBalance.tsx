@@ -32,7 +32,11 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
   const sectionsTabs = sectionsInfo.map(({ sectionName, sectionId }) => ({
     title: sectionName,
     content: (
-      <SectionBalanceRentsE orders={sections[sectionId]} balance={balance} />
+      <SectionBalanceRentsE
+        orders={sections[sectionId]}
+        balance={balance}
+        title={sectionName}
+      />
     ),
     show: true
   }))
@@ -45,7 +49,13 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
         tabs={[
           {
             title: 'Todo',
-            content: <SectionBalanceRentsE orders={rents} balance={balance} />,
+            content: (
+              <SectionBalanceRentsE
+                orders={rents}
+                balance={balance}
+                title={'Todo'}
+              />
+            ),
             show: true
           },
           ...sectionsTabs

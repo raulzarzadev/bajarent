@@ -10,6 +10,7 @@ import { useStore } from '../../contexts/storeContext'
 import { useState } from 'react'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import ErrorBoundary from '../ErrorBoundary'
+import { gStyles } from '../../styles'
 
 const StoreBalance = () => {
   const { storeId, currentBalance } = useStore()
@@ -35,8 +36,8 @@ const StoreBalance = () => {
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
-          marginVertical: 12,
-          margin: 'auto'
+          marginTop: 8,
+          marginHorizontal: 'auto'
         }}
       >
         <Button
@@ -50,9 +51,18 @@ const StoreBalance = () => {
           }}
         />
       </View>
-      <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+      <Text
+        style={{
+          textAlign: 'center',
+          marginBottom: 12,
+          marginTop: 4,
+          ...gStyles.helper
+        }}
+      >
         Última actualización:{' '}
-        {dateFormat(asDate(currentBalance?.createdAt), 'dd MMM yy HH:mm')}
+        <Text style={gStyles.tBold}>
+          {dateFormat(asDate(currentBalance?.createdAt), 'dd/MMM/yy HH:mm')}
+        </Text>
       </Text>
       {!!currentBalance && (
         <Tabs
