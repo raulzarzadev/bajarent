@@ -265,7 +265,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       }))
 
       balance.payments = payments?.map((payment) => {
-        console.log({ payment })
         return {
           id: payment.id,
           orderId: payment.orderId || null,
