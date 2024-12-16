@@ -38,6 +38,7 @@ export type BalancePayment = Pick<
   | 'verifiedAt'
   | 'canceledAt'
   | 'createdBy'
+  | 'type'
 >
 
 export type BalanceItems = {

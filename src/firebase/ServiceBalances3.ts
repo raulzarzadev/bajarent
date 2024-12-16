@@ -231,7 +231,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       balance.storeId = storeId
 
       //* Get payments
-      const payments = await this.getPaymentsDate({
+      const payments: PaymentType[] = await this.getPaymentsDate({
         storeId,
         fromDate: FROM_DATE,
         toDate: TO_DATE
@@ -265,14 +265,16 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       }))
 
       balance.payments = payments?.map((payment) => {
+        console.log({ payment })
         return {
           id: payment.id,
-          orderId: payment.orderId,
+          orderId: payment.orderId || null,
           amount: payment.amount,
           method: payment.method,
           verifiedAt: payment.verifiedAt || null,
           canceledAt: payment.canceledAt || null,
-          createdBy: payment.createdBy
+          createdBy: payment.createdBy,
+          type: payment?.type || null
         }
       })
 
