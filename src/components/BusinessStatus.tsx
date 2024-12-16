@@ -18,9 +18,9 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { translateTime } from '../libs/expireDate'
 import asDate from '../libs/utils-date'
 import { OrderExtensionType } from '../types/OrderType'
-import Button from './Button'
 import Divider from './Divider'
 import { setItem, getItem } from '../libs/storage'
+import { ExpandibleListE } from './ExpandibleList'
 
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
@@ -447,7 +447,7 @@ const CellOrders = ({
   if (!orders.length) return null
 
   return (
-    <ExpandibleList
+    <ExpandibleListE
       defaultExpanded={defaultExpanded}
       label={label}
       onPressRow={(id) => {
@@ -473,90 +473,11 @@ const CellOrders = ({
   )
 }
 
-export const ExpandibleListE = <T extends BasicExpandibleItemType>(
-  props: ExpandibleListProps<T>
-) => (
-  <ErrorBoundary componentName="ExpandibleList">
-    <ExpandibleList {...props} />
-  </ErrorBoundary>
-)
-
-export type BasicExpandibleItemType = {
-  id: string
-  content?: string | ReactNode
-}
-export type ExpandibleListProps<T> = {
-  label: string
-  items: T[] | BasicExpandibleItemType[]
-  onPressRow: (id: string) => void
-  onPressTitle?: () => void
-  defaultExpanded?: boolean
-  renderItem?: (item) => ReactNode
-}
-export const ExpandibleList = <T extends BasicExpandibleItemType>({
-  label,
-  items = [],
-  onPressRow,
-  onPressTitle,
-  defaultExpanded = false,
-  renderItem
-}: ExpandibleListProps<T>) => {
-  const [expanded, setExpanded] = React.useState(defaultExpanded)
-
-  const uniqueItems = removeDuplicates(items.map((i) => i.id))
-  const hasRenderItem = typeof renderItem === 'function'
-  return (
-    <View style={{ marginVertical: 8, marginHorizontal: 6 }}>
-      <View style={{ flexDirection: 'row' }}>
-        <Pressable onPress={onPressTitle}>
-          <Text style={[gStyles.h3, { marginRight: 4 }]}>
-            {label}
-            {`(${items?.length || 0})`}
-          </Text>
-        </Pressable>
-        <Button
-          size="small"
-          variant="ghost"
-          justIcon
-          color="accent"
-          icon={expanded ? 'rowDown' : 'rowRight'}
-          onPress={() => setExpanded(!expanded)}
-        />
-      </View>
-
-      {expanded &&
-        uniqueItems.map((item, index) => {
-          const itemData = items.find((i) => i.id === item)
-          const countItems = items.filter((i) => i.id === item)?.length || 0
-          if (hasRenderItem) return renderItem(itemData)
-          return (
-            <Pressable
-              key={`${itemData.id}-${index}`}
-              onPress={() => onPressRow(itemData.id)}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginVertical: 2
-              }}
-            >
-              <View style={{ width: 20 }}>
-                {countItems > 1 && (
-                  <Text style={[gStyles.tBold]}>{countItems}*</Text>
-                )}
-              </View>
-              <Text key={index}>{itemData?.content}</Text>
-            </Pressable>
-          )
-        })}
-    </View>
-  )
-}
-
 const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
   const { toOrders } = useMyNav()
   return (
     <View>
-      <ExpandibleList
+      <ExpandibleListE
         label="Extensiones"
         onPressTitle={() => {
           toOrders({
@@ -602,7 +523,6 @@ const Extensions = ({ extensions }: { extensions: OrderExtensionType[] }) => {
 }
 
 export default BusinessStatus
-const removeDuplicates = (arr: string[]) => Array.from(new Set(arr))
 
 const ExpandibleOrderList = ({
   ordersIds,
@@ -613,7 +533,7 @@ const ExpandibleOrderList = ({
 }) => {
   const { toOrders } = useMyNav()
   return (
-    <ExpandibleList
+    <ExpandibleListE
       onPressRow={(id) => {
         toOrders({ id })
       }}

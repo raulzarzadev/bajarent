@@ -21,7 +21,8 @@ import { ServiceUsers } from '../firebase/ServiceUser'
 import { ServicePrices } from '../firebase/ServicePrices'
 import ItemType from '../types/ItemType'
 import { PriceType } from '../types/PriceType'
-import { ServiceBalances } from '../firebase/ServiceBalances2'
+import { ServiceBalances } from '../firebase/ServiceBalances3'
+import { StoreBalanceType } from '../types/StoreBalance'
 
 export type CurrentBalanceType = {}
 
@@ -30,7 +31,7 @@ export type StoreContextType = {
   setStore?: Dispatch<any>
   storeId?: StoreType['id']
   handleSetStoreId?: (storeId: string) => any
-  currentBalance?: CurrentBalanceType
+  currentBalance?: StoreBalanceType
   /**
    * @deprecated
    */
@@ -79,7 +80,7 @@ export type StoreContextType = {
 let sc = 0
 const StoreContext = createContext<StoreContextType>({})
 const StoreContextProvider = ({ children }) => {
-  const [currentBalance, setCurrentBalance] = useState<CurrentBalanceType>({})
+  const [currentBalance, setCurrentBalance] = useState<CurrentBalanceType>()
   //#region hooks
   const { storeId, handleSetStoreId, store, stores } = useAuth()
 
@@ -136,6 +137,8 @@ const StoreContextProvider = ({ children }) => {
       .map((section) => section.id)
     return { ...staff, sectionsAssigned }
   })
+
+  console.log({ currentBalance })
 
   //#region useMemo
 

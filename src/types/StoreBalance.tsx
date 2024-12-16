@@ -7,6 +7,7 @@ import { TimePriceType } from './PriceType'
 export type StoreBalanceBase = {
   fromDate: Date
   toDate: Date
+  storeId: string
   items: BalanceItems[]
   payments: BalancePayment[]
   orders: StoreBalanceOrder[]
@@ -14,6 +15,7 @@ export type StoreBalanceBase = {
 }
 
 export type StoreBalanceOrder = {
+  clientName: string
   orderId: string
   orderType: OrderType['type']
   orderStatus: OrderType['status']
@@ -22,6 +24,8 @@ export type StoreBalanceOrder = {
   payments: BalancePayment[]
   assignedSection: OrderType['assignedSection']
   time: TimePriceType
+  renewedAt?: Date
+  deliveredAt?: Date
 }
 
 export type BalancePayment = Pick<

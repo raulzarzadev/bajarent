@@ -3,7 +3,7 @@ import ErrorBoundary from '../ErrorBoundary'
 const RepairsBalance = (props: RepairsBalanceProps) => {
   return (
     <View>
-      <Text>Reparaciones</Text>{' '}
+      <Text>Reparaciones</Text>
     </View>
   )
 }

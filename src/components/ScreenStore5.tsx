@@ -28,7 +28,7 @@ import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import ModalCloseOperations from '../ModalCloseOperations'
-import StoreBalance from './StoreBalance/StoreBalance'
+import StoreBalance, { StoreBalanceE } from './StoreBalance/StoreBalance'
 
 const ScreenStore = (props) => {
   const { store, user } = useAuth()
@@ -64,7 +64,7 @@ const ScreenStore = (props) => {
   const CheckedTabClients = CheckedTab(TabClients)
   const CheckedTabOrders = CheckedTab(TabOrders)
   const CheckedStoreCounts = CheckedTab(StoreCounts)
-  const CheckedStoreBalance = CheckedTab(StoreBalance)
+  const CheckedStoreBalance = CheckedTab(StoreBalanceE)
   return (
     <ScrollView ref={scrollViewRef}>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
