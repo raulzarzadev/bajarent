@@ -10,7 +10,7 @@ import PaymentType from '../types/PaymentType'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import { StoreBalanceOrder, StoreBalanceType } from '../types/StoreBalance'
 import { ServicePayments } from './ServicePayments'
-import { ca } from 'react-native-paper-dates'
+import ItemType from '../types/ItemType'
 
 class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   constructor() {
@@ -252,7 +252,9 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       })
 
       //* Get items
-      const availableItems = await ServiceStoreItems.getAvailable({ storeId })
+      const availableItems: ItemType[] = await ServiceStoreItems.getAvailable({
+        storeId
+      })
 
       //* Get reports
       const solvedReports = await ServiceComments.getSolvedReportsByDate({
@@ -265,8 +267,9 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         itemId: item.id,
         itemEco: item.number,
         assignedSection: item.assignedSection || null,
-        categoryId: item?.category || null
+        categoryId: item.category || null
       }))
+
       balance.payments = payments?.map((payment) => {
         return {
           id: payment.id,
@@ -321,7 +324,8 @@ const formatAsBalanceOrder = ({
     order?.items?.map((item) => ({
       itemId: item?.id,
       itemEco: item?.number,
-      categoryId: item?.categoryId || null
+      categoryName: item?.categoryName || null,
+      priceId: item?.priceSelected?.id || null
     })) || null
   const time = order?.items?.[0]?.priceSelected?.time || null
 

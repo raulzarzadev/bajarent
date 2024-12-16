@@ -44,7 +44,10 @@ export type BalanceItems = {
   itemId: string
   itemEco: string
   assignedSection?: string
-  categoryId?: string
+  categoryName?: string
+  priceId?: string
+
+  // categoryId?: string
   //status: ItemType['status']
 }
 
