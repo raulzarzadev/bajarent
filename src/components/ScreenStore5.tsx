@@ -228,13 +228,15 @@ const TabClients = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
-  const { storeId, storeSections, currentBalance } = useStore()
+  const { storeId, storeSections } = useStore()
   const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    setBalance(currentBalance)
-  }, [currentBalance])
+    ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
+      setBalance(res[0] || null)
+    })
+  }, [])
 
   const handleUpdateStoreStatus = async () => {
     setUpdating(true)
