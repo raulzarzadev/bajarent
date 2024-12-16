@@ -37,9 +37,7 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
         orders={sections[sectionId]}
         balance={balance}
         title={sectionName}
-        items={balance.items.filter(
-          (item) => item.assignedSection === sectionId
-        )}
+        sectionId={sectionId}
       />
     ),
     show: true
@@ -58,7 +56,7 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
                 orders={rents}
                 balance={balance}
                 title={'Todo'}
-                items={balance.items}
+                sectionId={'all'}
               />
             ),
             show: true

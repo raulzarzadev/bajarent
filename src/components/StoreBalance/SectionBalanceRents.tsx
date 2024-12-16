@@ -13,7 +13,7 @@ const SectionBalanceRents = ({
   orders,
   balance,
   title,
-  items
+  sectionId = 'all'
 }: SectionBalanceRentsProps) => {
   const { toItems } = useMyNav()
   const actives = orders?.filter(
@@ -43,6 +43,14 @@ const SectionBalanceRents = ({
       })
   )
 
+  const solvedReports = balance?.solvedReports
+    ?.map((report) =>
+      balance.orders.find((order) => order.orderId === report.orderId)
+    )
+    .filter((order) =>
+      sectionId === 'all' ? true : order.assignedSection === sectionId
+    )
+
   const payments = orders.map((order) => order?.payments).flat()
 
   return (
@@ -53,12 +61,14 @@ const SectionBalanceRents = ({
         <ExpandibleListE
           label={'Artículos'}
           defaultExpanded={false}
-          items={items?.map((item) => {
-            return {
-              id: item?.itemId,
-              content: <Text>{item?.itemEco}</Text>
-            }
-          })}
+          items={balance?.items
+            ?.filter((i) => i.assignedSection === sectionId)
+            .map((item) => {
+              return {
+                id: item?.itemId,
+                content: <Text>{item?.itemEco}</Text>
+              }
+            })}
           onPressRow={(id) => toItems({ id })}
         />
       </View>
@@ -82,6 +92,10 @@ const SectionBalanceRents = ({
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceOrders orders={actives} label="Todas" />
         <ExpandibleBalanceOrders orders={canceled} label="Canceladas" />
+        <ExpandibleBalanceOrders
+          orders={solvedReports}
+          label="Reportes resueltos"
+        />
       </View>
     </View>
   )
@@ -102,7 +116,7 @@ export const ExpandibleBalanceOrders = ({
       label={label}
       defaultExpanded={defaultExpanded}
       items={orders.map((order) => ({
-        id: order.orderId,
+        id: order?.orderId,
         content: <BalanceOrderRowE order={order} />
       }))}
       onPressRow={(id) => toOrders({ id })}
@@ -113,7 +127,7 @@ export type SectionBalanceRentsProps = {
   orders: StoreBalanceOrder[]
   balance: StoreBalanceType
   title: string
-  items: StoreBalanceType['items']
+  sectionId: string
 }
 export const SectionBalanceRentsE = (props: SectionBalanceRentsProps) => (
   <ErrorBoundary componentName="SectionBalanceRents">

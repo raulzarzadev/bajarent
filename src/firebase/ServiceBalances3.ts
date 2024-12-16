@@ -114,6 +114,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       ])
     }
   }
+
   async getFormattedOrders(
     props: GetBalanceOrders & { payments: PaymentType[] }
   ) {
@@ -237,6 +238,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         toDate: TO_DATE
       })
       //* Get orders
+
       const {
         activeRents,
         activeRepairs,
@@ -254,13 +256,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       //* Get items
       const availableItems: ItemType[] = await ServiceStoreItems.getAvailable({
         storeId
-      })
-
-      //* Get reports
-      const solvedReports = await ServiceComments.getSolvedReportsByDate({
-        storeId,
-        fromDate: FROM_DATE,
-        toDate: TO_DATE
       })
 
       balance.items = availableItems?.map((item) => ({
@@ -281,8 +276,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
           createdBy: payment.createdBy
         }
       })
-      balance.solvedReports = solvedReports
-      balance.orders = [
+
+      const orders = [
         ...activeRents,
         ...activeRepairs,
         ...rentsFinishedDate,
@@ -290,6 +285,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         ...salesDate,
         ...canceledOrders
       ]
+
+      balance.orders = orders
         //* format orders
         .map((order) =>
           formatAsBalanceOrder({
@@ -302,6 +299,15 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
           (order, index, self) =>
             index === self.findIndex((t) => t.orderId === order.orderId)
         )
+
+      //* Get reports
+      const solvedReports = await ServiceComments.getSolvedReportsByDate({
+        storeId,
+        fromDate: FROM_DATE,
+        toDate: TO_DATE
+      })
+
+      balance.solvedReports = solvedReports
 
       console.timeEnd('createV3')
       return balance

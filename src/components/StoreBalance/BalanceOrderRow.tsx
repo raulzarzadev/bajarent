@@ -10,7 +10,7 @@ import { translateTime } from '../../libs/expireDate'
 const BalanceOrderRow = (props: BalanceOrderRowProps) => {
   const order = props.order
   const { categories } = useStore()
-  const paymentAmount = order.payments.reduce((acc, payment) => {
+  const paymentAmount = order?.payments?.reduce((acc, payment) => {
     // omit canclations
     if (!!payment.canceledAt) return acc
     return acc + payment.amount
@@ -25,7 +25,7 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
   const paymentAndPriceMatches = matchedPrice?.amount === paymentAmount
   return (
     <View>
-      <Text>{order.clientName}</Text>
+      <Text>{order?.clientName}</Text>
       <View
         style={{
           flexDirection: 'row',
@@ -33,7 +33,7 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
           alignItems: 'center'
         }}
       >
-        <Text style={gStyles.helper}>{order.orderFolio}</Text>
+        <Text style={gStyles.helper}>{order?.orderFolio}</Text>
 
         {paymentAmount > 0 && (
           <React.Fragment>
@@ -57,7 +57,7 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
           </React.Fragment>
         )}
         <Text style={gStyles.helper}>
-          {translateTime(order.time, { shortLabel: true })}
+          {translateTime(order?.time, { shortLabel: true })}
         </Text>
 
         <Text style={gStyles.helper}> - </Text>
