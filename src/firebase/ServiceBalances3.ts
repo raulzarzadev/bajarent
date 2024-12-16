@@ -1,6 +1,5 @@
 import { limit, orderBy, where } from 'firebase/firestore'
 import { FirebaseGenericService } from './genericService'
-import { BalanceType2 } from '../types/BalanceType'
 import { ServiceOrders } from './ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import asDate, { endDate, startDate } from '../libs/utils-date'
@@ -42,7 +41,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   async listenLastInDate(
     storeId: string,
     date: Date,
-    cb: (data: Partial<BalanceType2>[]) => void
+    cb: (data: StoreBalanceType) => void
   ) {
     return this.listenMany(
       [

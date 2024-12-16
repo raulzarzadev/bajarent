@@ -31,9 +31,7 @@ const SectionBalanceRentItems = ({ items }: SectionBalanceRentItemsProps) => {
                       id: item.itemId,
                       content: (
                         <Text>
-                          {item.itemEco}{' '}
-                          {categories.find((c) => item.categoryId === c.id)
-                            ?.name || ''}
+                          {item.itemEco} {item.categoryName}
                         </Text>
                       )
                     }
@@ -62,9 +60,7 @@ const SectionBalanceRentItems = ({ items }: SectionBalanceRentItemsProps) => {
                 id: item.itemId,
                 content: (
                   <Text>
-                    {item.itemEco}{' '}
-                    {categories.find((c) => item.categoryId === c.id)?.name ||
-                      ''}
+                    {item.itemEco} {item.categoryName}
                   </Text>
                 )
               }

@@ -21,7 +21,7 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
     ?.map((cat) => cat.prices)
     ?.flat()
     ?.find((price) => price?.id === order?.items?.[0]?.priceId)
-  console.log({ matchedPrice })
+  //TODO: some times this will not match becaouse payemnts will be more if the balance is for more time
   const paymentAndPriceMatches = matchedPrice?.amount === paymentAmount
   return (
     <View>

@@ -1,4 +1,4 @@
-import { Component, ReactNode } from 'react'
+import React, { Component, ReactNode } from 'react'
 import { ServiceAppErrors } from '../firebase/ServiceAppErrors'
 import { NavigationProp } from '@react-navigation/native'
 import { Platform } from 'react-native'

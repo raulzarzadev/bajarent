@@ -80,7 +80,7 @@ export type StoreContextType = {
 let sc = 0
 const StoreContext = createContext<StoreContextType>({})
 const StoreContextProvider = ({ children }) => {
-  const [currentBalance, setCurrentBalance] = useState<CurrentBalanceType>()
+  const [currentBalance, setCurrentBalance] = useState<StoreBalanceType>()
   //#region hooks
   const { storeId, handleSetStoreId, store, stores } = useAuth()
 
@@ -107,7 +107,9 @@ const StoreContextProvider = ({ children }) => {
       ServiceSections.listenByStore(storeId, setSections)
 
       //* CURRENT BALANCE
-      ServiceBalances.listenLastInDate(storeId, new Date(), setCurrentBalance)
+      ServiceBalances.listenLastInDate(storeId, new Date(), (balance) =>
+        setCurrentBalance(balance)
+      )
 
       //* STORE STAFF
       ServiceStaff.listenByStore(storeId, async (staff) => {
@@ -137,8 +139,6 @@ const StoreContextProvider = ({ children }) => {
       .map((section) => section.id)
     return { ...staff, sectionsAssigned }
   })
-
-  console.log({ currentBalance })
 
   //#region useMemo
 
