@@ -26,6 +26,7 @@ export type StoreBalanceOrder = {
   time: TimePriceType
   renewedAt?: Date
   deliveredAt?: Date
+  canceledAt?: Date
 }
 
 export type BalancePayment = Pick<

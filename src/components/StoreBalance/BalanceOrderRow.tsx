@@ -12,7 +12,7 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
     if (!!payment.canceledAt) return acc
     return acc + payment.amount
   }, 0)
-  const itemNumber = order.items.map((item) => item.itemEco).join(', ')
+  const itemNumber = order?.items?.map((item) => item?.itemEco).join(', ')
   return (
     <View>
       <Text>{order.clientName}</Text>
