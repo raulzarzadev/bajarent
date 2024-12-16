@@ -43,6 +43,8 @@ export type BalancePayment = Pick<
 export type BalanceItems = {
   itemId: string
   itemEco: string
+  assignedSection?: string
+  categoryId?: string
   //status: ItemType['status']
 }
 

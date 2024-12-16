@@ -12,8 +12,10 @@ import { gStyles } from '../../styles'
 const SectionBalanceRents = ({
   orders,
   balance,
-  title
+  title,
+  items
 }: SectionBalanceRentsProps) => {
+  const { toItems } = useMyNav()
   const actives = orders?.filter(
     (order) => order?.orderStatus === order_status.DELIVERED
   )
@@ -47,6 +49,19 @@ const SectionBalanceRents = ({
     <View>
       <Text style={gStyles.h2}>{title}</Text>
       <BalanceAmountsE payments={payments} />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <ExpandibleListE
+          label={'Artículos'}
+          defaultExpanded={false}
+          items={items?.map((item) => {
+            return {
+              id: item?.itemId,
+              content: <Text>{item?.itemEco}</Text>
+            }
+          })}
+          onPressRow={(id) => toItems({ id })}
+        />
+      </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceOrders
           orders={delivered}
@@ -98,6 +113,7 @@ export type SectionBalanceRentsProps = {
   orders: StoreBalanceOrder[]
   balance: StoreBalanceType
   title: string
+  items: StoreBalanceType['items']
 }
 export const SectionBalanceRentsE = (props: SectionBalanceRentsProps) => (
   <ErrorBoundary componentName="SectionBalanceRents">

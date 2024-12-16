@@ -43,6 +43,7 @@ export const ExpandibleList = <T extends BasicExpandibleItemType>({
         uniqueItems.map((item, index) => {
           const itemData = items.find((i) => i.id === item)
           const countItems = items.filter((i) => i.id === item)?.length || 0
+
           if (hasRenderItem) return renderItem(itemData)
           return (
             <Pressable

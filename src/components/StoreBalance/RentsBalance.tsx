@@ -5,6 +5,7 @@ import { order_type } from '../../types/OrderType'
 import Tabs from '../Tabs'
 import { useStore } from '../../contexts/storeContext'
 import { SectionBalanceRentsE } from './SectionBalanceRents'
+import SectionBalanceRentItemsE from './SectionBalanceRentItemsE'
 
 const RentsBalance = ({ balance }: RentsBalanceProps) => {
   const { storeSections } = useStore()
@@ -36,6 +37,9 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
         orders={sections[sectionId]}
         balance={balance}
         title={sectionName}
+        items={balance.items.filter(
+          (item) => item.assignedSection === sectionId
+        )}
       />
     ),
     show: true
@@ -54,8 +58,14 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
                 orders={rents}
                 balance={balance}
                 title={'Todo'}
+                items={balance.items}
               />
             ),
+            show: true
+          },
+          {
+            title: 'Artículos',
+            content: <SectionBalanceRentItemsE items={balance.items} />,
             show: true
           },
           ...sectionsTabs

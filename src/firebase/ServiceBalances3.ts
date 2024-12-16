@@ -10,6 +10,7 @@ import PaymentType from '../types/PaymentType'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import { StoreBalanceOrder, StoreBalanceType } from '../types/StoreBalance'
 import { ServicePayments } from './ServicePayments'
+import { ca } from 'react-native-paper-dates'
 
 class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   constructor() {
@@ -262,7 +263,9 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
 
       balance.items = availableItems?.map((item) => ({
         itemId: item.id,
-        itemEco: item.number
+        itemEco: item.number,
+        assignedSection: item.assignedSection || null,
+        categoryId: item?.category || null
       }))
       balance.payments = payments?.map((payment) => {
         return {
@@ -317,7 +320,8 @@ const formatAsBalanceOrder = ({
   const items =
     order?.items?.map((item) => ({
       itemId: item?.id,
-      itemEco: item?.number
+      itemEco: item?.number,
+      categoryId: item?.categoryId || null
     })) || null
   const time = order?.items?.[0]?.priceSelected?.time || null
 
