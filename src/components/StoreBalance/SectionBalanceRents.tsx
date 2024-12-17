@@ -81,21 +81,20 @@ const SectionBalanceRents = ({
       )?.name
     }))
     .flat()
+    .filter((item) =>
+      sectionId === 'all' ? true : item?.assignedSection === sectionId
+    )
     .sort((a, b) => a.itemEco.localeCompare(b.itemEco))
 
   //* ORDER ITEMS
 
-  const rentedItems = balance.orders
+  const rentedItems = actives
     .map((order) =>
-      order?.items?.map((item) =>
-        item
-          ? {
-              ...item,
-              orderFolio: order?.orderFolio,
-              orderId: order?.orderId
-            }
-          : null
-      )
+      order?.items?.map((item) => ({
+        ...(item || {}),
+        orderFolio: order?.orderFolio,
+        orderId: order?.orderId
+      }))
     )
     .filter(Boolean)
     .flat()
@@ -110,7 +109,26 @@ const SectionBalanceRents = ({
     <View>
       <Text style={gStyles.h2}>{title}</Text>
       <BalanceAmountsE payments={payments} />
+
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <ExpandibleBalanceOrders
+          orders={delivered}
+          label="Rentas"
+          defaultExpanded
+        />
+        <ExpandibleBalanceOrders
+          orders={renewed}
+          label="Renovadas"
+          defaultExpanded
+        />
+        <ExpandibleBalanceOrders
+          orders={pickedUp}
+          label="Recogidas"
+          defaultExpanded
+        />
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <ExpandibleBalanceOrders orders={actives} label="Todas" />
         <ExpandibleListE
           label={'Artículos rentados'}
           defaultExpanded={false}
@@ -143,24 +161,6 @@ const SectionBalanceRents = ({
         />
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <ExpandibleBalanceOrders
-          orders={delivered}
-          label="Rentas"
-          defaultExpanded
-        />
-        <ExpandibleBalanceOrders
-          orders={renewed}
-          label="Renovadas"
-          defaultExpanded
-        />
-        <ExpandibleBalanceOrders
-          orders={pickedUp}
-          label="Recogidas"
-          defaultExpanded
-        />
-      </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <ExpandibleBalanceOrders orders={actives} label="Todas" />
         <ExpandibleBalanceOrders orders={canceled} label="Canceladas" />
         <ExpandibleBalanceOrders
           orders={solvedReports}
