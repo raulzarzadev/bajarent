@@ -13,6 +13,7 @@ const SectionBalanceRentItems = ({ items }: SectionBalanceRentItemsProps) => {
     acc[item.assignedSection].push(item)
     return acc
   }, {} as { [key: string]: StoreBalanceType['items'] })
+
   return (
     <View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>

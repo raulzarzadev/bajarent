@@ -9,6 +9,7 @@ import { ExpandibleListE } from '../ExpandibleList'
 import { BalanceOrderRowE } from './BalanceOrderRow'
 import useMyNav from '../../hooks/useMyNav'
 import { gStyles } from '../../styles'
+import { useStore } from '../../contexts/storeContext'
 const SectionBalanceRents = ({
   orders,
   balance,
@@ -16,6 +17,7 @@ const SectionBalanceRents = ({
   sectionId = 'all'
 }: SectionBalanceRentsProps) => {
   const { toItems } = useMyNav()
+  const { categories } = useStore()
   const actives = orders?.filter(
     (order) => order?.orderStatus === order_status.DELIVERED
   )
@@ -55,8 +57,7 @@ const SectionBalanceRents = ({
   const otherPayments = balance.payments.filter((payment) =>
     sectionId === 'all' ? true : payment.sectionId === sectionId
   )
-  //remove duplicates payments
-
+  //* remove duplicates payments
   const payments = [...orderPayment, ...otherPayments].reduce(
     (acc, payment) => {
       if (!acc.find((p) => p.id === payment.id)) {
@@ -67,22 +68,62 @@ const SectionBalanceRents = ({
     []
   )
 
+  //* ITEMS
+  //* AVALIABLE ITEMS
+
+  const availableItems = balance?.items
+    .map((item) => ({
+      ...item,
+      assignedSection: item.assignedSection || 'withoutSection',
+      categoryName: categories.find(
+        (category) => category.id === item.categoryId
+      )?.name
+    }))
+    .flat()
+  //* ORDER ITEMS
+
+  const rentedItems = balance.orders
+    .map((order) => order?.items)
+    .flat()
+    .map((item) => ({
+      ...item,
+      assignedSection: item?.assignedSection || 'withoutSection',
+      categoryName: item?.categoryName
+    }))
+
   return (
     <View>
       <Text style={gStyles.h2}>{title}</Text>
       <BalanceAmountsE payments={payments} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleListE
-          label={'Artículos'}
+          label={'Artículos rentados'}
           defaultExpanded={false}
-          items={balance?.items
-            ?.filter((i) => i.assignedSection === sectionId)
-            .map((item) => {
-              return {
-                id: item?.itemId,
-                content: <Text>{item?.itemEco}</Text>
-              }
-            })}
+          items={rentedItems.map((item) => {
+            return {
+              id: item?.itemId,
+              content: (
+                <Text>
+                  {item?.itemEco} {item.categoryName}
+                </Text>
+              )
+            }
+          })}
+          onPressRow={(id) => toItems({ id })}
+        />
+        <ExpandibleListE
+          label={'Artículos disponibles'}
+          defaultExpanded={false}
+          items={availableItems.map((item) => {
+            return {
+              id: item?.itemId,
+              content: (
+                <Text>
+                  {item?.itemEco} {item.categoryName}
+                </Text>
+              )
+            }
+          })}
           onPressRow={(id) => toItems({ id })}
         />
       </View>
