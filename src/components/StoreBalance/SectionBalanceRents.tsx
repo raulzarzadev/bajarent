@@ -76,6 +76,7 @@ const SectionBalanceRents = ({
       ...item,
       assignedSection: item.assignedSection || 'withoutSection',
       categoryName: categories.find(
+        //@ts-ignore
         (category) => category.id === item.categoryId
       )?.name
     }))
