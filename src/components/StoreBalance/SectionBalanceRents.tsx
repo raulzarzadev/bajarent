@@ -71,20 +71,25 @@ const SectionBalanceRents = ({
   //* ITEMS
   //* AVALIABLE ITEMS
 
-  const availableItems = balance?.items
-    .map((item) => ({
-      ...item,
-      assignedSection: item.assignedSection || 'withoutSection',
-      categoryName: categories.find(
+  const sortItemsByNumber = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
+  const formatItemsWithSectionAndCategoryName = (item) => ({
+    ...item,
+    assignedSection: item?.assignedSection || 'withoutSection',
+    categoryName:
+      item?.categoryName ||
+      categories.find(
         //@ts-ignore
         (category) => category.id === item.categoryId
       )?.name
-    }))
+  })
+
+  const availableItems = balance?.items
+    .map(formatItemsWithSectionAndCategoryName)
     .flat()
     .filter((item) =>
       sectionId === 'all' ? true : item?.assignedSection === sectionId
     )
-    .sort((a, b) => a?.itemEco?.localeCompare(b?.itemEco))
+    .sort(sortItemsByNumber)
 
   //* ORDER ITEMS
 
@@ -98,12 +103,8 @@ const SectionBalanceRents = ({
     )
     .filter(Boolean)
     .flat()
-    .map((item) => ({
-      ...item,
-      assignedSection: item?.assignedSection || 'withoutSection',
-      categoryName: item?.categoryName
-    }))
-    .sort((a, b) => a?.itemEco?.localeCompare(b?.itemEco))
+    .map(formatItemsWithSectionAndCategoryName)
+    .sort(sortItemsByNumber)
 
   return (
     <View>
