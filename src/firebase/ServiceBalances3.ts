@@ -329,7 +329,7 @@ const formatAsBalanceOrder = ({
   const items =
     order?.items?.map((item) => ({
       itemId: item?.id,
-      itemEco: item?.number,
+      itemEco: item?.number || null,
       categoryName: item?.categoryName || null,
       priceId: item?.priceSelected?.id || null
     })) || null
