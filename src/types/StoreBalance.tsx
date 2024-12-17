@@ -29,17 +29,19 @@ export type StoreBalanceOrder = {
   canceledAt?: Date
 }
 
-export type BalancePayment = Pick<
-  PaymentType,
-  | 'id'
-  | 'orderId'
-  | 'amount'
-  | 'method'
-  | 'verifiedAt'
-  | 'canceledAt'
-  | 'createdBy'
-  | 'type'
->
+export type BalancePayment = PaymentType
+
+// Pick<
+//   PaymentType,
+//   | 'id'
+//   | 'orderId'
+//   | 'amount'
+//   | 'method'
+//   | 'verifiedAt'
+//   | 'canceledAt'
+//   | 'createdBy'
+//   | 'type'
+// >
 
 export type BalanceItems = {
   itemId: string

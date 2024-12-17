@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, TextStyle, View } from 'react-native'
-import React from 'react'
 import PaymentType from '../types/PaymentType'
 import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
@@ -13,7 +12,6 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
   const cardPayments = payments?.filter((p) => p.method === 'card')
   const transferPayments = payments?.filter((p) => p.method === 'transfer')
   const canceledPayments = payments?.filter((p) => p.canceled)
-  const retirementsCount = payments?.filter((p) => p.isRetirement)
   const retirementBonus = payments.filter((p) => p.type === 'bonus')
   const retirementExpense = payments.filter((p) => p.type === 'expense')
   const retirementMissing = payments.filter((p) => p.type === 'missing')
@@ -28,7 +26,6 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
     cash,
     transfers,
     transfersNotVerified,
-    retirements,
     incomes,
     outcomes,
     missing,

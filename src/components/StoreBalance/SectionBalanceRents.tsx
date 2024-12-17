@@ -51,7 +51,21 @@ const SectionBalanceRents = ({
       sectionId === 'all' ? true : order?.assignedSection === sectionId
     )
 
-  const payments = orders.map((order) => order?.payments).flat()
+  const orderPayment = orders.map((order) => order?.payments).flat()
+  const otherPayments = balance.payments.filter((payment) =>
+    sectionId === 'all' ? true : payment.sectionId === sectionId
+  )
+  //remove duplicates payments
+
+  const payments = [...orderPayment, ...otherPayments].reduce(
+    (acc, payment) => {
+      if (!acc.find((p) => p.id === payment.id)) {
+        acc.push(payment)
+      }
+      return acc
+    },
+    []
+  )
 
   return (
     <View>

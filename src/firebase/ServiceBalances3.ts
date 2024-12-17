@@ -273,7 +273,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
           verifiedAt: payment.verifiedAt || null,
           canceledAt: payment.canceledAt || null,
           createdBy: payment.createdBy,
-          type: payment?.type || null
+          type: payment?.type || null,
+          ...payment
         }
       })
 
