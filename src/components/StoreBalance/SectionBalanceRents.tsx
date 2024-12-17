@@ -48,7 +48,7 @@ const SectionBalanceRents = ({
       balance.orders.find((order) => order.orderId === report.orderId)
     )
     .filter((order) =>
-      sectionId === 'all' ? true : order.assignedSection === sectionId
+      sectionId === 'all' ? true : order?.assignedSection === sectionId
     )
 
   const payments = orders.map((order) => order?.payments).flat()
