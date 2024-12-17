@@ -23,6 +23,9 @@ const initialAutState: {
   stores?: StoreType[]
   storeId?: string
   handleSetStoreId?: (storeId: string) => any
+  /**
+   * @deprecated use employee instead
+   */
   store?: StoreType
   /**
    * @deprecated use employee instead
@@ -43,7 +46,7 @@ const AuthContextProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialAutState)
   const [storeId, setStoreId] = useState<string>('')
   const [stores, setStores] = useState<StoreType[]>([])
-  const [store, setStore] = useState<StoreType | null>(undefined)
+  // const [store, setStore] = useState<StoreType | null>(undefined)
 
   useEffect(() => {
     authStateChanged((user) => {
@@ -54,16 +57,6 @@ const AuthContextProvider = ({ children }) => {
     })
   }, [])
 
-  const getUserStores = async () => {
-    if (auth.user) {
-      const userStores = await ServiceStores.userStores(auth.user.id)
-      setStores(userStores)
-    } else {
-      setStore(null)
-      setStores([])
-    }
-  }
-
   useEffect(() => {
     if (auth.user === null) {
       toProfile()
@@ -73,16 +66,26 @@ const AuthContextProvider = ({ children }) => {
     }
   }, [auth.user])
 
+  const getUserStores = async () => {
+    if (auth.user) {
+      const userStores = await ServiceStores.userStores(auth.user.id)
+      setStores(userStores)
+    } else {
+      // setStore(null)
+      setStores([])
+    }
+  }
+
   const handleSetStoreId = async (storeId: string) => {
     getUserStores()
     if (storeId) {
       setStoreId(storeId)
       setItem('storeId', storeId) //*<- save the storeId in localStorage
-      ServiceStores.listen(storeId, setStore)
+      // ServiceStores.listen(storeId, setStore)
     } else {
       setStoreId('')
       setItem('storeId', '') //*<- save the storeId in localStorage
-      setStore(null)
+      //  setStore(null)
     }
   }
 
@@ -92,11 +95,19 @@ const AuthContextProvider = ({ children }) => {
       setAuth,
       storeId,
       stores,
-      store,
+      //   store,
       handleSetStoreId
     }),
-    [auth, setAuth, storeId, stores, store]
+    [
+      auth,
+      setAuth,
+      storeId,
+      stores
+      // store
+    ]
   )
+  //console.log({ store })
+
   at++
   if (__DEV__) console.log({ at })
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

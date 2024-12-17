@@ -31,7 +31,8 @@ import ModalCloseOperations from '../ModalCloseOperations'
 import StoreBalance, { StoreBalanceE } from './StoreBalance/StoreBalance'
 
 const ScreenStore = (props) => {
-  const { store, user } = useAuth()
+  const { user } = useAuth()
+  const { store } = useStore()
   const {
     permissions: {
       isAdmin,
@@ -150,7 +151,7 @@ const TabMovements = () => {
 }
 
 const StoreNumbersRow = () => {
-  const { store } = useAuth()
+  const { store } = useStore()
   const { navigate } = useNavigation()
   const { orders, reports } = useOrdersCtx()
 

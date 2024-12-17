@@ -23,6 +23,7 @@ import ItemType from '../types/ItemType'
 import { PriceType } from '../types/PriceType'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
 import { StoreBalanceType } from '../types/StoreBalance'
+import { ServiceStores } from '../firebase/ServiceStore'
 
 export type CurrentBalanceType = {}
 
@@ -82,8 +83,8 @@ const StoreContext = createContext<StoreContextType>({})
 const StoreContextProvider = ({ children }) => {
   const [currentBalance, setCurrentBalance] = useState<StoreBalanceType>()
   //#region hooks
-  const { storeId, handleSetStoreId, store, stores } = useAuth()
-
+  const { storeId, handleSetStoreId, stores } = useAuth()
+  const [store, setStore] = useState<StoreType>()
   const [categories, setCategories] = useState<Partial<CategoryType>[]>([])
   const [sections, setSections] = useState<SectionType[]>([])
   const [staff, setStaff] = useState<StaffType[]>([])
@@ -96,21 +97,33 @@ const StoreContextProvider = ({ children }) => {
     setStorePrices(prices)
   }
 
+  const getStoreData = async () => {
+    const storePromise = ServiceStores.get(storeId)
+    const categoriesPromise = ServiceCategories.getByStore(storeId)
+    const sectionsPromise = ServiceSections.getByStore(storeId)
+    const staffPromise = ServiceStaff.getByStore(storeId)
+    const pricesPromise = ServicePrices.getByStore(storeId)
+    const [store, categories, sections, staff, prices] = await Promise.all([
+      storePromise,
+      categoriesPromise,
+      sectionsPromise,
+      staffPromise,
+      pricesPromise
+    ])
+    return { store, categories, sections, staff, prices }
+  }
+
   useEffect(() => {
     if (storeId) {
-      fetchPrices()
-      //* STORE CATEGORIES
-      ServiceCategories.listenByStore(storeId, async (categories) => {
+      getStoreData().then(({ store, categories, sections, staff, prices }) => {
+        console.log({ store, categories, sections, staff, prices })
+
+        setStore(store)
         setCategories(categories)
+        setSections(sections)
+        //setStaff(staff)
+        setStorePrices(prices)
       })
-      //* STORE SECTIONS
-      ServiceSections.listenByStore(storeId, setSections)
-
-      //* CURRENT BALANCE
-      ServiceBalances.listenLastInDate(storeId, new Date(), (balance) =>
-        setCurrentBalance(balance)
-      )
-
       //* STORE STAFF
       ServiceStaff.listenByStore(storeId, async (staff) => {
         const staffUserInfo = await Promise.all(
@@ -133,6 +146,44 @@ const StoreContextProvider = ({ children }) => {
     }
   }, [storeId])
 
+  // useEffect(() => {
+  //   if (storeId) {
+  //     ServiceStores.listen(storeId, setStore)
+  //     fetchPrices()
+  //     //* STORE CATEGORIES
+  //     ServiceCategories.listenByStore(storeId, async (categories) => {
+  //       setCategories(categories)
+  //     })
+  //     //* STORE SECTIONS
+  //     ServiceSections.listenByStore(storeId, setSections)
+
+  //     //* CURRENT BALANCE
+  //     ServiceBalances.listenLastInDate(storeId, new Date(), (balance) =>
+  //       setCurrentBalance(balance)
+  //     )
+
+  //     //* STORE STAFF
+  //     ServiceStaff.listenByStore(storeId, async (staff) => {
+  //       const staffUserInfo = await Promise.all(
+  //         staff.map(async ({ userId, ...rest }) => {
+  //           const user = await ServiceUsers.get(userId)
+  //           const name = user?.name || ''
+  //           const phone = user?.phone || ''
+  //           const email = user?.email || ''
+  //           return {
+  //             ...rest,
+  //             name: name || rest?.position,
+  //             phone,
+  //             email,
+  //             userId: user?.id || ''
+  //           }
+  //         })
+  //       )
+  //       setStaff(staffUserInfo)
+  //     })
+  //   }
+  // }, [storeId])
+
   const staffWithSections = staff.map((staff) => {
     const sectionsAssigned = sections
       .filter((section) => section?.staff?.includes(staff.id))
@@ -140,64 +191,110 @@ const StoreContextProvider = ({ children }) => {
     return { ...staff, sectionsAssigned }
   })
 
+  console.log({ currentBalance })
+
   //#region useMemo
 
-  const value: StoreContextType = useMemo(
-    () => ({
-      store,
-      storeId,
-      currentBalance,
-      handleSetStoreId,
-      staff: staffWithSections,
-      categories: categories.map((cat) => ({
-        ...cat,
-        prices: storePrices?.filter((p) => p.categoryId === cat.id)
-      })),
+  // const value: StoreContextType = useMemo(
+  //   () => ({
+  //     store,
+  //     storeId,
+  //     currentBalance,
+  //     handleSetStoreId,
+  //     staff: staffWithSections,
+  //     categories: categories.map((cat) => ({
+  //       ...cat,
+  //       prices: storePrices?.filter((p) => p.categoryId === cat.id)
+  //     })),
 
-      userStores: stores,
-      storeSections: [
-        ...sections,
-        {
-          id: 'workshop',
-          name: 'Taller',
-          storeId,
-          description: 'Taller de reparaciones',
-          icon: 'tools',
-          staff: [],
-          createdBy: 'admin',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          updatedBy: 'admin'
-        }
-      ],
-      fetchPrices,
-      payments: [],
-      items: [],
-      handleToggleJustActiveOrders: () => {},
-      handleSetMyStaffId: () => {},
-      orders: [],
-      myOrders: [],
-      userPositions: [],
-      updateUserStores: () => {}
-    }),
-    [
-      store,
-      storeId,
-      handleSetStoreId,
-      staffWithSections,
-      categories,
-      storePrices,
-      stores,
-      sections,
-      fetchPrices,
-      currentBalance
-    ]
-  )
+  //     userStores: stores,
+  //     storeSections: [
+  //       ...sections,
+  //       {
+  //         id: 'workshop',
+  //         name: 'Taller',
+  //         storeId,
+  //         description: 'Taller de reparaciones',
+  //         icon: 'tools',
+  //         staff: [],
+  //         createdBy: 'admin',
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         updatedBy: 'admin'
+  //       }
+  //     ],
+  //     fetchPrices,
+  //     payments: [],
+  //     items: [],
+  //     handleToggleJustActiveOrders: () => {},
+  //     handleSetMyStaffId: () => {},
+  //     orders: [],
+  //     myOrders: [],
+  //     userPositions: [],
+  //     updateUserStores: () => {}
+  //   }),
+  //   [
+  //     store,
+  //     storeId,
+  //     handleSetStoreId,
+  //     staffWithSections,
+  //     categories,
+  //     storePrices,
+  //     stores,
+  //     sections,
+  //     fetchPrices,
+  //     currentBalance
+  //   ]
+  // )
+
+  console.log({ store })
   sc++
   if (__DEV__) console.log({ sc })
   //#region render
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  return (
+    <StoreContext.Provider
+      value={{
+        store,
+        storeId,
+        currentBalance,
+        handleSetStoreId,
+        staff: staffWithSections,
+        categories: categories.map((cat) => ({
+          ...cat,
+          prices: storePrices?.filter((p) => p.categoryId === cat.id)
+        })),
+
+        //userStores: stores,
+        storeSections: [
+          ...sections,
+          {
+            id: 'workshop',
+            name: 'Taller',
+            storeId,
+            description: 'Taller de reparaciones',
+            icon: 'tools',
+            staff: [],
+            createdBy: 'admin',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            updatedBy: 'admin'
+          }
+        ],
+        fetchPrices,
+        payments: [],
+        items: [],
+        handleToggleJustActiveOrders: () => {},
+        handleSetMyStaffId: () => {},
+        orders: [],
+        myOrders: [],
+        userPositions: []
+        // updateUserStores: () => {}
+      }}
+    >
+      {children}
+    </StoreContext.Provider>
+  )
 }
 
 export const useStore = () => {
