@@ -16,7 +16,7 @@ const SectionBalanceRents = ({
   title,
   sectionId = 'all'
 }: SectionBalanceRentsProps) => {
-  const { toItems } = useMyNav()
+  const { toItems, toOrders } = useMyNav()
   const { categories } = useStore()
   const actives = orders?.filter(
     (order) => order?.orderStatus === order_status.DELIVERED
@@ -81,10 +81,22 @@ const SectionBalanceRents = ({
       )?.name
     }))
     .flat()
+
   //* ORDER ITEMS
 
   const rentedItems = balance.orders
-    .map((order) => order?.items)
+    .map((order) =>
+      order?.items?.map((item) =>
+        item
+          ? {
+              ...item,
+              orderFolio: order?.orderFolio,
+              orderId: order?.orderId
+            }
+          : null
+      )
+    )
+    .filter(Boolean)
     .flat()
     .map((item) => ({
       ...item,
@@ -102,15 +114,15 @@ const SectionBalanceRents = ({
           defaultExpanded={false}
           items={rentedItems.map((item) => {
             return {
-              id: item?.itemId,
+              id: item?.orderId,
               content: (
                 <Text>
-                  {item?.itemEco} {item.categoryName}
+                  {item?.itemEco} {item.categoryName} - {item.orderFolio}
                 </Text>
               )
             }
           })}
-          onPressRow={(id) => toItems({ id })}
+          onPressRow={(id) => toOrders({ id })}
         />
         <ExpandibleListE
           label={'Artículos disponibles'}
