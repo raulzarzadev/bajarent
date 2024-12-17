@@ -81,6 +81,7 @@ const SectionBalanceRents = ({
       )?.name
     }))
     .flat()
+    .sort((a, b) => a.itemEco.localeCompare(b.itemEco))
 
   //* ORDER ITEMS
 
@@ -103,6 +104,7 @@ const SectionBalanceRents = ({
       assignedSection: item?.assignedSection || 'withoutSection',
       categoryName: item?.categoryName
     }))
+    .sort((a, b) => a.itemEco.localeCompare(b.itemEco))
 
   return (
     <View>
