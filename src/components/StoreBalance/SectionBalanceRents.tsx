@@ -1,6 +1,10 @@
 import { View, Text } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import { StoreBalanceOrder, StoreBalanceType } from '../../types/StoreBalance'
+import {
+  BalanceItems,
+  StoreBalanceOrder,
+  StoreBalanceType
+} from '../../types/StoreBalance'
 import { isWithinInterval } from 'date-fns'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import { order_status } from '../../types/OrderType'
@@ -130,35 +134,15 @@ const SectionBalanceRents = ({
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceOrders orders={actives} label="Todas" />
-        <ExpandibleListE
+
+        <ExpandibleBalanceItemsRented
+          items={rentedItems}
           label={'Artículos rentados'}
           defaultExpanded={false}
-          items={rentedItems.map((item) => {
-            return {
-              id: item?.orderId,
-              content: (
-                <Text>
-                  {item?.itemEco} {item.categoryName} - {item.orderFolio}
-                </Text>
-              )
-            }
-          })}
-          onPressRow={(id) => toOrders({ id })}
         />
-        <ExpandibleListE
+        <ExpandibleBalanceItemsAvailable
           label={'Artículos disponibles'}
-          defaultExpanded={false}
-          items={availableItems.map((item) => {
-            return {
-              id: item?.itemId,
-              content: (
-                <Text>
-                  {item?.itemEco} {item.categoryName}
-                </Text>
-              )
-            }
-          })}
-          onPressRow={(id) => toItems({ id })}
+          items={availableItems}
         />
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
@@ -191,6 +175,67 @@ export const ExpandibleBalanceOrders = ({
         content: <BalanceOrderRowE order={order} />
       }))}
       onPressRow={(id) => toOrders({ id })}
+    />
+  )
+}
+
+export const ExpandibleBalanceItemsAvailable = ({
+  items,
+  label,
+  defaultExpanded
+}: {
+  items: BalanceItems[]
+  label: string
+  defaultExpanded?: boolean
+}) => {
+  const { toItems } = useMyNav()
+  const { categories } = useStore()
+  return (
+    <ExpandibleListE
+      label={label}
+      defaultExpanded={defaultExpanded}
+      items={items.map((item) => {
+        return {
+          id: item?.itemId,
+          content: (
+            <Text>
+              {item?.itemEco}{' '}
+              {item.categoryName ||
+                categories.find((cat) => cat.id === item?.categoryId)?.name}
+            </Text>
+          )
+        }
+      })}
+      onPressRow={(id) => toItems?.({ id })}
+    />
+  )
+}
+export const ExpandibleBalanceItemsRented = ({
+  items,
+  label,
+  defaultExpanded
+}: {
+  items: BalanceItems[]
+  label: string
+  defaultExpanded?: boolean
+}) => {
+  const { toOrders } = useMyNav()
+
+  return (
+    <ExpandibleListE
+      label={label}
+      defaultExpanded={defaultExpanded}
+      items={items.map((item) => {
+        return {
+          id: item?.orderId,
+          content: (
+            <Text>
+              {item?.itemEco} {item.categoryName} {item.orderFolio}
+            </Text>
+          )
+        }
+      })}
+      onPressRow={(id) => toOrders?.({ id })}
     />
   )
 }

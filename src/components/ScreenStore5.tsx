@@ -65,6 +65,7 @@ const ScreenStore = (props) => {
   const CheckedTabOrders = CheckedTab(TabOrders)
   const CheckedStoreCounts = CheckedTab(StoreCounts)
   const CheckedStoreBalance = CheckedTab(StoreBalanceE)
+
   return (
     <ScrollView ref={scrollViewRef}>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}

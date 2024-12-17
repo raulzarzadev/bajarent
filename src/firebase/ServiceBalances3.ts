@@ -332,7 +332,10 @@ const formatAsBalanceOrder = ({
       itemId: item?.id,
       itemEco: item?.number || null,
       categoryName: item?.categoryName || null,
-      priceId: item?.priceSelected?.id || null
+      priceId: item?.priceSelected?.id || null,
+      orderId: order.id || null,
+      assignedSection: order.assignToSection || null,
+      orderFolio: order.folio || null
     })) || null
   const time = order?.items?.[0]?.priceSelected?.time || null
 

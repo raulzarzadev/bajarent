@@ -73,29 +73,29 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   const { orders } = useOrdersCtx()
   const [currentWork, setCurrentWork] =
     useState<CurrentWorks>(defaultCurrentWork)
-  useEffect(() => {
-    if (orders) {
-      handleSetData({
-        disabledEmployee: employee?.disabled,
-        allowGetInfoFromAllOrders:
-          permissions.isAdmin ||
-          permissions.isOwner ||
-          permissions?.store?.canSeeCurrentWork,
-        sectionsAssigned
-      })
-    }
-  }, [orders, employee?.disabled, sectionsAssigned])
+  // useEffect(() => {
+  //   if (orders) {
+  //     handleSetData({
+  //       disabledEmployee: employee?.disabled,
+  //       allowGetInfoFromAllOrders:
+  //         permissions.isAdmin ||
+  //         permissions.isOwner ||
+  //         permissions?.store?.canSeeCurrentWork,
+  //       sectionsAssigned
+  //     })
+  //   }
+  // }, [orders, employee?.disabled, sectionsAssigned])
 
-  useEffect(() => {
-    if (storeId)
-      ServiceCurrentWork.getBetweenDates({
-        storeId,
-        fromDate: startDate(date),
-        toDate: endDate(date)
-      }).then((data: CurrentWorks[]) => {
-        setCurrentWork(data?.[0])
-      })
-  }, [date, storeId])
+  // useEffect(() => {
+  //   if (storeId)
+  //     ServiceCurrentWork.getBetweenDates({
+  //       storeId,
+  //       fromDate: startDate(date),
+  //       toDate: endDate(date)
+  //     }).then((data: CurrentWorks[]) => {
+  //       setCurrentWork(data?.[0])
+  //     })
+  // }, [date, storeId])
 
   const handleSetData = ({
     disabledEmployee = false,
