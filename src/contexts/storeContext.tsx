@@ -13,8 +13,6 @@ import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
 
-export type CurrentBalanceType = {}
-
 export type StoreContextType = {
   store?: null | StoreType
   storeId?: StoreType['id']

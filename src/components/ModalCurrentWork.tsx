@@ -20,215 +20,194 @@ import { Dimensions } from 'react-native'
 import HeaderDate from './HeaderDate'
 import { ServiceCurrentWork } from '../firebase/ServiceCurrentWork'
 import { endDate, startDate } from '../libs/utils-date'
+import { CurrentWorkE } from './CurrentWork/CurrentWork'
+
 const modalSize = Dimensions.get('window')?.width > 500 ? 'md' : 'full'
 const ModalCurrentWork = () => {
-  /**
-   *
-   * This component is a modal that shows the progress of the current work of the employee.
-   * 1. shows the progress of delivered/pedidos
-   * 2. shows the progress of (renewed + pickedUp)/expired
-   * 3. shows the progress of reports solved/unsolved
-   * 4. shows the total amount of payments in the sections assigned to the employee
-   * 5. if is admin shows the total amount of payments in the store
-   * 6. if is admin shows the total of orders progress
-   *
-   */
-  const { employee, permissions } = useEmployee()
-  const { currentWork, setDate } = useCurrentWorkCtx()
-  const { payments = [], progress = { total: 0 } } = currentWork || {}
-  const modalCurrentWork = useModal({
-    title: 'Trabajo de hoy (rentas)'
-  })
+  const { permissions } = useEmployee()
+  const { currentBalance } = useStore()
+  const modal = useModal({ title: 'Trabajo actual' })
 
-  const storePermissions = permissions.store || {}
-  const myProgress = storePermissions?.canViewMyCurrentWork
-  const allProgress = storePermissions?.canViewAllCurrentWork
-  // if any of both is true then show the modal
-  if (!myProgress && !allProgress) return null
+  const progress = 0
+  const payments = []
+
+  // if any of the permissions is true, or employee is disabled then the modal is open
+  if (permissions.canViewModalCurrentWork) return null
 
   return (
     <View style={{ marginRight: 8 }}>
-      <Pressable onPress={modalCurrentWork.toggleOpen}>
-        <ProgressWork progress={progress?.total} size="lg" />
+      <Pressable onPress={modal.toggleOpen}>
+        <ProgressWork progress={progress} size="lg" />
         <CurrencyAmount
           style={gStyles.helper}
           amount={payments_amount(payments)?.total}
         />
       </Pressable>
-      <StyledModal {...modalCurrentWork} size={modalSize}>
-        {employee?.disabled ? (
-          <DisabledEmployee></DisabledEmployee>
-        ) : (
-          <>
-            <HeaderDate label="" onChangeDate={setDate} />
-            <ProgressWorkDetails
-              onPressOrderRow={modalCurrentWork.toggleOpen}
-            />
-            <BalanceAmountsE payments={payments} />
-          </>
-        )}
-      </StyledModal>
-    </View>
-  )
-}
-const ProgressWorkDetails = ({ onPressOrderRow }) => {
-  const { currentWork } = useCurrentWorkCtx()
-  const { sections: storeSections } = useStore()
-  return (
-    <View>
-      <CurrentWork
-        currentWork={currentWork}
-        storeSections={storeSections}
-        onPressOrderRow={onPressOrderRow}
-      />
-    </View>
-  )
-}
-
-const CurrentWork = ({ currentWork, storeSections, onPressOrderRow }) => {
-  const {
-    permissions: { isAdmin, isOwner }
-  } = useEmployee()
-  const {
-    deliveredOrders = [],
-    authorizedOrders = [],
-    solvedReported = [],
-    unsolvedReported = [],
-    pickedUpOrders = [],
-    renewedOrders = [],
-    expiredOrders = [],
-    sections = []
-  } = currentWork || {}
-  return (
-    <View>
-      {sections?.map((sectionId) => (
-        <View key={sectionId}>
-          <Text style={[gStyles.h2, { textAlign: 'center' }]}>
-            {storeSections?.find((s) => s.id === sectionId)?.name}
-          </Text>
-        </View>
-      ))}
-      {sections?.length === 0 && (
-        <Text style={[gStyles.h2, { textAlign: 'center' }]}>Todas</Text>
-      )}
-      <View style={{ marginVertical: 8, marginBottom: 16 }}>
-        <SectionProgressWork
-          authorized={authorizedOrders}
-          delivered={deliveredOrders}
-          expired={expiredOrders}
-          resolved={[...renewedOrders, ...pickedUpOrders]}
-          reported={unsolvedReported}
-          reportedSolved={solvedReported}
-          onPressOrderRow={onPressOrderRow}
-        />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <ModalOrders
-            label="Recogidas"
-            orders={pickedUpOrders as OrderType[]}
-          />
-          <ModalOrders
-            label="Renovadas"
-            orders={renewedOrders as OrderType[]}
-          />
-        </View>
-      </View>
-      {(isAdmin || isOwner) && (
-        <SectionsCurrentWork onPressOrderRow={onPressOrderRow} />
-      )}
-    </View>
-  )
-}
-
-const ModalOrders = ({
-  label,
-  orders = []
-}: {
-  label: string
-  orders: OrderType[]
-}) => {
-  const modalOrders = useModal({ title: label })
-  return (
-    <View>
-      <Pressable onPress={modalOrders.toggleOpen}>
-        <Text style={gStyles.tBold}>
-          {label} {orders?.length}
-        </Text>
-      </Pressable>
-      <StyledModal {...modalOrders}>
-        <ListOrders orders={orders} />
+      <StyledModal {...modal} size={modalSize}>
+        <CurrentWorkE />
       </StyledModal>
     </View>
   )
 }
 
-const SectionsCurrentWork = ({ onPressOrderRow }) => {
-  const { sections: storeSections } = useStore()
-  const {
-    currentWork: {
-      authorizedOrders = [],
-      deliveredOrders = [],
-      expiredOrders = [],
-      renewedOrders = [],
-      pickedUpOrders = [],
-      solvedReported = [],
-      unsolvedReported = []
-    } = {}
-  } = useCurrentWorkCtx()
-  return (
-    <View>
-      {storeSections
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((section) => {
-          const authorized = authorizedOrders.filter(
-            (order) => order.assignToSection === section.id
-          )
-          const delivered = deliveredOrders.filter(
-            (order) => order.assignToSection === section.id
-          )
-          const expired = expiredOrders.filter(
-            (order) => order.assignToSection === section.id
-          )
-          const resolved = [...renewedOrders, ...pickedUpOrders].filter(
-            (order) => order.assignToSection === section.id
-          )
-          const reported = unsolvedReported.filter(
-            (order) => order.assignToSection === section.id
-          )
-          const reportedSolved = solvedReported.filter(
-            (order) => order.assignToSection === section.id
-          )
-          if (
-            [
-              ...authorized,
-              ...delivered,
-              ...expired,
-              ...resolved,
-              ...reported,
-              ...reportedSolved
-            ]?.length === 0
-          )
-            return null
+// const ProgressWorkDetails = ({ onPressOrderRow }) => {
+//   const { currentWork } = useCurrentWorkCtx()
+//   const { sections: storeSections } = useStore()
+//   return (
+//     <View>
+//       {/* <CurrentWork
+//         currentWork={currentWork}
+//         storeSections={storeSections}
+//         onPressOrderRow={onPressOrderRow}
+//       /> */}
+//     </View>
+//   )
+// }
 
-          return (
-            <View key={section.id}>
-              <Text style={[gStyles.h2, { textAlign: 'center' }]}>
-                {section.name}
-              </Text>
-              <SectionProgressWork
-                onPressOrderRow={onPressOrderRow}
-                authorized={authorized}
-                delivered={delivered}
-                expired={expired}
-                resolved={resolved}
-                reported={reported}
-                reportedSolved={reportedSolved}
-              />
-            </View>
-          )
-        })}
-    </View>
-  )
-}
+// const CurrentWork = ({ currentWork, storeSections, onPressOrderRow }) => {
+//   const {
+//     permissions: { isAdmin, isOwner }
+//   } = useEmployee()
+//   const {
+//     deliveredOrders = [],
+//     authorizedOrders = [],
+//     solvedReported = [],
+//     unsolvedReported = [],
+//     pickedUpOrders = [],
+//     renewedOrders = [],
+//     expiredOrders = [],
+//     sections = []
+//   } = currentWork || {}
+//   return (
+//     <View>
+//       {sections?.map((sectionId) => (
+//         <View key={sectionId}>
+//           <Text style={[gStyles.h2, { textAlign: 'center' }]}>
+//             {storeSections?.find((s) => s.id === sectionId)?.name}
+//           </Text>
+//         </View>
+//       ))}
+//       {sections?.length === 0 && (
+//         <Text style={[gStyles.h2, { textAlign: 'center' }]}>Todas</Text>
+//       )}
+//       <View style={{ marginVertical: 8, marginBottom: 16 }}>
+//         <SectionProgressWork
+//           authorized={authorizedOrders}
+//           delivered={deliveredOrders}
+//           expired={expiredOrders}
+//           resolved={[...renewedOrders, ...pickedUpOrders]}
+//           reported={unsolvedReported}
+//           reportedSolved={solvedReported}
+//           onPressOrderRow={onPressOrderRow}
+//         />
+//         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+//           <ModalOrders
+//             label="Recogidas"
+//             orders={pickedUpOrders as OrderType[]}
+//           />
+//           <ModalOrders
+//             label="Renovadas"
+//             orders={renewedOrders as OrderType[]}
+//           />
+//         </View>
+//       </View>
+//       {(isAdmin || isOwner) && (
+//         <SectionsCurrentWork onPressOrderRow={onPressOrderRow} />
+//       )}
+//     </View>
+//   )
+// }
+
+// const ModalOrders = ({
+//   label,
+//   orders = []
+// }: {
+//   label: string
+//   orders: OrderType[]
+// }) => {
+//   const modalOrders = useModal({ title: label })
+//   return (
+//     <View>
+//       <Pressable onPress={modalOrders.toggleOpen}>
+//         <Text style={gStyles.tBold}>
+//           {label} {orders?.length}
+//         </Text>
+//       </Pressable>
+//       <StyledModal {...modalOrders}>
+//         <ListOrders orders={orders} />
+//       </StyledModal>
+//     </View>
+//   )
+// }
+
+// const SectionsCurrentWork = ({ onPressOrderRow }) => {
+//   const { sections: storeSections } = useStore()
+//   const {
+//     currentWork: {
+//       authorizedOrders = [],
+//       deliveredOrders = [],
+//       expiredOrders = [],
+//       renewedOrders = [],
+//       pickedUpOrders = [],
+//       solvedReported = [],
+//       unsolvedReported = []
+//     } = {}
+//   } = useCurrentWorkCtx()
+//   return (
+//     <View>
+//       {storeSections
+//         .sort((a, b) => a.name.localeCompare(b.name))
+//         .map((section) => {
+//           const authorized = authorizedOrders.filter(
+//             (order) => order.assignToSection === section.id
+//           )
+//           const delivered = deliveredOrders.filter(
+//             (order) => order.assignToSection === section.id
+//           )
+//           const expired = expiredOrders.filter(
+//             (order) => order.assignToSection === section.id
+//           )
+//           const resolved = [...renewedOrders, ...pickedUpOrders].filter(
+//             (order) => order.assignToSection === section.id
+//           )
+//           const reported = unsolvedReported.filter(
+//             (order) => order.assignToSection === section.id
+//           )
+//           const reportedSolved = solvedReported.filter(
+//             (order) => order.assignToSection === section.id
+//           )
+//           if (
+//             [
+//               ...authorized,
+//               ...delivered,
+//               ...expired,
+//               ...resolved,
+//               ...reported,
+//               ...reportedSolved
+//             ]?.length === 0
+//           )
+//             return null
+
+//           return (
+//             <View key={section.id}>
+//               <Text style={[gStyles.h2, { textAlign: 'center' }]}>
+//                 {section.name}
+//               </Text>
+//               <SectionProgressWork
+//                 onPressOrderRow={onPressOrderRow}
+//                 authorized={authorized}
+//                 delivered={delivered}
+//                 expired={expired}
+//                 resolved={resolved}
+//                 reported={reported}
+//                 reportedSolved={reportedSolved}
+//               />
+//             </View>
+//           )
+//         })}
+//     </View>
+//   )
+// }
 
 export const ProgressWork = ({
   progress = 0,

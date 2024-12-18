@@ -14,7 +14,6 @@ import { gStyles } from '../../styles'
 
 const StoreBalance = () => {
   const { storeId, currentBalance } = useStore()
-
   const [loading, setLoading] = useState(false)
   const handleUpdateBalance = async () => {
     setLoading(true)
@@ -30,7 +29,6 @@ const StoreBalance = () => {
 
     setLoading(false)
   }
-  if (!currentBalance) return null
   return (
     <View>
       <View
