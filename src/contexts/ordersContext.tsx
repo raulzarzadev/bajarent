@@ -57,7 +57,7 @@ export const OrdersContextProvider = ({
   children: ReactNode
 }) => {
   const { store } = useStore()
-  const { employee, permissions, isEmployee, disabledEmployee } = useEmployee()
+  const { employee, permissions, disabledEmployee } = useEmployee()
   const { storeId } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
@@ -119,7 +119,7 @@ export const OrdersContextProvider = ({
       handleGetOrders()
       handleGetConsolidates()
     }
-  }, [isEmployee, disabledEmployee])
+  }, [disabledEmployee])
 
   useEffect(() => {
     if (store) {

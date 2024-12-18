@@ -35,7 +35,7 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
   const [filteredData, setFilteredData] = useState<Partial<ItemType>[]>(items)
   const { sections: storeSections } = useStore()
   const sections = groupSectionItems(filteredData || [], storeSections)
-
+  console.log({ sections })
   return (
     <View
       style={
@@ -104,10 +104,10 @@ const groupSectionItems = (
     //unassigned: []
   }
   items.forEach((item: any) => {
-    const assignedSection = item.assignedSection || 'unassigned'
-    const sectionName = storeSections.find(
-      (section) => section.id === assignedSection
-    )?.name
+    const assignedSection = item?.assignedSection || 'unassigned'
+    const sectionName =
+      storeSections.find((section) => section.id === assignedSection)?.name ||
+      'unassigned'
     if (!groupedItems[sectionName]) {
       groupedItems[sectionName] = []
     }

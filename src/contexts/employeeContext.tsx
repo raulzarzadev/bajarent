@@ -14,7 +14,6 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
 
-  isEmployee?: boolean
   disabledEmployee?: boolean
   permissions: {
     canSeeCurrentWork?: boolean
@@ -60,7 +59,6 @@ export const EmployeeContextProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
   const [disabledEmployee, setDisabledEmployee] = useState()
-  const [isEmployee, setIsEmployee] = useState(false)
 
   useEffect(() => {
     if (staff) {
@@ -79,37 +77,6 @@ export const EmployeeContextProvider = ({ children }) => {
       })
     }
   }, [staff])
-
-  console.log({ disabledEmployee })
-
-  // useEffect(() => {
-  //   setIsOwner(store && store?.createdBy === user?.id)
-
-  //   const employee = staff?.find(
-  //     (staff) => staff?.userId === user?.id && staff?.storeId === storeId
-  //   )
-
-  //   if (employee) {
-  //     setDisabledEmployee(employee.disabled)
-  //     setIsEmployee(true)
-  //     const sectionsAssigned = storeSections
-  //       ?.filter(({ staff }) => staff?.includes(employee?.id))
-  //       .map(({ id }) => id)
-  //     setIsAdmin(employee?.permissions?.isAdmin)
-  //     //setEmployee(employee)
-  //     setAssignedSections(sectionsAssigned)
-  //   } else {
-  //     setIsEmployee(false)
-  //   }
-  // }, [staff])
-
-  // useEffect(() => {
-  //   if (isOwner) {
-  //     setEmployee({
-  //       ...user
-  //     })
-  //   }
-  // }, [isOwner])
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
@@ -138,7 +105,7 @@ export const EmployeeContextProvider = ({ children }) => {
         }
       })
     }
-  }, [isEmployee])
+  }, [canViewAllItems])
 
   const value = useMemo(
     () => ({
@@ -146,7 +113,6 @@ export const EmployeeContextProvider = ({ children }) => {
       employee: employee
         ? { ...employee, sectionsAssigned: assignedSections }
         : undefined,
-      isEmployee,
       disabledEmployee,
 
       permissions: {
