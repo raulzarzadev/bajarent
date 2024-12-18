@@ -7,6 +7,8 @@ import { RowSectionItemsE } from './ListAssignedItems'
 import dictionary, { asCapitalize } from '../dictionary'
 import { ModalFilterListE } from './ModalFilterList'
 import theme, { colors } from '../theme'
+import { useStore } from '../contexts/storeContext'
+import StoreType from '../types/StoreType'
 
 export type MyItem = Pick<
   ItemType,
@@ -31,7 +33,9 @@ export type ListMyItemsProps = {
 
 const ListMyItems = ({ items }: ListMyItemsProps) => {
   const [filteredData, setFilteredData] = useState<Partial<ItemType>[]>(items)
-  const sections = groupSectionItems(filteredData || [])
+  const { sections: storeSections } = useStore()
+  const sections = groupSectionItems(filteredData || [], storeSections)
+
   return (
     <View
       style={
@@ -92,16 +96,22 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
     </View>
   )
 }
-const groupSectionItems = (items: any) => {
+const groupSectionItems = (
+  items: any,
+  storeSections: StoreType['sections']
+) => {
   const groupedItems: Record<string, ItemType[]> = {
     //unassigned: []
   }
   items.forEach((item: any) => {
-    const assignedSection = item.assignedSectionName || 'unassigned'
-    if (!groupedItems[assignedSection]) {
-      groupedItems[assignedSection] = []
+    const assignedSection = item.assignedSection || 'unassigned'
+    const sectionName = storeSections.find(
+      (section) => section.id === assignedSection
+    )?.name
+    if (!groupedItems[sectionName]) {
+      groupedItems[sectionName] = []
     }
-    groupedItems[assignedSection].push(item)
+    groupedItems[sectionName].push(item)
   })
   return groupedItems
 }

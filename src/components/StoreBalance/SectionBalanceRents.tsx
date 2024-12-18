@@ -189,11 +189,12 @@ export const ExpandibleBalanceItemsAvailable = ({
 }) => {
   const { toItems } = useMyNav()
   const { categories } = useStore()
+  const sortByEco = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
   return (
     <ExpandibleListE
       label={label}
       defaultExpanded={defaultExpanded}
-      items={items.map((item) => {
+      items={items.sort(sortByEco).map((item) => {
         return {
           id: item?.itemId,
           content: (
@@ -219,12 +220,12 @@ export const ExpandibleBalanceItemsRented = ({
   defaultExpanded?: boolean
 }) => {
   const { toOrders } = useMyNav()
-
+  const sortByEco = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
   return (
     <ExpandibleListE
       label={label}
       defaultExpanded={defaultExpanded}
-      items={items.map((item) => {
+      items={items.sort(sortByEco).map((item) => {
         return {
           id: item?.orderId,
           content: (

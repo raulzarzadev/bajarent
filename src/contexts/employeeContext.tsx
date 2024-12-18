@@ -82,13 +82,13 @@ export const EmployeeContextProvider = ({ children }) => {
     }
   }, [staff])
 
-  useEffect(() => {
-    if (isOwner) {
-      setEmployee({
-        ...user
-      })
-    }
-  }, [isOwner])
+  // useEffect(() => {
+  //   if (isOwner) {
+  //     setEmployee({
+  //       ...user
+  //     })
+  //   }
+  // }, [isOwner])
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 

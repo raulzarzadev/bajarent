@@ -6,7 +6,7 @@ import { SectionDetailsE } from './SectionDetails'
 const TabStoreSections = () => {
   const { sections: storeSections } = useStore()
 
-  const sections: TabType[] = storeSections.map((section) => ({
+  const sections: TabType[] = storeSections?.map((section) => ({
     content: (
       <View style={{ marginTop: 16 }}>
         <SectionDetailsE section={section} />

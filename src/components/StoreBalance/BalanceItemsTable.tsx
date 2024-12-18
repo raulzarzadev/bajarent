@@ -1,6 +1,5 @@
 import { View, Text, Pressable } from 'react-native'
 import ListRow, { ListRowField } from '../ListRow'
-import { CellItemsE, CellOrdersE } from '../BusinessStatus'
 import Divider from '../Divider'
 import { BalanceRowType } from '../../types/BalanceType'
 import { useEffect, useState } from 'react'
@@ -22,7 +21,9 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
   const availableItems = balance.items
 
   const orderItems = balance.orders
-    .filter((order) => order.orderType === 'RENT')
+    .filter(
+      (order) => order.orderType === 'RENT' && order.orderStatus === 'DELIVERED'
+    )
     .map((o) => o.items)
     .flat()
   const allItems = [...availableItems, ...orderItems]

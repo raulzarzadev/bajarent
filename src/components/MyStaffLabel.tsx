@@ -9,10 +9,8 @@ import { useEmployee } from '../contexts/employeeContext'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
-  const {
-    disabledEmployee,
-    permissions: { isAdmin, isOwner, orders }
-  } = useEmployee()
+  const { disabledEmployee, permissions, employee } = useEmployee()
+  const { isAdmin, isOwner, orders } = permissions
   const canCreateNewOrders = orders?.canCreate
   const navigation = useNavigation()
 
