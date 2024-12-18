@@ -35,7 +35,6 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
   const [filteredData, setFilteredData] = useState<Partial<ItemType>[]>(items)
   const { sections: storeSections } = useStore()
   const sections = groupSectionItems(filteredData || [], storeSections)
-  console.log({ sections })
   return (
     <View
       style={
