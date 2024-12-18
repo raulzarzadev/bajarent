@@ -1,8 +1,8 @@
 import React from 'react'
 import DisabledEmployee from '../DisabledEmployee'
 import { useEmployee } from '../../contexts/employeeContext'
-import { Text } from 'react-native'
 import TextInfo from '../TextInfo'
+import Loading from '../Loading'
 
 interface WithDisabledCheckProps {
   // isDisabled: boolean
@@ -16,26 +16,15 @@ const withDisabledCheck = <P extends object>(
   ) => {
     const {
       disabledEmployee,
-      permissions: { isAdmin, isOwner }
+      permissions: { isAdmin, isOwner },
+      employee
     } = useEmployee()
     const { ...otherProps } = props
-
-    if (disabledEmployee) {
-      if (isAdmin || isOwner) {
-        return (
-          <>
-            <DisabledEmployee />
-            <TextInfo
-              defaultVisible
-              text=" Este usuario no puede ser deshabilitado. (Admin/Owner)"
-            />
-
-            <WrappedComponent {...(otherProps as P)} />
-          </>
-        )
-      }
-      return <DisabledEmployee />
-    }
+    console.log({ employeeDisbled: employee?.disabled, disabledEmployee })
+    // ** admin or owner can't be disabled
+    if (disabledEmployee === undefined) return <Loading />
+    if (isAdmin || isOwner) return <WrappedComponent {...(otherProps as P)} />
+    if (disabledEmployee) return <DisabledEmployee />
 
     return <WrappedComponent {...(otherProps as P)} />
   }

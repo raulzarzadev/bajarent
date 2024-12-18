@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ErrorBoundary from './ErrorBoundary'
 import { ScreenWorkshopE } from './ScreenWorkshop'
 import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
+import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 
 const Stack = createStackNavigator()
 function StackWorkshop() {
@@ -12,7 +13,7 @@ function StackWorkshop() {
         options={({ route }) => ({
           title: 'Taller'
         })}
-        component={ScreenWorkshopE}
+        component={withDisabledCheck(ScreenWorkshopE)}
       />
       <Stack.Screen
         name="WorkshopHistory"
