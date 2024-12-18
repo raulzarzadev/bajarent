@@ -1,4 +1,3 @@
-import { useStore } from '../contexts/storeContext'
 import {
   createDataset,
   groupDocsByDay,
@@ -15,7 +14,7 @@ import dictionary from '../dictionary'
 import { setDayOfYear } from 'date-fns'
 
 export default function StatsOrders({ view }: { view: string }) {
-  const { orders } = useStore()
+  const orders = []
   return (
     <>
       {view === 'month' && <MonthStats orders={orders} />}
