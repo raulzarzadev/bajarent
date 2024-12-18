@@ -18,7 +18,7 @@ const ListItemsSections = ({
   onPressItem,
   selectOnPress
 }: ListItemsSectionsProps) => {
-  const { storeId, storeSections, categories } = useStore()
+  const { storeId, sections: storeSections, categories } = useStore()
   const { toItems } = useMyNav()
   const [groupedItems, setGroupedItems] = React.useState<
     Record<string, ItemType[]>

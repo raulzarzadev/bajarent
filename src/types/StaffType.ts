@@ -62,10 +62,6 @@ export type BaseStaffType = {
 
   disabled?: boolean
 
-  /**
-   * @deprecated use permissions.isOwner instead
-   */
-
   permissions?: StaffPermissions
   /**
    * @deprecated use permissions.isOwner instead

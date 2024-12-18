@@ -22,7 +22,7 @@ const FormItem = ({
   onSubmit?: (values: ItemType) => Promise<any> | void
   progress?: number
 }) => {
-  const { store, categories, storeSections } = useStore()
+  const { categories, sections: storeSections } = useStore()
   const { permissions } = useEmployee()
   const defaultValues: Partial<ItemType> = { ...values }
   const handleSubmit = async (values: ItemType) => {

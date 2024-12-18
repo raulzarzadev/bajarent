@@ -13,7 +13,7 @@ import { OrderWithId } from './ListOrdersConsolidated'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   if (!order) return null
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const assignedSectionLabel =
     //@ts-ignore
     order?.assignToSectionName ||

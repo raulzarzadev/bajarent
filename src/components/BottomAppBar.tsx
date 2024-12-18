@@ -13,11 +13,12 @@ import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
+import { useStore } from '../contexts/storeContext'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
-  const { store } = useAuth()
+  const { store } = useStore()
   const { permissions, employee } = useEmployee()
   const viewWorkshop =
     employee?.rol === 'technician' ||

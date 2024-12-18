@@ -49,7 +49,7 @@ const ItemActions = ({
   const itemId = item?.id
   const itemSection = item?.assignedSection || ''
   const checkedInventoryToday = isToday(asDate(item?.lastInventoryAt))
-  const { storeSections, storeId } = useStore()
+  const { sections: storeSections, storeId } = useStore()
 
   const { user } = useAuth()
   const [sectionId, setSectionId] = React.useState<string | null>(

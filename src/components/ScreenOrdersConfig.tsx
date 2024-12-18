@@ -1,10 +1,9 @@
 import { ScrollView, View } from 'react-native'
-import React from 'react'
 import { FormOrdersConfigE } from './FormOrdersConfig'
 import { gStyles } from '../styles'
-import { useAuth } from '../contexts/authContext'
 import { ServiceStores } from '../firebase/ServiceStore'
 import Loading from './Loading'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenOrdersConfig = () => {
   const handleSubmit = async (values) => {
@@ -16,7 +15,7 @@ const ScreenOrdersConfig = () => {
       console.error({ e })
     }
   }
-  const { store } = useAuth()
+  const { store } = useStore()
   const storeOrdersConfig = {
     orderTypes: store?.orderTypes || null,
     orderFields: store?.orderFields || null

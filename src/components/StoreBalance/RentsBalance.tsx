@@ -8,21 +8,21 @@ import { SectionBalanceRentsE } from './SectionBalanceRents'
 import BalanceItemsTable from './BalanceItemsTable'
 
 const RentsBalance = ({ balance }: RentsBalanceProps) => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const rents = balance?.orders?.filter(
     (order) => order?.orderType === order_type.RENT
   )
   //console.log({ rents, actives, finished, renewed, delivered })
   //* group by section
 
-  const sections = rents?.reduce((acc, order) => {
+  const groupedBySections = rents?.reduce((acc, order) => {
     if (!order?.assignedSection) order.assignedSection = 'withoutSection'
     if (!acc[order.assignedSection]) acc[order.assignedSection] = []
     acc[order.assignedSection].push(order)
     return acc
   }, {} as { [key: string]: StoreBalanceType['orders'] })
 
-  const sectionsInfo = Object.keys(sections).map((sectionId) => {
+  const sectionsInfo = Object.keys(groupedBySections).map((sectionId) => {
     return {
       sectionId,
       sectionName:
@@ -34,7 +34,7 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
     title: sectionName,
     content: (
       <SectionBalanceRentsE
-        orders={sections[sectionId]}
+        orders={groupedBySections[sectionId]}
         balance={balance}
         title={sectionName}
         sectionId={sectionId}

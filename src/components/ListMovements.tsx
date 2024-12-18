@@ -13,7 +13,7 @@ import { useStore } from '../contexts/storeContext'
 const ListMovements = () => {
   const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
   const { storeId } = useAuth()
-  const { store, staff } = useStore()
+  const { staff } = useStore()
   const [loading, setLoading] = React.useState(false)
   const [date, setDate] = React.useState(new Date())
   const handleChangeDate = async (newDate: Date) => {

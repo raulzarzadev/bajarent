@@ -23,7 +23,7 @@ import InputSelect from './InputSelect'
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
   const [item, setItem] = useState(undefined)
-  const { storeId, categories, storeSections } = useStore()
+  const { storeId, categories, sections: storeSections } = useStore()
   const { employee } = useEmployee()
 
   useEffect(() => {

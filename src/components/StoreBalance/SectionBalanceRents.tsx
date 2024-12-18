@@ -15,12 +15,11 @@ import useMyNav from '../../hooks/useMyNav'
 import { gStyles } from '../../styles'
 import { useStore } from '../../contexts/storeContext'
 const SectionBalanceRents = ({
-  orders,
+  orders = [],
   balance,
   title,
   sectionId = 'all'
 }: SectionBalanceRentsProps) => {
-  const { toItems, toOrders } = useMyNav()
   const { categories } = useStore()
   const actives = orders?.filter(
     (order) => order?.orderStatus === order_status.DELIVERED
@@ -57,7 +56,7 @@ const SectionBalanceRents = ({
       sectionId === 'all' ? true : order?.assignedSection === sectionId
     )
 
-  const orderPayment = orders.map((order) => order?.payments).flat()
+  const orderPayment = orders?.map((order) => order?.payments).flat()
   const otherPayments = balance.payments.filter((payment) =>
     sectionId === 'all' ? true : payment.sectionId === sectionId
   )

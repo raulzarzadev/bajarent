@@ -12,7 +12,7 @@ const FormItemPickUp = ({
   item: Partial<ItemType>
   onChange?: (item: Partial<ItemType>) => void
 }) => {
-  const { categories, storeSections } = useStore()
+  const { categories, sections: storeSections } = useStore()
   const section = storeSections.find(
     (section) => section?.id === item?.assignedSection
   )

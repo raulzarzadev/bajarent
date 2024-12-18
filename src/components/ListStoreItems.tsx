@@ -66,7 +66,7 @@ const ListStoreItems = ({
     return true
   })
   const { toItems } = useMyNav()
-  const { storeId, categories, storeSections } = useStore()
+  const { storeId, categories, sections: storeSections } = useStore()
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
 

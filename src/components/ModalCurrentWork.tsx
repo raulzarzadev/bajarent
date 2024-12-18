@@ -69,7 +69,7 @@ const ModalCurrentWork = () => {
 }
 const ProgressWorkDetails = ({ onPressOrderRow }) => {
   const { currentWork } = useCurrentWorkCtx()
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   return (
     <View>
       <CurrentWork
@@ -158,7 +158,7 @@ const ModalOrders = ({
 }
 
 const SectionsCurrentWork = ({ onPressOrderRow }) => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const {
     currentWork: {
       authorizedOrders = [],

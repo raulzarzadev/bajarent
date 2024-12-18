@@ -4,7 +4,6 @@ import PaymentType from '../types/PaymentType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { endDate, startDate } from '../libs/utils-date'
 import { useStore } from '../contexts/storeContext'
-import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
 import BalanceAmounts from './BalanceAmounts'
 import { useEmployee } from '../contexts/employeeContext'
@@ -12,7 +11,7 @@ import { useEmployee } from '../contexts/employeeContext'
 const DateCounts = ({ date }: { date: Date }) => {
   const [payments, setPayments] = useState<PaymentType[]>([])
 
-  const { storeId, storeSections, staff } = useStore()
+  const { storeId, staff } = useStore()
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()

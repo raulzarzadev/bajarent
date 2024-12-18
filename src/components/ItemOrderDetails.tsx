@@ -5,8 +5,9 @@ import OrderType from '../types/OrderType'
 import { gStyles } from '../styles'
 
 export const ItemOrderDetails = ({ item }: { item: OrderType['item'] }) => {
-  const { items } = useStore()
-
+  //const { items } = useStore()
+  //FIXME: items is not defined
+  const items = []
   const itemDetails = items.find((i) => i?.id === item?.id)
 
   return (

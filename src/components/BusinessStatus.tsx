@@ -25,7 +25,7 @@ import { ExpandibleListE } from './ExpandibleList'
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
 const BusinessStatus = ({ balance }: BusinessStatusProps) => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
 
   const table: {
     field: keyof BalanceRowType | 'allItems'

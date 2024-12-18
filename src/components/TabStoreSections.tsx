@@ -1,11 +1,10 @@
 import { View } from 'react-native'
-import React from 'react'
 import Tabs, { TabType } from './Tabs'
 import { useStore } from '../contexts/storeContext'
 import { SectionDetailsE } from './SectionDetails'
 
 const TabStoreSections = () => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
 
   const sections: TabType[] = storeSections.map((section) => ({
     content: (

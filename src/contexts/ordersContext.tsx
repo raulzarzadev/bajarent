@@ -21,6 +21,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
 import PaymentType from '../types/PaymentType'
 import { endDate, startDate } from '../libs/utils-date'
+import { useStore } from './storeContext'
 
 export type FetchTypeOrders =
   | 'all'
@@ -55,8 +56,9 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
+  const { store } = useStore()
   const { employee, permissions, isEmployee, disabledEmployee } = useEmployee()
-  const { storeId, store } = useAuth()
+  const { storeId } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -126,7 +128,6 @@ export const OrdersContextProvider = ({
     }
   }, [store])
 
-  const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
     const reportsSolvedToday = await ServiceComments.getReports({
       storeId,
@@ -147,7 +148,11 @@ export const OrdersContextProvider = ({
 
     const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
 
-    const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
+    const typeOfOrders = permissions.canViewAllOrders
+      ? 'all'
+      : permissions.orders.canViewMy
+      ? 'mine'
+      : 'none'
     if (typeOfOrders === 'all') {
       console.log('all orders')
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(

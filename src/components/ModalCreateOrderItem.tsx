@@ -22,7 +22,7 @@ import { gStyles } from '../styles'
 const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
   const { order } = useOrderDetails()
 
-  const { storeId, categories, storeSections } = useStore()
+  const { storeId, categories, sections: storeSections } = useStore()
   const { permissions } = useEmployee()
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(undefined)

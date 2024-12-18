@@ -19,7 +19,6 @@ import { useStore } from '../contexts/storeContext'
 import { BalanceType2 } from '../types/BalanceType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
-import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import HeaderDate from './HeaderDate'
 import StoreCounts from './StoreCounts'
@@ -28,7 +27,7 @@ import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import ModalCloseOperations from '../ModalCloseOperations'
-import StoreBalance, { StoreBalanceE } from './StoreBalance/StoreBalance'
+import { StoreBalanceE } from './StoreBalance/StoreBalance'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()
@@ -230,7 +229,7 @@ const TabClients = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
-  const { storeId, storeSections } = useStore()
+  const { storeId, sections: storeSections } = useStore()
   const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 

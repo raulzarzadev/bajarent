@@ -26,7 +26,7 @@ const ListOrders = ({
   rowSideButtons
 }: ListOrderProps) => {
   const { toOrders } = useMyNav()
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
 
   const formatOrders = orders
     ?.map((o) => {

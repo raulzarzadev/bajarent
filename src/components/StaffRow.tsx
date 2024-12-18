@@ -9,7 +9,7 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ErrorBoundary from './ErrorBoundary'
 import Button from './Button'
-import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
 
 export type StaffRowProps = {
   staffId: StaffType['id']
@@ -28,8 +28,7 @@ const Row = ({
   hideActions
 }: StaffRowProps) => {
   const navigation = useNavigation()
-  const { store } = useAuth()
-  const staff = store?.staff || []
+  const { staff } = useStore()
   const staffItem = staff?.find((s) => s.id === staffId)
   const text = (field?: string | Date): string => {
     if (typeof field === 'string') return field

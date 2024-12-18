@@ -2,7 +2,9 @@ import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 
 export default function useAssignOrder({ orderId }: { orderId: string }) {
-  const { orders, storeSections, staff } = useStore()
+  const { sections: storeSections, staff } = useStore()
+  //FIXME: orders is not defined
+  const orders = []
   const order = orders?.find((o) => o?.id === orderId)
   const assignedToStaff = staff?.find(
     (s) => s?.id === order?.assignToStaff

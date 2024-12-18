@@ -30,6 +30,7 @@ const StoreBalance = () => {
 
     setLoading(false)
   }
+  if (!currentBalance) return null
   return (
     <View>
       <View

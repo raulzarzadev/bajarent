@@ -16,7 +16,7 @@ import Loading from './Loading'
 import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenSections = ({ navigation }) => {
-  const { storeSections, store } = useStore()
+  const { sections: storeSections, store } = useStore()
   const {
     permissions: { canEditStaff }
   } = useEmployee()

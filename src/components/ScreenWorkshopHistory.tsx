@@ -80,7 +80,7 @@ export const ResumeRepairs = ({
   started: any[]
   finished: any[]
 }) => {
-  const { categories, storeSections } = useStore()
+  const { categories, sections: storeSections } = useStore()
   const [items, setItems] = useState([])
   const [selectedOption, setSelectedOption] = useState<List>(null)
   const handleShowList = (list: List) => {

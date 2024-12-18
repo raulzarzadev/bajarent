@@ -17,7 +17,7 @@ import {
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 
 const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
 
   const availableItems = balance.items
 
@@ -76,9 +76,9 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
       {Object.keys(groupedBySection)
         ?.sort((a, b) => {
           const aName =
-            storeSections.find((s) => s.id === a)?.name || 'Sin asignar'
+            storeSections?.find((s) => s.id === a)?.name || 'Sin asignar'
           const bName =
-            storeSections.find((s) => s.id === b)?.name || 'Sin asignar'
+            storeSections?.find((s) => s.id === b)?.name || 'Sin asignar'
           return aName.localeCompare(bName)
         })
         .sort((a, b) => {
@@ -209,6 +209,7 @@ const allFieldsAreEmpty = (balanceRow: BalanceRowType) => {
 const sectionLabel = ({ sectionId, storeSections }) => {
   if (sectionId === 'all') return 'Todas'
   if (sectionId === 'withoutSection') return 'Sin area'
+  if (sectionId === 'workshop') return 'Taller'
   return storeSections.find((s) => s.id === sectionId)?.name || 'S/N'
 }
 

@@ -1,9 +1,11 @@
 import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
-import { useStore } from '../contexts/storeContext'
 
 function usePrices() {
-  const { fetchPrices } = useStore()
+  //const { fetchPrices } = useStore()
+  const fetchPrices = () => {
+    console.log('fetchPrices')
+  }
   const createPrice = async (
     price: Partial<PriceType>,
     storeId: string,

@@ -24,7 +24,6 @@ import TextInfo from './TextInfo'
 const CANCELED_REASON_MIN_LENGTH = 10
 const ScreenPaymentsDetails = ({ route, navigation }) => {
   const { id } = route.params
-  const { staff } = useStore()
   const { permissions } = useEmployee()
   const canCancelPayments = permissions?.canCancelPayments
   const [payment, setPayment] = useState<PaymentType>()

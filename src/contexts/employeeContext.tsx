@@ -47,7 +47,13 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
-  const { store, staff, storeSections, storeId, categories } = useStore()
+  const {
+    store,
+    staff,
+    sections: storeSections,
+    storeId,
+    categories
+  } = useStore()
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
@@ -57,8 +63,9 @@ export const EmployeeContextProvider = ({ children }) => {
 
   useEffect(() => {
     setIsOwner(store && store?.createdBy === user?.id)
+
     const employee = staff?.find(
-      ({ userId }) => user?.id && userId === user?.id
+      (staff) => staff?.userId === user?.id && staff?.storeId === storeId
     )
 
     if (employee) {
@@ -91,6 +98,7 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
   const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
+
   useEffect(() => {
     if (canViewAllItems) {
       ServiceStoreItems.listenAvailableBySections({
