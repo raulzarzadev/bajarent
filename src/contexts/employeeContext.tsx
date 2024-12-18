@@ -58,23 +58,35 @@ export const EmployeeContextProvider = ({ children }) => {
   const [assignedSections, setAssignedSections] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
-  const [disabledEmployee, setDisabledEmployee] = useState()
+  const [disabledEmployee, setDisabledEmployee] = useState<boolean>()
 
   useEffect(() => {
     if (staff) {
       const employee = staff.find(
         (s) => s.userId === user?.id && s.storeId === storeId
       )
-      ServiceStaff.listen(employee?.id, (employee) => {
-        setEmployee(employee)
-        const sectionsAssigned = storeSections
-          ?.filter(({ staff }) => staff?.includes(employee?.id))
-          .map(({ id }) => id)
-        setDisabledEmployee(employee.disabled)
-        setIsAdmin(employee?.permissions?.isAdmin)
-        setIsOwner(store && store?.createdBy === user?.id)
-        setAssignedSections(sectionsAssigned)
-      })
+      if (employee) {
+        ServiceStaff.listen(employee?.id, (employee) => {
+          setEmployee(employee)
+          const sectionsAssigned = storeSections
+            ?.filter(({ staff }) => staff?.includes(employee?.id))
+            .map(({ id }) => id)
+
+          setDisabledEmployee(employee.disabled || null)
+          setIsAdmin(employee?.permissions?.isAdmin)
+          setIsOwner(store && store?.createdBy === user?.id)
+          setAssignedSections(sectionsAssigned)
+        })
+      } else {
+        console.log({ user, staff })
+        setEmployee({
+          ...user
+        })
+        setDisabledEmployee(false)
+        setIsAdmin(true)
+        setIsOwner(true)
+        setAssignedSections(null)
+      }
     }
   }, [staff])
 

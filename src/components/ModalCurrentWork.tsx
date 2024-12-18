@@ -40,7 +40,11 @@ const ModalCurrentWork = () => {
     title: 'Trabajo de hoy (rentas)'
   })
 
-  if (!permissions?.canSeeCurrentWork) return <></>
+  const storePermissions = permissions.store || {}
+  const myProgress = storePermissions?.canViewMyCurrentWork
+  const allProgress = storePermissions?.canViewAllCurrentWork
+  // if any of both is true then show the modal
+  if (!myProgress && !allProgress) return null
 
   return (
     <View style={{ marginRight: 8 }}>

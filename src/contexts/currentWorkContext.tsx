@@ -2,25 +2,24 @@ import React, {
   createContext,
   useState,
   useContext,
-  ReactNode,
-  useEffect
+  ReactNode
+  //useEffect
 } from 'react'
-import OrderType, {
-  order_status,
-  TypeOrder,
-  TypeOrderType
-} from '../types/OrderType'
-import { useOrdersCtx } from './ordersContext'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { useStore } from './storeContext'
-import { useEmployee } from './employeeContext'
-import { endDate, startDate } from '../libs/utils-date'
+import OrderType from // order_status,
+// TypeOrder,
+// TypeOrderType
+'../types/OrderType'
+// import { useOrdersCtx } from './ordersContext'
+// import { ServiceOrders } from '../firebase/ServiceOrders'
+// import { useStore } from './storeContext'
+// import { useEmployee } from './employeeContext'
+// import { endDate, startDate } from '../libs/utils-date'
 import PaymentType from '../types/PaymentType'
-import { ServicePayments } from '../firebase/ServicePayments'
-import { where } from 'firebase/firestore'
-import { ServiceComments } from '../firebase/ServiceComments'
-import { calculateProgress } from '../libs/currentWork'
-import { ServiceCurrentWork } from '../firebase/ServiceCurrentWork'
+// import { ServicePayments } from '../firebase/ServicePayments'
+// import { where } from 'firebase/firestore'
+// import { ServiceComments } from '../firebase/ServiceComments'
+// import { calculateProgress } from '../libs/currentWork'
+// import { ServiceCurrentWork } from '../firebase/ServiceCurrentWork'
 export type CurrentWorkContextType = {
   currentWork?: CurrentWorks
   setDate: (date: Date) => void
@@ -65,14 +64,13 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
   const [date, setDate] = useState(new Date())
-  const { storeId } = useStore()
-  const { employee, permissions } = useEmployee()
+  //const { storeId } = useStore()
+  //const { employee, permissions } = useEmployee()
 
-  const sectionsAssigned = employee?.sectionsAssigned || []
+  // const sectionsAssigned = employee?.sectionsAssigned || []
 
-  const { orders } = useOrdersCtx()
-  const [currentWork, setCurrentWork] =
-    useState<CurrentWorks>(defaultCurrentWork)
+  //const { orders } = useOrdersCtx()
+  const [currentWork, setCurrentWork] = useState<CurrentWorks>()
   // useEffect(() => {
   //   if (orders) {
   //     handleSetData({
@@ -97,39 +95,39 @@ export const CurrentWorkProvider: React.FC<{ children: ReactNode }> = ({
   //     })
   // }, [date, storeId])
 
-  const handleSetData = ({
-    disabledEmployee = false,
-    allowGetInfoFromAllOrders = false,
-    sectionsAssigned
-  }) => {
-    if (disabledEmployee) {
-      return setCurrentWork(defaultCurrentWork)
-    }
-    if (allowGetInfoFromAllOrders) {
-      getCurrentWork({
-        date,
-        storeId,
-        sectionsAssigned,
-        orderType: TypeOrder.RENT,
-        currentOrders: orders
-      }).then((data) => {
-        setCurrentWork({ ...data })
-      })
-      return
-    }
-    if (employee.sectionsAssigned.length > 0) {
-      getCurrentWork({
-        date,
-        storeId,
-        sectionsAssigned,
-        orderType: TypeOrder.RENT,
-        currentOrders: orders
-      }).then((data) => {
-        setCurrentWork({ ...data })
-      })
-      return
-    }
-  }
+  // const handleSetData = ({
+  //   disabledEmployee = false,
+  //   allowGetInfoFromAllOrders = false,
+  //   sectionsAssigned
+  // }) => {
+  //   if (disabledEmployee) {
+  //     return setCurrentWork(defaultCurrentWork)
+  //   }
+  //   if (allowGetInfoFromAllOrders) {
+  //     getCurrentWork({
+  //       date,
+  //       storeId,
+  //       sectionsAssigned,
+  //       orderType: TypeOrder.RENT,
+  //       currentOrders: orders
+  //     }).then((data) => {
+  //       setCurrentWork({ ...data })
+  //     })
+  //     return
+  //   }
+  //   if (employee.sectionsAssigned.length > 0) {
+  //     getCurrentWork({
+  //       date,
+  //       storeId,
+  //       sectionsAssigned,
+  //       orderType: TypeOrder.RENT,
+  //       currentOrders: orders
+  //     }).then((data) => {
+  //       setCurrentWork({ ...data })
+  //     })
+  //     return
+  //   }
+  // }
 
   return (
     <CurrentWorkContext.Provider value={{ currentWork, setDate }}>
@@ -146,144 +144,144 @@ export const useCurrentWorkCtx = (): CurrentWorkContextType => {
   return context
 }
 
-const getCurrentWork = async ({
-  storeId = '',
-  sectionsAssigned = [],
-  date = new Date(),
-  orderType,
-  currentOrders = []
-}: {
-  storeId: string
-  sectionsAssigned: string[]
-  date: Date
-  orderType?: TypeOrderType
-  currentOrders: Partial<OrderType>[]
-}) => {
-  // if sectionsAssigned.length is 0, should will get info of all orders
-  try {
-    const pickedUpPromise = ServiceOrders.getPickedUp({
-      storeId,
-      sections: sectionsAssigned,
-      fromDate: startDate(date),
-      toDate: endDate(date),
-      orderType
-    })
-    const deliveredPromise = ServiceOrders.getDelivered({
-      storeId,
-      sections: sectionsAssigned,
-      fromDate: startDate(date),
-      toDate: endDate(date),
-      orderType
-    })
+// const getCurrentWork = async ({
+//   storeId = '',
+//   sectionsAssigned = [],
+//   date = new Date(),
+//   orderType,
+//   currentOrders = []
+// }: {
+//   storeId: string
+//   sectionsAssigned: string[]
+//   date: Date
+//   orderType?: TypeOrderType
+//   currentOrders: Partial<OrderType>[]
+// }) => {
+//   // if sectionsAssigned.length is 0, should will get info of all orders
+//   try {
+//     const pickedUpPromise = ServiceOrders.getPickedUp({
+//       storeId,
+//       sections: sectionsAssigned,
+//       fromDate: startDate(date),
+//       toDate: endDate(date),
+//       orderType
+//     })
+//     const deliveredPromise = ServiceOrders.getDelivered({
+//       storeId,
+//       sections: sectionsAssigned,
+//       fromDate: startDate(date),
+//       toDate: endDate(date),
+//       orderType
+//     })
 
-    const renewedPromise = ServiceOrders.getRenewed({
-      storeId,
-      sections: sectionsAssigned,
-      fromDate: startDate(date),
-      toDate: endDate(date),
-      orderType
-    })
+//     const renewedPromise = ServiceOrders.getRenewed({
+//       storeId,
+//       sections: sectionsAssigned,
+//       fromDate: startDate(date),
+//       toDate: endDate(date),
+//       orderType
+//     })
 
-    const reportedOrderPromises = ServiceComments.getSolvedReportsByDate({
-      storeId,
-      fromDate: startDate(new Date()),
-      toDate: endDate(new Date())
-    })
-      .then((reports) => {
-        const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
-        return ordersIds.map((orderId) => ServiceOrders.get(orderId))
-      })
-      .then((ordersPromises) => {
-        return Promise.all(ordersPromises)
-      })
+//     const reportedOrderPromises = ServiceComments.getSolvedReportsByDate({
+//       storeId,
+//       fromDate: startDate(new Date()),
+//       toDate: endDate(new Date())
+//     })
+//       .then((reports) => {
+//         const ordersIds = Array.from(new Set(reports.map((r) => r.orderId)))
+//         return ordersIds.map((orderId) => ServiceOrders.get(orderId))
+//       })
+//       .then((ordersPromises) => {
+//         return Promise.all(ordersPromises)
+//       })
 
-    const [pickedUp, delivered, renewed, reportedSolved] = await Promise.all([
-      pickedUpPromise,
-      deliveredPromise,
-      renewedPromise,
-      reportedOrderPromises
-    ])
+//     const [pickedUp, delivered, renewed, reportedSolved] = await Promise.all([
+//       pickedUpPromise,
+//       deliveredPromise,
+//       renewedPromise,
+//       reportedOrderPromises
+//     ])
 
-    const authorized = currentOrders
-      .filter((o) => o.type === orderType)
-      .filter((o) => o.status === order_status.AUTHORIZED)
+//     const authorized = currentOrders
+//       .filter((o) => o.type === orderType)
+//       .filter((o) => o.status === order_status.AUTHORIZED)
 
-    const unsolvedReportedInSectionAssigned = currentOrders
-      .filter((o) => o.type === orderType)
-      .filter((o) => o.hasNotSolvedReports)
+//     const unsolvedReportedInSectionAssigned = currentOrders
+//       .filter((o) => o.type === orderType)
+//       .filter((o) => o.hasNotSolvedReports)
 
-    const solvedOrders = [...renewed, ...delivered].filter((o) => {
-      return sectionsAssigned.length > 0
-        ? sectionsAssigned.includes(o.assignToSection)
-        : true
-    })
-    const solvedReportsInSectionAssigned = reportedSolved.filter((o) =>
-      sectionsAssigned.length > 0
-        ? sectionsAssigned.includes(o.assignToSection)
-        : true
-    )
+//     const solvedOrders = [...renewed, ...delivered].filter((o) => {
+//       return sectionsAssigned.length > 0
+//         ? sectionsAssigned.includes(o.assignToSection)
+//         : true
+//     })
+//     const solvedReportsInSectionAssigned = reportedSolved.filter((o) =>
+//       sectionsAssigned.length > 0
+//         ? sectionsAssigned.includes(o.assignToSection)
+//         : true
+//     )
 
-    const paidOrders = await ServicePayments.getInList({
-      list: solvedOrders.map(({ id }) => id),
-      field: 'orderId',
-      moreFilters: [
-        where('createdAt', '>=', startDate(date)),
-        where('createdAt', '<=', endDate(date))
-      ]
-    })
+//     const paidOrders = await ServicePayments.getInList({
+//       list: solvedOrders.map(({ id }) => id),
+//       field: 'orderId',
+//       moreFilters: [
+//         where('createdAt', '>=', startDate(date)),
+//         where('createdAt', '<=', endDate(date))
+//       ]
+//     })
 
-    const reportedProgress = calculateProgress(
-      solvedReportsInSectionAssigned?.length,
-      unsolvedReportedInSectionAssigned?.length
-    )
+//     const reportedProgress = calculateProgress(
+//       solvedReportsInSectionAssigned?.length,
+//       unsolvedReportedInSectionAssigned?.length
+//     )
 
-    const deliveredProgress = calculateProgress(
-      delivered?.length,
-      authorized?.length
-    )
+//     const deliveredProgress = calculateProgress(
+//       delivered?.length,
+//       authorized?.length
+//     )
 
-    const expiredOrders = currentOrders.filter(
-      (o) => o.expiresToday || o.isExpired
-    )
+//     const expiredOrders = currentOrders.filter(
+//       (o) => o.expiresToday || o.isExpired
+//     )
 
-    const expiredProgress = calculateProgress(
-      renewed?.length + pickedUp?.length,
-      expiredOrders?.length
-    )
+//     const expiredProgress = calculateProgress(
+//       renewed?.length + pickedUp?.length,
+//       expiredOrders?.length
+//     )
 
-    const doneOrders =
-      delivered?.length +
-      renewed?.length +
-      pickedUp?.length +
-      solvedReportsInSectionAssigned?.length
+//     const doneOrders =
+//       delivered?.length +
+//       renewed?.length +
+//       pickedUp?.length +
+//       solvedReportsInSectionAssigned?.length
 
-    const pendingOrders =
-      authorized?.length +
-      expiredOrders?.length +
-      unsolvedReportedInSectionAssigned?.length
+//     const pendingOrders =
+//       authorized?.length +
+//       expiredOrders?.length +
+//       unsolvedReportedInSectionAssigned?.length
 
-    const total = calculateProgress(doneOrders, pendingOrders)
+//     const total = calculateProgress(doneOrders, pendingOrders)
 
-    return {
-      pickedUpOrders: pickedUp,
-      deliveredOrders: delivered,
-      renewedOrders: renewed,
-      authorizedOrders: authorized,
-      solvedReported: solvedReportsInSectionAssigned,
-      unsolvedReported: unsolvedReportedInSectionAssigned,
-      payments: paidOrders,
-      expiredOrders,
-      sections: sectionsAssigned,
-      progress: {
-        new: deliveredProgress,
-        reports: reportedProgress,
-        expired: expiredProgress,
-        total
-      }
-    }
-  } catch (error) {
-    console.log('error', error)
-    return defaultCurrentWork
-  }
-  // setCurrentWork()
-}
+//     return {
+//       pickedUpOrders: pickedUp,
+//       deliveredOrders: delivered,
+//       renewedOrders: renewed,
+//       authorizedOrders: authorized,
+//       solvedReported: solvedReportsInSectionAssigned,
+//       unsolvedReported: unsolvedReportedInSectionAssigned,
+//       payments: paidOrders,
+//       expiredOrders,
+//       sections: sectionsAssigned,
+//       progress: {
+//         new: deliveredProgress,
+//         reports: reportedProgress,
+//         expired: expiredProgress,
+//         total
+//       }
+//     }
+//   } catch (error) {
+//     console.log('error', error)
+//     return defaultCurrentWork
+//   }
+//   // setCurrentWork()
+// }

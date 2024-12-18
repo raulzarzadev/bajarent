@@ -127,6 +127,9 @@ const labels = {
   canValidatePayments: 'Validar pagos',
   canManageItems: 'Administrar artículos',
   canSendMessages: 'Enviar mensajes',
+  canViewMyCurrentWork: 'Trabajo personal',
+  canViewRouteCurrentWork: 'Trabajo ruta',
+  canViewAllCurrentWork: 'Trabajo total',
   /* ********************************************
    * PERMISSIONS ITEMS V2
    *******************************************rz */
