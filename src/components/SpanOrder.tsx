@@ -44,7 +44,7 @@ const SpanOrder = ({
   useEffect(() => {
     const searchOrder = async () => {
       // -> Search and return from CURRENT CONTEXT orders
-      const currentOrdersFound = orders.find((o) => o.id === orderId)
+      const currentOrdersFound = orders?.find((o) => o.id === orderId)
       if (currentOrdersFound) {
         return {
           ...currentOrdersFound,
