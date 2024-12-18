@@ -138,7 +138,7 @@ const BottomAppBar = () => {
         name="Profile"
         component={StackProfile}
         options={{
-          title: 'Perfil',
+          title: employee?.name?.split(' ')?.[0]?.substring(0, 12) || 'Perfil',
           headerShown: false,
           //* hide the tab bar button on the profile screen
           tabBarButton: showProfileButton ? undefined : () => null

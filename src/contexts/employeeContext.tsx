@@ -9,6 +9,7 @@ import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
+import { ServiceStaff } from '../firebase/ServiceStaff'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -62,25 +63,49 @@ export const EmployeeContextProvider = ({ children }) => {
   const [isEmployee, setIsEmployee] = useState(false)
 
   useEffect(() => {
-    setIsOwner(store && store?.createdBy === user?.id)
-
-    const employee = staff?.find(
-      (staff) => staff?.userId === user?.id && staff?.storeId === storeId
-    )
-
-    if (employee) {
-      setDisabledEmployee(employee.disabled)
-      setIsEmployee(true)
-      const sectionsAssigned = storeSections
-        ?.filter(({ staff }) => staff?.includes(employee?.id))
-        .map(({ id }) => id)
-      setIsAdmin(employee?.permissions?.isAdmin)
-      setEmployee(employee)
-      setAssignedSections(sectionsAssigned)
-    } else {
-      setIsEmployee(false)
+    if (staff) {
+      const employee = staff.find(
+        (s) => s.userId === user?.id && s.storeId === storeId
+      )
+      ServiceStaff.listen(employee?.id, (employee) => {
+        setEmployee(employee)
+        const sectionsAssigned = storeSections
+          ?.filter(({ staff }) => staff?.includes(employee?.id))
+          .map(({ id }) => id)
+        setIsAdmin(employee?.permissions?.isAdmin)
+        setAssignedSections(sectionsAssigned)
+      })
     }
+    // ServiceStaff.listen(employee?.id, (employee) => {
+    //   setEmployee(employee)
+    //   const sectionsAssigned = storeSections
+    //     ?.filter(({ staff }) => staff?.includes(employee?.id))
+    //     .map(({ id }) => id)
+    //   setIsAdmin(employee?.permissions?.isAdmin)
+    //   setAssignedSections(sectionsAssigned)
+    // })
   }, [staff])
+
+  // useEffect(() => {
+  //   setIsOwner(store && store?.createdBy === user?.id)
+
+  //   const employee = staff?.find(
+  //     (staff) => staff?.userId === user?.id && staff?.storeId === storeId
+  //   )
+
+  //   if (employee) {
+  //     setDisabledEmployee(employee.disabled)
+  //     setIsEmployee(true)
+  //     const sectionsAssigned = storeSections
+  //       ?.filter(({ staff }) => staff?.includes(employee?.id))
+  //       .map(({ id }) => id)
+  //     setIsAdmin(employee?.permissions?.isAdmin)
+  //     //setEmployee(employee)
+  //     setAssignedSections(sectionsAssigned)
+  //   } else {
+  //     setIsEmployee(false)
+  //   }
+  // }, [staff])
 
   // useEffect(() => {
   //   if (isOwner) {

@@ -5,7 +5,7 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useEmployee } from '../contexts/employeeContext'
 
 const InputDisabledStaff = ({ staffId }) => {
-  const { staff: staffs } = useStore()
+  const { staff: staffs, handleUpdateStore } = useStore()
   const { permissions } = useEmployee()
   const canDisabledStaff =
     permissions.isAdmin ||
@@ -21,6 +21,7 @@ const InputDisabledStaff = ({ staffId }) => {
     try {
       const res = await ServiceStaff.update(staff.id, { disabled: value })
       console.log(res)
+      handleUpdateStore()
     } catch (e) {
       console.error(e)
     } finally {

@@ -1,8 +1,9 @@
 import { PriceType } from '../types/PriceType'
 import { ServicePrices } from '../firebase/ServicePrices'
+import { useStore } from '../contexts/storeContext'
 
 function usePrices() {
-  //const { fetchPrices } = useStore()
+  const { handleUpdateStore } = useStore()
   const fetchPrices = () => {
     console.log('fetchPrices')
   }
@@ -16,10 +17,9 @@ function usePrices() {
     await ServicePrices.create(price)
       .then((r) => {
         console.log({ r })
-        // updateCategories()
+        handleUpdateStore()
       })
       .catch((e) => console.error({ e }))
-    fetchPrices()
   }
   const updatePrice = async (
     priceId: PriceType['id'],
@@ -28,19 +28,17 @@ function usePrices() {
     await ServicePrices.update(priceId, price)
       .then((r) => {
         console.log({ r })
-        //updateCategories()
+        handleUpdateStore()
       })
       .catch((e) => console.error({ e }))
-    fetchPrices()
   }
   const deletePrice = async (priceId: PriceType['id']) => {
     await ServicePrices.delete(priceId)
       .then((r) => {
         console.log({ r })
-        // updateCategories()
+        handleUpdateStore()
       })
       .catch((e) => console.error({ e }))
-    fetchPrices()
   }
 
   return {

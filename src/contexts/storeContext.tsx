@@ -23,6 +23,8 @@ export type StoreContextType = {
   sections?: SectionType[]
   staff?: StaffType[]
   categories?: Partial<CategoryType>[]
+  handleUpdateStore?: () => void //! TODO: this is so bad, shuold be removed or refactored
+  //! *<----- Thing this can be avoid if we use the redux
 }
 
 let sc = 0
@@ -31,7 +33,7 @@ const StoreContextProvider = ({ children }) => {
   const [currentBalance, setCurrentBalance] = useState<StoreBalanceType>()
   //#region hooks
   const { storeId } = useAuth()
-  const [store, setStore] = useState<StoreContextType>()
+  const [storeCtx, setStoreCtx] = useState<StoreContextType>()
 
   const getStoreData = async () => {
     const storePromise = ServiceStores.get(storeId)
@@ -77,10 +79,10 @@ const StoreContextProvider = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    if (storeId) {
-      getStoreData().then(({ store, categories, sections, staff, prices }) => {
-        setStore({
+  const handleUpdateStore = async () => {
+    getStoreData()
+      .then(({ store, categories, sections, staff, prices }) => {
+        setStoreCtx({
           store,
           categories,
           sections,
@@ -88,15 +90,24 @@ const StoreContextProvider = ({ children }) => {
           prices
         })
       })
+      .catch((e) => console.error({ e }))
+  }
+
+  useEffect(() => {
+    if (storeId) {
+      handleUpdateStore()
     }
   }, [storeId])
 
   useEffect(() => {
     //* CURRENT BALANCE
-    ServiceBalances.listenLastInDate(storeId, new Date(), (balance) =>
-      setCurrentBalance(balance)
-    )
-  }, [store])
+    if (storeCtx?.store)
+      ServiceBalances.listenLastInDate(
+        storeCtx?.store?.id,
+        new Date(),
+        (balance) => setCurrentBalance(balance)
+      )
+  }, [storeCtx?.store])
 
   sc++
   if (__DEV__) console.log({ sc })
@@ -105,9 +116,10 @@ const StoreContextProvider = ({ children }) => {
   return (
     <StoreContext.Provider
       value={{
-        ...store,
+        ...storeCtx,
         storeId,
-        currentBalance
+        currentBalance,
+        handleUpdateStore
       }}
     >
       {children}

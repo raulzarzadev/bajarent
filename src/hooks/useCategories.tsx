@@ -4,13 +4,15 @@ import { CategoryType } from '../types/RentItem'
 import usePrices from './usePrices'
 
 function useCategories() {
-  const { storeId } = useStore()
+  const { storeId, handleUpdateStore } = useStore()
   const { createPrice, updatePrice, deletePrice } = usePrices()
+
   const createCategory = async (values: Partial<CategoryType>) => {
     values.storeId = storeId
     await ServiceCategories.create(values)
       .then((r) => {
         console.log({ r })
+        handleUpdateStore()
       })
       .catch((e) => {
         console.log({ e })
@@ -24,6 +26,7 @@ function useCategories() {
     await ServiceCategories.update(categoryId, values)
       .then((r) => {
         console.log({ r })
+        handleUpdateStore()
       })
       .catch((e) => {
         console.log({ e })
@@ -33,6 +36,7 @@ function useCategories() {
     await ServiceCategories.delete(categoryId)
       .then((r) => {
         console.log({ r })
+        handleUpdateStore()
       })
       .catch((e) => {
         console.log({ e })

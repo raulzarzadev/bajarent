@@ -78,14 +78,15 @@ export const OrdersContextProvider = ({
     useState<ConsolidatedStoreOrdersType>()
 
   const handleGetConsolidates = async () => {
-    ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
-      // console.log('lisening chunks')
-      const { orders } = await getChunks({
-        chunks: res[0]?.consolidatedChunks || []
-      })
+    if (store)
+      ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
+        // console.log('lisening chunks')
+        const { orders } = await getChunks({
+          chunks: res[0]?.consolidatedChunks || []
+        })
 
-      setConsolidatedOrders({ ...res[0], orders })
-    })
+        setConsolidatedOrders({ ...res[0], orders })
+      })
   }
 
   const setOtherConsolidated = async ({
