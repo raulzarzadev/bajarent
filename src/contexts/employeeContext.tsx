@@ -9,11 +9,11 @@ import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
+import { ServiceStaff } from '../firebase/ServiceStaff'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
 
-  isEmployee?: boolean
   disabledEmployee?: boolean
   permissions: {
     canSeeCurrentWork?: boolean
@@ -34,6 +34,7 @@ export type EmployeeContextType = {
     canCreateItems?: boolean
     shouldChooseExactItem?: boolean
     canViewAllItems?: boolean
+    canViewModalCurrentWork?: boolean
   }
   items: Partial<ItemType>[]
 }
@@ -47,41 +48,48 @@ const EmployeeContext = createContext<EmployeeContextType>({
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
   const { user } = useAuth()
-  const { store, staff, storeSections, storeId, categories } = useStore()
+  const {
+    store,
+    staff,
+    sections: storeSections,
+    storeId,
+    categories
+  } = useStore()
   const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
   const [assignedSections, setAssignedSections] = useState<string[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOwner, setIsOwner] = useState(false)
-  const [disabledEmployee, setDisabledEmployee] = useState(employee?.disabled)
-  const [isEmployee, setIsEmployee] = useState(false)
+  const [disabledEmployee, setDisabledEmployee] = useState<boolean>()
 
   useEffect(() => {
-    setIsOwner(store && store?.createdBy === user?.id)
-    const employee = staff?.find(
-      ({ userId }) => user?.id && userId === user?.id
-    )
+    if (staff) {
+      const employee = staff.find(
+        (s) => s.userId === user?.id && s.storeId === storeId
+      )
+      if (employee) {
+        ServiceStaff.listen(employee?.id, (employee) => {
+          setEmployee(employee)
+          const sectionsAssigned = storeSections
+            ?.filter(({ staff }) => staff?.includes(employee?.id))
+            .map(({ id }) => id)
 
-    if (employee) {
-      setDisabledEmployee(employee.disabled)
-      setIsEmployee(true)
-      const sectionsAssigned = storeSections
-        ?.filter(({ staff }) => staff?.includes(employee?.id))
-        .map(({ id }) => id)
-      setIsAdmin(employee?.permissions?.isAdmin)
-      setEmployee(employee)
-      setAssignedSections(sectionsAssigned)
-    } else {
-      setIsEmployee(false)
+          setDisabledEmployee(employee.disabled || null)
+          setIsAdmin(employee?.permissions?.isAdmin)
+          setIsOwner(store && store?.createdBy === user?.id)
+          setAssignedSections(sectionsAssigned)
+        })
+      } else {
+        console.log({ user, staff })
+        setEmployee({
+          ...user
+        })
+        setDisabledEmployee(false)
+        setIsAdmin(true)
+        setIsOwner(true)
+        setAssignedSections(null)
+      }
     }
   }, [staff])
-
-  useEffect(() => {
-    if (isOwner) {
-      setEmployee({
-        ...user
-      })
-    }
-  }, [isOwner])
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
@@ -91,6 +99,7 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
   const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
+
   useEffect(() => {
     if (canViewAllItems) {
       ServiceStoreItems.listenAvailableBySections({
@@ -109,7 +118,9 @@ export const EmployeeContextProvider = ({ children }) => {
         }
       })
     }
-  }, [isEmployee])
+  }, [canViewAllItems])
+
+  const storePermissions = employee?.permissions?.store || {}
 
   const value = useMemo(
     () => ({
@@ -117,26 +128,20 @@ export const EmployeeContextProvider = ({ children }) => {
       employee: employee
         ? { ...employee, sectionsAssigned: assignedSections }
         : undefined,
-      isEmployee,
       disabledEmployee,
 
       permissions: {
         isAdmin: !!isAdmin || isOwner, //* <--- Owner now is an admin always
         isOwner: isOwner,
         orders: employee?.permissions?.order || {},
-        store: employee?.permissions?.store || {},
+        store: storePermissions || {},
         items: employee?.permissions?.items || {},
-        canSeeCurrentWork: employee?.permissions?.store?.canSeeCurrentWork,
-        canEditStaff:
-          !!employee?.permissions?.store?.canEditStaff || isOwner || isAdmin,
+        // canSeeCurrentWork: storePermissions?.canSeeCurrentWork,
+        canEditStaff: !!storePermissions?.canEditStaff || isOwner || isAdmin,
         canCancelPayments:
-          !!employee?.permissions?.store?.canCancelPayments ||
-          isOwner ||
-          isAdmin,
+          !!storePermissions?.canCancelPayments || isOwner || isAdmin,
         canValidatePayments:
-          isAdmin ||
-          isOwner ||
-          !!employee?.permissions?.store?.canValidatePayments,
+          isAdmin || isOwner || !!storePermissions?.canValidatePayments,
         canDeleteOrders:
           isAdmin || isOwner || !!employee?.permissions?.order?.canDelete,
         canDeleteItems:
@@ -155,14 +160,21 @@ export const EmployeeContextProvider = ({ children }) => {
           !!employee?.permissions?.items?.canCreate || isAdmin || isOwner,
         shouldChooseExactItem:
           employee?.permissions?.order?.shouldChooseExactItem,
-        canViewAllItems
+        canViewAllItems,
+        // if any of the permissions is true, or employee is disabled then the modal is open
+        canViewModalCurrentWork:
+          !(
+            storePermissions?.canViewAllCurrentWork ||
+            storePermissions?.canViewMyCurrentWork ||
+            storePermissions?.canViewAllCurrentWork
+          ) || employee?.disabled
       }
     }),
     [
       employee,
       isAdmin,
       isOwner,
-      store,
+      store?.id,
       assignedSections,
       items,
       disabledEmployee

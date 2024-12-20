@@ -1,20 +1,17 @@
 import { ScrollView, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Button from './Button'
 import ListStaff from './ListStaff2'
 import { gStyles } from '../styles'
-import { useAuth } from '../contexts/authContext'
 import ErrorBoundary from './ErrorBoundary'
 import Loading from './Loading'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
-import TextInfo from './TextInfo'
 
 const ScreenStaff = ({ navigation }) => {
-  const { store } = useAuth()
-  const { staff } = useStore()
+  const { staff, store } = useStore()
   const modal = useModal({ title: 'Eliminar empleado' })
 
   const [staffId, setStaffId] = useState('')

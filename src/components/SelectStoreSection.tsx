@@ -10,7 +10,7 @@ const SelectStoreSection = ({
   value: string
   setValue: (value: { type: string; section: string }) => void
 }) => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const options = storeSections.map((section) => ({
     label: section.name,
     value: section.id

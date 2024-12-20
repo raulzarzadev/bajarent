@@ -1,5 +1,4 @@
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
 import { FormStaffE } from './FormStaff'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStaff } from '../firebase/ServiceStaff'
@@ -9,12 +8,12 @@ import UserType from '../types/UserType'
 
 const ScreenStaffEdit = ({ route, navigation }) => {
   const { staff } = useStore() // <--Buscar staff
-  if (!staff.length) return <ActivityIndicator />
+  if (!staff?.length) return <ActivityIndicator />
 
   const staffId = route.params.staffId
   const employee = staff?.find(({ id }) => id === staffId)
   //const storeSections = store?.sections || []
-
+  console.log({ employee })
   return (
     <ScrollView>
       <View style={gStyles.container}>

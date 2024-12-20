@@ -21,7 +21,7 @@ const ScreenWorkshop = () => {
   const { toWorkshop } = useMyNav()
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
 
-  const { categories, storeSections } = useStore()
+  const { categories, sections: storeSections } = useStore()
   const formattedItems = formatItems(itemsPickedUp, categories, storeSections)
   const formattedOrders = formatItemsFromRepair({
     repairOrders,

@@ -11,7 +11,7 @@ import ErrorBoundary from './ErrorBoundary'
 import InputValueFormik from './FormikInputValue'
 import { StaffPermissionsE } from './StaffPermissions_old'
 import { EmployeePermissionsE } from './EmployeePermissions'
-import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
 const screenWidth = Dimensions.get('window').width
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
@@ -19,8 +19,7 @@ export type ScreenStoreEmployeeProps = {
   staffId: string
 }
 const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
-  const { store } = useAuth()
-  const staff = store?.staff || []
+  const { staff } = useStore()
   const employee = staff.find((s) => s.id === staffId)
   const handleSubmit = (values) => {
     ServiceStaff.update(employee.id, {

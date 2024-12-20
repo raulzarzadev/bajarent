@@ -1,15 +1,17 @@
-import React, { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
 import { gStyles } from '../styles'
 import Icon, { IconName } from './Icon'
+import { getItem, setItem } from '../libs/storage'
 
 export type Tab = {
   title: string
   content: ReactNode
   show?: boolean
   icon?: IconName
+  disabled?: boolean
 }
 export type TabType = Tab
 
@@ -17,15 +19,35 @@ export type TabsProps = {
   tabs: Tab[]
   defaultTab?: string | null
   showProgressBar?: boolean
+  tabId?: string
 }
 
-const TabsA = ({ tabs = [], defaultTab, showProgressBar }: TabsProps) => {
-  const [selectedTab, setSelectedTab] = useState(
-    defaultTab === null ? undefined : tabs[0]?.title
-  )
+const TabsA = ({
+  tabs = [],
+  defaultTab,
+  showProgressBar,
+  tabId
+}: TabsProps) => {
   const visibleTabs = tabs.filter(({ show }) => show)
+
+  const [selectedTab, setSelectedTab] = useState(undefined)
+
+  useEffect(() => {
+    console.log('rendering tabs')
+    //const initialTab = defaultTab === null ? undefined : visibleTabs[0]?.title
+
+    getItem(`tab-${tabId}`).then((tab) => {
+      if (tab) {
+        setSelectedTab(tab)
+      } else {
+        // setSelectedTab(initialTab)
+      }
+    })
+  }, [])
+
   const handleTabPress = (tab) => {
     setSelectedTab(tab)
+    setItem(`tab-${tabId}`, tab)
     // const visibleTabs = tabs.filter(({ show }) => show)
     const tabIndexSelected = visibleTabs.findIndex(({ title }) => title === tab)
     setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
@@ -41,32 +63,37 @@ const TabsA = ({ tabs = [], defaultTab, showProgressBar }: TabsProps) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabBar}
         >
-          {visibleTabs.map((tab) => (
-            <Pressable
-              role="tab"
-              key={tab.title}
-              style={({ pressed }) => [
-                styles.tabButton,
-                selectedTab === tab.title && styles.selectedTab,
-                pressed && { backgroundColor: '#ddd' },
-                { flexDirection: 'row' }
-              ]}
-              onPress={() => handleTabPress(tab.title)}
-            >
-              <Text style={styles.tabButtonText}>{tab.title}</Text>
-              {tab.icon && (
-                <View
-                  style={{
-                    marginLeft: 4,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Icon icon={tab.icon} size={14} />
-                </View>
-              )}
-            </Pressable>
-          ))}
+          {visibleTabs.map((tab) => {
+            const disabled = tab?.disabled
+            return (
+              <Pressable
+                disabled={disabled}
+                role="tab"
+                key={tab.title}
+                style={({ pressed }) => [
+                  styles.tabButton,
+                  selectedTab === tab.title && styles.selectedTab,
+                  pressed && { backgroundColor: '#ddd' },
+                  { flexDirection: 'row' },
+                  { opacity: disabled ? 0.5 : 1 }
+                ]}
+                onPress={() => handleTabPress(tab.title)}
+              >
+                <Text style={styles.tabButtonText}>{tab.title}</Text>
+                {tab.icon && (
+                  <View
+                    style={{
+                      marginLeft: 4,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Icon icon={tab.icon} size={14} />
+                  </View>
+                )}
+              </Pressable>
+            )
+          })}
         </ScrollView>
         {showProgressBar && (
           <View

@@ -33,7 +33,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const selectOnPress = props?.selectOnPress
 
   const { items: availableItems } = useEmployee()
-  const { categories, storeSections } = useStore()
+  const { categories, sections: storeSections } = useStore()
   const formattedItems = formatItems(availableItems, categories, storeSections)
     .filter((item) => !categoryId || item.category === categoryId)
     .sort((a, b) => a.number.localeCompare(b.number))

@@ -3,7 +3,7 @@ import { useStore } from '../contexts/storeContext'
 import FormikInputSelect from './FormikInputSelect'
 
 const FormikAssignOrder = () => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const options = storeSections.map((section) => ({
     label: section.name,
     value: section.id

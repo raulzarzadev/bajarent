@@ -1,15 +1,13 @@
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import React from 'react'
 import ButtonIcon from './ButtonIcon'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import ButtonConfirm from './ButtonConfirm'
 import { ScreenStoreEmployeeE } from './ScreenStoreEmployee'
-import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
 
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
-  const { store } = useAuth()
-  const staff = store?.staff || []
+  const { staff } = useStore()
   const employee = staff?.find(({ id }) => id === staffId)
   if (!employee) return <ActivityIndicator />
   return (

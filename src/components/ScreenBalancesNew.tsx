@@ -13,7 +13,7 @@ import { BalanceAmountsE } from './BalanceAmounts'
 import BusinessStatus from './BusinessStatus'
 
 const ScreenBalancesNew = ({ navigation }) => {
-  const { storeId, store, storeSections } = useStore()
+  const { storeId, store, sections: storeSections } = useStore()
   const { user } = useAuth()
   const [balance, setBalance] = React.useState<Partial<BalanceType2>>()
 

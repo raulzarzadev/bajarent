@@ -13,11 +13,12 @@ import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
+import { useStore } from '../contexts/storeContext'
 
 const Tab = createBottomTabNavigator()
 
 const BottomAppBar = () => {
-  const { store } = useAuth()
+  const { store } = useStore()
   const { permissions, employee } = useEmployee()
   const viewWorkshop =
     employee?.rol === 'technician' ||
@@ -137,7 +138,7 @@ const BottomAppBar = () => {
         name="Profile"
         component={StackProfile}
         options={{
-          title: 'Perfil',
+          title: employee?.name?.split(' ')?.[0]?.substring(0, 12) || 'Perfil',
           headerShown: false,
           //* hide the tab bar button on the profile screen
           tabBarButton: showProfileButton ? undefined : () => null

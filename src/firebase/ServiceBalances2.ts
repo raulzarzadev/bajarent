@@ -16,7 +16,6 @@ import { getBalancePayments } from '../libs/balance'
 import PaymentType from '../types/PaymentType'
 import { ServiceStoreItems } from './ServiceStoreItems'
 import ItemType from '../types/ItemType'
-import { Order } from '../DATA'
 
 class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
   constructor() {
@@ -58,7 +57,7 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
         orderBy('createdAt', 'desc'),
         limit(1)
       ],
-      cb
+      (res) => cb(res?.[0] || {})
     )
   }
 

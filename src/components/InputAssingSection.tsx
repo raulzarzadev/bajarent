@@ -19,7 +19,7 @@ const InputAssignSection = ({
     sectionName: string
   }) => Promise<void>
 }) => {
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const [sectionId, setSectionId] = React.useState<string | null>(null)
 
   const assignedToSectionName =

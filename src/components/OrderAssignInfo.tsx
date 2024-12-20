@@ -5,7 +5,8 @@ import { gStyles } from '../styles'
 import asDate, { dateFormat } from '../libs/utils-date'
 
 const OrderAssignInfo = ({ orderId }: { orderId: string }) => {
-  const { storeSections, orders } = useStore()
+  const { sections: storeSections } = useStore()
+  const orders = []
   const order = orders.find((o) => o.id === orderId)
   const sectionAssigned = storeSections.find(
     (o) => o?.id === order?.assignToSection

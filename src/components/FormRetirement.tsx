@@ -26,7 +26,7 @@ const FormRetirement = ({
 }: {
   onSubmit: (retirement: RetirementType) => Promise<any> | void
 }) => {
-  const { storeSections, storeId } = useStore()
+  const { sections: storeSections, storeId } = useStore()
   const initialValues: RetirementType = {
     type: 'bonus',
     amount: 0,

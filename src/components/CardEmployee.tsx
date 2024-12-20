@@ -4,12 +4,12 @@ import { useEmployee } from '../contexts/employeeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import BadgesStore from './BadgesStore'
-import { useAuth } from '../contexts/authContext'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
 
 const CardEmployee = () => {
-  const { store } = useAuth()
+  const { store } = useStore()
   const { employee } = useEmployee()
   const { navigate } = useNavigation()
   return (

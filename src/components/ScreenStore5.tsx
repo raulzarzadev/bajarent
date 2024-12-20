@@ -14,12 +14,11 @@ import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
 import { BusinessStatusE } from './BusinessStatus'
 import asDate from '../libs/utils-date'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import { BalanceType2 } from '../types/BalanceType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
 import Loading from './Loading'
-import { ServiceConsolidatedOrders } from '../firebase/ServiceConsolidatedOrders'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import HeaderDate from './HeaderDate'
 import StoreCounts from './StoreCounts'
@@ -28,9 +27,11 @@ import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import ModalCloseOperations from '../ModalCloseOperations'
+import { StoreBalanceE } from './StoreBalance/StoreBalance'
 
 const ScreenStore = (props) => {
-  const { store, user } = useAuth()
+  const { user } = useAuth()
+  const { store } = useStore()
   const {
     permissions: {
       isAdmin,
@@ -40,6 +41,9 @@ const ScreenStore = (props) => {
       canManageItems
     }
   } = useEmployee()
+
+  const scrollViewRef = useRef(null)
+
   const canViewSections = true
   const canViewOrders = isAdmin || isOwner || orders.canViewAll
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
@@ -60,12 +64,14 @@ const ScreenStore = (props) => {
   const CheckedTabClients = CheckedTab(TabClients)
   const CheckedTabOrders = CheckedTab(TabOrders)
   const CheckedStoreCounts = CheckedTab(StoreCounts)
+  const CheckedStoreBalance = CheckedTab(StoreBalanceE)
 
   return (
-    <ScrollView>
+    <ScrollView ref={scrollViewRef}>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
       {!!user && (
         <Tabs
+          tabId="screen-store"
           tabs={[
             {
               title: 'Información',
@@ -73,7 +79,12 @@ const ScreenStore = (props) => {
               show: true,
               icon: 'info'
             },
-
+            {
+              title: 'Balance',
+              content: <CheckedStoreBalance />,
+              show: canViewCashbox,
+              icon: 'cashbox'
+            },
             {
               title: 'Caja',
               content: <CheckedTabCashbox />,
@@ -139,7 +150,7 @@ const TabMovements = () => {
 }
 
 const StoreNumbersRow = () => {
-  const { store } = useAuth()
+  const { store } = useStore()
   const { navigate } = useNavigation()
   const { orders, reports } = useOrdersCtx()
 
@@ -218,21 +229,18 @@ const TabClients = () => {
 
 const TabCashbox = () => {
   const { navigate } = useNavigation()
-  const { storeId, storeSections } = useStore()
+  const { storeId, sections: storeSections } = useStore()
   const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
   useEffect(() => {
-    handleGetLastBalanceInDate(new Date())
+    ServiceBalances.getLastInDate(storeId, endOfDay(new Date())).then((res) => {
+      setBalance(res[0] || null)
+    })
   }, [])
 
   const handleUpdateStoreStatus = async () => {
     setUpdating(true)
-    // ServiceConsolidatedOrders.consolidate(storeId, {
-    //   progress: (p) => {
-    //     setProgress(p)
-    //   }
-    // })
 
     return await ServiceBalances.createV2(storeId, {
       progress: (p) => {
@@ -249,7 +257,6 @@ const TabCashbox = () => {
       })
   }
   const [updating, setUpdating] = useState(false)
-  // const [date, setDate] = useState(new Date())
   const endOfDay = (date: Date) => asDate(date.setHours(23, 59, 59, 999))
 
   const handleGetLastBalanceInDate = (date: Date) => {

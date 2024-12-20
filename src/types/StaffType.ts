@@ -62,10 +62,6 @@ export type BaseStaffType = {
 
   disabled?: boolean
 
-  /**
-   * @deprecated use permissions.isOwner instead
-   */
-
   permissions?: StaffPermissions
   /**
    * @deprecated use permissions.isOwner instead
@@ -122,7 +118,10 @@ export enum permissions_store {
   canEditStaff,
   canCancelPayments,
   canValidatePayments,
-  canSeeCurrentWork,
+  //canSeeCurrentWork,
+  canViewMyCurrentWork,
+  canViewAllCurrentWork,
+  canViewRouteCurrentWork,
   //canViewItems,
   //canDeleteItems,
   //canManageItems,

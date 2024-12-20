@@ -1,9 +1,9 @@
 import { View, Text, Dimensions } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ListE } from './List'
 import ItemType from '../types/ItemType'
 import ListRow, { ListRowField } from './ListRow'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useRoute } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
@@ -40,7 +40,6 @@ const ListStoreItems = ({
   allItems?: boolean
   getAllAvailable?: boolean
 }) => {
-  const { navigate } = useNavigation()
   const { params } = useRoute()
   const { permissions } = useEmployee()
   //@ts-ignore
@@ -66,7 +65,7 @@ const ListStoreItems = ({
     return true
   })
   const { toItems } = useMyNav()
-  const { storeId, categories, storeSections } = useStore()
+  const { storeId, categories, sections: storeSections } = useStore()
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
 
@@ -160,6 +159,7 @@ const ListStoreItems = ({
         maxWidth={1000}
         defaultOrder="des"
         defaultSortBy="number"
+        data={formattedItems}
         pinRows
         ComponentMultiActions={({ ids }) => (
           <View>
@@ -234,7 +234,6 @@ const ListStoreItems = ({
             visible: permissions?.items?.canCreate
           }
         ]}
-        data={formattedItems}
         filters={[
           { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },

@@ -1,5 +1,4 @@
 import { ActivityIndicator, FlatList, View } from 'react-native'
-import React from 'react'
 import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import H1 from './H1'
@@ -8,7 +7,8 @@ import StaffRow from './StaffRow'
 
 const ScreenAssignOrder = ({ route, navigation }) => {
   const { orderId } = route.params
-  const { orders, staff } = useStore()
+  const { staff } = useStore()
+  const orders = []
   const order = orders.find(({ id }) => id === orderId)
   if (!order) return <ActivityIndicator />
   const handleAssignOrder = (staffId: string) => {

@@ -21,6 +21,7 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { where } from 'firebase/firestore'
 import PaymentType from '../types/PaymentType'
 import { endDate, startDate } from '../libs/utils-date'
+import { useStore } from './storeContext'
 
 export type FetchTypeOrders =
   | 'all'
@@ -55,8 +56,9 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const { employee, permissions, isEmployee, disabledEmployee } = useEmployee()
-  const { storeId, store } = useAuth()
+  const { store } = useStore()
+  const { employee, permissions, disabledEmployee } = useEmployee()
+  const { storeId } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -76,14 +78,15 @@ export const OrdersContextProvider = ({
     useState<ConsolidatedStoreOrdersType>()
 
   const handleGetConsolidates = async () => {
-    ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
-      // console.log('lisening chunks')
-      const { orders } = await getChunks({
-        chunks: res[0]?.consolidatedChunks || []
-      })
+    if (store)
+      ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
+        // console.log('lisening chunks')
+        const { orders } = await getChunks({
+          chunks: res[0]?.consolidatedChunks || []
+        })
 
-      setConsolidatedOrders({ ...res[0], orders })
-    })
+        setConsolidatedOrders({ ...res[0], orders })
+      })
   }
 
   const setOtherConsolidated = async ({
@@ -116,17 +119,16 @@ export const OrdersContextProvider = ({
       handleGetOrders()
       handleGetConsolidates()
     }
-  }, [isEmployee, disabledEmployee])
+  }, [disabledEmployee])
 
   useEffect(() => {
-    if (store) {
-      ServiceComments.listenImportantUnsolved(storeId, (reports) => {
+    if (store?.id) {
+      ServiceComments.listenImportantUnsolved(store?.id, (reports) => {
         setImportant(reports)
       })
     }
-  }, [store])
+  }, [store?.id])
 
-  const viewMyOrders = employee?.permissions?.order?.canViewMy
   const handleGetOrders = async () => {
     const reportsSolvedToday = await ServiceComments.getReports({
       storeId,
@@ -147,7 +149,11 @@ export const OrdersContextProvider = ({
 
     const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
 
-    const typeOfOrders = viewAllOrders ? 'all' : viewMyOrders ? 'mine' : 'none'
+    const typeOfOrders = permissions.canViewAllOrders
+      ? 'all'
+      : permissions.orders.canViewMy
+      ? 'mine'
+      : 'none'
     if (typeOfOrders === 'all') {
       console.log('all orders')
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
@@ -199,14 +205,15 @@ export const OrdersContextProvider = ({
 
   const getPayments = async ({ date = new Date() }: { date: Date }) => {
     return await ServicePayments.findMany([
-      where('storeId', '==', storeId),
+      where('storeId', '==', store?.id),
       where('createdAt', '>=', startDate(date)),
       where('createdAt', '<=', endDate(date))
     ])
   }
   useEffect(() => {
-    getPayments({ date: new Date() }).then((res) => setPayments(res))
-  }, [storeId])
+    if (store?.id)
+      getPayments({ date: new Date() }).then((res) => setPayments(res))
+  }, [store?.id])
 
   oc++
   if (__DEV__) console.log({ oc })

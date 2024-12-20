@@ -6,7 +6,8 @@ import { useStore } from '../contexts/storeContext'
 
 const ScreenSectionsEdit = ({ navigation, route }) => {
   const sectionId = route.params.id
-  const section = useStore().storeSections.find((s) => s.id === sectionId)
+  const { sections } = useStore()
+  const section = sections.find((s) => s.id === sectionId)
   return (
     <View style={styles.container}>
       <FormSection

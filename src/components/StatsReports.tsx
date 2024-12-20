@@ -1,4 +1,3 @@
-import { useStore } from '../contexts/storeContext'
 import {
   createDataset,
   groupDocsByDay,
@@ -13,7 +12,7 @@ import { CommentType } from '../types/CommentType'
 import { setDayOfYear } from 'date-fns'
 
 export default function StatsReports({ view }: { view: string }) {
-  const { comments } = useStore()
+  const comments = []
   return (
     <>
       {view === 'month' && <MonthStats comments={comments} />}

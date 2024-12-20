@@ -27,13 +27,13 @@ export type OrderWithId = Partial<ConsolidatedOrderType> & {
 const ListOrdersConsolidated = () => {
   const { consolidatedOrders, handleRefresh, setOtherConsolidated } =
     useOrdersCtx()
-  const { storeId, storeSections } = useStore()
+  const { storeId, sections: storeSections } = useStore()
   const { navigate } = useNavigation()
   const orders = consolidatedOrders?.orders || {}
 
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedToSection =
-      storeSections.find((section) => section.id === order.assignToSection)
+      storeSections?.find((section) => section.id === order.assignToSection)
         ?.name || null
     return {
       id: order.id,

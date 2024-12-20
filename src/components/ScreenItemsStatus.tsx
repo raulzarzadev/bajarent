@@ -1,10 +1,9 @@
 import { StyleSheet } from 'react-native'
-import React from 'react'
-import { useStore } from '../contexts/storeContext'
 import ItemsStats from './ItemsStats'
 
 const ScreenItemsStatus = () => {
-  const { orders } = useStore()
+  //FIXME: orders is not defined
+  const orders = []
   return <ItemsStats orders={orders} />
 }
 

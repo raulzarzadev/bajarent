@@ -45,7 +45,7 @@ function ModalFilterList<T>({
   preFilteredIds,
   collectionSearch
 }: ModalFilterOrdersProps<T>) {
-  const { storeSections, staff } = useStore()
+  const { sections: storeSections, staff } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
 
   const {

@@ -7,7 +7,7 @@ import { gStyles } from '../styles'
 
 const FormEmployeeSections = ({ employeeId }: { employeeId: string }) => {
   const [loading, setLoading] = React.useState(false)
-  const { storeSections } = useStore()
+  const { sections: storeSections } = useStore()
   const handleUpdateEmployeeSections = async ({
     sectionId,
     add
@@ -45,7 +45,7 @@ const FormEmployeeSections = ({ employeeId }: { employeeId: string }) => {
             }}
           >
             {storeSections?.map(({ name, staff, id }) => (
-              <View style={{ margin: 4 }}>
+              <View style={{ margin: 4 }} key={id}>
                 <InputCheckbox
                   key={id}
                   disabled={loading}

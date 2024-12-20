@@ -57,9 +57,9 @@ export const formatItems = (
       ...item,
       id: item?.id,
       categoryName:
-        categories.find((cat) => cat.id === item?.category)?.name || '',
+        categories?.find((cat) => cat.id === item?.category)?.name || '',
       assignedSectionName:
-        sections.find((sec) => sec.id === item?.assignedSection)?.name || '',
+        sections?.find((sec) => sec.id === item?.assignedSection)?.name || '',
       needFix: !!item?.needFix,
       isRented: !!(item?.status === 'rented'),
       isPickedUp: !!(item?.status === 'pickedUp'),
@@ -112,8 +112,8 @@ export const formatItemsFromRepair = ({
         //*<----- this names changes to adapt to the new structure
 
         assignedSectionName:
-          storeSections.find((sec) => sec.id === order.assignToSection)?.name ||
-          '',
+          storeSections?.find((sec) => sec.id === order.assignToSection)
+            ?.name || '',
         workshopStatus: workshopStatus || 'pending',
         workshopFlow: order?.workshopFlow || {},
         failDescription,

@@ -7,6 +7,7 @@ export type SectionBase = {
   storeId: string
   staff: string[]
   icon?: IconName
+  defaultArea?: boolean //*<-- this area will be created by default
 }
 
 export type SectionType = BaseType & SectionBase
