@@ -40,7 +40,6 @@ const ListStoreItems = ({
   allItems?: boolean
   getAllAvailable?: boolean
 }) => {
-  const { navigate } = useNavigation()
   const { params } = useRoute()
   const { permissions } = useEmployee()
   //@ts-ignore
@@ -160,6 +159,7 @@ const ListStoreItems = ({
         maxWidth={1000}
         defaultOrder="des"
         defaultSortBy="number"
+        data={formattedItems}
         pinRows
         ComponentMultiActions={({ ids }) => (
           <View>
@@ -234,7 +234,6 @@ const ListStoreItems = ({
             visible: permissions?.items?.canCreate
           }
         ]}
-        data={formattedItems}
         filters={[
           { field: 'assignedSectionName', label: 'Area' },
           { field: 'categoryName', label: 'Categoría' },

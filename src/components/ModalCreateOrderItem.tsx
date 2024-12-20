@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Text } from 'react-native'
+import { useEffect, useState } from 'react'
 import Button from './Button'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
-import { onAssignItem } from '../firebase/actions/item-actions'
 import { useOrderDetails } from '../contexts/orderContext'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import { useEmployee } from '../contexts/employeeContext'
@@ -16,7 +15,6 @@ import FormItem from './FormItem'
 import { ItemSelected } from './FormSelectItem'
 import { CategoryType } from '../types/RentItem'
 import StoreType from '../types/StoreType'
-import { ListAssignedItemsE } from './ListAssignedItems'
 import { gStyles } from '../styles'
 
 const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
@@ -26,10 +24,8 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
   const { permissions } = useEmployee()
 
   const [itemAlreadyExist, setItemAlreadyExist] = useState(undefined)
-  const [loading, setLoading] = useState(false)
   const [_item, _setItem] = useState<ItemSelected>(undefined)
 
-  const [itemSelected, setItemSelected] = useState<null | string>(null)
   const [progress, setProgress] = useState(0)
   const createModal = useModal({ title: 'Crear artículo' })
 
@@ -43,12 +39,6 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
     order.type === order_type.RENT &&
     order.status === order_status.DELIVERED &&
     permissions?.canCreateItems
-
-  const handleSelectItem = (itemId) => {
-    setItemSelected(itemId)
-  }
-
-  const { items: employeeItems } = useEmployee()
 
   useEffect(() => {
     ServiceStoreItems.get({ itemId, storeId }).then((res) => {
@@ -66,7 +56,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
     setProgress(20)
     //* 1. CREATE ITEM
     const newItem = await ServiceStoreItems.add({
-      item: values,
+      item: { ...values, createdOrderId: orderId || null },
       storeId
     })
 
@@ -111,22 +101,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
 
     return
   }
-  const handleAssignItem = async () => {
-    setLoading(true)
-    createModal.toggleOpen()
 
-    await onAssignItem({
-      orderId,
-      newItemId: itemSelected,
-      oldItemId: itemId,
-      storeId,
-      newItemNumber: employeeItems?.find((i) => i?.id === itemSelected)?.number
-    })
-      .then((res) => console.log({ res }))
-      .catch((err) => console.log({ err }))
-    setLoading(false)
-    return
-  }
   return (
     <>
       {itemAlreadyExist === false && (
@@ -139,7 +114,6 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
           onPress={() => {
             createModal.toggleOpen()
           }}
-          disabled={loading}
         />
       )}
       <StyledModal {...createModal}>
@@ -173,23 +147,6 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
               }}
               progress={progress}
             />
-            {/* <Text style={[gStyles.h2, { marginTop: 16 }]}>o</Text>
-            <Text style={[gStyles.h2, { marginBottom: 16 }]}>
-              Asigna alguno
-            </Text>
-            <ListAssignedItemsE
-              itemSelected={itemSelected}
-              onSelectItem={(itemId) => {
-                handleSelectItem(itemId)
-              }}
-            />
-            <Button
-              disabled={!itemSelected}
-              label="Asignar item"
-              onPress={() => {
-                handleAssignItem()
-              }}
-            ></Button> */}
           </>
         )}
       </StyledModal>
@@ -199,7 +156,6 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
 
 export default ModalCreateOrderItem
 
-const styles = StyleSheet.create({})
 const formatNewItem = ({
   order,
   item,

@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ItemDetailsE } from './ItemDetails'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
@@ -16,9 +16,8 @@ import SpanOrder from './SpanOrder'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
 import { useEmployee } from '../contexts/employeeContext'
-import InputTextStyled from './InputTextStyled'
-import { set } from 'cypress/types/lodash'
 import InputSelect from './InputSelect'
+import Button from './Button'
 
 const ScreenItemsDetails = ({ route }) => {
   const id = route?.params?.id
@@ -68,7 +67,6 @@ const ItemHistory = ({ itemId }) => {
   const { storeId } = useStore()
   const COUNT_HISTORY = 5
   const [count, setCount] = useState(COUNT_HISTORY)
-  const [disabled, setDisabled] = useState(false)
   useEffect(() => {
     ServiceItemHistory.listenLastEntries({
       itemId,
@@ -83,26 +81,6 @@ const ItemHistory = ({ itemId }) => {
   return (
     <View>
       <Text style={gStyles.h3}>Historial </Text>
-      <InputSelect
-        disabled={disabled}
-        placeholder="Ultimos X registros"
-        value={count.toString()}
-        options={[
-          { label: 'Ultimos 5 registros', value: '5' },
-          { label: 'Ultimos 20 registros', value: '20' },
-          { label: 'Ultimos 50 registros', value: '50' },
-          { label: 'Ultimos 100 registros', value: '100' },
-          { label: 'Ultimos 200 registros', value: '200' },
-          { label: 'Ultimos 500 registros', value: '500' }
-        ]}
-        onChangeValue={(value) => {
-          setCount(parseInt(value))
-          setDisabled(true)
-          setTimeout(() => {
-            setDisabled(false)
-          }, 2000)
-        }}
-      />
 
       {itemHistory.map((entry) => (
         <ListRow
@@ -134,6 +112,21 @@ const ItemHistory = ({ itemId }) => {
           ]}
         />
       ))}
+      <View style={{ marginTop: 8 }}>
+        {count > itemHistory.length && (
+          <Text style={{ textAlign: 'center' }}>Fin del historial</Text>
+        )}
+        <Button
+          size="small"
+          buttonStyles={{ margin: 'auto' }}
+          onPress={() => {
+            setCount(count + COUNT_HISTORY)
+          }}
+          label="Cargar más"
+          disabled={count > itemHistory.length}
+          icon="down"
+        />
+      </View>
     </View>
   )
 }

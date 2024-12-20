@@ -165,6 +165,7 @@ export const ExpandibleBalanceOrders = ({
   defaultExpanded?: boolean
 }) => {
   const { toOrders } = useMyNav()
+  if (!orders.length) return null
   return (
     <ExpandibleListE
       label={label}

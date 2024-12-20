@@ -15,6 +15,7 @@ export type ItemBase = {
   serial: string
   brand: string
   status: ItemStatus
+  createdOrderId?: string //* when item is created in a order. This is the order id
   eco?: number
   /**
    * @description category id
