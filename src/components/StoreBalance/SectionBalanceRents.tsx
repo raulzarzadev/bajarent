@@ -121,7 +121,13 @@ const SectionBalanceRents = ({
       <Text style={gStyles.h2}>{title}</Text>
       <BalanceAmountsE payments={payments} />
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          flexWrap: 'wrap'
+        }}
+      >
         <ExpandibleBalanceOrders
           orders={delivered}
           label="Rentas"
