@@ -174,7 +174,7 @@ export const EmployeeContextProvider = ({ children }) => {
       employee,
       isAdmin,
       isOwner,
-      store,
+      store?.id,
       assignedSections,
       items,
       disabledEmployee

@@ -122,12 +122,12 @@ export const OrdersContextProvider = ({
   }, [disabledEmployee])
 
   useEffect(() => {
-    if (store) {
-      ServiceComments.listenImportantUnsolved(storeId, (reports) => {
+    if (store?.id) {
+      ServiceComments.listenImportantUnsolved(store?.id, (reports) => {
         setImportant(reports)
       })
     }
-  }, [store])
+  }, [store?.id])
 
   const handleGetOrders = async () => {
     const reportsSolvedToday = await ServiceComments.getReports({
@@ -205,14 +205,15 @@ export const OrdersContextProvider = ({
 
   const getPayments = async ({ date = new Date() }: { date: Date }) => {
     return await ServicePayments.findMany([
-      where('storeId', '==', storeId),
+      where('storeId', '==', store?.id),
       where('createdAt', '>=', startDate(date)),
       where('createdAt', '<=', endDate(date))
     ])
   }
   useEffect(() => {
-    getPayments({ date: new Date() }).then((res) => setPayments(res))
-  }, [storeId])
+    if (store?.id)
+      getPayments({ date: new Date() }).then((res) => setPayments(res))
+  }, [store?.id])
 
   oc++
   if (__DEV__) console.log({ oc })

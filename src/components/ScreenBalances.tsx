@@ -13,7 +13,7 @@ const ScreenBalances = () => {
       setBalances(balances)
     }
     if (store?.id) fetchBalances()
-  }, [store])
+  }, [store?.id])
   return (
     <ScrollView>
       <ListBalances balances={balances} />

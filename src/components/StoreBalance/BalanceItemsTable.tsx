@@ -45,13 +45,11 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
   }, [])
 
   const handleSelectRow = (rowId: string) => {
-    if (selectedRow === rowId) {
-      setSelectedRow(null)
-      setItem(BALANCE_ROW_SELECTED, null)
-    } else {
-      setSelectedRow(rowId)
-      setItem(BALANCE_ROW_SELECTED, rowId)
-    }
+    let value = ''
+    //* if the row is already selected, unselect it
+    if (selectedRow !== rowId) value = rowId
+    setSelectedRow(value)
+    setItem(BALANCE_ROW_SELECTED, value)
   }
 
   return (
