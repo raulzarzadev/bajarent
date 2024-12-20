@@ -30,18 +30,20 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
         'Sin asignar'
     }
   })
-  const sectionsTabs = sectionsInfo.map(({ sectionName, sectionId }) => ({
-    title: sectionName,
-    content: (
-      <SectionBalanceRentsE
-        orders={groupedBySections[sectionId]}
-        balance={balance}
-        title={sectionName}
-        sectionId={sectionId}
-      />
-    ),
-    show: true
-  }))
+  const sectionsTabs = sectionsInfo
+    .sort((a, b) => a.sectionName.localeCompare(b.sectionName))
+    .map(({ sectionName, sectionId }) => ({
+      title: sectionName,
+      content: (
+        <SectionBalanceRentsE
+          orders={groupedBySections[sectionId]}
+          balance={balance}
+          title={sectionName}
+          sectionId={sectionId}
+        />
+      ),
+      show: true
+    }))
 
   return (
     <View>
