@@ -75,7 +75,8 @@ const StoreBalance = () => {
               {
                 title: 'General',
                 content: <GeneralBalanceE />,
-                show: true
+                show: true,
+                disabled: true
               },
               {
                 title: 'Rentas',
@@ -85,12 +86,14 @@ const StoreBalance = () => {
               {
                 title: 'Ventas',
                 content: <SalesBalanceE />,
-                show: true
+                show: true,
+                disabled: true
               },
               {
                 title: 'Reparaciones',
                 content: <RepairsBalanceE />,
-                show: true
+                show: true,
+                disabled: true
               }
             ]}
           />

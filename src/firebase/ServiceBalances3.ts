@@ -339,11 +339,20 @@ const formatAsBalanceOrder = ({
     })) || null
   const time = order?.items?.[0]?.priceSelected?.time || null
 
-  //get last extension
+  //get last extension not renew
   const lastExtension =
-    Object.values(order?.extensions || {}).sort((a, b) =>
-      isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1
-    )[0]?.createdAt || null
+    Object.values(order?.extensions || {})
+      .filter((ext) => ext.reason !== 'renew')
+      .sort((a, b) =>
+        isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1
+      )[0]?.createdAt || null
+  // get last renewal
+  const lastRenew =
+    Object.values(order?.extensions || {})
+      .filter((ext) => ext.reason === 'renew')
+      .sort((a, b) =>
+        isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1
+      )[0]?.createdAt || null
 
   return {
     orderId: order?.id,
@@ -353,7 +362,8 @@ const formatAsBalanceOrder = ({
     canceledAt:
       order?.status === order_status?.CANCELLED ? order?.cancelledAt : null,
     items,
-    renewedAt: lastExtension,
+    renewedAt: lastRenew,
+    extendedAt: lastExtension,
     deliveredAt: order?.deliveredAt || null,
     time,
     assignedSection: order?.assignToSection || null,

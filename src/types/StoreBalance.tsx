@@ -25,6 +25,7 @@ export type StoreBalanceOrder = {
   assignedSection: OrderType['assignedSection']
   time: TimePriceType
   renewedAt?: Date
+  extendedAt?: Date
   deliveredAt?: Date
   canceledAt?: Date
 }
@@ -52,6 +53,7 @@ export type BalanceItems = {
   orderId?: string
   orderFolio?: number
   categoryId?: string
+
   //status: ItemType['status']
 }
 

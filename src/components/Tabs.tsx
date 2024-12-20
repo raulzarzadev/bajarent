@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
@@ -11,6 +11,7 @@ export type Tab = {
   content: ReactNode
   show?: boolean
   icon?: IconName
+  disabled?: boolean
 }
 export type TabType = Tab
 
@@ -62,32 +63,37 @@ const TabsA = ({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabBar}
         >
-          {visibleTabs.map((tab) => (
-            <Pressable
-              role="tab"
-              key={tab.title}
-              style={({ pressed }) => [
-                styles.tabButton,
-                selectedTab === tab.title && styles.selectedTab,
-                pressed && { backgroundColor: '#ddd' },
-                { flexDirection: 'row' }
-              ]}
-              onPress={() => handleTabPress(tab.title)}
-            >
-              <Text style={styles.tabButtonText}>{tab.title}</Text>
-              {tab.icon && (
-                <View
-                  style={{
-                    marginLeft: 4,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Icon icon={tab.icon} size={14} />
-                </View>
-              )}
-            </Pressable>
-          ))}
+          {visibleTabs.map((tab) => {
+            const disabled = tab?.disabled
+            return (
+              <Pressable
+                disabled={disabled}
+                role="tab"
+                key={tab.title}
+                style={({ pressed }) => [
+                  styles.tabButton,
+                  selectedTab === tab.title && styles.selectedTab,
+                  pressed && { backgroundColor: '#ddd' },
+                  { flexDirection: 'row' },
+                  { opacity: disabled ? 0.5 : 1 }
+                ]}
+                onPress={() => handleTabPress(tab.title)}
+              >
+                <Text style={styles.tabButtonText}>{tab.title}</Text>
+                {tab.icon && (
+                  <View
+                    style={{
+                      marginLeft: 4,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Icon icon={tab.icon} size={14} />
+                  </View>
+                )}
+              </Pressable>
+            )
+          })}
         </ScrollView>
         {showProgressBar && (
           <View

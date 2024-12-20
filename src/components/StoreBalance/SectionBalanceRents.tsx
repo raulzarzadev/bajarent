@@ -48,6 +48,13 @@ const SectionBalanceRents = ({
       })
   )
 
+  const extended = orders?.filter((order) =>
+    isWithinInterval(asDate(order?.extendedAt), {
+      start: asDate(balance.fromDate),
+      end: asDate(balance.toDate)
+    })
+  )
+
   const solvedReports = balance?.solvedReports
     ?.map((report) =>
       balance.orders.find((order) => order.orderId === report.orderId)
@@ -130,11 +137,16 @@ const SectionBalanceRents = ({
           label="Recogidas"
           defaultExpanded
         />
+        <ExpandibleBalanceOrders
+          orders={extended}
+          label="Extendidas"
+          defaultExpanded
+        />
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <ExpandibleBalanceOrders orders={actives} label="Todas" />
+        <ExpandibleBalanceOrders orders={actives} label="Rentas activas" />
 
-        <ExpandibleBalanceItemsRented
+        {/* <ExpandibleBalanceItemsRented
           items={rentedItems}
           label={'Artículos rentados'}
           defaultExpanded={false}
@@ -142,7 +154,7 @@ const SectionBalanceRents = ({
         <ExpandibleBalanceItemsAvailable
           label={'Artículos disponibles'}
           items={availableItems}
-        />
+        /> */}
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceOrders orders={canceled} label="Canceladas" />
