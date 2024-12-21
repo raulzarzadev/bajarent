@@ -57,10 +57,9 @@ export const CommentRow = ({
       setComment(res)
     })
   }
+  const staffInfo = staff?.find((s) => s.userId === comment?.createdBy)
+  const commentCreatedBy = staffInfo?.position || staffInfo?.name
 
-  const commentCreatedBy =
-    staff.find((s) => s.userId === comment?.createdBy)?.name ||
-    comment?.createdByName
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()

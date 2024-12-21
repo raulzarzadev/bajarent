@@ -257,12 +257,25 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         storeId
       })
 
-      balance.items = availableItems?.map((item) => ({
-        itemId: item.id,
-        itemEco: item.number,
-        assignedSection: item.assignedSection || null,
-        categoryId: item.category || null
-      }))
+      const retiredItems: ItemType[] =
+        await ServiceStoreItems.getFieldBetweenDates({
+          storeId,
+          field: 'retiredAt',
+          fromDate: FROM_DATE,
+          toDate: TO_DATE
+        })
+
+      const formattedItems = [...availableItems, ...retiredItems].map(
+        (item) => ({
+          itemId: item?.id,
+          itemEco: item?.number,
+          assignedSection: item?.assignedSection || null,
+          categoryId: item?.category || null,
+          retiredAt: item?.retiredAt || null
+        })
+      )
+
+      balance.items = formattedItems
 
       balance.payments = payments?.map((payment) => {
         return {

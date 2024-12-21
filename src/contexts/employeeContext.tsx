@@ -184,7 +184,6 @@ export const EmployeeContextProvider = ({ children }) => {
       disabledEmployee
     ]
   )
-
   em++
   if (__DEV__) console.log({ em })
   return (

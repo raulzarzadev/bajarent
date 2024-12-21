@@ -57,7 +57,7 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
       {/* HEADER */}
       <ListRow
         style={{ borderWidth: 0 }}
-        fields={table.map(({ label, width }) => ({
+        fields={TABLE.map(({ label, width }) => ({
           component: (
             <Text
               key={label}
@@ -101,7 +101,11 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
         .map((balanceRow: string) => {
           const balanceRowItems = groupedBySection[balanceRow]
           const inRent = balanceRowItems.filter((i) => !!i?.orderId)
-          const inStock = balanceRowItems.filter((i) => !i?.orderId)
+          const inStock = balanceRowItems.filter(
+            (i) => !i?.orderId && !i?.retiredAt
+          )
+          const retired = balanceRowItems.filter((i) => !!i?.retiredAt)
+          console.log({ retired })
           return (
             <View key={balanceRow}>
               <Divider mv={0} />
@@ -120,7 +124,7 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                       //   selectedRow === balanceRow ? 'lightblue' : 'transparent',
                       borderWidth: 0
                     }}
-                    fields={table.map(({ field, width }) => {
+                    fields={TABLE.map(({ field, width }) => {
                       if (field === 'section') {
                         return {
                           component: (
@@ -145,6 +149,7 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                         component: (
                           <View>
                             <Text style={gStyles.tCenter}>
+                              {field === 'retired' && retired.length}
                               {field === 'inRent' && inRent.length}
                               {field === 'inStock' && inStock.length}
                               {field === 'allItems' && balanceRowItems.length}
@@ -167,15 +172,18 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                         justifyContent: 'space-evenly'
                       }}
                     >
-                      <ExpandibleBalanceItemsRented
-                        items={inRent}
-                        label="Items en renta"
-                        defaultExpanded
+                      <ExpandibleBalanceItemsAvailable
+                        items={retired}
+                        label="Retirados"
                       />
+
                       <ExpandibleBalanceItemsAvailable
                         items={inStock}
-                        label="Items disponibles"
-                        defaultExpanded
+                        label="Disponibles"
+                      />
+                      <ExpandibleBalanceItemsRented
+                        items={inRent}
+                        label="Ordenes con items"
                       />
                     </View>
                   </View>
@@ -212,8 +220,13 @@ const sectionLabel = ({ sectionId, storeSections }) => {
   return storeSections.find((s) => s.id === sectionId)?.name || 'S/N'
 }
 
-const table: {
-  field: keyof BalanceRowType | 'allItems' | 'newRouteItems' | 'newStoreItems'
+const TABLE: {
+  field:
+    | keyof BalanceRowType
+    | 'allItems'
+    | 'newRouteItems'
+    | 'newStoreItems'
+    | 'retired'
   label: string
   width: ListRowField['width']
 }[] = [
@@ -229,10 +242,16 @@ const table: {
   //   width: 'rest'
   // },
   {
+    field: 'retired',
+    label: 'Retirados',
+    width: 'rest'
+  },
+  {
     field: 'inRent',
     label: 'En renta',
     width: 'rest'
   },
+
   {
     field: 'inStock',
     label: 'Disponibles',

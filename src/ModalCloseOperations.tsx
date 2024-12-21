@@ -29,9 +29,11 @@ const ModalCloseOperations = () => {
   return (
     <View>
       <Button
-        label="Cerrar operación"
+        label="Respaldo"
+        icon="backup"
         onPress={modal.toggleOpen}
         variant="ghost"
+        size="xs"
         disabled={loading}
       ></Button>
       <StyledModal {...modal}>

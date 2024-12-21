@@ -83,7 +83,7 @@ const ScreenStore = (props) => {
               title: 'Balance',
               content: <CheckedStoreBalance />,
               show: canViewCashbox,
-              icon: 'cashbox'
+              icon: 'balance'
             },
             {
               title: 'Caja',

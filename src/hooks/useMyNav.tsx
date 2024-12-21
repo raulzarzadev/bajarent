@@ -15,7 +15,7 @@ const useMyNav = () => {
   }) => {
     if (Array.isArray(ids) && ids.length > 0) {
       //@ts-ignore
-      navigate('StackMyItems', {
+      navigate('StackItems', {
         screen: 'ScreenItems',
         params: {
           ids
