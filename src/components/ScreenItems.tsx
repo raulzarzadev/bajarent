@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View
@@ -23,10 +24,10 @@ import { CardPrice } from './FormSelectPrice'
 
 const ScreenItems = () => {
   return (
-    <View>
+    <ScrollView>
       <StoreCategories />
       <StoreItems />
-    </View>
+    </ScrollView>
   )
 }
 

@@ -151,16 +151,6 @@ const SectionBalanceRents = ({
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceOrders orders={actives} label="Rentas activas" />
-
-        {/* <ExpandibleBalanceItemsRented
-          items={rentedItems}
-          label={'Artículos rentados'}
-          defaultExpanded={false}
-        />
-        <ExpandibleBalanceItemsAvailable
-          label={'Artículos disponibles'}
-          items={availableItems}
-        /> */}
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceOrders orders={canceled} label="Canceladas" />
@@ -213,6 +203,9 @@ export const ExpandibleBalanceItemsAvailable = ({
   return (
     <ExpandibleListE
       label={label}
+      onPressTitle={() => {
+        toItems?.({ ids: items.map((item) => item.itemId) })
+      }}
       defaultExpanded={defaultExpanded}
       items={items.sort(sortByEco).map((item) => {
         return {
@@ -245,6 +238,9 @@ export const ExpandibleBalanceItemsRented = ({
   return (
     <ExpandibleListE
       label={label}
+      onPressTitle={() => {
+        toOrders?.({ ids: items.map((item) => item.orderId) })
+      }}
       defaultExpanded={defaultExpanded}
       items={items.sort(sortByEco).map((item) => {
         return {

@@ -101,7 +101,9 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
         .map((balanceRow: string) => {
           const balanceRowItems = groupedBySection[balanceRow]
           const inRent = balanceRowItems.filter((i) => !!i?.orderId)
-          const inStock = balanceRowItems.filter((i) => !i?.orderId)
+          const inStock = balanceRowItems.filter(
+            (i) => !i?.orderId && !i?.retiredAt
+          )
           const retired = balanceRowItems.filter((i) => !!i?.retiredAt)
           console.log({ retired })
           return (
@@ -175,13 +177,13 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                         label="Retirados"
                       />
 
-                      <ExpandibleBalanceItemsRented
-                        items={inRent}
-                        label="Items en renta"
-                      />
                       <ExpandibleBalanceItemsAvailable
                         items={inStock}
-                        label="Items disponibles"
+                        label="Disponibles"
+                      />
+                      <ExpandibleBalanceItemsRented
+                        items={inRent}
+                        label="Ordenes con items"
                       />
                     </View>
                   </View>

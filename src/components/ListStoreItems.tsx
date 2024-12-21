@@ -1,5 +1,5 @@
 import { View, Text, Dimensions } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ListE } from './List'
 import ItemType from '../types/ItemType'
 import ListRow, { ListRowField } from './ListRow'
@@ -42,10 +42,12 @@ const ListStoreItems = ({
 }) => {
   const { params } = useRoute()
   const { permissions } = useEmployee()
+  const [errors, setErrors] = useState<{ rentedItems?: string }>({})
+  const { items } = useItemsCtx()
+  const { toItems } = useMyNav()
+
   //@ts-ignore
   const listItems = params?.ids
-
-  const { items } = useItemsCtx()
 
   const filteredItems = items?.filter((item) => {
     // * FILTER BY LIST
@@ -64,7 +66,6 @@ const ListStoreItems = ({
     }
     return true
   })
-  const { toItems } = useMyNav()
   const { storeId, categories, sections: storeSections } = useStore()
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
@@ -121,9 +122,25 @@ const ListStoreItems = ({
     return res
   }
 
-  const [errors, setErrors] = useState<{ rentedItems?: string }>({})
+  const [formattedItems, setFormattedItems] = useState([])
 
-  const formattedItems = formatItems(filteredItems, categories, storeSections)
+  useEffect(() => {
+    if (listItems.length > 0) {
+      ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
+        const formattedItems = formatItems(res, categories, storeSections)
+        setFormattedItems(formattedItems)
+      })
+    } else {
+      const formattedItems = formatItems(
+        filteredItems,
+        categories,
+        storeSections
+      )
+      setFormattedItems(formattedItems)
+    }
+  }, [listItems])
+
+  //const formattedItems = formatItems(filteredItems, categories, storeSections)
 
   const handleAssignItems = async (
     ids: string[],
