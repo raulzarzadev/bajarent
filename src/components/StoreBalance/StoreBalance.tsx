@@ -14,9 +14,12 @@ import { gStyles } from '../../styles'
 import HeaderDate from '../HeaderDate'
 import { StoreBalanceType } from '../../types/StoreBalance'
 import { isToday } from 'date-fns'
+import ModalCloseOperations from '../../ModalCloseOperations'
+import { useNavigation } from '@react-navigation/native'
 
 const StoreBalance = () => {
   const { storeId, currentBalance, store } = useStore()
+  const { navigate } = useNavigation()
 
   const [balance, setBalance] = useState<StoreBalanceType>()
   const [date, setDate] = useState(new Date())
@@ -49,7 +52,7 @@ const StoreBalance = () => {
   }
 
   return (
-    <View>
+    <View style={{ marginBottom: 44 }}>
       <HeaderDate
         debounce={400}
         onChangeDate={(date) => {
@@ -61,16 +64,17 @@ const StoreBalance = () => {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'center',
+            justifyContent: 'space-evenly',
             marginVertical: 4,
-            marginHorizontal: 'auto'
+            marginHorizontal: 'auto',
+            flexWrap: 'wrap',
+            width: '100%'
           }}
         >
           <Button
             //justIcon
             // variant="ghost"
             disabled={loading}
-            fullWidth={false}
             size="xs"
             icon="refresh"
             label="Actualizar"
@@ -78,6 +82,19 @@ const StoreBalance = () => {
               handleUpdateBalance()
             }}
           />
+          <Button
+            label="Retirar"
+            icon="moneyOff"
+            size="xs"
+            onPress={() => {
+              //@ts-ignore
+              navigate('StackPayments', {
+                screen: 'ScreenRetirementsNew'
+              })
+            }}
+            variant="ghost"
+          />
+          <ModalCloseOperations />
         </View>
       )}
 

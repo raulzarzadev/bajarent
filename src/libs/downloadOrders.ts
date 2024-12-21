@@ -8,6 +8,8 @@ import OrderType, { ContactType } from '../types/OrderType'
 import dictionary from '../dictionary'
 import StoreType from '../types/StoreType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
+import { ServiceBalances as ServiceBalance3 } from '../firebase/ServiceBalances3'
+
 import JSZip from 'jszip'
 
 export const rentsCSVFile = async ({
@@ -36,7 +38,7 @@ export const rentsCSVFile = async ({
   return json2csv(formatRentsToCSV(jsonRes, storeStaff))
 }
 export const balanceJSONFile = async ({ storeId }) => {
-  const jsonRes = await getDateBalance({
+  const jsonRes = await getDateBalanceV2({
     storeId,
     fromDate: new Date(),
     toDate: new Date(),
@@ -52,8 +54,13 @@ export const onDownloadBackup = async ({ storeId, storeStaff, storeName }) => {
     storeStaff,
     type: 'all-rents'
   })
-  const balancePromise = balanceJSONFile({
-    storeId
+  // const balancePromise = balanceJSONFile({
+  //   storeId
+  // })
+  const balancePromise = getDateBalanceV3({
+    storeId,
+    fromDate: new Date(),
+    toDate: new Date()
   })
 
   return await Promise.all([rentsPromise, balancePromise])
@@ -85,7 +92,7 @@ export const onDownloadBackup = async ({ storeId, storeStaff, storeName }) => {
     })
 }
 
-export const getDateBalance = async ({
+export const getDateBalanceV2 = async ({
   storeId,
   fromDate,
   toDate,
@@ -96,6 +103,13 @@ export const getDateBalance = async ({
     toDate,
     notSave: true,
     storeSections
+  }).catch((e) => console.error(e))
+}
+
+export const getDateBalanceV3 = async ({ storeId, fromDate, toDate }) => {
+  return await ServiceBalance3.createV3(storeId, {
+    fromDate,
+    toDate
   }).catch((e) => console.error(e))
 }
 
