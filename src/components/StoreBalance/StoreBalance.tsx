@@ -7,13 +7,22 @@ import { GeneralBalanceE } from './GeneralBalance'
 import Button from '../Button'
 import { ServiceBalances } from '../../firebase/ServiceBalances3'
 import { useStore } from '../../contexts/storeContext'
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import ErrorBoundary from '../ErrorBoundary'
 import { gStyles } from '../../styles'
+import HeaderDate from '../HeaderDate'
+import { StoreBalanceType } from '../../types/StoreBalance'
+import { isToday } from 'date-fns'
 
 const StoreBalance = () => {
-  const { storeId, currentBalance } = useStore()
+  const { storeId, currentBalance, store } = useStore()
+
+  const [balance, setBalance] = useState<StoreBalanceType>()
+  const [date, setDate] = useState(new Date())
+  useEffect(() => {
+    setBalance(currentBalance)
+  }, [])
 
   const [loading, setLoading] = useState(false)
 
@@ -32,29 +41,47 @@ const StoreBalance = () => {
     setLoading(false)
   }
 
+  const handleSetBalanceDate = (date: Date) => {
+    ServiceBalances.getLastInDate(store?.id, date).then((balance) => {
+      console.log({ balance })
+      setBalance(balance[0])
+    })
+  }
+
   return (
     <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          marginTop: 8,
-          marginHorizontal: 'auto'
+      <HeaderDate
+        debounce={400}
+        onChangeDate={(date) => {
+          handleSetBalanceDate(date)
+          setDate(date)
         }}
-      >
-        <Button
-          disabled={loading}
-          fullWidth={false}
-          size="xs"
-          icon="refresh"
-          label="Actualizar"
-          onPress={() => {
-            handleUpdateBalance()
+      />
+      {isToday(date) && (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginVertical: 4,
+            marginHorizontal: 'auto'
           }}
-        />
-      </View>
+        >
+          <Button
+            //justIcon
+            // variant="ghost"
+            disabled={loading}
+            fullWidth={false}
+            size="xs"
+            icon="refresh"
+            label="Actualizar"
+            onPress={() => {
+              handleUpdateBalance()
+            }}
+          />
+        </View>
+      )}
 
-      {!!currentBalance && (
+      {!!balance && (
         <>
           <Text
             style={{
@@ -66,7 +93,7 @@ const StoreBalance = () => {
           >
             Última actualización:{' '}
             <Text style={gStyles.tBold}>
-              {dateFormat(asDate(currentBalance?.createdAt), 'dd/MMM/yy HH:mm')}
+              {dateFormat(asDate(balance?.createdAt), 'dd/MMM/yy HH:mm')}
             </Text>
           </Text>
           <Tabs
@@ -80,7 +107,7 @@ const StoreBalance = () => {
               },
               {
                 title: 'Rentas',
-                content: <RentsBalanceE balance={currentBalance} />,
+                content: <RentsBalanceE balance={balance} />,
                 show: true
               },
               {

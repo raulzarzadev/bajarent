@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import { StoreBalanceType } from '../../types/StoreBalance'
 import { order_type } from '../../types/OrderType'

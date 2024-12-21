@@ -79,9 +79,11 @@ import { MdPendingActions } from 'react-icons/md'
 import { TfiWorld } from 'react-icons/tfi'
 import { PiSignatureDuotone } from 'react-icons/pi'
 import { BiCommentDots } from 'react-icons/bi'
+import { FaBalanceScale } from 'react-icons/fa'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  balance: FaBalanceScale,
   www: TfiWorld,
   signature: PiSignatureDuotone,
   pending: MdPendingActions,

@@ -14,7 +14,7 @@ const HeaderDate = ({
   documentDate,
   debounce = 0
 }: {
-  label: string
+  label?: string
   onChangeDate: (date: Date) => void
   showTime?: boolean
   documentDate?: Date
@@ -42,7 +42,7 @@ const HeaderDate = ({
 
   return (
     <View>
-      <Text style={gStyles.h1}>{label}</Text>
+      {!!label && <Text style={gStyles.h1}>{label}</Text>}
 
       <View
         style={{
