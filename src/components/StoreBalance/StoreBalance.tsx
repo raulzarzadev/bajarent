@@ -60,17 +60,18 @@ const StoreBalance = () => {
           setDate(date)
         }}
       />
-      {isToday(date) && (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            marginVertical: 4,
-            marginHorizontal: 'auto',
-            flexWrap: 'wrap',
-            width: '100%'
-          }}
-        >
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          marginVertical: 4,
+          marginHorizontal: 'auto',
+          flexWrap: 'wrap',
+          width: '100%',
+          height: 40
+        }}
+      >
+        {isToday(date) && (
           <Button
             //justIcon
             // variant="ghost"
@@ -82,21 +83,21 @@ const StoreBalance = () => {
               handleUpdateBalance()
             }}
           />
-          <Button
-            label="Retirar"
-            icon="moneyOff"
-            size="xs"
-            onPress={() => {
-              //@ts-ignore
-              navigate('StackPayments', {
-                screen: 'ScreenRetirementsNew'
-              })
-            }}
-            variant="ghost"
-          />
-          <ModalCloseOperations />
-        </View>
-      )}
+        )}
+        <Button
+          label="Retirar"
+          icon="moneyOff"
+          size="xs"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackPayments', {
+              screen: 'ScreenRetirementsNew'
+            })
+          }}
+          variant="ghost"
+        />
+        <ModalCloseOperations />
+      </View>
 
       {!!balance && (
         <>
