@@ -101,24 +101,28 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
 
   useEffect(() => {
-    if (canViewAllItems) {
-      ServiceStoreItems.listenAvailableBySections({
-        storeId,
-        userSections: 'all',
-        cb: (items) => {
-          setItems(formatItems(items, categories, storeSections))
-        }
-      })
+    if (!employee?.disabled) {
+      if (canViewAllItems) {
+        ServiceStoreItems.listenAvailableBySections({
+          storeId,
+          userSections: 'all',
+          cb: (items) => {
+            setItems(formatItems(items, categories, storeSections))
+          }
+        })
+      } else {
+        ServiceStoreItems.listenAvailableBySections({
+          storeId,
+          userSections: assignedSections,
+          cb: (items) => {
+            setItems(formatItems(items, categories, storeSections))
+          }
+        })
+      }
     } else {
-      ServiceStoreItems.listenAvailableBySections({
-        storeId,
-        userSections: assignedSections,
-        cb: (items) => {
-          setItems(formatItems(items, categories, storeSections))
-        }
-      })
+      console.log('disabled employee')
     }
-  }, [canViewAllItems])
+  }, [canViewAllItems, employee?.disabled])
 
   const storePermissions = employee?.permissions?.store || {}
 
