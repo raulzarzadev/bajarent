@@ -125,7 +125,7 @@ const ListStoreItems = ({
   const [formattedItems, setFormattedItems] = useState([])
 
   useEffect(() => {
-    if (listItems.length > 0) {
+    if (listItems?.length > 0) {
       ServiceStoreItems.getList({ storeId, ids: listItems }).then((res) => {
         const formattedItems = formatItems(res, categories, storeSections)
         setFormattedItems(formattedItems)
