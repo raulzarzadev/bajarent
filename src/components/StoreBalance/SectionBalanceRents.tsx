@@ -209,6 +209,7 @@ export const ExpandibleBalanceItemsAvailable = ({
   const { toItems } = useMyNav()
   const { categories } = useStore()
   const sortByEco = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
+  if (!items.length) return null
   return (
     <ExpandibleListE
       label={label}
@@ -240,6 +241,7 @@ export const ExpandibleBalanceItemsRented = ({
 }) => {
   const { toOrders } = useMyNav()
   const sortByEco = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
+  if (!items.length) return null
   return (
     <ExpandibleListE
       label={label}
