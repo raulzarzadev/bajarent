@@ -210,7 +210,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
     ops?: {
       fromDate?: Date
       toDate?: Date
-      notSave?: boolean
       progress?: (progress: number) => void
     }
   ): Promise<Partial<StoreBalanceType>> => {
@@ -236,6 +235,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         fromDate: FROM_DATE,
         toDate: TO_DATE
       })
+      progress?.(10)
       //* Get orders
 
       const {
@@ -251,6 +251,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         toDate: TO_DATE,
         payments
       })
+      progress?.(40)
 
       //* Get items
       const availableItems: ItemType[] = await ServiceStoreItems.getAvailable({
@@ -264,6 +265,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
           fromDate: FROM_DATE,
           toDate: TO_DATE
         })
+      progress?.(60)
 
       const formattedItems = [...availableItems, ...retiredItems].map(
         (item) => ({
@@ -299,6 +301,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         ...salesDate,
         ...canceledOrders
       ]
+      progress?.(70)
 
       balance.orders = orders
         //* format orders
@@ -320,12 +323,16 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         fromDate: FROM_DATE,
         toDate: TO_DATE
       })
+      progress?.(80)
 
       balance.solvedReports = solvedReports
 
       console.timeEnd('createV3')
+      progress?.(100)
+
       return balance
     } catch (error) {
+      progress?.(-1)
       console.timeEnd('createV3')
       console.error('Error creating balance', error)
     }

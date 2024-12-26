@@ -19,7 +19,13 @@ const CustomBalanceDate = () => {
   const { store } = useStore()
   const handleCalculateBalance = () => {
     setLoading(true)
-    ServiceBalances.createV3(store?.id)
+    ServiceBalances.createV3(store?.id, {
+      fromDate: dates.fromDate,
+      toDate: dates.toDate,
+      progress: (progress) => {
+        console.log({ progress })
+      }
+    })
       .then((balance) => {
         setBalance(balance)
         console.log({ balance })

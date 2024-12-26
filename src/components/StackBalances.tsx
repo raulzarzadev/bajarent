@@ -37,7 +37,7 @@ function StackBalances() {
       <Stack.Screen
         name="CustomBalanceDate"
         options={{
-          title: 'Balance modificado'
+          title: 'Balance por fechas'
         }}
         component={CustomBalanceDateE}
       />

@@ -105,7 +105,6 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
             (i) => !i?.orderId && !i?.retiredAt
           )
           const retired = balanceRowItems.filter((i) => !!i?.retiredAt)
-          console.log({ retired })
           return (
             <View key={balanceRow}>
               <Divider mv={0} />
