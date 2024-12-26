@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import InputDatesRage from '../InputDatesRage'
 import Button from '../Button'
@@ -45,7 +45,7 @@ const CustomBalanceDate = () => {
       })
   }
   return (
-    <View>
+    <ScrollView>
       <InputDatesRage
         defaultValues={dates}
         onChange={setDates}
@@ -59,7 +59,7 @@ const CustomBalanceDate = () => {
         />
       </View>
       {balance && <BalanceView balance={balance} />}
-    </View>
+    </ScrollView>
   )
 }
 export default CustomBalanceDate
