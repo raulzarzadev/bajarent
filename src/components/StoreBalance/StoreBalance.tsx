@@ -71,6 +71,19 @@ const StoreBalance = () => {
           height: 40
         }}
       >
+        <Button
+          size="xs"
+          icon="calendar"
+          variant="ghost"
+          label="Custom"
+          onPress={() => {
+            //@ts-ignore
+            navigate('StackBalances', {
+              screen: 'CustomBalanceDate'
+            })
+          }}
+        />
+
         {isToday(date) && (
           <Button
             //justIcon
