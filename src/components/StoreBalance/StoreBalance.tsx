@@ -114,49 +114,57 @@ const StoreBalance = () => {
 
       {!!balance && (
         <>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 12,
-              marginTop: 4,
-              ...gStyles.helper
-            }}
-          >
-            Última actualización:{' '}
-            <Text style={gStyles.tBold}>
-              {dateFormat(asDate(balance?.createdAt), 'dd/MMM/yy HH:mm')}
-            </Text>
-          </Text>
-          <Tabs
-            tabId="store-balance"
-            tabs={[
-              {
-                title: 'General',
-                content: <GeneralBalanceE />,
-                show: true,
-                disabled: true
-              },
-              {
-                title: 'Rentas',
-                content: <RentsBalanceE balance={balance} />,
-                show: true
-              },
-              {
-                title: 'Ventas',
-                content: <SalesBalanceE />,
-                show: true,
-                disabled: true
-              },
-              {
-                title: 'Reparaciones',
-                content: <RepairsBalanceE />,
-                show: true,
-                disabled: true
-              }
-            ]}
-          />
+          <BalanceView balance={balance} />
         </>
       )}
+    </View>
+  )
+}
+
+export const BalanceView = ({ balance }: { balance: StoreBalanceType }) => {
+  return (
+    <View>
+      <Text
+        style={{
+          textAlign: 'center',
+          marginBottom: 12,
+          marginTop: 4,
+          ...gStyles.helper
+        }}
+      >
+        Última actualización:{' '}
+        <Text style={gStyles.tBold}>
+          {dateFormat(asDate(balance?.createdAt), 'dd/MMM/yy HH:mm')}
+        </Text>
+      </Text>
+      <Tabs
+        tabId="store-balance"
+        tabs={[
+          {
+            title: 'General',
+            content: <GeneralBalanceE />,
+            show: true,
+            disabled: true
+          },
+          {
+            title: 'Rentas',
+            content: <RentsBalanceE balance={balance} />,
+            show: true
+          },
+          {
+            title: 'Ventas',
+            content: <SalesBalanceE />,
+            show: true,
+            disabled: true
+          },
+          {
+            title: 'Reparaciones',
+            content: <RepairsBalanceE />,
+            show: true,
+            disabled: true
+          }
+        ]}
+      />
     </View>
   )
 }
