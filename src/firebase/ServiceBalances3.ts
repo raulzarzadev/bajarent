@@ -212,7 +212,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       toDate?: Date
       progress?: (progress: number) => void
     }
-  ): Promise<Partial<StoreBalanceType>> => {
+  ): Promise<StoreBalanceType> => {
     console.time('createV3')
     const { fromDate, toDate, progress } = ops || {}
 
@@ -330,7 +330,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       console.timeEnd('createV3')
       progress?.(100)
 
-      return balance
+      return balance as StoreBalanceType
     } catch (error) {
       progress?.(-1)
       console.timeEnd('createV3')
