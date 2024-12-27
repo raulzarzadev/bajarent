@@ -18,7 +18,7 @@ const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
   const { sections: storeSections } = useStore()
 
-  const availableItems = balance.items
+  const availableItems = balance.items.filter((i) => !i.retiredAt)
 
   const orderItems = balance.orders
     .filter(

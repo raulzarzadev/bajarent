@@ -8,8 +8,10 @@ import { useState } from 'react'
 import { startDate } from '../../libs/utils-date'
 import { BalanceView } from './StoreBalance'
 import { StoreBalanceType } from '../../types/StoreBalance'
+
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [balance, setBalance] = useState<StoreBalanceType>()
   const [dates, setDates] = useState({
     fromDate: startDate(new Date()),
@@ -17,25 +19,18 @@ const CustomBalanceDate = () => {
   })
 
   const { store } = useStore()
+
   const handleCalculateBalance = () => {
     setLoading(true)
     ServiceBalances.createV3(store?.id, {
       fromDate: dates.fromDate,
       toDate: dates.toDate,
       progress: (progress) => {
-        console.log({ progress })
+        setProgress(progress)
       }
     })
       .then((balance) => {
         setBalance(balance)
-        console.log({ balance })
-        // ServiceBalances.saveBalance(balance)
-        //   .then(() => {
-        //     console.log('Balance saved')
-        //   })
-        //   .catch((e) => {
-        //     console.error(e)
-        //   })
       })
       .catch((e) => {
         console.log(e)
@@ -46,19 +41,22 @@ const CustomBalanceDate = () => {
   }
   return (
     <ScrollView>
-      <InputDatesRage
-        defaultValues={dates}
-        onChange={setDates}
-        disabled={loading}
-      />
+      <View style={{ margin: 'auto', maxWidth: 400, marginVertical: 40 }}>
+        <InputDatesRage
+          defaultValues={dates}
+          onChange={setDates}
+          disabled={loading}
+        />
+      </View>
       <View style={{ margin: 'auto' }}>
         <Button
           disabled={loading}
           onPress={() => handleCalculateBalance()}
           label="Calcular"
+          progress={progress}
         />
       </View>
-      {balance && <BalanceView balance={balance} />}
+      {!!balance && <BalanceView balance={balance} />}
     </ScrollView>
   )
 }
