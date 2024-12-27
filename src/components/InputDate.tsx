@@ -15,6 +15,7 @@ export type InputDateProps = {
   withTime?: boolean
   size?: ButtonProps['size']
   openButtonProps?: Partial<ButtonProps>
+  disabled?: boolean
 }
 type PickerTime = { hours: number; minutes: number }
 export default function InputDate({
@@ -25,7 +26,8 @@ export default function InputDate({
   withTime = false,
   icon = 'calendar',
   size,
-  openButtonProps
+  openButtonProps,
+  disabled
 }: InputDateProps) {
   const nowDate = new Date()
 
@@ -73,6 +75,7 @@ export default function InputDate({
         icon={icon}
         size={size}
         {...openButtonProps}
+        disabled={disabled}
       >
         {`${label} ${!!date ? dateFormat(date, format) : ''}`}
       </Button>
@@ -82,6 +85,7 @@ export default function InputDate({
           setTime={(time) => {
             handleSetTime(time)
           }}
+          disabled={disabled}
         />
       )}
 
@@ -113,10 +117,12 @@ export const InputDateE = (props: InputDateProps) => (
 
 const TimePicker = ({
   time,
-  setTime
+  setTime,
+  disabled
 }: {
   time?: PickerTime
   setTime?: (time: PickerTime) => void
+  disabled?: boolean
 }) => {
   const [open, setOpen] = React.useState(false)
   const onDismiss = React.useCallback(() => {
@@ -148,6 +154,7 @@ const TimePicker = ({
         onPress={() => {
           setOpen(true)
         }}
+        disabled={disabled}
       ></Button>
       <SafeAreaProvider>
         <TimePickerModal
