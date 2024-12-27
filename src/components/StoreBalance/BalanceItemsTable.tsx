@@ -18,7 +18,7 @@ const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
   const { sections: storeSections } = useStore()
 
-  const availableItems = balance.items.filter((i) => !i.retiredAt)
+  const availableItems = balance.items
 
   const orderItems = balance.orders
     .filter(
@@ -100,6 +100,9 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
         })
         .map((balanceRow: string) => {
           const balanceRowItems = groupedBySection[balanceRow]
+          const currentlyAvailable = balanceRowItems.filter(
+            (i) => !i?.retiredAt
+          )
           const inRent = balanceRowItems.filter((i) => !!i?.orderId)
           const inStock = balanceRowItems.filter(
             (i) => !i?.orderId && !i?.retiredAt
@@ -151,7 +154,8 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                               {field === 'retired' && retired.length}
                               {field === 'inRent' && inRent.length}
                               {field === 'inStock' && inStock.length}
-                              {field === 'allItems' && balanceRowItems.length}
+                              {field === 'allItems' &&
+                                currentlyAvailable.length}
                             </Text>
                           </View>
                         ),
