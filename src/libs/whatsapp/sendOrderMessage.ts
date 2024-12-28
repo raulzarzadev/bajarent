@@ -1,10 +1,7 @@
 import { arrayUnion } from 'firebase/firestore'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import sendMessage from './sendMessage'
-import OrderType, {
-  OrderExtensionType,
-  SentMessage
-} from '../../types/OrderType'
+import OrderType, { SentMessage } from '../../types/OrderType'
 import StoreType from '../../types/StoreType'
 import {
   expiredMessage,
@@ -50,6 +47,12 @@ const sendOrderMessage = async ({
     })
 }
 
+export type TypeOfMessage =
+  | 'renew'
+  | 'delivery'
+  | 'pickup'
+  | 'status'
+  | 'expire'
 export const onSendOrderWhatsapp = async ({
   store,
   order,
@@ -59,45 +62,45 @@ export const onSendOrderWhatsapp = async ({
 }: {
   store: StoreType
   order: Partial<OrderType>
-  type: 'renew' | 'delivery' | 'pickup' | 'status' | 'expire'
+  type: TypeOfMessage
   userId: string
   lastPayment?: PaymentType
 }) => {
-  if (!store.chatbot.enabled) return console.log('bot is disabled')
-  if (!store.chatbot.apiKey) return console.log('bot api key is missing')
-  if (!store.chatbot.id) return console.log('bot id is missing')
+  const { isValid, message: validationMessage } = validateChatbotConfig({
+    chatbot: store.chatbot,
+    messageType: type
+  })
 
-  let message = ''
-  if (type === 'expire') {
-    message = expiredMessage({
+  if (!isValid) return console.log(validationMessage)
+
+  const messageOptions: Record<TypeOfMessage, string> = {
+    status: orderStatus({
+      order,
+      storeName: store.name
+    }),
+    renew: rentRenewed({
+      order,
+      storeName: store.name,
+      lastPayment: lastPayment || order.payments[0]
+    }),
+    delivery: rentStarted({
+      order,
+      storeName: store.name,
+      lastPayment: lastPayment || order.payments[0]
+    }),
+    pickup: rentFinished({
+      order,
+      storeName: store.name
+    }),
+    expire: expiredMessage({
       order,
       store
-    })
-  } else if (type === 'renew') {
-    message = rentRenewed({
-      order,
-      storeName: store.name,
-      lastPayment: lastPayment || order.payments[0]
-    })
-  } else if (type === 'delivery') {
-    message = rentStarted({
-      order,
-      storeName: store.name,
-      lastPayment: lastPayment || order.payments[0]
-    })
-  } else if (type === 'pickup') {
-    message = rentFinished({
-      order,
-      storeName: store.name
-    })
-  } else if (type === 'status') {
-    message = orderStatus({
-      order,
-      storeName: store.name
     })
   }
 
   const staffName = store.staff.find((s) => s.userId === userId)?.position
+
+  let message = messageOptions[type]
 
   if (staffName && store?.chatbot?.config?.includeSender)
     message = message + `👤 ${staffName}`
@@ -123,6 +126,48 @@ export const onSendOrderWhatsapp = async ({
     .catch((e) => {
       console.error(e)
     })
+}
+
+export type ChatbotValidationResult = {
+  message: string
+  isValid: boolean
+}
+const validateChatbotConfig = ({
+  chatbot,
+  messageType
+}: {
+  chatbot: StoreType['chatbot']
+  messageType: TypeOfMessage
+}): ChatbotValidationResult => {
+  let message = 'message is not enabled' // * <--- default message is not enabled
+  let isValid = false // * <--- default validate value is false
+
+  if (!chatbot.enabled) message = 'chatbot is disabled'
+  if (!chatbot.apiKey) message = 'chatbot api key is missing'
+  if (!chatbot.id) message = 'chatbot id is missing'
+  if (!chatbot.config) message = 'chatbot config is missing'
+
+  if (!chatbot.config.sendDelivered) message = 'delivery message is disabled'
+  if (!chatbot.config.sendPickedUp) message = 'pickup message is disabled'
+  if (!chatbot.config.sendRenewed) message = 'renew message is disabled'
+
+  if (chatbot.config.sendDelivered && messageType === 'delivery') {
+    message = 'delivery message is enabled'
+    isValid = true
+  }
+  if (chatbot.config.sendPickedUp && messageType === 'pickup') {
+    message = 'pickup message is enabled'
+    isValid = true
+  }
+  if (chatbot.config.sendRenewed && messageType === 'renew') {
+    message = 'renew message is enabled'
+    isValid = true
+  }
+
+  return {
+    message,
+    isValid
+  }
 }
 
 export default sendOrderMessage

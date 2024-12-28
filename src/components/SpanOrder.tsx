@@ -1,9 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
-import { useNavigation } from '@react-navigation/native'
-import { currentRentPeriod, lastExtensionTime } from '../libs/orders'
+import { lastExtensionTime } from '../libs/orders'
 import { translateTime } from '../libs/expireDate'
 import CurrencyAmount from './CurrencyAmount'
 import { payments_amount } from '../libs/payments'
@@ -14,7 +13,6 @@ import theme from '../theme'
 import { gStyles } from '../styles'
 import useMyNav from '../hooks/useMyNav'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { ServicePayments } from '../firebase/ServicePayments'
 import OrderType from '../types/OrderType'
 
 const SpanOrder = ({
@@ -38,7 +36,7 @@ const SpanOrder = ({
 }) => {
   const [order, setOrder] =
     useState<Partial<ConsolidatedOrderType | OrderType>>()
-  const { consolidatedOrders, orders, payments } = useOrdersCtx()
+  const { orders, payments } = useOrdersCtx()
   const { toOrders } = useMyNav()
 
   useEffect(() => {
@@ -63,7 +61,7 @@ const SpanOrder = ({
     }
 
     searchOrder().then((res) => {
-      console.log({ order: res })
+      //  console.log({ order: res })
       setOrder(res)
     })
   }, [])

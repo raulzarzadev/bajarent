@@ -6,7 +6,6 @@ import { useStore } from '../contexts/storeContext'
 import ButtonConfirm from './ButtonConfirm'
 import { gStyles } from '../styles'
 import { clearStorage } from '../firebase/auth'
-import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
 
 const ScreenStoreEdit = ({ navigation }) => {

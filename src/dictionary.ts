@@ -1,6 +1,15 @@
 import { repair_order_types } from './types/OrderType'
+import { store_bot_configs } from './types/StoreType'
+const storeConfigLabels = Object.entries(store_bot_configs).reduce(
+  (acc, [key, value]) => {
+    acc[key] = value
+    return acc
+  },
+  {} as Record<string, string>
+)
 
 const labels = {
+  ...storeConfigLabels,
   started: 'Iniciada',
   canceled: 'Cancelada',
   pending: 'Pendiente',
@@ -233,6 +242,7 @@ const labels = {
   [repair_order_types.CLIENT_NEW]: 'Cliente frecuente',
   [repair_order_types.CLIENT_VIP]: 'Cliente VIP'
 } as const
+
 const labels_lowercase = Object.keys(labels).reduce((acc, key) => {
   const lowerKey = key.toLowerCase()
   const lowerValue = labels[key].toLowerCase()

@@ -3,7 +3,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import Button from './Button'
-import StoreType from '../types/StoreType'
+import StoreType, { store_bot_configs } from '../types/StoreType'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
@@ -12,6 +12,7 @@ import InputLocationFormik from './InputLocationFormik'
 import { FormikFieldArrayE } from './FormikInputArray'
 import { Separator } from './Separator'
 import theme from '../theme'
+import dictionary from '../dictionary'
 
 const FormStore = ({
   defaultValues,
@@ -94,10 +95,17 @@ const FormStore = ({
 
                 <View>
                   <Text>Configuración de mensajes</Text>
-                  <FormikCheckbox
-                    name="chatbot.config.includeSender"
-                    label="Incluir remitente"
-                  ></FormikCheckbox>
+                  <Text style={gStyles.helper}>
+                    * Se enviaran los mensajes que esten marcados. Algunos
+                    corresponden al flujo de las ordenes y otros al contenido.
+                  </Text>
+                  {Object.entries(store_bot_configs).map(([key, value]) => (
+                    <FormikCheckbox
+                      key={key}
+                      name={`chatbot.config.${key}`}
+                      label={dictionary(key)}
+                    ></FormikCheckbox>
+                  ))}
                 </View>
               </>
             )}

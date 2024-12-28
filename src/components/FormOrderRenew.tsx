@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Formik } from 'formik'
 import FormikSelectCategories from './FormikSelectCategories'
 import Button from './Button'
