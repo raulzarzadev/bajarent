@@ -65,6 +65,9 @@ export type BaseStoreType = {
     apiKey?: string
     hostNumber?: string
     enabled?: boolean
+    config?: {
+      includeSender?: boolean
+    }
   }
 }
 

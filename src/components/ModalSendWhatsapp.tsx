@@ -446,7 +446,6 @@ export const ButtonSendWhatsappStatatus = () => {
       openDisabled={sending}
       handleConfirm={async () => {
         setSending(true)
-
         await onSendOrderWhatsapp({
           order: { ...order, payments },
           store,

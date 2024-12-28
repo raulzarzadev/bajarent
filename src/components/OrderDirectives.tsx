@@ -9,7 +9,6 @@ import { currentRentPeriod } from '../libs/orders'
 import Icon, { IconName } from './Icon'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
-import { OrderWithId } from './ListOrdersConsolidated'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   if (!order) return null
@@ -17,7 +16,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   const assignedSectionLabel =
     //@ts-ignore
     order?.assignToSectionName ||
-    storeSections.find(({ id }) => id === order?.assignToSection)?.name ||
+    storeSections?.find(({ id }) => id === order?.assignToSection)?.name ||
     false
   const TypeIcon = (type: OrderType['type']): IconName => {
     if (type === order_type.RENT) {

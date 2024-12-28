@@ -91,6 +91,14 @@ const FormStore = ({
                     label="Numero anfitrión"
                   />
                 </View>
+
+                <View>
+                  <Text>Configuración de mensajes</Text>
+                  <FormikCheckbox
+                    name="chatbot.config.includeSender"
+                    label="Incluir remitente"
+                  ></FormikCheckbox>
+                </View>
               </>
             )}
           </View>
