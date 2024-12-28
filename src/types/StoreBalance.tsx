@@ -20,6 +20,7 @@ export type StoreBalanceOrder = {
   orderType: OrderType['type']
   orderStatus: OrderType['status']
   orderFolio: OrderType['folio']
+  orderNote: OrderType['note']
   items: BalanceItems[]
   payments: BalancePayment[]
   assignedSection: OrderType['assignedSection']
