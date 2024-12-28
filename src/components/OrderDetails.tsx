@@ -41,7 +41,6 @@ import { useStore } from '../contexts/storeContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
-  console.log({ order })
   const [defaultAmount, setDefaultAmount] = useState(0)
   useEffect(() => {
     if (order?.type === order_type.REPAIR) {
