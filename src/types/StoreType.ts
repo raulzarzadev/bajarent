@@ -65,11 +65,28 @@ export type BaseStoreType = {
     apiKey?: string
     hostNumber?: string
     enabled?: boolean
-    config?: {
-      includeSender?: boolean
-    }
+    config?: Record<ChatBotConfigs, boolean>
   }
 }
+
+export enum store_bot_configs {
+  includeSender = 'Incluir remitente',
+  sendDelivered = 'Orden entregada',
+  sendPickedUp = 'Orden recogida',
+  sendRenewed = 'Orden renovada'
+}
+
+export type StoreBotConfigsType = keyof typeof store_bot_configs
+
+// export const storeBotConfigs = {
+//   includeSender:{
+//     label: 'Incluir remitente',
+//   },
+//   sendDelivered: 'Orden entregada',
+//   sendPickedUp: 'Orden recogida'
+// }
+
+export type ChatBotConfigs = keyof typeof store_bot_configs
 
 export type MultiFields = {
   type: string
