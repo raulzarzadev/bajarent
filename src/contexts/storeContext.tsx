@@ -69,7 +69,7 @@ const StoreContextProvider = ({ children }) => {
     ]
 
     return {
-      store,
+      store: { ...store, staff: staffWithSections },
       sections: sectionsWithDefaultStoreSections.sort(sortSections),
       categories: categoriesWithPrices,
       staff: staffWithSections,
