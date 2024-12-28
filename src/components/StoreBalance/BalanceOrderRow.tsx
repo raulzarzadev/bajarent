@@ -23,6 +23,8 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
     ?.find((price) => price?.id === order?.items?.[0]?.priceId)
   //TODO: some times this will not match becaouse payemnts will be more if the balance is for more time
   const paymentAndPriceMatches = matchedPrice?.amount === paymentAmount
+
+  console.log({ order })
   return (
     <View>
       <Text>{order?.clientName}</Text>
@@ -34,6 +36,11 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
         }}
       >
         <Text style={gStyles.helper}>{order?.orderFolio}</Text>
+        {order?.orderNote && (
+          <>
+            <Text style={gStyles.helper}>- {order?.orderNote}</Text>
+          </>
+        )}
 
         {paymentAmount > 0 && (
           <React.Fragment>

@@ -388,7 +388,8 @@ const formatAsBalanceOrder = ({
     time,
     assignedSection: order?.assignToSection || null,
     payments,
-    clientName: order?.fullName
+    clientName: order?.fullName,
+    orderNote: order?.note || null
   }
 }
 
