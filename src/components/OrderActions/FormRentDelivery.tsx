@@ -11,6 +11,7 @@ import { getOrderFields } from '../FormOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
 import FormikInputSignature from '../FormikInputSignature'
+import FormikErrorsList, { ErrorsList } from '../FormikErrorsList'
 
 const FormRentDelivery = ({
   initialValues,
@@ -38,6 +39,18 @@ const FormRentDelivery = ({
   return (
     <View>
       <Formik
+        validate={(values) => {
+          const errors: any = {}
+
+          //* TODO validate fields from store configuration (orderFields)
+
+          // if (ORDER_FIELDS.includes('imageID')) {
+          //   if (!values.imageID) {
+          //     errors.items = 'Debes agregar una imagen del ID'
+          //   }
+          // }
+          return errors
+        }}
         initialValues={initialValues}
         onSubmit={async (values, { resetForm }) => {
           setLoading(true)
@@ -98,6 +111,8 @@ const FormRentDelivery = ({
                   </View>
                 )}
               </View>
+
+              <FormikErrorsList />
 
               <Button
                 buttonStyles={{ marginVertical: 12 }}
