@@ -81,12 +81,12 @@ export const onSendOrderWhatsapp = async ({
     renew: rentRenewed({
       order,
       storeName: store.name,
-      lastPayment: lastPayment || order.payments[0]
+      lastPayment: lastPayment || order?.payments?.[0]
     }),
     delivery: rentStarted({
       order,
       storeName: store.name,
-      lastPayment: lastPayment || order.payments[0]
+      lastPayment: lastPayment || order?.payments?.[0]
     }),
     pickup: rentFinished({
       order,
@@ -150,6 +150,13 @@ const validateChatbotConfig = ({
   if (!chatbot.config.sendDelivered) message = 'delivery message is disabled'
   if (!chatbot.config.sendPickedUp) message = 'pickup message is disabled'
   if (!chatbot.config.sendRenewed) message = 'renew message is disabled'
+
+  if (messageType === 'expire') {
+    return {
+      message: 'expire message is enabled',
+      isValid: true
+    }
+  }
 
   if (chatbot.config.sendDelivered && messageType === 'delivery') {
     message = 'delivery message is enabled'
