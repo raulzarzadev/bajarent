@@ -108,8 +108,8 @@ export const onSendOrderWhatsapp = async ({
   return await sendMessage({
     phone: chooseOrderPhone(order),
     message,
-    apiKey: store.chatbot.apiKey,
-    botId: store.chatbot.id
+    apiKey: store.chatbot?.apiKey,
+    botId: store.chatbot?.id
   })
     .then((res) => {
       const sentMessage: SentMessage = {
@@ -142,14 +142,14 @@ const validateChatbotConfig = ({
   let message = 'message is not enabled' // * <--- default message is not enabled
   let isValid = false // * <--- default validate value is false
 
-  if (!chatbot.enabled) message = 'chatbot is disabled'
-  if (!chatbot.apiKey) message = 'chatbot api key is missing'
-  if (!chatbot.id) message = 'chatbot id is missing'
-  if (!chatbot.config) message = 'chatbot config is missing'
+  if (!chatbot?.enabled) message = 'chatbot is disabled'
+  if (!chatbot?.apiKey) message = 'chatbot api key is missing'
+  if (!chatbot?.id) message = 'chatbot id is missing'
+  if (!chatbot?.config) message = 'chatbot config is missing'
 
-  if (!chatbot.config.sendDelivered) message = 'delivery message is disabled'
-  if (!chatbot.config.sendPickedUp) message = 'pickup message is disabled'
-  if (!chatbot.config.sendRenewed) message = 'renew message is disabled'
+  if (!chatbot?.config?.sendDelivered) message = 'delivery message is disabled'
+  if (!chatbot?.config?.sendPickedUp) message = 'pickup message is disabled'
+  if (!chatbot?.config?.sendRenewed) message = 'renew message is disabled'
 
   if (messageType === 'expire') {
     return {
@@ -158,15 +158,15 @@ const validateChatbotConfig = ({
     }
   }
 
-  if (chatbot.config.sendDelivered && messageType === 'delivery') {
+  if (chatbot?.config?.sendDelivered && messageType === 'delivery') {
     message = 'delivery message is enabled'
     isValid = true
   }
-  if (chatbot.config.sendPickedUp && messageType === 'pickup') {
+  if (chatbot?.config?.sendPickedUp && messageType === 'pickup') {
     message = 'pickup message is enabled'
     isValid = true
   }
-  if (chatbot.config.sendRenewed && messageType === 'renew') {
+  if (chatbot?.config?.sendRenewed && messageType === 'renew') {
     message = 'renew message is enabled'
     isValid = true
   }
