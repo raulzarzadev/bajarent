@@ -40,7 +40,7 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
         <FlatList
           data={[...orderComments, ...sentMessagesAsComments].sort(
             (a, b) =>
-              asDate(b?.createdAt).getTime() - asDate(a?.createdAt).getTime()
+              asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
           )}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <CommentRow comment={item} />}
