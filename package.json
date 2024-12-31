@@ -12,6 +12,7 @@
     "merge:main": "git switch main && git merge dev && git switch dev",
     "push:main": "git push origin main",
     "fast-push": "npm run merge:main && npm run push:main",
+    "fast-push:patch": "npm version patch && npm run merge:main && npm run push:main",
     "cy:open": "cypress open --e2e --browser chrome",
     "cy:run": "cypress run --e2e --browser chrome",
     "push:patch": "npm version patch --follow-tags && git push",
