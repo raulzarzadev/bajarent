@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native'
-import React from 'react'
 import P from './P'
 import StoreType, { store_bot_configs } from '../types/StoreType'
 import { gStyles } from '../styles'
@@ -27,7 +26,6 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
           justifyContent: 'center'
         }}
       >
-        {/* <ChangeStore /> */}
         <Text style={gStyles.h1}>{store?.name}</Text>
 
         {(isAdmin || isOwner) && (
@@ -84,28 +82,31 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       ))}
 
       <View>
-        <Text style={gStyles.h3}>Chatbot</Text>
-        <Text>Status: {store?.chatbot?.enabled ? '✅' : '❌'}</Text>
+        <Text style={[gStyles.h3, { marginTop: 8 }]}>Chatbot</Text>
+        <Text style={gStyles.tCenter}>
+          Status: {store?.chatbot?.enabled ? '✅' : '❌'}
+        </Text>
 
-        {store?.chatbot?.config &&
-          Object.entries(store_bot_configs).map(([key, value]) => (
-            <View key={key}>
-              <Text>
-                {value}:{' '}
-                <Text style={gStyles.tBold}>
-                  {store?.chatbot?.config[key] ? '✅' : '❌'}
-                </Text>
+        {Object.entries(store_bot_configs).map(([key, value]) => (
+          <View key={key}>
+            <Text style={gStyles.tCenter}>
+              {value}:{' '}
+              <Text style={gStyles.tBold}>
+                {store?.chatbot?.config[key] ? '✅' : '❌'}
               </Text>
-            </View>
-          ))}
-
-        {isAdmin && (
-          <View>
-            <Text style={gStyles.h3}>Configuración</Text>
-            <Text>API Key: {isAdmin ? store?.chatbot?.apiKey : '*****'}</Text>
-            <Text>Id: {isAdmin ? store?.chatbot?.id : '****'}</Text>
+            </Text>
           </View>
-        )}
+        ))}
+
+        {/* {isAdmin && (
+          <View>
+            <Text style={[gStyles.h3, { marginTop: 8 }]}>Configuración</Text>
+            <Text style={gStyles.tCenter}>
+              API Key: {store?.chatbot?.apiKey}
+            </Text>
+            <Text style={gStyles.tCenter}>Id: {store?.chatbot?.id}</Text>
+          </View>
+        )} */}
       </View>
     </View>
   )
