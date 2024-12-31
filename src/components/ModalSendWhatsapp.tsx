@@ -437,7 +437,7 @@ export const ButtonSendWhatsappStatatus = () => {
   const [sending, setSending] = useState(false)
   const message = orderStatus({
     order,
-    storeName: store.name
+    storeName: store?.name || ''
   })
   if (!order) return <></>
   return (
