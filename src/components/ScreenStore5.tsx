@@ -66,6 +66,9 @@ const ScreenStore = (props) => {
   const CheckedStoreCounts = CheckedTab(StoreCounts)
   const CheckedStoreBalance = CheckedTab(StoreBalanceE)
 
+  if (store === undefined) return <Loading />
+  if (store === null) return <Text>Store not found</Text>
+
   return (
     <ScrollView ref={scrollViewRef}>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}

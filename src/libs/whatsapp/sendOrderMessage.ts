@@ -67,7 +67,7 @@ export const onSendOrderWhatsapp = async ({
   lastPayment?: PaymentType
 }) => {
   const { isValid, message: validationMessage } = validateChatbotConfig({
-    chatbot: store.chatbot,
+    chatbot: store?.chatbot,
     messageType: type
   })
 
@@ -139,9 +139,6 @@ const validateChatbotConfig = ({
   chatbot: StoreType['chatbot']
   messageType: TypeOfMessage
 }): ChatbotValidationResult => {
-  let message = 'message is not enabled' // * <--- default message is not enabled
-  let isValid = false // * <--- default validate value is false
-
   if (!chatbot?.enabled) {
     return {
       message: 'chatbot is not enabled',
@@ -160,13 +157,6 @@ const validateChatbotConfig = ({
       isValid: false
     }
   }
-  if (!chatbot?.config) {
-    return {
-      message: 'chatbot config is missing',
-      isValid: false
-    }
-  }
-
   if (messageType === 'expire') {
     return {
       message: 'expire message is enabled',
@@ -178,6 +168,13 @@ const validateChatbotConfig = ({
     return {
       message: 'status message is enabled',
       isValid: true
+    }
+  }
+
+  if (!chatbot?.config) {
+    return {
+      message: 'chatbot config is missing',
+      isValid: false
     }
   }
 
@@ -201,8 +198,8 @@ const validateChatbotConfig = ({
   }
 
   return {
-    message,
-    isValid
+    message: `message type ${messageType} is not enabled`,
+    isValid: false
   }
 }
 
