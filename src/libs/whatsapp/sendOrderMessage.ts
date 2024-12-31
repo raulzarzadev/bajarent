@@ -142,14 +142,30 @@ const validateChatbotConfig = ({
   let message = 'message is not enabled' // * <--- default message is not enabled
   let isValid = false // * <--- default validate value is false
 
-  if (!chatbot?.enabled) message = 'chatbot is disabled'
-  if (!chatbot?.apiKey) message = 'chatbot api key is missing'
-  if (!chatbot?.id) message = 'chatbot id is missing'
-  if (!chatbot?.config) message = 'chatbot config is missing'
-
-  if (!chatbot?.config?.sendDelivered) message = 'delivery message is disabled'
-  if (!chatbot?.config?.sendPickedUp) message = 'pickup message is disabled'
-  if (!chatbot?.config?.sendRenewed) message = 'renew message is disabled'
+  if (!chatbot?.enabled) {
+    return {
+      message: 'chatbot is not enabled',
+      isValid: false
+    }
+  }
+  if (!chatbot?.apiKey) {
+    return {
+      message: 'chatbot api key is missing',
+      isValid: false
+    }
+  }
+  if (!chatbot?.id) {
+    return {
+      message: 'chatbot id is missing',
+      isValid: false
+    }
+  }
+  if (!chatbot?.config) {
+    return {
+      message: 'chatbot config is missing',
+      isValid: false
+    }
+  }
 
   if (messageType === 'expire') {
     return {
@@ -159,21 +175,29 @@ const validateChatbotConfig = ({
   }
 
   if (messageType === 'status') {
-    message = 'status message is enabled'
-    isValid = true
+    return {
+      message: 'status message is enabled',
+      isValid: true
+    }gi
   }
 
   if (chatbot?.config?.sendDelivered && messageType === 'delivery') {
-    message = 'delivery message is enabled'
-    isValid = true
+    return {
+      message: 'delivery message is enabled',
+      isValid: true
+    }
   }
   if (chatbot?.config?.sendPickedUp && messageType === 'pickup') {
-    message = 'pickup message is enabled'
-    isValid = true
+    return {
+      message: 'pickup message is enabled',
+      isValid: true
+    }
   }
   if (chatbot?.config?.sendRenewed && messageType === 'renew') {
-    message = 'renew message is enabled'
-    isValid = true
+    return {
+      message: 'renew message is enabled',
+      isValid: true
+    }
   }
 
   return {

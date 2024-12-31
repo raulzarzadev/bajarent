@@ -127,8 +127,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
     (permissions?.orders.canCancel || permissions.isAdmin) &&
     orderStatus === 'AUTHORIZED'
   const cancelDelivery =
-    (permissions?.orders.canCancelPickedUp || permissions.isAdmin) &&
-    orderStatus === 'DELIVERED'
+    permissions?.orders.canCancelPickedUp && orderStatus === 'DELIVERED'
   const delivery =
     (permissions?.orders.canDelivery || permissions.isAdmin) &&
     orderStatus === 'AUTHORIZED'
