@@ -15,8 +15,7 @@ import ErrorBoundary from './ErrorBoundary'
 import ChooseProfile from './ChooseProfile'
 import LoginSignUpEmail from './LoginSignupEmail'
 import { CardEmployeeE } from './CardEmployee'
-import packageJson from '../../package.json'
-import { gStyles } from '../styles'
+import AppVersion from './AppVersion'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -33,9 +32,7 @@ const ScreenProfile = ({ navigation }) => {
 
   return (
     <ScrollView style={{ padding: 2 }}>
-      <Text style={[gStyles.helper, { textAlign: 'right' }]}>
-        {packageJson.version}
-      </Text>
+      <AppVersion />
       <ErrorBoundary componentName="CardUser">
         <CardUser
           user={user}
