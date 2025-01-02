@@ -11,6 +11,7 @@ import { OrdersContextProvider } from './src/contexts/ordersContext'
 import ErrorBoundary from './src/components/ErrorBoundary'
 import { CurrentWorkProvider } from './src/contexts/currentWorkContext'
 import { ItemsProvider } from './src/contexts/itemsContext'
+import { AppVersionProvider } from './src/contexts/appVersionContext'
 
 export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {
@@ -44,28 +45,30 @@ export default function App() {
   }
   return (
     <ErrorBoundary componentName="App">
-      <NavigationContainer
-        initialState={initialState}
-        onStateChange={(state) => {
-          AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-        }}
-      >
-        <AuthContextProvider>
-          <StoreContextProvider>
-            <EmployeeContextProvider>
-              <OrdersContextProvider>
-                <CurrentWorkProvider>
-                  <ItemsProvider>
-                    <ThemeProvider>
-                      <BottomAppBarE />
-                    </ThemeProvider>
-                  </ItemsProvider>
-                </CurrentWorkProvider>
-              </OrdersContextProvider>
-            </EmployeeContextProvider>
-          </StoreContextProvider>
-        </AuthContextProvider>
-      </NavigationContainer>
+      <AppVersionProvider>
+        <NavigationContainer
+          initialState={initialState}
+          onStateChange={(state) => {
+            AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+          }}
+        >
+          <AuthContextProvider>
+            <StoreContextProvider>
+              <EmployeeContextProvider>
+                <OrdersContextProvider>
+                  <CurrentWorkProvider>
+                    <ItemsProvider>
+                      <ThemeProvider>
+                        <BottomAppBarE />
+                      </ThemeProvider>
+                    </ItemsProvider>
+                  </CurrentWorkProvider>
+                </OrdersContextProvider>
+              </EmployeeContextProvider>
+            </StoreContextProvider>
+          </AuthContextProvider>
+        </NavigationContainer>
+      </AppVersionProvider>
     </ErrorBoundary>
   )
 }

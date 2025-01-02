@@ -13,7 +13,6 @@ import StaffType from '../types/StaffType'
 import StoreType from '../types/StoreType'
 import { getItem, setItem } from '../libs/storage'
 import { ServiceStores } from '../firebase/ServiceStore'
-import { useNavigation } from '@react-navigation/native'
 import useMyNav from '../hooks/useMyNav'
 
 const initialAutState: {
