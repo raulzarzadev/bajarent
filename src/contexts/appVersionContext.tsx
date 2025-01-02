@@ -14,6 +14,7 @@ export const AppVersionProvider = ({ children }) => {
         setVersion(version)
       })
       .catch((error) => {
+        setVersion(null)
         console.error('AppVersionProvider', error)
       })
   }, [])

@@ -10,6 +10,7 @@ const AppVersion = ({
   hideCurrentVersion?: boolean
 }) => {
   const { version } = useAppVersionContext()
+  // console.log({ version })
   if (version === undefined) return null
   return (
     <View>
