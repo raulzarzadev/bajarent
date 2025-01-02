@@ -36,5 +36,5 @@ const getOperatingSystem = () => {
     return Platform.OS
   }
 }
-console.log('Operating System:', getOperatingSystem())
+console.log('os:', getOperatingSystem())
 export default sendMessage
