@@ -9,15 +9,10 @@ export const AppVersionProvider = ({ children }) => {
   const [version, setVersion] = useState(undefined)
 
   useEffect(() => {
-    ServiceInternalConfig.getVersion()
-      .then((version) => {
-        setVersion(version)
-      })
-      .catch((error) => {
-        setVersion(null)
-        console.error('AppVersionProvider', error)
-      })
+    ServiceInternalConfig.listenVersion(setVersion)
   }, [])
+
+  console.log(version)
 
   return (
     <AppVersionContext.Provider value={{ version }}>

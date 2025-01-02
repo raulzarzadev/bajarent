@@ -21,6 +21,9 @@ class ServiceInternalConfiguration extends FirebaseGenericService<InternalConfig
         console.error('ServiceInternalConfiguration', error)
       })
   }
+  listenVersion = (cb) => {
+    this.listen(CONFIG_ID, (res) => cb(res?.version))
+  }
 }
 
 export const ServiceInternalConfig = new ServiceInternalConfiguration()

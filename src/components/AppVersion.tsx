@@ -1,40 +1,27 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import { gStyles } from '../styles'
 import packageJson from '../../package.json'
 import { useAppVersionContext } from '../contexts/appVersionContext'
-import Button from './Button'
 
-const AppVersion = ({
-  hideCurrentVersion
-}: {
-  hideCurrentVersion?: boolean
-}) => {
+const AppVersion = ({ showVersion }: { showVersion?: boolean }) => {
   const { version } = useAppVersionContext()
-  // console.log({ version })
-  if (version === undefined) return null
+  const isSameVersion = version === packageJson.version
+
+  if (isSameVersion) {
+    return (
+      <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 4 }]}>
+        ✅
+      </Text>
+    )
+  }
+
   return (
     <View>
-      <Text style={[gStyles.helper, { textAlign: 'right' }]}>
-        {version === packageJson.version ? (
-          hideCurrentVersion ? (
-            ''
-          ) : (
-            packageJson.version
-          )
-        ) : (
-          <View>
-            <Button
-              label="Actualización"
-              color="success"
-              icon="refresh"
-              size="xs"
-              onPress={() => {
-                window.location.reload()
-              }}
-            ></Button>
-          </View>
-        )}
-      </Text>
+      <Pressable onPress={() => window?.location?.reload?.()}>
+        <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 4 }]}>
+          {' 🔄 '}
+        </Text>
+      </Pressable>
     </View>
   )
 }

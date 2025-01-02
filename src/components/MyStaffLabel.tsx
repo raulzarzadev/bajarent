@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import Button from './Button'
@@ -6,7 +6,6 @@ import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
 import { ModalCurrentWorkE } from './CurrentWork/ModalCurrentWork'
 import { useEmployee } from '../contexts/employeeContext'
-import { gStyles } from '../styles'
 import AppVersion from './AppVersion'
 
 const MyStaffLabel = () => {
@@ -23,9 +22,7 @@ const MyStaffLabel = () => {
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ marginRight: 4 }}>
-          <AppVersion hideCurrentVersion />
-        </View>
+        <AppVersion showVersion />
         <ModalCurrentWorkE />
 
         {__DEV__ && (
