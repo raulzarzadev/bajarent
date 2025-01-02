@@ -92,21 +92,11 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
             <Text style={gStyles.tCenter}>
               {value}:{' '}
               <Text style={gStyles.tBold}>
-                {store?.chatbot?.config[key] ? '✅' : '❌'}
+                {store?.chatbot?.config?.[key] ? '✅' : '❌'}
               </Text>
             </Text>
           </View>
         ))}
-
-        {/* {isAdmin && (
-          <View>
-            <Text style={[gStyles.h3, { marginTop: 8 }]}>Configuración</Text>
-            <Text style={gStyles.tCenter}>
-              API Key: {store?.chatbot?.apiKey}
-            </Text>
-            <Text style={gStyles.tCenter}>Id: {store?.chatbot?.id}</Text>
-          </View>
-        )} */}
       </View>
     </View>
   )
