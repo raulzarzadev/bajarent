@@ -12,7 +12,7 @@ export const AppVersionProvider = ({ children }) => {
     ServiceInternalConfig.listenVersion(setVersion)
   }, [])
 
-  console.log(version)
+  console.log(`v${version || ''}`)
 
   return (
     <AppVersionContext.Provider value={{ version }}>
