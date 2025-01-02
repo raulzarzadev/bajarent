@@ -22,7 +22,7 @@ const MyStaffLabel = () => {
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <AppVersion showVersion />
+        <AppVersion />
         <ModalCurrentWorkE />
 
         {__DEV__ && (

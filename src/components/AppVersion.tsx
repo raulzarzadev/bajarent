@@ -3,14 +3,14 @@ import { gStyles } from '../styles'
 import packageJson from '../../package.json'
 import { useAppVersionContext } from '../contexts/appVersionContext'
 
-const AppVersion = ({ showVersion }: { showVersion?: boolean }) => {
+const AppVersion = () => {
   const { version } = useAppVersionContext()
   const isSameVersion = version === packageJson.version
 
   if (isSameVersion) {
     return (
-      <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 4 }]}>
-        ✅
+      <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}>
+        {packageJson.version} ✅
       </Text>
     )
   }
@@ -18,8 +18,8 @@ const AppVersion = ({ showVersion }: { showVersion?: boolean }) => {
   return (
     <View>
       <Pressable onPress={() => window?.location?.reload?.()}>
-        <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 4 }]}>
-          {' 🔄 '}
+        <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}>
+          {packageJson.version} 🔄
         </Text>
       </Pressable>
     </View>
