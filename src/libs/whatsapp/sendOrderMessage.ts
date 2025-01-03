@@ -178,6 +178,11 @@ const validateChatbotConfig = ({
     }
   }
 
+  return {
+    message: `sending ${messageType}`,
+    isValid: true
+  }
+
   if (chatbot?.config?.sendDelivered && messageType === 'delivery') {
     return {
       message: 'delivery message is enabled',
