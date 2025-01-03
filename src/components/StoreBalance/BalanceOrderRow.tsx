@@ -4,7 +4,7 @@ import { StoreBalanceOrder } from '../../types/StoreBalance'
 import CurrencyAmount from '../CurrencyAmount'
 import React from 'react'
 import { gStyles } from '../../styles'
-import theme from '../../theme'
+import theme, { colors } from '../../theme'
 import { useStore } from '../../contexts/storeContext'
 import { translateTime } from '../../libs/expireDate'
 const BalanceOrderRow = (props: BalanceOrderRowProps) => {
@@ -38,13 +38,27 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
         <Text style={gStyles.helper}>{order?.orderFolio}</Text>
         {order?.orderNote && (
           <>
-            <Text style={gStyles.helper}>- {order?.orderNote}</Text>
+            <Text style={[gStyles.helper]}>
+              {' '}
+              <Text
+                style={{
+                  backgroundColor: colors.purple,
+                  padding: 1,
+                  paddingHorizontal: 2,
+                  borderRadius: 9999,
+                  color: theme.white,
+                  fontWeight: 'bold'
+                }}
+              >
+                {order?.orderNote}
+              </Text>
+            </Text>
           </>
         )}
 
         {paymentAmount > 0 && (
           <React.Fragment>
-            <Text style={gStyles.helper}> - </Text>
+            <Text style={gStyles.helper}> </Text>
             <CurrencyAmount
               amount={paymentAmount}
               style={{
@@ -64,10 +78,10 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
           </React.Fragment>
         )}
         <Text style={gStyles.helper}>
-          {translateTime(order?.time, { shortLabel: true })}
+          {' '}
+          {translateTime(order?.time, { shortLabel: true })}{' '}
         </Text>
 
-        <Text style={gStyles.helper}> - </Text>
         <Text style={[gStyles.tBold, gStyles.helper]}>{itemNumber}</Text>
       </View>
     </View>
