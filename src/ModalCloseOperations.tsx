@@ -6,9 +6,10 @@ import Button from './components/Button'
 import { useStore } from './contexts/storeContext'
 import { onDownloadBackup } from './libs/downloadOrders'
 import Loading from './components/Loading'
+import TextInfo from './components/TextInfo'
 
 const ModalCloseOperations = () => {
-  const modal = useModal({ title: 'Cerrar operación' })
+  const modal = useModal({ title: 'Respaldos' })
   const { storeId, staff, store } = useStore()
   const [loading, setLoading] = React.useState(false)
   const handleConfirmCloseOps = async () => {
@@ -37,6 +38,17 @@ const ModalCloseOperations = () => {
         disabled={loading}
       ></Button>
       <StyledModal {...modal}>
+        <TextInfo
+          defaultVisible
+          type="info"
+          text="Se generara archivos formato .csv (excel) con todas las ordenes
+          activas el día de hoy, así como los balance en archivo .json."
+        />
+        <TextInfo
+          defaultVisible
+          type="warning"
+          text="Guarda estos archivos en un lugar seguro."
+        />
         {loading && (
           <>
             <Text>Generando archivos</Text>
