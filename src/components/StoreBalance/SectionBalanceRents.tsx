@@ -120,6 +120,14 @@ const SectionBalanceRents = ({
     <View>
       <Text style={gStyles.h2}>{title}</Text>
       <BalanceAmountsE payments={payments} />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <ExpandibleBalanceItemsAvailable
+          items={availableItems}
+          label="Artículos disponibles"
+          defaultExpanded
+          hideIfEmpty={false}
+        />
+      </View>
 
       <View
         style={{
@@ -190,16 +198,18 @@ export const ExpandibleBalanceOrders = ({
 export const ExpandibleBalanceItemsAvailable = ({
   items,
   label,
-  defaultExpanded
+  defaultExpanded,
+  hideIfEmpty = true
 }: {
   items: BalanceItems[]
   label: string
   defaultExpanded?: boolean
+  hideIfEmpty?: boolean
 }) => {
   const { toItems } = useMyNav()
   const { categories } = useStore()
   const sortByEco = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
-  if (!items.length) return null
+  if (!items.length && hideIfEmpty) return null
   return (
     <ExpandibleListE
       label={label}

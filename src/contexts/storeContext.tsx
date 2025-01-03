@@ -91,6 +91,8 @@ const StoreContextProvider = ({ children }) => {
       .catch((e) => console.error({ e }))
   }
 
+  console.log({ storeCtx: storeCtx?.store })
+
   useEffect(() => {
     if (storeId) {
       handleUpdateStore()

@@ -6,7 +6,7 @@ export type InternalConfigurationType = {
   id: string
 }
 
-const CONFIG_ID = 'CV9CvlsgYqnKx9Tlm3IZ'
+const CONFIG_ID = 'w0mdPzGdk8nQ2tY1oiqT'
 
 class ServiceInternalConfiguration extends FirebaseGenericService<InternalConfigurationType> {
   constructor() {
