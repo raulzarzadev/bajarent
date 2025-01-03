@@ -43,7 +43,7 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
               <Text
                 style={{
                   backgroundColor: colors.purple,
-                  padding: 1,
+                  padding: 0,
                   paddingHorizontal: 2,
                   borderRadius: 9999,
                   color: theme.white,
