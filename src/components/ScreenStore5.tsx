@@ -269,7 +269,8 @@ const TabCashbox = () => {
   }
 
   if (balance === undefined) return <Loading />
-
+  //** disabled functions in tab */
+  const disabled = true
   return (
     <ScrollView>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -282,6 +283,7 @@ const TabCashbox = () => {
               screen: 'ScreenBalancesNew'
             })
           }}
+          disabled={disabled}
           variant="ghost"
         />
         <Button
@@ -291,6 +293,7 @@ const TabCashbox = () => {
             //@ts-ignore
             navigate('StackPayments')
           }}
+          disabled={disabled}
           variant="ghost"
         />
         <Button
@@ -302,6 +305,7 @@ const TabCashbox = () => {
               screen: 'ScreenRetirementsNew'
             })
           }}
+          disabled={disabled}
           variant="ghost"
         />
         <ModalCloseOperations />
@@ -320,7 +324,7 @@ const TabCashbox = () => {
       <View style={{ margin: 'auto', marginVertical: 6 }}>
         <Button
           progress={progress}
-          disabled={updating}
+          disabled={disabled || updating}
           size="small"
           fullWidth={false}
           label="Actualizar"
