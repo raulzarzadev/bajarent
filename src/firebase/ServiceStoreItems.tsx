@@ -36,26 +36,6 @@ export class ServiceStoreItemsClass {
     return { ...createItemRes, newItem } as FormattedResponse & {
       newItem: Type
     }
-
-    // //* 1. get current number
-    // const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
-    // const newNUmber = await ServiceStores.incrementItemNumber({
-    //   storeId
-    // })
-    // //* 2. update item number
-    // await ServiceStores.update(storeId, {
-    //   currentItemNumber: newNUmber
-    // })
-    // const newItem = { ...item, number: newNUmber }
-    // //* 3. create item
-    // const createItemRes = await ServiceStores.createRefItem({
-    //   collectionRef,
-    //   item: newItem
-    // })
-
-    // return { ...createItemRes, newItem } as FormattedResponse & {
-    //   newItem: Type
-    // }
   }
 
   async getAll(

@@ -32,13 +32,6 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
       [...asStaff, ...asOwner].find((store) => store.id === id)
     )
   }
-  async currentItemNumber(storeId: string) {
-    const store = await this.get(storeId)
-    if (!store) {
-      return
-    }
-    return store.currentItemNumber || '0000'
-  }
 
   async incrementItemNumber({ storeId }) {
     const store = await this.get(storeId)
