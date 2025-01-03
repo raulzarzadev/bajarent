@@ -18,19 +18,10 @@ export type BaseStoreType = {
   allowStaff?: boolean
   img?: string
   marketVisible?: boolean
-
   address?: string
-
   schedule?: string
-
   currentFolio?: FieldValue
-  currentItemNumber?: string
-
   currentEco?: FieldValue
-  // coords?: {
-  //   lat: number
-  //   lon: number
-  // }
   location?: string
   orderTypes?: Record<TypeOrderKey, boolean>
   orderFields?: Record<TypeOrderKey, FormOrderFields>
@@ -50,9 +41,7 @@ export type BaseStoreType = {
    * @deprecated use bankAccounts instead
    */
   mobile?: string
-
   //* multi items
-
   bankAccounts?: MultiFields[]
   contacts?: MultiFields[]
   socialMedia?: MultiFields[]
