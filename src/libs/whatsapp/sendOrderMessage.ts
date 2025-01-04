@@ -170,17 +170,16 @@ const validateChatbotConfig = ({
       isValid: true
     }
   }
+  return {
+    message: `sending ${messageType}`,
+    isValid: true
+  }
 
   if (!chatbot?.config) {
     return {
       message: 'chatbot config is missing',
       isValid: false
     }
-  }
-
-  return {
-    message: `sending ${messageType}`,
-    isValid: true
   }
 
   if (chatbot?.config?.sendDelivered && messageType === 'delivery') {
