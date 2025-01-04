@@ -82,16 +82,18 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
           ]}
         />
       </View>
-      {Object.entries(sections).map(([key, items]) => {
-        return (
-          <View key={key} style={{ marginBottom: 12 }}>
-            <Text style={gStyles.h2}>
-              {asCapitalize(dictionary(key))} {`(${items?.length || 0})`}
-            </Text>
-            <RowSectionItemsE items={items} layout="flex" />
-          </View>
-        )
-      })}
+      {Object.entries(sections)
+        .sort(([aKey], [bKey]) => aKey.localeCompare(bKey))
+        .map(([key, items]) => {
+          return (
+            <View key={key} style={{ marginBottom: 12 }}>
+              <Text style={gStyles.h2}>
+                {asCapitalize(dictionary(key))} {`(${items?.length || 0})`}
+              </Text>
+              <RowSectionItemsE items={items} layout="flex" />
+            </View>
+          )
+        })}
     </View>
   )
 }
