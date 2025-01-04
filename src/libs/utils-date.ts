@@ -146,3 +146,19 @@ export function startDate(date: Date): Date {
   start.setHours(0, 0, 0, 0)
   return start
 }
+
+export function isBetweenDates(
+  date: Date,
+  {
+    startDate,
+    endDate
+  }: {
+    startDate: Date
+    endDate: Date
+  }
+): boolean {
+  return isWithinInterval(asDate(date), {
+    start: asDate(startDate),
+    end: asDate(endDate)
+  })
+}

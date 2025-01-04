@@ -29,6 +29,7 @@ export type StoreBalanceOrder = {
   extendedAt?: Date
   deliveredAt?: Date
   canceledAt?: Date
+  repairingAt?: Date
 }
 
 export type BalancePayment = PaymentType

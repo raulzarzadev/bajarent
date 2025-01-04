@@ -5,11 +5,7 @@ import { ServiceOrders } from './ServiceOrders'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isAfter, isBefore, isToday } from 'date-fns'
-import {
-  getTodayRenews,
-  isRenewedToday,
-  orderExtensionsBetweenDates
-} from '../libs/orders'
+import { getTodayRenews, isRenewedToday } from '../libs/orders'
 import { ServiceComments } from './ServiceComments'
 import { CommentType } from '../types/CommentType'
 import { getBalancePayments } from '../libs/balance'

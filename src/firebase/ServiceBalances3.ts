@@ -82,26 +82,26 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         where('pickedUpAt', '<=', endDate(toDate))
       ])
     }
-    if (type === 'repair-active') {
+    if (type === 'repair-delivered-at') {
       return ServiceOrders.findMany([
         where('storeId', '==', storeId),
         where('type', '==', order_type.REPAIR),
-        where('status', 'in', [
-          order_status.PICKED_UP,
-          order_status.REPAIRING,
-          order_status.REPAIRED
-        ])
+        where('status', '==', order_status.DELIVERED),
+        where('deliveredAt', '>=', startDate(fromDate)),
+        where('deliveredAt', '<=', endDate(toDate))
       ])
     }
-    if (type === 'repair-finished-date') {
+
+    if (type === 'repair-started-at') {
       return ServiceOrders.findMany([
         where('storeId', '==', storeId),
         where('type', '==', order_type.REPAIR),
-        where('status', '==', order_status.REPAIRED),
-        where('pickedUpAt', '>=', startDate(fromDate)),
-        where('pickedUpAt', '<=', endDate(toDate))
+        //  where('status', '==', order_status.REPAIRED),
+        where('repairingAt', '>=', startDate(fromDate)),
+        where('repairingAt', '<=', endDate(toDate))
       ])
     }
+
     if (type === 'sales-date') {
       return ServiceOrders.findMany([
         where('storeId', '==', storeId),
@@ -111,12 +111,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         where('deliveredAt', '<=', endDate(toDate))
       ])
     }
-  }
-
-  async getFormattedOrders(
-    props: GetBalanceOrders & { payments: PaymentType[] }
-  ) {
-    return this.getOrders(props)
   }
 
   async getBalanceOrders({ storeId, fromDate, toDate, payments }) {
@@ -138,14 +132,14 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       fromDate,
       toDate
     })
-    const activeRepairsPromises = this.getOrders({
-      type: 'repair-active',
+    const repairStartedAtPromises = this.getOrders({
+      type: 'repair-started-at',
       storeId,
       fromDate,
       toDate
     })
-    const repairsFinishedDatePromises = this.getOrders({
-      type: 'repair-finished-date',
+    const repairDeliveredAtPromises = this.getOrders({
+      type: 'repair-delivered-at',
       storeId,
       fromDate,
       toDate
@@ -160,27 +154,33 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
     const [
       activeRents,
       rentsFinishedDate,
-      activeRepairs,
-      repairsFinishedDate,
+      repairStartedAt,
+      repairsDeliveredAt,
       salesDate,
       canceledOrders
     ] = await Promise.all([
       activeRentsPromises,
       rentsFinishedDatePromises,
-      activeRepairsPromises,
-      repairsFinishedDatePromises,
+      repairStartedAtPromises,
+      repairDeliveredAtPromises,
       salesDatePromises,
       canceledOrdersPromises
     ])
 
-    return {
+    //join orders
+    const allOrders = [
       activeRents,
       rentsFinishedDate,
-      activeRepairs,
-      repairsFinishedDate,
+      repairStartedAt,
+      repairsDeliveredAt,
       salesDate,
       canceledOrders
-    }
+    ].flat()
+    // remove duplicated orders
+    const unique = allOrders.filter(
+      (order, index, self) => index === self.findIndex((t) => t.id === order.id)
+    )
+    return unique
   }
 
   getPaymentsDate = async ({
@@ -237,14 +237,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       progress?.(10)
       //* Get orders
 
-      const {
-        activeRents,
-        activeRepairs,
-        rentsFinishedDate,
-        repairsFinishedDate,
-        salesDate,
-        canceledOrders
-      } = await this.getBalanceOrders({
+      const orders = await this.getBalanceOrders({
         storeId,
         fromDate: FROM_DATE,
         toDate: TO_DATE,
@@ -292,14 +285,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         }
       })
 
-      const orders = [
-        ...activeRents,
-        ...activeRepairs,
-        ...rentsFinishedDate,
-        ...repairsFinishedDate,
-        ...salesDate,
-        ...canceledOrders
-      ]
       progress?.(70)
 
       balance.orders = orders
@@ -388,7 +373,8 @@ const formatAsBalanceOrder = ({
     assignedSection: order?.assignToSection || null,
     payments,
     clientName: order?.fullName,
-    orderNote: order?.note || null
+    orderNote: order?.note || null,
+    repairingAt: order?.repairingAt || null
   }
 }
 
@@ -403,10 +389,14 @@ type GetBalanceOrders = {
   type:
     | 'rents-active'
     | 'rents-finished-date'
-    | 'repair-active'
-    | 'repair-finished-date'
+    //*<-- about repairs
+    | 'repair-started-at'
+    | 'repair-delivered-at'
+    //* <--- about sales
     | 'sales-date'
+    //* <-- general
     | 'canceled-date'
+    | 'paid-at'
   storeId: string
   fromDate: Date
   toDate: Date
