@@ -142,9 +142,9 @@ export const BalanceView = ({ balance }: { balance: StoreBalanceType }) => {
         tabs={[
           {
             title: 'General',
-            content: <GeneralBalanceE />,
-            show: true,
-            disabled: true
+            content: <GeneralBalanceE balance={balance} />,
+            show: true
+            //disabled: true
           },
           {
             title: 'Rentas',
