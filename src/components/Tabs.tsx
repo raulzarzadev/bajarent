@@ -33,16 +33,11 @@ const TabsA = ({
   const [selectedTab, setSelectedTab] = useState(undefined)
 
   useEffect(() => {
-    console.log('rendering tabs')
-    //const initialTab = defaultTab === null ? undefined : visibleTabs[0]?.title
-
-    getItem(`tab-${tabId}`).then((tab) => {
-      if (tab) {
+    if (tabId) {
+      getItem(`tab-${tabId}`).then((tab) => {
         setSelectedTab(tab)
-      } else {
-        // setSelectedTab(initialTab)
-      }
-    })
+      })
+    }
   }, [])
 
   const handleTabPress = (tab) => {

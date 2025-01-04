@@ -33,52 +33,8 @@ const StoreContextProvider = ({ children }) => {
   const { storeId } = useAuth()
   const [storeCtx, setStoreCtx] = useState<StoreContextType>()
 
-  const getStoreData = async () => {
-    const storePromise = ServiceStores.get(storeId)
-    const categoriesPromise = ServiceCategories.getByStore(storeId)
-    const sectionsPromise = ServiceSections.getByStore(storeId)
-    const staffPromise = ServiceStaff.getByStore(storeId)
-    const pricesPromise = ServicePrices.getByStore(storeId)
-    const [store, categories, sections, staff, prices] = await Promise.all([
-      storePromise,
-      categoriesPromise,
-      sectionsPromise,
-      staffPromise,
-      pricesPromise
-    ])
-    const categoriesWithPrices = categories.map((cat) => ({
-      ...cat,
-      prices: prices.filter((p) => p.categoryId === cat.id)
-    }))
-    const staffWithSections = staff.map((staff) => {
-      const sectionsAssigned = sections
-        .filter((section) => section?.staff?.includes(staff.id))
-        .map((section) => section.id)
-      return { ...staff, sectionsAssigned }
-    })
-    const sectionsWithDefaultStoreSections = [
-      ...sections,
-      {
-        id: 'workshop',
-        name: 'Taller',
-        storeId,
-        description: 'Taller de reparaciones',
-        icon: 'tools',
-        defaultArea: true
-      }
-    ]
-
-    return {
-      store: { ...store, staff: staffWithSections },
-      sections: sectionsWithDefaultStoreSections.sort(sortSections),
-      categories: categoriesWithPrices,
-      staff: staffWithSections,
-      prices
-    }
-  }
-
   const handleUpdateStore = async () => {
-    getStoreData()
+    getStoreData(storeId)
       .then(({ store, categories, sections, staff, prices }) => {
         setStoreCtx({
           store,
@@ -90,8 +46,6 @@ const StoreContextProvider = ({ children }) => {
       })
       .catch((e) => console.error({ e }))
   }
-
-  console.log({ storeCtx: storeCtx?.store })
 
   useEffect(() => {
     if (storeId) {
@@ -149,4 +103,48 @@ const sortSections = (a, b) => {
     return 1
   }
   return 0
+}
+
+const getStoreData = async (storeId: string) => {
+  const storePromise = ServiceStores.get(storeId)
+  const categoriesPromise = ServiceCategories.getByStore(storeId)
+  const sectionsPromise = ServiceSections.getByStore(storeId)
+  const staffPromise = ServiceStaff.getByStore(storeId)
+  const pricesPromise = ServicePrices.getByStore(storeId)
+  const [store, categories, sections, staff, prices] = await Promise.all([
+    storePromise,
+    categoriesPromise,
+    sectionsPromise,
+    staffPromise,
+    pricesPromise
+  ])
+  const categoriesWithPrices = categories.map((cat) => ({
+    ...cat,
+    prices: prices.filter((p) => p.categoryId === cat.id)
+  }))
+  const staffWithSections = staff.map((staff) => {
+    const sectionsAssigned = sections
+      .filter((section) => section?.staff?.includes(staff.id))
+      .map((section) => section.id)
+    return { ...staff, sectionsAssigned }
+  })
+  const sectionsWithDefaultStoreSections = [
+    ...sections,
+    {
+      id: 'workshop',
+      name: 'Taller',
+      storeId,
+      description: 'Taller de reparaciones',
+      icon: 'tools',
+      defaultArea: true
+    }
+  ]
+
+  return {
+    store: { ...store, staff: staffWithSections },
+    sections: sectionsWithDefaultStoreSections.sort(sortSections),
+    categories: categoriesWithPrices,
+    staff: staffWithSections,
+    prices
+  }
 }
