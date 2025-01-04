@@ -17,7 +17,7 @@ export const ModalRepairItem = ({}) => {
   const modal = useModal({ title: 'Artículo' })
   const item = order?.item
   const categoryName =
-    categories.find((cat) => cat?.id === item?.categoryId)?.name || ''
+    categories?.find((cat) => cat?.id === item?.categoryId)?.name || ''
   const formattedItem = {
     categoryName,
     categoryId: item?.categoryId || '',
