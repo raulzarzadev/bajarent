@@ -13,7 +13,6 @@ const RepairsBalance = (props: RepairsBalanceProps) => {
     (order) => order.orderType === order_type.REPAIR
   )
   const payments = repairsOrders.map((order) => order.payments).flat()
-  console.log({ balance, repairsOrders, payments })
   const repairStarted = repairsOrders.filter((order) =>
     isBetweenDates(order.repairingAt, {
       startDate: balance.fromDate,

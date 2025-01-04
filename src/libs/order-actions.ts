@@ -46,7 +46,7 @@ export const onComment = async ({
     variant
   })
     .then(() => {
-      console.log('comment')
+      //console.log('comment')
     })
     .catch(console.error)
 }
