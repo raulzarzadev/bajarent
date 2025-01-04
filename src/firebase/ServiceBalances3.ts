@@ -52,7 +52,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         limit(1)
       ],
       (res) => {
-        console.log(res)
         cb(res?.[0] || null)
       }
     )
