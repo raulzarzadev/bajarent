@@ -102,8 +102,8 @@ export const onSendOrderWhatsapp = async ({
 
   let message = messageOptions[type]
 
-  if (store?.chatbot?.config?.includeSender)
-    message = message + `👤 ${staffName || ''}`
+  //if (store?.chatbot?.config?.includeSender)
+  message = message + `👤 ${staffName || ''}`
 
   return await sendMessage({
     phone: chooseOrderPhone(order),
