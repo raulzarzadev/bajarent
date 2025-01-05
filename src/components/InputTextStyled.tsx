@@ -99,21 +99,33 @@ const InputTextStyled = ({
           }}
         />
 
-        <View
-          style={{
-            width: 20,
-            height: '100%',
-            justifyContent: 'center',
-            position: 'absolute',
-            right: 0,
-            top: 0,
-            bottom: 0
-          }}
-        >
-          {innerLeftIcon && !onLeftIconPress && !hiddenInnerLeftIcon && (
+        {innerLeftIcon && !onLeftIconPress && !hiddenInnerLeftIcon && (
+          <View
+            style={{
+              width: 20,
+              height: '100%',
+              justifyContent: 'center',
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              bottom: 0
+            }}
+          >
             <Icon icon={innerLeftIcon} />
-          )}
-          {innerLeftIcon && onLeftIconPress && !hiddenInnerLeftIcon && (
+          </View>
+        )}
+        {innerLeftIcon && onLeftIconPress && !hiddenInnerLeftIcon && (
+          <View
+            style={{
+              width: 20,
+              height: '100%',
+              justifyContent: 'center',
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              bottom: 0
+            }}
+          >
             <Button
               justIcon
               icon={innerLeftIcon}
@@ -121,8 +133,8 @@ const InputTextStyled = ({
               variant="ghost"
               size="xs"
             />
-          )}
-        </View>
+          </View>
+        )}
       </View>
 
       {!!helperText && (

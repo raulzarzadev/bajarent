@@ -276,7 +276,16 @@ export const orders_should_expire = [
 export type TypeOfOrderType = order_type
 export type OrderStatus = order_status
 
-type OrderType = OrderBase & BaseType
+type OrderType = OrderBase &
+  BaseType & {
+    // ** If The order is sale de Type of ítems. Should be SaleOrderItem[]
+    items: TypeOfOrderType extends order_type.SALE
+      ? SaleOrderItem[]
+      : RentItem[]
+
+    paidAt: Date
+    paidBy: string
+  }
 
 export const ORDER_STATUS_SOLVED = [
   order_status.CANCELLED,
@@ -323,3 +332,10 @@ export const TypeOrderKeys = Object.keys(TypeOrder).filter((a) =>
 )
 
 export type TypeOrderKey = keyof typeof TypeOrder
+
+export type SaleOrderItem = {
+  id: string
+  name: string
+  price: number
+  quantity: number
+}

@@ -25,6 +25,11 @@ import FormikErrorsList from './FormikErrorsList'
 import FormikAssignSection from './FormikAssingSection'
 import FormikInputSignature from './FormikInputSignature'
 import FormikInputSelect from './FormikInputSelect'
+import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
+import { InputDateE } from './InputDate'
+import { ModalPayment } from './ModalPayment'
+import { orderAmount } from '../libs/order-amount'
+import { ModalPaymentSale } from './ModalPaymentSale'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -199,15 +204,16 @@ const FormOrderA = ({
 
             delete values.sheetRow //*<--- remove sheetRow from values
 
-            await onSubmit(values)
+            return await onSubmit(values)
               .then((res) => {
                 resetForm()
+                return res
               })
               .catch((e) => {
                 setError(
                   'Error al guardar la orden, intente de nuevo más tarde'
                 )
-                console.error
+                return null
               })
               .finally(() => {
                 setLoading(false)
@@ -254,7 +260,14 @@ const FormOrderA = ({
             return errors
           }}
         >
-          {({ handleSubmit, setValues, values, errors, setErrors }) => {
+          {({
+            handleSubmit,
+            setValues,
+            values,
+            errors,
+            setErrors,
+            submitForm
+          }) => {
             useEffect(() => {
               setErrors({})
               //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
@@ -303,17 +316,31 @@ const FormOrderA = ({
                     {error}
                   </Text>
                 )} */}
+
+                {values.type === order_type.SALE && (
+                  <FormikSaleOrderItemsE name="items" />
+                )}
                 <FormikErrorsList />
 
-                <View style={[styles.item]}>
-                  <Button
-                    disabled={loading || Object.keys(errors).length > 0}
-                    onPress={async () => {
-                      handleSubmit()
-                    }}
-                    label={'Guardar'}
-                  />
-                </View>
+                {values.type === order_type.SALE ? (
+                  <>
+                    <ModalPaymentSale
+                      onSubmit={async () => {
+                        return submitForm()
+                      }}
+                    />
+                  </>
+                ) : (
+                  <View style={[styles.item]}>
+                    <Button
+                      disabled={loading || Object.keys(errors).length > 0}
+                      onPress={async () => {
+                        handleSubmit()
+                      }}
+                      label={'Guardar'}
+                    />
+                  </View>
+                )}
               </>
             )
           }}

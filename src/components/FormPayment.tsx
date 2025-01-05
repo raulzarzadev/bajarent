@@ -17,10 +17,12 @@ import { dateFormat } from '../libs/utils-date'
 
 const FormPayment = ({
   onSubmit,
-  values
+  values,
+  disabledSubmit
 }: {
   onSubmit: (values: Partial<PaymentType>) => Promise<any> | void
   values?: Partial<PaymentType>
+  disabledSubmit?: boolean
 }) => {
   const { store } = useStore()
   const { permissions } = useEmployee()
@@ -133,7 +135,10 @@ const FormPayment = ({
             <View style={styles.repairItemForm}>
               <Button
                 disabled={
-                  submitting || isSubmitting || !!Object.keys(errors).length
+                  submitting ||
+                  isSubmitting ||
+                  !!Object.keys(errors).length ||
+                  disabledSubmit
                 }
                 onPress={async () => {
                   handleSubmit()
