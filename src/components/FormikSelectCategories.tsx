@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { ItemSelected } from './FormSelectItem'
 import { CategoryType } from '../types/RentItem'
 import Button from './Button'
@@ -24,6 +24,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ModalSelectCategoryPriceE } from './ModalSelectCategoryPrice'
 import { ErrorsList } from './FormikErrorsList'
+import OrderType, { order_type } from '../types/OrderType'
 
 const FormikSelectCategories = ({
   name,
@@ -41,6 +42,9 @@ const FormikSelectCategories = ({
     items: employeeItems,
     permissions: { shouldChooseExactItem }
   } = useEmployee()
+
+  const { values } = useFormikContext<Partial<OrderType>>()
+  const orderType = values.type
   const [field, meta, helpers] = useField(name)
   const ALLOW_CHOOSE_EMPTY_CATEGORY = !shouldChooseExactItem
 
@@ -50,8 +54,17 @@ const FormikSelectCategories = ({
 
   const shouldSelectAnItem = !ALLOW_CHOOSE_EMPTY_CATEGORY
   useEffect(() => {
-    setAvailableCategories(categories)
-  }, [employeeItems])
+    //FIX THIS and in the sale order too.
+    const filteredCategories = categories.filter((cat) => {
+      const isRentOrder = cat.orderType.rent
+      const isRepairOrder = cat.orderType.repair
+      const isSaleOrder = cat.orderType.sale
+      if (orderType === order_type.RENT && !isRentOrder) return false
+      if (orderType === order_type.REPAIR && !isRepairOrder) return false
+      if (orderType === order_type.SALE && !isSaleOrder) return false
+    })
+    setAvailableCategories(filteredCategories)
+  }, [employeeItems, categories])
 
   const value = field.value || []
 

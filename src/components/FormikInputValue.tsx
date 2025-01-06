@@ -10,7 +10,11 @@ const FormikInputValue = ({
   return (
     <StyledTextInput
       value={field?.value}
-      onChangeText={helpers.setValue}
+      onChangeText={(text) =>
+        props.type === 'number'
+          ? helpers.setValue(Number(text))
+          : helpers.setValue(text)
+      }
       helperTextColor={meta.error ? 'error' : undefined}
       helperText={meta.error || helperText}
       {...props}

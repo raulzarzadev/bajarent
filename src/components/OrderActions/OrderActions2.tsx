@@ -29,6 +29,7 @@ import { useStore } from '../../contexts/storeContext'
 import InputTextStyled from '../InputTextStyled'
 import useMyNav from '../../hooks/useMyNav'
 import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
+import StyledModal from '../StyledModal'
 
 //* repaired
 function OrderActions() {
@@ -38,6 +39,7 @@ function OrderActions() {
     <View style={{ marginBottom: gSpace(4) }}>
       {orderType === order_type.REPAIR && <RepairOrderActions order={order} />}
       {orderType === order_type.RENT && <RentOrderActions order={order} />}
+      {orderType === order_type.SALE && <SaleOrderActions order={order} />}
     </View>
   )
 }
@@ -114,6 +116,36 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
   )
 }
 
+const SaleOrderActions = ({ order }: { order: OrderType }) => {
+  const { permissions } = useEmployee()
+  const { user } = useAuth()
+
+  const orderStatus = order?.status
+
+  const cancelDelivery =
+    permissions?.orders.canCancelPickedUp && orderStatus === 'DELIVERED'
+  const delivery =
+    (permissions?.orders.canDelivery || permissions.isAdmin) &&
+    orderStatus === 'AUTHORIZED'
+
+  return (
+    <>
+      <ScrollView style={[{ width: '100%', margin: 'auto' }]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            minWidth: '100%',
+            justifyContent: 'space-around'
+          }}
+        >
+          {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
+          {delivery && order.type === order_type.RENT && <ButtonDeliveryRent />}
+          {delivery && order.type === order_type.SALE && <ButtonDeliverySale />}
+        </View>
+      </ScrollView>
+    </>
+  )
+}
 const RentOrderActions = ({ order }: { order: OrderType }) => {
   const { permissions } = useEmployee()
   const { user } = useAuth()
@@ -153,7 +185,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
           {authorize && <ButtonAuthorize order={order} user={user} />}
           {cancel && <ButtonCancel order={order} user={user} />}
           {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
-          {delivery && <ButtonDelivery />}
+          {delivery && <ButtonDeliveryRent />}
           {pickUp && <ButtonPickUp />}
           {renew && <ButtonRenew order={order} user={user} />}
           {cancelPickUp && <ButtonCancelPickUp order={order} user={user} />}
@@ -234,7 +266,32 @@ const ButtonRenew = ({ order, user }) => {
   )
 }
 
-const ButtonDelivery = () => {
+const ButtonDeliverySale = () => {
+  const { order } = useOrderDetails()
+  const { user } = useAuth()
+  const modalDeliverySale = useModal({ title: 'Entregar compra' })
+  const handleDelivery = () => {
+    ServiceOrders.update(order.id, {
+      status: order_status.DELIVERED,
+      deliveredAt: new Date(),
+      deliveredBy: user?.id
+    })
+  }
+  return (
+    <View>
+      <Button
+        label="Entregar"
+        onPress={modalDeliverySale.toggleOpen}
+        icon="home"
+        color="success"
+      />
+      <StyledModal {...modalDeliverySale}>
+        <Button label="Entregar" onPress={handleDelivery}></Button>
+      </StyledModal>
+    </View>
+  )
+}
+const ButtonDeliveryRent = () => {
   const modalRentStart = useModal({ title: 'Comenzar renta' })
   return (
     <View>

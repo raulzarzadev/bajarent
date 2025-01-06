@@ -304,32 +304,19 @@ const FormOrderA = ({
                   setLoading={setLoading}
                 />
 
-                {/* <View>
-                  {Object.entries(errors).map(([key, value]) => (
-                    <Text key={key} style={[gStyles.p, { color: theme.error }]}>
-                      {value as string}
-                    </Text>
-                  ))}
-                </View>
-                {!!error && (
-                  <Text style={[gStyles.p, { color: theme.error }]}>
-                    {error}
-                  </Text>
-                )} */}
-
                 {values.type === order_type.SALE && (
                   <FormikSaleOrderItemsE name="items" />
                 )}
                 <FormikErrorsList />
 
                 {values.type === order_type.SALE ? (
-                  <>
-                    <ModalPaymentSale
-                      onSubmit={async () => {
-                        return submitForm()
-                      }}
-                    />
-                  </>
+                  <ModalPaymentSale
+                    onSubmit={async () => {
+                      const res = await submitForm()
+                      // @ts-ignore orderId can be used for others purposes
+                      return { orderId: res?.orderId || null }
+                    }}
+                  />
                 ) : (
                   <View style={[styles.item]}>
                     <Button

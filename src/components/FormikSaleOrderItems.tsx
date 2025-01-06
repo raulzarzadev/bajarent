@@ -8,6 +8,7 @@ import { SaleOrderItem } from '../types/OrderType'
 import Button from './Button'
 import CurrencyAmount from './CurrencyAmount'
 import { orderAmount } from '../libs/order-amount'
+import { gStyles } from '../styles'
 const FormikSaleOrderItems = ({ name }: { name: string }) => {
   const layoutRow = Dimensions.get('window').width > 500
 
@@ -23,6 +24,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
       total: 0
     }
   ]
+  console.log({ values })
   return (
     <View>
       <FieldArray
@@ -30,29 +32,31 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
         render={(arrayHelpers) => (
           <View>
             {values.items && values.items.length > 0 ? (
-              values.items.map((item, index) => (
+              values?.items?.map((item, index) => (
                 <View
                   key={index}
                   style={{
                     flexDirection: layoutRow ? 'row' : 'column',
                     marginVertical: 6,
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    justifyContent: 'space-around'
                   }}
                 >
                   <FormikInputSelect
+                    style={{ width: 120, marginVertical: 4 }}
                     name={`items.${index}.category`}
                     placeholder="Categoria"
                     options={categories
-                      .map((cat) => {
+                      ?.map((cat) => {
                         return { label: cat.name, value: cat.id }
                       })
-                      .sort((a, b) => a.label.localeCompare(b.label))}
+                      ?.sort((a, b) => a.label.localeCompare(b.label))}
                   />
                   <FormikInputValue
                     name={`items.${index}.serial`}
                     placeholder="Serie"
                     type="text"
-                    style={{ marginVertical: 4 }}
+                    style={{ width: 100, marginVertical: 4 }}
                   />
                   <FormikInputValue
                     name={`items.${index}.quantity`}
@@ -79,10 +83,10 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                 </View>
               ))
             ) : (
-              <Text>No hay items</Text>
+              <Text style={gStyles.tCenter}>No hay artículos</Text>
             )}
             <Button
-              label="Agregar item"
+              label="Agregar artículo"
               icon="add"
               size="small"
               variant="ghost"
@@ -93,15 +97,17 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
       />
 
       <View>
-        <Text>
+        <Text style={gStyles.tCenter}>
           Articulos:{' '}
           {values?.items?.reduce(
             (acc, item) => acc + parseInt(`${item.quantity}`),
             0
           ) || 0}
         </Text>
-        <Text>Total:</Text>
-        <CurrencyAmount amount={orderAmount(values)} />
+        <Text style={gStyles.tCenter}>
+          Total:{' '}
+          <CurrencyAmount amount={orderAmount(values)} style={gStyles.h2} />
+        </Text>
       </View>
     </View>
   )

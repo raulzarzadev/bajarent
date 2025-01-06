@@ -19,7 +19,7 @@ import { Order } from '../DATA'
 
 export type ModalPaymentSaleProps = {
   defaultAmount?: number
-  onSubmit: () => Promise<{ orderId: string } | null>
+  onSubmit: () => Promise<{ orderId: string }>
 }
 export const ModalPaymentSale = ({ onSubmit }: ModalPaymentSaleProps) => {
   const { values: orderFormValues, errors } =
@@ -58,24 +58,28 @@ export const ModalPaymentSale = ({ onSubmit }: ModalPaymentSaleProps) => {
   }) => {
     //* first save order to get orderId
     //* once saved get orderId and save payment
-    onSubmit()
+    return onSubmit()
       .then(async (res) => {
-        console.log('saved and delivered', res)
+        console.log({ variant, res })
+        if (!res.orderId) return console.error('no orderId')
         values.createdBy = user.id //* <-- is needed to update paid order
-        values.orderId = res.orderId //* <-- is needed to update paid order
+        values.orderId = res?.orderId || null //* <-- is needed to update paid order
         values.storeId = storeId
         await handleSavePayment({ values })
+
         if (variant === 'paidAndScheduled') {
-          ServiceOrders.update(res.orderId, {
+          await ServiceOrders.update(res.orderId, {
             status: order_status.AUTHORIZED,
             scheduledAt: orderFormValues?.scheduledAt || new Date()
           })
         }
         if (variant === 'paidAndDelivery') {
-          ServiceOrders.update(res.orderId, {
+          await ServiceOrders.update(res.orderId, {
             status: order_status.DELIVERED
           })
         }
+
+        return
       })
       .catch(console.error)
   }
@@ -102,7 +106,7 @@ export const ModalPaymentSale = ({ onSubmit }: ModalPaymentSaleProps) => {
           disabledSubmit={Object.keys(errors).length > 0}
           values={defaultPaymentValues}
           onSubmit={async (values) => {
-            return handleSubmit({ values })
+            return await handleSubmit({ values, variant: 'paidAndDelivery' })
           }}
         />
         <FormikErrorsList />
@@ -114,7 +118,7 @@ export const ModalPaymentSale = ({ onSubmit }: ModalPaymentSaleProps) => {
           onSubmit={async (values) => {
             // modal.toggleOpen()
             try {
-              return handleSubmit({ values, variant: 'paidAndScheduled' })
+              return await handleSubmit({ values, variant: 'paidAndScheduled' })
             } catch (error) {
               console.error({ error })
             }
