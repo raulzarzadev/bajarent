@@ -17,6 +17,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   }
 
   async orderPayment(payment: PaymentType) {
+    console.log({ payment })
     return this.create({
       ...payment,
       orderId: payment.orderId,
@@ -28,7 +29,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       if (payment.orderId) {
         ServiceOrders.update(payment.orderId, {
           paidAt: new Date(),
-          paidBy: payment.createdBy
+          paidBy: payment.createdBy || null
         }).catch(console.error)
         return res
       } else {

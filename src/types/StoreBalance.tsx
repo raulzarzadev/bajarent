@@ -25,11 +25,13 @@ export type StoreBalanceOrder = {
   payments: BalancePayment[]
   assignedSection: OrderType['assignedSection']
   time: TimePriceType
-  renewedAt?: Date
-  extendedAt?: Date
-  deliveredAt?: Date
-  canceledAt?: Date
-  repairingAt?: Date
+  renewedAt: Date | null
+  extendedAt: Date | null
+  deliveredAt: Date | null
+  canceledAt: Date | null
+  repairingAt: Date | null
+  paidAt: Date | null
+  createdAt: Date | null
 }
 
 export type BalancePayment = PaymentType

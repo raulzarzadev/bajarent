@@ -102,13 +102,30 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       ])
     }
 
-    if (type === 'sales-date') {
+    if (type === 'sales-delivered-at') {
       return ServiceOrders.findMany([
         where('storeId', '==', storeId),
         where('type', '==', order_type.SALE),
-        where('status', '==', order_status.DELIVERED),
+        // where('status', '==', order_status.DELIVERED),
         where('deliveredAt', '>=', startDate(fromDate)),
         where('deliveredAt', '<=', endDate(toDate))
+      ])
+    }
+    if (type === 'sales-paid-at') {
+      return ServiceOrders.findMany([
+        where('storeId', '==', storeId),
+        where('type', '==', order_type.SALE),
+        // where('status', '==', order_status.DELIVERED),
+        where('paidAt', '>=', startDate(fromDate)),
+        where('paidAt', '<=', endDate(toDate))
+      ])
+    }
+    if (type === 'sales-created-at') {
+      return ServiceOrders.findMany([
+        where('storeId', '==', storeId),
+        where('type', '==', order_type.SALE),
+        where('createdAt', '>=', startDate(fromDate)),
+        where('createdAt', '<=', endDate(toDate))
       ])
     }
   }
@@ -144,8 +161,20 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       fromDate,
       toDate
     })
-    const salesDatePromises = this.getOrders({
-      type: 'sales-date',
+    // const salesDeliveredPromises = this.getOrders({
+    //   type: 'sales-delivered-at',
+    //   storeId,
+    //   fromDate,
+    //   toDate
+    // })
+    const salesPaidPromises = this.getOrders({
+      type: 'sales-paid-at',
+      storeId,
+      fromDate,
+      toDate
+    })
+    const salesCreatedPromises = this.getOrders({
+      type: 'sales-created-at',
       storeId,
       fromDate,
       toDate
@@ -156,15 +185,19 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       rentsFinishedDate,
       repairStartedAt,
       repairsDeliveredAt,
-      salesDate,
-      canceledOrders
+      canceledOrders,
+      salesCreated,
+      salesPaid
+      //salesDate,
     ] = await Promise.all([
       activeRentsPromises,
       rentsFinishedDatePromises,
       repairStartedAtPromises,
       repairDeliveredAtPromises,
-      salesDatePromises,
-      canceledOrdersPromises
+      canceledOrdersPromises,
+      salesCreatedPromises,
+      salesPaidPromises
+      //  salesDeliveredPromises,
     ])
 
     //join orders
@@ -173,8 +206,10 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       rentsFinishedDate,
       repairStartedAt,
       repairsDeliveredAt,
-      salesDate,
-      canceledOrders
+      canceledOrders,
+      salesCreated,
+      salesPaid
+      //salesDate,
     ].flat()
     // remove duplicated orders
     const unique = allOrders.filter(
@@ -200,7 +235,6 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   }
 
   saveBalance = async (balance: Partial<StoreBalanceType>) => {
-    console.log({ balance })
     return this.create(balance)
   }
 
@@ -261,8 +295,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
 
       const formattedItems = [...availableItems, ...retiredItems].map(
         (item) => ({
-          itemId: item?.id,
-          itemEco: item?.number,
+          itemId: item?.id || null,
+          itemEco: item?.number || null,
           assignedSection: item?.assignedSection || null,
           categoryId: item?.category || null,
           retiredAt: item?.retiredAt || null
@@ -332,15 +366,17 @@ const formatAsBalanceOrder = ({
   payments: PaymentType[]
 }): StoreBalanceOrder => {
   const items =
-    order?.items?.map((item) => ({
-      itemId: item?.id,
-      itemEco: item?.number || null,
-      categoryName: item?.categoryName || null,
-      priceId: item?.priceSelected?.id || null,
-      orderId: order.id || null,
-      assignedSection: order.assignToSection || null,
-      orderFolio: order.folio || null
-    })) || null
+    order?.items?.map((item) => {
+      return {
+        itemId: item?.id || null,
+        itemEco: item?.number || null,
+        categoryName: item?.categoryName || null,
+        priceId: item?.priceSelected?.id || null,
+        orderId: order.id || null,
+        assignedSection: order.assignToSection || null,
+        orderFolio: order.folio || null
+      }
+    }) || null
   const time = order?.items?.[0]?.priceSelected?.time || null
 
   //get last extension not renew
@@ -374,7 +410,9 @@ const formatAsBalanceOrder = ({
     payments,
     clientName: order?.fullName,
     orderNote: order?.note || null,
-    repairingAt: order?.repairingAt || null
+    repairingAt: order?.repairingAt || null,
+    paidAt: order?.paidAt || null,
+    createdAt: order?.createdAt || null
   }
 }
 
@@ -393,7 +431,9 @@ type GetBalanceOrders = {
     | 'repair-started-at'
     | 'repair-delivered-at'
     //* <--- about sales
-    | 'sales-date'
+    | 'sales-delivered-at'
+    | 'sales-paid-at'
+    | 'sales-created-at'
     //* <-- general
     | 'canceled-date'
     | 'paid-at'

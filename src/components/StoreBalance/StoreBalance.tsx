@@ -159,9 +159,9 @@ export const BalanceView = ({ balance }: { balance: StoreBalanceType }) => {
           },
           {
             title: 'Ventas',
-            content: <SalesBalanceE />,
-            show: true,
-            disabled: true
+            content: <SalesBalanceE balance={balance} />,
+            show: true
+            // disabled: true
           }
         ]}
       />
