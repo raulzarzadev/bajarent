@@ -12,6 +12,7 @@ import { PriceType } from '../types/PriceType'
 import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -32,12 +33,12 @@ const StoreContextProvider = ({ children }) => {
   //#region hooks
   const { storeId } = useAuth()
   const [storeCtx, setStoreCtx] = useState<StoreContextType>()
-
+  const [store, setStore] = useState<StoreType>()
   const handleUpdateStore = async () => {
     getStoreData(storeId)
-      .then(({ store, categories, sections, staff, prices }) => {
+      .then(({ categories, sections, staff, prices }) => {
         setStoreCtx({
-          store,
+          // store,
           categories,
           sections,
           staff,
@@ -46,6 +47,13 @@ const StoreContextProvider = ({ children }) => {
       })
       .catch((e) => console.error({ e }))
   }
+
+  useEffect(() => {
+    ServiceStores.listen(storeId, (store) => {
+      store.staff = storeCtx?.staff
+      setStore(store)
+    })
+  }, [storeId, storeCtx?.staff])
 
   useEffect(() => {
     if (storeId) {
@@ -71,6 +79,7 @@ const StoreContextProvider = ({ children }) => {
     <StoreContext.Provider
       value={{
         ...storeCtx,
+        store,
         storeId,
         currentBalance,
         handleUpdateStore
@@ -106,13 +115,19 @@ const sortSections = (a, b) => {
 }
 
 const getStoreData = async (storeId: string) => {
-  const storePromise = ServiceStores.get(storeId)
+  //const storePromise = ServiceStores.get(storeId)
   const categoriesPromise = ServiceCategories.getByStore(storeId)
   const sectionsPromise = ServiceSections.getByStore(storeId)
   const staffPromise = ServiceStaff.getByStore(storeId)
   const pricesPromise = ServicePrices.getByStore(storeId)
-  const [store, categories, sections, staff, prices] = await Promise.all([
-    storePromise,
+  const [
+    //store,
+    categories,
+    sections,
+    staff,
+    prices
+  ] = await Promise.all([
+    // storePromise,
     categoriesPromise,
     sectionsPromise,
     staffPromise,
@@ -141,7 +156,7 @@ const getStoreData = async (storeId: string) => {
   ]
 
   return {
-    store: { ...store, staff: staffWithSections },
+    //store: { ...store, staff: staffWithSections },
     sections: sectionsWithDefaultStoreSections.sort(sortSections),
     categories: categoriesWithPrices,
     staff: staffWithSections,
