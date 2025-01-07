@@ -4,11 +4,12 @@ import { FieldArray, useFormikContext } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import FormikInputSelect from './FormikInputSelect'
 import { useStore } from '../contexts/storeContext'
-import { SaleOrderItem } from '../types/OrderType'
+import { order_type, SaleOrderItem } from '../types/OrderType'
 import Button from './Button'
 import CurrencyAmount from './CurrencyAmount'
 import { orderAmount } from '../libs/order-amount'
 import { gStyles } from '../styles'
+import { useEffect, useState } from 'react'
 const FormikSaleOrderItems = ({ name }: { name: string }) => {
   const layoutRow = Dimensions.get('window').width > 500
 
@@ -24,7 +25,18 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
       total: 0
     }
   ]
-  console.log({ values })
+
+  const [saleCategories, setSaleCategories] = useState([])
+  useEffect(() => {
+    setSaleCategories(
+      categories
+        .filter((cat) => cat?.orderType?.sale)
+        ?.map((cat) => {
+          return { label: cat.name, value: cat.id }
+        })
+        ?.sort((a, b) => a.label.localeCompare(b.label))
+    )
+  }, [categories])
   return (
     <View>
       <FieldArray
@@ -46,11 +58,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                     style={{ width: 120, marginVertical: 4 }}
                     name={`items.${index}.category`}
                     placeholder="Categoria"
-                    options={categories
-                      ?.map((cat) => {
-                        return { label: cat.name, value: cat.id }
-                      })
-                      ?.sort((a, b) => a.label.localeCompare(b.label))}
+                    options={saleCategories}
                   />
                   <FormikInputValue
                     name={`items.${index}.serial`}
