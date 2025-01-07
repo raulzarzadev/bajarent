@@ -1,7 +1,9 @@
 import { Text, View } from 'react-native'
 import { useState } from 'react'
 import { Formik } from 'formik'
-import FormikSelectCategories from './FormikSelectCategories'
+import FormikSelectCategories, {
+  FormikSelectCategoriesE
+} from './FormikSelectCategories'
 import Button from './Button'
 import OrderType from '../types/OrderType'
 import { expireDate2, translateTime } from '../libs/expireDate'
@@ -146,7 +148,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
           const currentPriceSelected = values?.items?.[0]?.priceSelected
           return (
             <View>
-              <FormikSelectCategories
+              <FormikSelectCategoriesE
                 name="items"
                 selectPrice
                 label="Articulos"

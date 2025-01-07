@@ -25,18 +25,14 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ModalSelectCategoryPriceE } from './ModalSelectCategoryPrice'
 import { ErrorsList } from './FormikErrorsList'
 import OrderType, { order_type } from '../types/OrderType'
+import ErrorBoundary from './ErrorBoundary'
 
 const FormikSelectCategories = ({
   name,
   selectPrice,
   startAt //? TODO: <--- Should be add?
 }: //choseEmptyCategory = true //*<--- this will alow you choose category with out specific item
-{
-  name: string
-  label?: string
-  selectPrice?: boolean
-  startAt?: Date
-}) => {
+FormikSelectCategoriesProps) => {
   const { categories } = useStore()
   const {
     items: employeeItems,
@@ -56,9 +52,9 @@ const FormikSelectCategories = ({
   useEffect(() => {
     //FIX THIS and in the sale order too.
     const filteredCategories = categories.filter((cat) => {
-      const isRentOrder = cat.orderType.rent
-      const isRepairOrder = cat.orderType.repair
-      const isSaleOrder = cat.orderType.sale
+      const isRentOrder = !!cat?.orderType?.rent
+      const isRepairOrder = !!cat?.orderType?.repair
+      const isSaleOrder = !!cat?.orderType?.sale
       if (orderType === order_type.RENT && !isRentOrder) return false
       if (orderType === order_type.REPAIR && !isRepairOrder) return false
       if (orderType === order_type.SALE && !isSaleOrder) return false
@@ -401,5 +397,17 @@ export const ItemRow = ({
     </View>
   )
 }
+
+export type FormikSelectCategoriesProps = {
+  name: string
+  label?: string
+  selectPrice?: boolean
+  startAt?: Date
+}
+export const FormikSelectCategoriesE = (props: FormikSelectCategoriesProps) => (
+  <ErrorBoundary componentName="FormikSelectCategories">
+    <FormikSelectCategories {...props} />
+  </ErrorBoundary>
+)
 
 export default FormikSelectCategories

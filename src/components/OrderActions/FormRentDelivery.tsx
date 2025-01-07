@@ -6,7 +6,9 @@ import InputLocationFormik from '../InputLocationFormik'
 import OrderType from '../../types/OrderType'
 import Button from '../Button'
 import FormikInputImage from '../FormikInputImage'
-import FormikSelectCategories from '../FormikSelectCategories'
+import FormikSelectCategories, {
+  FormikSelectCategoriesE
+} from '../FormikSelectCategories'
 import { getOrderFields } from '../FormOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
@@ -74,7 +76,7 @@ const FormRentDelivery = ({
             <>
               {ORDER_FIELDS.includes('selectItems') && (
                 <View style={{ marginVertical: 8 }}>
-                  <FormikSelectCategories name="items" selectPrice />
+                  <FormikSelectCategoriesE name="items" selectPrice />
                 </View>
               )}
               {ORDER_FIELDS.includes('note') && (

@@ -17,7 +17,9 @@ import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
 import InputTextStyled from './InputTextStyled'
 import theme from '../theme'
-import FormikSelectCategories from './FormikSelectCategories'
+import FormikSelectCategories, {
+  FormikSelectCategoriesE
+} from './FormikSelectCategories'
 import Loading from './Loading'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
@@ -518,7 +520,7 @@ const FormFieldsA = ({
       />
     ),
     selectItems: (
-      <FormikSelectCategories
+      <FormikSelectCategoriesE
         name="items"
         label="Selecciona un artículo"
         selectPrice
