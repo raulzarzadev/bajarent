@@ -63,13 +63,11 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     //* CURRENT BALANCE
-    if (storeCtx?.store)
-      ServiceBalances.listenLastInDate(
-        storeCtx?.store?.id,
-        new Date(),
-        (balance) => setCurrentBalance(balance)
+    if (store?.id)
+      ServiceBalances.listenLastInDate(store?.id, new Date(), (balance) =>
+        setCurrentBalance(balance)
       )
-  }, [storeCtx?.store])
+  }, [store?.id])
 
   sc++
   if (__DEV__) console.log({ sc })
