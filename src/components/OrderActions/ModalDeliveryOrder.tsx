@@ -7,7 +7,9 @@ import OrderType from '../../types/OrderType'
 import InputLocationFormik from '../InputLocationFormik'
 import FormikInputValue from '../FormikInputValue'
 import FormikInputImage from '../FormikInputImage'
-import FormikSelectCategories from '../FormikSelectCategories'
+import FormikSelectCategories, {
+  FormikSelectCategoriesE
+} from '../FormikSelectCategories'
 import { gStyles } from '../../styles'
 import Button from '../Button'
 import { onComment, onDelivery } from '../../libs/order-actions'
@@ -127,7 +129,7 @@ const ModalDeliveryOrder = ({
                 </View>
 
                 <View style={{ marginVertical: 8 }}>
-                  <FormikSelectCategories name="items" selectPrice />
+                  <FormikSelectCategoriesE name="items" selectPrice />
                 </View>
 
                 {Object.entries(errors).map(([field, message]) => (
