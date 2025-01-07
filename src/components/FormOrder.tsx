@@ -32,6 +32,8 @@ import { InputDateE } from './InputDate'
 import { ModalPayment } from './ModalPayment'
 import { orderAmount } from '../libs/order-amount'
 import { ModalPaymentSale } from './ModalPaymentSale'
+import ButtonConfirm from './ButtonConfirm'
+import ModalChangeOrderFolio from './ModalChangeOrderFolio'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',

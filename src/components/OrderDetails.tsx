@@ -39,6 +39,9 @@ import useMyNav from '../hooks/useMyNav'
 import OrderBigStatus from './OrderBigStatus'
 import { useStore } from '../contexts/storeContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
+import ModalChangeOrderFolio from './ModalChangeOrderFolio'
+import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -492,8 +495,9 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
 }
 
 export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
-  const { navigate } = useNavigation()
-  const { consolidatedOrders } = useOrdersCtx()
+  const {
+    permissions: { isAdmin }
+  } = useEmployee()
   return (
     <View>
       <SpanMetadata
@@ -512,7 +516,7 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
         }}
       >
         <View>
-          {order?.renewedTo && (
+          {/* {order?.renewedTo && (
             <Text>
               Renovada con:{' '}
               <Pressable
@@ -527,8 +531,8 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
                 </Text>
               </Pressable>
             </Text>
-          )}
-          {order?.renewedFrom && (
+          )} */}
+          {/* {order?.renewedFrom && (
             <Text>
               Renovada de:{' '}
               <Pressable
@@ -544,10 +548,21 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
                 </Text>
               </Pressable>
             </Text>
-          )}
+          )} */}
         </View>
-        <View>
-          <Text style={{ textAlign: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {isAdmin ? <ModalChangeOrderFolio /> : null}
+          <Text
+            style={{
+              textAlign: 'center'
+            }}
+          >
             <P bold size="lg">
               Folio:{' '}
             </P>
