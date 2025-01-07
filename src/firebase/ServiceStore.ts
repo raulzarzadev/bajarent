@@ -33,15 +33,6 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     )
   }
 
-  async incrementItemNumber({ storeId }) {
-    const store = await this.get(storeId)
-    if (!store) {
-      return
-    }
-    const newNumber = nextItemNumber({ currentNumber: store.currentItemNumber })
-    return newNumber
-  }
-
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

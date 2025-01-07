@@ -380,6 +380,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('status', '==', order_status.DELIVERED)
       //* get orders that are expired today don't meter the hours
     ]
+    const filterSalesPending = [
+      where('type', '==', order_type.SALE),
+      where('status', 'in', [order_status.AUTHORIZED])
+    ]
 
     //* SET FILTERS TO EXPIRE AT
     if (getExpireTomorrow) {
@@ -395,6 +399,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         filterRentPending.push(where('assignToSection', 'in', sections))
         filterRepairs.push(where('assignToSection', 'in', sections))
         filterExpiredRents.push(where('assignToSection', 'in', sections))
+        filterSalesPending.push(where('assignToSection', 'in', sections))
       }
     }
     const rentPending = await this.findMany(
@@ -418,7 +423,20 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       console.log('Error getting reported orders', e)
       return []
     })
-    const unsolvedOrders = [...rentPending, ...repairs, ...expiredRents]
+
+    const sales = await this.findMany(
+      [...filterSalesPending, where('storeId', '==', storeId)],
+      ops
+    ).catch((e) => {
+      console.log('Error getting reported orders', e)
+      return []
+    })
+    const unsolvedOrders = [
+      ...rentPending,
+      ...repairs,
+      ...expiredRents,
+      ...sales
+    ]
 
     //* *** 1 *** get reports and set the ids, to get reports from the database
     const ordersWithReportsAndImportantUnsolved = Array.from(

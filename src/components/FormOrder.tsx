@@ -2,14 +2,9 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import InputValueFormik from './FormikInputValue'
-import OrderType, {
-  TypeOrder,
-  order_type,
-  repair_order_types
-} from '../types/OrderType'
+import OrderType, { order_type, repair_order_types } from '../types/OrderType'
 import Button from './Button'
 import FormikInputPhone from './FormikInputPhone'
-import InputDate, { InputDateE } from './InputDate'
 import asDate from '../libs/utils-date'
 import InputLocationFormik from './InputLocationFormik'
 import InputRadiosFormik from './FormikInputRadios'
@@ -22,16 +17,19 @@ import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
 import InputTextStyled from './InputTextStyled'
 import theme from '../theme'
-import FormikAssignOrder from './FormikAssignOrder'
 import FormikSelectCategories from './FormikSelectCategories'
 import Loading from './Loading'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
 import FormikErrorsList from './FormikErrorsList'
 import FormikAssignSection from './FormikAssingSection'
-import InputSignature from './InputSignature'
 import FormikInputSignature from './FormikInputSignature'
 import FormikInputSelect from './FormikInputSelect'
+import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
+import { InputDateE } from './InputDate'
+import { ModalPayment } from './ModalPayment'
+import { orderAmount } from '../libs/order-amount'
+import { ModalPaymentSale } from './ModalPaymentSale'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -206,15 +204,16 @@ const FormOrderA = ({
 
             delete values.sheetRow //*<--- remove sheetRow from values
 
-            await onSubmit(values)
+            return await onSubmit(values)
               .then((res) => {
                 resetForm()
+                return res
               })
               .catch((e) => {
                 setError(
                   'Error al guardar la orden, intente de nuevo más tarde'
                 )
-                console.error
+                return null
               })
               .finally(() => {
                 setLoading(false)
@@ -261,7 +260,14 @@ const FormOrderA = ({
             return errors
           }}
         >
-          {({ handleSubmit, setValues, values, errors, setErrors }) => {
+          {({
+            handleSubmit,
+            setValues,
+            values,
+            errors,
+            setErrors,
+            submitForm
+          }) => {
             useEffect(() => {
               setErrors({})
               //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
@@ -298,29 +304,30 @@ const FormOrderA = ({
                   setLoading={setLoading}
                 />
 
-                {/* <View>
-                  {Object.entries(errors).map(([key, value]) => (
-                    <Text key={key} style={[gStyles.p, { color: theme.error }]}>
-                      {value as string}
-                    </Text>
-                  ))}
-                </View>
-                {!!error && (
-                  <Text style={[gStyles.p, { color: theme.error }]}>
-                    {error}
-                  </Text>
-                )} */}
+                {values.type === order_type.SALE && (
+                  <FormikSaleOrderItemsE name="items" />
+                )}
                 <FormikErrorsList />
 
-                <View style={[styles.item]}>
-                  <Button
-                    disabled={loading || Object.keys(errors).length > 0}
-                    onPress={async () => {
-                      handleSubmit()
+                {values.type === order_type.SALE ? (
+                  <ModalPaymentSale
+                    onSubmit={async () => {
+                      const res = await submitForm()
+                      // @ts-ignore orderId can be used for others purposes
+                      return { orderId: res?.orderId || null }
                     }}
-                    label={'Guardar'}
                   />
-                </View>
+                ) : (
+                  <View style={[styles.item]}>
+                    <Button
+                      disabled={loading || Object.keys(errors).length > 0}
+                      onPress={async () => {
+                        handleSubmit()
+                      }}
+                      label={'Guardar'}
+                    />
+                  </View>
+                )}
               </>
             )
           }}

@@ -1,5 +1,3 @@
-import { StyleSheet } from 'react-native'
-import React from 'react'
 import StyledTextInput, { InputTextProps } from './InputTextStyled'
 import { useField } from 'formik'
 
@@ -12,7 +10,11 @@ const FormikInputValue = ({
   return (
     <StyledTextInput
       value={field?.value}
-      onChangeText={helpers.setValue}
+      onChangeText={(text) =>
+        props.type === 'number'
+          ? helpers.setValue(Number(text))
+          : helpers.setValue(text)
+      }
       helperTextColor={meta.error ? 'error' : undefined}
       helperText={meta.error || helperText}
       {...props}
@@ -21,5 +23,3 @@ const FormikInputValue = ({
 }
 
 export default FormikInputValue
-
-const styles = StyleSheet.create({})

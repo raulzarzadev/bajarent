@@ -7,6 +7,7 @@ import { gStyles } from '../../styles'
 import theme, { colors } from '../../theme'
 import { useStore } from '../../contexts/storeContext'
 import { translateTime } from '../../libs/expireDate'
+import { order_type } from '../../types/OrderType'
 const BalanceOrderRow = (props: BalanceOrderRowProps) => {
   const order = props.order
   const { categories } = useStore()
@@ -24,7 +25,8 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
   //TODO: some times this will not match becaouse payemnts will be more if the balance is for more time
   const paymentAndPriceMatches = matchedPrice?.amount === paymentAmount
 
-  console.log({ order })
+  const isSale = order?.orderType === order_type.SALE
+
   return (
     <View>
       <Text>{order?.clientName}</Text>
@@ -39,7 +41,6 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
         {order?.orderNote && (
           <>
             <Text style={[gStyles.helper]}>
-              {' '}
               <Text
                 style={{
                   backgroundColor: colors.purple,
@@ -64,9 +65,10 @@ const BalanceOrderRow = (props: BalanceOrderRowProps) => {
               style={{
                 fontWeight: 'bold',
                 ...gStyles.helper,
-                backgroundColor: paymentAndPriceMatches
-                  ? theme.success
-                  : theme.error,
+                backgroundColor:
+                  paymentAndPriceMatches || isSale
+                    ? theme.success
+                    : theme.error,
                 borderRadius: 9999,
                 paddingVertical: 0,
                 paddingHorizontal: 3,

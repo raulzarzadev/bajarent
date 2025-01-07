@@ -71,7 +71,7 @@ const FormCategoryA = ({
               />
             </View>
           </View>
-          <View style={styles.input}>
+          {/* <View style={styles.input}>
             <Text>Tipo de articulo </Text>
             <FormikInputRadios
               name="type"
@@ -81,7 +81,7 @@ const FormCategoryA = ({
                 { label: 'Venta', value: order_type.SALE }
               ]}
             />
-          </View>
+          </View> */}
           <View style={styles.input}>
             <FormikInputImage name="img" label="Imagen " />
           </View>

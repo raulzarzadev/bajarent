@@ -10,12 +10,14 @@ import PaymentType from '../types/PaymentType'
 import { subDays } from 'date-fns'
 import { RetirementType } from '../components/FormRetirement'
 import { GetItemsOps } from './firebase.CRUD'
+import { ServiceOrders } from './ServiceOrders'
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   constructor() {
     super('payments')
   }
 
   async orderPayment(payment: PaymentType) {
+    console.log({ payment })
     return this.create({
       ...payment,
       orderId: payment.orderId,
@@ -23,6 +25,17 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
       method: payment.method,
       reference: payment.reference,
       amount: parseFloat(`${payment.amount || 0}`)
+    }).then(async (res) => {
+      if (payment.orderId) {
+        ServiceOrders.update(payment.orderId, {
+          paidAt: new Date(),
+          paidBy: payment.createdBy || null
+        }).catch(console.error)
+        return res
+      } else {
+        console.error('orderId missing')
+        return res
+      }
     })
   }
 
