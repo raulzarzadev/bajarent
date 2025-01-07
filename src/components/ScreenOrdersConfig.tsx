@@ -4,12 +4,15 @@ import { gStyles } from '../styles'
 import { ServiceStores } from '../firebase/ServiceStore'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
+import { useNavigation } from '@react-navigation/native'
 
 const ScreenOrdersConfig = () => {
+  const navigation = useNavigation()
   const handleSubmit = async (values) => {
     try {
       const res = await ServiceStores.update(store.id, values)
       console.log({ res })
+      navigation.goBack()
       return res
     } catch (e) {
       console.error({ e })
