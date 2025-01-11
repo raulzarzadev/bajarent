@@ -7,7 +7,7 @@ import {
 } from '../../types/StoreBalance'
 import { isWithinInterval } from 'date-fns'
 import asDate, { dateFormat } from '../../libs/utils-date'
-import { order_status } from '../../types/OrderType'
+import { order_status, order_type } from '../../types/OrderType'
 import { BalanceAmountsE } from '../BalanceAmounts'
 import { ExpandibleListE } from '../ExpandibleList'
 import { BalanceOrderRowE } from './BalanceOrderRow'
@@ -63,20 +63,17 @@ const SectionBalanceRents = ({
       sectionId === 'all' ? true : order?.assignedSection === sectionId
     )
 
-  const orderPayment = orders?.map((order) => order?.payments).flat()
-  const otherPayments = balance.payments.filter((payment) =>
-    sectionId === 'all' ? true : payment.sectionId === sectionId
-  )
+  const rentsPayments = balance?.orders
+    .filter((o) => o.orderType === order_type.RENT)
+    .map((o) => o.payments)
+    .flat()
   //* remove duplicates payments
-  const payments = [...orderPayment, ...otherPayments].reduce(
-    (acc, payment) => {
-      if (!acc.find((p) => p.id === payment.id)) {
-        acc.push(payment)
-      }
-      return acc
-    },
-    []
-  )
+  const payments = rentsPayments.reduce((acc, payment) => {
+    if (!acc.find((p) => p.id === payment.id)) {
+      acc.push(payment)
+    }
+    return acc
+  }, [])
 
   //* ITEMS
   //* AVALIABLE ITEMS

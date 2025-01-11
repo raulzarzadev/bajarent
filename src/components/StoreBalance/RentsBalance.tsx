@@ -12,7 +12,6 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
   const rents = balance?.orders?.filter(
     (order) => order?.orderType === order_type.RENT
   )
-  //console.log({ rents, actives, finished, renewed, delivered })
   //* group by section
 
   const groupedBySections = rents?.reduce((acc, order) => {
