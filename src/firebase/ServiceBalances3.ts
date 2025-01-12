@@ -111,21 +111,28 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         where('deliveredAt', '<=', endDate(toDate))
       ])
     }
-    if (type === 'sales-paid-at') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.SALE),
-        // where('status', '==', order_status.DELIVERED),
-        where('paidAt', '>=', startDate(fromDate)),
-        where('paidAt', '<=', endDate(toDate))
-      ])
-    }
+    // if (type === 'sales-paid-at') {
+    //   return ServiceOrders.findMany([
+    //     where('storeId', '==', storeId),
+    //     where('type', '==', order_type.SALE),
+    //     // where('status', '==', order_status.DELIVERED),
+    //     where('paidAt', '>=', startDate(fromDate)),
+    //     where('paidAt', '<=', endDate(toDate))
+    //   ])
+    // }
     if (type === 'sales-created-at') {
       return ServiceOrders.findMany([
         where('storeId', '==', storeId),
         where('type', '==', order_type.SALE),
         where('createdAt', '>=', startDate(fromDate)),
         where('createdAt', '<=', endDate(toDate))
+      ])
+    }
+    if (type === 'paid-at') {
+      return ServiceOrders.findMany([
+        where('storeId', '==', storeId),
+        where('paidAt', '>=', startDate(fromDate)),
+        where('paidAt', '<=', endDate(toDate))
       ])
     }
   }
@@ -167,8 +174,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
     //   fromDate,
     //   toDate
     // })
-    const salesPaidPromises = this.getOrders({
-      type: 'sales-paid-at',
+    const paidPromises = this.getOrders({
+      type: 'paid-at',
       storeId,
       fromDate,
       toDate
@@ -187,7 +194,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       repairsDeliveredAt,
       canceledOrders,
       salesCreated,
-      salesPaid
+      paidOrders
       //salesDate,
     ] = await Promise.all([
       activeRentsPromises,
@@ -196,7 +203,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       repairDeliveredAtPromises,
       canceledOrdersPromises,
       salesCreatedPromises,
-      salesPaidPromises
+      paidPromises
       //  salesDeliveredPromises,
     ])
 
@@ -208,7 +215,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       repairsDeliveredAt,
       canceledOrders,
       salesCreated,
-      salesPaid
+      paidOrders
       //salesDate,
     ].flat()
     // remove duplicated orders
@@ -430,6 +437,7 @@ type GetBalanceOrders = {
     //*<-- about repairs
     | 'repair-started-at'
     | 'repair-delivered-at'
+
     //* <--- about sales
     | 'sales-delivered-at'
     | 'sales-paid-at'
