@@ -143,30 +143,45 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       storeId,
       fromDate,
       toDate
+    }).catch((e) => {
+      console.log(e)
+      return []
     })
     const rentsFinishedDatePromises = this.getOrders({
       type: 'rents-finished-date',
       storeId,
       fromDate,
       toDate
+    }).catch((e) => {
+      console.log(e)
+      return []
     })
     const canceledOrdersPromises = this.getOrders({
       type: 'canceled-date',
       storeId,
       fromDate,
       toDate
+    }).catch((e) => {
+      console.log(e)
+      return []
     })
     const repairStartedAtPromises = this.getOrders({
       type: 'repair-started-at',
       storeId,
       fromDate,
       toDate
+    }).catch((e) => {
+      console.log(e)
+      return []
     })
     const repairDeliveredAtPromises = this.getOrders({
       type: 'repair-delivered-at',
       storeId,
       fromDate,
       toDate
+    }).catch((e) => {
+      console.log(e)
+      return []
     })
     // const salesDeliveredPromises = this.getOrders({
     //   type: 'sales-delivered-at',
@@ -174,17 +189,20 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
     //   fromDate,
     //   toDate
     // })
-    const paidPromises = this.getOrders({
-      type: 'paid-at',
-      storeId,
-      fromDate,
-      toDate
-    })
+    // const paidPromises = this.getOrders({
+    //   type: 'paid-at',
+    //   storeId,
+    //   fromDate,
+    //   toDate
+    // })
     const salesCreatedPromises = this.getOrders({
       type: 'sales-created-at',
       storeId,
       fromDate,
       toDate
+    }).catch((e) => {
+      console.log(e)
+      return []
     })
 
     const [
@@ -193,8 +211,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       repairStartedAt,
       repairsDeliveredAt,
       canceledOrders,
-      salesCreated,
-      paidOrders
+      salesCreated
+      //paidOrders
       //salesDate,
     ] = await Promise.all([
       activeRentsPromises,
@@ -202,8 +220,8 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       repairStartedAtPromises,
       repairDeliveredAtPromises,
       canceledOrdersPromises,
-      salesCreatedPromises,
-      paidPromises
+      salesCreatedPromises
+      // paidPromises
       //  salesDeliveredPromises,
     ])
 
@@ -214,15 +232,32 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       repairStartedAt,
       repairsDeliveredAt,
       canceledOrders,
-      salesCreated,
-      paidOrders
+      salesCreated
+      // paidOrders
       //salesDate,
     ].flat()
     // remove duplicated orders
     const unique = allOrders.filter(
       (order, index, self) => index === self.findIndex((t) => t.id === order.id)
     )
-    return unique
+
+    //* get orders from payments avoid all in unique
+    //* ES NECESARIO TRAER LAS ORDENES QUE ESTEN EN PAYMENTS Y NO EN EXISTAN EN UNIQUE
+
+    const ordersFromPayments = payments
+      .filter(
+        (payment) => !unique.find((order) => order.id === payment.orderId)
+      )
+      .map((payment) => payment.orderId)
+      .filter((id) => !!id)
+
+    const paidOrders = await ServiceOrders.getList(ordersFromPayments).catch(
+      (e) => {
+        console.log(e)
+        return []
+      }
+    )
+    return [...unique, ...paidOrders]
   }
 
   getPaymentsDate = async ({
@@ -238,7 +273,10 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       where('storeId', '==', storeId),
       where('createdAt', '>=', fromDate),
       where('createdAt', '<=', toDate)
-    ])
+    ]).catch((e) => {
+      console.log(e)
+      return []
+    })
   }
 
   saveBalance = async (balance: Partial<StoreBalanceType>) => {
@@ -274,6 +312,9 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         storeId,
         fromDate: FROM_DATE,
         toDate: TO_DATE
+      }).catch((e) => {
+        console.log(e)
+        return []
       })
       progress?.(10)
       //* Get orders
@@ -283,12 +324,18 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
         fromDate: FROM_DATE,
         toDate: TO_DATE,
         payments
+      }).catch((e) => {
+        console.log(e)
+        return []
       })
       progress?.(40)
 
       //* Get items
       const availableItems: ItemType[] = await ServiceStoreItems.getAvailable({
         storeId
+      }).catch((e) => {
+        console.log(e)
+        return []
       })
 
       const retiredItems: ItemType[] =
