@@ -64,9 +64,7 @@ const SectionBalanceRents = ({
     )
 
   const orderPayment = orders?.map((order) => order?.payments).flat()
-  // const otherPayments = balance.payments.filter((payment) =>
-  //   sectionId === 'all' ? true : payment.sectionId === sectionId
-  // )
+
   //* remove duplicates payments
   const payments = orderPayment.reduce((acc, payment) => {
     if (!acc.find((p) => p.id === payment.id)) {
@@ -74,6 +72,10 @@ const SectionBalanceRents = ({
     }
     return acc
   }, [])
+
+  const sectionPayments = balance.payments.filter(
+    (p) => p.type && (sectionId === 'all' || p.sectionId === sectionId)
+  )
 
   //* ITEMS
   //* AVALIABLE ITEMS
@@ -100,23 +102,10 @@ const SectionBalanceRents = ({
 
   //* ORDER ITEMS
 
-  const rentedItems = actives
-    .map((order) =>
-      order?.items?.map((item) => ({
-        ...(item || {}),
-        orderFolio: order?.orderFolio,
-        orderId: order?.orderId
-      }))
-    )
-    .filter(Boolean)
-    .flat()
-    .map(formatItemsWithSectionAndCategoryName)
-    .sort(sortItemsByNumber)
-
   return (
     <View>
       <Text style={gStyles.h2}>{title}</Text>
-      <BalanceAmountsE payments={payments} />
+      <BalanceAmountsE payments={[...payments, ...sectionPayments]} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ExpandibleBalanceItemsAvailable
           items={availableItems}

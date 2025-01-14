@@ -18,6 +18,10 @@ const GeneralBalance = (props: GeneralBalanceProps) => {
     .filter((o) => o.orderType === order_type.SALE)
     .map((o) => o.payments)
     .flat()
+  const paymentsWithOutOrders = balance.payments.filter(
+    (p) => p.orderId === null
+  )
+
   return (
     <View
       style={{
@@ -29,15 +33,17 @@ const GeneralBalance = (props: GeneralBalanceProps) => {
     >
       <View>
         <Text style={[gStyles.h3]}>Rentas</Text>
-        <BalanceAmountsE payments={rentsPayments} />
+        <BalanceAmountsE
+          payments={[...rentsPayments, ...paymentsWithOutOrders]}
+        />
       </View>
       <View>
         <Text style={[gStyles.h3]}>Reparaciones</Text>
-        <BalanceAmountsE payments={repairPayments} />
+        <BalanceAmountsE payments={[...repairPayments]} />
       </View>
       <View>
         <Text style={[gStyles.h3]}>Ventas</Text>
-        <BalanceAmountsE payments={salePayments} />
+        <BalanceAmountsE payments={[...salePayments]} />
       </View>
     </View>
   )
