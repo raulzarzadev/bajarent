@@ -345,17 +345,34 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
           fromDate: FROM_DATE,
           toDate: TO_DATE
         })
+
+      const createdItems = await ServiceStoreItems.getFieldBetweenDates({
+        storeId,
+        field: 'createdAt',
+        fromDate: FROM_DATE,
+        toDate: TO_DATE
+      })
       progress?.(60)
 
-      const formattedItems = [...availableItems, ...retiredItems].map(
-        (item) => ({
+      const formattedItems = [
+        ...availableItems,
+        ...retiredItems,
+        ...createdItems
+      ]
+        .map((item) => ({
           itemId: item?.id || null,
           itemEco: item?.number || null,
           assignedSection: item?.assignedSection || null,
           categoryId: item?.category || null,
-          retiredAt: item?.retiredAt || null
-        })
-      )
+          retiredAt: item?.retiredAt || null,
+          createdAt: item?.createdAt || null,
+          status: item?.status || null
+        }))
+        //*remove duplicated items
+        .filter(
+          (item, index, self) =>
+            index === self.findIndex((t) => t.itemId === item.itemId)
+        )
 
       balance.items = formattedItems
 

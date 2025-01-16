@@ -58,6 +58,7 @@ export type BalanceItems = {
   orderFolio?: number
   categoryId?: string
   retiredAt?: Date
+  createdAt?: Date
 
   //status: ItemType['status']
 }

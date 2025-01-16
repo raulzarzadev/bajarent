@@ -1,5 +1,5 @@
 import BaseType from './BaseType'
-import { RentItem } from './RentItem'
+import { CategoryType, RentItem } from './RentItem'
 import StoreType from './StoreType'
 import { CommentType } from './CommentType'
 import PaymentType from './PaymentType'
@@ -9,6 +9,7 @@ import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
+import ItemType from './ItemType'
 export type ContactType = {
   name: string
   phone: string
@@ -338,4 +339,6 @@ export type SaleOrderItem = {
   name: string
   price: number
   quantity: number
+  category: CategoryType['id']
+  serial: string
 }

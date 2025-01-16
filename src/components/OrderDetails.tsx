@@ -1,6 +1,10 @@
-import { Text, View, Linking, Pressable } from 'react-native'
+import { Text, View, Linking, Pressable, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  order_type,
+  SaleOrderItem
+} from '../types/OrderType'
 import P from './P'
 import theme, { colors } from '../theme'
 import asDate, { dateFormat } from '../libs/utils-date'
@@ -40,8 +44,8 @@ import OrderBigStatus from './OrderBigStatus'
 import { useStore } from '../contexts/storeContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import ModalChangeOrderFolio from './ModalChangeOrderFolio'
-import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
+import { SaleItemsInfoE } from './SaleItemsInfo'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -175,7 +179,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       {/*//* <-----Order actions flow */}
 
       {order.type === order_type.RENT && (
-        <ErrorBoundary componentName="OrderItems">
+        <ErrorBoundary componentName="RentItemsInfo">
           <View
             style={{
               marginVertical: 8,
@@ -185,7 +189,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
               paddingHorizontal: 4
             }}
           >
-            <OrderItems order={order} />
+            <RentItemsInfo order={order} />
             <Totals items={order.items} />
             {order?.extensions ? (
               <OrderExtensions order={order} />
@@ -204,6 +208,8 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
           </View>
         </ErrorBoundary>
       )}
+
+      {order.type === order_type.SALE && <SaleItemsInfoE />}
 
       {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
 
@@ -320,7 +326,7 @@ const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   )
 }
 
-const OrderItems = ({ order }: { order: Partial<OrderType> }) => {
+const RentItemsInfo = ({ order }: { order: Partial<OrderType> }) => {
   const items = order.items
   return (
     <View>
@@ -515,41 +521,6 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
           marginBottom: 8
         }}
       >
-        <View>
-          {/* {order?.renewedTo && (
-            <Text>
-              Renovada con:{' '}
-              <Pressable
-                onPress={() => {
-                  //@ts-ignore
-                  navigate('OrderDetails', { orderId: order?.renewedTo })
-                }}
-              >
-                <Text>
-                  {consolidatedOrders?.orders?.[order.renewedTo]?.folio} -{' '}
-                  {consolidatedOrders?.orders?.[order.renewedTo]?.note || ''}
-                </Text>
-              </Pressable>
-            </Text>
-          )} */}
-          {/* {order?.renewedFrom && (
-            <Text>
-              Renovada de:{' '}
-              <Pressable
-                onPress={() => {
-                  //@ts-ignore
-
-                  navigate('OrderDetails', { orderId: order?.renewedFrom })
-                }}
-              >
-                <Text>
-                  {consolidatedOrders?.orders?.[order.renewedFrom]?.folio} -{' '}
-                  {consolidatedOrders?.orders?.[order.renewedFrom]?.note || ''}
-                </Text>
-              </Pressable>
-            </Text>
-          )} */}
-        </View>
         <View
           style={{
             flexDirection: 'row',

@@ -12,6 +12,7 @@ import {
   ExpandibleBalanceItemsAvailable,
   ExpandibleBalanceItemsRented
 } from './SectionBalanceRents'
+import { isBetweenDates } from '../../libs/utils-date'
 
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 
@@ -51,9 +52,39 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
     setSelectedRow(value)
     setItem(BALANCE_ROW_SELECTED, value)
   }
+  const createdItems = balance.items.filter((item) =>
+    isBetweenDates(item.createdAt, {
+      startDate: balance.fromDate,
+      endDate: balance.toDate
+    })
+  )
+
+  const retiredItems = balance.items.filter((item) =>
+    isBetweenDates(item.retiredAt, {
+      startDate: balance.fromDate,
+      endDate: balance.toDate
+    })
+  )
 
   return (
     <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          marginVertical: 16
+        }}
+      >
+        <ExpandibleBalanceItemsAvailable
+          items={createdItems}
+          label="Articulos creados"
+        />
+        <ExpandibleBalanceItemsAvailable
+          items={retiredItems}
+          label="Articulos retirados"
+        />
+      </View>
+
       {/* HEADER */}
       <ListRow
         style={{ borderWidth: 0 }}
@@ -151,7 +182,7 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                         component: (
                           <View>
                             <Text style={gStyles.tCenter}>
-                              {field === 'retired' && retired.length}
+                              {/* {field === 'retired' && retired.length} */}
                               {field === 'inRent' && inRent.length}
                               {field === 'inStock' && inStock.length}
                               {field === 'allItems' &&
@@ -175,10 +206,10 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                         justifyContent: 'space-evenly'
                       }}
                     >
-                      <ExpandibleBalanceItemsAvailable
+                      {/* <ExpandibleBalanceItemsAvailable
                         items={retired}
                         label="Retirados"
-                      />
+                      /> */}
 
                       <ExpandibleBalanceItemsAvailable
                         items={inStock}
@@ -244,11 +275,11 @@ const TABLE: {
   //   label: 'Nuevos',
   //   width: 'rest'
   // },
-  {
-    field: 'retired',
-    label: 'Retirados',
-    width: 'rest'
-  },
+  // {
+  //   field: 'retired',
+  //   label: 'Retirados',
+  //   width: 'rest'
+  // },
   {
     field: 'inRent',
     label: 'En renta',
