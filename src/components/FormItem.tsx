@@ -10,6 +10,7 @@ import dictionary, { asCapitalize } from '../dictionary'
 import { useEmployee } from '../contexts/employeeContext'
 import TextInfo from './TextInfo'
 import theme from '../theme'
+import FormikErrorsList from './FormikErrorsList'
 
 const FormItem = ({
   fromOrder,
@@ -24,7 +25,7 @@ const FormItem = ({
 }) => {
   const { categories, sections: storeSections } = useStore()
   const { permissions } = useEmployee()
-  const defaultValues: Partial<ItemType> = { ...values }
+  const defaultValues: Partial<ItemType> = { status: 'pickedUp', ...values }
   const handleSubmit = async (values: ItemType) => {
     setDisabled(true)
     if (onSubmit) {
@@ -38,7 +39,7 @@ const FormItem = ({
     }
   }
 
-  const categoriesOps = categories.map((category) => ({
+  const categoriesOps = categories?.map((category) => ({
     label: category.name,
     value: category.id
   }))
@@ -49,8 +50,11 @@ const FormItem = ({
 
   const [disabled, setDisabled] = useState(false)
   const itemStatuses = Object.keys(ItemStatuses)
-  const itemStatusOptions = Object.values(itemStatuses).map((status) => ({
-    label: asCapitalize(dictionary(status)),
+  const itemStatusOptions = Object.values(itemStatuses)?.map((status) => ({
+    label:
+      status === 'pickedUp'
+        ? 'Recogido/Disponible'
+        : asCapitalize(dictionary(status)),
     value: status
   }))
   const canEditItemStatus =
@@ -63,6 +67,13 @@ const FormItem = ({
       initialValues={{ ...defaultValues }}
       onSubmit={async (values: ItemType) => {
         await handleSubmit(values)
+      }}
+      validate={(values) => {
+        if (!values.status)
+          return {
+            status: 'Selecciona un estado'
+          }
+        return {}
       }}
     >
       {({ handleSubmit }) => (
@@ -131,6 +142,7 @@ const FormItem = ({
             />
           </View>
           <View style={[{ marginTop: 16 }]}>
+            <FormikErrorsList />
             <Button
               onPress={handleSubmit}
               label={'Guardar'}
