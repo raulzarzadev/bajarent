@@ -30,7 +30,7 @@ const OrderStatus = ({
   const expireToday = isToday(asDate(order?.expireAt))
   const expired = isBefore(asDate(order?.expireAt), new Date())
   const isExpired = (order?.isExpired || expireToday || expired) && isDelivered
-  const expiresTomorrow = isRent && order.expiresTomorrow
+  const expiresTomorrow = isRent && isDelivered && order.expiresTomorrow
   const expireLabel = expireToday
     ? 'hoy'
     : `${fromNow(asDate(order?.expireAt))}`
