@@ -69,11 +69,16 @@ const FormItem = ({
         await handleSubmit(values)
       }}
       validate={(values) => {
-        if (!values.status)
-          return {
-            status: 'Selecciona un estado'
-          }
-        return {}
+        let errors: any = {}
+        if (!values.status) {
+          errors.status = 'Selecciona un estado'
+        }
+
+        if (!values.category) {
+          errors.category = 'Selecciona una categoria'
+        }
+
+        return errors
       }}
     >
       {({ handleSubmit }) => (
