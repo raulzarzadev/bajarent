@@ -44,9 +44,8 @@ import OrderBigStatus from './OrderBigStatus'
 import { useStore } from '../contexts/storeContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import ModalChangeOrderFolio from './ModalChangeOrderFolio'
-import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
-import { SaleItemsInfo, SaleItemsInfoE } from './SaleItemsInfo'
+import { SaleItemsInfoE } from './SaleItemsInfo'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)

@@ -42,6 +42,7 @@ export const SaleItemsInfo = () => {
 
         {items?.map((item, i) => (
           <View
+            key={item.id || i}
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <Text style={styles.saleItemCell}>
