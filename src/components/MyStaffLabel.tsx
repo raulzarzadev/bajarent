@@ -6,7 +6,7 @@ import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
 import { ModalCurrentWorkE } from './CurrentWork/ModalCurrentWork'
 import { useEmployee } from '../contexts/employeeContext'
-import AppVersion from './AppVersion'
+import AppVersion, { AppVersionE } from './AppVersion'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
@@ -22,7 +22,7 @@ const MyStaffLabel = () => {
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <AppVersion />
+        <AppVersionE />
         <ModalCurrentWorkE />
 
         {__DEV__ && (
