@@ -20,7 +20,7 @@ const TabStoreSections = () => {
   }))
 
   return (
-    <View style={{ marginTop: 0 }}>
+    <View>
       <Button
         label="Agregar area"
         onPress={() => toSections({ screenNew: true })}
@@ -29,7 +29,9 @@ const TabStoreSections = () => {
         size="xs"
         icon="add"
       />
-      <Tabs tabs={sections} />
+      <View>
+        <Tabs tabs={sections} />
+      </View>
     </View>
   )
 }
