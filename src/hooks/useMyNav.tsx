@@ -163,7 +163,7 @@ const useMyNav = () => {
     if (screenNew) {
       //@ts-ignore
       navigate('StackSections', {
-        screen: 'ScreenSectionSNew'
+        screen: 'ScreenSectionsNew'
       })
       return
     } else if (id) {
