@@ -1,5 +1,6 @@
 import BaseType from './BaseType'
 import { CommentType } from './CommentType'
+import ItemType from './ItemType'
 import OrderType from './OrderType'
 import PaymentType from './PaymentType'
 import { TimePriceType } from './PriceType'
@@ -59,8 +60,11 @@ export type BalanceItems = {
   categoryId?: string
   retiredAt?: Date
   createdAt?: Date
-
-  //status: ItemType['status']
+  /**
+   * @deprecated it should be removed, status of item can change any time.
+   * ! status is creating an error in the StoreBalance because is shows in rows and that is not ok
+   */
+  status: ItemType['status'] //* <---- Should not be added because can change any time
 }
 
 export type StoreBalanceType = StoreBalanceBase & BaseType

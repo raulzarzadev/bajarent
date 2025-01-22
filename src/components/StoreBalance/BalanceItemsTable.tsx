@@ -136,7 +136,7 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
           )
           const inRent = balanceRowItems.filter((i) => !!i?.orderId)
           const inStock = balanceRowItems.filter(
-            (i) => !i?.orderId && !i?.retiredAt
+            (i) => !i?.orderId && !i?.retiredAt && i.status !== 'rented'
           )
           const retired = balanceRowItems.filter((i) => !!i?.retiredAt)
           return (

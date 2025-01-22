@@ -24,7 +24,7 @@ interface ItemsContextProps {
    */
   repairOrders?: unknown[]
 }
-
+let ic = 0
 const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
 
 export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
@@ -79,6 +79,8 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const removeItem = (id: number) => {
     //setItems((prevItems) => prevItems.filter((item) => item.id !== id))
   }
+  ic++
+  if (__DEV__) console.log({ ic })
 
   return (
     <ItemsContext.Provider

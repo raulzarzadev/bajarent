@@ -1,6 +1,5 @@
 import { View, Text } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import React from 'react'
 import ItemType from '../../types/ItemType'
 const BalanceItemRow = (props: BalanceItemRowProps) => {
   const item = props.item

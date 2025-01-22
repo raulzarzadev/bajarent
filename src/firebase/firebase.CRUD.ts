@@ -815,9 +815,7 @@ export class FirebaseCRUD {
   normalizeItem = (doc: any) => {
     const id = doc.id
     if (!doc?.exists()) {
-      console.error(
-        `document ${id} in collection:${this.collectionName} not found`
-      )
+      console.error(`not found ${this.collectionName}/${id} `)
       return null
     } // The document  not exist
     const data = doc.data()
@@ -827,9 +825,7 @@ export class FirebaseCRUD {
     if (res) {
       return { ...res, id }
     } else {
-      console.log(
-        `error formatting document ${id} in collection:${this.collectionName} not found`
-      )
+      console.log(`not found formatting ${this.collectionName}/${id}`)
       return null
     }
   }
