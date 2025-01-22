@@ -10,14 +10,15 @@ import AppVersion, { AppVersionE } from './AppVersion'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
-  const { disabledEmployee, permissions } = useEmployee()
+  const { disabledEmployee, permissions, employee } = useEmployee()
   const { isAdmin, isOwner, orders } = permissions
-  const canCreateNewOrders = orders?.canCreate
+  const canCreateNewOrders = orders?.canCreate || isAdmin
   const navigation = useNavigation()
 
   const handleClearHistory = () => {
     setItem(PERSISTENCE_KEY, '')
   }
+  //console.log({ store, canCreateNewOrders, permissions, employee })
 
   return (
     <View>
