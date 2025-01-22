@@ -40,6 +40,7 @@ export type OrdersContextType = {
   handleRefresh?: () => Promise<void> | void
   reports?: CommentType[]
   consolidatedOrders?: ConsolidatedStoreOrdersType
+  repairOrders?: unknown[]
   payments?: PaymentType[]
   setOtherConsolidated?: ({
     consolidated
@@ -116,6 +117,7 @@ export const OrdersContextProvider = ({
       setConsolidatedOrders(null)
       return
     }
+    // //* is disbaled and is not admin or owner do not get any order
     if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
       setOrders(null)
       setConsolidatedOrders(null)
@@ -123,15 +125,6 @@ export const OrdersContextProvider = ({
     }
     handleGetOrders()
     handleGetConsolidates()
-
-    // //* is disbaled and is not admin or owner do not get any order
-    // if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
-    //   setOrders(null)
-    //   setConsolidatedOrders(null)
-    // } else {
-    //   handleGetOrders()
-    //   handleGetConsolidates()
-    // }
   }, [disabledEmployee, isAuthenticated])
 
   useEffect(() => {
@@ -227,6 +220,12 @@ export const OrdersContextProvider = ({
     if (store?.id && isAuthenticated)
       getPayments({ date: new Date() }).then((res) => setPayments(res))
   }, [store?.id && isAuthenticated])
+  const [repairOrders, setRepairOrders] = useState<unknown[]>([])
+  useEffect(() => {
+    if (storeId && isAuthenticated) {
+      ServiceOrders.listenRepairUnsolved({ storeId, cb: setRepairOrders })
+    }
+  }, [storeId, isAuthenticated])
 
   oc++
   if (__DEV__) console.log({ oc })
@@ -234,6 +233,7 @@ export const OrdersContextProvider = ({
     <OrdersContext.Provider
       value={{
         orders,
+        repairOrders,
         setFetchTypeOrders,
         fetchTypeOrders,
         orderTypeOptions,

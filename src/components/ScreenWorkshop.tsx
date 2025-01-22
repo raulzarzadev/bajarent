@@ -12,15 +12,16 @@ import Divider from './Divider'
 import { Switch } from 'react-native-elements'
 import useMyNav from '../hooks/useMyNav'
 import Button from './Button'
+import { useOrdersCtx } from '../contexts/ordersContext'
 
 const ScreenWorkshop = () => {
-  const { workshopItems, repairOrders } = useItemsCtx()
+  const { workshopItems } = useItemsCtx()
+  const { repairOrders } = useOrdersCtx()
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
   const { toWorkshop } = useMyNav()
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
-
   const { categories, sections: storeSections } = useStore()
   const formattedItems = formatItems(itemsPickedUp, categories, storeSections)
   const formattedOrders = formatItemsFromRepair({

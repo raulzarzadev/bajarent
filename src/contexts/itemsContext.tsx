@@ -9,7 +9,6 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from './storeContext'
 import { useEmployee } from './employeeContext'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useAuth } from './authContext'
 
 export type Item = ItemType
@@ -20,6 +19,9 @@ interface ItemsContextProps {
   addItem: (item: Item) => void
   removeItem: (id: number) => void
   workshopMovements?: unknown[]
+  /**
+   * @deprecated use repair orders from ordersContext
+   */
   repairOrders?: unknown[]
 }
 
@@ -32,7 +34,6 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const { storeId } = useStore()
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
-  const [repairOrders, setRepairOrders] = useState<unknown[]>([])
 
   const {
     permissions: {
@@ -69,12 +70,6 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
         })
   }, [storeId, getAllItems, isAuthenticated])
 
-  useEffect(() => {
-    if (storeId && isAuthenticated) {
-      ServiceOrders.listenRepairUnsolved({ storeId, cb: setRepairOrders })
-    }
-  }, [storeId, isAuthenticated])
-
   const [workshopMovements, setWorkshopMovements] = useState<unknown[]>([])
 
   const addItem = (item: Item) => {
@@ -92,8 +87,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
         addItem,
         removeItem,
         workshopItems,
-        workshopMovements,
-        repairOrders
+        workshopMovements
       }}
     >
       {children}
