@@ -12,8 +12,6 @@ const ScreenStaffEdit = ({ route, navigation }) => {
 
   const staffId = route.params.staffId
   const employee = staff?.find(({ id }) => id === staffId)
-  //const storeSections = store?.sections || []
-  console.log({ employee })
   return (
     <ScrollView>
       <View style={gStyles.container}>
