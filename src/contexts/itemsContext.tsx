@@ -10,6 +10,7 @@ import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from './storeContext'
 import { useEmployee } from './employeeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { useAuth } from './authContext'
 
 export type Item = ItemType
 
@@ -27,9 +28,10 @@ const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
 export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
+  const { isAuthenticated } = useAuth()
+  const { storeId } = useStore()
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
-  const { storeId } = useStore()
   const [repairOrders, setRepairOrders] = useState<unknown[]>([])
 
   const {
@@ -44,7 +46,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const getAllItems = isAdmin || isOwner || canViewAllItems
 
   useEffect(() => {
-    if (employee?.rol === 'technician') {
+    if (employee?.rol === 'technician' && isAuthenticated) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: ['workshop'],
@@ -53,10 +55,10 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
         }
       })
     }
-  }, [employee?.rol])
+  }, [employee?.rol, isAuthenticated])
 
   useEffect(() => {
-    if (storeId && getAllItems)
+    if (storeId && getAllItems && isAuthenticated)
       ServiceStoreItems.getAll({ storeId, justActive: true })
         .then((res) => {
           setItems(res)
@@ -65,13 +67,13 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
           console.error(err)
           setItems(null)
         })
-  }, [storeId, getAllItems])
+  }, [storeId, getAllItems, isAuthenticated])
 
   useEffect(() => {
-    if (storeId) {
+    if (storeId && isAuthenticated) {
       ServiceOrders.listenRepairUnsolved({ storeId, cb: setRepairOrders })
     }
-  }, [storeId])
+  }, [storeId, isAuthenticated])
 
   const [workshopMovements, setWorkshopMovements] = useState<unknown[]>([])
 

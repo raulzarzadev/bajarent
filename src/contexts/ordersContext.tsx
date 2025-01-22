@@ -56,9 +56,9 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
+  const { storeId, isAuthenticated } = useAuth()
   const { store } = useStore()
   const { employee, permissions, disabledEmployee } = useEmployee()
-  const { storeId } = useAuth()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -111,23 +111,36 @@ export const OrdersContextProvider = ({
   }
 
   useEffect(() => {
-    //* is disbaled and is not admin or owner do not get any order
+    if (!isAuthenticated) {
+      setOrders(null)
+      setConsolidatedOrders(null)
+      return
+    }
     if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
       setOrders(null)
       setConsolidatedOrders(null)
-    } else {
-      handleGetOrders()
-      handleGetConsolidates()
+      return
     }
-  }, [disabledEmployee])
+    handleGetOrders()
+    handleGetConsolidates()
+
+    // //* is disbaled and is not admin or owner do not get any order
+    // if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
+    //   setOrders(null)
+    //   setConsolidatedOrders(null)
+    // } else {
+    //   handleGetOrders()
+    //   handleGetConsolidates()
+    // }
+  }, [disabledEmployee, isAuthenticated])
 
   useEffect(() => {
-    if (store?.id) {
+    if (isAuthenticated && store?.id) {
       ServiceComments.listenImportantUnsolved(store?.id, (reports) => {
         setImportant(reports)
       })
     }
-  }, [store?.id])
+  }, [store?.id, isAuthenticated])
 
   const handleGetOrders = async () => {
     const reportsSolvedToday = await ServiceComments.getReports({
@@ -211,9 +224,9 @@ export const OrdersContextProvider = ({
     ])
   }
   useEffect(() => {
-    if (store?.id)
+    if (store?.id && isAuthenticated)
       getPayments({ date: new Date() }).then((res) => setPayments(res))
-  }, [store?.id])
+  }, [store?.id && isAuthenticated])
 
   oc++
   if (__DEV__) console.log({ oc })

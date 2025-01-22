@@ -79,7 +79,6 @@ export const EmployeeContextProvider = ({ children }) => {
           setAssignedSections(sectionsAssigned)
         })
       } else {
-        console.log({ user, staff })
         setEmployee({
           ...user
         })
