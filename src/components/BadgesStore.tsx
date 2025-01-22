@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import BadgeOwner from './BadgeOwner'
 import BadgeAdmin from './BadgeAdmin'

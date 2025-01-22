@@ -8,10 +8,7 @@ import { gStyles } from '../../styles'
 import { useStore } from '../../contexts/storeContext'
 import { BalanceItems, StoreBalanceType } from '../../types/StoreBalance'
 import ErrorBoundary from '../ErrorBoundary'
-import {
-  ExpandibleBalanceItemsAvailable,
-  ExpandibleBalanceItemsRented
-} from './SectionBalanceRents'
+import { ExpandibleBalanceItems } from './SectionBalanceRents'
 import { isBetweenDates } from '../../libs/utils-date'
 
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
@@ -75,11 +72,11 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
           marginVertical: 16
         }}
       >
-        <ExpandibleBalanceItemsAvailable
+        <ExpandibleBalanceItems
           items={createdItems}
           label="Articulos creados"
         />
-        <ExpandibleBalanceItemsAvailable
+        <ExpandibleBalanceItems
           items={retiredItems}
           label="Articulos retirados"
         />
@@ -135,10 +132,10 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
             (i) => !i?.retiredAt
           )
           const inRent = balanceRowItems.filter((i) => !!i?.orderId)
-          const inStock = balanceRowItems.filter(
-            (i) => !i?.orderId && !i?.retiredAt && i.status !== 'rented'
-          )
-          const retired = balanceRowItems.filter((i) => !!i?.retiredAt)
+          const inStock = balanceRowItems
+            .filter((i) => !i?.orderId && !i?.retiredAt)
+            .filter((item) => item?.status !== 'rented') //* keep out rented items (they are in the orders )
+
           return (
             <View key={balanceRow}>
               <Divider mv={0} />
@@ -206,16 +203,11 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
                         justifyContent: 'space-evenly'
                       }}
                     >
-                      {/* <ExpandibleBalanceItemsAvailable
-                        items={retired}
-                        label="Retirados"
-                      /> */}
-
-                      <ExpandibleBalanceItemsAvailable
+                      <ExpandibleBalanceItems
                         items={inStock}
                         label="Disponibles"
                       />
-                      <ExpandibleBalanceItemsRented
+                      <ExpandibleBalanceItems
                         items={inRent}
                         label="Ordenes con items"
                       />

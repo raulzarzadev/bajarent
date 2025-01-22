@@ -98,6 +98,7 @@ const SectionBalanceRents = ({
     .filter((item) =>
       sectionId === 'all' ? true : item?.assignedSection === sectionId
     )
+    .filter((item) => item?.status !== 'rented') //* keep out rented items (they are in the orders )
     .sort(sortItemsByNumber)
 
   //* ORDER ITEMS
@@ -107,7 +108,7 @@ const SectionBalanceRents = ({
       <Text style={gStyles.h2}>{title}</Text>
       <BalanceAmountsE payments={[...payments, ...sectionPayments]} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <ExpandibleBalanceItemsAvailable
+        <ExpandibleBalanceItems
           items={availableItems}
           label="Artículos disponibles"
           defaultExpanded
@@ -181,7 +182,7 @@ export const ExpandibleBalanceOrders = ({
   )
 }
 
-export const ExpandibleBalanceItemsAvailable = ({
+export const ExpandibleBalanceItems = ({
   items,
   label,
   defaultExpanded,
@@ -219,39 +220,7 @@ export const ExpandibleBalanceItemsAvailable = ({
     />
   )
 }
-export const ExpandibleBalanceItemsRented = ({
-  items,
-  label,
-  defaultExpanded
-}: {
-  items: BalanceItems[]
-  label: string
-  defaultExpanded?: boolean
-}) => {
-  const { toOrders } = useMyNav()
-  const sortByEco = (a, b) => a?.itemEco?.localeCompare(b?.itemEco)
-  if (!items.length) return null
-  return (
-    <ExpandibleListE
-      label={label}
-      onPressTitle={() => {
-        toOrders?.({ ids: items.map((item) => item.orderId) })
-      }}
-      defaultExpanded={defaultExpanded}
-      items={items.sort(sortByEco).map((item) => {
-        return {
-          id: item?.orderId,
-          content: (
-            <Text>
-              {item?.itemEco} {item.categoryName} {item.orderFolio}
-            </Text>
-          )
-        }
-      })}
-      onPressRow={(id) => toOrders?.({ id })}
-    />
-  )
-}
+
 export type SectionBalanceRentsProps = {
   orders: StoreBalanceOrder[]
   balance: StoreBalanceType

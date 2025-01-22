@@ -66,6 +66,7 @@ export const EmployeeContextProvider = ({ children }) => {
       const employee = staff.find(
         (s) => s.userId === user?.id && s.storeId === storeId
       )
+
       if (employee) {
         ServiceStaff.listen(employee?.id, (employee) => {
           setEmployee(employee)
