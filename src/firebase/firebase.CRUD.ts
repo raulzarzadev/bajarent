@@ -344,7 +344,11 @@ export class FirebaseCRUD {
   }
 
   async listenItem(itemId: string, cb: CallableFunction) {
-    if (!itemId) return console.error('invalid value', { itemId })
+    if (!itemId)
+      return console.error('invalid value', {
+        itemId,
+        collection: this.collectionName
+      })
     const q = doc(this.db, this.collectionName, itemId)
 
     onSnapshot(q, (snapshotDoc) => {

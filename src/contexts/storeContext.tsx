@@ -49,10 +49,11 @@ const StoreContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    ServiceStores.listen(storeId, (store) => {
-      store.staff = storeCtx?.staff
-      setStore(store)
-    })
+    if (storeId)
+      ServiceStores.listen(storeId, (store) => {
+        store.staff = storeCtx?.staff
+        setStore(store)
+      })
   }, [storeId, storeCtx?.staff])
 
   useEffect(() => {
