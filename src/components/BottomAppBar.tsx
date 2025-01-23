@@ -14,7 +14,6 @@ import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
 import { useStore } from '../contexts/storeContext'
-import AppVersion from './AppVersion'
 
 const Tab = createBottomTabNavigator()
 
