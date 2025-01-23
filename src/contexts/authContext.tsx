@@ -45,7 +45,6 @@ const AuthContextProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialAutState)
   const [storeId, setStoreId] = useState<string>('')
   const [stores, setStores] = useState<StoreType[]>([])
-  // const [store, setStore] = useState<StoreType | null>(undefined)
 
   useEffect(() => {
     authStateChanged((user) => {
@@ -70,7 +69,6 @@ const AuthContextProvider = ({ children }) => {
       const userStores = await ServiceStores.userStores(auth.user.id)
       setStores(userStores)
     } else {
-      // setStore(null)
       setStores([])
     }
   }
@@ -80,11 +78,9 @@ const AuthContextProvider = ({ children }) => {
     if (storeId) {
       setStoreId(storeId)
       setItem('storeId', storeId) //*<- save the storeId in localStorage
-      // ServiceStores.listen(storeId, setStore)
     } else {
       setStoreId('')
       setItem('storeId', '') //*<- save the storeId in localStorage
-      //  setStore(null)
     }
   }
 
@@ -94,18 +90,10 @@ const AuthContextProvider = ({ children }) => {
       setAuth,
       storeId,
       stores,
-      //   store,
       handleSetStoreId
     }),
-    [
-      auth,
-      setAuth,
-      storeId,
-      stores
-      // store
-    ]
+    [auth, setAuth, storeId, stores]
   )
-  //console.log({ store })
 
   at++
   if (__DEV__) console.log({ at })

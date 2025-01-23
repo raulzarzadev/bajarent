@@ -1,15 +1,19 @@
 import { View, Text, Pressable } from 'react-native'
 import { gStyles } from '../styles'
 import packageJson from '../../package.json'
-import { useAppVersionContext } from '../contexts/appVersionContext'
 import { versionCompare } from '../libs/versionCompare'
 import ErrorBoundary from './ErrorBoundary'
+import { useEffect, useState } from 'react'
+import { ServiceInternalConfig } from '../firebase/ServiceInternalConfig'
 
 const AppVersion = () => {
-  const { version } = useAppVersionContext()
+  const [version, setVersion] = useState()
   const isSameVersion = version === packageJson.version
 
-  const isVersionForwards = versionCompare(version, packageJson.version) === 1
+  useEffect(() => {
+    ServiceInternalConfig.listenVersion(setVersion)
+  }, [])
+
   if (isSameVersion) {
     return (
       <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}>
@@ -17,22 +21,29 @@ const AppVersion = () => {
       </Text>
     )
   }
+
+  //* 🔄 Significa que remote-version esta adelantada, pronto habra una actualización disponible
+  //* ⏳ Significa  que remote-version esta atrasada, esta version esta adelantada.
+  //* ✅ Significa que remote-version y el proyecto actual estan sincronizados
+
+  const isVersionForwards = versionCompare(version, packageJson.version) === 1
   if (isVersionForwards) {
     return (
-      <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}>
-        {packageJson.version} ⏳
-      </Text>
+      <View>
+        <Pressable onPress={() => window?.location?.reload?.()}>
+          <Text
+            style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}
+          >
+            {packageJson.version} 🔄
+          </Text>
+        </Pressable>
+      </View>
     )
   }
-
   return (
-    <View>
-      <Pressable onPress={() => window?.location?.reload?.()}>
-        <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}>
-          {packageJson.version} 🔄
-        </Text>
-      </Pressable>
-    </View>
+    <Text style={[gStyles.helper, { textAlign: 'right', marginRight: 8 }]}>
+      {packageJson.version} ⏳
+    </Text>
   )
 }
 export default AppVersion

@@ -413,7 +413,7 @@ const FormFieldsA = ({
   }, [sheetRow])
 
   useEffect(() => {
-    if (employee.sectionsAssigned.length > 0) {
+    if (employee?.sectionsAssigned?.length > 0) {
       setValues({
         ...values,
         assignToSection: values.assignToSection || employee.sectionsAssigned[0]

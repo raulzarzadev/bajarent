@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react'
+import { createContext, useState, useContext, useEffect, useMemo } from 'react'
 import StoreType from '../types/StoreType'
 import StaffType from '../types/StaffType'
 import { useAuth } from './authContext'
@@ -12,7 +12,6 @@ import { PriceType } from '../types/PriceType'
 import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -31,14 +30,13 @@ const StoreContext = createContext<StoreContextType>({})
 const StoreContextProvider = ({ children }) => {
   const [currentBalance, setCurrentBalance] = useState<StoreBalanceType>()
   //#region hooks
-  const { storeId } = useAuth()
+  const { storeId, isAuthenticated, user } = useAuth()
   const [storeCtx, setStoreCtx] = useState<StoreContextType>()
   const [store, setStore] = useState<StoreType>()
   const handleUpdateStore = async () => {
     getStoreData(storeId)
       .then(({ categories, sections, staff, prices }) => {
         setStoreCtx({
-          // store,
           categories,
           sections,
           staff,
@@ -49,43 +47,40 @@ const StoreContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    ServiceStores.listen(storeId, (store) => {
-      store.staff = storeCtx?.staff
-      setStore(store)
-    })
-  }, [storeId, storeCtx?.staff])
+    if (storeId && isAuthenticated)
+      ServiceStores.listen(storeId, (store) => {
+        store.staff = storeCtx?.staff
+        setStore(store)
+      })
+  }, [storeId, storeCtx?.staff, isAuthenticated])
 
   useEffect(() => {
-    if (storeId) {
+    if (storeId && isAuthenticated) {
       handleUpdateStore()
     }
-  }, [storeId])
+  }, [storeId, isAuthenticated])
 
   useEffect(() => {
     //* CURRENT BALANCE
-    if (store?.id)
+    if (store?.id && isAuthenticated)
       ServiceBalances.listenLastInDate(store?.id, new Date(), (balance) =>
         setCurrentBalance(balance)
       )
-  }, [store?.id])
+  }, [store?.id, isAuthenticated])
 
   sc++
   if (__DEV__) console.log({ sc })
   //#region render
-
-  return (
-    <StoreContext.Provider
-      value={{
-        ...storeCtx,
-        store,
-        storeId,
-        currentBalance,
-        handleUpdateStore
-      }}
-    >
-      {children}
-    </StoreContext.Provider>
-  )
+  const value = useMemo(() => {
+    return {
+      ...storeCtx,
+      store,
+      storeId,
+      currentBalance,
+      handleUpdateStore
+    }
+  }, [storeCtx, store, storeId, currentBalance])
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
 
 export const useStore = () => {
@@ -154,7 +149,6 @@ const getStoreData = async (storeId: string) => {
   ]
 
   return {
-    //store: { ...store, staff: staffWithSections },
     sections: sectionsWithDefaultStoreSections.sort(sortSections),
     categories: categoriesWithPrices,
     staff: staffWithSections,

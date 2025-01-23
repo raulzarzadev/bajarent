@@ -65,11 +65,13 @@ export default function formatComments({
     }
   )
   const commentsFormatted: FormattedComment[] = comments.map((comment) => {
-    const createdBy = staff?.find((st) => st.userId === comment.createdBy)
     const order = orders?.find((ord) => ord.id === comment.orderId)
+    const createdByPosition = staff?.find(
+      (st) => st.userId === comment.createdBy
+    )?.position
     return {
       ...comment,
-      createdByName: createdBy?.name || '',
+      createdByName: createdByPosition || '',
       orderFolio: order?.folio,
       orderName: order?.fullName,
       orderStatus: order?.status,
@@ -84,11 +86,13 @@ export default function formatComments({
   })
 
   const paymentsFormatted: FormattedComment[] = payments?.map((payment) => {
-    const createdBy = staff?.find((st) => st.userId === payment.createdBy)
+    const createdByPosition = staff?.find(
+      (st) => st.userId === payment.createdBy
+    )?.position
     const order = orders?.find((ord) => ord.id === payment.orderId)
     const paymentAmount = parseFloat(`${payment?.amount || 0}`)
     return {
-      createdByName: createdBy?.name || '',
+      createdByName: createdByPosition || '',
       orderFolio: order?.folio,
       orderName: order?.fullName,
       orderStatus: order?.status,

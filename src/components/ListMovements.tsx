@@ -30,7 +30,7 @@ const ListMovements = () => {
         res.map((item) => ({
           ...item,
           createdByName: staff?.find(({ userId }) => userId === item?.createdBy)
-            ?.name
+            ?.position
         }))
       )
     } catch (error) {

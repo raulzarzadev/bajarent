@@ -9,7 +9,7 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { useStore } from './storeContext'
 import { useEmployee } from './employeeContext'
-import { ServiceOrders } from '../firebase/ServiceOrders'
+import { useAuth } from './authContext'
 
 export type Item = ItemType
 
@@ -19,18 +19,21 @@ interface ItemsContextProps {
   addItem: (item: Item) => void
   removeItem: (id: number) => void
   workshopMovements?: unknown[]
+  /**
+   * @deprecated use repair orders from ordersContext
+   */
   repairOrders?: unknown[]
 }
-
+let ic = 0
 const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
 
 export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
+  const { isAuthenticated } = useAuth()
+  const { storeId } = useStore()
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
-  const { storeId } = useStore()
-  const [repairOrders, setRepairOrders] = useState<unknown[]>([])
 
   const {
     permissions: {
@@ -44,7 +47,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const getAllItems = isAdmin || isOwner || canViewAllItems
 
   useEffect(() => {
-    if (employee?.rol === 'technician') {
+    if (employee?.rol === 'technician' && isAuthenticated) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: ['workshop'],
@@ -53,10 +56,10 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
         }
       })
     }
-  }, [employee?.rol])
+  }, [employee?.rol, isAuthenticated])
 
   useEffect(() => {
-    if (storeId && getAllItems)
+    if (storeId && getAllItems && isAuthenticated)
       ServiceStoreItems.getAll({ storeId, justActive: true })
         .then((res) => {
           setItems(res)
@@ -65,13 +68,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
           console.error(err)
           setItems(null)
         })
-  }, [storeId, getAllItems])
-
-  useEffect(() => {
-    if (storeId) {
-      ServiceOrders.listenRepairUnsolved({ storeId, cb: setRepairOrders })
-    }
-  }, [storeId])
+  }, [storeId, getAllItems, isAuthenticated])
 
   const [workshopMovements, setWorkshopMovements] = useState<unknown[]>([])
 
@@ -82,6 +79,8 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const removeItem = (id: number) => {
     //setItems((prevItems) => prevItems.filter((item) => item.id !== id))
   }
+  ic++
+  if (__DEV__) console.log({ ic })
 
   return (
     <ItemsContext.Provider
@@ -90,8 +89,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
         addItem,
         removeItem,
         workshopItems,
-        workshopMovements,
-        repairOrders
+        workshopMovements
       }}
     >
       {children}
