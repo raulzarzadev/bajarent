@@ -64,7 +64,7 @@ export type BalanceItems = {
    * @deprecated it should be removed, status of item can change any time.
    * ! status is creating an error in the StoreBalance because is shows in rows and that is not ok
    */
-  status: ItemType['status'] //* <---- Should not be added because can change any time
+  status?: ItemType['status'] //* <---- Should not be added because can change any time
 }
 
 export type StoreBalanceType = StoreBalanceBase & BaseType
