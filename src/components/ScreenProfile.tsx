@@ -8,6 +8,7 @@ import ErrorBoundary from './ErrorBoundary'
 import ChooseProfile from './ChooseProfile'
 import LoginSignUpEmail from './LoginSignupEmail'
 import { CardEmployeeE } from './CardEmployee'
+import { AppVersionE } from './AppVersion'
 
 const ScreenProfile = ({ navigation }) => {
   const { user } = useAuth()
@@ -24,6 +25,7 @@ const ScreenProfile = ({ navigation }) => {
 
   return (
     <ScrollView style={{ padding: 2 }}>
+      <AppVersionE />
       <ErrorBoundary componentName="CardUser">
         <CardUser
           user={user}
