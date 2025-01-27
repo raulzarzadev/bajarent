@@ -85,6 +85,14 @@ const useMyNav = () => {
     //@ts-ignore
     navigate('WorkshopHistory')
   }
+  const toCustomers = ({ to }: { to: 'new' | 'edit' | 'details' }) => {
+    if (to === 'new') {
+      //@ts-ignore
+      navigate('StackCustomers', {
+        screen: 'ScreenCustomerNew'
+      })
+    }
+  }
 
   const toOrders = ({
     id,
@@ -189,7 +197,8 @@ const useMyNav = () => {
     toProfile,
     toSections,
     toWorkshop,
-    toMessages
+    toMessages,
+    toCustomers
   }
 }
 

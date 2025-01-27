@@ -2,6 +2,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import MyStaffLabel from '../MyStaffLabel'
 import ErrorBoundary from '../ErrorBoundary'
 import { ScreenCustomersE } from './ScreenCustomers'
+import { ScreenCustomerE } from './ScreenCustomer'
+import { ScreenCustomerFormE } from './ScreenCustomerForm'
 
 const Stack = createStackNavigator()
 export function StackCustomers() {
@@ -22,6 +24,22 @@ export function StackCustomers() {
           title: `Clientes`
         })}
         component={ScreenCustomersE}
+      />
+      <Stack.Screen
+        name="ScreenCustomer"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: `Detalle de cliente`
+        })}
+        component={ScreenCustomerE}
+      />
+      <Stack.Screen
+        name="ScreenCustomerNew"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: `Nuevo cliente`
+        })}
+        component={ScreenCustomerFormE}
       />
     </Stack.Navigator>
   )
