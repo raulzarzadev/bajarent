@@ -30,6 +30,7 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.20",
+    "@reduxjs/toolkit": "^2.5.0",
     "@types/react": "~18.2.14",
     "@types/react-leaflet": "^3.0.0",
     "@types/react-signature-canvas": "^1.0.6",
@@ -62,7 +63,9 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-web": "~0.19.6",
+    "react-redux": "^9.2.0",
     "react-signature-canvas": "^1.0.6",
+    "redux": "^5.0.1",
     "short-unique-id": "^5.0.3",
     "typescript": "^5.3.3"
   },

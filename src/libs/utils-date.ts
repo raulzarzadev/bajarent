@@ -162,3 +162,30 @@ export function isBetweenDates(
     end: asDate(endDate)
   })
 }
+type Ops = {
+  to: 'string' | 'date'
+}
+export const convertTimestamps = (obj: any, ops: Ops = { to: 'date' }): any => {
+  if (obj === null || obj === undefined) return obj
+
+  if (obj instanceof Timestamp) {
+    if (ops.to === 'string') {
+      return obj.toDate().toISOString()
+    }
+    return obj.toDate()
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => convertTimestamps(item, ops))
+  }
+
+  if (typeof obj === 'object') {
+    const newObj: any = {}
+    for (const key in obj) {
+      newObj[key] = convertTimestamps(obj[key], ops)
+    }
+    return newObj
+  }
+
+  return obj
+}

@@ -12,6 +12,9 @@ import { PriceType } from '../types/PriceType'
 import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
+import { useDispatch } from 'react-redux'
+import { fetchCustomers } from '../app/features/costumers/customersThunks'
+import { AppDispatch } from '../app/store'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -67,6 +70,24 @@ const StoreContextProvider = ({ children }) => {
         setCurrentBalance(balance)
       )
   }, [store?.id, isAuthenticated])
+
+  //*****************************
+  //* REDUX WILL BE CHARGED IN THIS CONTEXT
+  //******************************
+  //->>>
+
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    if (store?.id) {
+      // get customers
+      dispatch(fetchCustomers({ storeId: store.id }))
+    }
+  }, [dispatch, store?.id])
+
+  //->>>
+  //*****************************
+  //* REDUX WILL BE CHARGED IN THIS CONTEXT
+  //******************************
 
   sc++
   if (__DEV__) console.log({ sc })

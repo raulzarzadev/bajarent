@@ -1,0 +1,67 @@
+{
+  "store": {
+    "name": "nombre",
+    "sections": {
+      "section1": {
+        "name": "Area 1"
+      },
+      "section2": {
+        "name": "Area 2"
+      }
+    },
+    "emplyees": {
+      "employee1": {
+        "name": "Pedro",
+        "nickname": "Pedrito",
+        "roles": {
+          "tecnictian": true,
+          "delivery": true,
+          "office": false
+        },
+        "permissions": {
+          "order": [
+            "read",
+            "create",
+            "delete",
+            "update"
+          ],
+          "store": [
+            "read",
+            "create",
+            "delete",
+            "update"
+          ],
+          "permissions": [
+            "read",
+            "create",
+            "delete",
+            "update"
+          ]
+        }
+      }
+    }
+  },
+  "customers": {
+    "custoremID": {
+      "firstName": "Lola",
+      "lastName": "Hernandez",
+      "contacts": {
+        "contact1": {
+          "type": "phone",
+          "value": "525543374016",
+          "label": "Martha",
+          "favorite": true
+        }
+      },
+      "address": {
+        "street": "Cerrada de otoño #16",
+        "references": "Casa blanca",
+        "locationURL": "https://maps.google.com",
+        "coords": [
+          -8.34234,
+          123.443523
+        ]
+      }
+    }
+  }
+}

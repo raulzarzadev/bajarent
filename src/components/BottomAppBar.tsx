@@ -6,7 +6,6 @@ import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
-import { useAuth } from '../contexts/authContext'
 import ScreenNewOrder from './ScreenOrderNew'
 import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
@@ -14,6 +13,7 @@ import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
 import { useStore } from '../contexts/storeContext'
+import { StackCustomersE } from './Customers/StackCustomers'
 
 const Tab = createBottomTabNavigator()
 
@@ -34,6 +34,9 @@ const BottomAppBar = () => {
     permissions.items.canViewMyItems ||
     permissions.isAdmin ||
     permissions.isOwner
+
+  const showClientsButton = permissions?.customers?.read
+
   return (
     <Tab.Navigator
       //initialRouteName="StackOrders"
@@ -50,7 +53,8 @@ const BottomAppBar = () => {
               StackOrders: 'orders',
               StackConsolidated: 'orders',
               StackMyItems: 'washMachine',
-              Workshop: 'tools'
+              Workshop: 'tools',
+              StackCustomers: 'customerCard'
             }
             return (
               <Icon
@@ -120,6 +124,17 @@ const BottomAppBar = () => {
           headerShown: false,
           title: 'Mis Ordenes',
           tabBarButton: showOrdersButton ? undefined : () => null
+          // tabBarButton:
+          //   !canSeeOrders || !isAuthenticated ? () => null : undefined
+        })}
+      />
+      <Tab.Screen
+        name="StackCustomers"
+        component={StackCustomersE}
+        options={({ route }) => ({
+          headerShown: false,
+          title: 'Clientes'
+          //tabBarButton: showClientsButton ? undefined : () => null
           // tabBarButton:
           //   !canSeeOrders || !isAuthenticated ? () => null : undefined
         })}

@@ -37,7 +37,7 @@ import {
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoPricetagsOutline } from 'react-icons/io5'
-import { FaTruckPickup } from 'react-icons/fa6'
+import { FaAddressCard, FaTruckPickup } from 'react-icons/fa6'
 import { LuCalendarClock } from 'react-icons/lu'
 import { LuCalendar } from 'react-icons/lu'
 import { MdOutlinePaid } from 'react-icons/md'
@@ -84,6 +84,7 @@ import { FaCloudDownloadAlt } from 'react-icons/fa'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  customerCard: FaAddressCard,
   backup: FaCloudDownloadAlt,
   balance: FaBalanceScale,
   www: TfiWorld,

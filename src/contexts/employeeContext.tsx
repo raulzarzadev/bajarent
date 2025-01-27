@@ -35,6 +35,10 @@ export type EmployeeContextType = {
     shouldChooseExactItem?: boolean
     canViewAllItems?: boolean
     canViewModalCurrentWork?: boolean
+    customers?: {
+      read?: boolean
+      write?: boolean
+    }
   }
   items: Partial<ItemType>[]
 }
