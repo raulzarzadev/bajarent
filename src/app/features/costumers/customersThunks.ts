@@ -13,3 +13,44 @@ export const fetchCustomers = createAsyncThunk(
     return customers
   }
 )
+
+export const createCustomer = createAsyncThunk(
+  'customers/newCustomer',
+  async ({
+    customer,
+    storeId
+  }: {
+    customer: Partial<CustomerType>
+    storeId: string
+  }): Promise<CustomerType> => {
+    const newCustomer = { ...customer, storeId }
+    const response = await ServiceCustomers.create(newCustomer)
+      .then(({ res }) => {
+        return { ...newCustomer, id: res.id }
+      })
+      .catch((error) => {
+        console.error('Error adding document: ', error)
+        return null
+      })
+    return response
+  }
+)
+export const updateCustomer = createAsyncThunk(
+  'customers/updateCustomer',
+  async ({
+    customer,
+    customerId
+  }: {
+    customer: Partial<CustomerType>
+    customerId: string
+  }): Promise<CustomerType> => {
+    return await ServiceCustomers.update(customerId, customer)
+      .then(() => {
+        return customer
+      })
+      .catch((error) => {
+        console.error('Error updating document: ', error)
+        return null
+      })
+  }
+)

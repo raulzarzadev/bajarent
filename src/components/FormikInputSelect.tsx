@@ -1,8 +1,6 @@
 import { View, Text, ViewStyle } from 'react-native'
-import React from 'react'
 import { useField } from 'formik'
 import InputSelect from './InputSelect'
-import { gStyles } from '../styles'
 
 const FormikInputSelect = ({
   name,
@@ -11,7 +9,8 @@ const FormikInputSelect = ({
   label = '',
   placeholder = '',
   disabled = false,
-  style
+  style,
+  containerStyle
 }: {
   name: string
   helperText?: string
@@ -20,10 +19,11 @@ const FormikInputSelect = ({
   placeholder?: string
   disabled?: boolean
   style?: ViewStyle
+  containerStyle?: ViewStyle
 }) => {
   const [field, meta, helpers] = useField(name)
   return (
-    <View>
+    <View style={containerStyle}>
       {!!label && <Text>{label}</Text>}
       <InputSelect
         disabled={disabled}
@@ -37,14 +37,6 @@ const FormikInputSelect = ({
         helperTextColor={meta.error ? 'error' : 'black'}
         style={style}
       />
-      {/* {!!helperText && !meta.error && (
-        <Text style={gStyles.inputHelper}>{helperText}</Text>
-      )}
-      {!!meta.error && (
-        <Text style={[gStyles.inputHelper, gStyles.helperError]}>
-          {meta.error}
-        </Text>
-      )} */}
     </View>
   )
 }

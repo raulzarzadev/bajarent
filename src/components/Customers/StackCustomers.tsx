@@ -3,7 +3,7 @@ import MyStaffLabel from '../MyStaffLabel'
 import ErrorBoundary from '../ErrorBoundary'
 import { ScreenCustomersE } from './ScreenCustomers'
 import { ScreenCustomerE } from './ScreenCustomer'
-import { ScreenCustomerFormE } from './ScreenCustomerForm'
+import ScreenCustomerForm, { ScreenCustomerFormE } from './ScreenCustomerForm'
 
 const Stack = createStackNavigator()
 export function StackCustomers() {
@@ -40,6 +40,14 @@ export function StackCustomers() {
           title: `Nuevo cliente`
         })}
         component={ScreenCustomerFormE}
+      />
+      <Stack.Screen
+        name="ScreenCustomerEdit"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: `Editar cliente`
+        })}
+        component={ScreenCustomerForm}
       />
     </Stack.Navigator>
   )

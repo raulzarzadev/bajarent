@@ -13,7 +13,6 @@ import StackOrders from './StackOrders'
 import { StackPaymentsE } from './StackPayments'
 import ScreenItemsMap from './ScreenItemsMap'
 import ErrorBoundary from './ErrorBoundary'
-import StackClients from './StackClients'
 import StackItems from './StackItems'
 
 export type StackStoreNavigationProps = {
@@ -121,16 +120,6 @@ function StackStore() {
           headerShown: false
         }}
         component={StackPaymentsE}
-      />
-
-      {/* CLIENTS */}
-      <Stack.Screen
-        name="StackClients"
-        options={{
-          title: 'Clientes',
-          headerShown: false
-        }}
-        component={StackClients}
       />
 
       {/* ******************************************** 

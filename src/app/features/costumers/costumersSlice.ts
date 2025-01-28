@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { CustomerType } from './customerType'
-import { fetchCustomers } from './customersThunks'
+import {
+  createCustomer,
+  fetchCustomers,
+  updateCustomer
+} from './customersThunks'
 import { useSelector } from 'react-redux'
 
 export type CustomersState = {
@@ -50,11 +54,23 @@ export const customersSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Failed to fetch customers'
       })
+      .addCase(createCustomer.fulfilled, (state, action) => {
+        state.data.push(action.payload)
+      })
+      .addCase(createCustomer.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to create customer'
+      })
+      .addCase(updateCustomer.fulfilled, (state, action) => {
+        const index = state.data.findIndex((c) => c.id === action.payload.id)
+        state.data[index] = action.payload
+      })
+      .addCase(updateCustomer.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to update customer'
+      })
   }
 })
 
-export const { addCustomer, removeCustomer, updateCustomer } =
-  customersSlice.actions
+export const { addCustomer, removeCustomer } = customersSlice.actions
 
 export const selectCustomers = (state: { customers: CustomersState }) =>
   state.customers

@@ -49,6 +49,11 @@ PhoneInputProps) {
         selectedCountry={selectedCountry}
         onChangeSelectedCountry={handleSelectedCountry}
         popularCountries={['MX', 'CA', 'US']}
+        phoneInputStyles={{
+          container: {
+            height: 43 // * as the inputText height
+          }
+        }}
       />
       {helperText && (
         <Text style={[gStyles.helper, { color: theme[helperTextColor] }]}>

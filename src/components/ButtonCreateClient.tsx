@@ -2,7 +2,6 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { ClientType } from '../types/ClientType'
-import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import ButtonConfirm from './ButtonConfirm'
@@ -23,8 +22,6 @@ const ButtonCreateClient = ({
   orderId: string
   clientId?: string
 }) => {
-  const { navigate } = useNavigation()
-
   const [clients, setClients] = React.useState<Partial<ClientType>[]>([])
   const [selectedClient, setSelectedClient] =
     React.useState<Partial<ClientType['id']>>(clientId)
@@ -109,26 +106,6 @@ const ButtonCreateClient = ({
             )}
           </View>
         </ButtonConfirm>
-      )}
-
-      {clientAlreadyExist && (
-        <Button
-          variant="ghost"
-          justIcon
-          icon="profileFill"
-          onPress={() => {
-            //@ts-ignore
-            navigate('Store', {
-              screen: 'StackClients',
-              params: {
-                screen: 'ScreenClientDetails',
-                params: {
-                  id: clientId
-                }
-              }
-            })
-          }}
-        />
       )}
     </View>
   )

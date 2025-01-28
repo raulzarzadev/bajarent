@@ -1,20 +1,9 @@
-import { View, Text } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import Button from '../Button'
-import useMyNav from '../../hooks/useMyNav'
+import { useCustomers } from '../../app/features/costumers/costumersSlice'
+import ListCustomers from '../ListClients'
 const ScreenCustomers = () => {
-  const { toCustomers } = useMyNav()
-  return (
-    <View>
-      <Button
-        size="xs"
-        label="Nuevo cliente"
-        onPress={() => {
-          toCustomers({ to: 'new' })
-        }}
-      />
-    </View>
-  )
+  const { data: customers } = useCustomers()
+  return <ListCustomers customers={customers} />
 }
 export default ScreenCustomers
 export type ScreenCustomersProps = {}

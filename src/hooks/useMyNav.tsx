@@ -85,11 +85,30 @@ const useMyNav = () => {
     //@ts-ignore
     navigate('WorkshopHistory')
   }
-  const toCustomers = ({ to }: { to: 'new' | 'edit' | 'details' }) => {
-    if (to === 'new') {
+
+  const toCustomers = (props: ToCustomersType) => {
+    if (props.to === 'new') {
       //@ts-ignore
       navigate('StackCustomers', {
         screen: 'ScreenCustomerNew'
+      })
+    }
+    if (props.to === 'details' && props.id) {
+      //@ts-ignore
+      navigate('StackCustomers', {
+        screen: 'ScreenCustomer',
+        params: {
+          id: props.id
+        }
+      })
+    }
+    if (props.to === 'edit' && props.id) {
+      //@ts-ignore
+      navigate('StackCustomers', {
+        screen: 'ScreenCustomerEdit',
+        params: {
+          id: props.id
+        }
       })
     }
   }
@@ -201,5 +220,18 @@ const useMyNav = () => {
     toCustomers
   }
 }
+
+export type ToCustomersType =
+  | {
+      to: 'new'
+    }
+  | {
+      to: 'details'
+      id: string
+    }
+  | {
+      to: 'edit'
+      id: string
+    }
 
 export default useMyNav
