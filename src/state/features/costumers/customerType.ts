@@ -2,9 +2,10 @@ import BaseType from '../../../types/BaseType'
 
 export type CustomerBase = {
   name: string
-  contacts: Record<CustomerContact['id'], CustomerContact>
   address: CustomerAddress
   storeId: string
+  images?: CustomerImages
+  contacts: Record<CustomerContact['id'], CustomerContact>
 }
 
 export type CustomerContact = {
@@ -23,6 +24,13 @@ export type CustomerAddress = {
   neighborhood?: string
   coords?: `${number},${number}`
 }
+
+export type CustomerImages = Record<string, ImageDescriptionType>
+export type ImageDescriptionType = {
+  description: string
+  src: string
+  type: 'house' | 'ID' | 'signature'
+} & BaseType
 
 export type NewCustomer = Partial<Omit<CustomerBase, 'storeId'>> &
   //* make storeId required

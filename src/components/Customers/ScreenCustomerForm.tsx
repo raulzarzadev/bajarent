@@ -5,13 +5,13 @@ import { useDispatch } from 'react-redux'
 import {
   createCustomer,
   updateCustomer
-} from '../../app/features/costumers/customersThunks'
-import { NewCustomer } from '../../app/features/costumers/customerType'
-import { AppDispatch } from '../../app/store'
+} from '../../state/features/costumers/customersThunks'
+import { NewCustomer } from '../../state/features/costumers/customerType'
+import { AppDispatch } from '../../state/store'
 import { useStore } from '../../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import { gStyles } from '../../styles'
-import { useCustomers } from '../../app/features/costumers/costumersSlice'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 const ScreenCustomerForm = (navigate) => {
   const dispatch = useDispatch<AppDispatch>()

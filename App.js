@@ -12,7 +12,7 @@ import ErrorBoundary from './src/components/ErrorBoundary'
 import { CurrentWorkProvider } from './src/contexts/currentWorkContext'
 import { ItemsProvider } from './src/contexts/itemsContext'
 import { Provider } from 'react-redux'
-import { store } from './src/app/store'
+import { store } from './src/state/store'
 
 export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {

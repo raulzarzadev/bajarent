@@ -1,5 +1,5 @@
 import ErrorBoundary from '../ErrorBoundary'
-import { useCustomers } from '../../app/features/costumers/costumersSlice'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import ListCustomers from '../ListClients'
 const ScreenCustomers = () => {
   const { data: customers } = useCustomers()

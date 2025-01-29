@@ -162,27 +162,55 @@ export function isBetweenDates(
     end: asDate(endDate)
   })
 }
-type Ops = {
-  to: 'string' | 'date'
+
+const convertTimestampToDate = (timestamp: Timestamp) => {
+  return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000)
 }
-export const convertTimestamps = (obj: any, ops: Ops = { to: 'date' }): any => {
+
+const convertDateToString = (date: Date) => {
+  return date.toISOString()
+}
+
+export const convertTimestamps = (
+  obj: any,
+  options: { to: 'date' | 'string' }
+): any => {
   if (obj === null || obj === undefined) return obj
 
   if (obj instanceof Timestamp) {
-    if (ops.to === 'string') {
-      return obj.toDate().toISOString()
-    }
-    return obj.toDate()
+    return options.to === 'date'
+      ? convertTimestampToDate(obj)
+      : convertDateToString(convertTimestampToDate(obj))
+  }
+  if (obj instanceof Date) {
+    if (options.to === 'date') return obj
+    if (options.to === 'string') return convertDateToString(obj)
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => convertTimestamps(item, ops))
+    return obj.map((item) => convertTimestamps(item, options))
   }
 
   if (typeof obj === 'object') {
     const newObj: any = {}
     for (const key in obj) {
-      newObj[key] = convertTimestamps(obj[key], ops)
+      const keys = key.split('.')
+      if (keys.length > 1) {
+        let current = newObj
+        for (let i = 0; i < keys.length - 1; i++) {
+          if (!current[keys[i]]) {
+            current[keys[i]] = {}
+          }
+          current = current[keys[i]]
+        }
+        current[keys[keys.length - 1]] = convertTimestamps(obj[key], options)
+      } else {
+        if (obj[key] && obj[key]._methodName === 'deleteField') {
+          newObj[key] = obj[key] // Preserve deleteField
+        } else {
+          newObj[key] = convertTimestamps(obj[key], options)
+        }
+      }
     }
     return newObj
   }

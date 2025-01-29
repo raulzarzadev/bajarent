@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { ListE } from './List'
 import ListRow from './ListRow'
 import useMyNav from '../hooks/useMyNav'
-import { CustomerType } from '../app/features/costumers/customerType'
+import { CustomerType } from '../state/features/costumers/customerType'
 
 const ListCustomers = ({ customers }: { customers: CustomerType[] }) => {
   const { toCustomers } = useMyNav()

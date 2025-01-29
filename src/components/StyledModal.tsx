@@ -47,7 +47,12 @@ const StyledModal = ({
           }}
         >
           <TouchableWithoutFeedback onPress={handleClose}>
-            <View style={styles.centeredView}>
+            <View
+              style={[
+                styles.centeredView,
+                open ? { backgroundColor: 'rgba(0,0,0,0.5)' } : {}
+              ]}
+            >
               <TouchableWithoutFeedback>
                 <View
                   style={[
@@ -82,8 +87,7 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    alignItems: 'center'
     // marginTop: 22
   },
   modalView: {

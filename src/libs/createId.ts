@@ -9,6 +9,8 @@ export const createId2 = () =>
     .toString(36)
     .substring(4)}`
 
-export const createUUID = () => uidGenerator()
+export const createUUID = (props?: Props) =>
+  uidGenerator().slice(0, props?.length || 99999)
+export type Props = { length?: number }
 
 export default createId

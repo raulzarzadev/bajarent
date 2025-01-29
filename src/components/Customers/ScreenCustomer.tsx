@@ -1,17 +1,19 @@
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import { useCustomers } from '../../app/features/costumers/costumersSlice'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import Button from '../Button'
 import useMyNav from '../../hooks/useMyNav'
 import { gStyles } from '../../styles'
+import { FormCustomerImagesE } from './FormCustomerImages'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading } = useCustomers()
   const { toCustomers } = useMyNav()
   const customer = customers.find((c) => c.id === customerId)
+
   if (!customer) return <Text>Cliente no encontrado</Text>
   return (
-    <View>
+    <ScrollView>
       <View
         style={{
           flexDirection: 'row',
@@ -58,7 +60,11 @@ const ScreenCustomer = (params) => {
           <Text>{contact?.value}</Text>
         </View>
       ))}
-    </View>
+      <FormCustomerImagesE
+        images={customer?.images}
+        customerId={customer?.id}
+      />
+    </ScrollView>
   )
 }
 export default ScreenCustomer

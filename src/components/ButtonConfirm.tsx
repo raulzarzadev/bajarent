@@ -28,7 +28,8 @@ const ButtonConfirm = ({
   confirmDisabledHelper,
   cancelButton = false,
   handleCancel = () => console.log('cancel'),
-  progress
+  progress,
+  openStyles
 }: {
   progress?: ButtonProps['progress']
   confirmIcon?: IconButtonProps['icon']
@@ -52,6 +53,7 @@ const ButtonConfirm = ({
   cancelButton?: boolean
   hideConfirm?: boolean
   handleCancel?: () => void
+  openStyles?: ButtonProps['buttonStyles']
 }) => {
   const modal = useModal({ title: modalTitle })
   const [sending, setSending] = React.useState(false)
@@ -59,6 +61,7 @@ const ButtonConfirm = ({
     <View>
       {justIcon ? (
         <ButtonIcon
+          buttonStyles={openStyles}
           icon={icon}
           color={openColor}
           variant={openVariant}
@@ -71,6 +74,7 @@ const ButtonConfirm = ({
         ></ButtonIcon>
       ) : (
         <Button
+          buttonStyles={openStyles}
           color={openColor}
           variant={openVariant}
           onPress={() => {
@@ -82,6 +86,7 @@ const ButtonConfirm = ({
           size={openSize}
           disabled={openDisabled}
           progress={progress}
+          fullWidth={false}
         ></Button>
       )}
       <StyledModal {...modal}>

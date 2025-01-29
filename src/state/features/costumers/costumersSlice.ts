@@ -3,9 +3,11 @@ import { CustomerType } from './customerType'
 import {
   createCustomer,
   fetchCustomers,
-  updateCustomer
+  updateCustomer as updateCustomerThunk
 } from './customersThunks'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '../../store'
+import { produce } from 'immer'
 
 export type CustomersState = {
   data: CustomerType[]
@@ -60,11 +62,32 @@ export const customersSlice = createSlice({
       .addCase(createCustomer.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to create customer'
       })
-      .addCase(updateCustomer.fulfilled, (state, action) => {
+      .addCase(updateCustomerThunk.fulfilled, (state, action) => {
+        state.loading = false
+        const { id, ...changes } = action.payload
+        console.log({ changes })
         const index = state.data.findIndex((c) => c.id === action.payload.id)
-        state.data[index] = action.payload
+        state.data[index] = produce(state.data[index], (draft) => {
+          for (const key in changes) {
+            if (
+              typeof changes[key] === 'object' &&
+              !Array.isArray(changes[key])
+            ) {
+              draft[key] = {
+                ...draft[key],
+                ...changes[key]
+              }
+            } else {
+              draft[key] = changes[key]
+            }
+          }
+        })
+        // const index = state.data.findIndex((c) => c.id === action.payload.id)
+        // console.log('payload', action.payload)
+
+        // state.data[index] = { ...state.data[index], ...action.payload }
       })
-      .addCase(updateCustomer.rejected, (state, action) => {
+      .addCase(updateCustomerThunk.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to update customer'
       })
   }
@@ -72,9 +95,25 @@ export const customersSlice = createSlice({
 
 export const { addCustomer, removeCustomer } = customersSlice.actions
 
-export const selectCustomers = (state: { customers: CustomersState }) =>
-  state.customers
+export const selectCustomers = (state: { customers: CustomersState }) => {
+  return state.customers
+}
 
 export const customersReducer = customersSlice.reducer
 
-export const useCustomers = () => useSelector(selectCustomers)
+export const useCustomers = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  const update = (id: string, changes: Partial<CustomerType>) => {
+    dispatch(
+      updateCustomerThunk({
+        customer: changes,
+        customerId: id
+      })
+    )
+  }
+  const customers = useSelector(selectCustomers)
+  return {
+    ...customers,
+    update
+  }
+}

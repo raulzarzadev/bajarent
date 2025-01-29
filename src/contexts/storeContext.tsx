@@ -13,8 +13,8 @@ import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
 import { useDispatch } from 'react-redux'
-import { fetchCustomers } from '../app/features/costumers/customersThunks'
-import { AppDispatch } from '../app/store'
+import { fetchCustomers } from '../state/features/costumers/customersThunks'
+import { AppDispatch } from '../state/store'
 
 export type StoreContextType = {
   store?: null | StoreType

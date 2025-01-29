@@ -28,7 +28,7 @@ import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import ModalCloseOperations from '../ModalCloseOperations'
 import { StoreBalanceE } from './StoreBalance/StoreBalance'
-import Counter from '../app/features/counter/Counter'
+import Counter from '../state/features/counter/Counter'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()

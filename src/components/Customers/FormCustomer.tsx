@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import { Formik, useFormik, useFormikContext } from 'formik'
 import Button from '../Button'
-import { CustomerType } from '../../app/features/costumers/customerType'
+import { CustomerType } from '../../state/features/costumers/customerType'
 import FormikInputValue from '../FormikInputValue'
 import FormikInputSelect from '../FormikInputSelect'
 import { gStyles } from '../../styles'
@@ -111,6 +111,7 @@ const FormikCustomerContacts = () => {
           )}
         </View>
       ))}
+
       <Button
         onPress={() => {
           const length = Object.keys(values.contacts || {}).length + 1
@@ -136,6 +137,7 @@ const FormikCustomerContacts = () => {
     </View>
   )
 }
+
 export default FormCustomer
 export type FormCustomerProps = {
   onSubmit?: (values: Partial<CustomerType>) => void
