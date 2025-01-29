@@ -8,7 +8,6 @@ import {
 import Icon from '../Icon'
 import useModal from '../../hooks/useModal'
 import StyledModal from '../StyledModal'
-
 import FormikInputImage from '../FormikInputImage'
 import { Formik } from 'formik'
 import FormikInputSelect from '../FormikInputSelect'
@@ -17,19 +16,14 @@ import FormikInputSignature from '../FormikInputSignature'
 import Button from '../Button'
 import { createUUID } from '../../libs/createId'
 import ImagePreview from '../ImagePreview'
-import {
-  selectCustomers,
-  useCustomers
-} from '../../state/features/costumers/costumersSlice'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useAuth } from '../../contexts/authContext'
-import { deleteField } from 'firebase/firestore'
-import { useSelector } from 'react-redux'
 import asDate from '../../libs/utils-date'
+
 const FormCustomerImages = (props?: FormCustomerImagesProps) => {
   const customerId = props?.customerId
   const { update, data } = useCustomers()
   const images = data?.find((c) => c.id === props.customerId).images || {}
-  console.log({ images, data })
   const modal = useModal({ title: 'Agregar imagen' })
   const handleAddCustomerImage = async (image: ImageDescriptionType) => {
     const imageId = createUUID({ length: 8 })
