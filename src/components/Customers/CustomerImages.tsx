@@ -20,7 +20,7 @@ import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useAuth } from '../../contexts/authContext'
 import asDate from '../../libs/utils-date'
 
-const FormCustomerImages = (props?: FormCustomerImagesProps) => {
+const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
   const { update, data } = useCustomers()
   const images = data?.find((c) => c.id === props.customerId).images || {}
@@ -78,9 +78,12 @@ const FormCustomerImages = (props?: FormCustomerImagesProps) => {
               height={100}
               width={100}
               title={image.type}
+              description={image.description}
             />
             <Text>{image.type}</Text>
-            <Text style={gStyles.helper}>{image.description}</Text>
+            <Text style={[gStyles.helper, { maxWidth: 100 }]} numberOfLines={2}>
+              {image.description}
+            </Text>
           </View>
         ))}
       </View>
@@ -149,13 +152,13 @@ export const FormikImageDescription = ({
     </Formik>
   )
 }
-export default FormCustomerImages
-export type FormCustomerImagesProps = {
+export default CustomerImages
+export type CustomerImagesProps = {
   images: CustomerType['images']
   customerId: string
 }
-export const FormCustomerImagesE = (props: FormCustomerImagesProps) => (
-  <ErrorBoundary componentName="FormCustomerImages">
-    <FormCustomerImages {...props} />
+export const CustomerImagesE = (props: CustomerImagesProps) => (
+  <ErrorBoundary componentName="CustomerImages">
+    <CustomerImages {...props} />
   </ErrorBoundary>
 )

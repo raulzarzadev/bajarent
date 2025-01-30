@@ -16,7 +16,7 @@ export type CustomersState = {
 }
 export const initialState: CustomersState = {
   data: [],
-  loading: false,
+  loading: true,
   error: null
 }
 export const customersSlice = createSlice({

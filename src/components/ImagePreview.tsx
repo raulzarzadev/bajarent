@@ -19,7 +19,8 @@ const ImagePreview = ({
   height = 150,
   justIcon = false,
   icon,
-  onDelete
+  onDelete,
+  description
 }: {
   image: string
   title?: string
@@ -28,8 +29,10 @@ const ImagePreview = ({
   fullscreen?: boolean
   icon?: IconName
   justIcon?: boolean
+  description?: string
   onDelete?: () => void | Promise<void>
 }) => {
+  //TODO: add button edit
   const modal = useModal({ title: title })
   //if (!image) return <></>
   return (
@@ -129,6 +132,7 @@ const ImagePreview = ({
             </Text>
           </ButtonConfirm>
         )}
+        {description && <Text>{description} </Text>}
         <Image
           source={{ uri: image }}
           style={{

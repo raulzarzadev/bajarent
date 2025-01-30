@@ -35,3 +35,10 @@ export type ImageDescriptionType = {
 export type NewCustomer = Partial<Omit<CustomerBase, 'storeId'>> &
   //* make storeId required
   Pick<CustomerBase, 'storeId'>
+
+export type CustomerCompiledType = {
+  name: CustomerType['name']
+  neighborhood: CustomerAddress['neighborhood']
+  street: CustomerAddress['street']
+  contacts: Record<CustomerContact['label'], CustomerContact['value']>
+}
