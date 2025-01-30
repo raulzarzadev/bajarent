@@ -19,10 +19,12 @@ import ImagePreview from '../ImagePreview'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useAuth } from '../../contexts/authContext'
 import asDate from '../../libs/utils-date'
+import { useEmployee } from '../../contexts/employeeContext'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
   const { update, data } = useCustomers()
+  const { permissions } = useEmployee()
   const images = data?.find((c) => c.id === props.customerId).images || {}
   const modal = useModal({ title: 'Agregar imagen' })
   const handleAddCustomerImage = async (image: ImageDescriptionType) => {
@@ -42,6 +44,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
       (a, b) =>
         asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
     )
+  const canDeleteImages = permissions?.orders?.canDelete || permissions?.isAdmin
   return (
     <View style={[gStyles.container]}>
       <View
@@ -87,9 +90,9 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         {customerImages?.map((image) => (
           <View key={image.id} style={{ margin: 4 }}>
             <ImagePreview
-              onDelete={() => {
-                handleDeleteImage(image.id)
-              }}
+              onDelete={
+                canDeleteImages ? () => handleDeleteImage(image.id) : undefined
+              }
               image={image.src}
               height={100}
               width={100}

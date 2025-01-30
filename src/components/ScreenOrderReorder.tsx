@@ -5,15 +5,18 @@ import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 const ScreenOrderReorder = ({ route }) => {
   const orderId = route?.params?.orderId
   const { navigate } = useNavigation()
+  const { data: customers } = useCustomers()
   const [originalOrder, setOriginalOrder] = useState<OrderType | null>(null)
   useEffect(() => {
     getFullOrderData(orderId).then((order) => setOriginalOrder(order))
   }, [orderId])
   const newOrder: Partial<OrderType> = {
+    customerId: originalOrder?.customerId || '',
     contacts: originalOrder?.contacts || [],
     status: order_status.AUTHORIZED,
     storeId: originalOrder?.storeId || '',
@@ -35,19 +38,16 @@ const ScreenOrderReorder = ({ route }) => {
     street: originalOrder?.street || '',
     expireAt: null,
     references: originalOrder?.references || ''
-    // description: originalOrder?.description || '', //* describe the failure
-    //items: originalOrder?.items || [],
-    //item: originalOrder?.item || null,
-    //itemBrand: originalOrder?.itemBrand || '',
-    //itemSerial: originalOrder?.itemSerial || '',
+  }
+  const customer = customers.find((c) => c?.id === originalOrder?.customerId)
+  if (customer) {
+    newOrder.fullName = customer.name
   }
 
   if (!originalOrder) return <ActivityIndicator />
 
   return (
     <FormOrder
-      //renew={originalOrder.folio}
-      // title="Re Ordenar"
       defaultValues={newOrder}
       onSubmit={async (order) => {
         //   .then(console.log)

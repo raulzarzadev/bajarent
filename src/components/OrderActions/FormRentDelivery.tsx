@@ -74,11 +74,6 @@ const FormRentDelivery = ({
           const disabledUpdate = loading || !dirty
           return (
             <>
-              {ORDER_FIELDS.includes('selectItems') && (
-                <View style={{ marginVertical: 8 }}>
-                  <FormikSelectCategoriesE name="items" selectPrice />
-                </View>
-              )}
               {ORDER_FIELDS.includes('note') && (
                 <FormikInputValue name="note" label="Contrato" />
               )}
@@ -113,7 +108,11 @@ const FormRentDelivery = ({
                   </View>
                 )}
               </View>
-
+              {ORDER_FIELDS.includes('selectItems') && (
+                <View style={{ marginVertical: 8 }}>
+                  <FormikSelectCategoriesE name="items" selectPrice />
+                </View>
+              )}
               <FormikErrorsList />
 
               <Button
