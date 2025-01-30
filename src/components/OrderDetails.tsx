@@ -493,7 +493,7 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           paddingHorizontal: 16,
           alignItems: 'center',
           flexWrap: 'wrap',
@@ -502,29 +502,44 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
       >
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'center'
           }}
         >
-          {isAdmin ? <ModalChangeOrderFolio /> : null}
-          <Text
+          <View
             style={{
-              textAlign: 'center'
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end'
             }}
           >
-            <P bold size="lg">
-              Folio:{' '}
-            </P>
-            <P size="lg">{order?.folio}</P>
-          </Text>
-          {!!order?.note && (
-            <Text style={{ textAlign: 'center' }}>
-              <P bold size="lg">
-                Contrato:{' '}
-              </P>
-              <P size="lg">{order?.note}</P>
+            {isAdmin ? <ModalChangeOrderFolio /> : null}
+            <Text
+              style={{
+                textAlign: 'right'
+              }}
+            >
+              <Text style={gStyles.helper}>Folio: </Text>
             </Text>
+            <Text style={gStyles.h1}>{order?.folio}</Text>
+          </View>
+          {!!order?.note && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: 'center'
+                }}
+              >
+                <Text style={gStyles.helper}>Contrato: </Text>
+              </Text>
+              <Text style={gStyles.h2}>{order?.note}</Text>
+            </View>
           )}
         </View>
       </View>

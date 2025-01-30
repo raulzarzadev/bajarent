@@ -1,6 +1,5 @@
 import { IoMdSwap, IoMdAdd } from 'react-icons/io'
 
-import React from 'react'
 import {
   MdEdit,
   MdClose,
@@ -20,7 +19,6 @@ import {
   MdInfoOutline,
   MdWarningAmber,
   MdOutlineUndo,
-  MdCancel,
   MdOutlineRefresh,
   MdCopyAll,
   MdUpload,
@@ -33,7 +31,8 @@ import {
   MdStarHalf,
   MdOutlineHistory,
   MdOutlineInventory,
-  MdMyLocation
+  MdMyLocation,
+  MdOutlineMailOutline
 } from 'react-icons/md'
 import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
 import { IoPricetagsOutline } from 'react-icons/io5'
@@ -84,6 +83,7 @@ import { FaCloudDownloadAlt } from 'react-icons/fa'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  email: MdOutlineMailOutline,
   customerCard: FaAddressCard,
   backup: FaCloudDownloadAlt,
   balance: FaBalanceScale,

@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Linking } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import { gStyles } from '../../styles'
 import Button from '../Button'
@@ -7,6 +7,7 @@ import StyledModal from '../StyledModal'
 import { FormikCustomerContacts } from './FormCustomer'
 import { Formik } from 'formik'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import CardPhone from '../CardPhone'
 const CustomerContacts = (props?: CustomerContactsProps) => {
   const { data: customers, loading, update } = useCustomers()
   const customerContacts = customers.find(
@@ -44,9 +45,32 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
                 margin: 'auto'
               }}
             >
-              <Text style={{ width: 100 }}>{contact?.label}</Text>
+              <Text
+                style={{ width: 120, alignSelf: 'center' }}
+                numberOfLines={1}
+              >
+                {contact?.label}
+              </Text>
               {/* <Text>{contact?.type}</Text> */}
-              <Text>{contact?.value}</Text>
+              {contact.type === 'phone' && <CardPhone phone={contact.value} />}
+              {contact.type === 'email' && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: 200
+                  }}
+                >
+                  <Text style={{ alignSelf: 'center' }}>{contact.value}</Text>
+                  <Button
+                    variant="ghost"
+                    justIcon
+                    icon="email"
+                    onPress={() => {
+                      Linking.openURL(`mailto:${contact.value}`)
+                    }}
+                  />
+                </View>
+              )}
             </View>
           )
       )}
