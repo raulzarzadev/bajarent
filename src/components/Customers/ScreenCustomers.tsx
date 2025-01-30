@@ -1,9 +1,8 @@
 import ErrorBoundary from '../ErrorBoundary'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
-import ListCustomers from '../ListClients'
+
+import { ListCustomersE } from '../ListClients'
 const ScreenCustomers = () => {
-  const { data: customers } = useCustomers()
-  return <ListCustomers customers={customers} />
+  return <ListCustomersE />
 }
 export default ScreenCustomers
 export type ScreenCustomersProps = {}

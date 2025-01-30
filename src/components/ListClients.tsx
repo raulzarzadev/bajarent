@@ -1,10 +1,42 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { ListE } from './List'
 import ListRow from './ListRow'
 import useMyNav from '../hooks/useMyNav'
-import { CustomerType } from '../state/features/costumers/customerType'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { useEffect, useState } from 'react'
+import ErrorBoundary from './ErrorBoundary'
+export type ListCustomerType = {
+  id: string
+  name: string
+  contact: string
+  neighborhood: string
+  street: string
+  // status: string
+}
+const ListCustomers = () => {
+  const { data: customers } = useCustomers()
+  const [formattedCustomers, setFormattedCustomers] = useState<
+    ListCustomerType[]
+  >([])
+  useEffect(() => {
+    if (customers.length) {
+      const formatted = customers.map((customer) => {
+        const contactsArray = Object.values(customer.contacts || {})
+        const contact =
+          contactsArray.find((contact) => contact.type === 'phone')?.value ||
+          contactsArray[0]?.value
+        return {
+          id: customer?.id,
+          name: customer?.name,
+          contact,
+          neighborhood: customer?.address?.neighborhood || '',
+          street: customer?.address?.street || ''
+        }
+      })
+      setFormattedCustomers(formatted)
+    }
+  }, [customers])
 
-const ListCustomers = ({ customers }: { customers: CustomerType[] }) => {
   const { toCustomers } = useMyNav()
   return (
     <View>
@@ -37,16 +69,12 @@ const ListCustomers = ({ customers }: { customers: CustomerType[] }) => {
             label: 'Colonia'
           },
           {
-            key: 'address',
-            label: 'Dirección'
-          },
-          {
-            key: 'status',
-            label: 'Estatus'
+            key: 'street',
+            label: 'Calle'
           }
         ]}
         filters={[]}
-        data={customers}
+        data={formattedCustomers}
         ComponentRow={({ item }) => <RowClient customer={item} />}
         onPressRow={(id) => {
           toCustomers({ to: 'details', id })
@@ -55,32 +83,24 @@ const ListCustomers = ({ customers }: { customers: CustomerType[] }) => {
     </View>
   )
 }
-const RowClient = ({ customer }: { customer: CustomerType }) => {
+const RowClient = ({ customer }: { customer: ListCustomerType }) => {
   return (
     <ListRow
       fields={[
         {
-          component: (
-            <View>
-              <Text>{customer?.name}</Text>
-            </View>
-          ),
+          component: <Text>{customer?.name}</Text>,
           width: 'rest'
         },
         {
-          component: <View>{/* <Text>{customer}</Text> */}</View>,
+          component: <Text>{customer?.contact}</Text>,
           width: 'rest'
         },
         {
-          component: <View>{/* <Text>{client?.neighborhood}</Text> */}</View>,
+          component: <Text>{customer?.neighborhood}</Text>,
           width: 'rest'
         },
         {
-          component: <View>{/* <Text>{client?.address}</Text> */}</View>,
-          width: 'rest'
-        },
-        {
-          component: <View>{/* <Text>{client?.status}</Text> */}</View>,
+          component: <Text>{customer?.street}</Text>,
           width: 'rest'
         }
       ]}
@@ -90,4 +110,9 @@ const RowClient = ({ customer }: { customer: CustomerType }) => {
 
 export default ListCustomers
 
-const styles = StyleSheet.create({})
+export type ListCustomersProps = {}
+export const ListCustomersE = (props: ListCustomersProps) => (
+  <ErrorBoundary componentName="ListCustomers">
+    <ListCustomers {...props} />
+  </ErrorBoundary>
+)
