@@ -1,8 +1,7 @@
-import React from 'react'
 import FormOrder from './FormOrder'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
 import { onRentStart } from '../libs/order-actions'
@@ -11,7 +10,7 @@ import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { CustomerType } from '../state/features/costumers/customerType'
 import { createUUID } from '../libs/createId'
 //
-const ScreenOrderNew = ({ navigation }) => {
+const ScreenOrderNew = () => {
   const { storeId, store } = useStore()
   const { create } = useCustomers()
   const { user } = useAuth()

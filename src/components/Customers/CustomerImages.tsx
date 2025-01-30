@@ -35,17 +35,33 @@ const CustomerImages = (props?: CustomerImagesProps) => {
   }
   const customerImages = Object.entries(images)
     .reduce((acc, [id, image]) => {
-      if (!image.deletedAt) acc.push({ ...image, id })
+      if (!image?.deletedAt) acc.push({ ...image, id })
       return acc
     }, [])
     .sort(
-      (a, b) => asDate(b?.createdAt).getTime() - asDate(a?.createdAt).getTime()
+      (a, b) =>
+        asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
     )
   return (
-    <View>
-      <Text style={gStyles.h3}>Imagenes</Text>
+    <View style={[gStyles.container]}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Text style={gStyles.h3}>Imagenes </Text>
+        <Button
+          icon="add"
+          onPress={modal.toggleOpen}
+          variant="ghost"
+          size="small"
+          justIcon
+        />
+      </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        <Pressable
+        {/* <Pressable
           onPress={modal.toggleOpen}
           style={({ pressed }) => ({
             width: 100,
@@ -66,7 +82,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
           })}
         >
           <Icon icon="add" size={60} />
-        </Pressable>
+        </Pressable> */}
 
         {customerImages?.map((image) => (
           <View key={image.id} style={{ margin: 4 }}>

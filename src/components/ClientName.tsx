@@ -1,7 +1,5 @@
 import { Text, TextStyle } from 'react-native'
-import React from 'react'
 import OrderType from '../types/OrderType'
-import { gStyles } from '../styles'
 
 const ClientName = ({
   order,

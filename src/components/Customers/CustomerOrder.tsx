@@ -19,8 +19,8 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
         {customer?.address?.references}
       </Text>
 
-      <CustomerImagesE images={customer.images} customerId={customer.id} />
       <CustomerContactsE customerId={customer.id} />
+      <CustomerImagesE images={customer.images} customerId={customer.id} />
     </View>
   )
 }
