@@ -7,6 +7,8 @@ import FormikInputValue from '../FormikInputValue'
 import FormikInputSelect from '../FormikInputSelect'
 import { gStyles } from '../../styles'
 import { FormikInputPhoneE } from '../FormikInputPhone'
+import { createUUID } from '../../libs/createId'
+import ButtonConfirm from '../ButtonConfirm'
 const FormCustomer = (props?: FormCustomerProps) => {
   const defaultCustomer: Partial<CustomerType> = {
     name: '',
@@ -59,7 +61,7 @@ const FormCustomer = (props?: FormCustomerProps) => {
     </View>
   )
 }
-const FormikCustomerContacts = () => {
+export const FormikCustomerContacts = () => {
   const { values, setValues } = useFormikContext<Partial<CustomerType>>()
 
   const isMobile = Dimensions.get('window').width <= 768
@@ -67,63 +69,88 @@ const FormikCustomerContacts = () => {
   const layoutStyle = isMobile
     ? { marginBottom: 4 }
     : { marginRight: 2, maxWidth: 100 }
-
   return (
     <View>
       <Text style={gStyles.h3}>Contactos</Text>
-      {Object.entries(values.contacts || {}).map(([key, value]) => (
-        <View
-          key={key}
-          style={[
-            styles.input,
-            { marginBottom: 8, flexDirection: isMobile ? 'column' : 'row' }
-          ]}
-        >
-          <FormikInputValue
-            name={`contacts.${key}.label`}
-            placeholder="Nombre"
-            style={{ ...layoutStyle }}
-          />
-          <FormikInputSelect
-            name={`contacts.${key}.type`}
-            placeholder="Tipo"
-            containerStyle={{ ...layoutStyle }}
-            options={[
-              {
-                label: 'Teléfono',
-                value: 'phone'
-              },
-              {
-                label: 'Correo',
-                value: 'email'
-              }
-            ]}
-          />
-          {values.contacts[key].type === 'phone' && (
-            <FormikInputPhoneE name={`contacts.${key}.value`} />
-          )}
-          {values.contacts[key].type === 'email' && (
-            <FormikInputValue
-              containerStyle={{ flex: 1 }}
-              placeholder="Correo"
-              name={`contacts.${key}.value`}
-            />
-          )}
-        </View>
-      ))}
+      {Object.entries(values.contacts || {}).map(
+        ([key, value]) =>
+          !values.contacts[key].deletedAt && (
+            <View
+              key={key}
+              style={[
+                styles.input,
+                { marginBottom: 8, flexDirection: isMobile ? 'column' : 'row' }
+              ]}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <Button
+                  justIcon
+                  icon="delete"
+                  variant="ghost"
+                  size="small"
+                  color="error"
+                  onPress={() => {
+                    setValues({
+                      ...values,
+                      contacts: {
+                        ...values.contacts,
+                        [key]: {
+                          ...values.contacts[key],
+                          deletedAt: new Date()
+                        }
+                      }
+                    })
+                  }}
+                />
+
+                <FormikInputValue
+                  name={`contacts.${key}.label`}
+                  placeholder="Nombre"
+                  style={{ ...layoutStyle }}
+                  containerStyle={{ flex: 1 }}
+                />
+              </View>
+              <FormikInputSelect
+                name={`contacts.${key}.type`}
+                placeholder="Tipo"
+                containerStyle={{ ...layoutStyle }}
+                options={[
+                  {
+                    label: 'Teléfono',
+                    value: 'phone'
+                  },
+                  {
+                    label: 'Correo',
+                    value: 'email'
+                  }
+                ]}
+              />
+              {values.contacts[key]?.type === 'phone' && (
+                <FormikInputPhoneE name={`contacts.${key}.value`} />
+              )}
+              {values.contacts[key]?.type === 'email' && (
+                <FormikInputValue
+                  containerStyle={{ flex: 1 }}
+                  placeholder="Correo"
+                  name={`contacts.${key}.value`}
+                />
+              )}
+            </View>
+          )
+      )}
 
       <Button
         onPress={() => {
-          const length = Object.keys(values.contacts || {}).length + 1
+          const contactId = createUUID({ length: 8 })
           setValues({
             ...values,
             contacts: {
               ...values.contacts,
-              [length]: {
+              [contactId]: {
                 label: '',
                 type: '',
                 value: '',
-                id: `${length}`
+                id: `${contactId}`
               }
             }
           })

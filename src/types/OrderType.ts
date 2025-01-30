@@ -37,8 +37,12 @@ export type OrderBase = {
 
   // * this option is marked when order wasn't fund in the system. Should disabled order actions
   isConsolidated?: boolean
-
+  /**
+   * @deprecated use customerId instead
+   */
   clientId: string
+
+  customerId: string
   note: string
 
   repairType?: RepairOrderType

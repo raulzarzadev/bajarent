@@ -11,12 +11,18 @@ import FormRentDelivery from './FormRentDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ErrorsList } from '../FormikErrorsList'
 import { useStore } from '../../contexts/storeContext'
-import { order_type } from '../../types/OrderType'
+import OrderType, { order_type } from '../../types/OrderType'
 import FormikCheckbox from '../FormikCheckbox'
 import InputCheckbox from '../InputCheckbox'
 import FormPayment from '../FormPayment'
 import PaymentType, { PaymentBase } from '../../types/PaymentType'
 import { ServicePayments } from '../../firebase/ServicePayments'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import { createUUID } from '../../libs/createId'
+import {
+  CustomerType,
+  ImageDescriptionType
+} from '../../state/features/costumers/customerType'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { store } = useStore()
@@ -24,6 +30,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { user } = useAuth()
   const [isDirty, setIsDirty] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+  const { update: updateCustomer } = useCustomers()
   const handleRentStart = async ({
     lastPayment
   }: {
@@ -67,8 +74,30 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
         </View>
         <FormRentDelivery
           initialValues={order}
-          onSubmit={async (values) => {
+          onSubmit={async (values: OrderType) => {
             delete values.expireAt // <-- Do not update expireAt because
+            //* update customer
+            if (order.customerId) {
+              const customerImages = createImages({
+                houseImage: values?.imageHouse || null,
+                ID: values?.imageID || null,
+                signature: values?.signature || null
+              })
+              const customerUpdates: Partial<CustomerType> = {
+                images: customerImages as Record<string, ImageDescriptionType>,
+                address: {
+                  references: values.references || '',
+                  neighborhood: values.neighborhood || '',
+                  street: values.street || '',
+                  locationURL: values.location || '',
+                  coords: values.coords
+                    ? `${values.coords[0]},${values.coords[1]}`
+                    : null
+                }
+              }
+              await updateCustomer(order.customerId, customerUpdates)
+            }
+
             await ServiceOrders.update(order.id, values)
               .then((res) => console.log(res))
               .catch((e) => console.error(e))
@@ -189,3 +218,35 @@ const AddPay = ({
 }
 
 export default ModalRentStart
+
+const createImages = ({ houseImage, ID, signature }) => {
+  let customerImages: Record<string, Partial<ImageDescriptionType>> = {}
+  if (houseImage) {
+    const id = createUUID({ length: 8 })
+    customerImages[id] = {
+      src: houseImage,
+      description: 'Fachada',
+      type: 'house',
+      id
+    }
+  }
+  if (ID) {
+    const id = createUUID({ length: 8 })
+    customerImages[id] = {
+      src: ID,
+      description: 'Identificación',
+      type: 'ID',
+      id
+    }
+  }
+  if (signature) {
+    const id = createUUID({ length: 8 })
+    customerImages[id] = {
+      src: signature,
+      description: 'Firma',
+      type: 'signature',
+      id
+    }
+  }
+  return customerImages
+}

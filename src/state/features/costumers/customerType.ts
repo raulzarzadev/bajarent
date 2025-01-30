@@ -13,6 +13,7 @@ export type CustomerContact = {
   label: string
   type: string
   value: string
+  deletedAt?: Date
 }
 
 export type CustomerType = CustomerBase & BaseType

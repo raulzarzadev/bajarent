@@ -5,6 +5,7 @@ import Button from '../Button'
 import useMyNav from '../../hooks/useMyNav'
 import { gStyles } from '../../styles'
 import { CustomerImagesE } from './CustomerImages'
+import { CustomerContactsE } from './CustomerContacts'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading } = useCustomers()
@@ -44,22 +45,7 @@ const ScreenCustomer = (params) => {
       <Text style={{ textAlign: 'center' }}>
         Referencias: {customer?.address?.references}
       </Text>
-      <Text style={gStyles.h3}>Contactos</Text>
-      {Object.entries(customer?.contacts || {}).map(([id, contact]) => (
-        <View
-          key={contact?.id}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            maxWidth: 400,
-            margin: 'auto'
-          }}
-        >
-          <Text style={{ width: 100 }}>{contact?.label}</Text>
-          {/* <Text>{contact?.type}</Text> */}
-          <Text>{contact?.value}</Text>
-        </View>
-      ))}
+      <CustomerContactsE customerId={customer.id} />
       <CustomerImagesE images={customer?.images} customerId={customer?.id} />
     </ScrollView>
   )

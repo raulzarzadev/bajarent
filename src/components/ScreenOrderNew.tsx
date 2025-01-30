@@ -8,13 +8,39 @@ import { orderExpireAt } from '../libs/orders'
 import { onRentStart } from '../libs/order-actions'
 import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { CustomerType } from '../state/features/costumers/customerType'
+import { createUUID } from '../libs/createId'
 //
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId, store } = useStore()
-  const {} = useCustomers()
+  const { create } = useCustomers()
   const { user } = useAuth()
   const { toOrders } = useMyNav()
   const handleSubmit = async (values: OrderType) => {
+    const contactId = createUUID({ length: 8 })
+    const newCustomer: Partial<CustomerType> = {
+      name: values.fullName || '',
+      address: {
+        street: values.address || '',
+        references: values.references || '',
+        neighborhood: values.neighborhood || '',
+        locationURL: values.location || '',
+        coords: values.coords ? `${values.coords[0]},${values.coords[1]}` : null
+      },
+      contacts: {
+        [contactId]: {
+          label: 'Principal',
+          value: values.phone || '',
+          type: 'phone',
+          id: contactId
+        }
+      }
+    }
+    const { payload } = await create(storeId, newCustomer)
+    console.log({ payload })
+    if (payload) {
+      values.customerId = payload.id
+    }
     const defaultValues = {
       //* Default values
       storeId: storeId,

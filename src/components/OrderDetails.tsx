@@ -46,6 +46,7 @@ import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import ModalChangeOrderFolio from './ModalChangeOrderFolio'
 import { useEmployee } from '../contexts/employeeContext'
 import { SaleItemsInfoE } from './SaleItemsInfo'
+import { CustomerOrderE } from './Customers/CustomerOrder'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const [defaultAmount, setDefaultAmount] = useState(0)
@@ -140,36 +141,40 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         <OrderDirectivesE order={order} />
       </View>
 
-      <View
-        style={{
-          padding: 4,
-          flexDirection: 'row',
-          justifyContent: 'center'
-        }}
-      >
-        <ClientName order={order} style={gStyles.h1} />
-        <ButtonCreateClient
-          client={{
-            name: order?.fullName || '',
-            phone: order?.phone || '',
-            neighborhood: order?.neighborhood || '',
-            address: order?.address || '',
-            imageHouse: order?.imageHouse || null,
-            imageID: order?.imageID || null,
-            isActive: order.status === order_status.DELIVERED
+      {/* {order.customerId ? ( */}
+      <CustomerOrderE customerId={order.customerId} />
+      {/* ) : ( */}
+      <>
+        <View
+          style={{
+            padding: 4,
+            flexDirection: 'row',
+            justifyContent: 'center'
           }}
-          storeId={order.storeId}
-          orderId={order.id}
-          clientId={order.clientId}
-        />
-      </View>
-
-      <OrderContacts />
-      <OrderImages order={order} />
-
-      <ErrorBoundary componentName="OrderAddress">
-        <OrderAddress order={order} />
-      </ErrorBoundary>
+        >
+          <ClientName order={order} style={gStyles.h1} />
+          <ButtonCreateClient
+            client={{
+              name: order?.fullName || '',
+              phone: order?.phone || '',
+              neighborhood: order?.neighborhood || '',
+              address: order?.address || '',
+              imageHouse: order?.imageHouse || null,
+              imageID: order?.imageID || null,
+              isActive: order.status === order_status.DELIVERED
+            }}
+            storeId={order.storeId}
+            orderId={order.id}
+            clientId={order.clientId}
+          />
+        </View>
+        <OrderContacts />
+        <OrderImages order={order} />
+        <ErrorBoundary componentName="OrderAddress">
+          <OrderAddress order={order} />
+        </ErrorBoundary>
+      </>
+      {/* )} */}
 
       {/*//* <-----Order actions flow */}
       <View style={{ marginTop: 8 }} />
