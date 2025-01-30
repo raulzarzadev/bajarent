@@ -1,36 +1,29 @@
 import { View, Text, ScrollView } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import { FormCustomerE } from './FormCustomer'
-import { useDispatch } from 'react-redux'
-import {
-  createCustomer,
-  updateCustomer
-} from '../../state/features/costumers/customersThunks'
 import { NewCustomer } from '../../state/features/costumers/customerType'
-import { AppDispatch } from '../../state/store'
 import { useStore } from '../../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
 import { gStyles } from '../../styles'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 const ScreenCustomerForm = (navigate) => {
-  const dispatch = useDispatch<AppDispatch>()
+  const customerId = navigate?.route?.params?.id
   const navigation = useNavigation()
 
   const { storeId } = useStore()
-  const { data: customers } = useCustomers()
+  const { data: customers, create, update } = useCustomers()
 
-  const customerId = navigate?.route?.params?.id
   const defaultCustomer = customers.find((c) => c.id === customerId) || null
 
   const handleSubmit = async (customer: NewCustomer) => {
     if (customerId) {
       //* Edit  customer
-      await dispatch(updateCustomer({ customer, customerId }))
+      await update(customerId, customer)
       navigation.goBack()
     } else {
       //* Create  customer
-      const res = await dispatch(createCustomer({ customer, storeId }))
+      await create(storeId, customer)
       navigation.goBack()
     }
   }
@@ -44,8 +37,8 @@ const ScreenCustomerForm = (navigate) => {
     }
   }, [customers])
 
-  if (customer === undefined) return <Text>Cargando...</Text>
-  if (customer === null) return <Text>Cliente no encontrado</Text>
+  if (customerId && customer === undefined) return <Text>Cargando...</Text>
+  //if (customer === null) return <Text>Cliente no encontrado</Text>
 
   return (
     <ScrollView>

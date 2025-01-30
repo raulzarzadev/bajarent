@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { CustomerType } from './customerType'
 import {
-  createCustomer,
+  createCustomer as createCustomerThunk,
   fetchCustomers,
   updateCustomer as updateCustomerThunk
 } from './customersThunks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { produce } from 'immer'
+import StoreType from '../../../types/StoreType'
 
 export type CustomersState = {
   data: CustomerType[]
@@ -56,10 +57,10 @@ export const customersSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Failed to fetch customers'
       })
-      .addCase(createCustomer.fulfilled, (state, action) => {
+      .addCase(createCustomerThunk.fulfilled, (state, action) => {
         state.data.push(action.payload)
       })
-      .addCase(createCustomer.rejected, (state, action) => {
+      .addCase(createCustomerThunk.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to create customer'
       })
       .addCase(updateCustomerThunk.fulfilled, (state, action) => {
@@ -98,17 +99,24 @@ export const customersReducer = customersSlice.reducer
 
 export const useCustomers = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const update = (id: string, changes: Partial<CustomerType>) => {
-    dispatch(
+  const update = async (id: string, changes: Partial<CustomerType>) => {
+    return await dispatch(
       updateCustomerThunk({
         customer: changes,
         customerId: id
       })
     )
   }
+  const create = async (
+    storeId: StoreType['id'],
+    customer: Partial<CustomerType>
+  ) => {
+    return await dispatch(createCustomerThunk({ customer, storeId }))
+  }
   const customers = useSelector(selectCustomers)
   return {
     ...customers,
-    update
+    update,
+    create
   }
 }

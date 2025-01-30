@@ -34,7 +34,7 @@ export type ImageDescriptionType = {
 
 export type NewCustomer = Partial<Omit<CustomerBase, 'storeId'>> &
   //* make storeId required
-  Pick<CustomerBase, 'storeId'>
+  Pick<CustomerBase, 'storeId' | 'name'>
 
 export type CustomerCompiledType = {
   name: CustomerType['name']

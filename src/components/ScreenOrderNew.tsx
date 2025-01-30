@@ -7,9 +7,11 @@ import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
 import { onRentStart } from '../libs/order-actions'
 import useMyNav from '../hooks/useMyNav'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 //
 const ScreenOrderNew = ({ navigation }) => {
   const { storeId, store } = useStore()
+  const {} = useCustomers()
   const { user } = useAuth()
   const { toOrders } = useMyNav()
   const handleSubmit = async (values: OrderType) => {
