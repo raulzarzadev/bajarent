@@ -1,10 +1,5 @@
-import { Text, View, Linking, Pressable, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import OrderType, {
-  order_status,
-  order_type,
-  SaleOrderItem
-} from '../types/OrderType'
+import { Text, View, Linking, Pressable } from 'react-native'
+import OrderType, { order_status, order_type } from '../types/OrderType'
 import P from './P'
 import theme, { colors } from '../theme'
 import asDate, { dateFormat } from '../libs/utils-date'
@@ -26,8 +21,6 @@ import { translateTime } from '../libs/expireDate'
 import { OrderDirectivesE } from './OrderDirectives'
 import Button from './Button'
 import LinkLocation from './LinkLocation'
-import { useNavigation } from '@react-navigation/native'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import dictionary from '../dictionary'
 import SpanUser from './SpanUser'
 import OrderImages from './OrderImages'
@@ -49,24 +42,6 @@ import { SaleItemsInfoE } from './SaleItemsInfo'
 import { CustomerOrderE } from './Customers/CustomerOrder'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
-  const [defaultAmount, setDefaultAmount] = useState(0)
-  useEffect(() => {
-    if (order?.type === order_type.REPAIR) {
-      setDefaultAmount(order?.quote?.amount || order?.repairTotal || 0)
-    }
-    const multiItemOrderAmount = order?.items?.reduce((acc, item) => {
-      const price = item?.priceSelected?.amount || 0
-      const qty = item?.priceQty || 1
-
-      // ? * qty should be 1 always ?
-      //FIXME: This is a problem when you update items , types and price selected ...
-      return acc + price * qty
-    }, 0)
-    if (order?.type === order_type.RENT) {
-      setDefaultAmount(multiItemOrderAmount)
-    }
-  }, [])
-
   if (order?.isConsolidated) {
     const consolidated = order as unknown as ConsolidatedOrderType
     return (
