@@ -109,9 +109,8 @@ const ButtonConfirm = ({
                 modal.toggleOpen()
                 handleCancel()
               }}
-            >
-              Cancelar
-            </Button>
+              label="Cancelar"
+            ></Button>
           )}
           {!hideConfirm && (
             <Button
@@ -133,9 +132,8 @@ const ButtonConfirm = ({
                     modal.toggleOpen()
                   })
               }}
-            >
-              {confirmLabel}
-            </Button>
+              label={confirmLabel}
+            ></Button>
           )}
         </View>
       </StyledModal>

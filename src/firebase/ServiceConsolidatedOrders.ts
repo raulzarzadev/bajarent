@@ -118,6 +118,7 @@ const splitOrdersCount = (count: number = 500, orders: any[]) => {
 //#region FUNCTIONS
 const formatConsolidateOrder = (order: OrderType, payments: PaymentType[]) => {
   return {
+    customerId: order?.customerId || null,
     fullName: order?.fullName || '',
     phone: order?.phone || '',
     //email: order?.email || '',

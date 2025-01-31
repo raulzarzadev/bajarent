@@ -38,7 +38,7 @@ const ScreenOrderNew = () => {
     const { payload } = await create(storeId, newCustomer)
     console.log({ payload })
     if (payload) {
-      values.customerId = payload.id
+      values.customerId = payload?.id
     }
     const defaultValues = {
       //* Default values

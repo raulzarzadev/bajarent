@@ -27,7 +27,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
         <Button
           onPress={modal.toggleOpen}
           justIcon
-          icon="edit"
+          icon="add"
           variant="ghost"
           size="small"
         />

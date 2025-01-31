@@ -6,6 +6,7 @@ import useMyNav from '../../hooks/useMyNav'
 import { gStyles } from '../../styles'
 import { CustomerImagesE } from './CustomerImages'
 import { CustomerContactsE } from './CustomerContacts'
+import { CustomerOrdersE } from './CustomerOrders'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading } = useCustomers()
@@ -47,6 +48,7 @@ const ScreenCustomer = (params) => {
       </Text>
       <CustomerContactsE customerId={customer.id} />
       <CustomerImagesE images={customer?.images} customerId={customer?.id} />
+      <CustomerOrdersE customerId={customer.id} />
     </ScrollView>
   )
 }

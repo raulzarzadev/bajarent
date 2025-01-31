@@ -1,4 +1,11 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { LoadingList } from './List'
 import ListRow, { ListRowField } from './ListRow'
@@ -19,6 +26,10 @@ import MultiOrderActions from './OrderActions/MultiOrderActions'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Button from './Button'
+import { createUUID } from '../libs/createId'
+import { ButtonCreateClientE } from './ButtonCreateClient'
+import { ButtonAddCustomerE } from './Customers/ButtonAddCustomer'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
@@ -72,6 +83,8 @@ const ListOrdersConsolidated = () => {
   }, [storeId, otherConsolidatedCount])
   const modal = useModal({ title: 'Otras consolidadas' })
 
+  const modalCustomers = useModal({ title: 'Clientes' })
+
   return (
     <ScrollView>
       <View>
@@ -102,12 +115,16 @@ const ListOrdersConsolidated = () => {
             icon="down"
           ></Button>
         </StyledModal>
+        <StyledModal {...modalCustomers}>
+          <ConsolidateCustomersList data={data} />
+        </StyledModal>
         <Pressable onPress={() => modal.toggleOpen()}>
           <Text style={[gStyles.helper, gStyles.tCenter]}>
             Última actualización{' '}
             {fromNow(asDate(consolidatedOrders?.createdAt))}
           </Text>
         </Pressable>
+
         <LoadingList
           ComponentRow={({ item }) => <ComponentRow item={item} />}
           pinRows
@@ -129,6 +146,14 @@ const ListOrdersConsolidated = () => {
                 await handleConsolidate()
               },
               disabled,
+              visible: true
+            },
+            {
+              icon: 'customerCard',
+              label: 'Customers',
+              onPress: () => {
+                modalCustomers.toggleOpen()
+              },
               visible: true
             }
           ]}
@@ -303,3 +328,75 @@ export const ListOrdersConsolidatedE = (props) => (
 )
 
 export default ListOrdersConsolidated
+
+export const ConsolidateCustomersList = ({ data }) => {
+  const { storeId } = useStore()
+  const reducedData = data
+    .map((o) => {
+      const contactId = createUUID({ length: 8 })
+      const newCustomer = {
+        id: o.customerId || null,
+        name: o.fullName || '',
+        address: {
+          // street: o.address || '',
+          //references: o.references || '',
+          neighborhood: o?.neighborhood || '',
+          locationURL: o?.location || ''
+          //coords: o.coords ? `${o.coords[0]},${o.coords[1]}` : null
+        },
+        contacts: {
+          [contactId]: {
+            label: 'Principal',
+            value: o.phone || '',
+            type: 'phone',
+            id: contactId
+          }
+        },
+        orderId: o?.id || null,
+        orderFolio: o?.folio || null,
+        storeId: storeId
+      }
+
+      return newCustomer
+    })
+    // .reduce((acc, client) => {
+    //   const includeCustomer = acc?.some((c) => c.id && client.id === c.id)
+    //   const includePhone = acc?.some(
+    //     (c) =>
+    //       Object.values(client.contacts)[0]?.value ===
+    //       Object.values(c.contacts)[0]?.value
+    //   )
+    //   const includeName = acc?.some((c) => client.name === c.name)
+    //   if (includeCustomer || includePhone || includeName) {
+    //     client.orderId && acc?.orders?.push(client.orderId)
+    //     return acc
+    //   }
+    //   acc?.push(client)
+    //   return acc
+    // }, [])
+    .sort((a, b) => {
+      return a.name.localeCompare(b.name)
+    })
+
+  return (
+    <View>
+      <FlatList
+        data={reducedData}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              marginVertical: 2
+            }}
+          >
+            {!item?.id && <ButtonAddCustomerE customer={item} />}
+            <Text>
+              {item.orderFolio} {item.name}{' '}
+            </Text>
+          </View>
+        )}
+      />
+    </View>
+  )
+}

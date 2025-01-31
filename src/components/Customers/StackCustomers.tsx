@@ -29,7 +29,7 @@ export function StackCustomers() {
         name="ScreenCustomer"
         options={({ route }) => ({
           //@ts-ignore
-          title: `Detalle de cliente`
+          title: `Detalles de cliente`
         })}
         component={ScreenCustomerE}
       />

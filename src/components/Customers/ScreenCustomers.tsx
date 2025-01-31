@@ -1,8 +1,13 @@
+import { ScrollView } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 
 import { ListCustomersE } from '../ListClients'
 const ScreenCustomers = () => {
-  return <ListCustomersE />
+  return (
+    <ScrollView>
+      <ListCustomersE />
+    </ScrollView>
+  )
 }
 export default ScreenCustomers
 export type ScreenCustomersProps = {}

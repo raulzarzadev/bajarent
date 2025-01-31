@@ -2,7 +2,6 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { ClientType } from '../types/ClientType'
-import { useNavigation } from '@react-navigation/native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import ButtonConfirm from './ButtonConfirm'
 import ImagePreview from './ImagePreview'
@@ -10,18 +9,14 @@ import ListRow from './ListRow'
 import TextInfo from './TextInfo'
 import { colors } from '../theme'
 import CardClient from './CardClient'
+import ErrorBoundary from './ErrorBoundary'
 
 const ButtonCreateClient = ({
   client,
   storeId,
   orderId,
   clientId
-}: {
-  client: Partial<ClientType>
-  storeId: string
-  orderId: string
-  clientId?: string
-}) => {
+}: ButtonCreateClientProps) => {
   const [clients, setClients] = React.useState<Partial<ClientType>[]>([])
   const [selectedClient, setSelectedClient] =
     React.useState<Partial<ClientType['id']>>(clientId)
@@ -51,7 +46,7 @@ const ButtonCreateClient = ({
     <View>
       {canCreateClient && (
         <ButtonConfirm
-          modalTitle="Crear cliente"
+          // modalTitle="Crear cliente"
           icon="profileAdd"
           justIcon
           openVariant="ghost"
@@ -66,7 +61,7 @@ const ButtonCreateClient = ({
               : handleCreateClient()
           }}
           confirmColor="success"
-          confirmLabel={selectedClient ? 'Asociar cliente' : 'Crear cliente'}
+          // confirmLabel={selectedClient ? 'Asociar cliente' : 'Crear cliente'}
         >
           <View style={{ marginVertical: 8 }}>
             <Pressable
@@ -229,5 +224,15 @@ const ListOfSimilarClients = ({
 }
 
 export default ButtonCreateClient
-
+export type ButtonCreateClientProps = {
+  client: Partial<ClientType>
+  storeId: string
+  orderId: string
+  clientId?: string
+}
+export const ButtonCreateClientE = (props: ButtonCreateClientProps) => (
+  <ErrorBoundary componentName="ButtonCreateClient">
+    <ButtonCreateClient {...props} />
+  </ErrorBoundary>
+)
 const styles = StyleSheet.create({})
