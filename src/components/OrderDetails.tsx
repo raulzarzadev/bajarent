@@ -31,7 +31,6 @@ import { OrderActionsE } from './OrderActions/OrderActions2'
 import ModalRepairItem from './ModalRepairItem'
 import OrderContacts from './OrderContacts'
 import useMyNav from '../hooks/useMyNav'
-import OrderBigStatus from './OrderBigStatus'
 import { useStore } from '../contexts/storeContext'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import ModalChangeOrderFolio from './ModalChangeOrderFolio'
@@ -39,6 +38,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import { SaleItemsInfoE } from './SaleItemsInfo'
 import { CustomerOrderE } from './Customers/CustomerOrder'
 import { ButtonAddCustomerE } from './Customers/ButtonAddCustomer'
+import OrderBigStatus from './OrderBigStatus'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   if (order?.isConsolidated) {
@@ -114,7 +114,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       >
         <OrderDirectivesE order={order} />
       </View>
-      <OrderBigStatus />
+
       {order.customerId ? (
         <CustomerOrderE customerId={order.customerId} />
       ) : (
@@ -479,13 +479,14 @@ export const OrderMetadata = ({ order }: { order: Partial<OrderType> }) => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           paddingHorizontal: 16,
           alignItems: 'center',
           flexWrap: 'wrap',
           marginBottom: 8
         }}
       >
+        <OrderBigStatus />
         <View
           style={{
             flexDirection: 'column',

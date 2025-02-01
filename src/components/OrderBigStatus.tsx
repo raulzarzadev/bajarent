@@ -43,7 +43,7 @@ const OrderBigStatus = () => {
     `${dateFormat(asDate(date), 'dd MMM yy')} (${fromNow(asDate(date))})`
 
   return (
-    <View style={{ marginVertical: 8 }}>
+    <View style={{ marginVertical: 2, flex: 1 }}>
       {isCancelled && (
         <Badge
           color={'error'}
