@@ -113,7 +113,6 @@ const FormOrderA = ({
     setCustomerId(defaultValues.customerId)
   }, [defaultValues?.customerId])
 
-  console.log({ customerId })
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
@@ -315,7 +314,6 @@ const FormOrderA = ({
                   return true
                 }
               })
-            console.log({ orderFields })
             return (
               <>
                 <InputRadiosFormik
