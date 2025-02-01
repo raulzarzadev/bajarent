@@ -10,6 +10,7 @@ import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { StackPaymentsE } from './StackPayments'
 import StackItems from './StackItems'
 import { ScreenMessagesE } from './ScreenMessages'
+import ScreenOrderNew from './ScreenOrderNew'
 
 const Stack = createStackNavigator()
 function StackOrders() {

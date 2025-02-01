@@ -4,6 +4,7 @@ import ErrorBoundary from '../ErrorBoundary'
 import { ScreenCustomersE } from './ScreenCustomers'
 import { ScreenCustomerE } from './ScreenCustomer'
 import ScreenCustomerForm, { ScreenCustomerFormE } from './ScreenCustomerForm'
+import ScreenOrderNew from '../ScreenOrderNew'
 
 const Stack = createStackNavigator()
 export function StackCustomers() {

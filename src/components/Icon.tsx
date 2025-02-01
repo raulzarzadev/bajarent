@@ -81,8 +81,26 @@ import { BiCommentDots } from 'react-icons/bi'
 import { FaBalanceScale } from 'react-icons/fa'
 import { FaCloudDownloadAlt } from 'react-icons/fa'
 
+import { LuClipboardPlus } from 'react-icons/lu'
+import { LuClipboardPenLine } from 'react-icons/lu'
+import { LuClipboardMinus } from 'react-icons/lu'
+import { LuClipboardCheck } from 'react-icons/lu'
+import { LuClipboard } from 'react-icons/lu'
+import { LuClipboardList } from 'react-icons/lu'
+import { LuClipboardPaste } from 'react-icons/lu'
+import { TbClipboardSearch } from 'react-icons/tb'
+
 // https://react-icons.github.io/react-icons/
 const icons = {
+  orderAdd: LuClipboardPlus,
+  orderSearch: TbClipboardSearch,
+  orderEdit: LuClipboardPenLine,
+  orderGo: LuClipboardPaste,
+  orderList: LuClipboardList,
+  order: LuClipboard,
+  orderDone: LuClipboardCheck,
+  orderRemove: LuClipboardMinus,
+
   email: MdOutlineMailOutline,
   customerCard: FaAddressCard,
   backup: FaCloudDownloadAlt,

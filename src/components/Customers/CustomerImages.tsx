@@ -5,7 +5,6 @@ import {
   CustomerType,
   ImageDescriptionType
 } from '../../state/features/costumers/customerType'
-import Icon from '../Icon'
 import useModal from '../../hooks/useModal'
 import StyledModal from '../StyledModal'
 import FormikInputImage from '../FormikInputImage'
@@ -25,7 +24,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
   const { update, data } = useCustomers()
   const { permissions } = useEmployee()
-  const images = data?.find((c) => c.id === props.customerId).images || {}
+  const images = data?.find((c) => c.id === props.customerId)?.images || {}
   const modal = useModal({ title: 'Agregar imagen' })
   const handleAddCustomerImage = async (image: ImageDescriptionType) => {
     const imageId = createUUID({ length: 8 })
@@ -64,29 +63,6 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         />
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        {/* <Pressable
-          onPress={modal.toggleOpen}
-          style={({ pressed }) => ({
-            width: 100,
-            height: 100,
-            borderWidth: 2,
-            borderStyle: 'dashed',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 12,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 2,
-              height: 2
-            },
-            shadowRadius: 6,
-            shadowOpacity: pressed ? 0.5 : 0.2,
-            margin: 4
-          })}
-        >
-          <Icon icon="add" size={60} />
-        </Pressable> */}
-
         {customerImages?.map((image) => (
           <View key={image.id} style={{ margin: 4 }}>
             <ImagePreview

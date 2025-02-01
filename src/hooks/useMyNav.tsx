@@ -112,20 +112,22 @@ const useMyNav = () => {
       })
     }
   }
-
-  const toOrders = ({
-    id,
-    ids,
-    screenNew,
-    idsTitle,
-    screen
-  }: {
+  type ToOrdersType = {
     id?: string
     ids?: string[]
     screenNew?: boolean
     idsTitle?: string
     screen?: 'renew'
-  }) => {
+    customerId?: string
+  }
+  const toOrders = ({
+    id,
+    ids,
+    screenNew,
+    idsTitle,
+    screen,
+    customerId
+  }: ToOrdersType = {}) => {
     if (screen === 'renew') {
       //@ts-ignore
       navigate('StackOrders', {
@@ -146,9 +148,12 @@ const useMyNav = () => {
         }
       })
     }
+
     if (screenNew) {
       //@ts-ignore
-      navigate('NewOrder')
+      navigate('NewOrder', {
+        customerId
+      })
       return
     }
     if (id) {
@@ -224,6 +229,7 @@ const useMyNav = () => {
 export type ToCustomersType =
   | {
       to: 'new'
+      customerId?: string
     }
   | {
       to: 'details'

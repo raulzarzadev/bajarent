@@ -5,6 +5,9 @@ import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import { ConsolidateCustomersList } from './ListOrdersConsolidated'
 export type ListCustomerType = {
   id: string
   name: string
@@ -38,11 +41,20 @@ const ListCustomers = () => {
   }, [customers])
 
   const { toCustomers } = useMyNav()
+  const modalConsolidatedList = useModal({ title: 'Ordenes consolidadas' })
   return (
     <View>
       <ListE
         rowsPerPage={20}
         sideButtons={[
+          {
+            icon: 'customerCard',
+            label: 'Tarjeta de Cliente',
+            onPress: () => {
+              modalConsolidatedList.toggleOpen()
+            },
+            visible: true
+          },
           {
             icon: 'add',
             label: 'Nuevo Cliente',
@@ -80,6 +92,9 @@ const ListCustomers = () => {
           toCustomers({ to: 'details', id })
         }}
       />
+      <StyledModal {...modalConsolidatedList}>
+        <ConsolidateCustomersList />
+      </StyledModal>
     </View>
   )
 }

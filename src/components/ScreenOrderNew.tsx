@@ -10,7 +10,8 @@ import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { CustomerType } from '../state/features/costumers/customerType'
 import { createUUID } from '../libs/createId'
 //
-const ScreenOrderNew = () => {
+const ScreenOrderNew = (navigation) => {
+  const customerId = navigation?.route?.params?.customerId
   const { storeId, store } = useStore()
   const { create } = useCustomers()
   const { user } = useAuth()
@@ -35,10 +36,12 @@ const ScreenOrderNew = () => {
         }
       }
     }
-    const { payload } = await create(storeId, newCustomer)
-    console.log({ payload })
-    if (payload) {
-      values.customerId = payload?.id
+    if (!values.customerId) {
+      const { payload } = await create(storeId, newCustomer)
+      console.log({ payload })
+      if (payload) {
+        values.customerId = payload?.id
+      }
     }
     const defaultValues = {
       //* Default values
@@ -96,7 +99,7 @@ const ScreenOrderNew = () => {
   }
   return (
     <>
-      <FormOrder onSubmit={handleSubmit} />
+      <FormOrder onSubmit={handleSubmit} defaultValues={{ customerId }} />
     </>
   )
 }

@@ -1,13 +1,6 @@
-import {
-  FlatList,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { LoadingList } from './List'
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { ListE, LoadingList } from './List'
 import ListRow, { ListRowField } from './ListRow'
 import {
   ConsolidatedOrderType,
@@ -26,13 +19,16 @@ import MultiOrderActions from './OrderActions/MultiOrderActions'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Button from './Button'
-import { createUUID } from '../libs/createId'
-import { ButtonCreateClientE } from './ButtonCreateClient'
 import { ButtonAddCustomerE } from './Customers/ButtonAddCustomer'
+import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { customerFromOrder } from './Customers/lib/customerFromOrder'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import TextInfo from './TextInfo'
 export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
+  isCustomer?: boolean
 }
 
 const ListOrdersConsolidated = () => {
@@ -49,7 +45,8 @@ const ListOrdersConsolidated = () => {
     return {
       id: order.id,
       ...order,
-      assignToSectionName: assignedToSection
+      assignToSectionName: assignedToSection,
+      isCustomer: !!order.customerId
     }
   })
   const [disabled, setDisabled] = useState(false)
@@ -83,8 +80,6 @@ const ListOrdersConsolidated = () => {
   }, [storeId, otherConsolidatedCount])
   const modal = useModal({ title: 'Otras consolidadas' })
 
-  const modalCustomers = useModal({ title: 'Clientes' })
-
   return (
     <ScrollView>
       <View>
@@ -115,9 +110,7 @@ const ListOrdersConsolidated = () => {
             icon="down"
           ></Button>
         </StyledModal>
-        <StyledModal {...modalCustomers}>
-          <ConsolidateCustomersList data={data} />
-        </StyledModal>
+
         <Pressable onPress={() => modal.toggleOpen()}>
           <Text style={[gStyles.helper, gStyles.tCenter]}>
             Última actualización{' '}
@@ -147,14 +140,6 @@ const ListOrdersConsolidated = () => {
               },
               disabled,
               visible: true
-            },
-            {
-              icon: 'customerCard',
-              label: 'Customers',
-              onPress: () => {
-                modalCustomers.toggleOpen()
-              },
-              visible: true
             }
           ]}
           onPressRow={(orderId) => {
@@ -165,6 +150,13 @@ const ListOrdersConsolidated = () => {
             })
           }}
           filters={[
+            {
+              field: 'isCustomer',
+              label: 'Es cliente',
+              boolean: true,
+              icon: 'customerCard',
+              booleanValue: true
+            },
             {
               field: 'type',
               label: 'Tipo'
@@ -252,6 +244,7 @@ const ListOrdersConsolidated = () => {
 }
 
 const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
+  const { toCustomers } = useMyNav()
   const fields: ListRowField[] = [
     {
       width: 120,
@@ -301,6 +294,19 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
       width: 'rest',
       //@ts-ignore
       component: <OrderDirectives order={order} />
+    },
+    {
+      width: 100,
+      component: order.customerId ? (
+        <Button
+          icon="customerCard"
+          size="xs"
+          fullWidth={false}
+          onPress={() => {
+            toCustomers({ to: 'details', id: order.customerId })
+          }}
+        />
+      ) : null
     }
   ]
   return (
@@ -329,58 +335,151 @@ export const ListOrdersConsolidatedE = (props) => (
 
 export default ListOrdersConsolidated
 
-export const ConsolidateCustomersList = ({ data }) => {
-  const { storeId } = useStore()
+export const ConsolidateCustomersList = () => {
+  const { consolidatedOrders } = useOrdersCtx()
+  const { storeId, sections: storeSections } = useStore()
+  const orders = consolidatedOrders?.orders || {}
+
+  const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
+    const assignedToSection =
+      storeSections?.find((section) => section.id === order.assignToSection)
+        ?.name || null
+    return {
+      id: order.id,
+      ...order,
+      assignToSectionName: assignedToSection,
+      isCustomer: !!order.customerId
+    }
+  })
   const reducedData = data
-    .map((o) => {
-      const contactId = createUUID({ length: 8 })
-      const newCustomer = {
-        id: o.customerId || null,
-        name: o.fullName || '',
-        address: {
-          // street: o.address || '',
-          //references: o.references || '',
-          neighborhood: o?.neighborhood || '',
-          locationURL: o?.location || ''
-          //coords: o.coords ? `${o.coords[0]},${o.coords[1]}` : null
-        },
-        contacts: {
-          [contactId]: {
-            label: 'Principal',
-            value: o.phone || '',
-            type: 'phone',
-            id: contactId
-          }
-        },
-        orderId: o?.id || null,
-        orderFolio: o?.folio || null,
-        storeId: storeId
+
+  const { create } = useCustomers()
+  const { toCustomers } = useMyNav()
+  const [progress, setProgress] = useState(0)
+  const [createCustomerDisabled, setCreateCustomerDisabled] = useState(false)
+  const handleCreateCustomers = async ({ ids }) => {
+    setCreateCustomerDisabled(true)
+    const orders = data.filter((order) => ids.includes(order.id))
+    let progress = 0
+    for (const order of orders) {
+      const customer = customerFromOrder(order, { storeId })
+      progress++
+      await create(storeId, customer)
+        .then((res) => {
+          console.log({ res })
+        })
+        .catch((error) => {
+          console.error('Error creating customer', error)
+        })
+      await ServiceOrders.update(order.id, {
+        customerId: customer.id
+      })
+        .then((res) => {
+          console.log({ res })
+        })
+        .catch((error) => {
+          console.error('Error creating customer', error)
+        })
+      setProgress(progress)
+      if (progress === ids.length) {
+        setProgress(0)
+        setCreateCustomerDisabled(false)
       }
-
-      return newCustomer
-    })
-    // .reduce((acc, client) => {
-    //   const includeCustomer = acc?.some((c) => c.id && client.id === c.id)
-    //   const includePhone = acc?.some(
-    //     (c) =>
-    //       Object.values(client.contacts)[0]?.value ===
-    //       Object.values(c.contacts)[0]?.value
-    //   )
-    //   const includeName = acc?.some((c) => client.name === c.name)
-    //   if (includeCustomer || includePhone || includeName) {
-    //     client.orderId && acc?.orders?.push(client.orderId)
-    //     return acc
-    //   }
-    //   acc?.push(client)
-    //   return acc
-    // }, [])
-    .sort((a, b) => {
-      return a.name.localeCompare(b.name)
-    })
-
+    }
+  }
   return (
     <View>
-      <FlatList
+      <ListE
+        rowsPerPage={40}
+        data={reducedData}
+        ComponentRow={({ item }) => (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              marginVertical: 2
+            }}
+          >
+            <Text>
+              {item.folio} {item.fullName}
+            </Text>
+
+            {!item?.customerId && (
+              // TODO: arregralr esto por que puede que no se esten formateadno correctamente los clientes
+              <ButtonAddCustomerE order={item} />
+            )}
+            {item?.customerId && (
+              <Button
+                icon="arrowForward"
+                onPress={() => {
+                  toCustomers({ to: 'details', id: item?.customerId })
+                }}
+                color="success"
+                justIcon
+                variant="ghost"
+                size="xs"
+              />
+            )}
+          </View>
+        )}
+        filters={[
+          {
+            label: 'Es cliente',
+            field: 'isCustomer',
+            boolean: true,
+            icon: 'customerCard',
+            booleanValue: false,
+            color: colors.blue,
+            titleColor: colors.white
+          }
+        ]}
+        sortFields={[
+          {
+            key: 'folio',
+            label: 'Folio'
+          },
+          {
+            key: 'fullName',
+            label: 'Nombre'
+          }
+        ]}
+        ComponentMultiActions={({ ids }) => {
+          return (
+            <View>
+              {createCustomerDisabled ? (
+                <>
+                  <Text style={gStyles.tCenter}>
+                    Se estan creando los clientes
+                  </Text>
+                  <Text style={gStyles.tCenter}>
+                    Creando <Text style={gStyles.tBold}>{progress}</Text> de{' '}
+                    <Text style={gStyles.tBold}>{ids.length || 0} </Text>
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <TextInfo
+                    defaultVisible
+                    type="warning"
+                    text="Esto creara nuevos clientes y no verifica si estos existen o no antes de crearlo. Asegurate de no agregar clientes nuevos. "
+                  ></TextInfo>
+                  <TextInfo
+                    defaultVisible
+                    type="info"
+                    text="Se modificara la orden con el nuevo usuario"
+                  ></TextInfo>
+                </>
+              )}
+              <Button
+                label="Crear customer"
+                disabled={createCustomerDisabled}
+                onPress={() => handleCreateCustomers({ ids })}
+              ></Button>
+            </View>
+          )
+        }}
+      />
+      {/* <FlatList
         data={reducedData}
         renderItem={({ item }) => (
           <View
@@ -390,13 +489,27 @@ export const ConsolidateCustomersList = ({ data }) => {
               marginVertical: 2
             }}
           >
-            {!item?.id && <ButtonAddCustomerE customer={item} />}
-            <Text>
-              {item.orderFolio} {item.name}{' '}
+            {item?.customerId && (
+              <Pressable
+                onPress={() => {
+                  toCustomers({ to: 'details', id: item?.customerId })
+                }}
+              />
+            )} */}
+      {/* {!item?.customerId && (
+              // TODO: arregralr esto por que puede que no se esten formateadno correctamente los clientes
+              <ButtonAddCustomerE
+                customer={customerFromOrder(item, { isConsolidate: true })}
+              />
+            )} */}
+      {/* <Text>
+              {item.folio} {item.fullName}{' '}
             </Text>
           </View>
         )}
-      />
+      /> */}
     </View>
   )
 }
+
+const OrderConsolidateAction = () => {}

@@ -9,10 +9,10 @@ import { Formik } from 'formik'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import CardPhone from '../CardPhone'
 const CustomerContacts = (props?: CustomerContactsProps) => {
-  const { data: customers, loading, update } = useCustomers()
-  const customerContacts = customers.find(
-    (c) => c.id === props.customerId
-  ).contacts
+  const { data: customers, update } = useCustomers()
+  const customerContacts = customers?.find(
+    (c) => c?.id === props?.customerId
+  )?.contacts
   const modal = useModal({ title: 'Agregar contacto' })
   return (
     <View>
@@ -78,7 +78,9 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
         <Formik
           initialValues={{ contacts: customerContacts }}
           onSubmit={async (values) => {
-            return await update(props.customerId, { contacts: values.contacts })
+            return await update(props.customerId, {
+              contacts: values?.contacts
+            })
           }}
         >
           {({ handleSubmit, isSubmitting }) => (

@@ -10,7 +10,7 @@ import { CustomerOrdersE } from './CustomerOrders'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading } = useCustomers()
-  const { toCustomers } = useMyNav()
+  const { toOrders, toCustomers } = useMyNav()
   const customer = customers.find((c) => c.id === customerId)
   if (loading) return <Text>Cargando...</Text>
   if (!customer) return <Text>Cliente no encontrado</Text>
@@ -25,7 +25,6 @@ const ScreenCustomer = (params) => {
           alignItems: 'center'
         }}
       >
-        <Text style={[gStyles.h2]}>{customer?.name} </Text>
         <Button
           icon="edit"
           justIcon
@@ -33,6 +32,18 @@ const ScreenCustomer = (params) => {
           size="small"
           onPress={() => {
             toCustomers({ to: 'edit', id: customer.id })
+          }}
+        ></Button>
+        <Text style={[gStyles.h2]}>{customer?.name} </Text>
+
+        <Button
+          icon="orderAdd"
+          justIcon
+          color="success"
+          variant="ghost"
+          size="small"
+          onPress={() => {
+            toOrders({ customerId: customer?.id, screenNew: true })
           }}
         ></Button>
       </View>

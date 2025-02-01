@@ -1,5 +1,4 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
+import { View } from 'react-native'
 import OrderType from '../types/OrderType'
 import ImagePreview from './ImagePreview'
 
@@ -12,7 +11,7 @@ const OrderImages = ({ order }: { order: Partial<OrderType> }) => {
         flexWrap: 'wrap'
       }}
     >
-      {order?.imageID && (
+      {!!order?.imageID && (
         <ImagePreview
           image={order?.imageID}
           title="Imagen ID"
@@ -20,7 +19,7 @@ const OrderImages = ({ order }: { order: Partial<OrderType> }) => {
           height={100}
         />
       )}
-      {order?.imageHouse && (
+      {!!order?.imageHouse && (
         <ImagePreview
           image={order?.imageHouse}
           title="Imagen Casa"
@@ -28,7 +27,7 @@ const OrderImages = ({ order }: { order: Partial<OrderType> }) => {
           height={100}
         />
       )}
-      {order?.signature && (
+      {!!order?.signature && (
         <ImagePreview
           image={order?.signature}
           title="signature"

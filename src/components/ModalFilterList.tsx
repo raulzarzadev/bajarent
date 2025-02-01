@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useFilter, { CollectionSearch } from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -292,7 +292,7 @@ function ModalFilterList<T>({
                   }}
                   style={{
                     margin: 4,
-                    borderWidth: 4,
+                    borderWidth: 3,
                     borderColor: isFilterSelected(field, 'true')
                       ? theme.black
                       : 'transparent'

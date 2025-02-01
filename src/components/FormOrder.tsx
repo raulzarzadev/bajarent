@@ -17,9 +17,7 @@ import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
 import InputTextStyled from './InputTextStyled'
 import theme from '../theme'
-import FormikSelectCategories, {
-  FormikSelectCategoriesE
-} from './FormikSelectCategories'
+import { FormikSelectCategoriesE } from './FormikSelectCategories'
 import Loading from './Loading'
 import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
@@ -29,11 +27,8 @@ import FormikInputSignature from './FormikInputSignature'
 import FormikInputSelect from './FormikInputSelect'
 import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import { InputDateE } from './InputDate'
-import { ModalPayment } from './ModalPayment'
-import { orderAmount } from '../libs/order-amount'
 import { ModalPaymentSale } from './ModalPaymentSale'
-import ButtonConfirm from './ButtonConfirm'
-import ModalChangeOrderFolio from './ModalChangeOrderFolio'
+import { CustomerOrderE } from './Customers/CustomerOrder'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -110,6 +105,15 @@ const FormOrderA = ({
   defaultValues = initialValues,
   title
 }: FormOrderProps) => {
+  const [customerId, setCustomerId] = useState<string | null>(
+    defaultValues?.customerId || null
+  )
+
+  useEffect(() => {
+    setCustomerId(defaultValues.customerId)
+  }, [defaultValues?.customerId])
+
+  console.log({ customerId })
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
   const { store } = useStore()
@@ -146,7 +150,7 @@ const FormOrderA = ({
   const initialValues = {
     ...defaultValues,
     type: defaultType,
-
+    customerId: customerId || null,
     phone:
       defaultValues?.phone === 'undefined' || !defaultValues.phone
         ? ''
@@ -200,6 +204,17 @@ const FormOrderA = ({
         {!!error && (
           <Text style={[gStyles.p, { color: theme.error }]}>{error}</Text>
         )}
+        {customerId && (
+          <>
+            <CustomerOrderE customerId={customerId} />
+            <Button
+              label="Omitir cliente"
+              onPress={() => {
+                setCustomerId(null)
+              }}
+            />
+          </>
+        )}
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, { resetForm }) => {
@@ -225,8 +240,9 @@ const FormOrderA = ({
           }}
           validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
-            if (!values.fullName) errors.fullName = 'Nombre necesario'
-            if (!values.phone || values.phone.length < 12)
+            if (!values.fullName && !customerId)
+              errors.fullName = 'Nombre necesario'
+            if ((!values.phone || values.phone.length < 12) && !customerId)
               errors.phone = 'Teléfono valido es necesario'
 
             const ITEMS_MAX_BY_ORDER =
@@ -276,6 +292,30 @@ const FormOrderA = ({
               setErrors({})
               //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
             }, [values])
+            const orderFields = getOrderFields(
+              store?.orderFields?.[values.type] as OrderFields,
+              //@ts-ignore FIXME: as TypeOrder or TypeOrderKey
+              values.type
+            )
+              // if customerId is set omit customer fields
+              .filter((field) => {
+                if (customerId) {
+                  return ![
+                    'fullName',
+                    'phone',
+                    'address',
+                    'neighborhood',
+                    'location',
+                    'references',
+                    'imageID',
+                    'imageHouse',
+                    'signature'
+                  ].includes(field)
+                } else {
+                  return true
+                }
+              })
+            console.log({ orderFields })
             return (
               <>
                 <InputRadiosFormik
@@ -298,11 +338,7 @@ const FormOrderA = ({
                 )}
 
                 <FormFields
-                  fields={getOrderFields(
-                    store?.orderFields?.[values.type] as OrderFields,
-                    //@ts-ignore FIXME: as TypeOrder or TypeOrderKey
-                    values.type
-                  )}
+                  fields={orderFields}
                   values={values}
                   setValues={setValues}
                   setLoading={setLoading}

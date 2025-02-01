@@ -1,6 +1,5 @@
 import { Text, View, Linking, Pressable } from 'react-native'
 import OrderType, { order_status, order_type } from '../types/OrderType'
-import P from './P'
 import theme, { colors } from '../theme'
 import asDate, { dateFormat } from '../libs/utils-date'
 import CurrencyAmount from './CurrencyAmount'
@@ -26,7 +25,6 @@ import SpanUser from './SpanUser'
 import OrderImages from './OrderImages'
 import OrderExtensions from './OrderExtensions'
 import PaymentVerify from './PaymentVerify'
-import ButtonCreateClient from './ButtonCreateClient'
 import RowOrderItem from './RowOrderItem'
 import { useOrderDetails } from '../contexts/orderContext'
 import { OrderActionsE } from './OrderActions/OrderActions2'
@@ -40,6 +38,7 @@ import ModalChangeOrderFolio from './ModalChangeOrderFolio'
 import { useEmployee } from '../contexts/employeeContext'
 import { SaleItemsInfoE } from './SaleItemsInfo'
 import { CustomerOrderE } from './Customers/CustomerOrder'
+import { ButtonAddCustomerE } from './Customers/ButtonAddCustomer'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   if (order?.isConsolidated) {
@@ -128,20 +127,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
             }}
           >
             <ClientName order={order} style={gStyles.h1} />
-            <ButtonCreateClient
-              client={{
-                name: order?.fullName || '',
-                phone: order?.phone || '',
-                neighborhood: order?.neighborhood || '',
-                address: order?.address || '',
-                imageHouse: order?.imageHouse || null,
-                imageID: order?.imageID || null,
-                isActive: order.status === order_status.DELIVERED
-              }}
-              storeId={order.storeId}
-              orderId={order.id}
-              clientId={order.clientId}
-            />
+            {!order.customerId && <ButtonAddCustomerE order={order} />}
           </View>
           <OrderContacts />
           <OrderImages order={order} />
