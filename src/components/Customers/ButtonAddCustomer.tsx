@@ -54,6 +54,7 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
         })
     } else {
       const customerCreated = await create(storeId, customer)
+      //@ts-ignore
       const customerId = customerCreated.payload?.id
 
       await ServiceOrders.update(orderId, {
@@ -131,6 +132,7 @@ const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
         const someSameContact = Object.values(c.contacts || {}).some(
           (contact) => {
             return Object.values(customer?.contacts).some((contact2) => {
+              //@ts-ignore
               return contact.value === contact2.value
             })
           }
@@ -158,6 +160,7 @@ const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
         >
           <Text>{c.name}</Text>
           {Object.values(c.contacts || {}).map((contact) => (
+            //@ts-ignore
             <Text key={contact.id}>{contact.value}</Text>
           ))}
           <Text>{c?.address?.street}</Text>

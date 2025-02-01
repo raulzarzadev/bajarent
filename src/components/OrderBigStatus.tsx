@@ -1,11 +1,6 @@
 import { View, Text } from 'react-native'
-import React from 'react'
-import OrderType, {
-  order_status,
-  order_type,
-  TypeOrder
-} from '../types/OrderType'
-import theme, { Colors, colors } from '../theme'
+import { order_status, order_type } from '../types/OrderType'
+import theme, { Colors } from '../theme'
 import asDate, { dateFormat, fromNow } from '../libs/utils-date'
 import { useOrderDetails } from '../contexts/orderContext'
 import Icon, { IconName } from './Icon'

@@ -79,14 +79,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     if (!type) type = 'comment'
     if (!content) content = ''
 
-    const comment: CreateCommentType = {
+    const comment: Partial<CreateCommentType> = {
       orderId,
       storeId,
       type,
       content,
       solved: false,
-      isOrderMovement,
-      variant
+      isOrderMovement
     }
 
     return await ServiceComments.create(comment)

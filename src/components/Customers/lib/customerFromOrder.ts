@@ -20,12 +20,16 @@ export const customerFromOrder = (
     storeId: storeId || null,
 
     address: {
+      //@ts-ignore
       street: order?.address || '',
+      //@ts-ignore
       references: order?.references || '',
       neighborhood: order?.neighborhood || '',
       locationURL: order?.location || '',
+      //@ts-ignore
       coords: order?.coords
-        ? (`${order?.coords[0]},${order?.coords[1]}` as `${number},${number}`)
+        ? //@ts-ignore
+          (`${order?.coords[0]},${order?.coords[1]}` as `${number},${number}`)
         : null
     },
     contacts: customerOrderContacts(order)

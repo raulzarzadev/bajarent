@@ -38,8 +38,8 @@ const ScreenOrderNew = (navigation) => {
     }
     if (!values.customerId) {
       const { payload } = await create(storeId, newCustomer)
-      console.log({ payload })
       if (payload) {
+        //@ts-ignore
         values.customerId = payload?.id
       }
     }
