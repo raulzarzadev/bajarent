@@ -1,6 +1,5 @@
 import { View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import { useNavigation } from '@react-navigation/native'
 import Button from './Button'
 import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'

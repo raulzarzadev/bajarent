@@ -32,7 +32,6 @@ const OPACITY_ROW_COLOR = '66'
 const ListStoreItems = ({
   allItemsSections,
   allItems,
-  availableItemsSections,
   getAllAvailable
 }: {
   allItemsSections?: string[]

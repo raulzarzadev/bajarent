@@ -6,7 +6,6 @@ import ErrorBoundary from './ErrorBoundary'
 import ScreenComponents from './ScreenComponents'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
-import ScreenNewOrder from './ScreenOrderNew'
 import { useEmployee } from '../contexts/employeeContext'
 import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
@@ -34,8 +33,6 @@ const BottomAppBar = () => {
     permissions.items.canViewMyItems ||
     permissions.isAdmin ||
     permissions.isOwner
-
-  const showClientsButton = permissions?.customers?.read
 
   return (
     <Tab.Navigator
@@ -134,20 +131,8 @@ const BottomAppBar = () => {
         options={({ route }) => ({
           headerShown: false,
           title: 'Clientes'
-          //tabBarButton: showClientsButton ? undefined : () => null
-          // tabBarButton:
-          //   !canSeeOrders || !isAuthenticated ? () => null : undefined
         })}
       />
-
-      {/* <Tab.Screen
-        name="NewOrder"
-        component={ScreenNewOrder}
-        options={{
-          title: 'Nueva Orden',
-          tabBarButton: () => null
-        }}
-      /> */}
 
       <Tab.Screen
         name="Profile"
