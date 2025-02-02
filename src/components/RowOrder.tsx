@@ -82,10 +82,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
                 {!!order?.note && <Text numberOfLines={1}>-{order?.note}</Text>}
               </View>
             </View>
-            <Text
-              style={[{ textAlign: 'center' }, gStyles.tBold]}
-              numberOfLines={1}
-            >
+            <Text style={[{ textAlign: 'center' }]} numberOfLines={1}>
               {customer || <ClientName order={order} />}
             </Text>
             {!!order?.itemsString && (
