@@ -14,6 +14,7 @@ const ScreenComponents = () => {
     <ScrollView>
       <View style={gStyles.container}>
         <RowOrderE
+          //@ts-ignore
           item={{
             firstName: 'Manuel Trath',
             type: order_type.SALE,
@@ -30,7 +31,9 @@ const ScreenComponents = () => {
             hasImportantComment: true,
             markedToCollect: true,
             markedToCharge: true,
+
             comments: [
+              //@ts-ignore
               {
                 type: 'important',
                 solved: false,
@@ -40,6 +43,7 @@ const ScreenComponents = () => {
           }}
         />
         <RowOrderE
+          //@ts-ignore
           item={{
             firstName: 'Manuel ',
             type: order_type.RENT,
@@ -56,6 +60,7 @@ const ScreenComponents = () => {
           }}
         />
         <RowOrderE
+          //@ts-ignore
           item={{
             firstName: 'Manuel Direleret Graham ',
             type: order_type.RENT,
