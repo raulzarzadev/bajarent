@@ -295,7 +295,7 @@ const ListStoreItems = ({
           { key: 'status', label: 'Estado' }
         ]}
         onPressRow={(rowId) => {
-          toItems({ id: rowId })
+          toItems({ id: rowId, to: 'details' })
         }}
         ComponentRow={({ item }) => {
           return <RowItem item={item} />

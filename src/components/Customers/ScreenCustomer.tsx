@@ -45,7 +45,7 @@ const ScreenCustomer = (params) => {
           variant="ghost"
           size="small"
           onPress={() => {
-            toOrders({ customerId: customer?.id, screenNew: true })
+            toCustomers({ customerId: customer?.id, to: 'newOrder' })
           }}
         ></Button>
       </View>

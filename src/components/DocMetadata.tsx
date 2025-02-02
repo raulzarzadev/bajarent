@@ -21,7 +21,7 @@ const DocMetadata = ({
   style
 }: {
   item?: Partial<DocMetadataType>
-  style: ViewStyle
+  style?: ViewStyle
 }) => {
   return (
     <View style={[style]}>

@@ -6,13 +6,35 @@ const useMyNav = () => {
     id,
     screenNew,
     screenEdit,
-    ids
+    ids,
+    to
   }: {
+    to?: 'new' | 'edit' | 'details' | 'newOrder' | 'customerOrder'
     id?: string
     screenNew?: boolean
     screenEdit?: boolean
     ids?: string[]
   }) => {
+    if (to === 'details' && id) {
+      //@ts-ignore
+      navigate('StackItems', {
+        screen: 'ScreenItemsDetails',
+        params: {
+          id
+        }
+      })
+      return
+    }
+    if (to === 'edit' && id) {
+      //@ts-ignore
+      navigate('StackItems', {
+        screen: 'ScreenItemEdit',
+        params: {
+          id
+        }
+      })
+      return
+    }
     if (Array.isArray(ids) && ids.length > 0) {
       //@ts-ignore
       navigate('StackItems', {
@@ -87,12 +109,31 @@ const useMyNav = () => {
   }
 
   const toCustomers = (props: ToCustomersType) => {
+    if (props.to === 'customerOrder' && props.orderId) {
+      //@ts-ignore
+      navigate('StackOrders', {
+        screen: 'OrderDetails',
+        params: {
+          orderId: props.orderId
+        }
+      })
+    }
+    if (props?.to === 'newOrder' && props?.customerId) {
+      //@ts-ignore
+      navigate('StackOrders', {
+        screen: 'ScreenNewOrder',
+        params: {
+          customerId: props?.customerId
+        }
+      })
+    }
     if (props.to === 'new') {
       //@ts-ignore
       navigate('StackCustomers', {
         screen: 'ScreenCustomerNew'
       })
     }
+
     if (props.to === 'details' && props.id) {
       //@ts-ignore
       navigate('StackCustomers', {
@@ -119,6 +160,7 @@ const useMyNav = () => {
     idsTitle?: string
     screen?: 'renew'
     customerId?: string
+    to?: 'new' | 'details' | 'edit'
   }
   const toOrders = ({
     id,
@@ -126,8 +168,19 @@ const useMyNav = () => {
     screenNew,
     idsTitle,
     screen,
-    customerId
+    customerId,
+    to
   }: ToOrdersType = {}) => {
+    if (to === 'new') {
+      //@ts-ignore
+      navigate('StackOrders', {
+        screen: 'ScreenNewOrder',
+        params: {
+          customerId
+        }
+      })
+      return
+    }
     if (screen === 'renew') {
       //@ts-ignore
       navigate('StackOrders', {
@@ -238,6 +291,14 @@ export type ToCustomersType =
   | {
       to: 'edit'
       id: string
+    }
+  | {
+      to: 'newOrder'
+      customerId: string
+    }
+  | {
+      to: 'customerOrder'
+      orderId: string
     }
 
 export default useMyNav

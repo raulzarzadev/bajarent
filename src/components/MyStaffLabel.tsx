@@ -6,18 +6,19 @@ import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
 import { ModalCurrentWorkE } from './CurrentWork/ModalCurrentWork'
 import { useEmployee } from '../contexts/employeeContext'
+import useMyNav from '../hooks/useMyNav'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
   const { disabledEmployee, permissions, employee } = useEmployee()
   const { isAdmin, isOwner, orders } = permissions
   const canCreateNewOrders = orders?.canCreate || isAdmin
-  const navigation = useNavigation()
-
+  const { toOrders } = useMyNav()
   const handleClearHistory = () => {
     setItem(PERSISTENCE_KEY, '')
   }
-  //console.log({ store, canCreateNewOrders, permissions, employee })
+  //console.l
+  // og({ store, canCreateNewOrders, permissions, employee })
 
   return (
     <View>
@@ -41,8 +42,7 @@ const MyStaffLabel = () => {
             disabled={disabledEmployee && !(isAdmin || isOwner)}
             icon="add"
             onPress={() => {
-              // @ts-ignore
-              navigation.navigate('NewOrder')
+              toOrders({ to: 'new' })
             }}
             justIcon
             variant="outline"

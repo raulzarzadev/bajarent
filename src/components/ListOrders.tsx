@@ -14,7 +14,7 @@ export type ListOrderProps = {
   defaultOrdersIds?: string[]
   sideButtons?: ListSideButton[]
   collectionSearch?: CollectionSearch
-  onPressRow?: () => void
+  onPressRow?: (id: string) => void
   rowSideButtons?: ListSideButton[]
 }
 const ListOrders = ({
@@ -69,8 +69,7 @@ const ListOrders = ({
         defaultSortBy="folio"
         defaultOrder="des"
         onPressRow={(id) => {
-          toOrders({ id })
-          onPressRow?.()
+          onPressRow ? onPressRow(id) : toOrders({ id })
         }}
         rowSideButtons={rowSideButtons}
         sortFields={[

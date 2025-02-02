@@ -140,14 +140,14 @@ const BottomAppBar = () => {
         })}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="NewOrder"
         component={ScreenNewOrder}
         options={{
           title: 'Nueva Orden',
           tabBarButton: () => null
         }}
-      />
+      /> */}
 
       <Tab.Screen
         name="Profile"

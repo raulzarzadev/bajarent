@@ -121,6 +121,16 @@ function StackStore() {
         }}
         component={StackPaymentsE}
       />
+      {/* ITEMS */}
+      <Stack.Screen
+        name="StackItems"
+        options={{
+          title: 'Items',
+          headerShown: false
+          //tabBarButton: () => null
+        }}
+        component={StackItems}
+      />
 
       {/* ******************************************** 
                  MORE SCREENS                 
@@ -148,15 +158,6 @@ function StackStore() {
         options={{
           title: 'Mapa'
         }}
-      />
-      <Stack.Screen
-        name="StackItems"
-        options={{
-          title: 'Items',
-          headerShown: false
-          //tabBarButton: () => null
-        }}
-        component={StackItems}
       />
     </Stack.Navigator>
   )

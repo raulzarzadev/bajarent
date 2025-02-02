@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { where } from 'firebase/firestore'
 import ListOrders from '../ListOrders'
+import useMyNav from '../../hooks/useMyNav'
 const CustomerOrders = (props?: CustomerOrdersProps) => {
   const [orders, setOrders] = useState([])
+  const { toCustomers } = useMyNav()
   useEffect(() => {
     ServiceOrders.findMany([where('customerId', '==', props?.customerId)]).then(
       (orders) => {
@@ -15,7 +17,12 @@ const CustomerOrders = (props?: CustomerOrdersProps) => {
   }, [])
   return (
     <View>
-      <ListOrders orders={orders} />
+      <ListOrders
+        orders={orders}
+        onPressRow={(id) => {
+          toCustomers({ to: 'customerOrder', orderId: id })
+        }}
+      />
     </View>
   )
 }

@@ -141,7 +141,7 @@ const ItemActions = ({
             <Button
               disabled={disabled || disabledEdit}
               onPress={() => {
-                toItems({ id: itemId, screenEdit: true })
+                toItems({ id: itemId, to: 'edit' })
               }}
               variant="outline"
               // justIcon

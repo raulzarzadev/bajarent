@@ -71,6 +71,14 @@ function StackOrders() {
         }}
         component={ScreenOrderReorder}
       />
+      <Stack.Screen
+        name="ScreenNewOrder"
+        component={ScreenOrderNew}
+        options={{
+          title: 'Nueva Orden'
+          // tabBarButton: () => null
+        }}
+      />
 
       {/* 
 //* Consolidated orders

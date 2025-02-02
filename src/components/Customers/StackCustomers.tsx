@@ -4,7 +4,8 @@ import ErrorBoundary from '../ErrorBoundary'
 import { ScreenCustomersE } from './ScreenCustomers'
 import { ScreenCustomerE } from './ScreenCustomer'
 import ScreenCustomerForm, { ScreenCustomerFormE } from './ScreenCustomerForm'
-import ScreenOrderNew from '../ScreenOrderNew'
+import { OrdersScreens } from '../Navigation/Stacks/OrdersScreens'
+import StackOrders from '../StackOrders'
 
 const Stack = createStackNavigator()
 export function StackCustomers() {
@@ -49,6 +50,13 @@ export function StackCustomers() {
           title: `Editar cliente`
         })}
         component={ScreenCustomerForm}
+      />
+      <Stack.Screen
+        name="StackOrders"
+        component={StackOrders}
+        options={{
+          headerShown: false
+        }}
       />
     </Stack.Navigator>
   )
