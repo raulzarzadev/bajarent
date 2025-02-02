@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import asDate, { dateFormat } from '../libs/utils-date'
 import SpanUser from './SpanUser'
 import { gStyles } from '../styles'
@@ -17,9 +16,15 @@ export type DocMetadataType = {
   pickedUpAt?: string | Date | Timestamp
   pickedUpBy?: string
 }
-const DocMetadata = ({ item }: { item?: Partial<DocMetadataType> }) => {
+const DocMetadata = ({
+  item,
+  style
+}: {
+  item?: Partial<DocMetadataType>
+  style: ViewStyle
+}) => {
   return (
-    <View>
+    <View style={[style]}>
       <Text style={gStyles.helper}>
         <Text style={[gStyles.tBold]}>id:</Text>
         {item?.id}

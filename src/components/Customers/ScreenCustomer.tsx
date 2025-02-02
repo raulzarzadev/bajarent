@@ -7,6 +7,7 @@ import { gStyles } from '../../styles'
 import { CustomerImagesE } from './CustomerImages'
 import { CustomerContactsE } from './CustomerContacts'
 import { CustomerOrdersE } from './CustomerOrders'
+import DocMetadata from '../DocMetadata'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading } = useCustomers()
@@ -16,6 +17,7 @@ const ScreenCustomer = (params) => {
   if (!customer) return <Text>Cliente no encontrado</Text>
   return (
     <ScrollView>
+      <DocMetadata item={customer} style={{ margin: 'auto' }} />
       <View
         style={{
           flexDirection: 'row',
