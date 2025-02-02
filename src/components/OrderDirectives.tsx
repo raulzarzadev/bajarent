@@ -47,29 +47,31 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
         style={{ position: 'absolute', top: 4, right: 4, flexDirection: 'row' }}
       >
         {order?.sentMessages?.some((m) => isToday(asDate(m?.sentAt))) && (
-          <View style={{ marginHorizontal: 1 }}>
+          <View style={{ margin: 1 }}>
             <Icon icon="whatsapp" size={12} color={theme.success} />
           </View>
         )}
         {order.marketOrder && (
-          <View style={{ marginHorizontal: 1 }}>
+          <View style={{ margin: 1 }}>
             <Icon icon="www" size={12} />
           </View>
         )}
       </View>
-      <View style={{ width: 60 }}>
+      {/* <View style={{ width: 60 }}>
         <OrderLabels order={order} />
-      </View>
-      <View style={{ width: 60 }}>
+      </View> */}
+      <View style={{ width: 40 }}>
         <Chip
           style={[styles.chip]}
           title={orderType}
           icon={TypeIcon(order?.type)}
           color={theme?.transparent}
           iconSize="sm"
+          size="sm"
         ></Chip>
       </View>
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
+
       {!!assignedSectionLabel && (
         <Chip
           style={styles.chip}
@@ -79,6 +81,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
           size="sm"
         ></Chip>
       )}
+      <OrderLabels order={order} />
     </View>
   )
 }
@@ -96,22 +99,24 @@ const OrderLabels = ({ order }: { order: Partial<OrderType> }) => {
     >
       {collect && !(order.status === order_status.PICKED_UP) && (
         <Chip
+          style={{ margin: 2 }}
           color={theme.secondary}
           titleColor={theme.white}
           title={''}
           icon="pickUpIt"
           size="sm"
-          iconSize="lg"
+          iconSize="sm"
         ></Chip>
       )}
       {charge && (
         <Chip
+          style={{ margin: 2 }}
           color={theme.success}
           titleColor={theme.white}
           title={''}
           icon="chargeIt"
           size="sm"
-          iconSize="lg"
+          iconSize="sm"
         ></Chip>
       )}
     </View>

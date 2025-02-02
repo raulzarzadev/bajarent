@@ -8,6 +8,7 @@ import ListRow, { ListRowField } from './ListRow'
 import { ModalOrderQuickActionsE } from './ModalOrderQuickActions'
 import Button from './Button'
 import useMyNav from '../hooks/useMyNav'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -21,6 +22,8 @@ export type RowOrderProps = {
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
   const { toCustomers } = useMyNav()
+  const { data: customers } = useCustomers()
+  const customer = customers?.find((c) => c?.id === order?.customerId)?.name
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
@@ -56,45 +59,60 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
       )
     },
     {
-      width: bigScreen ? 'rest' : 100,
+      width: 'rest',
       component: (
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ textAlign: 'center', flex: 1 }} numberOfLines={1}>
-              {order?.folio}
-              {!!order?.note && <Text>-{order?.note}</Text>}
+        <View
+          style={{
+            //flexDirection: 'row'
+            flexDirection: bigScreen ? 'row' : 'column-reverse'
+          }}
+        >
+          <View style={{ width: 160, margin: bigScreen ? null : 'auto' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  // textAlign: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  flex: 1
+                }}
+                // numberOfLines={1}
+              >
+                <Text numberOfLines={1}>{order?.folio}</Text>
+                {!!order?.note && <Text numberOfLines={1}>-{order?.note}</Text>}
+              </View>
+            </View>
+            <Text
+              style={[{ textAlign: 'center' }, gStyles.tBold]}
+              numberOfLines={1}
+            >
+              {customer || <ClientName order={order} />}
+            </Text>
+            {!!order?.itemsString && (
+              <Text
+                numberOfLines={1}
+                style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
+              >
+                {order?.itemsString}
+              </Text>
+            )}
+            <Text
+              style={[gStyles.helper, { textAlign: 'center' }]}
+              numberOfLines={1}
+            >
+              {order?.neighborhood}
             </Text>
           </View>
-          <Text style={{ textAlign: 'center' }} numberOfLines={1}>
-            <ClientName order={order} />
-          </Text>
-          {!!order?.itemsString && (
-            <Text
-              numberOfLines={1}
-              style={[gStyles.helper, gStyles.tBold, gStyles.tCenter]}
-            >
-              {order?.itemsString}
-            </Text>
-          )}
+
+          <View style={{ justifyContent: 'flex-start' }}>
+            <OrderDirectives order={order} />
+          </View>
         </View>
       )
     },
+
     {
-      width: 50,
-      component: (
-        <View>
-          <Text style={gStyles.helper} numberOfLines={2}>
-            {order?.neighborhood}
-          </Text>
-        </View>
-      )
-    },
-    {
-      width: bigScreen ? 300 : 'rest',
-      component: <OrderDirectives order={order} />
-    },
-    {
-      width: 100,
+      width: 34,
       component: order.customerId ? (
         <Button
           icon="customerCard"

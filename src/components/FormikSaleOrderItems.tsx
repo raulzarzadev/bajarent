@@ -30,7 +30,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
   useEffect(() => {
     setSaleCategories(
       categories
-        .filter((cat) => cat?.orderType?.sale)
+        ?.filter((cat) => cat?.orderType?.sale)
         ?.map((cat) => {
           return { label: cat.name, value: cat.id }
         })

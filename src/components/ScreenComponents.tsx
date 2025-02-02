@@ -6,11 +6,75 @@ import Chips from './Chips'
 import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import { Formik } from 'formik'
 import { gStyles } from '../styles'
-import { order_type } from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
+import { RowOrderE } from './RowOrder'
 
 const ScreenComponents = () => {
   return (
     <ScrollView>
+      <View style={gStyles.container}>
+        <RowOrderE
+          item={{
+            firstName: 'Manuel Trath',
+            type: order_type.SALE,
+            id: '1',
+            folio: 1,
+            name: 'name',
+            neighborhood: 'neighborhood',
+            phone: 'phone',
+            status: order_status.AUTHORIZED,
+            itemsNumbers: '1, 2, 3',
+            itemsString: '(3) 1, 2, 3',
+            isAuthorized: true,
+            assignToSectionName: 'section',
+            hasImportantComment: true,
+            markedToCollect: true,
+            markedToCharge: true,
+            comments: [
+              {
+                type: 'important',
+                solved: false,
+                content: 'content'
+              }
+            ]
+          }}
+        />
+        <RowOrderE
+          item={{
+            firstName: 'Manuel ',
+            type: order_type.RENT,
+            id: '443',
+            folio: 123,
+            name: 'name',
+            neighborhood: 'neighborhood',
+            phone: 'phone',
+            status: order_status.DELIVERED,
+            deliveredAt: new Date(),
+            itemsString: '000345',
+            isAuthorized: true,
+            hasImportantComment: true
+          }}
+        />
+        <RowOrderE
+          item={{
+            firstName: 'Manuel Direleret Graham ',
+            type: order_type.RENT,
+            id: '3423',
+            folio: 9045,
+            note: 'note-34',
+            name: 'name',
+            neighborhood: 'neighborhood',
+            phone: 'phone',
+            status: order_status.DELIVERED,
+            deliveredAt: new Date(),
+            itemsNumbers: '1, 2, 3',
+            itemsString: '(3) 1, 2, 3',
+            isAuthorized: true,
+            hasImportantComment: true,
+            customerId: 'undefined'
+          }}
+        />
+      </View>
       <View style={gStyles.container}>
         <Formik
           initialValues={{
