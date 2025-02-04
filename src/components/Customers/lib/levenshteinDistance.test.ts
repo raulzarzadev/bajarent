@@ -4,7 +4,9 @@ describe('findBestMatch', () => {
   const customers = [
     'Benito Juarez de Oretegon Progreso 1234 +5255433899452 +5244342691212',
     'Maria Lopez de la Cruz Reforma 5678  +524455667788',
-    'Juan Juarez de la Colina Progreso 1234 +5255433899452 +52486567691212'
+    'Juan Juarez de la Colina Progreso 1234 +5255433899452 +52486567691212',
+    '1ZNQfsrTItdvH4aPB5h8 Mike +523232323232',
+    'OFSeTMu40lsa0HbwBrBJ Brandino +522342355234 '
   ]
 
   it('should find the best match for a given query', () => {
@@ -41,5 +43,11 @@ describe('findBestMatch', () => {
     const count = 2
     const result = findBestMatches(customers, query, count)
     expect(result).toEqual([customers[0], customers[2]])
+  })
+  it('should return brandino', () => {
+    const query = 'brand'
+    const count = 1
+    const result = findBestMatches(customers, query, count)
+    expect(result).toEqual([customers[4]])
   })
 })

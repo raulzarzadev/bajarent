@@ -5,6 +5,7 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import asDate from '../libs/utils-date'
 import OrderType from '../types/OrderType'
 import { useStore } from '../contexts/storeContext'
+import { findBestMatches } from '../components/Customers/lib/levenshteinDistance'
 
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
@@ -113,65 +114,69 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const [searchValue, setSearchValue] = useState('')
+  const arrayData = data.map((a) => Object.values(a).flat().join(' '))
   const search = async (value: string) => {
     setSearchValue(value)
-    setTimeout(async () => {
-      const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
-      // let exactMatches = []
-      if (!value) {
-        //<-- Apply filters if exist to keep current selection
-        setFilteredData(filteredData)
-        setCustomData([])
+    console.log({ arrayData })
+    const res = findBestMatches(arrayData, value)
+    console.log({ res })
+    // setTimeout(async () => {
+    //   const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
+    //   // let exactMatches = []
+    //   if (!value) {
+    //     //<-- Apply filters if exist to keep current selection
+    //     setFilteredData(filteredData)
+    //     setCustomData([])
 
-        return
-      }
+    //     return
+    //   }
 
-      const res = filteredData?.filter((order) => {
-        //* Get all values of the order
-        const orderValues = Object.values(order)
+    //   const res = filteredData?.filter((order) => {
+    //     //* Get all values of the order
+    //     const orderValues = Object.values(order)
 
-        //*  Check for exact matches first and add to exactMatches
-        // orderValues.forEach((orderValue) => {
-        //   if (orderValue == value) {
-        //     exactMatches.push(order)
-        //   }
+    //     //*  Check for exact matches first and add to exactMatches
+    //     // orderValues.forEach((orderValue) => {
+    //     //   if (orderValue == value) {
+    //     //     exactMatches.push(order)
+    //     //   }
 
-        // })
-        //*  Check for partial matches and add to filteredData
-        return orderValues.some((orderValue) => {
-          if (typeof orderValue === 'string') {
-            return orderValue.toLowerCase().includes(value.toLowerCase())
-          }
-          if (typeof orderValue === 'number' && !isNaN(Number(value))) {
-            return orderValue === parseFloat(value)
-          }
-          return false
-        })
-      })
+    //     // })
+    //     //*  Check for partial matches and add to filteredData
+    //     return orderValues.some((orderValue) => {
+    //       if (typeof orderValue === 'string') {
+    //         return orderValue.toLowerCase().includes(value.toLowerCase())
+    //       }
+    //       if (typeof orderValue === 'number' && !isNaN(Number(value))) {
+    //         return orderValue === parseFloat(value)
+    //       }
+    //       return false
+    //     })
+    //   })
 
-      if (collectionSearch?.collectionName === 'orders') {
-        // const avoidIds = res.map(({ id }) => id)
-        const orders = await ServiceOrders.search({
-          storeId,
-          fields: collectionSearch?.fields,
-          value,
-          sections: collectionSearch?.assignedSections
-        }).then((res) => {
-          return formatOrders({ orders: res as Partial<OrderType>[], reports })
-        })
+    //   if (collectionSearch?.collectionName === 'orders') {
+    //     // const avoidIds = res.map(({ id }) => id)
+    //     const orders = await ServiceOrders.search({
+    //       storeId,
+    //       fields: collectionSearch?.fields,
+    //       value,
+    //       sections: collectionSearch?.assignedSections
+    //     }).then((res) => {
+    //       return formatOrders({ orders: res as Partial<OrderType>[], reports })
+    //     })
 
-        setCustomData([
-          ...orders.filter((o) => !res.some((r) => r.id === o.id))
-        ])
-      }
-      //console.log({ exactMatches })
+    //     setCustomData([
+    //       ...orders.filter((o) => !res.some((r) => r.id === o.id))
+    //     ])
+    //   }
+    //   //console.log({ exactMatches })
 
-      setFilteredData(res)
-      // if (exactMatches.length > 0) {
-      //   setFilteredData(exactMatches)
-      // } else {
-      // }
-    }, debounceSearch)
+    //   setFilteredData(res)
+    //   // if (exactMatches.length > 0) {
+    //   //   setFilteredData(exactMatches)
+    //   // } else {
+    //   // }
+    // }, debounceSearch)
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {

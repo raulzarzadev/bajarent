@@ -37,20 +37,23 @@ export function findBestMatch(customers: string[], query: string) {
   return bestMatch
 }
 
-export function findBestMatches(customers: string[], query: string) {
+export function findBestMatches(customers: string[], query: string, count = 1) {
   if (!customers.length) return null
-  const queryWords = query.toLowerCase().split(/\s+/)
+  const lowerQuery = query.toLowerCase()
+  const queryWords = lowerQuery.split(/\s+/)
 
   const matches = customers.map((customer) => {
     const lowerCustomer = customer.toLowerCase()
     const words = lowerCustomer.split(/\s+/)
 
     // 1️⃣ Distancia de Levenshtein con la cadena completa
-    const distance = levenshteinDistance(lowerCustomer, query.toLowerCase())
-
+    const distance = levenshteinDistance(lowerCustomer, lowerQuery)
+    // 2️⃣ Coincidencia parcial (priorizar nombres que contienen directamente el query)
+    const containsQuery = lowerCustomer.includes(lowerQuery) ? 1 : 0
     // 2️⃣ Ponderación basada en coincidencias de palabras clave
     let keywordMatches = 0
     for (const word of queryWords) {
+      if (containsQuery) keywordMatches++
       if (words.includes(word)) keywordMatches++
     }
 
@@ -67,7 +70,7 @@ export function findBestMatches(customers: string[], query: string) {
 
   console.log({ query, matches })
 
-  return matches.map((match) => match.customer)
+  return matches.map((match) => match.customer).slice(0, count)
 }
 
 // 📌 Ejemplo de uso
