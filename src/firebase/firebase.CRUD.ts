@@ -216,6 +216,13 @@ export class FirebaseCRUD {
         )
         .catch((err) => {
           console.error(err)
+          return this.formatResponse(
+            false,
+            `${this.collectionName}_UPDATED_ERROR`,
+            {
+              id: itemId
+            }
+          )
         })
     } catch (error) {
       console.log({ error })

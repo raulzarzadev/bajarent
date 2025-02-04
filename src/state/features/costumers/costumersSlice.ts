@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
 import { produce } from 'immer'
 import StoreType from '../../../types/StoreType'
+import { ServiceOrders } from '../../../firebase/ServiceOrders'
 
 export type CustomersState = {
   data: CustomerType[]
@@ -114,9 +115,104 @@ export const useCustomers = () => {
     return await dispatch(createCustomerThunk({ customer, storeId }))
   }
   const customers = useSelector(selectCustomers)
+
+  const handleCreateCustomer = async ({
+    option,
+    storeId,
+    newCustomer,
+    orderId
+  }: {
+    option: CreateCustomerChoiceType
+    storeId: StoreType['id']
+    newCustomer: Partial<CustomerType>
+    orderId: string
+  }): Promise<{
+    option: CreateCustomerChoiceType
+    customer: Partial<CustomerType>
+    orderUpdatedId?: string
+    statusOk: boolean
+  }> => {
+    if (option === 'cancel') {
+      return {
+        option: 'cancel',
+        customer: newCustomer,
+        statusOk: true
+      }
+    }
+    if (option === 'create') {
+      // update order and create customer
+      const customerCreated = await create(storeId, newCustomer)
+        .then((res) => {
+          //console.log('create customer')
+          const customer = res.payload as CustomerType
+          return customer
+          // add customer create to a list of current customers to avoid create more than the same
+        })
+        .catch((error) => {
+          //console.error('Error creating customer', error)
+          return error
+        })
+      if (!customerCreated?.res?.ok) {
+        const orderUpdated = await ServiceOrders.update(orderId, {
+          //@ts-ignore
+          customerId: customerCreated
+        })
+          .then((res) => {
+            // console.log('update order')
+            return res
+          })
+          .catch((error) => {
+            // console.error('Error updating order', error)
+            return error
+          })
+        return {
+          option: 'create',
+          customer: customerCreated,
+          orderUpdatedId: orderUpdated?.res?.id,
+          statusOk: true
+        }
+      } else {
+        return {
+          option: 'create',
+          customer: customerCreated,
+          statusOk: false
+        }
+      }
+    }
+    if (option === 'merge') {
+      // just update order
+
+      return await ServiceOrders.update(orderId, {
+        customerId: newCustomer.id
+      })
+        .then((res) => {
+          console.log('update order')
+          console.log({ res })
+          return {
+            option: 'merge' as const, // explicitamos el literal "merge",
+            customer: newCustomer,
+            //@ts-ignore
+            orderUpdatedId: res?.res?.id,
+            statusOk: true
+          }
+        })
+        .catch((error) => {
+          console.error('Error creating customer', error)
+          return {
+            option: 'merge',
+            customer: newCustomer,
+            orderUpdatedId: error.res.id,
+            statusOk: false
+          }
+        })
+    }
+  }
+
   return {
     ...customers,
     update,
-    create
+    create,
+    handleCreateCustomer
   }
 }
+export type CreateCustomerChoiceType = 'cancel' | 'merge' | 'create'

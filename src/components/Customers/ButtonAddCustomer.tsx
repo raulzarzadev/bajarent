@@ -4,75 +4,23 @@ import Button from '../Button'
 import StyledModal from '../StyledModal'
 import useModal from '../../hooks/useModal'
 import { gStyles } from '../../styles'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import {
+  CreateCustomerChoiceType,
+  useCustomers
+} from '../../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
-import { useStore } from '../../contexts/storeContext'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 import TextInfo from '../TextInfo'
 import { ConsolidatedOrderType } from '../../firebase/ServiceConsolidatedOrders'
 import OrderType from '../../types/OrderType'
 import { customerFromOrder } from './lib/customerFromOrder'
 import { CustomerCardE } from './CustomerCard'
+import { CustomerType } from '../../state/features/costumers/customerType'
 
 const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
   const order = props?.order
-  const orderId = order?.id
-  const customer = customerFromOrder(order)
   const modal = useModal({ title: 'Agregar cliente' })
-  const [selectedSimilarCustomer, setSelectedSimilarCustomer] = useState(null)
-  const handleSelectCustomer = (customerId) => {
-    if (selectedSimilarCustomer === customerId) {
-      setSelectedSimilarCustomer(null)
-    } else {
-      setSelectedSimilarCustomer(customerId)
-    }
-  }
-  const { create } = useCustomers()
-  const { storeId } = useStore()
-  const [disabled, setDisabled] = useState(false)
-
-  const handleAddCustomer = async () => {
-    setDisabled(true)
-    //FIXME esto parece que no funciona
-    //  */
-
-    //* if client are selected from similar customers just update the order with the customerId
-    //* else create a new customer and update the order with the customerId
-    if (selectedSimilarCustomer?.id) {
-      await ServiceOrders.update(orderId, {
-        customerId: selectedSimilarCustomer?.id,
-        fullName: selectedSimilarCustomer?.name
-      })
-        .then((res) => {
-          console.log({ res })
-          modal.toggleOpen()
-          setDisabled(false)
-        })
-        .catch((error) => {
-          console.error('Error updating order', error)
-          setDisabled(false)
-        })
-    } else {
-      const customerCreated = await create(storeId, customer)
-      //@ts-ignore
-      const customerId = customerCreated.payload?.id
-
-      await ServiceOrders.update(orderId, {
-        customerId
-      })
-        .then((res) => {
-          console.log({ res })
-          modal.toggleOpen()
-          setDisabled(false)
-        })
-        .catch((error) => {
-          console.error('Error updating order', error)
-          setDisabled(false)
-        })
-    }
-    modal.toggleOpen()
-    setDisabled(false)
-  }
+  const { userChoiceHandler } = useCustomers()
+  const customer = customerFromOrder(order)
 
   return (
     <View>
@@ -84,41 +32,131 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
         size="xs"
       />
       <StyledModal {...modal}>
-        <CustomerCardE customer={customer} />
-
-        <SimilarCustomers
+        <AddOrMergeCustomer
+          onSelectOption={({ option }) => {
+            userChoiceHandler({
+              userOptionSelected: option,
+              newCustomer: customer,
+              storeId: customer.storeId,
+              orderId: customer.orderId,
+              onCanceled: () => {
+                modal.toggleOpen()
+              },
+              onCreated: () => {
+                modal.toggleOpen()
+              },
+              onMerged: () => {
+                modal.toggleOpen()
+              }
+            })
+          }}
           customer={customer}
-          onSelectCustomer={handleSelectCustomer}
-          selectedCustomer={selectedSimilarCustomer}
         />
-        <View style={{ height: 60 }}>
-          {selectedSimilarCustomer && (
-            <TextInfo
-              text={`Se editara el nombre en la orden original y se agregara esta orden al cliente seleccionado ${selectedSimilarCustomer?.name}`}
-              type="warning"
-              defaultVisible
-            />
-          )}
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <Button
-            onPress={modal.toggleOpen}
-            label="Cancelar"
-            variant="ghost"
-          ></Button>
-
-          <Button
-            disabled={disabled}
-            label={
-              selectedSimilarCustomer ? 'Agregar a cliente' : 'Crear cliente'
-            }
-            color={selectedSimilarCustomer ? 'primary' : 'success'}
-            onPress={handleAddCustomer}
-          ></Button>
-        </View>
       </StyledModal>
     </View>
   )
+}
+
+export type AddCustomerProps = {
+  option: CreateCustomerChoiceType
+  customerId?: string
+}
+
+export const AddOrMergeCustomer = ({
+  customer,
+  onSelectOption
+}: {
+  customer: Partial<CustomerType>
+  onSelectOption?: (option: AddCustomerProps) => Promise<void> | void
+}) => {
+  const [selectedSimilarCustomer, setSelectedSimilarCustomer] =
+    useState<CustomerType>(null)
+
+  const handleSelectCustomer = (customerId) => {
+    if (selectedSimilarCustomer === customerId) {
+      setSelectedSimilarCustomer(null)
+    } else {
+      setSelectedSimilarCustomer(customerId)
+    }
+  }
+  const [disabled, setDisabled] = useState(false)
+  const handleChoice = async (option: CreateCustomerChoiceType) => {
+    setDisabled(true)
+    await onSelectOption({
+      option,
+      customerId: selectedSimilarCustomer.id
+    })
+    setDisabled(false)
+  }
+  return (
+    <>
+      <CustomerCardE customer={customer} />
+
+      <SimilarCustomers
+        customer={customer}
+        onSelectCustomer={handleSelectCustomer}
+        selectedCustomer={selectedSimilarCustomer}
+      />
+      <View style={{ height: 60 }}>
+        {selectedSimilarCustomer && (
+          <TextInfo
+            text={`Se editara el nombre en la orden original y se agregara esta orden al cliente seleccionado ${selectedSimilarCustomer?.name}`}
+            type="warning"
+            defaultVisible
+          />
+        )}
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around'
+          }}
+        >
+          <Button
+            label="Cancelar"
+            variant="ghost"
+            onPress={async () => {
+              return await handleChoice('cancel')
+            }}
+            disabled={disabled}
+          />
+          {!!selectedSimilarCustomer ? (
+            <Button
+              label="Agregar "
+              icon="merge"
+              onPress={async () => {
+                return await handleChoice('merge')
+              }}
+              disabled={disabled}
+            />
+          ) : (
+            <Button
+              label="Crear"
+              color="success"
+              icon="add"
+              onPress={async () => {
+                return await handleChoice('create')
+              }}
+              disabled={disabled}
+            />
+          )}
+        </View>
+      </View>
+    </>
+  )
+}
+export const getSimilarCustomers = (customer, customers) => {
+  return customers.filter((c) => {
+    const sameName = c.name.toLowerCase() === customer?.name.toLowerCase()
+    const someSameContact = Object.values(c.contacts || {}).some((contact) => {
+      return Object.values(customer?.contacts || {}).some((contact2) => {
+        //@ts-ignore
+        return contact.value === contact2.value
+      })
+    })
+    return sameName || someSameContact
+  })
 }
 const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
   const { data: customers } = useCustomers()
@@ -127,52 +165,76 @@ const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
   //console.log({ customer, similarCustomers })
   useEffect(() => {
     if (customers.length) {
-      const similarCustomers = customers.filter((c) => {
-        const sameName = c.name.toLowerCase() === customer?.name.toLowerCase()
-        const someSameContact = Object.values(c.contacts || {}).some(
-          (contact) => {
-            return Object.values(customer?.contacts).some((contact2) => {
-              //@ts-ignore
-              return contact.value === contact2.value
-            })
-          }
-        )
-        return sameName || someSameContact
-      })
+      const similarCustomers = getSimilarCustomers(customer, customers)
       setSimilarCustomers(similarCustomers)
     }
   }, [])
   return (
     <View>
       <Text style={gStyles.h2}>Clientes con datos similares</Text>
-      {similarCustomers.map((c) => (
-        <Pressable
-          key={c.id}
-          onPress={() => onSelectCustomer(c)}
-          style={{
-            borderWidth: 2,
-            borderColor:
-              selectedCustomer && selectedCustomer?.id === c?.id
-                ? 'black'
-                : 'transparent',
-            borderStyle: 'dashed'
-          }}
-        >
-          <Text>{c.name}</Text>
-          {Object.values(c.contacts || {}).map((contact) => (
-            //@ts-ignore
-            <Text key={contact.id}>{contact.value}</Text>
-          ))}
-          <Text>{c?.address?.street}</Text>
-          <Text>{c?.address?.neighborhood}</Text>
-        </Pressable>
-      ))}
+      <SimilarCustomersList
+        selectedCustomer={selectedCustomer}
+        onSelectCustomer={onSelectCustomer}
+        similarCustomers={similarCustomers}
+      />
+    </View>
+  )
+}
+export const SimilarCustomersList = ({
+  similarCustomers,
+  onSelectCustomer,
+  selectedCustomer
+}: {
+  similarCustomers: CustomerType[]
+  onSelectCustomer: (customer: CustomerType) => void
+  selectedCustomer: CustomerType
+}) => {
+  return (
+    <View>
+      {similarCustomers
+        .sort((a, b) => {
+          if (a.name < b.name) {
+            return -1
+          }
+          if (a.name > b.name) {
+            return 1
+          }
+          return 0
+        })
+        .map((c, i) => (
+          <Pressable
+            key={i}
+            onPress={() => onSelectCustomer(c)}
+            style={{
+              borderWidth: 2,
+              borderColor:
+                selectedCustomer && selectedCustomer?.id === c?.id
+                  ? 'black'
+                  : 'transparent',
+              borderStyle: 'dashed',
+              flexDirection: 'row'
+            }}
+          >
+            <View>
+              <Text>{c.name}</Text>
+              {Object.values(c.contacts || {}).map((contact, i) => (
+                //@ts-ignore
+                <Text key={contact.id || i}>{contact.value}</Text>
+              ))}
+            </View>
+            <View>
+              <Text>{c?.address?.street}</Text>
+              <Text>{c?.address?.neighborhood}</Text>
+            </View>
+          </Pressable>
+        ))}
     </View>
   )
 }
 export default ButtonAddCustomer
 export type ButtonAddCustomerProps = {
   order: Partial<ConsolidatedOrderType> | Partial<OrderType>
+  toggleModal?: ReturnType<typeof useModal>
 }
 export const ButtonAddCustomerE = (props: ButtonAddCustomerProps) => (
   <ErrorBoundary componentName="ButtonAddCustomer">

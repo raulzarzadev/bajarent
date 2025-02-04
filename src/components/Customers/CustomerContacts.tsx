@@ -34,10 +34,10 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
       </View>
       {Object.entries(customerContacts || {}).map(
         ([id, contact]) =>
-          contact &&
+          !!contact &&
           !contact?.deletedAt && (
             <View
-              key={contact?.id}
+              key={id}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',

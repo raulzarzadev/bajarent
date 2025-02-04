@@ -8,10 +8,14 @@ import { Formik } from 'formik'
 import { gStyles } from '../styles'
 import { order_status, order_type } from '../types/OrderType'
 import { RowOrderE } from './RowOrder'
+import { ModalCreateCustomersE } from './ModalCreateCustomers'
 
 const ScreenComponents = () => {
   return (
     <ScrollView>
+      <View style={gStyles.container}>
+        <ModalCreateCustomersE />
+      </View>
       <View style={gStyles.container}>
         <RowOrderE
           //@ts-ignore

@@ -41,7 +41,9 @@ const ListCustomers = () => {
   }, [customers])
 
   const { toCustomers } = useMyNav()
-  const modalConsolidatedList = useModal({ title: 'Ordenes consolidadas' })
+  const modalConsolidatedList = useModal({
+    title: 'Crear clientes desde consolidadas'
+  })
   return (
     <View>
       <ListE

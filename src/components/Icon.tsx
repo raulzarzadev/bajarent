@@ -89,9 +89,11 @@ import { LuClipboard } from 'react-icons/lu'
 import { LuClipboardList } from 'react-icons/lu'
 import { LuClipboardPaste } from 'react-icons/lu'
 import { TbClipboardSearch } from 'react-icons/tb'
+import { IoIosGitMerge } from 'react-icons/io'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  merge: IoIosGitMerge,
   orderAdd: LuClipboardPlus,
   orderSearch: TbClipboardSearch,
   orderEdit: LuClipboardPenLine,

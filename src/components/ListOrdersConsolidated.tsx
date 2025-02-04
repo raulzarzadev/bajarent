@@ -19,12 +19,20 @@ import MultiOrderActions from './OrderActions/MultiOrderActions'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import Button from './Button'
-import { ButtonAddCustomerE } from './Customers/ButtonAddCustomer'
+import {
+  ButtonAddCustomerE,
+  getSimilarCustomers,
+  SimilarCustomersList
+} from './Customers/ButtonAddCustomer'
 import useMyNav from '../hooks/useMyNav'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
+import {
+  CreateCustomerChoiceType,
+  useCustomers
+} from '../state/features/costumers/costumersSlice'
 import { customerFromOrder } from './Customers/lib/customerFromOrder'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import TextInfo from './TextInfo'
+import { CustomerType } from '../state/features/costumers/customerType'
+import { CustomerCardE } from './Customers/CustomerCard'
 export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
@@ -32,11 +40,19 @@ export type OrderWithId = Partial<ConsolidatedOrderType> & {
 }
 
 const ListOrdersConsolidated = () => {
+  const modalConsolidateList = useModal({ title: 'Otras consolidadas' })
+
   const { consolidatedOrders, handleRefresh, setOtherConsolidated } =
     useOrdersCtx()
   const { storeId, sections: storeSections } = useStore()
   const { navigate } = useNavigation()
   const orders = consolidatedOrders?.orders || {}
+  const [disabled, setDisabled] = useState(false)
+
+  const [otherConsolidates, setOtherConsolidates] = useState<
+    ConsolidatedStoreOrdersType[]
+  >([])
+  const [otherConsolidatedCount, setOtherConsolidatedCount] = useState(10)
 
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedToSection =
@@ -49,7 +65,16 @@ const ListOrdersConsolidated = () => {
       isCustomer: !!order.customerId
     }
   })
-  const [disabled, setDisabled] = useState(false)
+
+  useEffect(() => {
+    if (storeId)
+      ServiceConsolidatedOrders.getLasts({
+        storeId,
+        count: otherConsolidatedCount
+      }).then((res) => {
+        setOtherConsolidates(res)
+      })
+  }, [storeId, otherConsolidatedCount])
 
   const handleConsolidate = async () => {
     setDisabled(true)
@@ -65,32 +90,17 @@ const ListOrdersConsolidated = () => {
     setDisabled(false)
   }
 
-  const [otherConsolidates, setOtherConsolidates] = useState<
-    ConsolidatedStoreOrdersType[]
-  >([])
-  const [otherConsolidatedCount, setOtherConsolidatedCount] = useState(10)
-  useEffect(() => {
-    if (storeId)
-      ServiceConsolidatedOrders.getLasts({
-        storeId,
-        count: otherConsolidatedCount
-      }).then((res) => {
-        setOtherConsolidates(res)
-      })
-  }, [storeId, otherConsolidatedCount])
-  const modal = useModal({ title: 'Otras consolidadas' })
-
   return (
     <ScrollView>
       <View>
-        <StyledModal {...modal}>
+        <StyledModal {...modalConsolidateList}>
           {otherConsolidates.map((consolidated) => {
             return (
               <Pressable
                 key={consolidated.id}
                 onPress={() => {
                   setOtherConsolidated({ consolidated })
-                  modal.toggleOpen()
+                  modalConsolidateList.toggleOpen()
                 }}
               >
                 <Text>
@@ -111,7 +121,7 @@ const ListOrdersConsolidated = () => {
           ></Button>
         </StyledModal>
 
-        <Pressable onPress={() => modal.toggleOpen()}>
+        <Pressable onPress={() => modalConsolidateList.toggleOpen()}>
           <Text style={[gStyles.helper, gStyles.tCenter]}>
             Última actualización{' '}
             {fromNow(asDate(consolidatedOrders?.createdAt))}
@@ -353,40 +363,116 @@ export const ConsolidateCustomersList = () => {
   })
   const reducedData = data
 
-  const { create } = useCustomers()
+  const { handleCreateCustomer } = useCustomers()
   const { toCustomers } = useMyNav()
   const [progress, setProgress] = useState(0)
   const [createCustomerDisabled, setCreateCustomerDisabled] = useState(false)
+  const { data: customers } = useCustomers()
+  const modalSimilarCustomers = useModal({
+    title: 'Clientes con datos similares'
+  })
+  const [newCustomer, setNewCustomer] = useState<Partial<
+    CustomerType & { orderId?: string }
+  > | null>(null)
+
   const handleCreateCustomers = async ({ ids }) => {
     setCreateCustomerDisabled(true)
     const orders = data.filter((order) => ids.includes(order.id))
-    let progress = 0
+    let currentCustomers = [...customers] // Hacer una copia del array
     for (const order of orders) {
+      setProgress((prev) => prev + 1)
+
       const customer = customerFromOrder(order, { storeId })
-      progress++
-      await create(storeId, customer)
-        .then((res) => {
-          console.log({ res })
+      let similarCustomers = getSimilarCustomers(customer, currentCustomers)
+      // console.log({
+      //   customers: customers.length,
+      //   currentCustomers: currentCustomers.length,
+      //   similarCustomers,
+      //   customer,
+      //   progress
+      // })
+      if (similarCustomers.length) {
+        modalSimilarCustomers.setOpen(true)
+        setSelectedCustomer(similarCustomers[0])
+        setNewCustomer(customer)
+        setSimilarCustomers(similarCustomers)
+        const orderId = order.id
+        const { customerId: customerSelectedId, option: userOptionSelected } =
+          await waitForUserChoice()
+
+        const {
+          option,
+          customer: customerResult,
+          statusOk
+        } = await handleCreateCustomer({
+          option: userOptionSelected,
+          storeId,
+          newCustomer: customer,
+          orderId
         })
-        .catch((error) => {
-          console.error('Error creating customer', error)
+
+        if (!statusOk) return console.error(' an error ocurred')
+        if (option === 'create') {
+          modalSimilarCustomers.setOpen(false)
+          currentCustomers.push(customerResult as CustomerType)
+          setSelectedCustomer(null)
+        }
+        if (option === 'merge') {
+          modalSimilarCustomers.setOpen(false)
+          setSelectedCustomer(null)
+        }
+        if (option === 'cancel') {
+          modalSimilarCustomers.setOpen(false)
+          setSelectedCustomer(null)
+          break
+        }
+      } else {
+        handleCreateCustomer({
+          option: 'create',
+          newCustomer: customer,
+          storeId: customer.storeId,
+          orderId: customer.orderId
         })
-      await ServiceOrders.update(order.id, {
-        customerId: customer.id
-      })
-        .then((res) => {
-          console.log({ res })
-        })
-        .catch((error) => {
-          console.error('Error creating customer', error)
-        })
-      setProgress(progress)
-      if (progress === ids.length) {
-        setProgress(0)
-        setCreateCustomerDisabled(false)
       }
     }
+    setCreateCustomerDisabled(false)
   }
+
+  const waitForUserChoice = (): Promise<{
+    option: CreateCustomerChoiceType
+    customerId: string
+  }> => {
+    return new Promise<{
+      option: CreateCustomerChoiceType
+      customerId: string
+    }>((resolve) => {
+      const handleUserChoice = ({
+        option,
+        customerId
+      }: {
+        option: CreateCustomerChoiceType
+        customerId: string
+      }) => {
+        resolve({ option, customerId })
+      }
+
+      // Pasar handleUserChoice como callback al Modal
+      setUserChoiceHandler(() => handleUserChoice)
+    })
+  }
+
+  const [userChoiceHandler, setUserChoiceHandler] = useState(null)
+  const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [similarCustomers, setSimilarCustomers] = useState([])
+  const handleSelectCustomer = (customer) => {
+    if (customer.id === selectedCustomer?.id) {
+      setSelectedCustomer(null)
+    } else {
+      setSelectedCustomer(customer)
+    }
+  }
+  const [disabled, setDisabled] = useState(false)
+
   return (
     <View>
       <ListE
@@ -446,6 +532,74 @@ export const ConsolidateCustomersList = () => {
         ComponentMultiActions={({ ids }) => {
           return (
             <View>
+              <StyledModal
+                {...modalSimilarCustomers}
+                onclose={async () => {
+                  setDisabled(true)
+                  await userChoiceHandler({
+                    option: 'cancel',
+                    customerId: selectedCustomer?.id
+                  })
+                  setDisabled(false)
+                }}
+              >
+                <CustomerCardE customer={newCustomer} />
+                <SimilarCustomersList
+                  onSelectCustomer={handleSelectCustomer}
+                  selectedCustomer={selectedCustomer}
+                  similarCustomers={similarCustomers}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around'
+                  }}
+                >
+                  <Button
+                    label="Cancelar"
+                    variant="ghost"
+                    onPress={async () => {
+                      setDisabled(true)
+                      await userChoiceHandler({
+                        option: 'cancel',
+                        customerId: selectedCustomer?.id
+                      })
+                      setDisabled(false)
+                    }}
+                    disabled={disabled}
+                  />
+                  {!!selectedCustomer ? (
+                    <Button
+                      label="Agregar "
+                      icon="merge"
+                      onPress={async () => {
+                        setDisabled(true)
+                        await userChoiceHandler({
+                          option: 'merge',
+                          customerId: selectedCustomer?.id
+                        })
+                        setDisabled(false)
+                      }}
+                      disabled={disabled}
+                    />
+                  ) : (
+                    <Button
+                      label="Crear"
+                      color="success"
+                      icon="add"
+                      onPress={async () => {
+                        setDisabled(true)
+                        await userChoiceHandler({
+                          option: 'create',
+                          customerId: selectedCustomer?.id
+                        })
+                        setDisabled(false)
+                      }}
+                      disabled={disabled}
+                    />
+                  )}
+                </View>
+              </StyledModal>
               {createCustomerDisabled ? (
                 <>
                   <Text style={gStyles.tCenter}>
@@ -471,7 +625,7 @@ export const ConsolidateCustomersList = () => {
                 </>
               )}
               <Button
-                label="Crear customer"
+                label="Crear customers"
                 disabled={createCustomerDisabled}
                 onPress={() => handleCreateCustomers({ ids })}
               ></Button>
@@ -479,37 +633,6 @@ export const ConsolidateCustomersList = () => {
           )
         }}
       />
-      {/* <FlatList
-        data={reducedData}
-        renderItem={({ item }) => (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              marginVertical: 2
-            }}
-          >
-            {item?.customerId && (
-              <Pressable
-                onPress={() => {
-                  toCustomers({ to: 'details', id: item?.customerId })
-                }}
-              />
-            )} */}
-      {/* {!item?.customerId && (
-              // TODO: arregralr esto por que puede que no se esten formateadno correctamente los clientes
-              <ButtonAddCustomerE
-                customer={customerFromOrder(item, { isConsolidate: true })}
-              />
-            )} */}
-      {/* <Text>
-              {item.folio} {item.fullName}{' '}
-            </Text>
-          </View>
-        )}
-      /> */}
     </View>
   )
 }
-
-const OrderConsolidateAction = () => {}
