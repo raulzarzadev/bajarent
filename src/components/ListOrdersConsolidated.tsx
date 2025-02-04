@@ -367,6 +367,7 @@ export const ConsolidateCustomersList = () => {
   const { toCustomers } = useMyNav()
   const [progress, setProgress] = useState(0)
   const [createCustomerDisabled, setCreateCustomerDisabled] = useState(false)
+  const [finished, setFinished] = useState(false)
   const { data: customers } = useCustomers()
   const modalSimilarCustomers = useModal({
     title: 'Clientes con datos similares'
@@ -427,16 +428,23 @@ export const ConsolidateCustomersList = () => {
           break
         }
       } else {
-        handleCreateCustomer({
+        const {
+          option,
+          customer: customerResult,
+          statusOk
+        } = await handleCreateCustomer({
           option: 'create',
           newCustomer: customer,
           storeId: customer.storeId,
           orderId: customer.orderId
         })
+        if (statusOk) currentCustomers.push(customerResult as CustomerType)
       }
     }
     setCreateCustomerDisabled(false)
+    setFinished(true)
   }
+  console.log({ createCustomerDisabled })
 
   const waitForUserChoice = (): Promise<{
     option: CreateCustomerChoiceType
@@ -600,7 +608,14 @@ export const ConsolidateCustomersList = () => {
                   )}
                 </View>
               </StyledModal>
-              {createCustomerDisabled ? (
+              {finished && (
+                <Text
+                  style={[gStyles.tCenter, gStyles.h2, { marginVertical: 10 }]}
+                >
+                  Se han creado los clientes correctamente
+                </Text>
+              )}
+              {createCustomerDisabled && (
                 <>
                   <Text style={gStyles.tCenter}>
                     Se estan creando los clientes
@@ -610,7 +625,8 @@ export const ConsolidateCustomersList = () => {
                     <Text style={gStyles.tBold}>{ids.length || 0} </Text>
                   </Text>
                 </>
-              ) : (
+              )}
+              {!createCustomerDisabled && !finished && (
                 <>
                   <TextInfo
                     defaultVisible
@@ -626,7 +642,7 @@ export const ConsolidateCustomersList = () => {
               )}
               <Button
                 label="Crear customers"
-                disabled={createCustomerDisabled}
+                disabled={createCustomerDisabled || finished}
                 onPress={() => handleCreateCustomers({ ids })}
               ></Button>
             </View>
