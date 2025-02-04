@@ -38,6 +38,8 @@ export type EmployeeContextType = {
     customers?: {
       read?: boolean
       write?: boolean
+      delete?: boolean
+      update?: boolean
     }
   }
   items: Partial<ItemType>[]

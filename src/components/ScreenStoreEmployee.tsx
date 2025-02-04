@@ -78,6 +78,10 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
           const sortOrderPermissions = (a, b) =>
             values?.permissions?.order?.[b] - values.permissions?.order?.[a]
 
+          const sortCustomerPermissions = (a, b) =>
+            values?.permissions?.customers?.[b] -
+            values.permissions?.customers?.[a]
+
           const [sortedOrders, setSortedOrder] = useState(
             permissionsOrderKeys.sort(sortOrderPermissions)
           )
@@ -92,6 +96,10 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
           useEffect(() => {
             setSortedStore(permissionsStoreKeys.sort(sortStorePermissions))
           }, [values?.permissions?.store])
+          useEffect(() => {
+            setSortedStore(permissionsStoreKeys.sort(sortCustomerPermissions))
+          }, [values?.permissions?.customers])
+          console.log({ sortedStores })
 
           return (
             <View>
@@ -125,6 +133,17 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
                     style={{ width: checkboxWidth, marginVertical: 4 }}
                     key={permission}
                     name={`permissions.store.${permission}`}
+                    label={dictionary(permission)}
+                  />
+                ))}
+              </View>
+              <Text>Permisos de clientes</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {sortedStores.map((permission) => (
+                  <FormikCheckbox
+                    style={{ width: checkboxWidth, marginVertical: 4 }}
+                    key={permission}
+                    name={`permissions.customers.${permission}`}
                     label={dictionary(permission)}
                   />
                 ))}

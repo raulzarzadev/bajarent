@@ -128,6 +128,12 @@ export enum permissions_store {
   disabledStaff,
   canSendMessages
 }
+export enum permissions_customers {
+  create,
+  edit,
+  delete,
+  view
+}
 
 export enum permissions_items {
   canCreate,
@@ -145,12 +151,38 @@ export type PermissionsItems = Partial<
   Record<keyof typeof permissions_items, boolean>
 >
 
+export type PermissionsCustomers = Partial<
+  Record<keyof typeof permissions_customers, boolean>
+>
+
 export type StaffPermissions = {
   isOwner?: boolean
   isAdmin?: boolean
   order?: Partial<PermissionsOrder>
   store?: Partial<PermissionsStore>
   items?: Partial<PermissionsItems>
+  customers?: Partial<PermissionsCustomers>
+}
+
+export const staffPermissions = {
+  isOwner: 'isOwner',
+  isAdmin: 'isAdmin',
+  order: Object.keys(permissions_orders).reduce((acc, key) => {
+    acc[key] = key
+    return acc
+  }, {} as Record<keyof typeof permissions_orders, string>),
+  store: Object.keys(permissions_store).reduce((acc, key) => {
+    acc[key] = key
+    return acc
+  }, {} as Record<keyof typeof permissions_store, string>),
+  items: Object.keys(permissions_items).reduce((acc, key) => {
+    acc[key] = key
+    return acc
+  }, {} as Record<keyof typeof permissions_orders, string>),
+  customers: Object.keys(permissions_customers).reduce((acc, key) => {
+    acc[key] = key
+    return acc
+  }, {} as Record<keyof typeof permissions_customers, string>)
 }
 
 export type PermissionsOrderType = keyof typeof permissions_orders
@@ -166,3 +198,6 @@ export const permissionsStoreKeys = Object.keys(permissions_store).filter(
 export const permissionsItemsKeys = Object.keys(permissions_items).filter(
   (key) => isNaN(Number(key))
 )
+export const permissionsCustomersKeys = Object.keys(
+  permissions_customers
+).filter((key) => isNaN(Number(key)))
