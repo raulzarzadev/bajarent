@@ -37,13 +37,16 @@ export function findBestMatch(customers: string[], query: string) {
   return bestMatch
 }
 
-export function findBestMatches(customers: string[], query: string, count = 1) {
-  if (!customers.length) return null
+export function findBestMatches(data: string[], query: string, count = 1) {
+  if (!data.length)
+    return {
+      matches: null
+    }
   const lowerQuery = query.toLowerCase()
   const queryWords = lowerQuery.split(/\s+/)
 
-  const matches = customers.map((customer) => {
-    const lowerCustomer = customer.toLowerCase()
+  const matches = data.map((item) => {
+    const lowerCustomer = item.toLowerCase()
     const words = lowerCustomer.split(/\s+/)
 
     // 1️⃣ Distancia de Levenshtein con la cadena completa
@@ -57,7 +60,7 @@ export function findBestMatches(customers: string[], query: string, count = 1) {
       if (words.includes(word)) keywordMatches++
     }
 
-    return { customer, distance, keywordMatches }
+    return { item, distance, keywordMatches }
   })
 
   // Ordenar primero por mayor cantidad de palabras clave coincidentes, luego por menor distancia
@@ -68,9 +71,9 @@ export function findBestMatches(customers: string[], query: string, count = 1) {
     return a.distance - b.distance
   })
 
-  console.log({ query, matches })
-
-  return matches.map((match) => match.customer).slice(0, count)
+  return {
+    matches: matches.slice(0, count)
+  }
 }
 
 // 📌 Ejemplo de uso

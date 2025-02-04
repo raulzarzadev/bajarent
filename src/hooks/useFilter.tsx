@@ -6,7 +6,8 @@ import asDate from '../libs/utils-date'
 import OrderType from '../types/OrderType'
 import { useStore } from '../contexts/storeContext'
 import { findBestMatches } from '../components/Customers/lib/levenshteinDistance'
-
+import { Timestamp } from 'firebase/firestore'
+import { processData } from '../libs/flattenData'
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
   collectionName: string
@@ -114,12 +115,29 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const [searchValue, setSearchValue] = useState('')
-  const arrayData = data.map((a) => Object.values(a).flat().join(' '))
+  const arrayData = data.map((a) => {
+    return processData(a)
+  })
   const search = async (value: string) => {
     setSearchValue(value)
-    console.log({ arrayData })
-    const res = findBestMatches(arrayData, value)
-    console.log({ res })
+
+    if (!value) {
+      setFilteredData([...data])
+      return
+    }
+
+    const { matches } = findBestMatches(arrayData, value, 5)
+
+    const exactMatches = matches.filter((m) => m.keywordMatches > 0)
+    if (exactMatches.length > 0) {
+      const matchesIds = exactMatches?.map((a) => a.item.split(' ')[0])
+      const matchedData = data.filter((a) => matchesIds.includes(a.id))
+      setFilteredData(matchedData)
+    } else {
+      const matchesIds = matches?.map((a) => a.item.split(' ')[0])
+      const matchedData = data.filter((a) => matchesIds.includes(a.id))
+      setFilteredData(matchedData)
+    }
     // setTimeout(async () => {
     //   const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
     //   // let exactMatches = []
