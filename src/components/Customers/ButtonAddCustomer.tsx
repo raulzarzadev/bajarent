@@ -19,7 +19,7 @@ import { CustomerType } from '../../state/features/costumers/customerType'
 const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
   const order = props?.order
   const modal = useModal({ title: 'Agregar cliente' })
-  const { userChoiceHandler } = useCustomers()
+  const { handleCreateCustomer } = useCustomers()
   const customer = customerFromOrder(order)
 
   return (
@@ -34,20 +34,13 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
       <StyledModal {...modal}>
         <AddOrMergeCustomer
           onSelectOption={({ option }) => {
-            userChoiceHandler({
-              userOptionSelected: option,
+            handleCreateCustomer({
+              option,
               newCustomer: customer,
               storeId: customer.storeId,
-              orderId: customer.orderId,
-              onCanceled: () => {
-                modal.toggleOpen()
-              },
-              onCreated: () => {
-                modal.toggleOpen()
-              },
-              onMerged: () => {
-                modal.toggleOpen()
-              }
+              orderId: customer.orderId
+            }).then((res) => {
+              modal.toggleOpen()
             })
           }}
           customer={customer}

@@ -49,11 +49,12 @@ const InputCheckbox = ({
         // { marginHorizontal: 'auto' },
         style,
         //  disabled ? { opacity: 0.4 } : {},
-        { padding: 6 }
+        { padding: 2 }
       ]}
       iconStyle={{
         opacity: disabled ? 0.3 : 1
       }}
+      size={20}
       textComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
       textContainerStyle={{ marginLeft: 4 }}
       textStyle={[
@@ -66,7 +67,7 @@ const InputCheckbox = ({
       // iconComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
       iconComponent={
         iconCheck ? (
-          <Icon icon={iconCheck} color={theme.white} size={20} />
+          <Icon icon={iconCheck} color={theme.white} size={12} />
         ) : undefined
       }
       innerIconStyle={{

@@ -3,7 +3,8 @@ import { CustomerType } from './customerType'
 import {
   createCustomer as createCustomerThunk,
   fetchCustomers,
-  updateCustomer as updateCustomerThunk
+  updateCustomer as updateCustomerThunk,
+  deleteCustomer as deleteCustomerThunk
 } from './customersThunks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store'
@@ -46,6 +47,7 @@ export const customersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //* ----> FETCHING CUSTOMER
       .addCase(fetchCustomers.pending, (state) => {
         state.loading = true
         state.error = null
@@ -58,12 +60,14 @@ export const customersSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Failed to fetch customers'
       })
+      //* ----> CREATE CUSTOMER
       .addCase(createCustomerThunk.fulfilled, (state, action) => {
         state.data.push(action.payload)
       })
       .addCase(createCustomerThunk.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to create customer'
       })
+      //* ----> UPDATE CUSTOMER
       .addCase(updateCustomerThunk.fulfilled, (state, action) => {
         state.loading = false
         const { id, ...changes } = action.payload
@@ -87,6 +91,13 @@ export const customersSlice = createSlice({
       .addCase(updateCustomerThunk.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to update customer'
       })
+      //* ----> DELETE CUSTOMER
+      .addCase(deleteCustomerThunk.fulfilled, (state, action) => {
+        state.data = state.data.filter((c) => c.id !== action.payload)
+      })
+      .addCase(deleteCustomerThunk.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to delete customer'
+      })
   }
 })
 
@@ -108,13 +119,17 @@ export const useCustomers = () => {
       })
     )
   }
+
   const create = async (
     storeId: StoreType['id'],
     customer: Partial<CustomerType>
   ) => {
     return await dispatch(createCustomerThunk({ customer, storeId }))
   }
-  const customers = useSelector(selectCustomers)
+
+  const remove = async (id: string) => {
+    return await dispatch(deleteCustomerThunk(id))
+  }
 
   const handleCreateCustomer = async ({
     option,
@@ -208,10 +223,13 @@ export const useCustomers = () => {
     }
   }
 
+  const customers = useSelector(selectCustomers)
+
   return {
     ...customers,
     update,
     create,
+    remove,
     handleCreateCustomer
   }
 }

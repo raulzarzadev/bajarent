@@ -182,6 +182,7 @@ function MyList<T extends { id: string }>({
     }
     setSelectAll(!selectAll)
   }
+  const [_pressedRow, _setPressedRow] = useState(null)
 
   //#region render
 
@@ -390,13 +391,20 @@ function MyList<T extends { id: string }>({
                     label=""
                     setValue={() => {
                       handleSelectRow(item?.id)
+                      _setPressedRow(item.id)
                     }}
                     value={selectedRows.includes(item?.id)}
                   />
                 )}
                 <Pressable
-                  style={{ flex: 1, flexDirection: 'row' }}
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    backgroundColor:
+                      _pressedRow === item.id ? '#00000020' : 'transparent'
+                  }}
                   onPress={() => {
+                    _setPressedRow(item.id)
                     if (multiSelect) {
                       handleSelectRow(item.id)
                     } else {

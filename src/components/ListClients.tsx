@@ -2,12 +2,18 @@ import { Text, View } from 'react-native'
 import { ListE } from './List'
 import ListRow from './ListRow'
 import useMyNav from '../hooks/useMyNav'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
+import {
+  customersSlice,
+  useCustomers
+} from '../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import { ConsolidateCustomersList } from './ListOrdersConsolidated'
+import Button from './Button'
+import { gStyles } from '../styles'
+import { CustomersActionsE } from './Customers/CustomersActions'
 export type ListCustomerType = {
   id: string
   name: string
@@ -44,6 +50,7 @@ const ListCustomers = () => {
   const modalConsolidatedList = useModal({
     title: 'Crear clientes desde consolidadas'
   })
+
   return (
     <View>
       <ListE
@@ -93,6 +100,7 @@ const ListCustomers = () => {
         onPressRow={(id) => {
           toCustomers({ to: 'details', id })
         }}
+        ComponentMultiActions={({ ids }) => <CustomersActionsE ids={ids} />}
       />
       <StyledModal {...modalConsolidatedList}>
         <ConsolidateCustomersList />

@@ -8,10 +8,13 @@ import { CustomerImagesE } from './CustomerImages'
 import { CustomerContactsE } from './CustomerContacts'
 import { CustomerOrdersE } from './CustomerOrders'
 import DocMetadata from '../DocMetadata'
+import { useNavigation } from '@react-navigation/native'
+import ButtonConfirm from '../ButtonConfirm'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
-  const { data: customers, loading } = useCustomers()
+  const { data: customers, loading, remove } = useCustomers()
   const { toOrders, toCustomers } = useMyNav()
+  const navigation = useNavigation()
   const customer = customers.find((c) => c.id === customerId)
   if (loading) return <Text>Cargando...</Text>
   if (!customer) return <Text>Cliente no encontrado</Text>
@@ -27,6 +30,24 @@ const ScreenCustomer = (params) => {
           alignItems: 'center'
         }}
       >
+        <ButtonConfirm
+          handleConfirm={async () => {
+            remove(customer.id)
+            navigation.goBack()
+          }}
+          openLabel="Eliminar"
+          openColor="error"
+          openVariant="ghost"
+          openSize="small"
+          confirmColor="error"
+          icon="delete"
+          justIcon
+        >
+          <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+            ¡ Eliminar de forma permanente !
+          </Text>
+        </ButtonConfirm>
+
         <Button
           icon="edit"
           justIcon
