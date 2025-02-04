@@ -370,6 +370,7 @@ function MyList<T extends { id: string }>({
             />
           </View>
         </View>
+
         {/* MULTI-SELECT  */}
         {multiSelect && (
           <View style={{ alignSelf: 'flex-start' }}>
@@ -380,6 +381,7 @@ function MyList<T extends { id: string }>({
             />
           </View>
         )}
+
         {/* CONTENT  */}
         <FlatList
           data={sortedData.slice(startIndex, endIndex)}
@@ -490,9 +492,8 @@ function MyList<T extends { id: string }>({
             totalPages={totalPages}
           />
         </View>
-
         {/* TABLE OF CUSTOM DATA */}
-        {collectionData.length > 0 && (
+        {collectionData?.length > 0 && (
           <>
             <View>
               <Text style={gStyles.h3}>Otras coincidencias</Text>

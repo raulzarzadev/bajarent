@@ -123,6 +123,7 @@ export default function useFilter<T extends { id?: string }>({
 
     if (!value) {
       setFilteredData([...data])
+      setCustomData([])
       return
     }
 
@@ -138,28 +139,21 @@ export default function useFilter<T extends { id?: string }>({
       const matchedData = data.filter((a) => matchesIds.includes(a.id))
       setFilteredData(matchedData)
     }
-
     if (collectionSearch?.collectionName === 'orders') {
-      // const avoidIds = res.map(({ id }) => id)
-      const orders = await ServiceOrders.search({
-        storeId,
-        fields: collectionSearch?.fields,
-        value,
-        sections: collectionSearch?.assignedSections
-      }).then((res) => {
-        return formatOrders({ orders: res as Partial<OrderType>[], reports })
-      })
-      setFilteredData([...orders])
+      setTimeout(async () => {
+        const orders = await ServiceOrders.search({
+          storeId,
+          fields: collectionSearch?.fields,
+          value,
+          sections: collectionSearch?.assignedSections
+        }).then((res) => {
+          return formatOrders({ orders: res as Partial<OrderType>[], reports })
+        })
 
-      //setCustomData([...orders])
+        setCustomData([...orders])
+      }, 1000) // <--- 1 second delay to avoid multiple requests
     }
-    //   //console.log({ exactMatches })
 
-    //   setFilteredData(res)
-    //   // if (exactMatches.length > 0) {
-    //   //   setFilteredData(exactMatches)
-    //   // } else {
-    //   // }
     // }, debounceSearch)
   }
 
