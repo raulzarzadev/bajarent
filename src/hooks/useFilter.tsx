@@ -138,55 +138,21 @@ export default function useFilter<T extends { id?: string }>({
       const matchedData = data.filter((a) => matchesIds.includes(a.id))
       setFilteredData(matchedData)
     }
-    // setTimeout(async () => {
-    //   const filteredData = filterDataByFields(data, filtersBy) // <-- Apply filters and search in current selection
-    //   // let exactMatches = []
-    //   if (!value) {
-    //     //<-- Apply filters if exist to keep current selection
-    //     setFilteredData(filteredData)
-    //     setCustomData([])
 
-    //     return
-    //   }
+    if (collectionSearch?.collectionName === 'orders') {
+      // const avoidIds = res.map(({ id }) => id)
+      const orders = await ServiceOrders.search({
+        storeId,
+        fields: collectionSearch?.fields,
+        value,
+        sections: collectionSearch?.assignedSections
+      }).then((res) => {
+        return formatOrders({ orders: res as Partial<OrderType>[], reports })
+      })
+      setFilteredData([...orders])
 
-    //   const res = filteredData?.filter((order) => {
-    //     //* Get all values of the order
-    //     const orderValues = Object.values(order)
-
-    //     //*  Check for exact matches first and add to exactMatches
-    //     // orderValues.forEach((orderValue) => {
-    //     //   if (orderValue == value) {
-    //     //     exactMatches.push(order)
-    //     //   }
-
-    //     // })
-    //     //*  Check for partial matches and add to filteredData
-    //     return orderValues.some((orderValue) => {
-    //       if (typeof orderValue === 'string') {
-    //         return orderValue.toLowerCase().includes(value.toLowerCase())
-    //       }
-    //       if (typeof orderValue === 'number' && !isNaN(Number(value))) {
-    //         return orderValue === parseFloat(value)
-    //       }
-    //       return false
-    //     })
-    //   })
-
-    //   if (collectionSearch?.collectionName === 'orders') {
-    //     // const avoidIds = res.map(({ id }) => id)
-    //     const orders = await ServiceOrders.search({
-    //       storeId,
-    //       fields: collectionSearch?.fields,
-    //       value,
-    //       sections: collectionSearch?.assignedSections
-    //     }).then((res) => {
-    //       return formatOrders({ orders: res as Partial<OrderType>[], reports })
-    //     })
-
-    //     setCustomData([
-    //       ...orders.filter((o) => !res.some((r) => r.id === o.id))
-    //     ])
-    //   }
+      //setCustomData([...orders])
+    }
     //   //console.log({ exactMatches })
 
     //   setFilteredData(res)

@@ -99,7 +99,6 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
           useEffect(() => {
             setSortedStore(permissionsStoreKeys.sort(sortCustomerPermissions))
           }, [values?.permissions?.customers])
-          console.log({ sortedStores })
 
           return (
             <View>
