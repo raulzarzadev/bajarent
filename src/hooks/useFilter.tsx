@@ -128,15 +128,17 @@ export default function useFilter<T extends { id?: string }>({
     }
 
     const { matches } = findBestMatches(arrayData, value, 5)
+    const filteredData = filterDataByFields(data, filtersBy)
 
     const exactMatches = matches.filter((m) => m.keywordMatches > 0)
     if (exactMatches.length > 0) {
       const matchesIds = exactMatches?.map((a) => a.item.split(' ')[0])
-      const matchedData = data.filter((a) => matchesIds.includes(a.id))
+      const matchedData = filteredData.filter((a) => matchesIds.includes(a.id))
+
       setFilteredData(matchedData)
     } else {
       const matchesIds = matches?.map((a) => a.item.split(' ')[0])
-      const matchedData = data.filter((a) => matchesIds.includes(a.id))
+      const matchedData = filteredData.filter((a) => matchesIds.includes(a.id))
       setFilteredData(matchedData)
     }
     if (collectionSearch?.collectionName === 'orders') {
