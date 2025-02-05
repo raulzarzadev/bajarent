@@ -33,7 +33,7 @@ const BottomAppBar = () => {
     permissions.items.canViewMyItems ||
     permissions.isAdmin ||
     permissions.isOwner
-
+  const showCustomerButton = permissions?.customers?.read
   return (
     <Tab.Navigator
       //initialRouteName="StackOrders"
@@ -130,7 +130,8 @@ const BottomAppBar = () => {
         component={StackCustomersE}
         options={({ route }) => ({
           headerShown: false,
-          title: 'Clientes'
+          title: 'Clientes',
+          tabBarButton: showCustomerButton ? undefined : () => null
         })}
       />
 

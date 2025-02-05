@@ -2,18 +2,14 @@ import { Text, View } from 'react-native'
 import { ListE } from './List'
 import ListRow from './ListRow'
 import useMyNav from '../hooks/useMyNav'
-import {
-  customersSlice,
-  useCustomers
-} from '../state/features/costumers/costumersSlice'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import { ConsolidateCustomersList } from './ListOrdersConsolidated'
-import Button from './Button'
-import { gStyles } from '../styles'
 import { CustomersActionsE } from './Customers/CustomersActions'
+import { useEmployee } from '../contexts/employeeContext'
 export type ListCustomerType = {
   id: string
   name: string
@@ -50,6 +46,8 @@ const ListCustomers = () => {
   const modalConsolidatedList = useModal({
     title: 'Crear clientes desde consolidadas'
   })
+  const { permissions } = useEmployee()
+  const canCreateCustomer = permissions.customers.write
 
   return (
     <View>
@@ -71,7 +69,8 @@ const ListCustomers = () => {
               //@ts-ignore
               toCustomers({ to: 'new' })
             },
-            visible: true
+            visible: true,
+            disabled: !canCreateCustomer
           }
         ]}
         defaultOrder="asc"

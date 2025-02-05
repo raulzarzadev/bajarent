@@ -129,10 +129,10 @@ export enum permissions_store {
   canSendMessages
 }
 export enum permissions_customers {
-  create,
+  read,
   edit,
-  delete,
-  view
+  write,
+  delete
 }
 
 export enum permissions_items {

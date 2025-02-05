@@ -155,7 +155,7 @@ const ButtonX: React.FC<ButtonProps> = ({
           <Icon
             icon={icon}
             color={textColor.color}
-            size={24}
+            size={size === 'xs' ? 16 : 24}
             //  size={sizes[size].padding * 2}
           />
         </View>

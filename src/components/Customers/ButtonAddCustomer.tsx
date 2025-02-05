@@ -15,21 +15,25 @@ import OrderType from '../../types/OrderType'
 import { customerFromOrder } from './lib/customerFromOrder'
 import { CustomerCardE } from './CustomerCard'
 import { CustomerType } from '../../state/features/costumers/customerType'
+import { useEmployee } from '../../contexts/employeeContext'
 
 const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
   const order = props?.order
   const modal = useModal({ title: 'Agregar cliente' })
   const { handleCreateCustomer } = useCustomers()
   const customer = customerFromOrder(order)
-
+  const { permissions } = useEmployee()
+  const canCreateCustomer = permissions?.customers?.write
   return (
-    <View>
+    <View style={{ marginLeft: 6, justifyContent: 'center' }}>
       <Button
-        icon="add"
+        icon="profileAdd"
         onPress={modal.toggleOpen}
         variant="ghost"
+        color="success"
         justIcon
         size="xs"
+        disabled={!canCreateCustomer}
       />
       <StyledModal {...modal}>
         <AddOrMergeCustomer

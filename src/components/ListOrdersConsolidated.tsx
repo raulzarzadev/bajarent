@@ -33,6 +33,7 @@ import { customerFromOrder } from './Customers/lib/customerFromOrder'
 import TextInfo from './TextInfo'
 import { CustomerType } from '../state/features/costumers/customerType'
 import { CustomerCardE } from './Customers/CustomerCard'
+import { useEmployee } from '../contexts/employeeContext'
 export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
@@ -480,7 +481,8 @@ export const ConsolidateCustomersList = () => {
     }
   }
   const [disabled, setDisabled] = useState(false)
-
+  const { permissions } = useEmployee()
+  const canCreateCustomers = permissions?.customers?.write
   return (
     <View>
       <ListE
@@ -640,9 +642,12 @@ export const ConsolidateCustomersList = () => {
                   ></TextInfo>
                 </>
               )}
+
               <Button
-                label="Crear customers"
-                disabled={createCustomerDisabled || finished}
+                label="Crear multiples clientes"
+                disabled={
+                  createCustomerDisabled || finished || !canCreateCustomers
+                }
                 onPress={() => handleCreateCustomers({ ids })}
               ></Button>
             </View>

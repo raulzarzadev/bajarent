@@ -10,8 +10,11 @@ import theme from '../theme'
 export const SaleItemsInfo = () => {
   const { order } = useOrderDetails()
   const { categories } = useStore()
-  const items = order.items as SaleOrderItem[]
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const items = order?.items as SaleOrderItem[]
+  const total = items?.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  )
   return (
     <ErrorBoundary componentName="SaleItemsInfo">
       <View

@@ -10,9 +10,12 @@ import { CustomerOrdersE } from './CustomerOrders'
 import DocMetadata from '../DocMetadata'
 import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from '../ButtonConfirm'
+import { useEmployee } from '../../contexts/employeeContext'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading, remove } = useCustomers()
+  const { permissions } = useEmployee()
+  const sortCustomerPermissions = permissions.customers
   const { toOrders, toCustomers } = useMyNav()
   const navigation = useNavigation()
   const customer = customers.find((c) => c.id === customerId)
@@ -30,33 +33,36 @@ const ScreenCustomer = (params) => {
           alignItems: 'center'
         }}
       >
-        <ButtonConfirm
-          handleConfirm={async () => {
-            remove(customer.id)
-            navigation.goBack()
-          }}
-          openLabel="Eliminar"
-          openColor="error"
-          openVariant="ghost"
-          openSize="small"
-          confirmColor="error"
-          icon="delete"
-          justIcon
-        >
-          <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-            ¡ Eliminar de forma permanente !
-          </Text>
-        </ButtonConfirm>
-
-        <Button
-          icon="edit"
-          justIcon
-          variant="ghost"
-          size="small"
-          onPress={() => {
-            toCustomers({ to: 'edit', id: customer.id })
-          }}
-        ></Button>
+        {sortCustomerPermissions?.delete && (
+          <ButtonConfirm
+            handleConfirm={async () => {
+              remove(customer.id)
+              navigation.goBack()
+            }}
+            openLabel="Eliminar"
+            openColor="error"
+            openVariant="ghost"
+            openSize="small"
+            confirmColor="error"
+            icon="delete"
+            justIcon
+          >
+            <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+              ¡ Eliminar de forma permanente !
+            </Text>
+          </ButtonConfirm>
+        )}
+        {sortCustomerPermissions?.edit && (
+          <Button
+            icon="edit"
+            justIcon
+            variant="ghost"
+            size="small"
+            onPress={() => {
+              toCustomers({ to: 'edit', id: customer.id })
+            }}
+          ></Button>
+        )}
         <Text style={[gStyles.h2]}>{customer?.name} </Text>
 
         <Button
