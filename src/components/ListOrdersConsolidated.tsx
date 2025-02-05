@@ -501,7 +501,7 @@ export const ConsolidateCustomersList = () => {
 
             {!item?.customerId && (
               // TODO: arregralr esto por que puede que no se esten formateadno correctamente los clientes
-              <ButtonAddCustomerE order={item} />
+              <ButtonAddCustomerE orderId={item.id} />
             )}
             {item?.customerId && (
               <Button

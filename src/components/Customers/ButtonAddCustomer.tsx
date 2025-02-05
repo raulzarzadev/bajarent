@@ -10,19 +10,39 @@ import {
 } from '../../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 import TextInfo from '../TextInfo'
-import { ConsolidatedOrderType } from '../../firebase/ServiceConsolidatedOrders'
 import OrderType from '../../types/OrderType'
 import { customerFromOrder } from './lib/customerFromOrder'
 import { CustomerCardE } from './CustomerCard'
 import { CustomerType } from '../../state/features/costumers/customerType'
 import { useEmployee } from '../../contexts/employeeContext'
+import { useOrdersCtx } from '../../contexts/ordersContext'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
-  const order = props?.order
-  const modal = useModal({ title: 'Agregar cliente' })
+  const { orders } = useOrdersCtx()
   const { handleCreateCustomer } = useCustomers()
+
+  const [order, setOrder] = useState<Partial<OrderType>>(props?.order)
+
+  const modal = useModal({ title: 'Agregar cliente' })
   const customer = customerFromOrder(order)
   const { permissions } = useEmployee()
+
+  useEffect(() => {
+    if (props?.order) {
+      setOrder(props.order)
+    } else {
+      const ctxOrder = orders.find((o) => o.id === props.orderId)
+      if (ctxOrder) {
+        setOrder(ctxOrder)
+      } else {
+        ServiceOrders.get(props.orderId).then((order) => {
+          setOrder(order)
+        })
+      }
+    }
+  }, [props?.order, props?.orderId])
+
   const canCreateCustomer = permissions?.customers?.write
   return (
     <View style={{ marginLeft: 6, justifyContent: 'center' }}>
@@ -77,6 +97,7 @@ export const AddOrMergeCustomer = ({
     }
   }
   const [disabled, setDisabled] = useState(false)
+
   const handleChoice = async (option: CreateCustomerChoiceType) => {
     setDisabled(true)
     await onSelectOption({
@@ -230,8 +251,9 @@ export const SimilarCustomersList = ({
 }
 export default ButtonAddCustomer
 export type ButtonAddCustomerProps = {
-  order: Partial<ConsolidatedOrderType> | Partial<OrderType>
+  order?: Partial<OrderType>
   toggleModal?: ReturnType<typeof useModal>
+  orderId?: string
 }
 export const ButtonAddCustomerE = (props: ButtonAddCustomerProps) => (
   <ErrorBoundary componentName="ButtonAddCustomer">

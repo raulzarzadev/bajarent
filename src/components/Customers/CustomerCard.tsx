@@ -38,7 +38,10 @@ const CustomerCard = (props?: CustomerCardProps) => {
 
       <View style={{ marginBottom: 8 }} />
 
-      <CustomerContactsE customerId={customerId} />
+      <CustomerContactsE
+        customerId={customerId}
+        customerContacts={customer.contacts}
+      />
       <CustomerImagesE images={customer?.images} customerId={customerId} />
     </View>
   )

@@ -8,8 +8,10 @@ import { FormikCustomerContacts } from './FormCustomer'
 import { Formik } from 'formik'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import CardPhone from '../CardPhone'
+import { CustomerType } from '../../state/features/costumers/customerType'
 const CustomerContacts = (props?: CustomerContactsProps) => {
   const { data: customers, update } = useCustomers()
+  const propsCustomerContacts = props?.customerContacts
   const customerContacts = customers?.find(
     (c) => c?.id === props?.customerId
   )?.contacts
@@ -32,7 +34,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
           size="small"
         />
       </View>
-      {Object.entries(customerContacts || {}).map(
+      {Object.entries(customerContacts || propsCustomerContacts || {}).map(
         ([id, contact]) =>
           !!contact &&
           !contact?.deletedAt && (
@@ -99,6 +101,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
 export default CustomerContacts
 export type CustomerContactsProps = {
   customerId: string
+  customerContacts?: CustomerType['contacts']
 }
 export const CustomerContactsE = (props: CustomerContactsProps) => (
   <ErrorBoundary componentName="CustomerContacts">

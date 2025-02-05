@@ -22,6 +22,7 @@ import {
   CustomerType,
   ImageDescriptionType
 } from '../../state/features/costumers/customerType'
+import { customerImagesFromOrder } from '../Customers/lib/customerFromOrder'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { store } = useStore()
@@ -77,7 +78,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
             delete values.expireAt // <-- Do not update expireAt because
             //* update customer
             if (order.customerId) {
-              const customerImages = createImages({
+              const customerImages = customerImagesFromOrder({
                 houseImage: values?.imageHouse || null,
                 ID: values?.imageID || null,
                 signature: values?.signature || null
@@ -217,35 +218,3 @@ const AddPay = ({
 }
 
 export default ModalRentStart
-
-const createImages = ({ houseImage, ID, signature }) => {
-  let customerImages: Record<string, Partial<ImageDescriptionType>> = {}
-  if (houseImage) {
-    const id = createUUID({ length: 8 })
-    customerImages[id] = {
-      src: houseImage,
-      description: 'Fachada',
-      type: 'house',
-      id
-    }
-  }
-  if (ID) {
-    const id = createUUID({ length: 8 })
-    customerImages[id] = {
-      src: ID,
-      description: 'Identificación',
-      type: 'ID',
-      id
-    }
-  }
-  if (signature) {
-    const id = createUUID({ length: 8 })
-    customerImages[id] = {
-      src: signature,
-      description: 'Firma',
-      type: 'signature',
-      id
-    }
-  }
-  return customerImages
-}

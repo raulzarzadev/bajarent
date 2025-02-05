@@ -26,7 +26,11 @@ export type CustomerAddress = {
   coords?: `${number},${number}`
 }
 
-export type CustomerImages = Record<string, ImageDescriptionType>
+export type CustomerImages = Record<
+  ImageDescriptionType['id'],
+  Partial<ImageDescriptionType>
+>
+
 export type ImageDescriptionType = {
   description: string
   src: string
