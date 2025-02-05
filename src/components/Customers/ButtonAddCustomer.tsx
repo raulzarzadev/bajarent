@@ -81,7 +81,7 @@ export const AddOrMergeCustomer = ({
     setDisabled(true)
     await onSelectOption({
       option,
-      customerId: selectedSimilarCustomer.id
+      customerId: selectedSimilarCustomer?.id
     })
     setDisabled(false)
   }

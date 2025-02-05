@@ -445,7 +445,6 @@ export const ConsolidateCustomersList = () => {
     setCreateCustomerDisabled(false)
     setFinished(true)
   }
-  console.log({ createCustomerDisabled })
 
   const waitForUserChoice = (): Promise<{
     option: CreateCustomerChoiceType
