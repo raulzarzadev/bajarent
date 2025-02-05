@@ -37,8 +37,8 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
       />
       <StyledModal {...modal}>
         <AddOrMergeCustomer
-          onSelectOption={({ option }) => {
-            handleCreateCustomer({
+          onSelectOption={async ({ option }) => {
+            return await handleCreateCustomer({
               option,
               newCustomer: customer,
               storeId: customer.storeId,

@@ -170,7 +170,7 @@ export const useCustomers = () => {
       if (!customerCreated?.res?.ok) {
         const orderUpdated = await ServiceOrders.update(orderId, {
           //@ts-ignore
-          customerId: customerCreated
+          customerId: customerCreated.id
         })
           .then((res) => {
             // console.log('update order')

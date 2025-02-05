@@ -115,27 +115,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         <OrderDirectivesE order={order} />
       </View>
 
-      {order.customerId ? (
-        <CustomerOrderE customerId={order.customerId} />
-      ) : (
-        <>
-          <View
-            style={{
-              padding: 4,
-              flexDirection: 'row',
-              justifyContent: 'center'
-            }}
-          >
-            <ClientName order={order} style={gStyles.h1} />
-            {!order.customerId && <ButtonAddCustomerE order={order} />}
-          </View>
-          <OrderContacts />
-          <OrderImages order={order} />
-          <ErrorBoundary componentName="OrderAddress">
-            <OrderAddress order={order} />
-          </ErrorBoundary>
-        </>
-      )}
+      <CustomerOrderE />
 
       {/*//* <-----Order actions flow */}
       <View style={{ marginTop: 8 }} />
@@ -240,7 +220,7 @@ export const RepairItemConfigInfo = () => {
   )
 }
 
-const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
+export const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const neighborhood = order?.neighborhood || ''
   const street = order?.street || ''
   const betweenStreets = order?.betweenStreets || ''
