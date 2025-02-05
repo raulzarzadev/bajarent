@@ -77,11 +77,11 @@ export function findBestMatches(data: string[], query: string, count = 1) {
 }
 
 // 📌 Ejemplo de uso
-const customers = [
-  'Benito Juarez de Oretegon Progreso 1234 +5255433899452 +5244342691212',
-  'Maria Lopez de la Cruz Reforma 5678 +5255123456789 +524455667788'
-]
+// const customers = [
+//   'Benito Juarez de Oretegon Progreso 1234 +5255433899452 +5244342691212',
+//   'Maria Lopez de la Cruz Reforma 5678 +5255123456789 +524455667788'
+// ]
 
-console.log(findBestMatch(customers, 'Benito Juarez Progreso 1234'))
+//console.log(findBestMatch(customers, 'Benito Juarez Progreso 1234'))
 
 //

@@ -28,15 +28,15 @@ export function processData(a: any): string {
 }
 
 // Ejemplo de uso:
-const a = {
-  name: 'Juan',
-  address: {
-    street: 'Av. Reforma',
-    number: 123,
-    details: ['Apto 5', { floor: '3rd', door: 'B' }]
-  },
-  contacts: ['+5255433899452', { type: 'mobile', number: '+524455667788' }],
-  age: 30
-}
+// const a = {
+//   name: 'Juan',
+//   address: {
+//     street: 'Av. Reforma',
+//     number: 123,
+//     details: ['Apto 5', { floor: '3rd', door: 'B' }]
+//   },
+//   contacts: ['+5255433899452', { type: 'mobile', number: '+524455667788' }],
+//   age: 30
+// }
 
-console.log(processData(a)) // Juan Av. Reforma 123 Apto 5 3rd B +5255433899452 mobile +524455667788 30
+//console.log(processData(a)) // Juan Av. Reforma 123 Apto 5 3rd B +5255433899452 mobile +524455667788 30
