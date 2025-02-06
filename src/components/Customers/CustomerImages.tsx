@@ -19,6 +19,7 @@ import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useAuth } from '../../contexts/authContext'
 import asDate from '../../libs/utils-date'
 import { useEmployee } from '../../contexts/employeeContext'
+import { useState } from 'react'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
@@ -75,6 +76,14 @@ const CustomerImages = (props?: CustomerImagesProps) => {
               width={100}
               title={image.type}
               description={image.description}
+              formValues={image}
+              handleSubmitForm={async (values) => {
+                await update(customerId, {
+                  [`images.${image.id}`]: values
+                })
+                return
+              }}
+              ComponentForm={FormikImageDescription}
             />
             <Text>{image.type}</Text>
             <Text style={[gStyles.helper, { maxWidth: 100 }]} numberOfLines={2}>
@@ -85,34 +94,41 @@ const CustomerImages = (props?: CustomerImagesProps) => {
       </View>
       <StyledModal {...modal}>
         <FormikImageDescription
-          handleSubmit={(values) => {
-            handleAddCustomerImage(values)
+          handleSubmit={async (values) => {
+            await handleAddCustomerImage(values)
             modal.toggleOpen()
+            return
           }}
         />
       </StyledModal>
     </View>
   )
 }
+
 export const FormikImageDescription = ({
-  handleSubmit
+  handleSubmit,
+  values
 }: {
   handleSubmit: (values: ImageDescriptionType) => void | Promise<void>
+  values?: ImageDescriptionType
 }) => {
   const { user } = useAuth()
-  const defaultImage: Partial<ImageDescriptionType> = {
+  const defaultImage: Partial<ImageDescriptionType> = values || {
     type: 'house',
     description: '',
     src: ''
   }
+  const [disabled, setDisabled] = useState(false)
 
   return (
     <Formik
       initialValues={defaultImage}
-      onSubmit={(values: ImageDescriptionType) => {
+      onSubmit={async (values: ImageDescriptionType) => {
+        setDisabled(true)
         values.createdAt = new Date()
         values.createdBy = user.id
-        handleSubmit(values)
+        await handleSubmit(values)
+        setDisabled(false)
       }}
     >
       {({ handleSubmit, values }) => {
@@ -135,13 +151,30 @@ export const FormikImageDescription = ({
                 }
               ]}
             />
-            <FormikInputValue name="description" placeholder="Descripción" />
-            {values?.type === 'signature' ? (
-              <FormikInputSignature name="src" />
-            ) : (
-              <FormikInputImage name="src" />
-            )}
-            <Button onPress={handleSubmit} label="Guardar" />
+            <FormikInputValue
+              name="description"
+              placeholder="Descripción"
+              style={{ marginVertical: 8 }}
+            />
+            <View
+              style={{
+                //height: 100,
+                marginVertical: 8,
+                justifyContent: 'center'
+                //  ...gStyles.guide
+              }}
+            >
+              {values?.type === 'signature' ? (
+                <FormikInputSignature name="src" />
+              ) : (
+                <FormikInputImage name="src" />
+              )}
+            </View>
+            <Button
+              onPress={handleSubmit}
+              label="Guardar"
+              disabled={disabled}
+            />
           </View>
         )
       }}

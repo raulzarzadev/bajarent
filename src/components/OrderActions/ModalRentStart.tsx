@@ -23,14 +23,15 @@ import {
   ImageDescriptionType
 } from '../../state/features/costumers/customerType'
 import { customerImagesFromOrder } from '../Customers/lib/customerFromOrder'
+import { createUUID } from '../../libs/createId'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
-  const { store } = useStore()
+  const { store, storeId } = useStore()
   const { order } = useOrderDetails()
   const { user } = useAuth()
   const [isDirty, setIsDirty] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const { update: updateCustomer } = useCustomers()
+  const { update: updateCustomer, create } = useCustomers()
   const handleRentStart = async ({
     lastPayment
   }: {
@@ -66,43 +67,65 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   return (
     <View>
       <StyledModal {...modal}>
-        <View>
-          <TextInfo
-            defaultVisible
-            text="Asegurate de que ENTREGAS el siguiente artículo"
-          />
-        </View>
         <FormRentDelivery
           initialValues={order}
           onSubmit={async (values: OrderType) => {
             delete values.expireAt // <-- Do not update expireAt because
             //* update customer
-            if (order.customerId) {
-              const customerImages = customerImagesFromOrder({
-                houseImage: values?.imageHouse || null,
-                ID: values?.imageID || null,
-                signature: values?.signature || null
-              })
-              const customerUpdates: Partial<CustomerType> = {
-                images: customerImages as Record<string, ImageDescriptionType>,
+            if (!values.customerId) {
+              const contactId = createUUID({ length: 8 })
+              const newCustomer: Partial<CustomerType> = {
+                name: values.fullName || '',
                 address: {
+                  street: values.address || '',
                   references: values.references || '',
                   neighborhood: values.neighborhood || '',
-                  street: values.street || '',
                   locationURL: values.location || '',
                   coords: values.coords
                     ? `${values.coords[0]},${values.coords[1]}`
                     : null
+                },
+                contacts: {
+                  [contactId]: {
+                    label: 'Principal',
+                    value: values.phone || '',
+                    type: 'phone',
+                    id: contactId
+                  }
                 }
               }
-              await updateCustomer(order.customerId, customerUpdates)
-                .then((res) => {
-                  console.log(res)
-                })
-                .catch((e) => {
-                  console.error(e)
-                })
+              const { payload } = await create(storeId, newCustomer)
+              if (payload) {
+                //@ts-ignore
+                values.customerId = payload?.id
+              }
             }
+            // if (!order.customerId) {
+            //   const customerImages = customerImagesFromOrder({
+            //     houseImage: values?.imageHouse || null,
+            //     ID: values?.imageID || null,
+            //     signature: values?.signature || null
+            //   })
+            //   const customerUpdates: Partial<CustomerType> = {
+            //     images: customerImages as Record<string, ImageDescriptionType>,
+            //     address: {
+            //       references: values.references || '',
+            //       neighborhood: values.neighborhood || '',
+            //       street: values.street || '',
+            //       locationURL: values.location || '',
+            //       coords: values.coords
+            //         ? `${values.coords[0]},${values.coords[1]}`
+            //         : null
+            //     }
+            //   }
+            //   await updateCustomer(order.customerId, customerUpdates)
+            //     .then((res) => {
+            //       console.log(res)
+            //     })
+            //     .catch((e) => {
+            //       console.error(e)
+            //     })
+            // }
 
             await ServiceOrders.update(order.id, values)
               .then((res) => console.log(res))

@@ -120,47 +120,55 @@ export default function InputImagePicker({
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: 50,
-        backgroundColor: colors.transparent,
-        width: '100%'
-      }}
-    >
-      {progress === -1 && (
-        <Text
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            textAlign: 'center'
-          }}
-        >
-          Error al subir archivo
-        </Text>
-      )}
-
-      <ImagePreview image={value} width={'100%'} height={100} />
-      <ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
+    <>
       <View
         style={{
-          width: '100%'
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 50,
+          backgroundColor: colors.transparent,
+          width: '100%',
+          position: 'relative'
         }}
       >
+        {progress === -1 && (
+          <Text
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              textAlign: 'center'
+            }}
+          >
+            Error al subir archivo
+          </Text>
+        )}
+
+        <ImagePreview image={value} />
+        <ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
+        <View
+          style={{
+            width: '100%'
+          }}
+        ></View>
         <Button
           onPress={() => {
             pickImage()
           }}
-          fullWidth
           label={label}
           icon="addImage"
           size="xs"
+          buttonStyles={{
+            width: 50,
+            position: 'absolute',
+            left: '50%',
+            transform: [{ translateX: -25 }],
+            opacity: value ? 0.4 : 1
+          }}
         />
       </View>
-    </View>
+    </>
   )
 }

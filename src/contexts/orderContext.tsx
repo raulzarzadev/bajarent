@@ -75,10 +75,8 @@ const OrderProvider = ({
   useEffect(() => {
     if (_orderId) {
       listenFullOrderData(_orderId, (order) => {
-        console.log({ order })
         if (order) return setOrder({ ...order })
         const consolidatedOrder = consolidatedOrders?.orders[_orderId]
-        console.log({ consolidatedOrder })
         // @ts-ignore
         return setOrder({
           ...consolidatedOrder,

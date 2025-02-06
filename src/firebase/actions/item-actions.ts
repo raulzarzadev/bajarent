@@ -164,7 +164,7 @@ export const onPickUpItem = async ({
     type: 'pickup',
     orderId
   })
-    .then((res) => console.log({ res }))
+    //.then((res) => console.log({ res }))
     .catch((err) => console.error({ err }))
   return pickedUpRes
 }
@@ -177,7 +177,7 @@ export const onRentItem = async ({ storeId, itemId, orderId }) => {
     field: 'status',
     value: 'rented'
   })
-    .then((res) => console.log({ res }))
+    //.then((res) => console.log({ res }))
     .catch((err) => console.error({ err }))
   //* <------------------ UPDATE ITEM STATUS TO DELIVERED
   // onRegistryEntry({

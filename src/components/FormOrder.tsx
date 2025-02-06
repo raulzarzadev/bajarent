@@ -106,12 +106,8 @@ const FormOrderA = ({
   title
 }: FormOrderProps) => {
   const [customerId, setCustomerId] = useState<string | null>(
-    defaultValues.customerId
+    defaultValues?.customerId || null
   )
-  // console.log({ customerId })
-  // useEffect(() => {
-  //   setCustomerId(defaultValues.customerId)
-  // }, [defaultValues?.customerId])
 
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)

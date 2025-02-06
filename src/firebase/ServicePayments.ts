@@ -17,7 +17,6 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
   }
 
   async orderPayment(payment: PaymentType) {
-    console.log({ payment })
     return this.create({
       ...payment,
       orderId: payment.orderId,

@@ -14,6 +14,8 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
 import FormikInputSignature from '../FormikInputSignature'
 import FormikErrorsList, { ErrorsList } from '../FormikErrorsList'
+import { CustomerOrderE } from '../Customers/CustomerOrder'
+import TextInfo from '../TextInfo'
 
 const FormRentDelivery = ({
   initialValues,
@@ -23,7 +25,12 @@ const FormRentDelivery = ({
 }: {
   initialValues: Pick<
     OrderType,
-    'address' | 'location' | 'references' | 'imageID' | 'imageHouse'
+    | 'address'
+    | 'location'
+    | 'references'
+    | 'imageID'
+    | 'imageHouse'
+    | 'customerId'
   >
   onSubmit: (values) => Promise<void> | void
   setDirty?: (dirty: boolean) => void
@@ -70,44 +77,62 @@ const FormRentDelivery = ({
           useEffect(() => {
             setDirty?.(dirty)
           }, [dirty])
-
+          const customerIdAlreadySet =
+            typeof initialValues.customerId === 'string'
           const disabledUpdate = loading || !dirty
           return (
             <>
+              {customerIdAlreadySet && <CustomerOrderE />}
               {ORDER_FIELDS.includes('note') && (
                 <FormikInputValue name="note" label="Contrato" />
               )}
-              {ORDER_FIELDS.includes('address') && (
-                <FormikInputValue name="address" label="Dirección" />
+              {/* IT ALREADY INCLUDE CUSTOMER ID, SOME FIELDS ARE NOT NECESARI */}
+              {!customerIdAlreadySet && (
+                <>
+                  {ORDER_FIELDS.includes('address') && (
+                    <FormikInputValue name="address" label="Dirección" />
+                  )}
+                  {ORDER_FIELDS.includes('references') && (
+                    <FormikInputValue
+                      name="references"
+                      label="Referencias de la casa"
+                    />
+                  )}
+                  {ORDER_FIELDS.includes('location') && (
+                    <InputLocationFormik name="location" />
+                  )}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly'
+                    }}
+                  >
+                    {ORDER_FIELDS.includes('imageID') && (
+                      <View style={{ marginVertical: 8, width: 100 }}>
+                        <FormikInputImage name="imageID" label="ID" />
+                      </View>
+                    )}
+                    {ORDER_FIELDS.includes('imageHouse') && (
+                      <View style={{ marginVertical: 8, width: 100 }}>
+                        <FormikInputImage name="imageHouse" label="Casa" />
+                      </View>
+                    )}
+                    {ORDER_FIELDS.includes('signature') && (
+                      <View style={{ marginVertical: 8, width: 100 }}>
+                        <FormikInputSignature name="signature" />
+                      </View>
+                    )}
+                  </View>
+                </>
               )}
-              {ORDER_FIELDS.includes('references') && (
-                <FormikInputValue
-                  name="references"
-                  label="Referencias de la casa"
+
+              <View>
+                <TextInfo
+                  defaultVisible
+                  text="Asegurate de que ENTREGAS el siguiente artículo"
                 />
-              )}
-              {ORDER_FIELDS.includes('location') && (
-                <InputLocationFormik name="location" />
-              )}
-              <View
-                style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
-              >
-                {ORDER_FIELDS.includes('imageID') && (
-                  <View style={{ marginVertical: 8, width: 100 }}>
-                    <FormikInputImage name="imageID" label="ID" />
-                  </View>
-                )}
-                {ORDER_FIELDS.includes('imageHouse') && (
-                  <View style={{ marginVertical: 8, width: 100 }}>
-                    <FormikInputImage name="imageHouse" label="Casa" />
-                  </View>
-                )}
-                {ORDER_FIELDS.includes('signature') && (
-                  <View style={{ marginVertical: 8, width: 100 }}>
-                    <FormikInputSignature name="signature" />
-                  </View>
-                )}
               </View>
+
               {ORDER_FIELDS.includes('selectItems') && (
                 <View style={{ marginVertical: 8 }}>
                   <FormikSelectCategoriesE name="items" selectPrice />

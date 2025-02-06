@@ -18,26 +18,28 @@ const ScreenOrderNew = (navigation) => {
   const { user } = useAuth()
   const { toOrders } = useMyNav()
   const handleSubmit = async (values: OrderType) => {
-    const contactId = createUUID({ length: 8 })
-    const newCustomer: Partial<CustomerType> = {
-      name: values.fullName || '',
-      address: {
-        street: values.address || '',
-        references: values.references || '',
-        neighborhood: values.neighborhood || '',
-        locationURL: values.location || '',
-        coords: values.coords ? `${values.coords[0]},${values.coords[1]}` : null
-      },
-      contacts: {
-        [contactId]: {
-          label: 'Principal',
-          value: values.phone || '',
-          type: 'phone',
-          id: contactId
+    if (!values.customerId) {
+      const contactId = createUUID({ length: 8 })
+      const newCustomer: Partial<CustomerType> = {
+        name: values.fullName || '',
+        address: {
+          street: values.address || '',
+          references: values.references || '',
+          neighborhood: values.neighborhood || '',
+          locationURL: values.location || '',
+          coords: values.coords
+            ? `${values.coords[0]},${values.coords[1]}`
+            : null
+        },
+        contacts: {
+          [contactId]: {
+            label: 'Principal',
+            value: values.phone || '',
+            type: 'phone',
+            id: contactId
+          }
         }
       }
-    }
-    if (!values.customerId) {
       const { payload } = await create(storeId, newCustomer)
       if (payload) {
         //@ts-ignore

@@ -10,6 +10,7 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import Icon, { IconName } from './Icon'
 import ButtonConfirm from './ButtonConfirm'
+import { ImageDescriptionType } from '../state/features/costumers/customerType'
 const { height: deviceHeight } = Dimensions.get('window')
 
 const ImagePreview = ({
@@ -20,7 +21,10 @@ const ImagePreview = ({
   justIcon = false,
   icon,
   onDelete,
-  description
+  description,
+  ComponentForm,
+  formValues,
+  handleSubmitForm
 }: {
   image: string
   title?: string
@@ -30,6 +34,12 @@ const ImagePreview = ({
   icon?: IconName
   justIcon?: boolean
   description?: string
+  formValues: ImageDescriptionType
+  handleSubmitForm?: (values: ImageDescriptionType) => Promise<void> | void
+  ComponentForm?: React.FC<{
+    handleSubmit: (values: ImageDescriptionType) => void | Promise<void>
+    values?: ImageDescriptionType
+  }>
   onDelete?: () => void | Promise<void>
 }) => {
   //TODO: add button edit
@@ -37,7 +47,7 @@ const ImagePreview = ({
   //if (!image) return <></>
   return (
     <View style={{ width, height }}>
-      {onDelete && (
+      {!!onDelete && (
         <View style={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}>
           <ButtonConfirm
             justIcon
@@ -112,7 +122,7 @@ const ImagePreview = ({
         )}
       </Pressable>
       <StyledModal {...modal}>
-        {onDelete && (
+        {!!onDelete && (
           <ButtonConfirm
             openLabel="Eliminar"
             openColor="error"
@@ -132,20 +142,33 @@ const ImagePreview = ({
             </Text>
           </ButtonConfirm>
         )}
-        {description && <Text>{description} </Text>}
-        <Image
-          source={{ uri: image }}
-          style={{
-            flex: 1,
-            width: '100%',
-            height: '100%',
-            marginVertical: 2,
-            minWidth: '100%',
-            minHeight: deviceHeight - 100,
-            resizeMode: 'contain',
-            alignItems: 'center'
-          }}
-        />
+        {!!ComponentForm ? (
+          <ComponentForm
+            handleSubmit={async (values) => {
+              const res = await handleSubmitForm(values)
+              modal.toggleOpen()
+              return res
+            }}
+            values={formValues}
+          />
+        ) : (
+          <>
+            {!!description && <Text>{description} </Text>}
+            <Image
+              source={{ uri: image }}
+              style={{
+                flex: 1,
+                width: '100%',
+                height: '100%',
+                marginVertical: 2,
+                minWidth: '100%',
+                minHeight: deviceHeight - 100,
+                resizeMode: 'contain',
+                alignItems: 'center'
+              }}
+            />
+          </>
+        )}
       </StyledModal>
     </View>
   )

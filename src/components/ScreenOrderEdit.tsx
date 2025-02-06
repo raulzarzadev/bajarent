@@ -31,8 +31,8 @@ const ScreenOrderEdit = ({ route, navigation }) => {
       <FormOrder
         defaultValues={order}
         onSubmit={async (values) => {
-          if (order.customerId) {
-            await update(order.customerId, {
+          if (order?.customerId) {
+            await update(order?.customerId, {
               name: values.fullName || '',
               //@ts-ignore //* Just will update some basic values
               address: {
@@ -63,6 +63,7 @@ const ScreenOrderEdit = ({ route, navigation }) => {
               values[key] = normalized.trim()
             }
           })
+          console.log({ values })
           return ServiceOrders.update(orderId, values)
             .then((res) => {
               // console.log(res)

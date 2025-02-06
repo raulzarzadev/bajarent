@@ -449,7 +449,7 @@ export const onRentStart = async ({
     order,
     deliveredAt
   })
-    .then((r) => console.log(r))
+    // .then((r) => console.log(r))
     .catch((e) => console.error(e))
 
   //* create movement
@@ -459,7 +459,7 @@ export const onRentStart = async ({
     content: 'Entregada',
     type: 'comment'
   })
-    .then((r) => console.log(r))
+    //.then((r) => console.log(r))
     .catch((e) => console.error(e))
 
   //* delivery items
@@ -471,22 +471,24 @@ export const onRentStart = async ({
     })
   })
   const registryItemsEntriesPromises = items.map((item) => {
-    return onRegistryEntry({
-      storeId,
-      itemId: item.id,
-      type: 'delivery',
-      orderId
-    })
-      .then((res) => console.log({ res }))
-      .catch((err) => console.error({ err }))
+    return (
+      onRegistryEntry({
+        storeId,
+        itemId: item.id,
+        type: 'delivery',
+        orderId
+      })
+        // .then((res) => console.log({ res }))
+        .catch((err) => console.error({ err }))
+    )
   })
 
   await Promise.all(rentOrderPromises)
-    .then((r) => console.log(r))
+    // .then((r) => console.log(r))
     .catch((e) => console.error(e))
 
   await Promise.all(registryItemsEntriesPromises)
-    .then((r) => console.log(r))
+    // .then((r) => console.log(r))
     .catch((e) => console.error(e))
 
   //***** SEND RENT STARTED MESSAGE */
