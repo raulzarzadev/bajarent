@@ -34,7 +34,7 @@ const ImagePreview = ({
   icon?: IconName
   justIcon?: boolean
   description?: string
-  formValues: ImageDescriptionType
+  formValues?: ImageDescriptionType
   handleSubmitForm?: (values: ImageDescriptionType) => Promise<void> | void
   ComponentForm?: React.FC<{
     handleSubmit: (values: ImageDescriptionType) => void | Promise<void>
