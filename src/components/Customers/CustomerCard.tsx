@@ -14,42 +14,24 @@ const CustomerCard = (props?: CustomerCardProps) => {
   const { toCustomers } = useMyNav()
   const location = customer?.address?.locationURL || customer?.address?.coords
   const customerId = customer?.id
-  const canEdit = customerId && permissions?.customers?.edit
   const canRead = customerId && permissions?.customers?.read
   return (
     <View>
-      <Text style={[gStyles.h1, { textAlign: 'center' }]}>
+      <Text
+        style={[gStyles.h1, { textAlign: 'center', justifyContent: 'center' }]}
+      >
         {customer?.name}{' '}
-        {!!canEdit && (
-          <Button
-            icon="edit"
-            variant="ghost"
-            justIcon
-            onPress={() => {
-              toCustomers({ to: 'edit', id: customerId })
-            }}
-          />
-        )}
         {!!canRead && (
           <Button
             icon="openEye"
             variant="ghost"
             justIcon
+            size="xs"
             onPress={() => {
               toCustomers({ to: 'details', id: customerId })
             }}
           />
         )}
-        {/* {!!customerId && (
-          <Button
-            icon="edit"
-            variant="ghost"
-            justIcon
-            onPress={() => {
-              toCustomers({ to: 'edit', id: customerId })
-            }}
-          />
-        )} */}
       </Text>
       <Text style={[{ textAlign: 'center' }]}>
         {customer?.address?.neighborhood}
