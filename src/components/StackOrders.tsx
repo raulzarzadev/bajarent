@@ -11,6 +11,7 @@ import { StackPaymentsE } from './StackPayments'
 import StackItems from './StackItems'
 import { ScreenMessagesE } from './ScreenMessages'
 import ScreenOrderNew from './ScreenOrderNew'
+import { StackCustomersE } from './Customers/StackCustomers'
 
 const Stack = createStackNavigator()
 function StackOrders() {
@@ -89,6 +90,16 @@ function StackOrders() {
           title: 'Ordenes consolidadas'
         }}
         component={ScreenOrdersConsolidated}
+      />
+
+      {/* ------ NESTED STACKS  */}
+      <Stack.Screen
+        name="StackCustomers"
+        options={{
+          title: 'Clientes',
+          headerShown: false
+        }}
+        component={StackCustomersE}
       />
 
       <Stack.Screen

@@ -21,7 +21,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
   const modal = useModal({ title: 'Agregar contacto' })
   const handleMarkAsFavorite = async (
     contactId: string,
-    isFavorite,
+    isFavorite: boolean,
     { customerContacts }
   ) => {
     const restContactsAsNotFavorite = Object.keys(customerContacts).reduce(

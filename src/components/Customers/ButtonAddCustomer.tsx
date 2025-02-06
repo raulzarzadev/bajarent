@@ -34,7 +34,7 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
       const ctxOrder = orders?.find((o) => o?.id === props?.orderId)
       if (ctxOrder) {
         setOrder(ctxOrder)
-      } else {
+      } else if (props?.orderId) {
         ServiceOrders.get(props.orderId)
           .then((order) => {
             setOrder(order)
@@ -48,7 +48,6 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
 
   //** CREATE CUSTOMER FROM ORDER
   const customer = customerFromOrder(order)
-  console.log({ customer })
   const canCreateCustomer = permissions?.customers?.write
   return (
     <View style={{ marginLeft: 6, justifyContent: 'center' }}>
@@ -63,12 +62,13 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
       />
       <StyledModal {...modal}>
         <AddOrMergeCustomer
-          onSelectOption={async ({ option }) => {
+          onSelectOption={async ({ option, customerId }) => {
             return await handleCreateCustomer({
               option,
               newCustomer: customer,
               storeId: customer.storeId,
-              orderId: customer.orderId
+              orderId: customer.orderId,
+              mergeCustomerId: customerId
             }).then((res) => {
               modal.toggleOpen()
             })

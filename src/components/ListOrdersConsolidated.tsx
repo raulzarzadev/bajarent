@@ -34,6 +34,7 @@ import TextInfo from './TextInfo'
 import { CustomerType } from '../state/features/costumers/customerType'
 import { CustomerCardE } from './Customers/CustomerCard'
 import { useEmployee } from '../contexts/employeeContext'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
@@ -347,7 +348,7 @@ export const ListOrdersConsolidatedE = (props) => (
 export default ListOrdersConsolidated
 
 export const ConsolidateCustomersList = () => {
-  const { consolidatedOrders } = useOrdersCtx()
+  const { consolidatedOrders, orders: ctxOrders } = useOrdersCtx()
   const { storeId, sections: storeSections } = useStore()
   const orders = consolidatedOrders?.orders || {}
 
@@ -384,7 +385,24 @@ export const ConsolidateCustomersList = () => {
     for (const order of orders) {
       setProgress((prev) => prev + 1)
 
-      const customer = customerFromOrder(order, { storeId })
+      //@ts-ignore FIXME: this order some times is not a OrderType ej. ListOrdersConsolidated.tsx: 10
+      const getFullOrder = async () => {
+        const orderId = order.id
+        const ctxOrder = ctxOrders.find((o) => o.id === orderId)
+        if (ctxOrder) {
+          console.log('ctx order')
+          return ctxOrder
+        }
+        //get from db if not found
+        const dbOrder = await ServiceOrders.get(orderId)
+        if (dbOrder) {
+          console.log('db order')
+          return dbOrder
+        }
+      }
+      const fullOrder = await getFullOrder()
+      const customer = customerFromOrder(fullOrder, { storeId })
+
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
       // console.log({
       //   customers: customers.length,
@@ -410,7 +428,8 @@ export const ConsolidateCustomersList = () => {
           option: userOptionSelected,
           storeId,
           newCustomer: customer,
-          orderId
+          orderId,
+          mergeCustomerId: customerSelectedId
         })
 
         if (!statusOk) return console.error(' an error ocurred')
@@ -641,14 +660,17 @@ export const ConsolidateCustomersList = () => {
                   ></TextInfo>
                 </>
               )}
-
-              <Button
-                label="Crear multiples clientes"
-                disabled={
-                  createCustomerDisabled || finished || !canCreateCustomers
-                }
-                onPress={() => handleCreateCustomers({ ids })}
-              ></Button>
+              {canCreateCustomers ? (
+                <Button
+                  label="Crear multiples clientes"
+                  disabled={createCustomerDisabled}
+                  onPress={() => {
+                    handleCreateCustomers({ ids })
+                  }}
+                ></Button>
+              ) : (
+                <Text>No puedes crear clientes</Text>
+              )}
             </View>
           )
         }}

@@ -106,12 +106,12 @@ const FormOrderA = ({
   title
 }: FormOrderProps) => {
   const [customerId, setCustomerId] = useState<string | null>(
-    defaultValues?.customerId || null
+    defaultValues.customerId
   )
-
-  useEffect(() => {
-    setCustomerId(defaultValues.customerId)
-  }, [defaultValues?.customerId])
+  // console.log({ customerId })
+  // useEffect(() => {
+  //   setCustomerId(defaultValues.customerId)
+  // }, [defaultValues?.customerId])
 
   const isRenew = !!renew
   const [loading, setLoading] = React.useState(false)
@@ -149,7 +149,6 @@ const FormOrderA = ({
   const initialValues = {
     ...defaultValues,
     type: defaultType,
-    customerId: customerId || null,
     phone:
       defaultValues?.phone === 'undefined' || !defaultValues.phone
         ? ''
@@ -221,7 +220,7 @@ const FormOrderA = ({
             setError(null)
 
             delete values.sheetRow //*<--- remove sheetRow from values
-
+            values.customerId = customerId //* <---- set customerId if is set
             return await onSubmit(values)
               .then((res) => {
                 resetForm()

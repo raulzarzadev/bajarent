@@ -132,19 +132,21 @@ export const useCustomers = () => {
     option,
     storeId,
     newCustomer,
-    orderId
+    orderId,
+    mergeCustomerId
   }: {
     option: CreateCustomerChoiceType
     storeId: StoreType['id']
     newCustomer: Partial<CustomerType>
     orderId: string
+    mergeCustomerId?: string
   }): Promise<{
     option: CreateCustomerChoiceType
     customer: Partial<CustomerType>
     orderUpdatedId?: string
     statusOk: boolean
   }> => {
-    console.log({ newCustomer, storeId, orderId })
+    //console.log({ newCustomer, storeId, orderId })
     if (option === 'cancel') {
       return {
         option: 'cancel',
@@ -167,7 +169,6 @@ export const useCustomers = () => {
         })
       if (!customerCreated?.res?.ok) {
         const orderUpdated = await ServiceOrders.update(orderId, {
-          //@ts-ignore
           customerId: customerCreated.id
         })
           .then((res) => {
@@ -194,13 +195,12 @@ export const useCustomers = () => {
     }
     if (option === 'merge') {
       // just update order
-
       return await ServiceOrders.update(orderId, {
-        customerId: newCustomer.id
+        customerId: mergeCustomerId
       })
         .then((res) => {
-          console.log('update order')
-          console.log({ res })
+          // console.log('update order')
+          // console.log({ res })
           return {
             option: 'merge' as const, // explicitamos el literal "merge",
             customer: newCustomer,
@@ -214,7 +214,7 @@ export const useCustomers = () => {
           return {
             option: 'merge',
             customer: newCustomer,
-            orderUpdatedId: error.res.id,
+            orderUpdatedId: error?.res?.id,
             statusOk: false
           }
         })

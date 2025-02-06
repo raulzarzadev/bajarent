@@ -11,13 +11,19 @@ import { OrderAddress } from '../OrderDetails'
 import { gStyles } from '../../styles'
 import { useOrderDetails } from '../../contexts/orderContext'
 import OrderType from '../../types/OrderType'
+import { useEffect, useState } from 'react'
+import { CustomerType } from '../../state/features/costumers/customerType'
 
 const CustomerOrder = (props?: CustomerOrderProps) => {
   const { order } = useOrderDetails()
   const { data: customers, loading } = useCustomers()
-  const customer = customers?.find((c) => c?.id === order?.customerId)
+  const [customer, setCustomer] = useState<CustomerType | undefined>()
+  useEffect(() => {
+    const customerId = props?.customerId || order?.customerId
+    const customer = customers?.find((c) => c.id === customerId)
+    setCustomer(customer)
+  }, [customers, order])
   if (loading) return <Text>Loading...</Text>
-
   return (
     <View>
       {customer ? (
@@ -52,7 +58,9 @@ export const OrderCustomerNotFound = ({ order }: { order: OrderType }) => {
 }
 
 export default CustomerOrder
-export type CustomerOrderProps = {}
+export type CustomerOrderProps = {
+  customerId?: string
+}
 export const CustomerOrderE = (props: CustomerOrderProps) => (
   <ErrorBoundary componentName="CustomerOrder">
     <CustomerOrder {...props} />

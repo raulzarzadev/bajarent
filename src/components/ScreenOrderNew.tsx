@@ -9,6 +9,7 @@ import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { CustomerType } from '../state/features/costumers/customerType'
 import { createUUID } from '../libs/createId'
+import { OrderProvider } from '../contexts/orderContext'
 //
 const ScreenOrderNew = (navigation) => {
   const customerId = navigation?.route?.params?.customerId

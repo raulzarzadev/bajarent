@@ -13,13 +13,18 @@ export const customerFromOrder = (
   orderFolio?: number | null
   storeId?: string | null
 } => {
+  //@ts-ignore FIXME: this order some times is not a OrderType ej. ListOrdersConsolidated.tsx: 10
+
   const customerContacts = customerOrderContacts(order as OrderType)
   const customerImages = customerImagesFromOrder({
     houseImage: order?.imageHouse,
     ID: order?.imageID,
     signature: order?.signature
   })
+  if (typeof order?.customerId === 'string') {
+  }
   //console.log({ order, customerContacts, customerImages })
+
   const newCustomer = {
     id: order?.customerId || null,
     name: order?.fullName || '',
