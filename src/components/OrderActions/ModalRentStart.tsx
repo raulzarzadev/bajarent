@@ -17,7 +17,7 @@ import FormPayment from '../FormPayment'
 import PaymentType, { PaymentBase } from '../../types/PaymentType'
 import { ServicePayments } from '../../firebase/ServicePayments'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
-import { createUUID } from '../../libs/createId'
+
 import {
   CustomerType,
   ImageDescriptionType
@@ -96,6 +96,12 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
                 }
               }
               await updateCustomer(order.customerId, customerUpdates)
+                .then((res) => {
+                  console.log(res)
+                })
+                .catch((e) => {
+                  console.error(e)
+                })
             }
 
             await ServiceOrders.update(order.id, values)

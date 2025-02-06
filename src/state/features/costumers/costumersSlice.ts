@@ -11,7 +11,7 @@ import { AppDispatch } from '../../store'
 import { produce } from 'immer'
 import StoreType from '../../../types/StoreType'
 import { ServiceOrders } from '../../../firebase/ServiceOrders'
-
+import { merge, set } from 'lodash'
 export type CustomersState = {
   data: CustomerType[]
   loading: boolean
@@ -72,18 +72,15 @@ export const customersSlice = createSlice({
         state.loading = false
         const { id, ...changes } = action.payload
         const index = state.data.findIndex((c) => c.id === action.payload.id)
+
         state.data[index] = produce(state.data[index], (draft) => {
           for (const key in changes) {
-            if (
-              typeof changes[key] === 'object' &&
-              !Array.isArray(changes[key])
-            ) {
-              draft[key] = {
-                ...draft[key],
-                ...changes[key]
-              }
+            const value = changes[key]
+            //console.log({ draft, key, changes })
+            if (typeof changes[key] === 'object' && !Array.isArray(value)) {
+              draft[key] = merge({}, draft[key] || {}, value)
             } else {
-              draft[key] = changes[key]
+              draft[key] = value
             }
           }
         })
@@ -147,6 +144,7 @@ export const useCustomers = () => {
     orderUpdatedId?: string
     statusOk: boolean
   }> => {
+    console.log({ newCustomer, storeId, orderId })
     if (option === 'cancel') {
       return {
         option: 'cancel',

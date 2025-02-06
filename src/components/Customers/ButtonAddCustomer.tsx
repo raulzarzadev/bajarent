@@ -25,24 +25,30 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
   const [order, setOrder] = useState<Partial<OrderType>>(props?.order)
 
   const modal = useModal({ title: 'Agregar cliente' })
-  const customer = customerFromOrder(order)
   const { permissions } = useEmployee()
 
   useEffect(() => {
     if (props?.order) {
       setOrder(props.order)
     } else {
-      const ctxOrder = orders.find((o) => o.id === props.orderId)
+      const ctxOrder = orders?.find((o) => o?.id === props?.orderId)
       if (ctxOrder) {
         setOrder(ctxOrder)
       } else {
-        ServiceOrders.get(props.orderId).then((order) => {
-          setOrder(order)
-        })
+        ServiceOrders.get(props.orderId)
+          .then((order) => {
+            setOrder(order)
+          })
+          .catch((err) => {
+            console.log({ err })
+          })
       }
     }
   }, [props?.order, props?.orderId])
 
+  //** CREATE CUSTOMER FROM ORDER
+  const customer = customerFromOrder(order)
+  console.log({ customer })
   const canCreateCustomer = permissions?.customers?.write
   return (
     <View style={{ marginLeft: 6, justifyContent: 'center' }}>

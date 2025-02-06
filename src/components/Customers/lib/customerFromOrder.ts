@@ -13,13 +13,20 @@ export const customerFromOrder = (
   orderFolio?: number | null
   storeId?: string | null
 } => {
+  const customerContacts = customerOrderContacts(order as OrderType)
+  const customerImages = customerImagesFromOrder({
+    houseImage: order?.imageHouse,
+    ID: order?.imageID,
+    signature: order?.signature
+  })
+  //console.log({ order, customerContacts, customerImages })
   const newCustomer = {
     id: order?.customerId || null,
     name: order?.fullName || '',
 
     orderId: order?.id || null,
     orderFolio: order?.folio || null,
-    storeId: storeId || null,
+    storeId: order?.storeId || storeId || null,
 
     address: {
       //@ts-ignore
@@ -34,14 +41,9 @@ export const customerFromOrder = (
           (`${order?.coords[0]},${order?.coords[1]}` as `${number},${number}`)
         : null
     },
-    contacts: customerOrderContacts(order as OrderType),
-    images: customerImagesFromOrder({
-      houseImage: order?.houseImage,
-      ID: order?.ID,
-      signature: order?.signature
-    })
+    contacts: customerContacts,
+    images: customerImages
   }
-  console.log({ newCustomer })
   return newCustomer
 }
 const customerOrderContacts = (order: OrderType) => {
@@ -68,7 +70,6 @@ const customerOrderContacts = (order: OrderType) => {
     type: 'phone',
     id: 'default'
   }
-  console.log({ customerContacts })
   return customerContacts
 }
 

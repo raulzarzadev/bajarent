@@ -22,9 +22,10 @@ import { useEmployee } from '../../contexts/employeeContext'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
+  const customerPropImages = props?.images
   const { update, data } = useCustomers()
   const { permissions } = useEmployee()
-  const images = data?.find((c) => c.id === props.customerId)?.images || {}
+  const images = data?.find((c) => c.id === props.customerId)?.images
   const modal = useModal({ title: 'Agregar imagen' })
   const handleAddCustomerImage = async (image: ImageDescriptionType) => {
     const imageId = createUUID({ length: 8 })
@@ -34,7 +35,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
   const handleDeleteImage = async (imageId: string) => {
     update(customerId, { [`images.${imageId}.deletedAt`]: new Date() })
   }
-  const customerImages = Object.entries(images)
+  const customerImages = Object.entries(images || customerPropImages || {})
     .reduce((acc, [id, image]) => {
       if (!image?.deletedAt) acc.push({ ...image, id })
       return acc

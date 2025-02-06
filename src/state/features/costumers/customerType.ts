@@ -14,6 +14,7 @@ export type CustomerContact = {
   type: string
   value: string
   deletedAt?: Date
+  isFavorite?: boolean
 }
 
 export type CustomerType = CustomerBase & BaseType

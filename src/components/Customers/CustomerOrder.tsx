@@ -15,7 +15,7 @@ import OrderType from '../../types/OrderType'
 const CustomerOrder = (props?: CustomerOrderProps) => {
   const { order } = useOrderDetails()
   const { data: customers, loading } = useCustomers()
-  const customer = customers.find((c) => c.id === order.customerId)
+  const customer = customers?.find((c) => c?.id === order?.customerId)
   if (loading) return <Text>Loading...</Text>
 
   return (

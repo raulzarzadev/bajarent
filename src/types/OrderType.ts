@@ -9,7 +9,7 @@ import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
-import ItemType from './ItemType'
+
 export type ContactType = {
   name: string
   phone: string

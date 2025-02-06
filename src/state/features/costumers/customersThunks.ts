@@ -44,19 +44,18 @@ export const updateCustomer = createAsyncThunk(
     customer: Partial<CustomerType>
     customerId: string
   }): Promise<CustomerType> => {
-    return await ServiceCustomers.update(customerId, customer)
-      .then(() => {
-        //* pass serializable data to redux store
-        const changes = convertTimestamps(customer, { to: 'string' })
-        return {
-          ...changes,
-          id: customerId
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating document: ', error)
-        return null
-      })
+    return await ServiceCustomers.update(customerId, customer).then(() => {
+      //* pass serializable data to redux store
+      const changes = convertTimestamps(customer, { to: 'string' })
+      return {
+        ...changes,
+        id: customerId
+      }
+    })
+    // .catch((error) => {
+    //   console.error('Error updating document: ', error)
+    //   return null
+    // })
   }
 )
 

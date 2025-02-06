@@ -207,26 +207,25 @@ export class FirebaseCRUD {
       ...item,
       ...this.updateItemMetadata()
     }
-    try {
-      return await updateDoc(doc(this.db, this.collectionName, itemId), newItem)
-        .then((res) =>
-          this.formatResponse(true, `${this.collectionName}_UPDATED`, {
-            id: itemId
-          })
-        )
-        .catch((err) => {
-          console.error(err)
-          return this.formatResponse(
-            false,
-            `${this.collectionName}_UPDATED_ERROR`,
-            {
-              id: itemId
-            }
-          )
-        })
-    } catch (error) {
-      console.log({ error })
-    }
+
+    return await updateDoc(
+      doc(this.db, this.collectionName, itemId),
+      newItem
+    ).then((res) =>
+      this.formatResponse(true, `${this.collectionName}_UPDATED`, {
+        id: itemId
+      })
+    )
+    // .catch((err) => {
+    //   console.error(err)
+    //   return this.formatResponse(
+    //     false,
+    //     `${this.collectionName}_UPDATED_ERROR`,
+    //     {
+    //       id: itemId
+    //     }
+    //   )
+    // })
   }
 
   async setItem(itemId: string, newItem: object) {

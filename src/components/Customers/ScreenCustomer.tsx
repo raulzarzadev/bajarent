@@ -16,7 +16,7 @@ const ScreenCustomer = (params) => {
   const { data: customers, loading, remove } = useCustomers()
   const { permissions } = useEmployee()
   const sortCustomerPermissions = permissions.customers
-  const { toOrders, toCustomers } = useMyNav()
+  const { toCustomers } = useMyNav()
   const navigation = useNavigation()
   const customer = customers.find((c) => c.id === customerId)
   if (loading) return <Text>Cargando...</Text>
@@ -63,6 +63,7 @@ const ScreenCustomer = (params) => {
             }}
           ></Button>
         )}
+
         <Text style={[gStyles.h2]}>{customer?.name} </Text>
 
         <Button

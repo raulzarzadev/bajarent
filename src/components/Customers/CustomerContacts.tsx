@@ -9,13 +9,37 @@ import { Formik } from 'formik'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import CardPhone from '../CardPhone'
 import { CustomerType } from '../../state/features/costumers/customerType'
+import { useState } from 'react'
 const CustomerContacts = (props?: CustomerContactsProps) => {
   const { data: customers, update } = useCustomers()
+  const [disabled, setDisabled] = useState(false)
+  const customerId = props?.customerId
   const propsCustomerContacts = props?.customerContacts
   const customerContacts = customers?.find(
-    (c) => c?.id === props?.customerId
+    (c) => c?.id === customerId
   )?.contacts
   const modal = useModal({ title: 'Agregar contacto' })
+  const handleMarkAsFavorite = async (
+    contactId: string,
+    isFavorite,
+    { customerContacts }
+  ) => {
+    const restContactsAsNotFavorite = Object.keys(customerContacts).reduce(
+      (acc, curr) => {
+        return {
+          ...acc,
+          [`contacts.${curr}.isFavorite`]:
+            contactId === curr ? !isFavorite : false
+        }
+      },
+      {}
+    )
+    setDisabled(true)
+    await update(customerId, {
+      ...restContactsAsNotFavorite
+    })
+    setDisabled(false)
+  }
   return (
     <View>
       <View
@@ -47,6 +71,20 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
                 margin: 'auto'
               }}
             >
+              {handleMarkAsFavorite && (
+                <Button
+                  disabled={disabled}
+                  justIcon
+                  icon={contact?.isFavorite ? 'starFilled' : 'starEmpty'}
+                  color={contact?.isFavorite ? 'success' : 'info'}
+                  variant="ghost"
+                  onPress={() => {
+                    handleMarkAsFavorite(id, contact?.isFavorite, {
+                      customerContacts
+                    })
+                  }}
+                />
+              )}
               <Text
                 style={{ width: 120, alignSelf: 'center' }}
                 numberOfLines={1}

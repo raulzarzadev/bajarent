@@ -7,16 +7,20 @@ import useMyNav from '../../hooks/useMyNav'
 import LinkLocation from '../LinkLocation'
 import { CustomerContactsE } from './CustomerContacts'
 import { CustomerImagesE } from './CustomerImages'
+import { useEmployee } from '../../contexts/employeeContext'
 const CustomerCard = (props?: CustomerCardProps) => {
   const customer = props?.customer
+  const { permissions } = useEmployee()
   const { toCustomers } = useMyNav()
   const location = customer?.address?.locationURL || customer?.address?.coords
   const customerId = customer?.id
+  const canEdit = customerId && permissions?.customers?.edit
+  const canRead = customerId && permissions?.customers?.read
   return (
     <View>
       <Text style={[gStyles.h1, { textAlign: 'center' }]}>
         {customer?.name}{' '}
-        {!!customerId && (
+        {!!canEdit && (
           <Button
             icon="edit"
             variant="ghost"
@@ -26,6 +30,26 @@ const CustomerCard = (props?: CustomerCardProps) => {
             }}
           />
         )}
+        {!!canRead && (
+          <Button
+            icon="openEye"
+            variant="ghost"
+            justIcon
+            onPress={() => {
+              toCustomers({ to: 'details', id: customerId })
+            }}
+          />
+        )}
+        {/* {!!customerId && (
+          <Button
+            icon="edit"
+            variant="ghost"
+            justIcon
+            onPress={() => {
+              toCustomers({ to: 'edit', id: customerId })
+            }}
+          />
+        )} */}
       </Text>
       <Text style={[{ textAlign: 'center' }]}>
         {customer?.address?.neighborhood}

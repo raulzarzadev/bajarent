@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import { Formik, useFormik, useFormikContext } from 'formik'
+import { Formik, useFormikContext } from 'formik'
 import Button from '../Button'
 import { CustomerType } from '../../state/features/costumers/customerType'
 import FormikInputValue from '../FormikInputValue'
@@ -8,20 +8,24 @@ import FormikInputSelect from '../FormikInputSelect'
 import { gStyles } from '../../styles'
 import { FormikInputPhoneE } from '../FormikInputPhone'
 import { createUUID } from '../../libs/createId'
-import ButtonConfirm from '../ButtonConfirm'
+import { useState } from 'react'
+
 const FormCustomer = (props?: FormCustomerProps) => {
   const defaultCustomer: Partial<CustomerType> = {
     name: '',
     ...(props.defaultValues || {})
   }
+  const [disabled, setDisabled] = useState(false)
 
   return (
     <View>
       <Formik
         initialValues={defaultCustomer}
-        onSubmit={(values, actions) => {
+        onSubmit={async (values, actions) => {
           if (props?.onSubmit) {
-            props.onSubmit(values)
+            setDisabled(true)
+            await props.onSubmit(values)
+            setDisabled(false)
           }
         }}
       >
@@ -53,7 +57,11 @@ const FormCustomer = (props?: FormCustomerProps) => {
 
               <FormikCustomerContacts />
 
-              <Button onPress={handleSubmit} label="Guardar" />
+              <Button
+                onPress={handleSubmit}
+                label="Guardar"
+                disabled={disabled}
+              />
             </View>
           )
         }}
@@ -167,7 +175,7 @@ export const FormikCustomerContacts = () => {
 
 export default FormCustomer
 export type FormCustomerProps = {
-  onSubmit?: (values: Partial<CustomerType>) => void
+  onSubmit?: (values: Partial<CustomerType>) => Promise<void> | void
   defaultValues?: Partial<CustomerType>
 }
 export const FormCustomerE = (props: FormCustomerProps) => (
