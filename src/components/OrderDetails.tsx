@@ -37,6 +37,7 @@ import { CustomerOrderE } from './Customers/CustomerOrder'
 import OrderBigStatus from './OrderBigStatus'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  console.log({ order })
   if (order?.isConsolidated) {
     const consolidated = order as unknown as ConsolidatedOrderType
     return (

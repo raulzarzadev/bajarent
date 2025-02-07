@@ -13,6 +13,7 @@ import PaymentType from '../types/PaymentType'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { CommentType } from '../types/CommentType'
 import { useOrdersCtx } from './ordersContext'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -40,6 +41,7 @@ const OrderProvider = ({
   orderId?: OrderType['id']
 }) => {
   const { consolidatedOrders } = useOrdersCtx()
+  const { data: customers } = useCustomers()
   const route = useRoute()
   //@ts-ignore
   const _orderId = orderId || route?.params?.orderId
@@ -75,7 +77,21 @@ const OrderProvider = ({
   useEffect(() => {
     if (_orderId) {
       listenFullOrderData(_orderId, (order) => {
-        if (order) return setOrder({ ...order })
+        let plainOrder: OrderType = order
+        const customerIsSet = typeof order.customerId === 'string'
+        if (customerIsSet) {
+          const ctxCustomer = customers.find((c) => c.id === order.customerId)
+          if (ctxCustomer) {
+            plainOrder.fullName = ctxCustomer.name
+            plainOrder.phone = Object.values(ctxCustomer.contacts)
+              .filter((c) => c.type === 'phone')
+              .filter((c) => c.deletedAt)
+              .map((c) => c.value)
+              .join(', ')
+          }
+        }
+
+        if (order) return setOrder({ ...plainOrder })
         const consolidatedOrder = consolidatedOrders?.orders[_orderId]
         // @ts-ignore
         return setOrder({

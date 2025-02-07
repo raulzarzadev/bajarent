@@ -12,6 +12,8 @@ import OrderType, { ContactType, order_type } from '../types/OrderType'
 import { getUserName } from './SpanUser'
 import { currentRentPeriod } from '../libs/orders'
 import dictionary from '../dictionary'
+import { ServiceCustomers } from '../firebase/ServiceCustomers'
+import { CustomerType } from '../state/features/costumers/customerType'
 
 const ButtonDownloadCSV = () => {
   const { storeId, staff } = useStore()
@@ -27,6 +29,15 @@ const ButtonDownloadCSV = () => {
       downloadLink({
         res,
         fileName: `rentas-activas-${dateFormat(new Date(), 'ddMMMyy')}`
+      })
+    })
+  }
+  const handleDownloadCustomers = () => {
+    ServiceCustomers.getByStore(storeId).then((customers) => {
+      const res = json2csv(formatCustomers(customers))
+      downloadLink({
+        res,
+        fileName: `clientes-${dateFormat(new Date(), 'ddMMMyy')}`
       })
     })
   }
@@ -78,6 +89,7 @@ const ButtonDownloadCSV = () => {
               handleDownloadRents()
             }}
           ></Button>
+
           <Button
             buttonStyles={{ margin: 10 }}
             label="Todas las rentas ⏰"
@@ -92,6 +104,13 @@ const ButtonDownloadCSV = () => {
               handleDownloadRepairs()
             }}
           ></Button>
+          <Button
+            buttonStyles={{ margin: 10 }}
+            label="Descargar clientes"
+            onPress={() => {
+              handleDownloadCustomers()
+            }}
+          />
         </View>
       </StyledModal>
     </View>
@@ -114,9 +133,9 @@ const downloadLink = ({ res, fileName = 'download' }) => {
   // aqui deberia mostrar un prompt en la pantalla para descargar el archivo
 }
 
+const formatDate = (date) =>
+  date ? dateFormat(asDate(date), 'yyyy-MM-dd HH:mm:ss') : ''
 const formatRentsToCSV = (rents, staff) => {
-  const formatDate = (date) =>
-    date ? dateFormat(asDate(date), 'yyyy-MM-dd HH:mm:ss') : ''
   const formatUser = (userId) => getUserName(staff, userId) || ''
   return rents.map((rent: Partial<OrderType>) => {
     const contacts = (rent?.contacts as ContactType[]) || []
@@ -125,6 +144,7 @@ const formatRentsToCSV = (rents, staff) => {
       status: dictionary(rent?.status) || '',
       folio: rent?.folio || '',
       note: rent?.note || '',
+      customerId: rent?.customerId || '',
       items:
         rent?.items
           ?.map((item) => `${item?.number || ''} ${item?.serial || ''}`)
@@ -149,6 +169,33 @@ const formatRentsToCSV = (rents, staff) => {
       deliveredBy: formatUser(rent.deliveredBy) || '',
       createdBy: formatUser(rent.createdBy) || '',
       createdAt: formatDate(rent.createdAt) || ''
+    }
+  })
+}
+const formatCustomers = (customers: Partial<CustomerType>[]) => {
+  return customers.map((customer: Partial<CustomerType>) => {
+    const customerContactsString = Object.values(customer.contacts || {})
+      .map((contact) => {
+        return `${contact.id || ''}-${contact.type || ''}: ${
+          contact.value || ''
+        }`
+      })
+      .join(', ')
+    const customerImagesString = Object.values(customer?.images || {})
+      .map((image) => {
+        return `${image.id || ''}-${image.type || ''}: ${image.src || ''} `
+      })
+      .join(', ')
+    return {
+      id: customer.id,
+      name: customer.name,
+      contacts: customerContactsString,
+      images: customerImagesString,
+      street: customer.address.street,
+      neighborhood: customer.address.neighborhood,
+      references: customer.address.references,
+      coords: customer.address.coords || customer.address.locationURL || null,
+      createdAt: formatDate(customer.createdAt) || ''
     }
   })
 }

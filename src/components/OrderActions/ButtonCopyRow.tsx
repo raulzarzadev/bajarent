@@ -8,7 +8,7 @@ const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
   const { order } = useOrderDetails()
   return (
     <Button
-      disabled={disabled}
+      disabled={true}
       onPress={async () => {
         setDisabled(true)
         if (orderId) {
@@ -27,6 +27,7 @@ const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
 
           const serialNumber = '' //<--This should be an empty string
           const string = `${note}\t${fullName}\t${phone}\t${neighborhood}\t${address}\t${references}\t${serialNumber}\t${date}`
+          console.log({ string })
           navigator.clipboard.writeText(string)
           setTimeout(() => {
             setDisabled(false)
