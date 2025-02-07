@@ -99,32 +99,35 @@ export const EmployeeContextProvider = ({ children }) => {
   //* otherwise you can only view the items assigned to your sections
   const canViewAllItems =
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
+  const canViewMyItems = !!employee?.permissions?.items?.canViewMyItems
   const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
 
   useEffect(() => {
-    if (!employee?.disabled) {
-      if (canViewAllItems) {
-        ServiceStoreItems.listenAvailableBySections({
-          storeId,
-          userSections: 'all',
-          cb: (items) => {
-            setItems(formatItems(items, categories, storeSections))
-          }
-        })
-      } else {
-        ServiceStoreItems.listenAvailableBySections({
-          storeId,
-          userSections: assignedSections,
-          cb: (items) => {
-            setItems(formatItems(items, categories, storeSections))
-          }
-        })
-      }
-    } else {
-      console.log('disabled employee')
+    if (employee?.disabled || !employee) {
+      return // console.log('disable employee')
     }
-  }, [canViewAllItems, employee?.disabled])
+    if (canViewAllItems) {
+      ServiceStoreItems.listenAvailableBySections({
+        storeId,
+        userSections: 'all',
+        cb: (items) => {
+          setItems(formatItems(items, categories, storeSections))
+        }
+      })
+      return
+    }
+    if (canViewMyItems) {
+      ServiceStoreItems.listenAvailableBySections({
+        storeId,
+        userSections: assignedSections,
+        cb: (items) => {
+          setItems(formatItems(items, categories, storeSections))
+        }
+      })
+      return
+    }
+  }, [canViewAllItems, canViewMyItems, employee?.disabled, assignedSections])
 
   const storePermissions = employee?.permissions?.store || {}
 
