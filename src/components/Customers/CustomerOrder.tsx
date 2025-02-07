@@ -46,7 +46,7 @@ export const OrderCustomerNotFound = ({ order }: { order: OrderType }) => {
         }}
       >
         <ClientName order={order} style={gStyles.h1} />
-        <ButtonAddCustomerE order={order} />
+        <ButtonAddCustomerE order={order} orderId={order?.id} />
       </View>
       <OrderContacts />
       <OrderImages order={order} />
