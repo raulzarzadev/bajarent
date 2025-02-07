@@ -219,8 +219,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ids: string[],
     ops: GetItemsOps & { sections?: string[] } = {}
   ): Promise<Type[]> {
-    if (ids.length <= 30) {
-      // Lógica para cuando hay 30 o menos ids
+    const maxAllowedIds =
+      ops.sections && ops.sections.length > 0
+        ? Math.floor(30 / ops.sections.length)
+        : 30
+
+    if (ids.length <= maxAllowedIds) {
+      // Lógica para cuando hay maxAllowedIds o menos ids
       const filters = [where(documentId(), 'in', ids)]
       if (ops.sections?.length) {
         filters.push(where('assignToSection', 'in', ops.sections))
@@ -229,11 +234,16 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     } else {
       // Cuando hay más de 30 ids, divídelo en chunks y utiliza recursión
       const promises: Promise<Type[]>[] = []
-      for (let i = 0; i < ids.length; i += 30) {
-        const chunk = ids.slice(i, i + 30)
+      for (let i = 0; i < ids.length; i += maxAllowedIds) {
+        const chunk = ids.slice(i, i + maxAllowedIds)
         promises.push(this.getList(chunk, ops))
       }
-      return Promise.all(promises).then((res) => res.flat())
+      return Promise.all(promises)
+        .then((res) => res.flat())
+        .catch((e) => {
+          console.error(e)
+          return []
+        })
     }
   }
 
@@ -445,22 +455,26 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     let reportedOrders = []
     //* if ordersWithReportsAndImportantUnsolved dont get list
     if (ordersWithReportsAndImportantUnsolved.length > 0) {
-      reportedOrders = await this.getList(
-        ordersWithReportsAndImportantUnsolved,
-        {
-          sections,
-          ...(ops || {})
-        }
-      ).catch((e) => {
+      const res = await this.getList(ordersWithReportsAndImportantUnsolved, {
+        sections,
+        ...(ops || {})
+      }).catch((e) => {
         console.log('Error getting reported orders', e)
         return []
       })
+      if (res) {
+        reportedOrders = res
+      } else {
+        console.log(
+          'no ordersWithReportsAndImportantUnsolved in reported orders'
+        )
+      }
     }
 
     //*  *** 2 *** remove reported orders from unsolved orders
     const removeReportedFromUnsolved = unsolvedOrders.filter(
       ({ id }) =>
-        !reportedOrders.find(({ id: reportedId }) => reportedId === id)
+        !reportedOrders?.find(({ id: reportedId }) => reportedId === id)
     )
     //*  *** 3 *** add reported orders to unsolved orders
     return [...removeReportedFromUnsolved, ...reportedOrders]

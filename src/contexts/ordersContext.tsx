@@ -140,13 +140,13 @@ export const OrdersContextProvider = ({
       storeId,
       solvedToday: true
     }).then((res) => {
-      return res
+      return res || []
     })
     const reportsUnsolved = await ServiceComments.getReports({
       storeId,
       solved: false
     }).then((res) => {
-      return res
+      return res || []
     })
 
     setReports([...reportsSolvedToday, ...reportsUnsolved])
