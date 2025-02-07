@@ -219,23 +219,21 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     ids: string[],
     ops: GetItemsOps & { sections?: string[] } = {}
   ): Promise<Type[]> {
-    const sections = ops?.sections || []
-    if (!ids || ids?.length === 0) return Promise.resolve([])
-    // if(ids.length>30) return Promise.reject('Max 30 ids')
-    if (ids.length > 30) {
-      const promises = [] //FIXME: this is hotfix im not sure if is the best way to do it
+    if (ids.length <= 30) {
+      // Lógica para cuando hay 30 o menos ids
+      const filters = [where(documentId(), 'in', ids)]
+      if (ops.sections?.length) {
+        filters.push(where('assignToSection', 'in', ops.sections))
+      }
+      return this.findMany(filters)
+    } else {
+      // Cuando hay más de 30 ids, divídelo en chunks y utiliza recursión
+      const promises: Promise<Type[]>[] = []
       for (let i = 0; i < ids.length; i += 30) {
         const chunk = ids.slice(i, i + 30)
         promises.push(this.getList(chunk, ops))
       }
       return Promise.all(promises).then((res) => res.flat())
-    } else {
-      //FIXME: this make an error if the union on "IN" es more than 30
-      const filters = [where(documentId(), 'in', ids)]
-      if (sections?.length > 0)
-        filters.push(where('assignToSection', 'in', sections))
-
-      return this.findMany(filters)
     }
   }
 
@@ -292,11 +290,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     }))
   }
 
-  // export type CollectionSearch = {
-  //   collectionName: string
-  //   fields: string[]
-  //   assignedSections?: 'all' | string[]
-  // }
   async search({
     storeId,
     fields,
