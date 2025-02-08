@@ -18,7 +18,11 @@ const sendMessage = async ({
     apiKey
   }
 
-  return axios.post('http://localhost:3000/api/messages', data)
+  const endpoint = __DEV__
+    ? 'http://localhost:3000/api/messages'
+    : 'https://bajarent.app/api/messages'
+
+  return axios.post(endpoint, data)
   // .then((response) => console.log(response))
   // .catch((error) => console.error(error))
 }
