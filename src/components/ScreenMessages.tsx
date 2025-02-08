@@ -18,9 +18,13 @@ import ListOrders from './ListOrders'
 import asDate, { endDate } from '../libs/utils-date'
 import { isBefore, subDays } from 'date-fns'
 import Loading from './Loading'
+import { sleep } from '../libs/sleep'
+import { set } from 'lodash'
+import Button from './Button'
 
 export default function ScreenMessages() {
   const { permissions, employee } = useEmployee()
+  const [doneMessage, setDoneMessage] = useState(null)
   const { user } = useAuth()
   const userId = user?.id
   const [sending, setSending] = useState(false)
@@ -75,12 +79,17 @@ export default function ScreenMessages() {
     message: string
     userId: string
   }) => {
-    setSending(true)
+    let sentList = []
     const TIME_OUT_SECONDS = 5
     const TIME_BETWEEN_MESSAGES = 1000 * TIME_OUT_SECONDS //<--- IN SECONDS
     setProgress(0)
+    setSending(true)
     const sendMessages = orders.map((order: OrderType, i) => {
-      return new Promise<void>((resolve) => {
+      return new Promise<{
+        phone: string
+        success: boolean
+        customerName: string
+      }>((resolve) => {
         setTimeout(async () => {
           const phone = chooseOrderPhone(order)
           console.log('enviando mensaje a ', phone)
@@ -91,23 +100,33 @@ export default function ScreenMessages() {
             userId
           })
           console.log('res', res)
-          setSentList((prev) => [
-            ...prev,
-            {
-              phone,
-              success: res?.success,
-              customerName: order.fullName
-            }
-          ])
+          const sentMessage = {
+            phone,
+            success: res?.success,
+            customerName: order.fullName
+          }
+          sentList.push(sentMessage)
+          setSentList((prev) => [...prev, sentMessage])
 
           setProgress(((i + 1) / orders.length) * 100)
-          resolve()
+          resolve(sentMessage)
         }, i * TIME_BETWEEN_MESSAGES)
       })
     })
-    await Promise.all(sendMessages)
+    const res = await Promise.all(sendMessages)
+    const sentMsjs = sentList?.filter((s) => s.success)?.length || 0
+    const TIME_OUT = 10 //* ---> seconds to close modal
+    setDoneMessage(`${sentMsjs} de ${orders.length}`)
+    console.log({ res })
+
+    await sleep(TIME_OUT)
     setSending(false)
+    setDoneMessage(null)
+    setSentList([])
+
+    return res
   }
+
   console.log({
     store,
     permissions,
@@ -117,6 +136,7 @@ export default function ScreenMessages() {
   })
   const canSendMessages =
     permissions?.store?.canSendMessages || permissions?.isAdmin
+
   if (!employee || store === undefined) return <Loading />
 
   if (!store?.chatbot?.enabled)
@@ -136,35 +156,6 @@ export default function ScreenMessages() {
     )
   }
 
-  // if (!permissions?.store?.canSendMessages)
-  //   return (
-  //     <Text style={gStyles.h2}>No tienes permisos para enviar mensajes</Text>
-  //   )
-  // if (sending)
-  //   return (
-  //     <View>
-  //       <Text
-  //         style={[gStyles.helper, { textAlign: 'center', marginVertical: 12 }]}
-  //       >
-  //         Enviando mensajes...
-  //       </Text>
-  //       <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-  //         {progress.toFixed(0)}%
-  //       </Text>
-  //       <Text>
-  //         {sentList?.map((sent, i) => (
-  //           <View style={{ justifyContent: 'center' }}>
-  //             <Text key={i}>
-  //               {sent.customerName} {sent.phone} {sent.success ? '✅' : '❌'}
-  //             </Text>
-  //           </View>
-  //         ))}
-  //       </Text>
-  //       <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-  //         No recarges la pagina hasta que haya terminado.
-  //       </Text>
-  //     </View>
-  //   )
   return (
     <ScrollView>
       {permissions?.store?.canSendMessages && <TestMessage />}
@@ -247,12 +238,14 @@ export default function ScreenMessages() {
           modalTitle="Enviar mensaje"
           confirmLabel="Enviar mensaje"
           handleConfirm={async () => {
-            return await handleSendWhatsappToOrders({
+            const res = await handleSendWhatsappToOrders({
               orders: selectedOrders,
               message,
               userId
             })
-            // console.log('Sending message to:', selectedOrders)
+            console.log({ res })
+
+            return
           }}
         >
           <Text>
@@ -270,13 +263,18 @@ export default function ScreenMessages() {
           <Text style={{ textAlign: 'center' }}>
             <Text> Ordenes: </Text>
             <Text style={{ fontWeight: 'bold' }}>
-              {selectedOrders?.length || 0}
+              {selectedOrders?.length || 0}{' '}
             </Text>
             ordenes seleccionadas
           </Text>
+
           {sending ? (
             <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
-              <Text>Enviando mensajes...</Text>
+              <View style={{ marginVertical: 12 }}>
+                {!doneMessage && (
+                  <Text style={gStyles.h3}>Enviando mensajes...</Text>
+                )}
+              </View>
               {sentList?.map((sent, i) => (
                 <View style={{ justifyContent: 'center' }}>
                   <Text key={i}>
@@ -303,7 +301,17 @@ export default function ScreenMessages() {
               <Text>{message}</Text>
             </>
           )}
-          <></>
+          {doneMessage && (
+            <>
+              <Text style={gStyles.h3}>
+                {doneMessage}
+                <Text style={gStyles.p}>mensajes enviados</Text>
+              </Text>
+              <Text style={[gStyles.helper, gStyles.tCenter]}>
+                Cerrando ...
+              </Text>
+            </>
+          )}
         </ButtonConfirm>
       </View>
     </ScrollView>
