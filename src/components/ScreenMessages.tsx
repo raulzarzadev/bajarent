@@ -30,6 +30,9 @@ export default function ScreenMessages() {
   const { store } = useStore()
   const [selectedOrders, setSelectedOrders] = useState<any[]>([])
   const [message, setMessage] = useState('')
+  const [sentList, setSentList] = useState<
+    { phone: string; success: boolean; customerName: string }[]
+  >([])
 
   const EXPIRED_DAYS = 5
 
@@ -80,12 +83,21 @@ export default function ScreenMessages() {
         setTimeout(async () => {
           const phone = chooseOrderPhone(order)
           console.log('enviando mensaje a ', phone)
-          await onSendOrderWhatsapp({
+          const res = await onSendOrderWhatsapp({
             order,
             store,
             type: 'expire',
             userId
           })
+          console.log('res', res)
+          setSentList((prev) => [
+            ...prev,
+            {
+              phone,
+              success: res?.success,
+              customerName: order.fullName
+            }
+          ])
 
           setProgress(((i + 1) / orders.length) * 100)
           resolve()
@@ -110,22 +122,31 @@ export default function ScreenMessages() {
         </Text>
       </View>
     )
-  if (sending)
-    return (
-      <View>
-        <Text
-          style={[gStyles.helper, { textAlign: 'center', marginVertical: 12 }]}
-        >
-          Enviando mensajes...
-        </Text>
-        <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-          {progress.toFixed(0)}%
-        </Text>
-        <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-          No recarges la pagina hasta que haya terminado.{' '}
-        </Text>
-      </View>
-    )
+  // if (sending)
+  //   return (
+  //     <View>
+  //       <Text
+  //         style={[gStyles.helper, { textAlign: 'center', marginVertical: 12 }]}
+  //       >
+  //         Enviando mensajes...
+  //       </Text>
+  //       <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+  //         {progress.toFixed(0)}%
+  //       </Text>
+  //       <Text>
+  //         {sentList?.map((sent, i) => (
+  //           <View style={{ justifyContent: 'center' }}>
+  //             <Text key={i}>
+  //               {sent.customerName} {sent.phone} {sent.success ? '✅' : '❌'}
+  //             </Text>
+  //           </View>
+  //         ))}
+  //       </Text>
+  //       <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+  //         No recarges la pagina hasta que haya terminado.
+  //       </Text>
+  //     </View>
+  //   )
   return (
     <ScrollView>
       <TestMessage />
@@ -208,7 +229,7 @@ export default function ScreenMessages() {
           modalTitle="Enviar mensaje"
           confirmLabel="Enviar mensaje"
           handleConfirm={async () => {
-            handleSendWhatsappToOrders({
+            return await handleSendWhatsappToOrders({
               orders: selectedOrders,
               message,
               userId
@@ -217,34 +238,54 @@ export default function ScreenMessages() {
           }}
         >
           <Text>
-            Mensaje:{' '}
+            Mensaje:
             <Text style={{ fontWeight: 'bold' }}>
               {messageTypes.find((v) => v.value === messageType)?.label || ''}
             </Text>
           </Text>
           <Text>
-            Objetivo:{' '}
+            Objetivo:
             <Text style={{ fontWeight: 'bold' }}>
               {targets.find((v) => v.value === target)?.label || ''}
             </Text>
           </Text>
-
           <Text style={{ textAlign: 'center' }}>
             <Text> Ordenes: </Text>
             <Text style={{ fontWeight: 'bold' }}>
               {selectedOrders?.length || 0}
-            </Text>{' '}
+            </Text>
             ordenes seleccionadas
           </Text>
-          <Text
-            style={[
-              gStyles.tBold,
-              { textAlign: 'center', marginVertical: 8, fontStyle: 'italic' }
-            ]}
-          >
-            Ejemplo de mensaje:{' '}
-          </Text>
-          <Text>{message}</Text>
+          {sending ? (
+            <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
+              <Text>Enviando mensajes...</Text>
+              {sentList?.map((sent, i) => (
+                <View style={{ justifyContent: 'center' }}>
+                  <Text key={i}>
+                    {sent.customerName} {sent.phone}{' '}
+                    {sent.success ? '✅' : '❌'}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <>
+              <Text
+                style={[
+                  gStyles.tBold,
+                  {
+                    textAlign: 'center',
+                    marginVertical: 8,
+                    fontStyle: 'italic'
+                  }
+                ]}
+              >
+                Ejemplo de mensaje:
+              </Text>
+              <Text>{message}</Text>
+            </>
+          )}
+          <></>
         </ButtonConfirm>
       </View>
     </ScrollView>
