@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { Platform } from 'react-native'
 
-const sendMessage = async ({ phone, message = 'hola', botId, apiKey }) => {
-  if (!phone) return console.log('Phone number is required')
-  if (!botId) return console.log('Bot Id is required')
-  if (!apiKey) return console.log('Api Key is required')
-  if (phone.length < 10) return console.log('Length phone number is invalid')
-
+const sendMessage = async ({
+  phone,
+  message = 'hola',
+  botId,
+  apiKey
+}): Promise<{ data: { existsOnWhats?: boolean; waited?: boolean } }> => {
   const data = {
     message: message
       //* This is a workaround to fix the line break issue on web
@@ -18,7 +18,7 @@ const sendMessage = async ({ phone, message = 'hola', botId, apiKey }) => {
     apiKey
   }
 
-  return axios.post('https://bajarent.app/api/messages', data)
+  return axios.post('http://localhost:3000/api/messages', data)
   // .then((response) => console.log(response))
   // .catch((error) => console.error(error))
 }

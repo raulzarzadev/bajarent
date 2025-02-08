@@ -30,6 +30,9 @@ export default function ScreenMessages() {
   const { store } = useStore()
   const [selectedOrders, setSelectedOrders] = useState<any[]>([])
   const [message, setMessage] = useState('')
+  const [sentList, setSentList] = useState<
+    { phone: string; success: boolean; customerName: string }[]
+  >([])
 
   const EXPIRED_DAYS = 5
 
@@ -80,12 +83,21 @@ export default function ScreenMessages() {
         setTimeout(async () => {
           const phone = chooseOrderPhone(order)
           console.log('enviando mensaje a ', phone)
-          await onSendOrderWhatsapp({
+          const res = await onSendOrderWhatsapp({
             order,
             store,
             type: 'expire',
             userId
           })
+          console.log('res', res)
+          setSentList((prev) => [
+            ...prev,
+            {
+              phone,
+              success: res?.success,
+              customerName: order.fullName
+            }
+          ])
 
           setProgress(((i + 1) / orders.length) * 100)
           resolve()
@@ -120,6 +132,13 @@ export default function ScreenMessages() {
         </Text>
         <Text style={{ textAlign: 'center', marginVertical: 12 }}>
           {progress.toFixed(0)}%
+        </Text>
+        <Text>
+          {sentList?.map((sent) => (
+            <Text key={sent.phone}>
+              {sent.customerName} {sent.phone} {sent.success ? '✅' : '❌'}
+            </Text>
+          ))}
         </Text>
         <Text style={{ textAlign: 'center', marginVertical: 12 }}>
           No recarges la pagina hasta que haya terminado.{' '}

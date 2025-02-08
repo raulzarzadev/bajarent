@@ -56,22 +56,31 @@ export type TypeOfMessage =
 export const onSendOrderWhatsapp = async ({
   store,
   order,
+  phone: defaultPhone,
   type,
   userId,
   lastPayment
 }: {
   store: StoreType
+  phone?: string
   order: Partial<OrderType>
   type: TypeOfMessage
   userId: string
   lastPayment?: PaymentType
-}) => {
+}): Promise<{
+  success: boolean
+  error?: string
+}> => {
   const { isValid, message: validationMessage } = validateChatbotConfig({
     chatbot: store?.chatbot,
     messageType: type
   })
 
-  if (!isValid) return console.log(validationMessage)
+  if (!isValid)
+    return {
+      success: false,
+      error: validationMessage
+    }
 
   const messageOptions: Record<TypeOfMessage, string> = {
     status: orderStatus({
@@ -99,32 +108,40 @@ export const onSendOrderWhatsapp = async ({
   }
 
   const staffName = store?.staff?.find((s) => s.userId === userId)?.position
-
   let message = messageOptions[type]
 
   //if (store?.chatbot?.config?.includeSender)
   message = message + `👤 ${staffName || ''}`
+  const phone = defaultPhone || chooseOrderPhone(order)
 
   return await sendMessage({
-    phone: chooseOrderPhone(order),
+    phone,
     message,
     apiKey: store.chatbot?.apiKey,
     botId: store.chatbot?.id
   })
     .then((res) => {
-      const sentMessage: SentMessage = {
-        message,
-        sentAt: new Date(),
-        number: chooseOrderPhone(order),
-        sentBy: userId
+      if (res?.data?.existsOnWhats === false) {
+        return { success: false, error: 'no existe en whatsapp' }
       }
-      return ServiceOrders.update(order.id, {
-        //@ts-ignore
-        sentMessages: arrayUnion(sentMessage)
-      })
+      if (res?.data?.waited) {
+        const sentMessage: SentMessage = {
+          message,
+          sentAt: new Date(),
+          number: phone,
+          sentBy: userId
+        }
+        ServiceOrders.update(order.id, {
+          //@ts-ignore
+          sentMessages: arrayUnion(sentMessage)
+        })
+        return { success: true }
+      }
+      return { success: false, error: 'no enviado' }
     })
     .catch((e) => {
       console.error(e)
+      return { success: false, error: 'no enviado' }
     })
 }
 

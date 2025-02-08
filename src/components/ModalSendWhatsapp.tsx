@@ -423,14 +423,17 @@ export default function ModalSendWhatsapp({
           }}
         ></Button>
         <View style={{ marginVertical: 8 }}>
-          <ButtonSendWhatsappStatatusE />
+          <ButtonSendWhatsappStatatusE phone={phone} />
         </View>
       </StyledModal>
     </View>
   )
 }
 
-export const ButtonSendWhatsappStatatus = () => {
+export const ButtonSendWhatsappStatatus = (
+  props: ButtonSendWhatsappStatatusProps
+) => {
+  const phone = props?.phone
   const { order, payments } = useOrderDetails()
   const { store } = useStore()
   const { user } = useAuth()
@@ -448,6 +451,7 @@ export const ButtonSendWhatsappStatatus = () => {
         setSending(true)
         await onSendOrderWhatsapp({
           order: { ...order, payments },
+          phone: phone,
           store,
           type: 'status',
           userId: user.id
@@ -468,7 +472,7 @@ export const ButtonSendWhatsappStatatus = () => {
     </ButtonConfirm>
   )
 }
-export type ButtonSendWhatsappStatatusProps = {}
+export type ButtonSendWhatsappStatatusProps = { phone: string }
 export const ButtonSendWhatsappStatatusE = (
   props: ButtonSendWhatsappStatatusProps
 ) => (
