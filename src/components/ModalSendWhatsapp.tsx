@@ -1,5 +1,5 @@
-import { View, Text, Linking, Platform } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Linking } from 'react-native'
+import { useState } from 'react'
 import Button from './Button'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -26,18 +26,16 @@ import ErrorBoundary from './ErrorBoundary'
 import { useOrderDetails } from '../contexts/orderContext'
 import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
 import { useAuth } from '../contexts/authContext'
-import StoreType from '../types/StoreType'
 import ButtonConfirm from './ButtonConfirm'
 import TextInfo from './TextInfo'
 import { orderStatus } from '../libs/whatsappMessages'
+
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
   justIcon = false,
   whatsappPhone
 }: ModalSendWhatsappType) {
   const modal = useModal({ title: 'Enviar mensaje' })
-  const { user } = useAuth()
-  // const [order, setOrder] = useState<OrderType>()
   const { order, payments } = useOrderDetails()
   const phone = whatsappPhone
 

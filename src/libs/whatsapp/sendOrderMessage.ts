@@ -13,40 +13,6 @@ import {
 import chooseOrderPhone from './chooseOrderPhone'
 import PaymentType from '../../types/PaymentType'
 
-/**
- * @deprecated use onSendOrderWhatsapp instead
- */
-const sendOrderMessage = async ({
-  orderId,
-  userId,
-  message,
-  apiKey,
-  botId,
-  phone
-}) => {
-  return sendMessage({
-    phone,
-    message,
-    apiKey,
-    botId
-  })
-    .then((res) => {
-      const sentMessage: SentMessage = {
-        message,
-        sentAt: new Date(),
-        number: phone,
-        sentBy: userId
-      }
-      return ServiceOrders.update(orderId, {
-        //@ts-ignore
-        sentMessages: arrayUnion(sentMessage)
-      })
-    })
-    .catch((e) => {
-      console.error(e)
-    })
-}
-
 export type TypeOfMessage =
   | 'renew'
   | 'delivery'
@@ -191,37 +157,4 @@ const validateChatbotConfig = ({
     message: `sending ${messageType}`,
     isValid: true
   }
-
-  if (!chatbot?.config) {
-    return {
-      message: 'chatbot config is missing',
-      isValid: false
-    }
-  }
-
-  if (chatbot?.config?.sendDelivered && messageType === 'delivery') {
-    return {
-      message: 'delivery message is enabled',
-      isValid: true
-    }
-  }
-  if (chatbot?.config?.sendPickedUp && messageType === 'pickup') {
-    return {
-      message: 'pickup message is enabled',
-      isValid: true
-    }
-  }
-  if (chatbot?.config?.sendRenewed && messageType === 'renew') {
-    return {
-      message: 'renew message is enabled',
-      isValid: true
-    }
-  }
-
-  return {
-    message: `message type ${messageType} is not enabled`,
-    isValid: false
-  }
 }
-
-export default sendOrderMessage
