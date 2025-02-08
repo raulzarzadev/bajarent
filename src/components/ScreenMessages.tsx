@@ -17,9 +17,10 @@ import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
 import ListOrders from './ListOrders'
 import asDate, { endDate } from '../libs/utils-date'
 import { isBefore, subDays } from 'date-fns'
+import Loading from './Loading'
 
 export default function ScreenMessages() {
-  const { permissions } = useEmployee()
+  const { permissions, employee } = useEmployee()
   const { user } = useAuth()
   const userId = user?.id
   const [sending, setSending] = useState(false)
@@ -107,12 +108,18 @@ export default function ScreenMessages() {
     await Promise.all(sendMessages)
     setSending(false)
   }
+  console.log({
+    store,
+    permissions,
+    canSendMessages: permissions?.store?.canSendMessages,
+    employee,
+    user
+  })
+  const canSendMessages =
+    permissions?.store?.canSendMessages || permissions?.isAdmin
+  if (!employee || store === undefined) return <Loading />
 
-  if (!(permissions?.isAdmin || permissions?.store?.canSendMessages))
-    return (
-      <Text style={gStyles.h2}>No tienes permisos para enviar mensajes</Text>
-    )
-  if (!store.chatbot.enabled)
+  if (!store?.chatbot?.enabled)
     return (
       <View>
         <Text style={gStyles.h2}>El chatbot no esta habilitado</Text>
@@ -122,6 +129,17 @@ export default function ScreenMessages() {
         </Text>
       </View>
     )
+
+  if (!canSendMessages) {
+    return (
+      <Text style={gStyles.h2}>No tienes permisos para enviar mensajes</Text>
+    )
+  }
+
+  // if (!permissions?.store?.canSendMessages)
+  //   return (
+  //     <Text style={gStyles.h2}>No tienes permisos para enviar mensajes</Text>
+  //   )
   // if (sending)
   //   return (
   //     <View>
@@ -149,7 +167,7 @@ export default function ScreenMessages() {
   //   )
   return (
     <ScrollView>
-      <TestMessage />
+      {permissions?.store?.canSendMessages && <TestMessage />}
 
       <Text style={gStyles.h2}>1. Selecciona tipo de mensajes</Text>
       <InputRadios

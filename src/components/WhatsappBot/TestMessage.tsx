@@ -4,13 +4,10 @@ import { useState } from 'react'
 import InputPhone from '../InputPhone'
 import sendMessage from '../../libs/whatsapp/sendMessage'
 import { useStore } from '../../contexts/storeContext'
-import { useEmployee } from '../../contexts/employeeContext'
+
 const TestMessage = () => {
   const [number, setNumber] = useState('')
   const { store } = useStore()
-  const { permissions } = useEmployee()
-  if (!permissions?.isAdmin)
-    return <Text>No tienes permisos para enviar mensajes</Text>
 
   return (
     <View
