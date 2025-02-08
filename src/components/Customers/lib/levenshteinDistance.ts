@@ -41,6 +41,12 @@ function longestCommonSubstring(str1: string, str2: string): string {
   }
   return str1.slice(endIndex - maxLen, endIndex)
 }
+export function removeAccents(str: string): string {
+  return str
+    .normalize('NFD') // Descompone los caracteres
+    .replace(/[\u0300-\u036f]/g, '') // Elimina diacríticos
+    .toLowerCase() // Convierte a minúsculas
+}
 
 export function findBestMatch(customers: string[], query: string) {
   let bestMatch = null
@@ -63,13 +69,15 @@ export function levenshteinDistanceExtended(
   a: string,
   b: string
 ): { distance: number; matchBonus: number } {
-  const baseDistance = levenshteinDistance(a, b)
-  const lcs = longestCommonSubstring(a, b)
+  const normalizedA = removeAccents(a)
+  const normalizedB = removeAccents(b)
+  const baseDistance = levenshteinDistance(normalizedA, normalizedB)
+  const lcs = longestCommonSubstring(normalizedA, normalizedB)
   const matchBonus = lcs.length // bonus igual al largo del substring común
   return { distance: baseDistance, matchBonus }
 }
 
-export function findBestMatches(data: string[], query: string, count = 1) {
+export function findBestMatches(data: string[], query: string, count?: number) {
   if (!data.length)
     return {
       matches: null
@@ -99,15 +107,18 @@ export function findBestMatches(data: string[], query: string, count = 1) {
   })
 
   // Ordenar primero por mayor cantidad de palabras clave coincidentes, luego por menor distancia
-  const sortedAndSliced = [...matches]
-    .sort((a, b) => {
-      if (a.matchBonus === b.matchBonus) {
-        return a.distance - b.distance
-      }
-      return b.matchBonus - a.matchBonus
-    })
-    .slice(0, count)
-  console.log({ sortedAndSliced })
+  const sortedAndSliced = [...matches].sort((a, b) => {
+    if (a.matchBonus === b.matchBonus) {
+      return a.distance - b.distance
+    }
+    return b.matchBonus - a.matchBonus
+  })
+
+  if (count) {
+    return {
+      matches: sortedAndSliced.slice(0, count)
+    }
+  }
   return {
     matches: sortedAndSliced
   }

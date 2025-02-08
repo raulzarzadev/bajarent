@@ -127,32 +127,27 @@ export default function useFilter<T extends { id?: string }>({
       setCustomData([])
       return
     }
-    const LIMIT_SEARCH_RESULTS = 10
-    const { matches } = findBestMatches(arrayData, value, LIMIT_SEARCH_RESULTS)
-
     const filteredData = filterDataByFields(data, filtersBy)
+    const { matches } = findBestMatches(arrayData, value)
 
-    const matchesIds = matches?.map((a) => ({
-      ...a,
-      itemId: a.item.split(' ')[0],
-      itemData: filteredData.find((b) => b.id === a.item.split(' ')[0])
-    }))
+    const realMatches = matches.filter((m) => {
+      if (m.keywordMatches > 0) return true
+    })
+    const similarMatches = matches.filter((m) => {
+      if (m.matchBonus > 3) return true
+    })
 
-    // const exactMatches = matchesIds.filter((m) => m.keywordMatches > 0)[0]
-    // const maxMatchBonus = matchesIds.sort(
-    //   (a, b) => b.matchBonus - a.matchBonus
-    // )[0]
-    // const minDistance = matchesIds.sort((a, b) => a.distance - b.distance)[0]
-    // console.log({ matchesIds })
-    setFilteredData(matchesIds.map((a) => a.itemData))
-    // if (exactMatches) {
-    //   setFilteredData([exactMatches.itemData])
-    // } else if (maxMatchBonus) {
-    //   setFilteredData([maxMatchBonus.itemData])
-    // } else if (minDistance) {
-    //   setFilteredData([minDistance.itemData])
-    // } else {
-    // }
+    const matchesItemData = realMatches?.map((a) =>
+      filteredData.find((b) => b.id === a.item.split(' ')[0])
+    )
+    const similarMatchesItemData = similarMatches?.map((a) =>
+      filteredData.find((b) => b.id === a.item.split(' ')[0])
+    )
+    if (matchesItemData.length > 0) {
+      setFilteredData(matchesItemData)
+    } else {
+      setFilteredData(similarMatchesItemData)
+    }
 
     if (collectionSearch?.collectionName === 'orders') {
       console.log('custmom')
@@ -168,7 +163,6 @@ export default function useFilter<T extends { id?: string }>({
           customers
         })
       })
-      console.log({ orders })
 
       setCustomData([...orders])
     }

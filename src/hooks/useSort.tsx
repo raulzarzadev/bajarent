@@ -15,7 +15,7 @@ export default function useSort<T>({
   const [order, setOrder] = useState<'asc' | 'des'>(defaultOrder)
 
   useEffect(() => {
-    if (data.length > 0) {
+    if (data) {
       setSortedData(sortData(sortedBy, data, order))
     }
   }, [sortedBy, data, order])
