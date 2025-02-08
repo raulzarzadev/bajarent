@@ -22,6 +22,7 @@ import { where } from 'firebase/firestore'
 import PaymentType from '../types/PaymentType'
 import { endDate, startDate } from '../libs/utils-date'
 import { useStore } from './storeContext'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export type FetchTypeOrders =
   | 'all'
@@ -60,6 +61,7 @@ export const OrdersContextProvider = ({
   const { storeId, isAuthenticated } = useAuth()
   const { store } = useStore()
   const { employee, permissions, disabledEmployee } = useEmployee()
+  const { data: customers } = useCustomers()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -125,7 +127,7 @@ export const OrdersContextProvider = ({
     }
     handleGetOrders()
     handleGetConsolidates()
-  }, [disabledEmployee, isAuthenticated])
+  }, [disabledEmployee, isAuthenticated, customers])
 
   useEffect(() => {
     if (isAuthenticated && store?.id) {
@@ -179,7 +181,8 @@ export const OrdersContextProvider = ({
       // console.log({ reports })
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
-        reports: [...reports, ...important]
+        reports: [...reports, ...important],
+        customers
       })
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {
@@ -198,7 +201,7 @@ export const OrdersContextProvider = ({
         console.log(e)
         return []
       })
-      const formatted = formatOrders({ orders, reports: reports })
+      const formatted = formatOrders({ orders, reports: reports, customers })
       setOrders(formatted)
     } else {
       console.log('no orders')

@@ -16,6 +16,7 @@ import Button from './Button'
 import FIlterByDate from './FIlterByDate'
 import OrderType, { order_status, order_type } from '../types/OrderType'
 import { IconName } from './Icon'
+import Loading from './Loading'
 
 export type FilterListType<T> = {
   field: keyof T
@@ -56,11 +57,12 @@ function ModalFilterList<T>({
     filtersBy,
     search,
     searchValue,
-    filterByDates
+    filterByDates,
+    loading
   } = useFilter<T>({
     data,
     collectionSearch,
-    debounceSearch: 400
+    debounceSearch: 1000
   })
 
   useEffect(() => {
@@ -234,6 +236,7 @@ function ModalFilterList<T>({
             search('')
           }}
         />
+        {loading && <Loading />}
 
         {filters?.length > 0 && (
           <View

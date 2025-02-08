@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
@@ -6,8 +6,8 @@ import asDate from '../libs/utils-date'
 import OrderType from '../types/OrderType'
 import { useStore } from '../contexts/storeContext'
 import { findBestMatches } from '../components/Customers/lib/levenshteinDistance'
-import { Timestamp } from 'firebase/firestore'
 import { processData } from '../libs/flattenData'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
   collectionName: string
@@ -30,6 +30,7 @@ export default function useFilter<T extends { id?: string }>({
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
   )
+  const { data: customers } = useCustomers()
   const [customData, setCustomData] = useState<T[]>([])
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
 
@@ -126,37 +127,52 @@ export default function useFilter<T extends { id?: string }>({
       setCustomData([])
       return
     }
+    const LIMIT_SEARCH_RESULTS = 10
+    const { matches } = findBestMatches(arrayData, value, LIMIT_SEARCH_RESULTS)
 
-    const { matches } = findBestMatches(arrayData, value, 5)
     const filteredData = filterDataByFields(data, filtersBy)
 
-    const exactMatches = matches.filter((m) => m.keywordMatches > 0)
-    if (exactMatches.length > 0) {
-      const matchesIds = exactMatches?.map((a) => a.item.split(' ')[0])
-      const matchedData = filteredData.filter((a) => matchesIds.includes(a.id))
+    const matchesIds = matches?.map((a) => ({
+      ...a,
+      itemId: a.item.split(' ')[0],
+      itemData: filteredData.find((b) => b.id === a.item.split(' ')[0])
+    }))
 
-      setFilteredData(matchedData)
-    } else {
-      const matchesIds = matches?.map((a) => a.item.split(' ')[0])
-      const matchedData = filteredData.filter((a) => matchesIds.includes(a.id))
-      setFilteredData(matchedData)
-    }
+    // const exactMatches = matchesIds.filter((m) => m.keywordMatches > 0)[0]
+    // const maxMatchBonus = matchesIds.sort(
+    //   (a, b) => b.matchBonus - a.matchBonus
+    // )[0]
+    // const minDistance = matchesIds.sort((a, b) => a.distance - b.distance)[0]
+    // console.log({ matchesIds })
+    setFilteredData(matchesIds.map((a) => a.itemData))
+    // if (exactMatches) {
+    //   setFilteredData([exactMatches.itemData])
+    // } else if (maxMatchBonus) {
+    //   setFilteredData([maxMatchBonus.itemData])
+    // } else if (minDistance) {
+    //   setFilteredData([minDistance.itemData])
+    // } else {
+    // }
+
     if (collectionSearch?.collectionName === 'orders') {
-      setTimeout(async () => {
-        const orders = await ServiceOrders.search({
-          storeId,
-          fields: collectionSearch?.fields,
-          value,
-          sections: collectionSearch?.assignedSections
-        }).then((res) => {
-          return formatOrders({ orders: res as Partial<OrderType>[], reports })
+      console.log('custmom')
+      const orders = await ServiceOrders.search({
+        storeId,
+        fields: collectionSearch?.fields,
+        value,
+        sections: collectionSearch?.assignedSections
+      }).then((res) => {
+        return formatOrders({
+          orders: res as Partial<OrderType>[],
+          reports,
+          customers
         })
+      })
+      console.log({ orders })
 
-        setCustomData([...orders])
-      }, 1000) // <--- 1 second delay to avoid multiple requests
+      setCustomData([...orders])
     }
-
-    // }, debounceSearch)
+    return
   }
 
   const filterDataByFields = (data: T[], filters: Filter[]) => {
@@ -178,6 +194,19 @@ export default function useFilter<T extends { id?: string }>({
     search(searchValue)
   }, [data])
 
+  const timeoutRef = useRef<number>()
+  const [loading, setLoading] = useState(false)
+
+  const searchDebounced = async (value: string) => {
+    setLoading(true)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = window.setTimeout(async () => {
+      await search(value)
+      setLoading(false)
+    }, debounceSearch)
+  }
   return {
     filteredData,
     customData,
@@ -185,8 +214,9 @@ export default function useFilter<T extends { id?: string }>({
     handleClearFilters,
     filterByDates,
     filterBy,
-    search,
+    search: searchDebounced,
     filtersBy,
-    searchValue
+    searchValue,
+    loading
   }
 }

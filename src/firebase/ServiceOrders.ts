@@ -18,7 +18,7 @@ import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { addDays, isSaturday } from 'date-fns'
+import { addDays, isSaturday, isValid } from 'date-fns'
 import { createUUID } from '../libs/createId'
 import { auth } from './auth'
 import { expireDate2 } from '../libs/expireDate'
@@ -313,22 +313,31 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     avoidIds?: string[]
     sections: string[] | 'all' //FIXME: if is undefined, search in all sections, if is an array search in the array
   }): Promise<Partial<Type>[] | void> {
-    const promises = fields?.map((field) => {
-      const number = parseFloat(value as string)
-      //* search as number
-      const filters = [where('storeId', '==', storeId)]
-      if (Array.isArray(sections) && sections.length > 0) {
-        filters.push(where('assignToSection', 'in', sections))
-      }
-
-      if (field === 'folio')
-        return this.findMany([...filters, where(field, '==', number)])
-      //* search with phone format
-      if (field === 'phone')
-        return this.findMany([...filters, where(field, '==', `+52${value}`)])
-      //* search as string
-      return this.findMany([...filters, where(field, '==', value)])
-    })
+    const promises = fields
+      ?.map((field) => {
+        const asNumber = parseFloat(`${value}`)
+        const itsValidNumber = !isNaN(asNumber)
+        //* search as number
+        const filters = [where('storeId', '==', storeId)]
+        if (Array.isArray(sections) && sections.length > 0) {
+          filters.push(where('assignToSection', 'in', sections))
+        }
+        if (field === 'folio') {
+          return itsValidNumber //* <--- just search if is a number
+            ? this.findMany([...filters, where(field, '==', value)])
+            : null
+        }
+        //* search with phone format
+        if (field === 'phone') {
+          return itsValidNumber && String(value).length === 10 //* <--- just search if is a number
+            ? this.findMany([...filters, where(field, '==', `+52${value}`)])
+            : null
+        }
+        //* search as string
+        return this.findMany([...filters, where(field, '==', value)])
+      })
+      //* remove unset promises
+      .filter((a) => a !== null)
     return await Promise.all(promises)
       .then((res) => res.flat())
       .catch((e) => console.log({ e }))
@@ -337,7 +346,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   async getRentItemsLocation(storeId: string) {
     return await this.findMany([
       where('storeId', '==', storeId),
-      where('type', '==', TypeOrder.RENT),
+      where('type', '==', order_type.RENT),
       where('status', '==', order_status.DELIVERED)
     ])
   }

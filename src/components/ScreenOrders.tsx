@@ -13,7 +13,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
   const hasOrderList = !!route?.params?.orders
   const { orders = [], handleRefresh: refreshOrders } = useOrdersCtx()
-
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
     ids: route?.params?.orders
   })

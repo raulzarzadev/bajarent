@@ -13,21 +13,28 @@ import asDate from './utils-date'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { TimePriceType } from '../types/PriceType'
 import { ExtendReason } from '../firebase/ServiceOrders'
+import { CustomerType } from '../state/features/costumers/customerType'
+import { getFavoriteCustomerPhone } from '../components/Customers/lib/lib'
 
 export const formatOrders = ({
   orders,
   reports = [],
-  justActive = false
+  justActive = false,
+  customers = []
 }: {
   orders: Partial<OrderType>[]
   reports?: CommentType[]
   justActive?: boolean
+  customers?: Partial<CustomerType>[]
 }) => {
   const ordersWithExpireDate = orders
     .map((order) => {
+      const customer = customers.find((c) => c.id === order?.customerId)
+
       const formattedOrder = formatOrder({
         order: order as OrderType,
-        comments: reports
+        comments: reports,
+        customer
       })
       return formattedOrder
     })
@@ -50,10 +57,12 @@ export const formatOrders = ({
 
 export const formatOrder = ({
   order,
-  comments = []
+  comments = [],
+  customer
 }: {
   order: OrderType
   comments: CommentType[]
+  customer?: Partial<CustomerType>
 }) => {
   const orderComments = comments?.filter(
     (comment) => comment?.orderId === order?.id
@@ -61,8 +70,22 @@ export const formatOrder = ({
   const reportsNotSolved = orderComments?.some(
     ({ type, solved }) => type === 'report' && !solved
   )
+  let formattedOrder = { ...order }
 
-  if (order?.type === 'RENT') {
+  formattedOrder.comments = orderComments
+  formattedOrder.hasNotSolvedReports = reportsNotSolved
+  formattedOrder.pendingMarketOrder =
+    formattedOrder?.status === order_status.PENDING &&
+    formattedOrder.marketOrder
+
+  if (customer) {
+    formattedOrder.fullName = customer.name
+    formattedOrder.neighborhood = customer.address.neighborhood
+    formattedOrder.address = customer.address.street
+    formattedOrder.phone = getFavoriteCustomerPhone(customer.contacts)
+  }
+
+  if (formattedOrder?.type === 'RENT') {
     const expireAt = order.expireAt
     const expireToday = isToday(asDate(expireAt))
     // const expireAt = orderExpireAt({ order })
@@ -71,45 +94,34 @@ export const formatOrder = ({
     const expiresToday = expireToday
 
     return {
-      ...order,
-      comments: orderComments,
-      hasNotSolvedReports: reportsNotSolved,
+      ...formattedOrder,
       isExpired,
       expireAt,
       expiresToday,
       expiresTomorrow: isTomorrow(asDate(expireAt)),
       // today is saturday, is not expires yet and expires on monday
       expiresOnMonday:
-        isSaturday(new Date()) && isMonday(asDate(expireAt)) && !isExpired,
-      pendingMarketOrder:
-        order?.status === order_status.PENDING && order.marketOrder
+        isSaturday(new Date()) && isMonday(asDate(expireAt)) && !isExpired
     }
   }
-  if (order?.type === 'REPAIR') {
+  if (formattedOrder?.type === 'REPAIR') {
     return {
-      ...order,
-      comments: orderComments,
-      expireAt: null,
-      hasNotSolvedReports: reportsNotSolved,
-      pendingMarketOrder:
-        order?.status === order_status.PENDING && order.marketOrder
+      ...formattedOrder,
+      expireAt: null
     }
   }
-  if (order?.type === 'SALE') {
+  if (formattedOrder?.type === 'SALE') {
     return {
-      ...order,
+      ...formattedOrder,
+      expireAt: null
+    }
+  }
 
-      comments: orderComments,
-      expireAt: null,
-      hasNotSolvedReports: reportsNotSolved,
-      pendingMarketOrder:
-        order?.status === order_status.PENDING && order.marketOrder
-    }
-  }
   return {
-    ...order,
+    ...formattedOrder,
     pendingMarketOrder:
-      order?.status === order_status.PENDING && !!order.marketOrder
+      formattedOrder?.status === order_status.PENDING &&
+      !!formattedOrder.marketOrder
   }
 }
 
