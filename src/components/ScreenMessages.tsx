@@ -127,13 +127,6 @@ export default function ScreenMessages() {
     return res
   }
 
-  console.log({
-    store,
-    permissions,
-    canSendMessages: permissions?.store?.canSendMessages,
-    employee,
-    user
-  })
   const canSendMessages =
     permissions?.store?.canSendMessages || permissions?.isAdmin
 
