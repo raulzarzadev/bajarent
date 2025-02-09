@@ -8,6 +8,7 @@ import { useStore } from '../contexts/storeContext'
 import { findBestMatches } from '../components/Customers/lib/levenshteinDistance'
 import { processData } from '../libs/flattenData'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { useEmployee } from '../contexts/employeeContext'
 export type Filter = { field: string; value: string | number | boolean }
 export type CollectionSearch = {
   collectionName: string
@@ -25,6 +26,7 @@ export default function useFilter<T extends { id?: string }>({
   debounceSearch?: number
 }) {
   const { storeId } = useStore()
+  const { permissions } = useEmployee()
   const { reports } = useOrdersCtx()
   const [filteredData, setFilteredData] = useState<T[]>([...data])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
@@ -155,7 +157,9 @@ export default function useFilter<T extends { id?: string }>({
         storeId,
         fields: collectionSearch?.fields,
         value,
-        sections: collectionSearch?.assignedSections
+        sections: permissions.canViewAllOrders
+          ? 'all'
+          : collectionSearch?.assignedSections
       }).then((res) => {
         return formatOrders({
           orders: res as Partial<OrderType>[],

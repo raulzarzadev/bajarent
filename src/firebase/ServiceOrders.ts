@@ -322,19 +322,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         if (Array.isArray(sections) && sections.length > 0) {
           filters.push(where('assignToSection', 'in', sections))
         }
+
         if (field === 'folio') {
-          return itsValidNumber //* <--- just search if is a number
+          // if is folio search just if value its a number
+          return itsValidNumber
             ? this.findMany([...filters, where(field, '==', asNumber)])
             : null
         }
         //* search with phone format
         if (field === 'phone') {
-          return itsValidNumber && String(value).length === 10 //* <--- just search if is a number
+          // if is phone search just if value its a number
+          return itsValidNumber
             ? this.findMany([...filters, where(field, '==', `+52${asNumber}`)])
             : null
+        } else {
+          //* search as string
+          return this.findMany([...filters, where(field, '==', value)])
         }
-        //* search as string
-        return this.findMany([...filters, where(field, '==', value)])
       })
       //* remove unset promises
       .filter((a) => a !== null)
