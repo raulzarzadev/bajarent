@@ -51,6 +51,7 @@ export type ListPops<T extends { id: string }> = {
   onFetchMoreCount?: string
   maxWidth?: number
   rowSideButtons?: ListSideButton[]
+  pinMaxRows?: number
 }
 
 function MyList<T extends { id: string }>({
@@ -70,7 +71,8 @@ function MyList<T extends { id: string }>({
   pinRows,
   onFetchMoreCount,
   maxWidth = 600,
-  rowSideButtons
+  rowSideButtons,
+  pinMaxRows
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
@@ -85,7 +87,7 @@ function MyList<T extends { id: string }>({
   //#region hooks
 
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
-    data: data,
+    data: filteredData,
     defaultSortBy: defaultSortBy as string,
     defaultOrder
   })
@@ -99,18 +101,19 @@ function MyList<T extends { id: string }>({
 
   //#region effects
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const storedPinnedRows = await getItem('pinnedRows')
-  //     if (storedPinnedRows) {
-  //       const items = JSON.parse(storedPinnedRows || '[]')
-  //       const validItems = items?.filter((id) =>
-  //         data?.find((row) => row?.id === id)
-  //       )
-  //       setPinnedRows(validItems)
-  //     }
-  //   })()
-  // }, [data])
+  useEffect(() => {
+    ;(async () => {
+      const storedPinnedRows = await getItem('pinnedRows')
+      if (storedPinnedRows) {
+        const items = JSON.parse(storedPinnedRows || '[]')
+        const validItems = items?.filter((id) =>
+          data?.find((row) => row?.id === id)
+        )
+        setPinnedRows(validItems)
+      }
+    })()
+  }, [data])
+  console.log({ pinnedRows })
 
   useEffect(() => {
     if (pinnedRows?.length && pinRows) {
@@ -205,7 +208,14 @@ function MyList<T extends { id: string }>({
         {pinRows && (
           <>
             {pinnedRows.length > 0 && (
-              <Text style={gStyles.h2}>Fijadas {pinnedRows.length || 0}</Text>
+              <>
+                <Text style={gStyles.h3}>Fijadas {pinnedRows.length || 0}</Text>
+                {pinnedRows.length === pinMaxRows && (
+                  <Text style={[gStyles.helper, { textAlign: 'center' }]}>
+                    Solo puedes fijar {pinMaxRows} filas
+                  </Text>
+                )}
+              </>
             )}
             <FlatList
               data={pinnedRowsData}
@@ -447,6 +457,7 @@ function MyList<T extends { id: string }>({
                     {/* ***************** ******* ***** PIN BUTTON  */}
                     {!pinnedRows.includes(item?.id) ? (
                       <PinButton
+                        disabled={pinnedRows.length >= pinMaxRows}
                         handlePin={() => {
                           handlePinRow(item?.id)
                         }}
@@ -508,17 +519,43 @@ function MyList<T extends { id: string }>({
   )
 }
 //#region pin button
-const PinButton = ({ handlePin, unpin = false }) => {
+const PinButton = ({
+  handlePin,
+  unpin = false,
+  disabled
+}: {
+  handlePin: () => void
+  unpin?: boolean
+  disabled?: boolean
+}) => {
   return (
-    <Button
-      icon={unpin ? 'unPin' : 'pin'}
-      justIcon
+    <Pressable
+      disabled={disabled}
       onPress={() => handlePin()}
-      color={unpin ? 'error' : 'primary'}
-      variant="ghost"
-      size="medium"
-    />
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        opacity: disabled ? 0.4 : 1
+      }}
+    >
+      <Icon
+        icon={unpin ? 'unPin' : 'pin'}
+        color={unpin ? theme.error : theme.primary}
+        size={22}
+      />
+    </Pressable>
   )
+  // return (
+  //   <Pressable
+  //     disabled={disabled}
+  //     icon={unpin ? 'unPin' : 'pin'}
+  //     justIcon
+  //     onPress={() => handlePin()}
+  //
+  //     variant="ghost"
+  //     size="medium"
+  //   />
+  // )
 }
 
 //#region pagination

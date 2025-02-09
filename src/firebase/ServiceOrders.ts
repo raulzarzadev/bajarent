@@ -413,21 +413,23 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         filterSalesPending.push(where('assignToSection', 'in', sections))
       }
     }
-    const rentPending = await this.findMany(
+    if (process.env.PRE_PRODUCTION) console.time('getUnsolvedByStore')
+
+    const rentPendingPromise = this.findMany(
       [...filterRentPending, where('storeId', '==', storeId)],
       ops
     ).catch((e) => {
       console.log('Error getting reported orders', e)
       return []
     })
-    const expiredRents = await this.findMany(
+    const expiredRentsPromise = this.findMany(
       [...filterExpiredRents, where('storeId', '==', storeId)],
       ops
     ).catch((e) => {
       console.log('Error getting reported orders', e)
       return []
     })
-    const repairs = await this.findMany(
+    const repairsPromise = this.findMany(
       [...filterRepairs, where('storeId', '==', storeId)],
       ops
     ).catch((e) => {
@@ -435,20 +437,34 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       return []
     })
 
-    const sales = await this.findMany(
+    const salesPromise = this.findMany(
       [...filterSalesPending, where('storeId', '==', storeId)],
       ops
     ).catch((e) => {
       console.log('Error getting reported orders', e)
       return []
     })
-    const unsolvedOrders = [
-      ...rentPending,
-      ...repairs,
-      ...expiredRents,
-      ...sales
-    ]
-
+    const unsolvedOrders = await Promise.allSettled([
+      rentPendingPromise,
+      repairsPromise,
+      expiredRentsPromise,
+      salesPromise
+    ])
+      .then((res) =>
+        res.map((result, index) => {
+          if (result.status === 'fulfilled') {
+            return result.value
+          } else {
+            console.error(`Error en promesa ${index}:`, result.reason)
+            return [] // valor por defecto en caso de error
+          }
+        })
+      )
+      .catch((e) => {
+        console.log('Error getting reported orders', e)
+        return []
+      })
+    if (process.env.PRE_PRODUCTION) console.timeLog('getUnsolvedByStore')
     //* *** 1 *** get reports and set the ids, to get reports from the database
     const ordersWithReportsAndImportantUnsolved = Array.from(
       new Set(
@@ -479,6 +495,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         )
       }
     }
+    if (process.env.PRE_PRODUCTION) console.timeEnd('getUnsolvedByStore')
 
     //*  *** 2 *** remove reported orders from unsolved orders
     const removeReportedFromUnsolved = unsolvedOrders.filter(

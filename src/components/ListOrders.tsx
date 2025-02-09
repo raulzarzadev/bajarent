@@ -1,4 +1,3 @@
-import React from 'react'
 import { ListE, ListSideButton } from './List'
 import { RowOrderE, RowOrderType } from './RowOrder'
 import OrderType, { order_status } from '../types/OrderType'
@@ -63,7 +62,9 @@ const ListOrders = ({
       <ListE
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
-        pinRows={false}
+        rowsPerPage={20}
+        pinRows={true}
+        pinMaxRows={10}
         sideButtons={sideButtons}
         preFilteredIds={defaultOrdersIds}
         defaultSortBy="folio"
