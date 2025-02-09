@@ -41,7 +41,7 @@ export type ModalFilterOrdersProps<T> = {
 function ModalFilterList<T>({
   data,
   filters,
-  setData = (data) => console.log(data),
+  setData,
   setCollectionData,
   preFilteredIds,
   collectionSearch

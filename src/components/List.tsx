@@ -217,13 +217,13 @@ function MyList<T extends { id: string }>({
               </>
             )}
             <FlatList
-              data={pinnedRowsData}
+              data={pinnedRowsData || []}
               renderItem={({ item }) => (
                 <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
                   <Pressable
                     style={{ flexDirection: 'row', flex: 1 }}
                     onPress={() => {
-                      onPressRow && onPressRow(item.id)
+                      onPressRow && onPressRow(item?.id)
                     }}
                   >
                     <ComponentRow item={item} />
@@ -231,7 +231,7 @@ function MyList<T extends { id: string }>({
                   {/* ***************** ******* ***** UNPIN BUTTON  */}
                   <PinButton
                     handlePin={() => {
-                      handleUnpinRow(item.id)
+                      handleUnpinRow(item?.id)
                     }}
                     unpin={true}
                   />
@@ -407,7 +407,7 @@ function MyList<T extends { id: string }>({
                     label=""
                     setValue={() => {
                       handleSelectRow(item?.id)
-                      _setPressedRow(item.id)
+                      _setPressedRow(item?.id)
                     }}
                     value={selectedRows.includes(item?.id)}
                   />
@@ -417,12 +417,12 @@ function MyList<T extends { id: string }>({
                     flex: 1,
                     flexDirection: 'row',
                     backgroundColor:
-                      _pressedRow === item.id ? '#00000020' : 'transparent'
+                      _pressedRow === item?.id ? '#00000020' : 'transparent'
                   }}
                   onPress={() => {
-                    _setPressedRow(item.id)
+                    _setPressedRow(item?.id)
                     if (multiSelect) {
-                      handleSelectRow(item.id)
+                      handleSelectRow(item?.id)
                     } else {
                       onPressRow && onPressRow(item?.id)
                     }

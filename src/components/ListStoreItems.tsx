@@ -297,6 +297,7 @@ const ListStoreItems = ({
           toItems({ id: rowId, to: 'details' })
         }}
         ComponentRow={({ item }) => {
+          if (!item) return null
           return <RowItem item={item} />
         }}
       />
@@ -325,8 +326,8 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
             )}
           </View>
           <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{ marginRight: 8 }}>{item.number}</Text>
-            <Text style={gStyles.helper}>{item.serial}</Text>
+            <Text style={{ marginRight: 8 }}>{item?.number}</Text>
+            <Text style={gStyles.helper}>{item?.serial}</Text>
           </View>
         </View>
       )
@@ -337,13 +338,13 @@ const RowItem = ({ item }: { item: Partial<ItemType> }) => {
       component: (
         <View>
           <Text>{item.categoryName}</Text>
-          <Text style={gStyles.helper}>{item.brand}</Text>
+          <Text style={gStyles.helper}>{item?.brand}</Text>
         </View>
       )
     },
     {
       width: 'rest',
-      component: <Text>{dictionary(item.status)}</Text>
+      component: <Text>{dictionary(item?.status)}</Text>
     }
   ]
   if (isBigScreen) {

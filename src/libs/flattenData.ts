@@ -1,6 +1,7 @@
 export function flattenValues(data: any): (string | number)[] {
   let result: (string | number)[] = []
-
+  const itemId = data?.id || null
+  if (itemId) result = [`${itemId}`] //<-- put the id Item in the array at very first
   if (Array.isArray(data)) {
     // Si es un array, iteramos sobre sus elementos y los aplanamos
     for (const item of data) {
