@@ -113,7 +113,6 @@ function MyList<T extends { id: string }>({
       }
     })()
   }, [data])
-  console.log({ pinnedRows })
 
   useEffect(() => {
     if (pinnedRows?.length && pinRows) {

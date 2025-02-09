@@ -176,7 +176,7 @@ const ListStoreItems = ({
         defaultOrder="des"
         defaultSortBy="number"
         data={formattedItems}
-        pinRows
+        pinRows={false}
         ComponentMultiActions={({ ids }) => (
           <View>
             <View style={{ marginVertical: 8 }}>
