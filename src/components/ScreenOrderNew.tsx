@@ -85,13 +85,6 @@ const ScreenOrderNew = (navigation) => {
     })
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       async (orderId) => {
-        debugger
-        console.log({
-          newCustomerCreated,
-          config: store.chatbot.config,
-          orderId
-        })
-
         if (orderId) {
           const shouldSendWhatsappWhenNewOrder =
             !!store.chatbot?.enabled && !!store.chatbot.config.sendNewStoreOrder
