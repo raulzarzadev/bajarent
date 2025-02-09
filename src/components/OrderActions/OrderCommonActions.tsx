@@ -1,26 +1,20 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import ModalAssignOrder from './ModalAssignOrder'
 import Button from '../Button'
-import {
-  onAuthorize,
-  onCancel,
-  onDelete,
-  onSetStatuses
-} from '../../libs/order-actions'
+import { onCancel, onSetStatuses } from '../../libs/order-actions'
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
-import { ModalSendWhatsappE } from '../ModalSendWhatsapp'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
 import ModalScheduleOrder from './ModalScheduleOrder'
 import { useOrderDetails } from '../../contexts/orderContext'
 import ErrorBoundary from '../ErrorBoundary'
 import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
-import { ContactType } from '../../types/OrderType'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
 import TextInfo from '../TextInfo'
+
 export type OrderCommonActionsType = {
   storeId: string
   orderId: string
@@ -47,7 +41,7 @@ const OrderCommonActions = ({
   userId
 }: OrderCommonActionsType) => {
   const { order } = useOrderDetails()
-  const { navigate, goBack } = useNavigation()
+  const { navigate } = useNavigation()
   const [cancelledReason, setCancelledReason] = useState('')
 
   const canCancel = actionsAllowed?.canCancel
@@ -78,13 +72,6 @@ const OrderCommonActions = ({
   const handleUpdateStatuses = async () => {
     onSetStatuses({ orderId })
   }
-
-  const orderContacts = order?.contacts as ContactType[]
-  const defaultWhatsappPhone =
-    orderContacts?.find((c) => c.isFavorite)?.phone ||
-    orderContacts?.[0]?.phone ||
-    order.phone ||
-    ''
 
   const buttons = [
     canAssign && <ModalScheduleOrder orderId={orderId} />,
