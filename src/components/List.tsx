@@ -2,6 +2,7 @@ import {
   FlatList,
   Pressable,
   ScrollView,
+  SectionList,
   StyleSheet,
   Text,
   View
@@ -22,6 +23,7 @@ import { gStyles } from '../styles'
 import { getItem, setItem } from '../libs/storage'
 import { CollectionSearch } from '../hooks/useFilter'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import theme from '../theme'
 
 export type ListSideButton = {
   icon: IconName
@@ -83,7 +85,7 @@ function MyList<T extends { id: string }>({
   //#region hooks
 
   const { sortBy, order, sortedBy, sortedData, changeOrder } = useSort<T>({
-    data: filteredData,
+    data: data,
     defaultSortBy: defaultSortBy as string,
     defaultOrder
   })
@@ -97,18 +99,18 @@ function MyList<T extends { id: string }>({
 
   //#region effects
 
-  useEffect(() => {
-    ;(async () => {
-      const storedPinnedRows = await getItem('pinnedRows')
-      if (storedPinnedRows) {
-        const items = JSON.parse(storedPinnedRows || '[]')
-        const validItems = items?.filter((id) =>
-          data?.find((row) => row?.id === id)
-        )
-        setPinnedRows(validItems)
-      }
-    })()
-  }, [data])
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const storedPinnedRows = await getItem('pinnedRows')
+  //     if (storedPinnedRows) {
+  //       const items = JSON.parse(storedPinnedRows || '[]')
+  //       const validItems = items?.filter((id) =>
+  //         data?.find((row) => row?.id === id)
+  //       )
+  //       setPinnedRows(validItems)
+  //     }
+  //   })()
+  // }, [data])
 
   useEffect(() => {
     if (pinnedRows?.length && pinRows) {
@@ -187,6 +189,9 @@ function MyList<T extends { id: string }>({
   //#region render
 
   if (!data) return <Loading />
+
+  const slicedData = sortedData.slice(startIndex, endIndex)
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <View
@@ -260,7 +265,7 @@ function MyList<T extends { id: string }>({
               data={data}
               setData={(data) => {
                 setFilteredData(data)
-                // setCurrentPage(1) //* FIXME: this mai cause a bug if uncomment
+                //setCurrentPage(1) //* FIXME: this mai cause a bug if uncomment
               }}
               filters={filters}
               setCollectionData={(data) => {
@@ -330,9 +335,6 @@ function MyList<T extends { id: string }>({
           >
             <FlatList
               style={{
-                // width: '100%',
-                // maxWidth: 600,
-                // margin: 'auto',
                 paddingBottom: 6,
                 paddingTop: 6
               }}
@@ -383,8 +385,11 @@ function MyList<T extends { id: string }>({
         )}
 
         {/* CONTENT  */}
-        <FlatList
-          data={sortedData.slice(startIndex, endIndex)}
+        <SectionList
+          sections={[
+            { title: 'Otras coicidencias', data: collectionData },
+            { title: 'base', data: slicedData }
+          ]}
           renderItem={({ item }) => {
             return (
               <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
@@ -461,7 +466,13 @@ function MyList<T extends { id: string }>({
               </View>
             )
           }}
-        ></FlatList>
+          renderSectionHeader={({ section }) => {
+            // adding a gap if are collectionData customData
+            if (collectionData.length > 0 && section.title === 'base')
+              return <View style={{ marginBottom: 6 }} />
+            return null
+          }}
+        ></SectionList>
         {/* SEE MORE   */}
         <View>
           {onFetchMore && (
@@ -475,7 +486,7 @@ function MyList<T extends { id: string }>({
           )}
         </View>
 
-        {/* PAGINATION   */}
+        {/* PAGINATION */}
 
         <View
           style={{
@@ -492,69 +503,6 @@ function MyList<T extends { id: string }>({
             totalPages={totalPages}
           />
         </View>
-        {/* TABLE OF CUSTOM DATA */}
-        {collectionData?.length > 0 && (
-          <>
-            <View>
-              <Text style={gStyles.h3}>Otras coincidencias</Text>
-            </View>
-            <View>
-              <FlatList
-                data={collectionData}
-                renderItem={({ item }) => {
-                  return (
-                    <View
-                      style={{ width: '100%', flexDirection: 'row', flex: 1 }}
-                    >
-                      {multiSelect && (
-                        <InputCheckbox
-                          label=""
-                          setValue={() => {
-                            handleSelectRow(item?.id)
-                          }}
-                          value={selectedRows.includes(item?.id)}
-                        />
-                      )}
-                      <Pressable
-                        style={{ flex: 1, flexDirection: 'row' }}
-                        onPress={() => {
-                          if (multiSelect) {
-                            handleSelectRow(item.id)
-                          } else {
-                            onPressRow && onPressRow(item?.id)
-                          }
-                        }}
-                      >
-                        <ComponentRow item={item} />
-                      </Pressable>
-                      {pinRows && (
-                        <>
-                          {/* ***************** ******* ***** PIN BUTTON  */}
-                          {!pinnedRows.includes(item?.id) ? (
-                            <PinButton
-                              handlePin={() => {
-                                handlePinRow(item?.id)
-                              }}
-                            />
-                          ) : (
-                            <PinButton
-                              handlePin={() => {
-                                handleUnpinRow(item?.id)
-                              }}
-                              unpin={true}
-                            />
-                          )}
-
-                          {/* ***************** ******* ***** PIN BUTTON  */}
-                        </>
-                      )}
-                    </View>
-                  )
-                }}
-              ></FlatList>
-            </View>
-          </>
-        )}
       </View>
     </ScrollView>
   )
@@ -569,13 +517,6 @@ const PinButton = ({ handlePin, unpin = false }) => {
       color={unpin ? 'error' : 'primary'}
       variant="ghost"
       size="medium"
-      buttonStyles={
-        {
-          // position: 'absolute',
-          // right: 8,
-          // top: 8
-        }
-      }
     />
   )
 }
@@ -627,8 +568,6 @@ const styles = StyleSheet.create({
   },
   orderList: {
     width: '100%'
-
-    // paddingHorizontal: 4
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -652,38 +591,10 @@ export default function <T extends { id: string }>(props: ListPops<T>) {
 }
 //#region error boundary
 export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
+  if (props?.data === undefined) return <Loading />
   return (
     <ErrorBoundary componentName="MyList">
       <MyList {...props}></MyList>
     </ErrorBoundary>
   )
-}
-//#region loading list
-export const LoadingList = <T extends { id: string }>(props: ListPops<T>) => {
-  const data = props?.data
-  if (data === undefined)
-    return (
-      <View
-        style={[
-          gStyles.container,
-          { flexDirection: 'column', justifyContent: 'center' }
-        ]}
-      >
-        <Text
-          style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
-        >
-          Cargando datos
-        </Text>
-        <Loading />
-      </View>
-    )
-  // if (data.length === 0)
-  //   return (
-  //     <Text
-  //       style={{ textAlign: 'center', marginVertical: 8, fontWeight: 'bold' }}
-  //     >
-  //       No hay datos
-  //     </Text>
-  //   )
-  return <ListE {...props} />
 }

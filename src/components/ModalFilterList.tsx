@@ -48,6 +48,7 @@ function ModalFilterList<T>({
 }: ModalFilterOrdersProps<T>) {
   const { sections: storeSections, staff } = useStore()
   const filterModal = useModal({ title: 'Filtrar por' })
+  const [customFilterSelected, setCustomFilterSelected] = useState(false)
 
   const {
     filterBy,
@@ -72,8 +73,6 @@ function ModalFilterList<T>({
   useEffect(() => {
     setCollectionData?.(customData)
   }, [customData])
-
-  const [customFilterSelected, setCustomFilterSelected] = useState(false)
 
   useEffect(() => {
     if (preFilteredIds?.length) {
@@ -275,9 +274,9 @@ function ModalFilterList<T>({
               { field, label, icon, color, titleColor, booleanValue = true },
               i
             ) => {
-              const count = filteredData.filter(
-                (a) => a[field] === booleanValue
-              ).length
+              const count = filteredData?.filter(
+                (a) => a?.[field] === booleanValue
+              )?.length
               if (!count) return null
               return (
                 <Chip

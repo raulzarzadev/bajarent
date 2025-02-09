@@ -1,5 +1,5 @@
 import React from 'react'
-import { ListSideButton, LoadingList } from './List'
+import { ListE, ListSideButton } from './List'
 import { RowOrderE, RowOrderType } from './RowOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import MultiOrderActions from './OrderActions/MultiOrderActions'
@@ -60,7 +60,7 @@ const ListOrders = ({
 
   return (
     <>
-      <LoadingList
+      <ListE
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
         pinRows={false}

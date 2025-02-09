@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
-import List, { LoadingList } from './List'
+import { ListE } from './List'
 import RowBalance from './RowBalace'
 import { BalanceType } from '../types/BalanceType'
 import { useNavigation } from '@react-navigation/native'
@@ -9,7 +8,7 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
   const { navigate } = useNavigation()
   return (
     <View>
-      <LoadingList
+      <ListE
         defaultSortBy="createdAt"
         defaultOrder="des"
         onPressRow={(id) => {

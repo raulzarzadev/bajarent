@@ -315,7 +315,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
   }): Promise<Partial<Type>[] | void> {
     const promises = fields
       ?.map((field) => {
-        const asNumber = parseFloat(`${value}`)
+        const asNumber = Number(value)
         const itsValidNumber = !isNaN(asNumber)
         //* search as number
         const filters = [where('storeId', '==', storeId)]
@@ -324,13 +324,13 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         }
         if (field === 'folio') {
           return itsValidNumber //* <--- just search if is a number
-            ? this.findMany([...filters, where(field, '==', value)])
+            ? this.findMany([...filters, where(field, '==', asNumber)])
             : null
         }
         //* search with phone format
         if (field === 'phone') {
           return itsValidNumber && String(value).length === 10 //* <--- just search if is a number
-            ? this.findMany([...filters, where(field, '==', `+52${value}`)])
+            ? this.findMany([...filters, where(field, '==', `+52${asNumber}`)])
             : null
         }
         //* search as string

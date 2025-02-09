@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, Switch } from 'react-native'
-import React from 'react'
-import { LoadingList } from './List'
+import { StyleSheet, Text, View } from 'react-native'
+import { ListE } from './List'
 import { useNavigation } from '@react-navigation/native'
 import StaffType from '../types/StaffType'
 import Button from './Button'
@@ -33,7 +32,7 @@ const ListStaff = ({
   const disableAdd = !canEditStaff
   return (
     <View>
-      <LoadingList
+      <ListE
         sortFields={[
           { key: 'name', label: 'Nombre' },
           { key: 'position', label: 'NickName' },

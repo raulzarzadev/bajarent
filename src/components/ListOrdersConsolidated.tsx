@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import { ListE, LoadingList } from './List'
+import { ListE } from './List'
 import ListRow, { ListRowField } from './ListRow'
 import {
   ConsolidatedOrderType,
@@ -130,7 +130,7 @@ const ListOrdersConsolidated = () => {
           </Text>
         </Pressable>
 
-        <LoadingList
+        <ListE
           ComponentRow={({ item }) => <ComponentRow item={item} />}
           pinRows
           collectionSearch={{

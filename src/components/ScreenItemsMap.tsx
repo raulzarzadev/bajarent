@@ -9,11 +9,9 @@ import React, { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
 import LinkLocation from './LinkLocation'
-import List, { LoadingList } from './List'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType from '../types/OrderType'
 import ListRow, { ListRowField } from './ListRow'
-import { ItemMap, ItemMapE } from './ItemsMap'
-import theme, { colors } from '../theme'
+import { ItemMapE } from './ItemsMap'
 import { formatOrders } from '../libs/orders'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { ModalFilterListE } from './ModalFilterList'
@@ -39,30 +37,7 @@ const ScreenItemsMap = () => {
 
   return (
     <ScrollView>
-      <View
-      // style={{
-      //   flexDirection: isScreenWidthGreaterThan500 ? 'row' : 'column'
-      // }}
-      >
-        {/* 
-        <View
-          style={{
-            width: isScreenWidthGreaterThan500 ? 300 : 500,
-            margin: 'auto'
-            >
-          }}
-          <LoadingList
-            sortFields={[
-              { key: 'fullName', label: 'Nombre' },
-              { key: 'itemSerial', label: 'Serie' },
-              { key: 'itemBrand', label: 'Marca' }
-            ]}
-            ComponentRow={({ item }) => <OrderLocationRow order={item} />}
-            filters={[]}
-            data={locatedOrders}
-          /> 
-        </View>
-          */}
+      <View>
         <View style={{ width: '100%', maxWidth: 400, margin: 'auto' }}>
           <ModalFilterListE
             data={locatedOrders}
@@ -80,17 +55,6 @@ const ScreenItemsMap = () => {
         <View style={{}}>
           <ItemMapE orders={locatedOrders} />
         </View>
-        {/*         
-        <LoadingList
-          sortFields={[
-            { key: 'fullName', label: 'Nombre' },
-            { key: 'itemSerial', label: 'Serie' },
-            { key: 'itemBrand', label: 'Marca' }
-          ]}
-          ComponentRow={({ item }) => <OrderLocationRow order={item} />}
-          filters={[]}
-          data={locatedOrders}
-        /> */}
       </View>
     </ScrollView>
   )

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { LoadingList } from './List'
+import { ListE } from './List'
 import { FormattedComment } from '../types/CommentType'
 import { View } from 'react-native'
 import HeaderDate from './HeaderDate'
@@ -49,7 +49,7 @@ const ListMovements = () => {
         debounce={700}
       />
       {loading && <Loading />}
-      <LoadingList
+      <ListE
         ComponentRow={({ item }) => <CommentRow comment={item} showOrder />}
         data={data}
         filters={[

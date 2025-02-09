@@ -1,11 +1,11 @@
 import { ScrollView, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { ConsolidatedStoreOrdersType } from '../firebase/ServiceConsolidatedOrders'
 import PaymentType from '../types/PaymentType'
-import { LoadingList } from './List'
+import { ListE } from './List'
 import PaymentRow from './PaymentRow'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -90,7 +90,7 @@ export default function ScreenPayments({ navigation, route }) {
         </View>
       </StyledModal>
       <Text style={gStyles.h2}>Pagos de los últimos {days} días</Text>
-      <LoadingList
+      <ListE
         ComponentMultiActions={({ ids }) => {
           return (
             <ModalVerifyPayments

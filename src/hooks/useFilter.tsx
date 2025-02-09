@@ -38,7 +38,6 @@ export default function useFilter<T extends { id?: string }>({
     field: string,
     dates: { fromDate: Date; toDate: Date }
   ) => {
-    console.log({ field, dates })
     const res = [...data].filter((o) => {
       const orderTime = asDate(o?.[field])?.getTime()
       const fromTime = asDate(dates?.fromDate)?.getTime()
@@ -123,7 +122,7 @@ export default function useFilter<T extends { id?: string }>({
     setSearchValue(value)
 
     if (!value) {
-      setFilteredData([...data])
+      setFilteredData(data)
       setCustomData([])
       return
     }
@@ -178,7 +177,7 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const handleClearFilters = () => {
-    setFilteredData([...data])
+    setFilteredData([])
     setFilteredBy('')
     setFiltersBy([])
     setSearchValue('')
