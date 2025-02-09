@@ -30,7 +30,6 @@ const ScreenOrderRenew = ({ route }) => {
               {order.folio} {order.note ? `-${order.note}` : ''}
             </Text>
           </Text>
-          <Text style={gStyles.h2}>{order.fullName}</Text>
         </View>
         {customerIsSet && <CustomerOrderE customerId={order.customerId} />}
         {!customerIsSet && (

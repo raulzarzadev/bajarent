@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { Platform } from 'react-native'
 
 const sendMessage = async ({
   phone,
@@ -26,19 +25,5 @@ const sendMessage = async ({
   // .then((response) => console.log(response))
   // .catch((error) => console.error(error))
 }
-const getOperatingSystem = () => {
-  if (Platform.OS === 'web') {
-    const userAgent = navigator.userAgent.toLowerCase()
-    if (userAgent.includes('win')) {
-      return 'win'
-    } else if (userAgent.includes('mac')) {
-      return 'mac'
-    } else {
-      return 'Other'
-    }
-  } else {
-    return Platform.OS
-  }
-}
-console.log('os:', getOperatingSystem())
+
 export default sendMessage

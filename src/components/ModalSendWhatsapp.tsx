@@ -445,6 +445,7 @@ export const ButtonSendWhatsappStatatus = (
     <ButtonConfirm
       openLabel="Enviar estado actual de la orden"
       openDisabled={sending}
+      confirmDisabled={sending}
       handleConfirm={async () => {
         setSending(true)
         await onSendOrderWhatsapp({
@@ -453,7 +454,9 @@ export const ButtonSendWhatsappStatatus = (
           store,
           type: 'status',
           userId: user.id
-        }).catch((e) => console.log(e))
+        })
+          .then((res) => console.log({ res }))
+          .catch((e) => console.log({ e }))
         setSending(false)
       }}
       confirmLabel="Enviar"

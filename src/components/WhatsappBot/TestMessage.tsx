@@ -24,12 +24,13 @@ const TestMessage = () => {
         openVariant="ghost"
         icon="comment"
         handleConfirm={async () => {
-          sendMessage({
+          const res = sendMessage({
             phone: number,
             message: 'Mensaje de prueba',
             apiKey: store?.chatbot?.apiKey,
             botId: store?.chatbot?.id
           })
+          console.log({ testMessageResponse: res })
         }}
         confirmLabel="Enviar"
       >
