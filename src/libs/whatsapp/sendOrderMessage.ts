@@ -5,6 +5,7 @@ import OrderType, { SentMessage } from '../../types/OrderType'
 import StoreType from '../../types/StoreType'
 import {
   expiredMessage,
+  newStoreOrder,
   orderStatus,
   rentFinished,
   rentRenewed,
@@ -12,6 +13,7 @@ import {
 } from '../whatsappMessages'
 import chooseOrderPhone from './chooseOrderPhone'
 import PaymentType from '../../types/PaymentType'
+import { CustomerType } from '../../state/features/costumers/customerType'
 
 export type TypeOfMessage =
   | 'renew'
@@ -19,17 +21,20 @@ export type TypeOfMessage =
   | 'pickup'
   | 'status'
   | 'expire'
+  | 'newStoreOrder'
 export const onSendOrderWhatsapp = async ({
   store,
   order,
   phone: defaultPhone,
   type,
   userId,
-  lastPayment
+  lastPayment,
+  customer
 }: {
   store: StoreType
   phone?: string
   order: Partial<OrderType>
+  customer?: CustomerType
   type: TypeOfMessage
   userId: string
   lastPayment?: PaymentType
@@ -48,7 +53,13 @@ export const onSendOrderWhatsapp = async ({
       error: validationMessage
     }
 
+  order.fullName = customer?.name || order?.fullName || ''
+
   const messageOptions: Record<TypeOfMessage, string> = {
+    newStoreOrder: newStoreOrder({
+      order,
+      storeName: store.name
+    }),
     status: orderStatus({
       order,
       storeName: store.name

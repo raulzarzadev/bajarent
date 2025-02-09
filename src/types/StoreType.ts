@@ -62,7 +62,9 @@ export enum store_bot_configs {
   includeSender = 'Incluir remitente',
   sendDelivered = 'Orden entregada',
   sendPickedUp = 'Orden recogida',
-  sendRenewed = 'Orden renovada'
+  sendRenewed = 'Orden renovada',
+  sendNewWebOrder = 'Nueva orden web',
+  sendNewStoreOrder = 'Nueva orden de tienda'
 }
 
 export type StoreBotConfigsType = keyof typeof store_bot_configs

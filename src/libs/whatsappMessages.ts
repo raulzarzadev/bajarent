@@ -19,7 +19,7 @@ export const expiredMessage = ({
   store: StoreType
 }) => {
   return `🚨 *ALERTA DE VENCIMIENTO* 
-  \n${WELCOME({ customerName: order?.fullName, storeName: store?.name })}
+  \n${WELCOME({ customerName: order?.fullName })}
   \n${expireDateString(order, { feePerDay: 100 })}
   ${ORDER_DETAILS({
     orderType: order?.type,
@@ -41,7 +41,7 @@ export const receiptMessage = ({
   storeName: string
 }) => {
   return `🧾 *COMPROBANTE DE PAGO* 
-  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
     orderFolio: order?.folio
@@ -62,7 +62,7 @@ export const rentStarted = ({
   lastPayment?: Partial<PaymentType>
 }) => {
   return `✅ *ARTÍCULO ENTREGADO* 
-  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
     orderFolio: order?.folio
@@ -82,7 +82,7 @@ export const rentFinished = ({
   storeName: string
 }) => {
   return `🔚 *RENTA FINALIZADA* 
-  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
     orderFolio: order?.folio
@@ -102,7 +102,7 @@ export const rentRenewed = ({
   lastPayment?: Partial<PaymentType>
 }) => {
   return `🔄 *RENOVACIÓN DE RENTA* 
-  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
     orderFolio: order?.folio
@@ -115,7 +115,7 @@ export const rentRenewed = ({
 }
 export const orderStatus = ({ order, storeName }) => {
   return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
-  \n${WELCOME({ customerName: order?.fullName, storeName })}
+  \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
     orderFolio: order?.folio
@@ -130,11 +130,22 @@ export const orderStatus = ({ order, storeName }) => {
   \n${AGRADECIMIENTOS({ storeName })}
   `
 }
+export const newStoreOrder = ({ order, storeName }) => {
+  return `📝 *PEDIDO REALIZADO CON ÉXITO* 
+  \n${WELCOME({ customerName: order?.fullName })}
+  ${ORDER_DETAILS({
+    orderType: order?.type,
+    orderFolio: order?.folio
+  })}
+  \n Pronto un asesor se pondrá en contacto para confirmar la fecha de entrega.*
+  \n${AGRADECIMIENTOS({ storeName })}
+  `
+}
 
 const AGRADECIMIENTOS = ({ storeName }) =>
   `*${storeName}* agradece su preferencia 🙏🏼`
 
-const WELCOME = ({ customerName, storeName }) => `Estimado *${customerName}* `
+const WELCOME = ({ customerName }) => `Estimado *${customerName}* `
 
 /**
  * Generates order details message.

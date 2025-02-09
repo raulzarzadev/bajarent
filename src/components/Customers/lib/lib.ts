@@ -1,9 +1,9 @@
 import { CustomerType } from '../../../state/features/costumers/customerType'
 
 export const getFavoriteCustomerPhone = (
-  customer: CustomerType['contacts']
+  customerContacts: CustomerType['contacts']
 ) => {
-  const phones = Object.values(customer || {})
+  const phones = Object.values(customerContacts || {})
     .filter((a) => a.type === 'phone')
     .sort((a, b) => {
       // set is favorite first

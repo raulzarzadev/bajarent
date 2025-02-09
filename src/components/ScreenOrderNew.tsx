@@ -10,6 +10,8 @@ import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { CustomerType } from '../state/features/costumers/customerType'
 import { createUUID } from '../libs/createId'
 import { OrderProvider } from '../contexts/orderContext'
+import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
+import { getFavoriteCustomerPhone } from './Customers/lib/lib'
 //
 const ScreenOrderNew = (navigation) => {
   const customerId = navigation?.route?.params?.customerId
@@ -18,6 +20,7 @@ const ScreenOrderNew = (navigation) => {
   const { user } = useAuth()
   const { toOrders } = useMyNav()
   const handleSubmit = async (values: OrderType) => {
+    let newCustomerCreated = null
     if (!values.customerId) {
       const contactId = createUUID({ length: 8 })
       const newCustomer: Partial<CustomerType> = {
@@ -40,10 +43,11 @@ const ScreenOrderNew = (navigation) => {
           }
         }
       }
-      const { payload } = await create(storeId, newCustomer)
-      if (payload) {
+      const { payload: customerCreated } = await create(storeId, newCustomer)
+      if (customerCreated) {
+        newCustomerCreated = customerCreated
         //@ts-ignore
-        values.customerId = payload?.id
+        values.customerId = customerCreated?.id
       }
     }
     const defaultValues = {
@@ -79,10 +83,32 @@ const ScreenOrderNew = (navigation) => {
         defaultValues[key] = normalized.trim()
       }
     })
-
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       async (orderId) => {
+        debugger
+        console.log({
+          newCustomerCreated,
+          config: store.chatbot.config,
+          orderId
+        })
+
         if (orderId) {
+          const shouldSendWhatsappWhenNewOrder =
+            !!store.chatbot?.enabled && !!store.chatbot.config.sendNewStoreOrder
+
+          if (shouldSendWhatsappWhenNewOrder && newCustomerCreated) {
+            await onSendOrderWhatsapp({
+              customer: newCustomerCreated,
+              store,
+              type: 'newStoreOrder',
+              userId: user.id,
+              phone: getFavoriteCustomerPhone(newCustomerCreated.contacts),
+              order: { ...defaultValues, id: orderId }
+            })
+              .then((res) => console.log({ res }))
+              .catch((e) => console.log({ e }))
+          }
+
           if (defaultValues?.hasDelivered) {
             // defaultValues.status = order_status.DELIVERED
             // defaultValues.deliveredAt = values.scheduledAt
