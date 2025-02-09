@@ -16,7 +16,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
     ids: route?.params?.orders
   })
-  console.log({ orders })
 
   const [disabled, setDisabled] = useState(false)
   const handleRefresh = () => {

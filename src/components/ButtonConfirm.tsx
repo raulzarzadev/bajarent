@@ -11,6 +11,7 @@ const ButtonConfirm = ({
   modalTitle = 'Confirmar',
   confirmLabel = 'Aceptar',
   text = '',
+  openFullWidth,
   children = null,
   handleConfirm = async () => console.log('confirm'),
   justIcon,
@@ -31,6 +32,7 @@ const ButtonConfirm = ({
   progress,
   openStyles
 }: {
+  openFullWidth?: boolean
   progress?: ButtonProps['progress']
   confirmIcon?: IconButtonProps['icon']
   openLabel?: string
@@ -86,7 +88,7 @@ const ButtonConfirm = ({
           size={openSize}
           disabled={openDisabled}
           progress={progress}
-          fullWidth={false}
+          fullWidth={openFullWidth}
         ></Button>
       )}
       <StyledModal {...modal}>

@@ -39,39 +39,36 @@ const InputAssignSection = ({
     }
   })
   return (
-    <View>
-      <ButtonConfirm
-        openSize="small"
-        openDisabled={disabled}
-        openLabel={assignedToSectionName || 'Asignar'}
-        icon="swap"
-        openColor="success"
-        openVariant="filled"
-        confirmLabel="Cambiar"
-        handleConfirm={async () => {
-          return await setNewSection({
-            sectionId,
-            sectionName: newSectionName
-          })
+    <ButtonConfirm
+      openSize="small"
+      openFullWidth
+      openDisabled={disabled}
+      openLabel={assignedToSectionName || 'Asignar'}
+      icon="swap"
+      openColor="success"
+      openVariant="filled"
+      confirmLabel="Cambiar"
+      handleConfirm={async () => {
+        return await setNewSection({
+          sectionId,
+          sectionName: newSectionName
+        })
+      }}
+    >
+      <InputRadios
+        layout="row"
+        label="Selecciona un area"
+        setValue={(sectionId) => {
+          setSectionId(sectionId)
         }}
-      >
-        <InputRadios
-          layout="row"
-          label="Selecciona un area"
-          setValue={(sectionId) => {
-            setSectionId(sectionId)
-          }}
-          containerStyle={{ marginVertical: 6 }}
-          value={sectionId}
-          options={[
-            { label: 'Sin', value: null },
-            ...storeSectionOptions.sort((a, b) =>
-              a.label.localeCompare(b.label)
-            )
-          ]}
-        />
-      </ButtonConfirm>
-    </View>
+        containerStyle={{ marginVertical: 6 }}
+        value={sectionId}
+        options={[
+          { label: 'Sin', value: null },
+          ...storeSectionOptions.sort((a, b) => a.label.localeCompare(b.label))
+        ]}
+      />
+    </ButtonConfirm>
   )
 }
 

@@ -27,15 +27,13 @@ const ModalAssignOrder = ({
   }
 
   return (
-    <View>
-      <InputAssignSection
-        currentSection={section}
-        setNewSection={({ sectionId, sectionName }) =>
-          handleAssignSection({ sectionId, sectionName })
-        }
-        disabled={loading}
-      />
-    </View>
+    <InputAssignSection
+      currentSection={section}
+      setNewSection={({ sectionId, sectionName }) =>
+        handleAssignSection({ sectionId, sectionName })
+      }
+      disabled={loading}
+    />
   )
 }
 export default ModalAssignOrder
