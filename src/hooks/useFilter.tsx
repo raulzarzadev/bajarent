@@ -182,7 +182,7 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const handleClearFilters = () => {
-    setFilteredData([])
+    setFilteredData([...data])
     setFilteredBy('')
     setFiltersBy([])
     setSearchValue('')
