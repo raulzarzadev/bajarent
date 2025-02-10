@@ -111,11 +111,13 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       >
         <OrderDirectivesE order={order} />
       </View>
-
-      <CustomerOrderE />
-
-      {/*//* <-----Order actions flow */}
+      {order?.excludeCustomer ? (
+        <Text style={gStyles.h2}>Orden sin cliente</Text>
+      ) : (
+        <CustomerOrderE />
+      )}
       <View style={{ marginTop: 8 }} />
+      {/*//* <-----Order actions flow */}
 
       <OrderActionsE />
       {/*//* <-----Order actions flow */}

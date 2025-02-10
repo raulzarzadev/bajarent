@@ -39,7 +39,7 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   'address',
   'location',
   'references',
-  ,
+
   'imageID',
   'imageHouse',
 
@@ -154,7 +154,8 @@ const FormOrderA = ({
       `${defaultValues?.firstName || ''}${defaultValues?.lastName || ''}`,
     address:
       defaultValues?.address ||
-      `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`
+      `${defaultValues?.street || ''}${defaultValues?.betweenStreets || ''}`,
+    excludeCustomer: false
   }
 
   if (!store || !employee) return <Loading />
@@ -234,11 +235,13 @@ const FormOrderA = ({
           }}
           validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
-            if (!values.fullName && !customerId)
-              errors.fullName = 'Nombre necesario'
-            if ((!values.phone || values.phone.length < 12) && !customerId)
-              errors.phone = 'Teléfono valido es necesario'
-
+            //*<---- check if include customer
+            if (!values.excludeCustomer) {
+              if (!values.fullName && !customerId)
+                errors.fullName = 'Nombre necesario'
+              if ((!values.phone || values.phone.length < 12) && !customerId)
+                errors.phone = 'Teléfono valido es necesario'
+            }
             const ITEMS_MAX_BY_ORDER =
               store?.orderFields?.[values.type]?.itemsMax
             const ITEMS_MIN_BY_ORDER =
@@ -286,14 +289,14 @@ const FormOrderA = ({
               setErrors({})
               //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
             }, [values])
-            const orderFields = getOrderFields(
+            const orderFields: FormOrderFields[] = getOrderFields(
               store?.orderFields?.[values.type] as OrderFields,
               //@ts-ignore FIXME: as TypeOrder or TypeOrderKey
               values.type
             )
               // if customerId is set omit customer fields
               .filter((field) => {
-                if (customerId) {
+                if (customerId || values.excludeCustomer) {
                   return ![
                     'fullName',
                     'phone',
@@ -329,19 +332,25 @@ const FormOrderA = ({
                     )}
                   />
                 )}
-
+                {values.type === order_type.SALE && (
+                  <View style={{ justifyContent: 'center', margin: 'auto' }}>
+                    <FormikCheckbox
+                      name="excludeCustomer"
+                      label="Omitir cliente"
+                    />
+                  </View>
+                )}
+                g
                 <FormFields
                   fields={orderFields}
                   values={values}
                   setValues={setValues}
                   setLoading={setLoading}
                 />
-
                 {values.type === order_type.SALE && (
                   <FormikSaleOrderItemsE name="items" />
                 )}
                 <FormikErrorsList />
-
                 {values.type === order_type.SALE ? (
                   <ModalPaymentSale
                     onSubmit={async () => {
@@ -622,8 +631,8 @@ const FormFieldsA = ({
 
   return (
     <View>
-      {fields.map((field) => (
-        <View key={field} style={[styles.item]}>
+      {fields.map((field, i) => (
+        <View key={i} style={[styles.item]}>
           {inputFields[field]}
         </View>
       ))}

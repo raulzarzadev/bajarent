@@ -41,7 +41,7 @@ export type OrderBase = {
    * @deprecated use customerId instead
    */
   clientId: string
-
+  excludeCustomer?: boolean
   customerId: string
   note: string
 

@@ -463,6 +463,7 @@ const ButtonAction = ({
 }
 
 const ButtonAuthorize = ({ order, user }) => {
+  //TODO: send whatsapp when order is authorized, complement with route and date of delivery
   return (
     <Button
       label="Autorizar"

@@ -178,9 +178,11 @@ export const OrdersContextProvider = ({
         return []
       })
 
+      console.log({ storeUnsolvedOrders })
+
       // console.log({ reports })
       const formatted = formatOrders({
-        orders: storeUnsolvedOrders,
+        orders: storeUnsolvedOrders.flat(),
         reports: [...reports, ...important],
         customers
       })

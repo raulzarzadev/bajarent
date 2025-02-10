@@ -79,6 +79,7 @@ export const onAuthorize = async ({
         type: 'comment',
         isOrderMovement: true
       })
+
       console.log('authorize')
     })
     .catch(console.error)

@@ -43,7 +43,12 @@ const ScreenOrderNew = (navigation) => {
           }
         }
       }
-      const { payload: customerCreated } = await create(storeId, newCustomer)
+
+      let customerCreated = null
+      if (!values?.excludeCustomer) {
+        const { payload } = await create(storeId, newCustomer)
+        customerCreated = payload
+      }
       if (customerCreated) {
         newCustomerCreated = customerCreated
         //@ts-ignore
