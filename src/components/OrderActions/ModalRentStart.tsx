@@ -6,7 +6,6 @@ import Button from '../Button'
 import { onRentStart } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
-import TextInfo from '../TextInfo'
 import FormRentDelivery from './FormRentDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ErrorsList } from '../FormikErrorsList'
@@ -18,11 +17,7 @@ import PaymentType, { PaymentBase } from '../../types/PaymentType'
 import { ServicePayments } from '../../firebase/ServicePayments'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 
-import {
-  CustomerType,
-  ImageDescriptionType
-} from '../../state/features/costumers/customerType'
-import { customerImagesFromOrder } from '../Customers/lib/customerFromOrder'
+import { CustomerType } from '../../state/features/costumers/customerType'
 import { createUUID } from '../../libs/createId'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
@@ -31,7 +26,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { user } = useAuth()
   const [isDirty, setIsDirty] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const { update: updateCustomer, create } = useCustomers()
+  const { create } = useCustomers()
   const handleRentStart = async ({
     lastPayment
   }: {
@@ -45,13 +40,14 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     modal.toggleOpen()
     return
   }
+
   const VALIDATE_ITEMS_QTY =
     store?.orderFields?.[order_type.RENT]?.validateItemsQty
   const ITEMS_MAX_BY_ORDER = parseInt(
-    store?.orderFields?.[order_type.RENT]?.itemsMax || '0'
+    `${store?.orderFields?.[order_type.RENT].itemsMax || '0'}`
   )
   const ITEMS_MIN_BY_ORDER = parseInt(
-    store?.orderFields?.[order_type.RENT]?.itemsMin || '0'
+    `${store?.orderFields?.[order_type.RENT]?.itemsMin || '0'}`
   )
 
   const itemsCount = order?.items?.length || 0

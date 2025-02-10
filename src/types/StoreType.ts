@@ -24,7 +24,7 @@ export type BaseStoreType = {
   currentEco?: FieldValue
   location?: string
   orderTypes?: Record<TypeOrderKey, boolean>
-  orderFields?: Record<TypeOrderKey, FormOrderFields>
+  orderFields?: Record<TypeOrderKey, Record<FormOrderFields, boolean>>
 
   /**
    * @deprecated use bankAccounts instead

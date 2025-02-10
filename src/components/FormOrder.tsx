@@ -68,12 +68,20 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
 
 //#region FUNCTIONS
 type OrderFields = Partial<Record<FormOrderFields, boolean>>
-
-export type FormOrderFields = (typeof LIST_OF_FORM_ORDER_FIELDS)[number] & {
-  validateItemsQty?: boolean
-  itemsMin?: number
-  itemsMax?: number
+type ValidationFields = {
+  validateItemsQty: boolean
+  itemsMin: number
+  itemsMax: number
 }
+export type FormOrderFields =
+  | (typeof LIST_OF_FORM_ORDER_FIELDS)[number]
+  | keyof ValidationFields
+
+// & {
+//   validateItemsQty?: boolean
+//   itemsMin?: number
+//   itemsMax?: number
+// }
 
 export const mutableFormOrderFields: FormOrderFields[] = [
   ...LIST_OF_FORM_ORDER_FIELDS
@@ -460,7 +468,8 @@ const FormFieldsA = ({
   }, [employee.sectionsAssigned])
 
   //#region InputFields
-  const inputFields: Record<FormOrderFields, ReactNode> = {
+  const inputFields: Partial<Record<FormOrderFields, ReactNode>> = {
+    // omit validateItemsQty, itemsMin, itemsMax
     type: (
       <>
         <InputRadiosFormik

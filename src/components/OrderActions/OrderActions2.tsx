@@ -60,7 +60,6 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
   const isRepairing = status === order_status.REPAIRING
   const isAuthorized = status === order_status.AUTHORIZED
   const modalRepairStart = useModal({ title: 'Comenzar reparación' })
-
   return (
     <ScrollView horizontal style={styles.scrollView}>
       <ModalStartRepair modal={modalRepairStart} />
