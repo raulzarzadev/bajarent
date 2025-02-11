@@ -10,6 +10,7 @@ import StyledModal from './StyledModal'
 import { ConsolidateCustomersList } from './ListOrdersConsolidated'
 import { CustomersActionsE } from './Customers/CustomersActions'
 import { useEmployee } from '../contexts/employeeContext'
+import { gStyles } from '../styles'
 export type ListCustomerType = {
   id: string
   name: string
@@ -112,19 +113,21 @@ const RowClient = ({ customer }: { customer: ListCustomerType }) => {
     <ListRow
       fields={[
         {
-          component: <Text>{customer?.name}</Text>,
+          component: <Text style={gStyles.helper}>{customer?.name}</Text>,
           width: 'rest'
         },
         {
-          component: <Text>{customer?.contact}</Text>,
+          component: <Text style={gStyles.helper}>{customer?.contact}</Text>,
           width: 'rest'
         },
         {
-          component: <Text>{customer?.neighborhood}</Text>,
+          component: (
+            <Text style={gStyles.helper}>{customer?.neighborhood}</Text>
+          ),
           width: 'rest'
         },
         {
-          component: <Text>{customer?.street}</Text>,
+          component: <Text style={gStyles.helper}>{customer?.street}</Text>,
           width: 'rest'
         }
       ]}

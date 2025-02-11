@@ -383,7 +383,7 @@ export const ConsolidateCustomersList = () => {
     let ordersWithSimilarCustomers = []
     let customersToCreate = []
     const orders = data.filter((order) => ids.includes(order.id))
-    let currentCustomers = [...customers] // Hacer una copia del array
+    let currentCustomers: Partial<CustomerType>[] = [...customers] // Hacer una copia del array
     for (const order of orders) {
       setProgress((prev) => prev + 1)
 
@@ -404,7 +404,7 @@ export const ConsolidateCustomersList = () => {
       }
       const fullOrder = await getFullOrder()
       const customer = customerFromOrder(fullOrder, { storeId })
-
+      currentCustomers.push(customer)
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
       // console.log({
       //   customers: customers.length,
@@ -414,9 +414,12 @@ export const ConsolidateCustomersList = () => {
       //   progress
       // })
       if (similarCustomers.length) {
+        console.log('simimar customers found ')
         // PUSH TO A LIST TO MERGE AT THE VERY END
         ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
       } else {
+        console.log('create new customers  ')
+
         // add to an array of promises and make all promises at the time
         customersToCreate.push(
           handleCreateCustomer({
