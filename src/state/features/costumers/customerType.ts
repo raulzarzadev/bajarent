@@ -6,6 +6,7 @@ export type CustomerBase = {
   storeId: string
   images?: CustomerImages
   contacts: Record<CustomerContact['id'], CustomerContact>
+  contactsList?: CustomerContact['id'][]
 }
 
 export type CustomerContact = {

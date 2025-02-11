@@ -14,6 +14,7 @@ import { useEmployee } from '../../contexts/employeeContext'
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
   const { data: customers, loading, remove } = useCustomers()
+
   const { permissions } = useEmployee()
   const sortCustomerPermissions = permissions.customers
   const { toCustomers } = useMyNav()

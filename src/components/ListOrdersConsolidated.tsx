@@ -398,7 +398,7 @@ export const ConsolidateCustomersList = () => {
         //get from db if not found
         const dbOrder = await ServiceOrders.get(orderId)
         if (dbOrder) {
-          console.log('db order')
+          //console.log('db order')
           return dbOrder
         }
       }
@@ -406,19 +406,13 @@ export const ConsolidateCustomersList = () => {
       const customer = customerFromOrder(fullOrder, { storeId })
       currentCustomers.push(customer)
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
-      // console.log({
-      //   customers: customers.length,
-      //   currentCustomers: currentCustomers.length,
-      //   similarCustomers,
-      //   customer,
-      //   progress
-      // })
+
       if (similarCustomers.length) {
-        console.log('simimar customers found ')
+        //console.log('simimar customers found ', similarCustomers)
         // PUSH TO A LIST TO MERGE AT THE VERY END
         ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
       } else {
-        console.log('create new customers  ')
+        //console.log('create new customers  ')
 
         // add to an array of promises and make all promises at the time
         customersToCreate.push(

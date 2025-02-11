@@ -15,7 +15,9 @@ export const customerFromOrder = (
 } => {
   //@ts-ignore FIXME: this order some times is not a OrderType ej. ListOrdersConsolidated.tsx: 10
 
-  const customerContacts = customerOrderContacts(order as OrderType)
+  const customerContacts: CustomerType['contacts'] = customerOrderContacts(
+    order as OrderType
+  )
   const customerImages = customerImagesFromOrder({
     houseImage: order?.imageHouse,
     ID: order?.imageID,
@@ -23,6 +25,9 @@ export const customerFromOrder = (
   })
   if (typeof order?.customerId === 'string') {
   }
+  const contactsList = Object.values(customerContacts || {}).map(
+    (contact) => contact.value
+  )
   //console.log({ order, customerContacts, customerImages })
 
   const newCustomer = {
@@ -32,7 +37,7 @@ export const customerFromOrder = (
     orderId: order?.id || null,
     orderFolio: order?.folio || null,
     storeId: order?.storeId || storeId || null,
-
+    contactsList,
     address: {
       //@ts-ignore
       street: order?.address || '',
