@@ -101,7 +101,7 @@ const ListOrdersConsolidated = () => {
                 key={consolidated.id}
                 onPress={() => {
                   setOtherConsolidated({ consolidated })
-                  modalConsolidateList.toggleOpen()
+                  modalConsolidateList.setOpen(true)
                 }}
               >
                 <Text>
@@ -351,7 +351,6 @@ export const ConsolidateCustomersList = () => {
   const { storeId, sections: storeSections } = useStore()
   const orders = consolidatedOrders?.orders || {}
   const [errors, setErrors] = useState(null)
-  console.log({ errors })
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedToSection =
       storeSections?.find((section) => section.id === order.assignToSection)
@@ -368,6 +367,8 @@ export const ConsolidateCustomersList = () => {
   const { handleCreateCustomer } = useCustomers()
   const { toCustomers } = useMyNav()
   const [progress, setProgress] = useState(0)
+  const [progressSimilar, setProgressSimilar] = useState(0)
+  const [similarCostumerCount, setSimilarCostumerCount] = useState(0)
   const [createCustomerDisabled, setCreateCustomerDisabled] = useState(false)
   const [finished, setFinished] = useState(false)
   const { data: customers } = useCustomers()
@@ -378,43 +379,43 @@ export const ConsolidateCustomersList = () => {
     CustomerType & { orderId?: string }
   > | null>(null)
 
+  const [process, setProcess] = useState<string[]>([])
+
   const handleCreateCustomers = async ({ ids }) => {
+    setProcess((prev) => [...prev, 'Iniciando'])
     setCreateCustomerDisabled(true)
     let ordersWithSimilarCustomers = []
     let customersToCreate = []
     const orders = data.filter((order) => ids.includes(order.id))
     let currentCustomers: Partial<CustomerType>[] = [...customers] // Hacer una copia del array
+
+    setProcess((prev) => [...prev, `Buscando ordenes ${orders?.length}`])
+    const fullOrders = await Promise.allSettled(
+      orders.map((order) => ServiceOrders.get(order.id))
+    ).then((res) =>
+      res.filter((r) => r.status === 'fulfilled').map((r) => r.value)
+    )
+    setProcess((prev) => [...prev, `Ordenes encontradas ${fullOrders?.length}`])
+
+    let indexOrders = 0
+    setProcess((prev) => [...prev, `Buscando clientes similares`])
     for (const order of orders) {
       setProgress((prev) => prev + 1)
 
-      //@ts-ignore FIXME: this order some times is not a OrderType ej. ListOrdersConsolidated.tsx: 10
-      const getFullOrder = async () => {
-        const orderId = order.id
-        const ctxOrder = ctxOrders.find((o) => o.id === orderId)
-        if (ctxOrder) {
-          console.log('ctx order')
-          return ctxOrder
-        }
-        //get from db if not found
-        const dbOrder = await ServiceOrders.get(orderId)
-        if (dbOrder) {
-          //console.log('db order')
-          return dbOrder
-        }
+      const getFullOrder = () => {
+        const fullOrder = fullOrders.find((o) => o.id === order.id)
+        return fullOrder
       }
-      const fullOrder = await getFullOrder()
+      const fullOrder = getFullOrder()
       const customer = customerFromOrder(fullOrder, { storeId })
-      currentCustomers.push(customer)
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
+      currentCustomers.push(customer)
 
       if (similarCustomers.length) {
-        //console.log('simimar customers found ', similarCustomers)
-        // PUSH TO A LIST TO MERGE AT THE VERY END
+        //*<------------------------ PUSH TO A LIST TO MERGE AT THE VERY END
         ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
       } else {
-        //console.log('create new customers  ')
-
-        // add to an array of promises and make all promises at the time
+        //*<------------------ ADD TO AN ARRAY OF PROMISES AND MAKE ALL PROMISES AT THE TIME
         customersToCreate.push(
           handleCreateCustomer({
             option: 'create',
@@ -423,18 +424,13 @@ export const ConsolidateCustomersList = () => {
             orderId: customer.orderId
           })
         )
-        // const { customer: customerResult, statusOk } =
-        //   await handleCreateCustomer({
-        //     option: 'create',
-        //     newCustomer: customer,
-        //     storeId: customer.storeId,
-        //     orderId: customer.orderId
-        //   })
-
-        // if (statusOk) currentCustomers.push(customerResult as CustomerType)
       }
     }
-    //crete all costumers at the same time
+    //*<-------------------------------------- CRETE ALL COSTUMERS AT THE SAME TIME
+    setProcess((prev) => [
+      ...prev,
+      `Creando clientes ${customersToCreate.length}`
+    ])
     const results = await Promise.allSettled(customersToCreate)
     const successfulResults = results
       .filter(
@@ -461,14 +457,33 @@ export const ConsolidateCustomersList = () => {
     const createdCustomers = successfulResults.filter(
       (result) => result.statusOk
     )
-    currentCustomers.push(...createdCustomers.map((result) => result.customer))
-    // merge or create customer if similar customers
+    setProcess((prev) => [
+      ...prev,
+      `Errores al crear clientes ${failedResults.length}`
+    ])
+
+    //currentCustomers.push(...createdCustomers.map((result) => result.customer))
+    setProcess((prev) => [
+      ...prev,
+      `Clientes creados ${customersToCreate.length}`
+    ])
+
+    //*<----- merge or create customer if similar customers
+    setProcess((prev) => [
+      ...prev,
+      `Merge clientes ${ordersWithSimilarCustomers.length}`
+    ])
+
+    let index = 0
+    setSimilarCostumerCount(ordersWithSimilarCustomers.length)
     for (const {
       order,
       similarCustomers,
       customer
     } of ordersWithSimilarCustomers) {
-      console.log('ordersWithSimilarCustomers')
+      index++
+      setProgressSimilar(index)
+
       modalSimilarCustomers.setOpen(true)
       setSelectedCustomer(similarCustomers[0])
       setNewCustomer(customer)
@@ -491,19 +506,18 @@ export const ConsolidateCustomersList = () => {
 
       if (!statusOk) return console.error(' an error ocurred')
       if (option === 'create') {
-        modalSimilarCustomers.setOpen(false)
         currentCustomers.push(customerResult as CustomerType)
         setSelectedCustomer(null)
       }
       if (option === 'merge') {
-        modalSimilarCustomers.setOpen(false)
         setSelectedCustomer(null)
       }
       if (option === 'cancel') {
-        modalSimilarCustomers.setOpen(false)
         setSelectedCustomer(null)
       }
     }
+    modalSimilarCustomers.setOpen(false)
+    setProcess((prev) => [...prev, 'Terminado'])
     setCreateCustomerDisabled(false)
     setFinished(true)
   }
@@ -614,11 +628,19 @@ export const ConsolidateCustomersList = () => {
                   setDisabled(false)
                 }}
               >
+                {progressSimilar > 0 && (
+                  <View>
+                    <Text style={gStyles.tCenter}>Merge clientes </Text>
+                    <Text style={gStyles.h2}>
+                      {progressSimilar} de {similarCostumerCount}
+                    </Text>
+                  </View>
+                )}
                 <CustomerCardE customer={newCustomer} />
                 <SimilarCustomersList
                   onSelectCustomer={handleSelectCustomer}
                   selectedCustomer={selectedCustomer}
-                  similarCustomers={similarCustomers}
+                  similarCustomers={removeDuplicatesByID(similarCustomers)}
                 />
                 <View
                   style={{
@@ -641,6 +663,7 @@ export const ConsolidateCustomersList = () => {
                   />
                   {!!selectedCustomer ? (
                     <Button
+                      autoFocus
                       label="Agregar "
                       icon="merge"
                       onPress={async () => {
@@ -655,6 +678,7 @@ export const ConsolidateCustomersList = () => {
                     />
                   ) : (
                     <Button
+                      autoFocus
                       label="Crear"
                       color="success"
                       icon="add"
@@ -671,6 +695,16 @@ export const ConsolidateCustomersList = () => {
                   )}
                 </View>
               </StyledModal>
+
+              {progress > 0 && (
+                <View>
+                  <Text>Creando </Text>
+                  <Text>
+                    {progress} de {ids.length || 0}{' '}
+                  </Text>
+                </View>
+              )}
+
               {finished && (
                 <Text
                   style={[gStyles.tCenter, gStyles.h2, { marginVertical: 10 }]}
@@ -678,17 +712,9 @@ export const ConsolidateCustomersList = () => {
                   Se han creado los clientes correctamente
                 </Text>
               )}
-              {createCustomerDisabled && (
-                <>
-                  <Text style={gStyles.tCenter}>
-                    Se estan creando los clientes
-                  </Text>
-                  <Text style={gStyles.tCenter}>
-                    Creando <Text style={gStyles.tBold}>{progress}</Text> de{' '}
-                    <Text style={gStyles.tBold}>{ids.length || 0} </Text>
-                  </Text>
-                </>
-              )}
+              {process?.map((p, i) => (
+                <Text key={i}>{p}</Text>
+              ))}
               {!createCustomerDisabled && !finished && (
                 <>
                   <TextInfo
@@ -721,3 +747,7 @@ export const ConsolidateCustomersList = () => {
     </View>
   )
 }
+const removeDuplicatesByID = <T extends { id: string }>(array: T[]): T[] =>
+  array.filter(
+    (item, index, self) => index === self.findIndex((i) => i.id === item.id)
+  )

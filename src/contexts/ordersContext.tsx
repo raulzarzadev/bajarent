@@ -178,8 +178,6 @@ export const OrdersContextProvider = ({
         return []
       })
 
-      console.log({ storeUnsolvedOrders })
-
       // console.log({ reports })
       const formatted = formatOrders({
         orders: storeUnsolvedOrders.flat(),

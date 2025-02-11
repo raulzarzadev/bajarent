@@ -172,7 +172,9 @@ export const AddOrMergeCustomer = ({
 }
 export const getSimilarCustomers = (customer, customers) => {
   return customers.filter((c) => {
-    const sameName = c.name.toLowerCase() === customer?.name.toLowerCase()
+    const sameName =
+      c?.name?.toLowerCase() === customer?.name?.toLowerCase() ||
+      c?.id === customer?.id
     const someSameContact = Object.values(c.contacts || {}).some((contact) => {
       return Object.values(customer?.contacts || {}).some((contact2) => {
         //@ts-ignore
@@ -227,7 +229,7 @@ export const SimilarCustomersList = ({
         })
         .map((c, i) => (
           <Pressable
-            key={i}
+            key={c.id}
             onPress={() => onSelectCustomer(c)}
             style={{
               borderWidth: 2,

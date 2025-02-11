@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Text,
   Pressable,
@@ -28,6 +28,7 @@ export type ButtonProps = {
   fullWidth?: boolean
   progress?: number
   uppercase?: boolean
+  autoFocus?: boolean
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
@@ -45,6 +46,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   fullWidth = true,
   progress,
   uppercase = true,
+  autoFocus = false,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -89,9 +91,18 @@ const ButtonX: React.FC<ButtonProps> = ({
     label = ''
     children = null
   }
+  const buttonRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (autoFocus && buttonRef.current) {
+      buttonRef.current.focus()
+    }
+  }, [])
+  const [isFocused, setIsFocused] = useState(false)
 
   return (
     <Pressable
+      ref={buttonRef}
       {...props}
       role="button"
       style={({ pressed }) => [
@@ -104,8 +115,15 @@ const ButtonX: React.FC<ButtonProps> = ({
         sizes[size],
         buttonStyles,
         justIcon && justIconStyles,
-        disabled && variant === 'ghost' && { backgroundColor: 'transparent' }
+        disabled && variant === 'ghost' && { backgroundColor: 'transparent' },
+        isFocused && {
+          borderColor: theme.accent,
+          borderWidth: 2
+        }
       ]}
+      focusable={true}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
       onPress={onPress}
       disabled={disabled}
     >
