@@ -380,6 +380,7 @@ export const ConsolidateCustomersList = () => {
 
   const handleCreateCustomers = async ({ ids }) => {
     setCreateCustomerDisabled(true)
+    let ordersWithSimilarCustomers = []
     const orders = data.filter((order) => ids.includes(order.id))
     let currentCustomers = [...customers] // Hacer una copia del array
     for (const order of orders) {
@@ -412,53 +413,59 @@ export const ConsolidateCustomersList = () => {
       //   progress
       // })
       if (similarCustomers.length) {
-        modalSimilarCustomers.setOpen(true)
-        setSelectedCustomer(similarCustomers[0])
-        setNewCustomer(customer)
-        setSimilarCustomers(similarCustomers)
-        const orderId = order.id
-        const { customerId: customerSelectedId, option: userOptionSelected } =
-          await waitForUserChoice()
-
-        const {
-          option,
-          customer: customerResult,
-          statusOk
-        } = await handleCreateCustomer({
-          option: userOptionSelected,
-          storeId,
-          newCustomer: customer,
-          orderId,
-          mergeCustomerId: customerSelectedId
-        })
-
-        if (!statusOk) return console.error(' an error ocurred')
-        if (option === 'create') {
-          modalSimilarCustomers.setOpen(false)
-          currentCustomers.push(customerResult as CustomerType)
-          setSelectedCustomer(null)
-        }
-        if (option === 'merge') {
-          modalSimilarCustomers.setOpen(false)
-          setSelectedCustomer(null)
-        }
-        if (option === 'cancel') {
-          modalSimilarCustomers.setOpen(false)
-          setSelectedCustomer(null)
-          break
-        }
+        // PUSH TO A LIST TO MERGE AT THE VERY END
+        ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
       } else {
-        const {
-          option,
-          customer: customerResult,
-          statusOk
-        } = await handleCreateCustomer({
-          option: 'create',
-          newCustomer: customer,
-          storeId: customer.storeId,
-          orderId: customer.orderId
-        })
+        const { customer: customerResult, statusOk } =
+          await handleCreateCustomer({
+            option: 'create',
+            newCustomer: customer,
+            storeId: customer.storeId,
+            orderId: customer.orderId
+          })
         if (statusOk) currentCustomers.push(customerResult as CustomerType)
+      }
+    }
+    // merge or create customer if similar customers
+    for (const {
+      order,
+      similarCustomers,
+      customer
+    } of ordersWithSimilarCustomers) {
+      console.log('ordersWithSimilarCustomers')
+      modalSimilarCustomers.setOpen(true)
+      setSelectedCustomer(similarCustomers[0])
+      setNewCustomer(customer)
+      setSimilarCustomers(similarCustomers)
+      const orderId = order.id
+      const { customerId: customerSelectedId, option: userOptionSelected } =
+        await waitForUserChoice()
+
+      const {
+        option,
+        customer: customerResult,
+        statusOk
+      } = await handleCreateCustomer({
+        option: userOptionSelected,
+        storeId,
+        newCustomer: customer,
+        orderId,
+        mergeCustomerId: customerSelectedId
+      })
+
+      if (!statusOk) return console.error(' an error ocurred')
+      if (option === 'create') {
+        modalSimilarCustomers.setOpen(false)
+        currentCustomers.push(customerResult as CustomerType)
+        setSelectedCustomer(null)
+      }
+      if (option === 'merge') {
+        modalSimilarCustomers.setOpen(false)
+        setSelectedCustomer(null)
+      }
+      if (option === 'cancel') {
+        modalSimilarCustomers.setOpen(false)
+        setSelectedCustomer(null)
       }
     }
     setCreateCustomerDisabled(false)
