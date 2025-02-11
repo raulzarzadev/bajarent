@@ -386,6 +386,7 @@ export const ConsolidateCustomersList = () => {
     setCreateCustomerDisabled(true)
     let ordersWithSimilarCustomers = []
     let customersToCreate = []
+    let ordersWithCustomerCreated = []
     const orders = data.filter((order) => ids.includes(order.id))
     let currentCustomers: Partial<CustomerType>[] = [...customers] // Hacer una copia del array
 
@@ -413,7 +414,12 @@ export const ConsolidateCustomersList = () => {
 
       if (similarCustomers.length) {
         //*<------------------------ PUSH TO A LIST TO MERGE AT THE VERY END
-        ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
+        //* <---IF THE CUSTOMER IS ALREADY IN THE LIST DONT ADD IT
+        if (!similarCustomers.some((c) => c.id === customer.id)) {
+          ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
+        } else {
+          ordersWithCustomerCreated.push({ order, similarCustomers, customer })
+        }
       } else {
         //*<------------------ ADD TO AN ARRAY OF PROMISES AND MAKE ALL PROMISES AT THE TIME
         customersToCreate.push(
@@ -426,6 +432,14 @@ export const ConsolidateCustomersList = () => {
         )
       }
     }
+    setProcess((prev) => [
+      ...prev,
+      `Ordenes con datos similares ${ordersWithSimilarCustomers.length}`
+    ])
+    setProcess((prev) => [
+      ...prev,
+      `Ordenes con cliente actualizado  ${ordersWithCustomerCreated.length}`
+    ])
     //*<-------------------------------------- CRETE ALL COSTUMERS AT THE SAME TIME
     setProcess((prev) => [
       ...prev,
@@ -516,10 +530,12 @@ export const ConsolidateCustomersList = () => {
         setSelectedCustomer(null)
       }
     }
-    modalSimilarCustomers.setOpen(false)
     setProcess((prev) => [...prev, 'Terminado'])
-    setCreateCustomerDisabled(false)
+    setCreateCustomerDisabled(true)
     setFinished(true)
+    setSelectedCustomer(null)
+
+    modalSimilarCustomers.setOpen(false)
   }
 
   const waitForUserChoice = (): Promise<{
@@ -617,84 +633,94 @@ export const ConsolidateCustomersList = () => {
         ComponentMultiActions={({ ids }) => {
           return (
             <View>
-              <StyledModal
-                {...modalSimilarCustomers}
-                onclose={async () => {
-                  setDisabled(true)
-                  await userChoiceHandler({
-                    option: 'cancel',
-                    customerId: selectedCustomer?.id
-                  })
-                  setDisabled(false)
-                }}
-              >
-                {progressSimilar > 0 && (
-                  <View>
-                    <Text style={gStyles.tCenter}>Merge clientes </Text>
-                    <Text style={gStyles.h2}>
-                      {progressSimilar} de {similarCostumerCount}
-                    </Text>
-                  </View>
-                )}
-                <CustomerCardE customer={newCustomer} />
-                <SimilarCustomersList
-                  onSelectCustomer={handleSelectCustomer}
-                  selectedCustomer={selectedCustomer}
-                  similarCustomers={removeDuplicatesByID(similarCustomers)}
-                />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-around'
+              {finished && (
+                <Text
+                  style={[gStyles.tCenter, gStyles.h2, { marginVertical: 10 }]}
+                >
+                  Se han creado los clientes correctamente
+                </Text>
+              )}
+              {!finished && (
+                <StyledModal
+                  {...modalSimilarCustomers}
+                  onclose={async () => {
+                    setDisabled(true)
+                    await userChoiceHandler({
+                      option: 'cancel',
+                      customerId: selectedCustomer?.id
+                    })
+                    setDisabled(false)
                   }}
                 >
-                  <Button
-                    label="Cancelar"
-                    variant="ghost"
-                    onPress={async () => {
-                      setDisabled(true)
-                      await userChoiceHandler({
-                        option: 'cancel',
-                        customerId: selectedCustomer?.id
-                      })
-                      setDisabled(false)
-                    }}
-                    disabled={disabled}
-                  />
-                  {!!selectedCustomer ? (
-                    <Button
-                      autoFocus
-                      label="Agregar "
-                      icon="merge"
-                      onPress={async () => {
-                        setDisabled(true)
-                        await userChoiceHandler({
-                          option: 'merge',
-                          customerId: selectedCustomer?.id
-                        })
-                        setDisabled(false)
-                      }}
-                      disabled={disabled}
-                    />
-                  ) : (
-                    <Button
-                      autoFocus
-                      label="Crear"
-                      color="success"
-                      icon="add"
-                      onPress={async () => {
-                        setDisabled(true)
-                        await userChoiceHandler({
-                          option: 'create',
-                          customerId: selectedCustomer?.id
-                        })
-                        setDisabled(false)
-                      }}
-                      disabled={disabled}
-                    />
+                  {progressSimilar > 0 && (
+                    <View>
+                      <Text style={gStyles.tCenter}>Merge clientes </Text>
+                      <Text style={gStyles.h2}>
+                        {progressSimilar} de {similarCostumerCount}
+                      </Text>
+                    </View>
                   )}
-                </View>
-              </StyledModal>
+                  <CustomerCardE customer={newCustomer} />
+                  <SimilarCustomersList
+                    onSelectCustomer={handleSelectCustomer}
+                    selectedCustomer={selectedCustomer}
+                    similarCustomers={removeDuplicatesByID(similarCustomers)}
+                  />
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around'
+                    }}
+                  >
+                    <Button
+                      label="Cancelar"
+                      variant="ghost"
+                      onPress={async () => {
+                        setDisabled(true)
+                        await userChoiceHandler({
+                          option: 'cancel',
+                          customerId: selectedCustomer?.id
+                        })
+                        setDisabled(false)
+                      }}
+                      disabled={disabled}
+                    />
+                    {!!selectedCustomer ? (
+                      <Button
+                        autoFocus
+                        label="Agregar "
+                        icon="merge"
+                        onPress={async () => {
+                          setDisabled(true)
+                          await userChoiceHandler({
+                            option: 'merge',
+                            customerId: selectedCustomer?.id
+                          })
+                          setDisabled(false)
+                        }}
+                        disabled={disabled}
+                      />
+                    ) : (
+                      <Button
+                        autoFocus
+                        label="Crear"
+                        color="success"
+                        icon="add"
+                        onPress={async () => {
+                          setDisabled(true)
+                          await userChoiceHandler({
+                            option: 'create',
+                            customerId: selectedCustomer?.id
+                          })
+                          setDisabled(false)
+                        }}
+                        disabled={disabled}
+                      />
+                    )}
+                  </View>
+                </StyledModal>
+              )}
 
               {progress > 0 && (
                 <View>
@@ -705,13 +731,6 @@ export const ConsolidateCustomersList = () => {
                 </View>
               )}
 
-              {finished && (
-                <Text
-                  style={[gStyles.tCenter, gStyles.h2, { marginVertical: 10 }]}
-                >
-                  Se han creado los clientes correctamente
-                </Text>
-              )}
               {process?.map((p, i) => (
                 <Text key={i}>{p}</Text>
               ))}
