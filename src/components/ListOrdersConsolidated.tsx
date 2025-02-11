@@ -50,7 +50,6 @@ const ListOrdersConsolidated = () => {
   const { navigate } = useNavigation()
   const orders = consolidatedOrders?.orders || {}
   const [disabled, setDisabled] = useState(false)
-
   const [otherConsolidates, setOtherConsolidates] = useState<
     ConsolidatedStoreOrdersType[]
   >([])
@@ -351,7 +350,8 @@ export const ConsolidateCustomersList = () => {
   const { consolidatedOrders, orders: ctxOrders } = useOrdersCtx()
   const { storeId, sections: storeSections } = useStore()
   const orders = consolidatedOrders?.orders || {}
-
+  const [errors, setErrors] = useState(null)
+  console.log({ errors })
   const data: OrderWithId[] = Array.from(Object.values(orders)).map((order) => {
     const assignedToSection =
       storeSections?.find((section) => section.id === order.assignToSection)
@@ -381,6 +381,7 @@ export const ConsolidateCustomersList = () => {
   const handleCreateCustomers = async ({ ids }) => {
     setCreateCustomerDisabled(true)
     let ordersWithSimilarCustomers = []
+    let customersToCreate = []
     const orders = data.filter((order) => ids.includes(order.id))
     let currentCustomers = [...customers] // Hacer una copia del array
     for (const order of orders) {
@@ -416,16 +417,54 @@ export const ConsolidateCustomersList = () => {
         // PUSH TO A LIST TO MERGE AT THE VERY END
         ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
       } else {
-        const { customer: customerResult, statusOk } =
-          await handleCreateCustomer({
+        // add to an array of promises and make all promises at the time
+        customersToCreate.push(
+          handleCreateCustomer({
             option: 'create',
             newCustomer: customer,
             storeId: customer.storeId,
             orderId: customer.orderId
           })
-        if (statusOk) currentCustomers.push(customerResult as CustomerType)
+        )
+        // const { customer: customerResult, statusOk } =
+        //   await handleCreateCustomer({
+        //     option: 'create',
+        //     newCustomer: customer,
+        //     storeId: customer.storeId,
+        //     orderId: customer.orderId
+        //   })
+
+        // if (statusOk) currentCustomers.push(customerResult as CustomerType)
       }
     }
+    //crete all costumers at the same time
+    const results = await Promise.allSettled(customersToCreate)
+    const successfulResults = results
+      .filter(
+        (result): result is PromiseFulfilledResult<any> =>
+          result.status === 'fulfilled'
+      )
+      .map((result) => result.value)
+
+    const failedResults = results
+      .filter(
+        (result): result is PromiseRejectedResult =>
+          result.status === 'rejected'
+      )
+      .map((result) => result.reason)
+
+    // Manejar errores
+    if (failedResults?.length > 0) {
+      console.error('Algunos clientes no pudieron ser creados:', failedResults)
+      // Opcional: Mostrar mensaje al usuario
+      setErrors(`${failedResults?.length} clientes no pudieron ser creados`)
+    }
+
+    // Continuar con los resultados exitosos
+    const createdCustomers = successfulResults.filter(
+      (result) => result.statusOk
+    )
+    currentCustomers.push(...createdCustomers.map((result) => result.customer))
     // merge or create customer if similar customers
     for (const {
       order,

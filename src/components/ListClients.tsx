@@ -26,7 +26,7 @@ const ListCustomers = () => {
   useEffect(() => {
     if (customers.length) {
       const formatted = customers.map((customer) => {
-        const contactsArray = Object.values(customer.contacts || {})
+        const contactsArray = Object.values(customer?.contacts || {})
         const contact =
           contactsArray.find((contact) => contact.type === 'phone')?.value ||
           contactsArray[0]?.value
