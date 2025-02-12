@@ -107,20 +107,31 @@ export function findBestMatches(data: string[], query: string, count?: number) {
   })
 
   // Ordenar primero por mayor cantidad de palabras clave coincidentes, luego por menor distancia
-  const sortedAndSliced = [...matches].sort((a, b) => {
-    if (a.matchBonus === b.matchBonus) {
-      return a.distance - b.distance
+  const sortedMatches = [...matches].sort((a, b) => {
+    if (a.keywordMatches !== b.keywordMatches) {
+      return b.keywordMatches - a.keywordMatches
     }
-    return b.matchBonus - a.matchBonus
+    if (a.matchBonus !== b.matchBonus) {
+      return b.matchBonus - a.matchBonus
+    }
+    return a.distance - b.distance
   })
+  // Obtener los valores máximos
+  const maxKeywords = sortedMatches[0]?.keywordMatches || 0
+  const maxBonus = sortedMatches[0]?.matchBonus || 0
+
+  const filteredMatches = sortedMatches.filter(
+    (match) =>
+      match.keywordMatches === maxKeywords && match.matchBonus === maxBonus
+  )
 
   if (count) {
     return {
-      matches: sortedAndSliced.slice(0, count)
+      matches: filteredMatches.slice(0, count)
     }
   }
   return {
-    matches: sortedAndSliced
+    matches: filteredMatches
   }
 }
 
