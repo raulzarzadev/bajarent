@@ -377,7 +377,7 @@ export const ConsolidateCustomersList = () => {
     title: 'Clientes con datos similares'
   })
   const [newCustomer, setNewCustomer] = useState<Partial<
-    CustomerType & { orderId?: string }
+    CustomerType & { orderId?: string; orderFolio?: string }
   > | null>(null)
 
   const [process, setProcess] = useState<string[]>([])
@@ -412,15 +412,17 @@ export const ConsolidateCustomersList = () => {
       const customer = customerFromOrder(fullOrder, { storeId })
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
       currentCustomers.push(customer)
-
-      if (similarCustomers.length) {
+      if (similarCustomers?.length) {
+        ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
         //*<------------------------ PUSH TO A LIST TO MERGE AT THE VERY END
-        //* <---IF THE CUSTOMER IS ALREADY IN THE LIST DONT ADD IT
-        if (!similarCustomers.some((c) => c.id === customer.id)) {
-          ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
-        } else {
-          ordersWithCustomerCreated.push({ order, similarCustomers, customer })
-        }
+
+        //* <---IF THE ORDER IS ALREA
+
+        // if (!similarCustomers.some((c) => c.id === customer.id)) {
+        //   ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
+        // } else {
+        //   //ordersWithCustomerCreated.push({ order, similarCustomers, customer })
+        // }
       } else {
         //*<------------------ ADD TO AN ARRAY OF PROMISES AND MAKE ALL PROMISES AT THE TIME
         customersToCreate.push(
@@ -507,6 +509,7 @@ export const ConsolidateCustomersList = () => {
         }))
         .sort((a, b) => a?.distance - b?.distance)[0]
       setSelectedCustomer(theMostSimilarCustomer?.customer)
+      customer.orderFolio = order?.folio // add to show int the card when is merging TODO: remove once merged
       setNewCustomer(customer)
       setSimilarCustomers(similarCustomers)
       const orderId = order.id
@@ -665,12 +668,16 @@ export const ConsolidateCustomersList = () => {
                   {progressSimilar > 0 && (
                     <View>
                       <Text style={gStyles.tCenter}>Merge clientes </Text>
-                      <Text style={gStyles.h2}>
+                      <Text style={gStyles.h1}>
+                        Folio: {newCustomer?.orderFolio}
+                      </Text>
+                      <Text style={gStyles.h3}>
                         {progressSimilar} de {similarCostumerCount}
                       </Text>
                     </View>
                   )}
                   <CustomerCardE customer={newCustomer} />
+
                   <View
                     style={{
                       flex: 1,
