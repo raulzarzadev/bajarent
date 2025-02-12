@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, ViewStyle, FlatList } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import Button from '../Button'
 import StyledModal from '../StyledModal'
@@ -209,52 +209,57 @@ const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
 export const SimilarCustomersList = ({
   similarCustomers,
   onSelectCustomer,
-  selectedCustomer
+  selectedCustomer,
+  style
 }: {
   similarCustomers: CustomerType[]
   onSelectCustomer: (customer: CustomerType) => void
   selectedCustomer: CustomerType
+  style?: ViewStyle
 }) => {
+  const data = similarCustomers.sort((a, b) => {
+    if (selectedCustomer && selectedCustomer?.id === a?.id) return -1
+    if (a.name < b.name) {
+      return -1
+    }
+    if (a.name > b.name) {
+      return 1
+    }
+    return 0
+  })
+
   return (
-    <View>
-      {similarCustomers
-        .sort((a, b) => {
-          if (a.name < b.name) {
-            return -1
-          }
-          if (a.name > b.name) {
-            return 1
-          }
-          return 0
-        })
-        .map((c, i) => (
-          <Pressable
-            key={c.id}
-            onPress={() => onSelectCustomer(c)}
-            style={{
-              borderWidth: 2,
-              borderColor:
-                selectedCustomer && selectedCustomer?.id === c?.id
-                  ? 'black'
-                  : 'transparent',
-              borderStyle: 'dashed',
-              flexDirection: 'row'
-            }}
-          >
-            <View>
-              <Text>{c.name}</Text>
-              {Object.values(c.contacts || {}).map((contact, i) => (
-                //@ts-ignore
-                <Text key={contact.id || i}>{contact.value}</Text>
-              ))}
-            </View>
-            <View>
-              <Text>{c?.address?.street}</Text>
-              <Text>{c?.address?.neighborhood}</Text>
-            </View>
-          </Pressable>
-        ))}
-    </View>
+    <FlatList
+      style={style}
+      data={data}
+      renderItem={({ item: c }) => (
+        <Pressable
+          key={c.id}
+          onPress={() => onSelectCustomer(c)}
+          style={{
+            borderWidth: 2,
+            borderColor:
+              selectedCustomer && selectedCustomer?.id === c?.id
+                ? 'black'
+                : 'transparent',
+            borderStyle: 'dashed',
+            flexDirection: 'row'
+          }}
+        >
+          <View>
+            <Text>{c.name}</Text>
+            {Object.values(c.contacts || {}).map((contact, i) => (
+              //@ts-ignore
+              <Text key={contact.id || i}>{contact.value}</Text>
+            ))}
+          </View>
+          <View>
+            <Text>{c?.address?.street}</Text>
+            <Text>{c?.address?.neighborhood}</Text>
+          </View>
+        </Pressable>
+      )}
+    ></FlatList>
   )
 }
 export default ButtonAddCustomer

@@ -193,6 +193,45 @@ export const useCustomers = () => {
         }
       }
     }
+    if (option === 'update') {
+      // update order and create customer
+      const customerUpdated = await update(mergeCustomerId, newCustomer)
+        .then((res) => {
+          //console.log('create customer')
+          const customer = res.payload as CustomerType
+          return customer
+          // add customer create to a list of current customers to avoid create more than the same
+        })
+        .catch((error) => {
+          //console.error('Error creating customer', error)
+          return error
+        })
+      if (!customerUpdated?.res?.ok) {
+        const orderUpdated = await ServiceOrders.update(orderId, {
+          customerId: customerUpdated.id
+        })
+          .then((res) => {
+            // console.log('update order')
+            return res
+          })
+          .catch((error) => {
+            // console.error('Error updating order', error)
+            return error
+          })
+        return {
+          option: 'update',
+          customer: customerUpdated,
+          orderUpdatedId: orderUpdated?.res?.id,
+          statusOk: true
+        }
+      } else {
+        return {
+          option: 'update',
+          customer: customerUpdated,
+          statusOk: false
+        }
+      }
+    }
     if (option === 'merge') {
       // just update order
       return await ServiceOrders.update(orderId, {
@@ -231,4 +270,4 @@ export const useCustomers = () => {
     handleCreateCustomer
   }
 }
-export type CreateCustomerChoiceType = 'cancel' | 'merge' | 'create'
+export type CreateCustomerChoiceType = 'cancel' | 'merge' | 'create' | 'update'

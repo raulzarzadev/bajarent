@@ -35,6 +35,7 @@ import { CustomerType } from '../state/features/costumers/customerType'
 import { CustomerCardE } from './Customers/CustomerCard'
 import { useEmployee } from '../contexts/employeeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { levenshteinDistanceExtended } from './Customers/lib/levenshteinDistance'
 export type OrderWithId = Partial<ConsolidatedOrderType> & {
   id: string
   itemsString?: string
@@ -499,7 +500,13 @@ export const ConsolidateCustomersList = () => {
       setProgressSimilar(index)
 
       modalSimilarCustomers.setOpen(true)
-      setSelectedCustomer(similarCustomers[0])
+      const theMostSimilarCustomer = similarCustomers
+        .map((c) => ({
+          ...levenshteinDistanceExtended(customer.name, c.name),
+          customer: c
+        }))
+        .sort((a, b) => a?.distance - b?.distance)[0]
+      setSelectedCustomer(theMostSimilarCustomer?.customer)
       setNewCustomer(customer)
       setSimilarCustomers(similarCustomers)
       const orderId = order.id
@@ -519,16 +526,19 @@ export const ConsolidateCustomersList = () => {
       })
 
       if (!statusOk) return console.error(' an error ocurred')
+      if (option === 'update') {
+        //remove custemer resutl from current customers
+        currentCustomers.filter((c) => c.id !== customerResult.id)
+        currentCustomers.push(customerResult as CustomerType)
+      }
       if (option === 'create') {
         currentCustomers.push(customerResult as CustomerType)
-        setSelectedCustomer(null)
       }
       if (option === 'merge') {
-        setSelectedCustomer(null)
       }
       if (option === 'cancel') {
-        setSelectedCustomer(null)
       }
+      setSelectedCustomer(null)
     }
     setProcess((prev) => [...prev, 'Terminado'])
     setCreateCustomerDisabled(true)
@@ -661,19 +671,33 @@ export const ConsolidateCustomersList = () => {
                     </View>
                   )}
                   <CustomerCardE customer={newCustomer} />
-                  <SimilarCustomersList
-                    onSelectCustomer={handleSelectCustomer}
-                    selectedCustomer={selectedCustomer}
-                    similarCustomers={removeDuplicatesByID(similarCustomers)}
-                  />
+                  <View
+                    style={{
+                      flex: 1,
+                      minHeight: 200, // altura mínima
+                      marginVertical: 10
+                    }}
+                  >
+                    <SimilarCustomersList
+                      onSelectCustomer={handleSelectCustomer}
+                      selectedCustomer={selectedCustomer}
+                      similarCustomers={removeDuplicatesByID(similarCustomers)}
+                      style={{ flexGrow: 1, maxHeight: 200 }}
+                    />
+                  </View>
 
                   <View
                     style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-around'
+                      flexDirection: 'column',
+                      justifyContent: 'space-around',
+                      flexWrap: 'wrap',
+                      marginVertical: 10
                     }}
                   >
                     <Button
+                      buttonStyles={{ marginVertical: 4 }}
+                      fullWidth
+                      size="medium"
                       label="Cancelar"
                       variant="ghost"
                       onPress={async () => {
@@ -686,38 +710,59 @@ export const ConsolidateCustomersList = () => {
                       }}
                       disabled={disabled}
                     />
-                    {!!selectedCustomer ? (
-                      <Button
-                        autoFocus
-                        label="Agregar "
-                        icon="merge"
-                        onPress={async () => {
-                          setDisabled(true)
-                          await userChoiceHandler({
-                            option: 'merge',
-                            customerId: selectedCustomer?.id
-                          })
-                          setDisabled(false)
-                        }}
-                        disabled={disabled}
-                      />
-                    ) : (
-                      <Button
-                        autoFocus
-                        label="Crear"
-                        color="success"
-                        icon="add"
-                        onPress={async () => {
-                          setDisabled(true)
-                          await userChoiceHandler({
-                            option: 'create',
-                            customerId: selectedCustomer?.id
-                          })
-                          setDisabled(false)
-                        }}
-                        disabled={disabled}
-                      />
-                    )}
+                    <Button
+                      buttonStyles={{ marginVertical: 4 }}
+                      fullWidth
+                      size="medium"
+                      label="Actualizar cliente"
+                      icon="edit"
+                      color="secondary"
+                      onPress={async () => {
+                        setDisabled(true)
+                        await userChoiceHandler({
+                          option: 'update',
+                          customerId: selectedCustomer?.id
+                        })
+                        setDisabled(false)
+                      }}
+                      disabled={disabled}
+                    />
+
+                    <Button
+                      buttonStyles={{ marginVertical: 4 }}
+                      fullWidth
+                      size="medium"
+                      label="Agregar a cliente "
+                      icon="merge"
+                      onPress={async () => {
+                        setDisabled(true)
+                        await userChoiceHandler({
+                          option: 'merge',
+                          customerId: selectedCustomer?.id
+                        })
+                        setDisabled(false)
+                      }}
+                      disabled={disabled || !selectedCustomer}
+                    />
+
+                    <Button
+                      buttonStyles={{ marginVertical: 4 }}
+                      fullWidth
+                      size="medium"
+                      autoFocus
+                      label="Nuevo cliente"
+                      color="success"
+                      icon="add"
+                      onPress={async () => {
+                        setDisabled(true)
+                        await userChoiceHandler({
+                          option: 'create',
+                          customerId: selectedCustomer?.id
+                        })
+                        setDisabled(false)
+                      }}
+                      disabled={disabled}
+                    />
                   </View>
                 </StyledModal>
               )}
