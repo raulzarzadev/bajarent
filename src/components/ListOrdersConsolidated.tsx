@@ -411,7 +411,7 @@ export const ConsolidateCustomersList = () => {
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
       currentCustomers.push(customer)
       if (similarCustomers?.length) {
-        if (!(order.customerId && order?.customerId === customer?.id))
+        if (order.customerId && order?.customerId !== customer?.id)
           ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
         //*<------------------------ PUSH TO A LIST TO MERGE AT THE VERY END
       } else {
