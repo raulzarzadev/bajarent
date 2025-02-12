@@ -144,7 +144,6 @@ export default function useFilter<T extends { id?: string }>({
     const similarMatchesItemData = similarMatches?.map((a) =>
       filteredData.find((b) => b.id === a.item.split(' ')[0])
     )
-    console.log({ realMatches, similarMatches })
     if (matchesItemData.length > 0) {
       setFilteredData(matchesItemData)
     } else {
@@ -152,7 +151,7 @@ export default function useFilter<T extends { id?: string }>({
     }
 
     if (collectionSearch?.collectionName === 'orders') {
-      console.log('custmom')
+      // console.log('custmom')
       const orders = await ServiceOrders.search({
         storeId,
         fields: collectionSearch?.fields,

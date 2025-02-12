@@ -417,7 +417,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         filterSalesPending.push(where('assignToSection', 'in', sections))
       }
     }
-    if (process.env.PRE_PRODUCTION) console.time('getUnsolvedByStore')
+    // if (process.env.PRE_PRODUCTION) console.time('getUnsolvedByStore')
 
     const rentPendingPromise = this.findMany(
       [...filterRentPending, where('storeId', '==', storeId)],
@@ -468,7 +468,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         console.log('Error getting reported orders', e)
         return []
       })
-    if (process.env.PRE_PRODUCTION) console.timeLog('getUnsolvedByStore')
+    //if (process.env.PRE_PRODUCTION) console.timeLog('getUnsolvedByStore')
     //* *** 1 *** get reports and set the ids, to get reports from the database
     const ordersWithReportsAndImportantUnsolved = Array.from(
       new Set(
@@ -499,7 +499,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         )
       }
     }
-    if (process.env.PRE_PRODUCTION) console.timeEnd('getUnsolvedByStore')
+    // if (process.env.PRE_PRODUCTION) console.timeEnd('getUnsolvedByStore')
 
     //*  *** 2 *** remove reported orders from unsolved orders
     const removeReportedFromUnsolved = unsolvedOrders.filter(
