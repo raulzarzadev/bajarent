@@ -131,10 +131,10 @@ export default function useFilter<T extends { id?: string }>({
     const filteredData = filterDataByFields(data, filtersBy)
     const { matches } = findBestMatches(arrayData, value)
 
-    const realMatches = matches.filter((m) => {
+    const realMatches = matches?.filter((m) => {
       if (m.keywordMatches > 0) return true
     })
-    const similarMatches = matches.filter((m) => {
+    const similarMatches = matches?.filter((m) => {
       if (m.matchBonus > 3) return true
     })
 

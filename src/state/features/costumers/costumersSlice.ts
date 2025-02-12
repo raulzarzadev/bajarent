@@ -194,7 +194,8 @@ export const useCustomers = () => {
       }
     }
     if (option === 'update') {
-      // update order and create customer
+      //*<-------------------------------------- update order and update customer
+      //*<-------------------------------------- 1. update customer
       const customerUpdated = await update(mergeCustomerId, newCustomer)
         .then((res) => {
           //console.log('create customer')
@@ -206,7 +207,8 @@ export const useCustomers = () => {
           //console.error('Error creating customer', error)
           return error
         })
-      if (!customerUpdated?.res?.ok) {
+      //*<-------------------------------------- 1. update customer
+      if (customerUpdated?.id) {
         const orderUpdated = await ServiceOrders.update(orderId, {
           customerId: customerUpdated.id
         })

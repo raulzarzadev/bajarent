@@ -402,8 +402,6 @@ export const ConsolidateCustomersList = () => {
     let indexOrders = 0
     setProcess((prev) => [...prev, `Buscando clientes similares`])
     for (const order of orders) {
-      setProgress((prev) => prev + 1)
-
       const getFullOrder = () => {
         const fullOrder = fullOrders.find((o) => o.id === order.id)
         return fullOrder
@@ -413,16 +411,9 @@ export const ConsolidateCustomersList = () => {
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
       currentCustomers.push(customer)
       if (similarCustomers?.length) {
-        ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
+        if (!(order.customerId && order?.customerId === customer?.id))
+          ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
         //*<------------------------ PUSH TO A LIST TO MERGE AT THE VERY END
-
-        //* <---IF THE ORDER IS ALREA
-
-        // if (!similarCustomers.some((c) => c.id === customer.id)) {
-        //   ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
-        // } else {
-        //   //ordersWithCustomerCreated.push({ order, similarCustomers, customer })
-        // }
       } else {
         //*<------------------ ADD TO AN ARRAY OF PROMISES AND MAKE ALL PROMISES AT THE TIME
         customersToCreate.push(
@@ -446,8 +437,9 @@ export const ConsolidateCustomersList = () => {
     //*<-------------------------------------- CRETE ALL COSTUMERS AT THE SAME TIME
     setProcess((prev) => [
       ...prev,
-      `Creando clientes ${customersToCreate.length}`
+      `Clientes seleccionados ${customersToCreate.length}`
     ])
+
     const results = await Promise.allSettled(customersToCreate)
     const successfulResults = results
       .filter(
@@ -500,7 +492,6 @@ export const ConsolidateCustomersList = () => {
     } of ordersWithSimilarCustomers) {
       index++
       setProgressSimilar(index)
-
       modalSimilarCustomers.setOpen(true)
       const theMostSimilarCustomer = similarCustomers
         .map((c) => ({
