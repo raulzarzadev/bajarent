@@ -490,11 +490,16 @@ export const ConsolidateCustomersList = () => {
 
     let index = 0
     setSimilarCostumerCount(ordersWithSimilarCustomers.length)
+    //* sort by ame to show in order
+    const ordersWithSimilarCustomersSorted = [
+      ...ordersWithSimilarCustomers
+    ].sort((a, b) => a?.fullName?.localeCompare(b?.fullName))
+
     for (const {
       order,
       similarCustomers,
       customer
-    } of ordersWithSimilarCustomers) {
+    } of ordersWithSimilarCustomersSorted) {
       index++
       setProgressSimilar(index)
       modalSimilarCustomers.setOpen(true)
