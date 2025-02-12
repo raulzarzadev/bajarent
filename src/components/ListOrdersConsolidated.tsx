@@ -388,6 +388,7 @@ export const ConsolidateCustomersList = () => {
     let ordersWithSimilarCustomers = []
     let customersToCreate = []
     let ordersWithCustomerCreated = []
+
     const orders = data.filter((order) => ids.includes(order.id))
     let currentCustomers: Partial<CustomerType>[] = [...customers] // Hacer una copia del array
 
@@ -401,18 +402,22 @@ export const ConsolidateCustomersList = () => {
 
     let indexOrders = 0
     setProcess((prev) => [...prev, `Buscando clientes similares`])
-    for (const order of orders) {
-      const getFullOrder = () => {
-        const fullOrder = fullOrders.find((o) => o.id === order.id)
-        return fullOrder
-      }
-      const fullOrder = getFullOrder()
+    for (const fullOrder of fullOrders) {
+      debugger
       const customer = customerFromOrder(fullOrder, { storeId })
       let similarCustomers = getSimilarCustomers(customer, currentCustomers)
       currentCustomers.push(customer)
       if (similarCustomers?.length) {
-        if (order.customerId && order?.customerId !== customer?.id)
-          ordersWithSimilarCustomers.push({ order, similarCustomers, customer })
+        if (!fullOrder?.customerId || fullOrder?.customerId !== customer?.id) {
+          //*<------------------------ PUSH  IF ORDER DOESN'T HAVE CUSTOMER
+          //*------------------------- PUSH IF ORDER HAS A DIFFERENT COSTUMER_ID
+          ordersWithSimilarCustomers.push({
+            order: fullOrder,
+            similarCustomers,
+            customer
+          })
+        }
+
         //*<------------------------ PUSH TO A LIST TO MERGE AT THE VERY END
       } else {
         //*<------------------ ADD TO AN ARRAY OF PROMISES AND MAKE ALL PROMISES AT THE TIME
