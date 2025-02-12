@@ -5,9 +5,6 @@ import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import { ConsolidateCustomersList } from './ListOrdersConsolidated'
 import { CustomersActionsE } from './Customers/CustomersActions'
 import { useEmployee } from '../contexts/employeeContext'
 import { gStyles } from '../styles'
@@ -44,9 +41,7 @@ const ListCustomers = () => {
   }, [customers])
 
   const { toCustomers } = useMyNav()
-  const modalConsolidatedList = useModal({
-    title: 'Crear clientes desde consolidadas'
-  })
+
   const { permissions } = useEmployee()
   const canCreateCustomer = permissions.customers.write
 
@@ -55,14 +50,6 @@ const ListCustomers = () => {
       <ListE
         rowsPerPage={20}
         sideButtons={[
-          {
-            icon: 'customerCard',
-            label: 'Tarjeta de Cliente',
-            onPress: () => {
-              modalConsolidatedList.toggleOpen()
-            },
-            visible: true
-          },
           {
             icon: 'add',
             label: 'Nuevo Cliente',
@@ -102,9 +89,6 @@ const ListCustomers = () => {
         }}
         ComponentMultiActions={({ ids }) => <CustomersActionsE ids={ids} />}
       />
-      <StyledModal {...modalConsolidatedList}>
-        <ConsolidateCustomersList />
-      </StyledModal>
     </View>
   )
 }

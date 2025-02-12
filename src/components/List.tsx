@@ -52,6 +52,7 @@ export type ListPops<T extends { id: string }> = {
   maxWidth?: number
   rowSideButtons?: ListSideButton[]
   pinMaxRows?: number
+  onRowsSelected?: (ids: string[]) => void
 }
 
 function MyList<T extends { id: string }>({
@@ -72,7 +73,8 @@ function MyList<T extends { id: string }>({
   onFetchMoreCount,
   maxWidth = 600,
   rowSideButtons,
-  pinMaxRows
+  pinMaxRows,
+  onRowsSelected
 }: ListPops<T>) {
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
@@ -138,9 +140,14 @@ function MyList<T extends { id: string }>({
   }
   const handleSelectRow = (id: string) => {
     if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows?.filter((rowId) => rowId !== id))
+      const newSelectedRows = selectedRows.filter((rowId) => rowId !== id)
+      setSelectedRows(newSelectedRows)
+
+      onRowsSelected?.(selectedRows)
     } else {
-      setSelectedRows([...selectedRows, id])
+      const newSelectedRows = [...selectedRows, id]
+      setSelectedRows(newSelectedRows)
+      onRowsSelected?.(newSelectedRows)
     }
   }
 
