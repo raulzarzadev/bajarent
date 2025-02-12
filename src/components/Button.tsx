@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import {
   Text,
   Pressable,
@@ -91,18 +91,9 @@ const ButtonX: React.FC<ButtonProps> = ({
     label = ''
     children = null
   }
-  const buttonRef = useRef<any>(null)
-
-  useEffect(() => {
-    if (autoFocus && buttonRef.current) {
-      buttonRef.current.focus()
-    }
-  }, [])
-  const [isFocused, setIsFocused] = useState(false)
 
   return (
     <Pressable
-      ref={buttonRef}
       {...props}
       role="button"
       style={({ pressed }) => [
@@ -115,15 +106,8 @@ const ButtonX: React.FC<ButtonProps> = ({
         sizes[size],
         buttonStyles,
         justIcon && justIconStyles,
-        disabled && variant === 'ghost' && { backgroundColor: 'transparent' },
-        isFocused && {
-          borderColor: theme.accent,
-          borderWidth: 2
-        }
+        disabled && variant === 'ghost' && { backgroundColor: 'transparent' }
       ]}
-      focusable={true}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
       onPress={onPress}
       disabled={disabled}
     >
