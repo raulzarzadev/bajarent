@@ -1,5 +1,4 @@
 import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native'
-import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import Icon, { IconName } from './Icon'
 import theme from '../theme'
 

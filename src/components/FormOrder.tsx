@@ -348,7 +348,7 @@ const FormOrderA = ({
                     />
                   </View>
                 )}
-                g
+
                 <FormFields
                   fields={orderFields}
                   values={values}
