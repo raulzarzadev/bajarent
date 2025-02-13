@@ -309,13 +309,13 @@ const ComponentRow = ({ item: order }: { item: OrderWithId }) => {
     },
     {
       width: 100,
-      component: order.customerId ? (
+      component: order?.customerId ? (
         <Button
           icon="customerCard"
           size="xs"
           fullWidth={false}
           onPress={() => {
-            toCustomers({ to: 'details', id: order.customerId })
+            toCustomers({ to: 'details', id: order?.customerId })
           }}
         />
       ) : null
