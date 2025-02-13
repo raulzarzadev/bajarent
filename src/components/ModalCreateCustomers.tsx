@@ -135,21 +135,22 @@ const OrderCustomerRow = ({ order }: { order: OrderType }) => {
   const handleUpdateOrder = async () => {
     setDisabled(true)
     if (createCustomerSelected) {
-      console.log('create', { orderCustomer, orderId: order.id })
       const { payload: createdCustomer } = await create(storeId, orderCustomer)
+      //@ts-ignore
       const newCustomerId = createdCustomer?.id
       await ServiceOrders.update(order.id, { customerId: newCustomerId })
+      //console.log('create', { orderCustomer, orderId: order.id })
       //create customer
       //update order
     }
     if (similarCustomerSelected) {
-      console.log('update', { similarCustomerSelected, orderId: order.id })
+      //console.log('update', { similarCustomerSelected, orderId: order.id })
       await ServiceOrders.update(order.id, {
         customerId: similarCustomerSelected
       })
     }
     if (mergeCustomerSelected) {
-      console.log('merge', { mergeCustomerSelected, orderCustomer })
+      //console.log('merge', { mergeCustomerSelected, orderCustomer })
       update(mergeCustomerSelected, orderCustomer)
       await ServiceOrders.update(order.id, {
         customerId: mergeCustomerSelected
