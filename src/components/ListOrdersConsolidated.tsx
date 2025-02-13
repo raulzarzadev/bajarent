@@ -49,6 +49,7 @@ const ListOrdersConsolidated = () => {
     useOrdersCtx()
   const { storeId, sections: storeSections } = useStore()
   const { navigate } = useNavigation()
+  const { toOrders } = useMyNav()
   const orders = consolidatedOrders?.orders || {}
   const [disabled, setDisabled] = useState(false)
   const [otherConsolidates, setOtherConsolidates] = useState<
@@ -155,11 +156,12 @@ const ListOrdersConsolidated = () => {
             }
           ]}
           onPressRow={(orderId) => {
+            toOrders({ id: orderId })
             //@ts-ignore
-            navigate('StackConsolidated', {
-              screen: 'OrderDetails',
-              params: { orderId }
-            })
+            // navigate('StackConsolidated', {
+            //   screen: 'OrderDetails',
+            //   params: { orderId }
+            // })
           }}
           filters={[
             {

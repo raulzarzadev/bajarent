@@ -1,13 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenOrderDetail, { ScreenOrderDetailE } from './ScreenOrderDetail'
-import ScreenOrderEdit from './ScreenOrderEdit'
-import ScreenAssignOrder from './ScreenAssignOrder'
-import ScreenOrderRenew from './ScreenOrderRenew2'
 import MyStaffLabel from './MyStaffLabel'
-import ScreenOrderReorder from './ScreenOrderReorder'
 import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { StackPaymentsE } from './StackPayments'
 import StackItems from './StackItems'
+import StackOrders from './StackOrders'
 
 const Stack = createStackNavigator()
 function StackConsolidated() {
@@ -22,7 +18,7 @@ function StackConsolidated() {
       }}
     >
       <Stack.Screen
-        name="Orders"
+        name="StackConsolidated"
         options={({ route }) => ({
           //@ts-ignore
           title: route?.params?.title || 'Ordenes consolidadas' //*<-- Title change if is from pedidos, reportes, balance details and more
@@ -31,53 +27,12 @@ function StackConsolidated() {
       />
 
       <Stack.Screen
-        name="OrderDetails"
+        name="StackOrders"
         options={{
-          title: 'Detalle de orden'
+          title: 'Ordenes',
+          headerShown: false
         }}
-        component={ScreenOrderDetailE}
-      />
-
-      <Stack.Screen
-        name="EditOrder"
-        options={{
-          title: 'Editar Orden'
-        }}
-        component={ScreenOrderEdit}
-      />
-
-      <Stack.Screen
-        name="AssignOrder"
-        options={{
-          title: 'Asignar Orden'
-        }}
-        component={ScreenAssignOrder}
-      />
-
-      <Stack.Screen
-        name="RenewOrder"
-        options={{
-          title: 'Renovar Orden'
-        }}
-        component={ScreenOrderRenew}
-      />
-      <Stack.Screen
-        name="ReorderOrder"
-        options={{
-          title: 'Re ordenar '
-        }}
-        component={ScreenOrderReorder}
-      />
-
-      {/* 
-//* Consolidated orders
-*/}
-      <Stack.Screen
-        name="ScreenOrdersConsolidated"
-        options={{
-          title: 'Ordenes consolidadas'
-        }}
-        component={ScreenOrdersConsolidated}
+        component={StackOrders}
       />
 
       <Stack.Screen

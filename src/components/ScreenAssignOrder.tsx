@@ -6,7 +6,7 @@ import theme from '../theme'
 import StaffRow from './StaffRow'
 
 const ScreenAssignOrder = ({ route, navigation }) => {
-  const { orderId } = route.params
+  const orderId = route?.params?.orderId
   const { staff } = useStore()
   const orders = []
   const order = orders.find(({ id }) => id === orderId)

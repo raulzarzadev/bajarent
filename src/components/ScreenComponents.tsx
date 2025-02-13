@@ -8,13 +8,12 @@ import { Formik } from 'formik'
 import { gStyles } from '../styles'
 import { order_status, order_type } from '../types/OrderType'
 import { RowOrderE } from './RowOrder'
-import { ModalCreateCustomersE } from './ModalCreateCustomers'
 
 const ScreenComponents = () => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <ModalCreateCustomersE
+        {/* <ModalCreateCustomersE
           ordersIds={[
             '0AN5dPUiBKwX8WevIXuT',
             '0C2Z5BNkxLOAs9OUMfjP',
@@ -24,7 +23,7 @@ const ScreenComponents = () => {
             '3HQ4dDinYmtqbU46lmg6',
             '3OqHkwLnn3hTBYmmXZpO'
           ]}
-        />
+        /> */}
       </View>
       <View style={gStyles.container}>
         <RowOrderE

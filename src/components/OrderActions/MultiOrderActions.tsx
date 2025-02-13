@@ -17,7 +17,7 @@ import InputAssignSection from '../InputAssingSection'
 import { useStore } from '../../contexts/storeContext'
 import ButtonConfirm from '../ButtonConfirm'
 import ModalEditMultiOrders from './ModalEditMultiOrders'
-import { ModalCreateCustomersE } from '../ModalCreateCustomers'
+import useMyNav from '../../hooks/useMyNav'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -26,6 +26,7 @@ const MultiOrderActions = ({
   ordersIds: string[]
   data: unknown[]
 }) => {
+  const { toOrders } = useMyNav()
   const { storeId, user } = useAuth()
   const {
     permissions: { orders: permissionsOrder, isOwner, isAdmin }
@@ -54,7 +55,14 @@ const MultiOrderActions = ({
   )
 
   const buttons = [
-    <ModalCreateCustomersE ordersIds={ordersIds} />,
+    <Button
+      label="Lista de ordenes"
+      onPress={() => {
+        toOrders({
+          ids: ordersIds
+        })
+      }}
+    />,
     <ModalExcelRows ordersIds={ordersIds} />,
     <ModalAssignOrders ordersIds={ordersIds} />,
     <ModalEditMultiOrders ordersIds={ordersIds} />,

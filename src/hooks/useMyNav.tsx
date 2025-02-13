@@ -194,9 +194,9 @@ const useMyNav = () => {
     if (Array.isArray(ids) && ids.length > 0) {
       //@ts-ignore
       navigate('StackOrders', {
-        screen: 'ScreenOrders',
+        screen: 'ScreenSelectedOrders',
         params: {
-          title: idsTitle || 'Ordenes',
+          title: idsTitle || 'Ordenes seleccionadas',
           orders: ids
         }
       })

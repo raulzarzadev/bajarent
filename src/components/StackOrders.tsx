@@ -80,6 +80,14 @@ function StackOrders() {
           // tabBarButton: () => null
         }}
       />
+      <Stack.Screen
+        name="ScreenSelectedOrders"
+        options={({ route }) => ({
+          //@ts-ignore
+          title: route?.params?.title || 'Ordenes seleccionadas'
+        })}
+        component={ScreenOrders}
+      />
 
       {/* 
 //* Consolidated orders
