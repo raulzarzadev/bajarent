@@ -406,12 +406,13 @@ function MyList<T extends { id: string }>({
             { title: 'Otras coicidencias', data: collectionData },
             { title: 'base', data: slicedData }
           ]}
+          keyExtractor={(item) => item?.id}
           renderItem={({ item }) => {
             return (
               <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
                 {multiSelect && (
                   <InputCheckbox
-                    label=""
+                    key={item?.id}
                     setValue={() => {
                       handleSelectRow(item?.id)
                       _setPressedRow(item?.id)

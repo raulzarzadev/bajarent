@@ -170,8 +170,11 @@ export const AddOrMergeCustomer = ({
     </>
   )
 }
-export const getSimilarCustomers = (customer, customers) => {
-  return customers.filter((c) => {
+export const getSimilarCustomers = (
+  customer: Partial<CustomerType>,
+  customers: CustomerType[]
+): CustomerType[] => {
+  return customers?.filter((c) => {
     const sameName =
       c?.name?.toLowerCase() === customer?.name?.toLowerCase() ||
       c?.id === customer?.id

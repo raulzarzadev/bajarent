@@ -1,7 +1,5 @@
-import { TextStyle, ViewStyle } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
-import createId from '../libs/createId'
 import Icon, { IconName } from './Icon'
 import theme from '../theme'
 
@@ -11,7 +9,7 @@ const InputCheckbox = ({
   value = false,
   style,
   textStyle,
-  color,
+  color = theme.success,
   disabled,
   iconLabel,
   iconCheck
@@ -23,65 +21,101 @@ const InputCheckbox = ({
   textStyle?: TextStyle
   color?: string
   disabled?: boolean
-  iconLabel?: IconName
   iconCheck?: IconName
+  /**
+   * @deprecated Use `iconCheck` instead
+   */
+  iconLabel?: IconName
 }) => {
-  const componentId = createId()
   const capitalizedLabel =
     label?.charAt(0)?.toUpperCase() + label?.slice(1) || ''
-  const [isChecked, setIsChecked] = useState(value)
-  const [key, setKey] = useState(componentId)
-
-  useEffect(() => {
-    setIsChecked(value)
-    setKey(createId())
-  }, [value])
 
   const handlePress = (newState: boolean) => {
-    setIsChecked(newState)
-    setValue(newState)
+    setValue(newState) // Actualizar directamente el estado padre
   }
   return (
-    <BouncyCheckbox
-      key={key}
-      fillColor={color}
-      style={[
-        // { marginHorizontal: 'auto' },
-        style,
-        //  disabled ? { opacity: 0.4 } : {},
-        { padding: 2 }
-      ]}
-      iconStyle={{
-        opacity: disabled ? 0.3 : 1
-      }}
-      size={20}
-      textComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
-      textContainerStyle={{ marginLeft: 4 }}
-      textStyle={[
-        {
-          textDecorationLine: 'none'
-          //  textTransform: 'capitalize'
-        },
-        textStyle
-      ]}
-      // iconComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
-      iconComponent={
-        iconCheck ? (
-          <Icon icon={iconCheck} color={theme.white} size={12} />
-        ) : undefined
-      }
-      innerIconStyle={{
-        alignContent: 'center',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-      isChecked={isChecked}
+    <Pressable
       disabled={disabled}
-      onPress={(isChecked: boolean) => {
-        handlePress(isChecked)
-      }}
-      text={capitalizedLabel}
-    />
+      onPress={() => handlePress(!value)}
+      style={[{ flexDirection: 'row' }, style]}
+    >
+      <View
+        style={{
+          opacity: disabled ? 0.4 : 1,
+          backgroundColor: value ? color : theme.white,
+          borderWidth: 1,
+          borderColor: theme.primary,
+          borderRadius: 99,
+          padding: 2,
+          marginRight: 5,
+          width: 20,
+          height: 20,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {value ? (
+          <Icon icon={iconCheck || 'done'} color={theme.white} size={16} />
+        ) : (
+          <>
+            {iconCheck && (
+              <Icon icon={iconCheck} color={theme.primary} size={16} />
+            )}
+          </>
+          //<Icon icon="add" color={theme.primary} size={12} />
+        )}
+      </View>
+      <Text
+        style={[
+          {
+            textDecorationLine: 'none'
+            //  textTransform: 'capitalize'
+          },
+          textStyle
+        ]}
+      >
+        {capitalizedLabel}
+      </Text>
+    </Pressable>
+    // <BouncyCheckbox
+    //   fillColor={color}
+    //   style={[
+    //     // { marginHorizontal: 'auto' },
+    //     style,
+    //     //  disabled ? { opacity: 0.4 } : {},
+    //     { padding: 2 }
+    //   ]}
+    //   iconStyle={{
+    //     opacity: disabled ? 0.3 : 1
+    //   }}
+    //   size={20}
+    //   textComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
+    //   textContainerStyle={{ marginLeft: 4 }}
+    //   textStyle={[
+    //     {
+    //       textDecorationLine: 'none'
+    //       //  textTransform: 'capitalize'
+    //     },
+    //     textStyle
+    //   ]}
+    //   // iconComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
+    //   iconComponent={
+    //     iconCheck ? (
+    //       <Icon icon={iconCheck} color={theme.white} size={12} />
+    //     ) : undefined
+    //   }
+    //   innerIconStyle={{
+    //     alignContent: 'center',
+    //     justifyContent: 'center',
+    //     alignItems: 'center'
+    //   }}
+    //   isChecked={value}
+    //   disabled={disabled}
+    //   onPress={(isChecked: boolean) => {
+    //     handlePress(isChecked)
+    //   }}
+    //   text={capitalizedLabel}
+    // />
   )
 }
 

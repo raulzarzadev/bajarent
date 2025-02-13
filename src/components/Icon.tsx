@@ -83,24 +83,24 @@ import { FaCloudDownloadAlt } from 'react-icons/fa'
 
 import { LuClipboardPenLine } from 'react-icons/lu'
 import { LuClipboardMinus } from 'react-icons/lu'
-import { LuClipboardCheck } from 'react-icons/lu'
 import { LuClipboard } from 'react-icons/lu'
 import { LuClipboardList } from 'react-icons/lu'
 import { LuClipboardPaste } from 'react-icons/lu'
 import { TbClipboardSearch } from 'react-icons/tb'
 import { IoIosGitMerge } from 'react-icons/io'
-import { BsFillClipboardPlusFill } from 'react-icons/bs'
+import { BsClipboardCheck } from 'react-icons/bs'
+import { BsClipboardPlus } from 'react-icons/bs'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
   merge: IoIosGitMerge,
-  orderAdd: BsFillClipboardPlusFill,
+  orderAdd: BsClipboardPlus,
+  orderDone: BsClipboardCheck,
   orderSearch: TbClipboardSearch,
   orderEdit: LuClipboardPenLine,
   orderGo: LuClipboardPaste,
   orderList: LuClipboardList,
   order: LuClipboard,
-  orderDone: LuClipboardCheck,
   orderRemove: LuClipboardMinus,
 
   email: MdOutlineMailOutline,

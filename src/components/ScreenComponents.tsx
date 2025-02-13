@@ -14,7 +14,17 @@ const ScreenComponents = () => {
   return (
     <ScrollView>
       <View style={gStyles.container}>
-        <ModalCreateCustomersE />
+        <ModalCreateCustomersE
+          ordersIds={[
+            '0AN5dPUiBKwX8WevIXuT',
+            '0C2Z5BNkxLOAs9OUMfjP',
+            '0gt9nYUyUrVGIPOYoUWc',
+            '0olUCRuQPpDjCCCHL1YO',
+            '1HZ96k5Qx73FYJ2DRcQw',
+            '3HQ4dDinYmtqbU46lmg6',
+            '3OqHkwLnn3hTBYmmXZpO'
+          ]}
+        />
       </View>
       <View style={gStyles.container}>
         <RowOrderE
