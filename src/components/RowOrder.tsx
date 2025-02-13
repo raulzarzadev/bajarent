@@ -35,7 +35,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             height: '100%',
             borderBottomLeftRadius: 4,
             borderTopLeftRadius: 4,
-            backgroundColor: order.colorLabel,
+            backgroundColor: order?.colorLabel,
             marginHorizontal: 0
           }}
         ></View>
