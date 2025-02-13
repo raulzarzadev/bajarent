@@ -134,10 +134,10 @@ function MyList<T extends { id: string }>({
 
   //#region handlers
 
-  const handleMultiSelect = () => {
-    setMultiSelect(!multiSelect)
-    if (!multiSelect) setSelectedRows([])
-  }
+  // const handleMultiSelect = () => {
+  //   setMultiSelect(!multiSelect)
+  //   if (!multiSelect) setSelectedRows([])
+  // }
   const handleSelectRow = (id: string) => {
     if (selectedRows.includes(id)) {
       const newSelectedRows = selectedRows.filter((rowId) => rowId !== id)
@@ -296,19 +296,33 @@ function MyList<T extends { id: string }>({
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <View style={{ width: '30%', justifyContent: 'center' }}>
-              {ComponentMultiActions && (
+              {!multiSelect && (
                 <Button
-                  label={
-                    multiSelect
-                      ? `Hecho ${selectedRows.length || 0}`
-                      : 'Selección'
-                  }
+                  label={'Seleccionar'}
                   variant={'ghost'}
                   size="xs"
                   onPress={() => {
-                    handleMultiSelect()
+                    setMultiSelect(true)
                   }}
                 ></Button>
+              )}
+              {multiSelect && (
+                <>
+                  <Button
+                    icon="settings"
+                    buttonStyles={{ margin: 'auto' }}
+                    onPress={() => {
+                      multiSelectActionsModal.toggleOpen()
+                    }}
+                    label="Acciones"
+                    size="xs"
+                    color="secondary"
+                    variant="ghost"
+                  ></Button>
+                  <StyledModal {...multiSelectActionsModal}>
+                    <ComponentMultiActions ids={selectedRows} />
+                  </StyledModal>
+                </>
               )}
             </View>
             <View style={{ width: '40%', justifyContent: 'center' }}>
@@ -321,20 +335,16 @@ function MyList<T extends { id: string }>({
             </View>
             <View style={{ width: '30%', justifyContent: 'center' }}>
               {multiSelect && (
-                <>
-                  <Button
-                    icon="settings"
-                    buttonStyles={{ margin: 'auto' }}
-                    onPress={() => {
-                      multiSelectActionsModal.toggleOpen()
-                    }}
-                    size="xs"
-                    variant="ghost"
-                  ></Button>
-                  <StyledModal {...multiSelectActionsModal}>
-                    <ComponentMultiActions ids={selectedRows} />
-                  </StyledModal>
-                </>
+                <Button
+                  label={`Cancelar ${selectedRows.length || 0}`}
+                  variant={'ghost'}
+                  size="xs"
+                  onPress={() => {
+                    setSelectedRows([])
+                    setSelectAll(false)
+                    setMultiSelect(false)
+                  }}
+                ></Button>
               )}
             </View>
           </View>

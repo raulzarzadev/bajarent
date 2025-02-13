@@ -6,11 +6,9 @@ export type Modal = {
 const useModal = (props?: Modal & StyledModalProps) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = () => {
-    console.log('toggle')
     setOpen(!open)
   }
   const handleSetOpen = (value) => {
-    console.log('handle open', value)
     if (value === open) return
     setOpen(value)
   }
