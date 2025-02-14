@@ -5,8 +5,19 @@ import { convertTimestamps } from '../../../libs/utils-date'
 
 export const fetchCustomers = createAsyncThunk(
   'customers/fetchCustomers',
-  async ({ storeId }: { storeId: string }): Promise<CustomerType[]> => {
-    const response = await ServiceCustomers.getByStore(storeId)
+  async ({
+    storeId,
+    readAll
+  }: {
+    storeId: string
+    readAll: boolean
+  }): Promise<CustomerType[]> => {
+    let response = []
+    if (readAll) {
+      response = await ServiceCustomers.getByStore(storeId)
+    } else {
+      // get just on demand
+    }
     const customers = response.map((customer) =>
       convertTimestamps(customer, { to: 'string' })
     )

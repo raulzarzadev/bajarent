@@ -71,24 +71,6 @@ const StoreContextProvider = ({ children }) => {
       )
   }, [store?.id, isAuthenticated])
 
-  //*****************************
-  //* REDUX WILL BE CHARGED IN THIS CONTEXT
-  //******************************
-  //->>>
-
-  const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    if (store?.id) {
-      // get customers
-      dispatch(fetchCustomers({ storeId: store.id }))
-    }
-  }, [dispatch, store?.id])
-
-  //->>>
-  //*****************************
-  //* REDUX WILL BE CHARGED IN THIS CONTEXT
-  //******************************
-
   sc++
   if (__DEV__) console.log({ sc })
   //#region render

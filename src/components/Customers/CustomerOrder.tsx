@@ -13,6 +13,7 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import OrderType from '../../types/OrderType'
 import { useEffect, useState } from 'react'
 import { CustomerType } from '../../state/features/costumers/customerType'
+import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 
 const CustomerOrder = (props?: CustomerOrderProps) => {
   const { order } = useOrderDetails()
@@ -21,7 +22,18 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
   useEffect(() => {
     const customerId = props?.customerId || order?.customerId
     const customer = customers?.find((c) => c.id === customerId)
-    setCustomer(customer)
+    if (customer) {
+      setCustomer(customer)
+    } else {
+      ServiceCustomers.get(customerId)
+        .then((c) => {
+          setCustomer(c)
+        })
+        .catch(() => {
+          setCustomer(undefined)
+          console.log('cliente no encontrado')
+        })
+    }
   }, [customers, order])
   if (loading) return <Text>Loading...</Text>
   return (

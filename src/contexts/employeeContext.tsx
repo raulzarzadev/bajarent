@@ -11,6 +11,9 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../state/store'
+import { fetchCustomers } from '../state/features/costumers/customersThunks'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -92,6 +95,29 @@ export const EmployeeContextProvider = ({ children }) => {
       }
     }
   }, [staff])
+
+  //*****************************
+  //* REDUX WILL BE CHARGED IN THIS CONTEXT
+  //******************************
+  //->>>
+
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    if (store?.id) {
+      // get customers
+      dispatch(
+        fetchCustomers({
+          storeId: store.id,
+          readAll: employee?.permissions?.customers?.read
+        })
+      )
+    }
+  }, [dispatch, store?.id])
+
+  //->>>
+  //*****************************
+  //* REDUX WILL BE CHARGED IN THIS CONTEXT
+  //******************************
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
 
