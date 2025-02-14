@@ -193,6 +193,7 @@ function MyList<T extends { id: string }>({
     }
     setSelectAll(!selectAll)
   }
+
   const [_pressedRow, _setPressedRow] = useState(null)
 
   //#region render
@@ -314,6 +315,7 @@ function MyList<T extends { id: string }>({
                     onPress={() => {
                       multiSelectActionsModal.toggleOpen()
                     }}
+                    disabled={selectedRows.length === 0}
                     label="Acciones"
                     size="xs"
                     color="secondary"
@@ -401,7 +403,11 @@ function MyList<T extends { id: string }>({
 
         {/* MULTI-SELECT  */}
         {multiSelect && (
-          <View style={{ alignSelf: 'flex-start' }}>
+          <View
+            style={{
+              alignSelf: 'flex-start'
+            }}
+          >
             <InputCheckbox
               value={selectAll}
               setValue={handleSelectAll}
@@ -419,7 +425,14 @@ function MyList<T extends { id: string }>({
           keyExtractor={(item) => item?.id}
           renderItem={({ item }) => {
             return (
-              <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  flex: 1,
+                  alignItems: 'center'
+                }}
+              >
                 {multiSelect && (
                   <InputCheckbox
                     key={item?.id}
