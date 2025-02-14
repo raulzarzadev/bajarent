@@ -188,10 +188,37 @@ function MyList<T extends { id: string }>({
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectedRows([])
+      setSelectedPages([])
     } else {
       setSelectedRows(sortedData.map((row) => row?.id))
+      let allPages = []
+      for (let i = 1; i < totalPages; i++) {
+        allPages.push(i)
+      }
+      setSelectedPages(allPages)
     }
     setSelectAll(!selectAll)
+  }
+
+  const [selectedPages, setSelectedPages] = useState([])
+
+  const handleSelectThisPage = (value) => {
+    if (value) {
+      setSelectedPages([...selectedPages, currentPage])
+    } else {
+      setSelectedPages(selectedPages.filter((page) => page !== currentPage))
+    }
+    const newSelectedRows = sortedData
+      .slice(startIndex, endIndex)
+      .map((row) => row?.id)
+
+    if (value) {
+      setSelectedRows([...selectedRows, ...newSelectedRows])
+    } else {
+      setSelectedRows(
+        selectedRows.filter((row) => !newSelectedRows.includes(row))
+      )
+    }
   }
 
   const [_pressedRow, _setPressedRow] = useState(null)
@@ -405,13 +432,19 @@ function MyList<T extends { id: string }>({
         {multiSelect && (
           <View
             style={{
-              alignSelf: 'flex-start'
+              alignSelf: 'flex-start',
+              flexDirection: 'row'
             }}
           >
             <InputCheckbox
               value={selectAll}
               setValue={handleSelectAll}
               label="Todas"
+            />
+            <InputCheckbox
+              value={selectedPages.includes(currentPage)}
+              setValue={handleSelectThisPage}
+              label="Esta pagina"
             />
           </View>
         )}
