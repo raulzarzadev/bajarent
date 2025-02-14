@@ -103,7 +103,7 @@ export const EmployeeContextProvider = ({ children }) => {
 
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
-    if (store?.id) {
+    if (employee) {
       // get customers
       dispatch(
         fetchCustomers({
@@ -112,7 +112,7 @@ export const EmployeeContextProvider = ({ children }) => {
         })
       )
     }
-  }, [dispatch, store?.id])
+  }, [dispatch, employee])
 
   //->>>
   //*****************************
