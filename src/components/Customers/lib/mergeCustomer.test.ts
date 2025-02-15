@@ -14,11 +14,19 @@ describe('mergeCustomers', () => {
           id: '12A',
           label: 'Contacto 1',
           deletedAt: null
+        },
+        '12A2': {
+          value: '+524444444444',
+          type: 'phone',
+          isFavorite: false,
+          id: '12A',
+          label: 'Contacto 1',
+          deletedAt: null
         }
       },
       images: {
         '12B': {
-          src: 'john.jpg',
+          src: 'john1.jpg',
           description: 'Casa',
           type: 'house',
           id: '12B'
@@ -41,10 +49,16 @@ describe('mergeCustomers', () => {
       },
       images: {
         '12BCD': {
-          src: 'john.jpg',
+          src: 'john2.jpg',
           description: 'Casa',
           type: 'house',
           id: '12BCD'
+        },
+        '12BCD2': {
+          src: 'john1.jpg',
+          description: 'Casa',
+          type: 'house',
+          id: '12BCD2'
         }
       }
     }
@@ -54,12 +68,12 @@ describe('mergeCustomers', () => {
     expect(result.id).toBe('1')
     expect(result.name).toBe('John Doe, Jane Smith')
     expect(result.contacts).toEqual({
-      '12ADS': {
+      '12A2': {
         value: '+524444444444',
         type: 'phone',
         isFavorite: false,
-        id: '12ADS',
-        label: 'mama',
+        id: '12A',
+        label: 'Contacto 1',
         deletedAt: null
       },
       '12A': {
@@ -74,13 +88,13 @@ describe('mergeCustomers', () => {
 
     expect(result.images).toEqual({
       '12BCD': {
-        src: 'john.jpg',
+        src: 'john2.jpg',
         description: 'Casa',
         type: 'house',
         id: '12BCD'
       },
       '12B': {
-        src: 'john.jpg',
+        src: 'john1.jpg',
         description: 'Casa',
         type: 'house',
         id: '12B'

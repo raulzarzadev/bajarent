@@ -157,18 +157,47 @@ export const mergeCustomers = (
   const customerMerged = {
     ...customer2,
     ...customer1,
-    contacts: {
-      ...(customer1?.contacts || {}),
-      ...(customer2?.contacts || {})
-    },
-    images: {
-      ...(customer1.images || {}),
-      ...(customer2.images || {})
-    },
+    contacts: mergeContacts(customer1.contacts, customer2.contacts),
+    images: mergeImages(customer1.images, customer2.images),
     id: customer1?.id,
     name
   }
   return replaceUndefinedWithNull(customerMerged)
+}
+
+const mergeImages = (
+  images1: CustomerImages = {},
+  images2: CustomerImages = {}
+) => {
+  const mergedImages = { ...images1 }
+  const existingValues = Object.values(images1).map((image) => image.src)
+
+  // Solo añadir imágenes que no existan ya
+  Object.entries(images2).forEach(([key, image]) => {
+    if (!existingValues.includes(image.src)) {
+      mergedImages[key] = image
+    }
+  })
+
+  return mergedImages
+}
+const mergeContacts = (
+  contacts1: Record<string, any> = {},
+  contacts2: Record<string, any> = {}
+) => {
+  const mergedContacts = { ...contacts1 }
+  const existingValues = Object.values(contacts1).map(
+    (contact) => contact.value
+  )
+
+  // Solo añadir contactos que no existan ya
+  Object.entries(contacts2).forEach(([key, contact]) => {
+    if (!existingValues.includes(contact.value)) {
+      mergedContacts[key] = contact
+    }
+  })
+
+  return mergedContacts
 }
 
 // const getLargerName = (name1: string, name2: string) => {
