@@ -54,16 +54,16 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
       setProgress(index++)
       setDisabled(true)
       const dbOrder = await ServiceOrders.get(orderId)
-      const orderCustomer = customerFromOrder(dbOrder)
+      const dbCustomerOrder = customerFromOrder(dbOrder)
       // check if similar customer already exist dont addit
-      const similarCustomerFound = findSimilarCustomer(orderCustomer, [
+      const similarCustomerFound = findSimilarCustomer(dbCustomerOrder, [
         ...newCustomersCreated,
         ...dbCustomers
       ])
       // if customer is excluded dont update/create customer and order
       if (dbOrder?.excludeCustomer) {
         //* CUSTOMER OMITTED
-        omittedCustomer.push(orderCustomer)
+        omittedCustomer.push(dbCustomerOrder)
         setCustomersOmitted(omittedCustomer)
         continue
       } // Salta a la siguiente iteración
@@ -71,8 +71,8 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
       if (similarCustomerFound) {
         //merge customer
         const mergedCustomer = mergeCustomers(
-          orderCustomer,
-          similarCustomerFound
+          similarCustomerFound,
+          dbCustomerOrder
         )
         //update customer
         ServiceCustomers.update(mergedCustomer?.id, mergedCustomer)
@@ -94,7 +94,7 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
         mergedCustomers.push(mergedCustomer)
       } else {
         // get customer
-        const res = await ServiceCustomers.create(orderCustomer)
+        const res = await ServiceCustomers.create(dbCustomerOrder)
           .then((res) => {
             res.res.id
             console.log(res)
@@ -106,10 +106,10 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
         const newCustomerId = res?.res?.id
         ServiceOrders.update(orderId, {
           customerId: newCustomerId,
-          customerName: orderCustomer.name
+          customerName: dbCustomerOrder.name
         })
         //* CUSTOMER CREATED
-        newCustomersCreated.push({ ...orderCustomer, id: newCustomerId })
+        newCustomersCreated.push({ ...dbCustomerOrder, id: newCustomerId })
       }
       setMergedCustomers(mergedCustomers)
       setCustomerCreated(newCustomersCreated)
