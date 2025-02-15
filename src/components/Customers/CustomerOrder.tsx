@@ -42,9 +42,13 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
         <ButtonAddCustomerE order={order} orderId={order?.id} />
       </View>
     )
-  if (loading) return <Text>Loading...</Text>
   return (
     <View>
+      <Text
+        style={[gStyles.helper, { fontStyle: 'italic', textAlign: 'center' }]}
+      >
+        {order.fullName}
+      </Text>
       {customer ? (
         <CustomerCardE customer={customer} canEdit />
       ) : (
