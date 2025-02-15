@@ -7,10 +7,11 @@ import { useEmployee } from '../contexts/employeeContext'
 import { ScrollView, Text } from 'react-native'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import useMyNav from '../hooks/useMyNav'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
-
+  const { data } = useCustomers()
   const hasOrderList = !!route?.params?.orders
   const { orders = [], handleRefresh: refreshOrders } = useOrdersCtx()
   const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({

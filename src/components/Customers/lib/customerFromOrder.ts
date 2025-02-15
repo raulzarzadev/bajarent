@@ -75,11 +75,12 @@ const customerOrderContacts = (order: OrderType) => {
       return acc
     }, {})
   }
-  customerContacts['default'] = {
+  const defaultContactId = createUUID({ length: 8 })
+  customerContacts[defaultContactId] = {
     label: 'Default',
     value: order?.phone || '',
     type: 'phone',
-    id: 'default'
+    id: defaultContactId
   }
   return customerContacts
 }
@@ -145,10 +146,11 @@ export const mergeCustomers = (
 ) => {
   const customerName1 = normalizeCustomerName(customer1.name)
   const customerName2 = normalizeCustomerName(customer2.name)
-  // normalize name
-  //1. remove spaces
-  //2. upper case just first letter of each word
-  //3. remove spaces at the end and start of the string
+
+  const name =
+    customerName1 === customerName2
+      ? customerName1
+      : `${customerName1}, ${customerName2}`
 
   return {
     ...customer2,
@@ -162,7 +164,7 @@ export const mergeCustomers = (
       ...customer2.images
     },
     id: customer1.id,
-    name: `${customerName1}, ${customerName2}`
+    name
   }
 }
 

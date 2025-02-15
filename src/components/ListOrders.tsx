@@ -7,6 +7,7 @@ import { CollectionSearch } from '../hooks/useFilter'
 import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
 import useMyNav from '../hooks/useMyNav'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export type ListOrderProps = {
   orders: OrderType[]
@@ -26,7 +27,7 @@ const ListOrders = ({
 }: ListOrderProps) => {
   const { toOrders } = useMyNav()
   const { sections: storeSections } = useStore()
-
+  const { data: customers } = useCustomers()
   const formatOrders = orders
     ?.map((o) => {
       const assignedToSection =
@@ -52,6 +53,10 @@ const ListOrders = ({
           .join(', '),
         isAuthorized: o?.status === order_status.AUTHORIZED
         //  assignedToSection
+      }
+      const customer = customers?.find((c) => c.id === o?.customerId)
+      if (customer) {
+        order.customerName = customer.name
       }
       return o?.id ? order : null
     })
