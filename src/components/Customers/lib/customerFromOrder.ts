@@ -139,39 +139,36 @@ export const findSimilarCustomer = (
   )
 }
 
-export const mergeOrderCustomerWithFoundCustomer = (
-  orderCustomer: Partial<CustomerType>,
-  customerFound: Partial<CustomerType>
+export const mergeCustomers = (
+  customer1: Partial<CustomerType>,
+  customer2: Partial<CustomerType>
 ) => {
-  const customerName = getLargerName(orderCustomer.name, customerFound.name)
+  const customerName1 = normalizeCustomerName(customer1.name)
+  const customerName2 = normalizeCustomerName(customer2.name)
   // normalize name
   //1. remove spaces
   //2. upper case just first letter of each word
   //3. remove spaces at the end and start of the string
-  const customerNameNormalized = normalizeCustomerName(customerName)
+
   return {
-    id: customerFound.id,
-    name: customerNameNormalized,
-    ...customerFound,
-    ...orderCustomer,
+    ...customer2,
+    ...customer1,
     contacts: {
-      ...customerFound.contacts,
-      ...orderCustomer.contacts
+      ...customer1.contacts,
+      ...customer2.contacts
     },
-    contactsList: [
-      ...customerFound.contactsList,
-      ...orderCustomer.contactsList
-    ],
     images: {
-      ...customerFound.images,
-      ...orderCustomer.images
-    }
+      ...customer1.images,
+      ...customer2.images
+    },
+    id: customer1.id,
+    name: `${customerName1}, ${customerName2}`
   }
 }
 
-const getLargerName = (name1: string, name2: string) => {
-  return name1.length > name2.length ? name1 : name2
-}
+// const getLargerName = (name1: string, name2: string) => {
+//   return name1.length > name2.length ? name1 : name2
+// }
 
 export const normalizeCustomerName = (name: string) => {
   // 1. Primero limpiamos espacios extras y hacemos trim

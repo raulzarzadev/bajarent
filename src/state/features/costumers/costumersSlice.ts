@@ -14,6 +14,7 @@ import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import { merge, set } from 'lodash'
 import { ServiceCustomers } from '../../../firebase/ServiceCustomers'
 import {
+  mergeCustomers,
   mergeOrderCustomerWithFoundCustomer,
   normalizeCustomerName
 } from '../../../components/Customers/lib/customerFromOrder'
@@ -264,10 +265,7 @@ export const useCustomers = () => {
       debugger
       const dbCustomer = await ServiceCustomers.get(mergeCustomerId)
       // just update order
-      const mergedCustomer = mergeOrderCustomerWithFoundCustomer(
-        newCustomer,
-        dbCustomer
-      )
+      const mergedCustomer = mergeCustomers(newCustomer, dbCustomer)
       ServiceCustomers.update(mergeCustomerId, mergedCustomer)
         .then((res) => {
           console.log('update customer')

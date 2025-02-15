@@ -8,7 +8,7 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import {
   customerFromOrder,
   findSimilarCustomer,
-  mergeOrderCustomerWithFoundCustomer
+  mergeCustomers
 } from './lib/customerFromOrder'
 import { useStore } from '../../contexts/storeContext'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
@@ -35,7 +35,8 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
   }, [ordersIds])
 
   const handleCreateCustomers = async () => {
-    let newCustomersCreated: Partial<CustomerType>[] = [...storeCustomers]
+    let dbCustomers = [...storeCustomers]
+    let newCustomersCreated: Partial<CustomerType>[] = []
     let omittedCustomer = []
     let mergedCustomers = []
     let index = 1
@@ -46,10 +47,10 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
       const dbOrder = await ServiceOrders.get(orderId)
       const orderCustomer = customerFromOrder(dbOrder)
       // check if similar customer already exist dont addit
-      const similarCustomerFound = findSimilarCustomer(
-        orderCustomer,
-        newCustomersCreated
-      )
+      const similarCustomerFound = findSimilarCustomer(orderCustomer, [
+        ...newCustomersCreated,
+        ...dbCustomers
+      ])
       // if customer is excluded dont update/create customer and order
       if (dbOrder?.excludeCustomer) {
         //* CUSTOMER OMITTED
@@ -60,7 +61,7 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
 
       if (similarCustomerFound) {
         //merge customer
-        const mergedCustomer = mergeOrderCustomerWithFoundCustomer(
+        const mergedCustomer = mergeCustomers(
           orderCustomer,
           similarCustomerFound
         )
