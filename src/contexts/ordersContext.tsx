@@ -114,19 +114,24 @@ export const OrdersContextProvider = ({
   }
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      setOrders(null)
-      setConsolidatedOrders(null)
-      return
+    if (isAuthenticated && (!disabledEmployee || permissions.isAdmin)) {
+      handleGetOrders()
+      handleGetConsolidates()
     }
-    // //* is disbaled and is not admin or owner do not get any order
-    if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
-      setOrders(null)
-      setConsolidatedOrders(null)
-      return
-    }
-    handleGetOrders()
-    handleGetConsolidates()
+    setOrders(null)
+    setConsolidatedOrders(null)
+    //   if (!isAuthenticated) {
+    //     setOrders(null)
+    //     setConsolidatedOrders(null)
+    //     return
+    //   }
+    // // //* is disbaled and is not admin or owner do not get any order
+    // if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
+    //   setOrders(null)
+    //   setConsolidatedOrders(null)
+    //   return
+    // }
+    // console.log({ isAuthenticated, disabledEmployee, customers, permissions })
   }, [disabledEmployee, isAuthenticated, customers])
 
   useEffect(() => {
@@ -162,6 +167,7 @@ export const OrdersContextProvider = ({
       : permissions.orders.canViewMy
       ? 'mine'
       : 'none'
+
     if (typeOfOrders === 'all') {
       console.log('all orders')
       const storeUnsolvedOrders = await ServiceOrders.getUnsolvedByStore(
