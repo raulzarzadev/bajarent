@@ -1,3 +1,4 @@
+//@ts-nocheck
 // /Users/zarza/Documents/projects/bajarent2/src/components/Customers/lib/normalizeCustomerName.test.ts
 
 import { normalizeCustomerName } from './customerFromOrder'
