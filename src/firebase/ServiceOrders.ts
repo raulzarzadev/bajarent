@@ -507,7 +507,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
         !reportedOrders?.find(({ id: reportedId }) => reportedId === id)
     )
     //*  *** 3 *** add reported orders to unsolved orders
-    return [...removeReportedFromUnsolved, ...reportedOrders]
+    return [...removeReportedFromUnsolved, ...reportedOrders].flat()
   }
 
   onExtend = async ({

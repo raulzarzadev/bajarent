@@ -186,7 +186,7 @@ export const OrdersContextProvider = ({
 
       // console.log({ reports })
       const formatted = formatOrders({
-        orders: storeUnsolvedOrders.flat(),
+        orders: storeUnsolvedOrders,
         reports: [...reports, ...important],
         customers
       })
@@ -207,7 +207,11 @@ export const OrdersContextProvider = ({
         console.log(e)
         return []
       })
-      const formatted = formatOrders({ orders, reports: reports, customers })
+      const formatted = formatOrders({
+        orders: orders,
+        reports: reports,
+        customers
+      })
       setOrders(formatted)
     } else {
       console.log('no orders')
