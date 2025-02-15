@@ -174,7 +174,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
                 >
                   <View style={{ justifyContent: 'center' }}>
                     <Text style={[{ textAlign: 'center' }]}>
-                      {order.folio} {order.fullName}
+                      {order.folio} {order?.fullName}
                     </Text>
                     <View
                       style={{

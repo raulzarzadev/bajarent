@@ -47,7 +47,7 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
       <Text
         style={[gStyles.helper, { fontStyle: 'italic', textAlign: 'center' }]}
       >
-        {order.fullName}
+        {order?.fullName}
       </Text>
       {customer ? (
         <CustomerCardE customer={customer} canEdit />

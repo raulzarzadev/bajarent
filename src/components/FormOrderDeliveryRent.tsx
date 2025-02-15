@@ -73,6 +73,7 @@ const FormOrder = ({
               ? ''
               : defaultValues?.phone,
           fullName:
+            defaultValues?.customerName ||
             defaultValues?.fullName ||
             `${defaultValues?.firstName || ''}${defaultValues?.lastName || ''}`,
           address:
