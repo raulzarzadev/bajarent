@@ -102,6 +102,7 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
           })
           .catch((e) => console.log({ e }))
         // update order
+        //@ts-ignore
         const newCustomerId = res?.res?.id
         ServiceOrders.update(orderId, {
           customerId: newCustomerId,
