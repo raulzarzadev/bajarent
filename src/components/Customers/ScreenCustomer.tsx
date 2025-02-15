@@ -88,8 +88,16 @@ const ScreenCustomer = (params) => {
       <Text style={{ textAlign: 'center' }}>
         Referencias: {customer?.address?.references}
       </Text>
-      <CustomerContactsE customerId={customer.id} />
-      <CustomerImagesE images={customer?.images} customerId={customer?.id} />
+      <CustomerContactsE
+        customerId={customer.id}
+        canAdd
+        customerContacts={customer.contacts}
+      />
+      <CustomerImagesE
+        images={customer?.images}
+        customerId={customer?.id}
+        canAdd
+      />
       <CustomerOrdersE customerId={customer.id} />
     </ScrollView>
   )

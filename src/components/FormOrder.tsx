@@ -244,7 +244,7 @@ const FormOrderA = ({
           validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
             //*<---- check if include customer
-            if (!values.excludeCustomer) {
+            if (!values?.excludeCustomer) {
               if (!values.fullName && !customerId)
                 errors.fullName = 'Nombre necesario'
               if ((!values.phone || values.phone.length < 12) && !customerId)
@@ -304,7 +304,7 @@ const FormOrderA = ({
             )
               // if customerId is set omit customer fields
               .filter((field) => {
-                if (customerId || values.excludeCustomer) {
+                if (customerId || values?.excludeCustomer) {
                   return ![
                     'fullName',
                     'phone',

@@ -8,7 +8,6 @@ import ListRow, { ListRowField } from './ListRow'
 import { ModalOrderQuickActionsE } from './ModalOrderQuickActions'
 import Button from './Button'
 import useMyNav from '../hooks/useMyNav'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -22,8 +21,6 @@ export type RowOrderProps = {
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
   const { toCustomers } = useMyNav()
-  const { data: customers } = useCustomers()
-  const customer = customers?.find((c) => c?.id === order?.customerId)?.name
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
@@ -83,7 +80,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
               </View>
             </View>
             <Text style={[{ textAlign: 'center' }]} numberOfLines={1}>
-              {customer || <ClientName order={order} />}
+              <ClientName order={order} />
             </Text>
             {!!order?.itemsString && (
               <Text

@@ -15,11 +15,15 @@ import {
 import { ContactType } from '../types/OrderType'
 import ButtonConfirm from './ButtonConfirm'
 
+/**
+ * @deprecated now  contacnts is from customers
+ * @returns
+ */
 const OrderContacts = () => {
   const { order } = useOrderDetails()
   const modal = useModal({ title: 'Lista de contactos' })
   const contacts = order?.contacts as ContactType[]
-
+  return null
   return (
     <View style={{ marginVertical: 16 }}>
       <View

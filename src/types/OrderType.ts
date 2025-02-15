@@ -56,6 +56,8 @@ export type OrderBase = {
   lastName: string
   fullName: string
 
+  customerName?: string //* this is modified when customer is updated
+
   signature?: string
 
   email: string

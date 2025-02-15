@@ -9,16 +9,14 @@ import { Formik } from 'formik'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import CardPhone from '../CardPhone'
 import { CustomerType } from '../../state/features/costumers/customerType'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 const CustomerContacts = (props?: CustomerContactsProps) => {
-  const { data: customers, update } = useCustomers()
-  const [disabled, setDisabled] = useState(false)
+  const cantAdd = props?.canAdd
+  const customerContacts = props?.customerContacts
   const customerId = props?.customerId
-  const propsCustomerContacts = props?.customerContacts
-  const customerContacts = customers?.find(
-    (c) => c?.id === customerId
-  )?.contacts
-  const modal = useModal({ title: 'Agregar contacto' })
+
+  const [disabled, setDisabled] = useState(false)
+
   const handleMarkAsFavorite = async (
     contactId: string,
     isFavorite: boolean,
@@ -35,10 +33,36 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
       {}
     )
     setDisabled(true)
-    await update(customerId, {
-      ...restContactsAsNotFavorite
-    })
+    // await update(customerId, {
+    //   ...restContactsAsNotFavorite
+    // })
     setDisabled(false)
+  }
+  const [contacts, setContacts] = useState([])
+
+  useEffect(() => {
+    setContacts(Object.values(customerContacts || {}))
+  }, [customerContacts])
+
+  if (contacts?.length === 0) {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Text style={[gStyles.helper, gStyles.tCenter]}>No hay contactos</Text>
+        {cantAdd && (
+          <ModalEditContact
+            contacts={customerContacts}
+            customerId={customerId}
+          />
+        )}
+      </View>
+    )
   }
   return (
     <View>
@@ -50,20 +74,19 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
         }}
       >
         <Text style={gStyles.h3}>Contactos </Text>
-        <Button
-          onPress={modal.toggleOpen}
-          justIcon
-          icon="add"
-          variant="ghost"
-          size="small"
-        />
+        {cantAdd && (
+          <ModalEditContact
+            contacts={customerContacts}
+            customerId={customerId}
+          />
+        )}
       </View>
-      {Object.entries(customerContacts || propsCustomerContacts || {}).map(
-        ([id, contact]) =>
+      {contacts.map(
+        (contact) =>
           !!contact &&
           !contact?.deletedAt && (
             <View
-              key={id}
+              key={contact?.id}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
@@ -71,7 +94,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
                 margin: 'auto'
               }}
             >
-              {handleMarkAsFavorite && (
+              {handleMarkAsFavorite && cantAdd && (
                 <Button
                   disabled={disabled}
                   justIcon
@@ -79,7 +102,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
                   color={contact?.isFavorite ? 'success' : 'info'}
                   variant="ghost"
                   onPress={() => {
-                    handleMarkAsFavorite(id, contact?.isFavorite, {
+                    handleMarkAsFavorite(contact.id, contact?.isFavorite, {
                       customerContacts
                     })
                   }}
@@ -114,11 +137,27 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
             </View>
           )
       )}
+    </View>
+  )
+}
+export const ModalEditContact = ({ contacts, customerId }) => {
+  const { update } = useCustomers()
+
+  const modal = useModal({ title: 'Agregar contacto' })
+  return (
+    <>
+      <Button
+        onPress={modal.toggleOpen}
+        justIcon
+        icon="add"
+        variant="ghost"
+        size="small"
+      />
       <StyledModal {...modal}>
         <Formik
-          initialValues={{ contacts: customerContacts }}
+          initialValues={{ contacts }}
           onSubmit={async (values) => {
-            return await update(props.customerId, {
+            return await update(customerId, {
               contacts: values?.contacts
             })
           }}
@@ -133,13 +172,14 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
           )}
         </Formik>
       </StyledModal>
-    </View>
+    </>
   )
 }
 export default CustomerContacts
 export type CustomerContactsProps = {
   customerId: string
   customerContacts?: CustomerType['contacts']
+  canAdd?: boolean
 }
 export const CustomerContactsE = (props: CustomerContactsProps) => (
   <ErrorBoundary componentName="CustomerContacts">

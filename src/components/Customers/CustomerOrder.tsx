@@ -35,11 +35,18 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
         })
     }
   }, [customers, order])
+  if (order?.excludeCustomer)
+    return (
+      <View>
+        <Text>Orden sin cliente </Text>
+        <ButtonAddCustomerE order={order} orderId={order?.id} />
+      </View>
+    )
   if (loading) return <Text>Loading...</Text>
   return (
     <View>
       {customer ? (
-        <CustomerCardE customer={customer} />
+        <CustomerCardE customer={customer} canEdit />
       ) : (
         <OrderCustomerNotFound order={order} />
       )}

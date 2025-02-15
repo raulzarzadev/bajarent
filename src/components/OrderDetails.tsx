@@ -37,8 +37,6 @@ import { CustomerOrderE } from './Customers/CustomerOrder'
 import OrderBigStatus from './OrderBigStatus'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
-  const { store } = useStore()
-  console.log({ order, store })
   if (order?.isConsolidated) {
     const consolidated = order as unknown as ConsolidatedOrderType
     return (
@@ -112,11 +110,8 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       >
         <OrderDirectivesE order={order} />
       </View>
-      {order?.excludeCustomer ? (
-        <Text style={gStyles.h2}>Orden sin cliente</Text>
-      ) : (
-        <CustomerOrderE />
-      )}
+
+      <CustomerOrderE />
       <View style={{ marginTop: 8 }} />
       {/*//* <-----Order actions flow */}
 
@@ -220,6 +215,11 @@ export const RepairItemConfigInfo = () => {
   )
 }
 
+/**
+ * @deprecated now  address is from customers
+ * @param param0
+ * @returns
+ */
 export const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const neighborhood = order?.neighborhood || ''
   const street = order?.street || ''
@@ -232,7 +232,7 @@ export const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
     //@ts-ignore typo in form generete this error
     order?.Location ||
     ''
-
+  if (!location) return null
   return (
     <View
       style={{

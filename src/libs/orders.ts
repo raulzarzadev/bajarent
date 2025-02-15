@@ -71,7 +71,7 @@ export const formatOrder = ({
     ({ type, solved }) => type === 'report' && !solved
   )
   let formattedOrder = { ...order }
-
+  console.log({ formattedOrder })
   formattedOrder.comments = orderComments
   formattedOrder.hasNotSolvedReports = reportsNotSolved
   formattedOrder.pendingMarketOrder =

@@ -23,16 +23,13 @@ import { useState } from 'react'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
+  const showAddButton = props?.canAdd
   const customerPropImages = props?.images
-  const { update, data } = useCustomers()
+
+  const { update } = useCustomers()
   const { permissions } = useEmployee()
-  const images = data?.find((c) => c.id === props.customerId)?.images
-  const modal = useModal({ title: 'Agregar imagen' })
-  const handleAddCustomerImage = async (image: ImageDescriptionType) => {
-    const imageId = createUUID({ length: 8 })
-    await update(customerId, { [`images.${imageId}`]: image })
-    modal.toggleOpen()
-  }
+  const images = props.images
+
   const handleDeleteImage = async (imageId: string) => {
     update(customerId, { [`images.${imageId}.deletedAt`]: new Date() })
   }
@@ -46,6 +43,20 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
     )
   const canDeleteImages = permissions?.orders?.canDelete || permissions?.isAdmin
+
+  if (customerImages.length === 0)
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Text style={[gStyles.helper, gStyles.tCenter]}>No hay imagenes</Text>
+        {showAddButton && <ModalEditImages customerId={customerId} />}
+      </View>
+    )
   return (
     <View style={[gStyles.container]}>
       <View
@@ -56,13 +67,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         }}
       >
         <Text style={gStyles.h3}>Imagenes </Text>
-        <Button
-          icon="add"
-          onPress={modal.toggleOpen}
-          variant="ghost"
-          size="small"
-          justIcon
-        />
+        {showAddButton && <ModalEditImages customerId={customerId} />}
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {customerImages?.map((image) => (
@@ -92,6 +97,28 @@ const CustomerImages = (props?: CustomerImagesProps) => {
           </View>
         ))}
       </View>
+    </View>
+  )
+}
+
+export const ModalEditImages = ({ customerId }) => {
+  const { update } = useCustomers()
+
+  const modal = useModal({ title: 'Agregar imagen' })
+  const handleAddCustomerImage = async (image: ImageDescriptionType) => {
+    const imageId = createUUID({ length: 8 })
+    await update(customerId, { [`images.${imageId}`]: image })
+    modal.toggleOpen()
+  }
+  return (
+    <>
+      <Button
+        icon="add"
+        onPress={modal.toggleOpen}
+        variant="ghost"
+        size="small"
+        justIcon
+      />
       <StyledModal {...modal}>
         <FormikImageDescription
           handleSubmit={async (values) => {
@@ -101,7 +128,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
           }}
         />
       </StyledModal>
-    </View>
+    </>
   )
 }
 
@@ -185,6 +212,7 @@ export default CustomerImages
 export type CustomerImagesProps = {
   images: CustomerType['images']
   customerId: string
+  canAdd?: boolean
 }
 export const CustomerImagesE = (props: CustomerImagesProps) => (
   <ErrorBoundary componentName="CustomerImages">

@@ -114,22 +114,14 @@ export const AddOrMergeCustomer = ({
   }
   return (
     <>
-      <CustomerCardE customer={customer} />
+      <CustomerCardE customer={customer} canEdit={false} />
 
       <SimilarCustomers
         customer={customer}
         onSelectCustomer={handleSelectCustomer}
         selectedCustomer={selectedSimilarCustomer}
       />
-      <View style={{ height: 60 }}>
-        {selectedSimilarCustomer && (
-          <TextInfo
-            text={`Se editara el nombre en la orden original y se agregara esta orden al cliente seleccionado ${selectedSimilarCustomer?.name}`}
-            type="warning"
-            defaultVisible
-          />
-        )}
-      </View>
+
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <View
           style={{
@@ -174,6 +166,7 @@ export const getSimilarCustomers = (
   customer: Partial<CustomerType>,
   customers: CustomerType[]
 ): CustomerType[] => {
+  console.log({ customer })
   return customers?.filter((c) => {
     const sameName =
       c?.name?.toLowerCase() === customer?.name?.toLowerCase() ||
@@ -181,6 +174,7 @@ export const getSimilarCustomers = (
     const someSameContact = Object.values(c.contacts || {}).some((contact) => {
       return Object.values(customer?.contacts || {}).some((contact2) => {
         //@ts-ignore
+        if (contact2?.value === undefined) return false
         return contact.value === contact2.value
       })
     })
@@ -195,9 +189,11 @@ const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
   useEffect(() => {
     if (customers.length) {
       const similarCustomers = getSimilarCustomers(customer, customers)
+      console.log({ similarCustomers })
       setSimilarCustomers(similarCustomers)
     }
   }, [])
+  if (similarCustomers.length === 0) return null
   return (
     <View>
       <Text style={gStyles.h2}>Clientes con datos similares</Text>

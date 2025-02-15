@@ -18,6 +18,9 @@ import { useStore } from '../../contexts/storeContext'
 import ButtonConfirm from '../ButtonConfirm'
 import ModalEditMultiOrders from './ModalEditMultiOrders'
 import useMyNav from '../../hooks/useMyNav'
+import ModalCreateCustomers, {
+  ModalCreateCustomersE
+} from '../Customers/ModalCreateCustomers'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -55,6 +58,7 @@ const MultiOrderActions = ({
   )
 
   const buttons = [
+    <ModalCreateCustomersE ordersIds={ordersIds} />,
     <Button
       label="Lista de ordenes"
       onPress={() => {

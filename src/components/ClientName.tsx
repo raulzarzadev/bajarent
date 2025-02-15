@@ -9,7 +9,9 @@ const ClientName = ({
   style?: TextStyle
 }) => {
   const clientName =
-    order?.fullName || ` ${order?.firstName || ''} ${order?.lastName || ''}`
+    order?.customerName ||
+    order?.fullName ||
+    ` ${order?.firstName || ''} ${order?.lastName || ''}`
   return <Text style={[style]}>{clientName}</Text>
 }
 

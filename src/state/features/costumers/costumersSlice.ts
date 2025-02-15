@@ -12,6 +12,11 @@ import { produce } from 'immer'
 import StoreType from '../../../types/StoreType'
 import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import { merge, set } from 'lodash'
+import { ServiceCustomers } from '../../../firebase/ServiceCustomers'
+import {
+  mergeOrderCustomerWithFoundCustomer,
+  normalizeCustomerName
+} from '../../../components/Customers/lib/customerFromOrder'
 export type CustomersState = {
   data: CustomerType[]
   loading: boolean
@@ -146,6 +151,10 @@ export const useCustomers = () => {
     orderUpdatedId?: string
     statusOk: boolean
   }> => {
+    //add storeId to newCustomer
+    newCustomer.storeId = storeId
+    //normalize customer name
+    newCustomer.name = normalizeCustomerName(newCustomer.name)
     //console.log({ newCustomer, storeId, orderId })
     if (option === 'cancel') {
       return {
@@ -154,6 +163,7 @@ export const useCustomers = () => {
         statusOk: true
       }
     }
+
     if (option === 'create') {
       // update order and create customer
       const customerCreated = await create(storeId, newCustomer)
@@ -169,7 +179,9 @@ export const useCustomers = () => {
         })
       if (!customerCreated?.res?.ok) {
         const orderUpdated = await ServiceOrders.update(orderId, {
-          customerId: customerCreated.id
+          customerId: customerCreated.id,
+          customerName: customerCreated.name,
+          excludeCustomer: false
         })
           .then((res) => {
             // console.log('update order')
@@ -195,8 +207,18 @@ export const useCustomers = () => {
     }
     if (option === 'update') {
       //*<-------------------------------------- update order and update customer
+      //* * get dbCustomer
+      const dbCustomer = await ServiceCustomers.get(mergeCustomerId)
+      //* * merge customer
+      const mergedCustomer = mergeOrderCustomerWithFoundCustomer(
+        newCustomer,
+        dbCustomer
+      )
+      debugger
+      console.log({ mergedCustomer })
       //*<-------------------------------------- 1. update customer
-      const customerUpdated = await update(mergeCustomerId, newCustomer)
+
+      const customerUpdated = await update(mergeCustomerId, mergedCustomer)
         .then((res) => {
           //console.log('create customer')
           const customer = res.payload as CustomerType
@@ -210,7 +232,9 @@ export const useCustomers = () => {
       //*<-------------------------------------- 1. update customer
       if (customerUpdated?.id) {
         const orderUpdated = await ServiceOrders.update(orderId, {
-          customerId: customerUpdated.id
+          customerId: customerUpdated.id,
+          customerName: customerUpdated.name,
+          excludeCustomer: false
         })
           .then((res) => {
             // console.log('update order')
@@ -235,9 +259,28 @@ export const useCustomers = () => {
       }
     }
     if (option === 'merge') {
+      //*<-------------------------------------- update order and update customer
+      //* * get dbCustomer
+      debugger
+      const dbCustomer = await ServiceCustomers.get(mergeCustomerId)
       // just update order
-      return await ServiceOrders.update(orderId, {
-        customerId: mergeCustomerId
+      const mergedCustomer = mergeOrderCustomerWithFoundCustomer(
+        newCustomer,
+        dbCustomer
+      )
+      ServiceCustomers.update(mergeCustomerId, mergedCustomer)
+        .then((res) => {
+          console.log('update customer')
+          console.log({ res })
+        })
+        .catch((e) => {
+          console.error('Error updating customer', e)
+        })
+
+      ServiceOrders.update(orderId, {
+        customerId: mergeCustomerId,
+        customerName: dbCustomer.name,
+        excludeCustomer: false
       })
         .then((res) => {
           // console.log('update order')

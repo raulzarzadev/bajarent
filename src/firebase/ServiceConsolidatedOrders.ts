@@ -119,7 +119,7 @@ const splitOrdersCount = (count: number = 500, orders: any[]) => {
 const formatConsolidateOrder = (order: OrderType, payments: PaymentType[]) => {
   return {
     customerId: order?.customerId || null,
-    fullName: order?.fullName || '',
+    fullName: order.customerName || order?.fullName || '',
     phone: order?.phone || '',
     //email: order?.email || '',
     id: order?.id || '',

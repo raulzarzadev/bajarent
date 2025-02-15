@@ -28,11 +28,12 @@ export const customerFromOrder = (
   const contactsList = Object.values(customerContacts || {}).map(
     (contact) => contact.value
   )
+  const customerName = normalizeCustomerName(order?.fullName || '')
   //console.log({ order, customerContacts, customerImages })
 
   const newCustomer = {
     id: order?.customerId || null,
-    name: order?.fullName || '',
+    name: customerName || '',
 
     orderId: order?.id || null,
     orderFolio: order?.folio || null,
@@ -117,4 +118,73 @@ export const customerImagesFromOrder = ({
     }
   }
   return customerImages
+}
+export const findSimilarCustomer = (
+  customer: Partial<CustomerType>,
+  customers: Partial<CustomerType>[]
+): Partial<CustomerType> | null => {
+  return (
+    customers.find((c) => {
+      if (c?.id === customer?.id) return true
+      const storeCustomerPhoneNumbers = Object.values(c.contacts).map(
+        (contact) => contact.value
+      )
+      const newCustomerPhoneNumbers = Object.values(customer.contacts).map(
+        (contact) => contact.value
+      )
+      return storeCustomerPhoneNumbers.find((sPhone) =>
+        newCustomerPhoneNumbers.includes(sPhone)
+      )
+    }) || null
+  )
+}
+
+export const mergeOrderCustomerWithFoundCustomer = (
+  orderCustomer: Partial<CustomerType>,
+  customerFound: Partial<CustomerType>
+) => {
+  const customerName = getLargerName(orderCustomer.name, customerFound.name)
+  // normalize name
+  //1. remove spaces
+  //2. upper case just first letter of each word
+  //3. remove spaces at the end and start of the string
+  const customerNameNormalized = normalizeCustomerName(customerName)
+  return {
+    id: customerFound.id,
+    name: customerNameNormalized,
+    ...customerFound,
+    ...orderCustomer,
+    contacts: {
+      ...customerFound.contacts,
+      ...orderCustomer.contacts
+    },
+    contactsList: [
+      ...customerFound.contactsList,
+      ...orderCustomer.contactsList
+    ],
+    images: {
+      ...customerFound.images,
+      ...orderCustomer.images
+    }
+  }
+}
+
+const getLargerName = (name1: string, name2: string) => {
+  return name1.length > name2.length ? name1 : name2
+}
+
+export const normalizeCustomerName = (name: string) => {
+  // 1. Primero limpiamos espacios extras y hacemos trim
+  const cleanName = name.replace(/\s+/g, ' ').trim()
+
+  // 2. Dividimos en palabras y capitalizamos solo la primera letra de cada palabra
+  return cleanName
+    .split(' ')
+    .map((word) => {
+      // Si la palabra está vacía, la retornamos tal cual
+      if (!word) return word
+      // Capitalizamos solo la primera letra y mantenemos el resto en minúsculas
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
 }
