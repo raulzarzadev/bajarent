@@ -150,6 +150,22 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('solved', '==', false)
     ])
   }
+
+  getUnsolvedImportantAndReports(storeId: string) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('type', 'in', ['report', 'important']),
+      where('solved', '==', false)
+    ])
+  }
+
+  getOrderUnsolvedImportant(orderId) {
+    return this.findMany([
+      where('orderId', '==', orderId),
+      where('type', '==', 'important'),
+      where('solved', '==', false)
+    ])
+  }
   getToday(storeId) {
     return this.findMany([
       where('storeId', '==', storeId),

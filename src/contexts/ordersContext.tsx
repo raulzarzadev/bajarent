@@ -117,48 +117,17 @@ export const OrdersContextProvider = ({
     if (isAuthenticated && (!disabledEmployee || permissions.isAdmin)) {
       handleGetOrders()
       handleGetConsolidates()
+    } else {
+      setImportant([])
+      setReports([])
+      setOrders(null)
+      setConsolidatedOrders(null)
     }
-    setOrders(null)
-    setConsolidatedOrders(null)
-    //   if (!isAuthenticated) {
-    //     setOrders(null)
-    //     setConsolidatedOrders(null)
-    //     return
-    //   }
-    // // //* is disbaled and is not admin or owner do not get any order
-    // if (disabledEmployee && !(permissions.isAdmin || permissions.isOwner)) {
-    //   setOrders(null)
-    //   setConsolidatedOrders(null)
-    //   return
-    // }
-    // console.log({ isAuthenticated, disabledEmployee, customers, permissions })
   }, [disabledEmployee, isAuthenticated, customers])
 
-  useEffect(() => {
-    if (isAuthenticated && store?.id) {
-      ServiceComments.listenImportantUnsolved(store?.id, (reports) => {
-        setImportant(reports)
-      })
-    }
-  }, [store?.id, isAuthenticated])
-
   const handleGetOrders = async () => {
-    const reportsSolvedToday = await ServiceComments.getReports({
-      storeId,
-      solvedToday: true
-    }).then((res) => {
-      return res || []
-    })
-    const reportsUnsolved = await ServiceComments.getReports({
-      storeId,
-      solved: false
-    }).then((res) => {
-      return res || []
-    })
-
-    setReports([...reportsSolvedToday, ...reportsUnsolved])
-
-    const reports = [...reportsSolvedToday, ...reportsUnsolved]
+    const commentImportantAndReports =
+      await ServiceComments.getUnsolvedImportantAndReports(storeId)
 
     const getExpireTomorrow = !!employee?.permissions?.order?.getExpireTomorrow
 
@@ -175,7 +144,7 @@ export const OrdersContextProvider = ({
         {
           getBySections: false,
           sections: [],
-          reports: [...reports, ...important],
+          reports: commentImportantAndReports,
           getExpireTomorrow
         }
         //{ fromCache: true }
@@ -187,7 +156,7 @@ export const OrdersContextProvider = ({
       // console.log({ reports })
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
-        reports: [...reports, ...important],
+        reports: commentImportantAndReports,
         customers
       })
       setOrders(formatted)
@@ -199,7 +168,7 @@ export const OrdersContextProvider = ({
         {
           getBySections: true,
           sections: employee.sectionsAssigned,
-          reports: [...reports, ...important],
+          reports: commentImportantAndReports,
           getExpireTomorrow
         }
         // { fromCache: true }
@@ -209,7 +178,7 @@ export const OrdersContextProvider = ({
       })
       const formatted = formatOrders({
         orders: orders,
-        reports: reports,
+        reports: commentImportantAndReports,
         customers
       })
       setOrders(formatted)
@@ -251,7 +220,7 @@ export const OrdersContextProvider = ({
         fetchTypeOrders,
         orderTypeOptions,
         handleRefresh: handleGetOrders,
-        reports,
+        reports: [...reports, ...important],
         consolidatedOrders,
         payments,
         setOtherConsolidated
