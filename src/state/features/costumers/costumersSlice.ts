@@ -20,6 +20,7 @@ import {
 import { useStore } from '../../../contexts/storeContext'
 import { useEmployee } from '../../../contexts/employeeContext'
 import { useEffect } from 'react'
+import { mergeObjs } from '../../../libs/mergeObjs'
 export type CustomersState = {
   data: CustomerType[]
   loading: boolean
@@ -80,18 +81,19 @@ export const customersSlice = createSlice({
         state.loading = false
         const { id, ...changes } = action.payload
         const index = state.data.findIndex((c) => c.id === action.payload.id)
-
-        state.data[index] = produce(state.data[index], (draft) => {
-          for (const key in changes) {
-            const value = changes[key]
-            //console.log({ draft, key, changes })
-            if (typeof changes[key] === 'object' && !Array.isArray(value)) {
-              draft[key] = merge({}, draft[key] || {}, value)
-            } else {
-              draft[key] = value
-            }
-          }
-        })
+        state.data[index] = mergeObjs(state.data[index], changes)
+        console.log(state.data[index])
+        // state.data[index] = produce(state.data[index], (draft) => {
+        //   for (const key in changes) {
+        //     const value = changes[key]
+        //     //console.log({ draft, key, changes })
+        //     if (typeof changes[key] === 'object' && !Array.isArray(value)) {
+        //       draft[key] = merge({}, draft[key] || {}, value)
+        //     } else {
+        //       draft[key] = value
+        //     }
+        //   }
+        // })
       })
       .addCase(updateCustomerThunk.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to update customer'

@@ -14,6 +14,7 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
   const cantAdd = props?.canAdd
   const customerContacts = props?.customerContacts
   const customerId = props?.customerId
+  const { update: updateCustomer } = useCustomers()
 
   const [disabled, setDisabled] = useState(false)
 
@@ -32,10 +33,11 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
       },
       {}
     )
+
     setDisabled(true)
-    // await update(customerId, {
-    //   ...restContactsAsNotFavorite
-    // })
+    await updateCustomer(customerId, {
+      ...restContactsAsNotFavorite
+    })
     setDisabled(false)
   }
   const [contacts, setContacts] = useState([])

@@ -9,6 +9,7 @@ import { gStyles } from '../../styles'
 import { FormikInputPhoneE } from '../FormikInputPhone'
 import { createUUID } from '../../libs/createId'
 import { useState } from 'react'
+import { mergeObjs } from '../../libs/mergeObjs'
 
 const FormCustomer = (props?: FormCustomerProps) => {
   const defaultCustomer: Partial<CustomerType> = {
@@ -77,6 +78,28 @@ export const FormikCustomerContacts = () => {
   const layoutStyle = isMobile
     ? { marginBottom: 4 }
     : { marginRight: 2, maxWidth: 100 }
+  const handleMarkAsFavorite = (
+    contactId: string,
+    isFavorite: boolean,
+    contacts: any
+  ) => {
+    console.log({ contactId, isFavorite, contacts })
+    const restContactsAsNotFavorite = Object.keys(contacts).reduce(
+      (acc, curr) => {
+        return {
+          ...acc,
+          [`contacts.${curr}.isFavorite`]:
+            contactId === curr ? !isFavorite : false
+        }
+      },
+      {}
+    )
+
+    const res = mergeObjs(values, restContactsAsNotFavorite)
+    console.log({ restContactsAsNotFavorite, res })
+    setValues(res)
+  }
+  console.log({ values })
   return (
     <View>
       <Text style={gStyles.h3}>Contactos</Text>
@@ -143,6 +166,22 @@ export const FormikCustomerContacts = () => {
                   name={`contacts.${key}.value`}
                 />
               )}
+              <Button
+                justIcon
+                icon={
+                  values.contacts[key]?.isFavorite ? 'starFilled' : 'starEmpty'
+                }
+                color={values.contacts[key].isFavorite ? 'success' : 'info'}
+                variant="ghost"
+                onPress={() => {
+                  debugger
+                  handleMarkAsFavorite(
+                    values?.contacts[key].id,
+                    values?.contacts[key]?.isFavorite,
+                    values?.contacts
+                  )
+                }}
+              />
             </View>
           )
       )}
