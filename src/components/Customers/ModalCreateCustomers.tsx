@@ -11,11 +11,21 @@ import {
   mergeCustomers
 } from './lib/customerFromOrder'
 import { useStore } from '../../contexts/storeContext'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 import { CustomerType } from '../../state/features/costumers/customerType'
 const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
   const modal = useModal()
+  return (
+    <View>
+      <Button onPress={modal.toggleOpen} label="Crear clientes"></Button>
+      <StyledModal {...modal} title="Crear clientes">
+        <CreateCustomers ordersIds={props.ordersIds} />
+      </StyledModal>
+    </View>
+  )
+}
+
+export const CreateCustomers = ({ ordersIds = [] }) => {
   const [disabled, setDisabled] = useState(false)
   const [progress, setProgress] = useState(0)
   const { storeId } = useStore()
@@ -23,7 +33,6 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
   const [storeCustomers, setStoreCustomers] = useState<Partial<CustomerType>[]>(
     []
   )
-  const ordersIds = props?.ordersIds || []
   const [customerCreated, setCustomerCreated] = useState([])
   const [omittedCustomer, setCustomersOmitted] = useState([])
   const [mergedCustomers, setMergedCustomers] = useState([])
@@ -41,8 +50,8 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
     let mergedCustomers = []
     let index = 1
     for (const orderId of ordersIds) {
-      setProgress(index++)
       debugger
+      setProgress(index++)
       setDisabled(true)
       const dbOrder = await ServiceOrders.get(orderId)
       const orderCustomer = customerFromOrder(dbOrder)
@@ -65,24 +74,35 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
           orderCustomer,
           similarCustomerFound
         )
-        try {
-          //update customer
-          ServiceCustomers.update(similarCustomerFound.id, mergedCustomer)
-          //update order
-          ServiceOrders.update(orderId, {
-            customerId: similarCustomerFound.id,
-            customerName: mergedCustomer.name
+        //update customer
+        ServiceCustomers.update(mergedCustomer?.id, mergedCustomer)
+          .then((res) => {
+            console.log(res)
           })
-        } catch (error) {
-          console.log(error)
-        }
+          .catch((e) => console.log({ e, mergedCustomer }))
+        //update order
+        ServiceOrders.update(orderId, {
+          customerId: mergedCustomer?.id,
+          customerName: mergedCustomer?.name
+        })
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((e) => console.log({ e }))
+
         //* CUSTOMER UPDATED
         mergedCustomers.push(mergedCustomer)
       } else {
         // get customer
         const res = await ServiceCustomers.create(orderCustomer)
+          .then((res) => {
+            res.res.id
+            console.log(res)
+            return res
+          })
+          .catch((e) => console.log({ e }))
         // update order
-        const newCustomerId = res.res.id
+        const newCustomerId = res?.res?.id
         ServiceOrders.update(orderId, {
           customerId: newCustomerId,
           customerName: orderCustomer.name
@@ -98,28 +118,25 @@ const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
   }
   return (
     <View>
-      <Button onPress={modal.toggleOpen} label="Crear clientes"></Button>
-      <StyledModal {...modal} title="Crear Clientes">
-        <Text style={{ marginVertical: 6 }}>
-          Progreso {progress} de {ordersIds.length}
-        </Text>
-        <Text style={{ marginVertical: 6 }}>
-          Clientes creados {customerCreated.length}
-        </Text>
-        <Text style={{ marginVertical: 6 }}>
-          Clientes actualizados {mergedCustomers.length}
-        </Text>
-        <Text style={{ marginVertical: 6 }}>
-          Clientes omitidos {omittedCustomer.length}
-        </Text>
-        <Button
-          label="Crear clientes"
-          disabled={disabled}
-          onPress={() => {
-            handleCreateCustomers()
-          }}
-        />
-      </StyledModal>
+      <Text style={{ marginVertical: 6 }}>
+        Progreso {progress} de {ordersIds.length}
+      </Text>
+      <Text style={{ marginVertical: 6 }}>
+        Clientes creados {customerCreated.length}
+      </Text>
+      <Text style={{ marginVertical: 6 }}>
+        Clientes actualizados {mergedCustomers.length}
+      </Text>
+      <Text style={{ marginVertical: 6 }}>
+        Clientes omitidos {omittedCustomer.length}
+      </Text>
+      <Button
+        label="Crear clientes"
+        disabled={disabled}
+        onPress={() => {
+          handleCreateCustomers()
+        }}
+      />
     </View>
   )
 }

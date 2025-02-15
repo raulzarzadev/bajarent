@@ -1,4 +1,5 @@
 import { createUUID } from '../../../libs/createId'
+import { replaceUndefinedWithNull } from '../../../libs/removeUndefinedValues'
 import {
   CustomerImages,
   CustomerType
@@ -26,7 +27,7 @@ export const customerFromOrder = (
   if (typeof order?.customerId === 'string') {
   }
   const contactsList = Object.values(customerContacts || {}).map(
-    (contact) => contact.value
+    (contact) => contact.value || ''
   )
   const customerName = normalizeCustomerName(order?.fullName || '')
   //console.log({ order, customerContacts, customerImages })
@@ -144,28 +145,30 @@ export const mergeCustomers = (
   customer1: Partial<CustomerType>,
   customer2: Partial<CustomerType>
 ) => {
-  const customerName1 = normalizeCustomerName(customer1.name)
-  const customerName2 = normalizeCustomerName(customer2.name)
+  const customerName1 = normalizeCustomerName(customer1?.name || '')
+  const customerName2 = normalizeCustomerName(customer2?.name || '')
 
   const name =
-    customerName1 === customerName2
+    customerName1.includes(customerName2) ||
+    customerName2.includes(customerName1)
       ? customerName1
       : `${customerName1}, ${customerName2}`
 
-  return {
+  const customerMerged = {
     ...customer2,
     ...customer1,
     contacts: {
-      ...customer1.contacts,
-      ...customer2.contacts
+      ...(customer1?.contacts || {}),
+      ...(customer2?.contacts || {})
     },
     images: {
-      ...customer1.images,
-      ...customer2.images
+      ...(customer1.images || {}),
+      ...(customer2.images || {})
     },
-    id: customer1.id,
+    id: customer1?.id,
     name
   }
+  return replaceUndefinedWithNull(customerMerged)
 }
 
 // const getLargerName = (name1: string, name2: string) => {

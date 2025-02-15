@@ -120,7 +120,7 @@ export const useCustomers = () => {
   const { permissions } = useEmployee()
 
   const fetch = async () => {
-    return dispatch(
+    return await dispatch(
       fetchCustomersThunk({ storeId, readAll: permissions?.customers?.read })
     )
   }

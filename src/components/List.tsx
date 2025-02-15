@@ -343,7 +343,7 @@ function MyList<T extends { id: string }>({
                       multiSelectActionsModal.toggleOpen()
                     }}
                     disabled={selectedRows.length === 0}
-                    label="Acciones"
+                    label={`Acciones ${selectedRows.length || 0}`}
                     size="xs"
                     color="secondary"
                     variant="ghost"
@@ -365,7 +365,7 @@ function MyList<T extends { id: string }>({
             <View style={{ width: '30%', justifyContent: 'center' }}>
               {multiSelect && (
                 <Button
-                  label={`Cancelar ${selectedRows.length || 0}`}
+                  label={`Cancelar `}
                   variant={'ghost'}
                   size="xs"
                   onPress={() => {
