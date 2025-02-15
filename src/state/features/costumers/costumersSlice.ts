@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { CustomerType } from './customerType'
 import {
   createCustomer as createCustomerThunk,
-  fetchCustomers,
+  fetchCustomers as fetchCustomersThunk,
   updateCustomer as updateCustomerThunk,
   deleteCustomer as deleteCustomerThunk
 } from './customersThunks'
@@ -15,9 +15,11 @@ import { merge, set } from 'lodash'
 import { ServiceCustomers } from '../../../firebase/ServiceCustomers'
 import {
   mergeCustomers,
-  mergeOrderCustomerWithFoundCustomer,
   normalizeCustomerName
 } from '../../../components/Customers/lib/customerFromOrder'
+import { useStore } from '../../../contexts/storeContext'
+import { useEmployee } from '../../../contexts/employeeContext'
+import { useEffect } from 'react'
 export type CustomersState = {
   data: CustomerType[]
   loading: boolean
@@ -54,15 +56,15 @@ export const customersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       //* ----> FETCHING CUSTOMER
-      .addCase(fetchCustomers.pending, (state) => {
+      .addCase(fetchCustomersThunk.pending, (state) => {
         state.loading = true
         state.error = null
       })
-      .addCase(fetchCustomers.fulfilled, (state, action) => {
+      .addCase(fetchCustomersThunk.fulfilled, (state, action) => {
         state.loading = false
         state.data = action.payload
       })
-      .addCase(fetchCustomers.rejected, (state, action) => {
+      .addCase(fetchCustomersThunk.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Failed to fetch customers'
       })
@@ -114,6 +116,14 @@ export const customersReducer = customersSlice.reducer
 
 export const useCustomers = () => {
   const dispatch = useDispatch<AppDispatch>()
+  const { storeId } = useStore()
+  const { permissions } = useEmployee()
+
+  const fetch = async () => {
+    return dispatch(
+      fetchCustomersThunk({ storeId, readAll: permissions?.customers?.read })
+    )
+  }
   const update = async (id: string, changes: Partial<CustomerType>) => {
     return await dispatch(
       updateCustomerThunk({
@@ -131,7 +141,7 @@ export const useCustomers = () => {
   }
 
   const remove = async (id: string) => {
-    return await dispatch(deleteCustomerThunk(id))
+    return dispatch(deleteCustomerThunk(id))
   }
 
   const handleCreateCustomer = async ({
@@ -211,10 +221,7 @@ export const useCustomers = () => {
       //* * get dbCustomer
       const dbCustomer = await ServiceCustomers.get(mergeCustomerId)
       //* * merge customer
-      const mergedCustomer = mergeOrderCustomerWithFoundCustomer(
-        newCustomer,
-        dbCustomer
-      )
+      const mergedCustomer = mergeCustomers(dbCustomer, newCustomer)
       debugger
       console.log({ mergedCustomer })
       //*<-------------------------------------- 1. update customer
@@ -265,7 +272,7 @@ export const useCustomers = () => {
       debugger
       const dbCustomer = await ServiceCustomers.get(mergeCustomerId)
       // just update order
-      const mergedCustomer = mergeCustomers(newCustomer, dbCustomer)
+      const mergedCustomer = mergeCustomers(dbCustomer, newCustomer)
       ServiceCustomers.update(mergeCustomerId, mergedCustomer)
         .then((res) => {
           console.log('update customer')
@@ -310,6 +317,7 @@ export const useCustomers = () => {
     update,
     create,
     remove,
+    fetch,
     handleCreateCustomer
   }
 }

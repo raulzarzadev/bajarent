@@ -12,9 +12,6 @@ import { PriceType } from '../types/PriceType'
 import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
-import { useDispatch } from 'react-redux'
-import { fetchCustomers } from '../state/features/costumers/customersThunks'
-import { AppDispatch } from '../state/store'
 
 export type StoreContextType = {
   store?: null | StoreType

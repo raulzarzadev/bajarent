@@ -13,6 +13,7 @@ import { CurrentWorkProvider } from './src/contexts/currentWorkContext'
 import { ItemsProvider } from './src/contexts/itemsContext'
 import { Provider } from 'react-redux'
 import { store } from './src/state/store'
+import { ReduxInitializer } from './src/state/ReduxInitializer'
 
 export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {
@@ -62,9 +63,11 @@ export default function App() {
                 <OrdersContextProvider>
                   <CurrentWorkProvider>
                     <ItemsProvider>
-                      <ThemeProvider>
-                        <BottomAppBarE />
-                      </ThemeProvider>
+                      <ReduxInitializer>
+                        <ThemeProvider>
+                          <BottomAppBarE />
+                        </ThemeProvider>
+                      </ReduxInitializer>
                     </ItemsProvider>
                   </CurrentWorkProvider>
                 </OrdersContextProvider>

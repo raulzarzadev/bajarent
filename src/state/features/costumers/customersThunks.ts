@@ -78,7 +78,7 @@ export const updateCustomer = createAsyncThunk(
 export const deleteCustomer = createAsyncThunk(
   'customers/deleteCustomer',
   async (customerId: string): Promise<string> => {
-    return await ServiceCustomers.delete(customerId)
+    return ServiceCustomers.delete(customerId)
       .then(() => {
         return customerId
       })

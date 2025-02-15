@@ -5,18 +5,27 @@ import { useState } from 'react'
 import { gStyles } from '../../styles'
 import Button from '../Button'
 import { useEmployee } from '../../contexts/employeeContext'
+import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 const CustomersActions = (props?: CustomersActionsProps) => {
   const ids = props?.ids
-  const { remove } = useCustomers()
+
+  const { fetch: fetchCustomers } = useCustomers()
   const { permissions } = useEmployee()
   const [disabled, setDisabled] = useState(false)
+  const [done, setDone] = useState(false)
   const handleDeleteCustomers = async (ids) => {
     setDisabled(true)
-    const promises = ids.map((id) => remove(id))
-    await Promise.all(promises).catch((err) => {
-      console.error(err)
-    })
-    setDisabled(false)
+    const promises = ids.map((id) => ServiceCustomers.delete(id))
+    await Promise.all(promises)
+      .then((res) => console.log({ res }))
+      .catch((err) => {
+        console.error(err)
+      })
+    setTimeout(() => {
+      fetchCustomers()
+      setDisabled(false)
+      setDone(true)
+    }, 1000)
   }
   const customerPermissions = permissions?.customers
 
@@ -24,7 +33,8 @@ const CustomersActions = (props?: CustomersActionsProps) => {
     <View>
       <Text style={gStyles.h2}>Clientes seleccionados {ids?.length}</Text>
       <Text style={gStyles.h3}>{disabled && 'Eliminando...'}</Text>
-      {customerPermissions?.delete && (
+      {done && <Text style={gStyles.h3}>Eliminado</Text>}
+      {!done && customerPermissions?.delete && (
         <Button
           disabled={disabled}
           label="Eliminar "
