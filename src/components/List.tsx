@@ -239,42 +239,6 @@ function MyList<T extends { id: string }>({
           margin: 'auto'
         }}
       >
-        {pinRows && (
-          <>
-            {pinnedRows.length > 0 && (
-              <>
-                <Text style={gStyles.h3}>Fijadas {pinnedRows.length || 0}</Text>
-                {pinnedRows.length === pinMaxRows && (
-                  <Text style={[gStyles.helper, { textAlign: 'center' }]}>
-                    Solo puedes fijar {pinMaxRows} filas
-                  </Text>
-                )}
-              </>
-            )}
-            <FlatList
-              data={pinnedRowsData || []}
-              renderItem={({ item }) => (
-                <View style={{ width: '100%', flexDirection: 'row', flex: 1 }}>
-                  <Pressable
-                    style={{ flexDirection: 'row', flex: 1 }}
-                    onPress={() => {
-                      onPressRow && onPressRow(item?.id)
-                    }}
-                  >
-                    <ComponentRow item={item} />
-                  </Pressable>
-                  {/* ***************** ******* ***** UNPIN BUTTON  */}
-                  <PinButton
-                    handlePin={() => {
-                      handleUnpinRow(item?.id)
-                    }}
-                    unpin={true}
-                  />
-                </View>
-              )}
-            />
-          </>
-        )}
         <View>
           {/* SEARCH FILTER AND SIDE BUTTONS   */}
           <View
@@ -451,9 +415,24 @@ function MyList<T extends { id: string }>({
 
         {/* CONTENT  */}
         <SectionList
+          renderSectionHeader={({ section }) => {
+            // adding a gap if are collectionData customData
+            return section.data.length ? (
+              <Text style={gStyles.helper}>{section?.title}</Text>
+            ) : null
+          }}
           sections={[
+            {
+              title: 'Fijadas',
+              data: pinnedRowsData
+            },
             { title: 'Otras coicidencias', data: collectionData },
-            { title: 'base', data: slicedData }
+            {
+              title: 'Todas',
+              data: slicedData.filter(
+                (o) => !pinnedRowsData.some((p) => p.id === o.id)
+              )
+            }
           ]}
           keyExtractor={(item) => item?.id}
           renderItem={({ item }) => {
@@ -539,12 +518,6 @@ function MyList<T extends { id: string }>({
                 )}
               </View>
             )
-          }}
-          renderSectionHeader={({ section }) => {
-            // adding a gap if are collectionData customData
-            if (collectionData.length > 0 && section.title === 'base')
-              return <View style={{ marginBottom: 6 }} />
-            return null
           }}
         ></SectionList>
         {/* SEE MORE   */}
