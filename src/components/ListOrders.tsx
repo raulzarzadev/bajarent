@@ -101,9 +101,10 @@ const ListOrders = ({
           { field: 'colorLabel', label: 'Color' },
 
           //* Boolean filters
+
           {
             field: 'pendingMarketOrder',
-            label: 'Pedido de mercado',
+            label: 'Pedido web sin confiramar',
             boolean: true,
             icon: 'www',
             color: theme.transparent,
@@ -111,37 +112,39 @@ const ListOrders = ({
           },
           {
             field: 'isAuthorized',
-            label: 'Pedido',
+            label: 'Pedido pendiente',
             boolean: true,
             icon: 'calendar',
             color: theme.warning,
             titleColor: theme.accent
           },
+
           {
             field: 'hasNotSolvedReports',
-            label: 'Reportes ',
+            label: 'Reportes sin resolver',
             boolean: true,
             icon: 'report',
             color: theme.error,
             titleColor: theme.white
           },
-
-          {
-            field: 'isExpired',
-            label: 'Vencidas ',
-            boolean: true,
-            icon: 'alarmOff',
-            color: theme.success,
-            titleColor: theme.white
-          },
           {
             field: 'hasImportantComment',
-            label: 'Importante',
+            label: 'Con comentarios importantes',
             boolean: true,
             icon: 'warning',
             color: theme.warning,
             titleColor: theme.accent
           },
+
+          {
+            field: 'isExpired',
+            label: 'Ya vencidas ',
+            boolean: true,
+            icon: 'alarmOff',
+            color: theme.success,
+            titleColor: theme.white
+          },
+
           {
             field: 'expiresTomorrow',
             label: 'Vence mañana ',
