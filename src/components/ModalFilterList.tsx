@@ -210,8 +210,6 @@ function ModalFilterList<T>({
     return dictionary(value as Labels).toUpperCase()
   }
 
-  console.log({ filters })
-
   return (
     <View>
       <View
