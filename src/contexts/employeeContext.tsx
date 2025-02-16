@@ -17,7 +17,6 @@ export type EmployeeContextType = {
 
   disabledEmployee?: boolean
   permissions: {
-    canSeeCurrentWork?: boolean
     canCancelPickedUp?: boolean
     isAdmin: boolean
     isOwner: boolean
@@ -35,7 +34,6 @@ export type EmployeeContextType = {
     canCreateItems?: boolean
     shouldChooseExactItem?: boolean
     canViewAllItems?: boolean
-    canViewModalCurrentWork?: boolean
     customers?: PermissionsCustomers
   }
   items: Partial<ItemType>[]
@@ -145,8 +143,8 @@ export const EmployeeContextProvider = ({ children }) => {
         orders: employee?.permissions?.order || {},
         store: storePermissions || {},
         customers: employee?.permissions?.customers || {},
+
         items: employee?.permissions?.items || {},
-        // canSeeCurrentWork: storePermissions?.canSeeCurrentWork,
         canEditStaff: !!storePermissions?.canEditStaff || isOwner || isAdmin,
         canCancelPayments:
           !!storePermissions?.canCancelPayments || isOwner || isAdmin,
@@ -170,14 +168,7 @@ export const EmployeeContextProvider = ({ children }) => {
           !!employee?.permissions?.items?.canCreate || isAdmin || isOwner,
         shouldChooseExactItem:
           employee?.permissions?.order?.shouldChooseExactItem,
-        canViewAllItems,
-        // if any of the permissions is true, or employee is disabled then the modal is open
-        canViewModalCurrentWork:
-          !(
-            storePermissions?.canViewAllCurrentWork ||
-            storePermissions?.canViewMyCurrentWork ||
-            storePermissions?.canViewAllCurrentWork
-          ) || employee?.disabled
+        canViewAllItems
       }
     }),
     [

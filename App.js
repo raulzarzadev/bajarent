@@ -9,7 +9,6 @@ import { ThemeProvider } from './src/contexts/themeContext'
 import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { OrdersContextProvider } from './src/contexts/ordersContext'
 import ErrorBoundary from './src/components/ErrorBoundary'
-import { CurrentWorkProvider } from './src/contexts/currentWorkContext'
 import { ItemsProvider } from './src/contexts/itemsContext'
 import { Provider } from 'react-redux'
 import { store } from './src/state/store'
@@ -61,15 +60,13 @@ export default function App() {
             <StoreContextProvider>
               <EmployeeContextProvider>
                 <OrdersContextProvider>
-                  <CurrentWorkProvider>
-                    <ItemsProvider>
-                      <ReduxInitializer>
-                        <ThemeProvider>
-                          <BottomAppBarE />
-                        </ThemeProvider>
-                      </ReduxInitializer>
-                    </ItemsProvider>
-                  </CurrentWorkProvider>
+                  <ItemsProvider>
+                    <ReduxInitializer>
+                      <ThemeProvider>
+                        <BottomAppBarE />
+                      </ThemeProvider>
+                    </ReduxInitializer>
+                  </ItemsProvider>
                 </OrdersContextProvider>
               </EmployeeContextProvider>
             </StoreContextProvider>

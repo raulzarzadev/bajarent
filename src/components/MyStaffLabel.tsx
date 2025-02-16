@@ -3,7 +3,6 @@ import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
-import { ModalCurrentWorkE } from './CurrentWork/ModalCurrentWork'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 
@@ -22,8 +21,6 @@ const MyStaffLabel = () => {
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <ModalCurrentWorkE />
-
         {__DEV__ && (
           <Button
             icon="broom"

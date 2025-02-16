@@ -1,12 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Pressable, StyleSheet, View } from 'react-native'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ListOrders from './ListOrders'
-import { ProgressWork } from './CurrentWork/ModalCurrentWork'
 import OrderType from '../types/OrderType'
-import { calculateProgress } from '../libs/currentWork'
-import { gStyles } from '../styles'
 import { IconName } from './Icon'
 
 const SectionProgressWork = ({
