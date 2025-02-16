@@ -9,6 +9,7 @@ import UserType from './UserType'
 import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
+import { IconName } from '../components/Icon'
 
 export type ContactType = {
   name: string
@@ -347,4 +348,13 @@ export type SaleOrderItem = {
   quantity: number
   category: CategoryType['id']
   serial: string
+}
+
+export const typeOrderIcon = (type: OrderType['type']): IconName => {
+  const icons = {
+    [order_type.RENT]: 'rent',
+    [order_type.SALE]: 'money',
+    [order_type.REPAIR]: 'wrench'
+  }
+  return icons[type]
 }

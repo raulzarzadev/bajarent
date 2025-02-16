@@ -1,7 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType, { order_status, order_type } from '../types/OrderType'
-import theme from '../theme'
+import OrderType, {
+  order_status,
+  order_type,
+  typeOrderIcon
+} from '../types/OrderType'
+import theme, { ORDER_TYPE_COLOR } from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
@@ -9,6 +13,11 @@ import { currentRentPeriod } from '../libs/orders'
 import Icon, { IconName } from './Icon'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
+import StyledModal from './StyledModal'
+import useModal from '../hooks/useModal'
+import { useState } from 'react'
+import { ServiceCustomers } from '../firebase/ServiceCustomers'
+import { CustomerCardE } from './Customers/CustomerCard'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   if (!order) return null
@@ -18,17 +27,6 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
     order?.assignToSectionName ||
     storeSections?.find(({ id }) => id === order?.assignToSection)?.name ||
     false
-  const TypeIcon = (type: OrderType['type']): IconName => {
-    if (type === order_type.RENT) {
-      return 'rent'
-    }
-    if (type === order_type.SALE) {
-      return 'sale'
-    }
-    if (type === order_type.REPAIR) {
-      return 'wrench'
-    }
-  }
 
   const orderType = `${currentRentPeriod(order, {
     shortLabel: true
@@ -57,19 +55,19 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
           </View>
         )}
       </View>
-      {/* <View style={{ width: 60 }}>
-        <OrderLabels order={order} />
-      </View> */}
-      <View style={{ width: 40 }}>
+
+      <View style={{ width: 50 }}>
         <Chip
-          style={[styles.chip]}
+          style={[styles.chip, { justifyContent: 'flex-start' }]}
           title={orderType}
-          icon={TypeIcon(order?.type)}
+          icon={typeOrderIcon(order?.type)}
           color={theme?.transparent}
+          titleColor={ORDER_TYPE_COLOR[order?.type]}
           iconSize="sm"
           size="sm"
         ></Chip>
       </View>
+      {order.customerId && <ModalCustomerChip customerId={order?.customerId} />}
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
 
       {!!assignedSectionLabel && (
@@ -137,3 +135,38 @@ export const OrderDirectivesE = (props) => (
 )
 
 export default OrderDirectives
+
+export const ModalCustomerChip = (
+  { customerId }: { customerId: Partial<OrderType['customerId']> } = {
+    customerId: null
+  }
+) => {
+  const modal = useModal({ title: 'Detalles de cliente' })
+  const [customer, setCustomer] = useState(null)
+  const [loading, setLoading] = useState(false)
+  return (
+    <>
+      <Chip
+        disabled={loading}
+        style={[styles.chip]}
+        title={''}
+        icon={'customerCard'}
+        titleColor={theme?.primary}
+        color={theme?.transparent}
+        iconSize="sm"
+        size="sm"
+        onPress={async () => {
+          setLoading(true)
+          ServiceCustomers.get(customerId).then((res) => {
+            setCustomer(res)
+            setLoading(false)
+            modal.setOpen(true)
+          })
+        }}
+      ></Chip>
+      <StyledModal {...modal}>
+        <CustomerCardE customer={customer} />
+      </StyledModal>
+    </>
+  )
+}

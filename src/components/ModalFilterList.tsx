@@ -14,7 +14,11 @@ import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import FIlterByDate from './FIlterByDate'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  order_type,
+  typeOrderIcon
+} from '../types/OrderType'
 import { IconName } from './Icon'
 import Loading from './Loading'
 
@@ -138,7 +142,6 @@ function ModalFilterList<T>({
     }
     //* this is useful for orders table to find type color
     if (field === 'type') {
-      return theme.base
       return (
         ORDER_TYPE_COLOR[value as keyof typeof ORDER_TYPE_COLOR] || theme.base
       )
@@ -154,16 +157,10 @@ function ModalFilterList<T>({
   const chipIconType = (
     type: OrderType['type']
   ): { icon: IconName; color: string } => {
-    if (type === order_type.RENT) {
-      return { icon: 'rent', color: colors.blue }
+    //<------ * just change the title color in  filters by OrderType
+    if ([order_type.RENT, order_type.SALE, order_type.REPAIR].includes(type)) {
+      return { icon: typeOrderIcon(type), color: theme.white }
     }
-    if (type === order_type.SALE) {
-      return { icon: 'sale', color: colors.green }
-    }
-    if (type === order_type.REPAIR) {
-      return { icon: 'wrench', color: colors.amber }
-    }
-    return undefined
   }
 
   const chipLabel = (field: string, value: string) => {
@@ -194,7 +191,6 @@ function ModalFilterList<T>({
 
     if (field === 'assignToSection') {
       const res = storeSections.find((a) => a.id === value)?.name || ''
-
       return dictionary(res as Labels).toUpperCase()
     }
     if (field === 'colorLabel') {
@@ -213,6 +209,8 @@ function ModalFilterList<T>({
 
     return dictionary(value as Labels).toUpperCase()
   }
+
+  console.log({ filters })
 
   return (
     <View>
@@ -408,7 +406,7 @@ function ModalFilterList<T>({
                         key={value}
                         size="sm"
                         icon={iconValues?.icon}
-                        iconColor={iconValues?.color}
+                        titleColor={iconValues?.color}
                         onPress={() => {
                           if (value === 'REPORTED') {
                             filterBy('isReported', true)

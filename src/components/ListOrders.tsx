@@ -8,6 +8,7 @@ import ErrorBoundary from './ErrorBoundary'
 import theme from '../theme'
 import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { View } from 'react-native'
 
 export type ListOrderProps = {
   orders: OrderType[]
@@ -63,7 +64,7 @@ const ListOrders = ({
     ?.filter((order) => !!order)
 
   return (
-    <>
+    <View style={{ paddingLeft: 2 }}>
       <ListE
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
@@ -93,8 +94,8 @@ const ListOrders = ({
           { key: 'itemsNumbers', label: 'Item' }
         ]}
         filters={[
-          { field: 'assignToSection', label: 'Area' },
           { field: 'type', label: 'Tipo' },
+          { field: 'assignToSection', label: 'Area' },
           { field: 'status', label: 'Status' },
 
           { field: 'colorLabel', label: 'Color' },
@@ -163,7 +164,7 @@ const ListOrders = ({
         }}
         collectionSearch={collectionSearch}
       />
-    </>
+    </View>
   )
 }
 

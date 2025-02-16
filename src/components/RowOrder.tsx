@@ -6,8 +6,6 @@ import OrderDirectives from './OrderDirectives'
 import ErrorBoundary from './ErrorBoundary'
 import ListRow, { ListRowField } from './ListRow'
 import { ModalOrderQuickActionsE } from './ModalOrderQuickActions'
-import Button from './Button'
-import useMyNav from '../hooks/useMyNav'
 
 export type RowOrderType = OrderType & {
   itemsNumbers?: string
@@ -20,7 +18,6 @@ export type RowOrderProps = {
   showTodayAmount?: boolean
 }
 const RowOrder = ({ item: order }: RowOrderProps) => {
-  const { toCustomers } = useMyNav()
   const bigScreen = Dimensions.get('window').width > 500
   const fields: ListRowField[] = [
     {
@@ -33,28 +30,16 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             borderBottomLeftRadius: 4,
             borderTopLeftRadius: 4,
             backgroundColor: order?.colorLabel,
-            marginHorizontal: 0
-          }}
-        ></View>
-      )
-    },
-    {
-      width: 'auto',
-      component: (
-        <View
-          style={{
-            flexDirection: 'row',
+            marginHorizontal: 0,
             justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            height: '100%'
-            //backgroundColor: order.colorLabel,
+            alignItems: 'center'
           }}
         >
           <ModalOrderQuickActionsE orderId={order.id} />
         </View>
       )
     },
+
     {
       width: 'rest',
       component: (
@@ -64,24 +49,35 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             flexDirection: bigScreen ? 'row' : 'column-reverse'
           }}
         >
-          <View style={{ width: 160, margin: bigScreen ? null : 'auto' }}>
+          <View
+            style={{
+              width: bigScreen ? '40%' : '100%'
+            }}
+          >
             <View style={{ flexDirection: 'row' }}>
+              {/* FOLIO AND NUMBER NOTE */}
               <View
                 style={{
                   // textAlign: 'center',
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  flex: 1
+                  flex: 1,
+                  width: '20%'
                 }}
-                // numberOfLines={1}
               >
                 <Text numberOfLines={1}>{order?.folio}</Text>
                 {!!order?.note && <Text numberOfLines={1}>-{order?.note}</Text>}
               </View>
+
+              {/* CUSTOMER NAME */}
+              <Text style={{ width: '50%' }} numberOfLines={1}>
+                <ClientName order={order} />
+              </Text>
+
+              {/* NEIGHBORHOOD */}
+              <Text style={{ width: '30%' }} numberOfLines={1}>
+                {order?.neighborhood}
+              </Text>
             </View>
-            <Text style={[{ textAlign: 'center' }]} numberOfLines={1}>
-              <ClientName order={order} />
-            </Text>
             {!!order?.itemsString && (
               <Text
                 numberOfLines={1}
@@ -90,33 +86,18 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
                 {order?.itemsString}
               </Text>
             )}
-            <Text
-              style={[gStyles.helper, { textAlign: 'center' }]}
-              numberOfLines={1}
-            >
-              {order?.neighborhood}
-            </Text>
           </View>
 
-          <View style={{ justifyContent: 'flex-start' }}>
+          <View
+            style={{
+              width: bigScreen ? '60%' : '100%',
+              justifyContent: 'flex-start'
+            }}
+          >
             <OrderDirectives order={order} />
           </View>
         </View>
       )
-    },
-
-    {
-      width: 34,
-      component: order.customerId ? (
-        <Button
-          icon="customerCard"
-          size="xs"
-          fullWidth={false}
-          onPress={() => {
-            toCustomers({ to: 'details', id: order.customerId })
-          }}
-        />
-      ) : null
     }
   ]
   return <ListRow fields={fields} style={{ marginVertical: 2, padding: 0 }} />
