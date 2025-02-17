@@ -15,6 +15,7 @@ export type CurrentWorkUpdate = {
   details?: CurrentWorkUpdateDetails
   createdAt: Timestamp | Date | FieldValue
   createdBy: string
+  id: string
 }
 export type CurrentWorkUpdateDetails = {
   orderId?: string

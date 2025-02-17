@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   CurrentWorkType,
-  CurrentWorkUpdate,
   NewWorkUpdate
 } from '../../../components/CurrentWork/CurrentWorkType'
 import { useEffect, useState } from 'react'

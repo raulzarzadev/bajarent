@@ -2,21 +2,34 @@ import { View, Text } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import List from '../List'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
+import { CurrentWorkUpdate } from './CurrentWorkType'
+import asDate, { dateFormat } from '../../libs/utils-date'
+import { useAuth } from '../../contexts/authContext'
+import { useEmployee } from '../../contexts/employeeContext'
 const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const { data } = useCurrentWork()
-  console.log({ data })
-  return null
+  const {
+    permissions: { isAdmin }
+  } = useEmployee()
+  const currentWorks: CurrentWorkUpdate[] = Object.entries(
+    data?.updates || {}
+  ).map(([id, value]) => ({ id, ...value }))
+  console.log({ currentWorks })
+  if (!isAdmin) return null
+  if (currentWorks?.length === 0) return null
   return (
     <View>
       <Text>Trabajo actual</Text>
       <List
-        data={[]}
+        data={currentWorks}
         ComponentRow={({ item }) => {
           return (
-            <View>
-              <Text>{item.storeId}</Text>
-              <Text>{item.date}</Text>
-              <Text>{item.updates}</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ marginRight: 6 }}>
+                {dateFormat(asDate(item.createdAt), 'dd/MM/yy HH:mm:sss')}
+              </Text>
+              <Text style={{ marginRight: 6 }}>{item.type}</Text>
+              <Text style={{ marginRight: 6 }}>{item.action}</Text>
             </View>
           )
         }}
