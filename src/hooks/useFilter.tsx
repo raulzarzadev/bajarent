@@ -188,7 +188,13 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   useEffect(() => {
-    search(searchValue)
+    if (searchValue) {
+      search(searchValue) // if is data, it will search again
+    } else {
+      // if not, it will filter the data
+      const res = filterDataByFields(data, filtersBy)
+      setFilteredData(res)
+    }
   }, [data])
 
   const timeoutRef = useRef<number>()
