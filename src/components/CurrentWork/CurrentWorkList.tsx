@@ -4,7 +4,6 @@ import List from '../List'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 import { CurrentWorkUpdate } from './CurrentWorkType'
 import asDate, { dateFormat } from '../../libs/utils-date'
-import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
 const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const { data } = useCurrentWork()
@@ -14,7 +13,6 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const currentWorks: CurrentWorkUpdate[] = Object.entries(
     data?.updates || {}
   ).map(([id, value]) => ({ id, ...value }))
-  console.log({ currentWorks })
   if (!isAdmin) return null
   if (currentWorks?.length === 0) return null
   return (
