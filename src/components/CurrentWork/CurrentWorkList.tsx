@@ -22,6 +22,14 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
       <Text>Trabajo actual</Text>
       <List
         data={currentWorks}
+        sortFields={[
+          {
+            key: 'createdAt',
+            label: 'Fecha'
+          }
+        ]}
+        defaultSortBy="createdAt"
+        defaultOrder="des"
         ComponentRow={({ item }) => {
           return (
             <View style={{ flexDirection: 'row' }}>

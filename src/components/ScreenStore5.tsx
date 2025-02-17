@@ -148,8 +148,8 @@ const ScreenStore = (props) => {
 const TabMovements = () => {
   return (
     <View>
-      <ListMovements />
       <CurrentWorkListE />
+      <ListMovements />
     </View>
   )
 }
