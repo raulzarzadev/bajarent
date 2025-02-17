@@ -31,6 +31,8 @@ export type NewWorkUpdate = Pick<
 export type CurrentWorkType = CurrentWorkBase & BaseType
 export type WorkActions = keyof typeof WORK_ACTIONS
 export const orders_work_actions = {
+  repair_delivered: 'Reparación entregada',
+  repair_authorized: 'Reparación autorizada',
   repair_start: 'Reparación comenzada',
   repair_finish: 'Reparación terminada',
   repair_pickup_canceled: 'repair_pickup_canceled',

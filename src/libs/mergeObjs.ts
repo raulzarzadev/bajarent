@@ -15,6 +15,7 @@ const mergeDeep = (current: any, path: string, value: any) => {
   } else {
     // Manejar la asignación del valor usando la notación de puntos
     if (path.includes('.')) {
+      // esto podria causar problemas con las keys que tengan puntos
       const keys = path.split('.')
       let currentObj = current
 

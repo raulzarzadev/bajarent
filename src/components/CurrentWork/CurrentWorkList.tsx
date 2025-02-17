@@ -7,6 +7,7 @@ import asDate, { dateFormat } from '../../libs/utils-date'
 import { useEmployee } from '../../contexts/employeeContext'
 const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const { data } = useCurrentWork()
+  console.log({ data })
   const {
     permissions: { isAdmin }
   } = useEmployee()

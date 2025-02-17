@@ -80,7 +80,7 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
             })
             addWork({
               work: {
-                action: 'repair_pickup_canceled',
+                action: 'repair_authorized',
                 type: 'order',
                 details: {
                   orderId: order.id
@@ -103,6 +103,15 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
           selectedLabel="Reprada "
           unselectedLabel="Terminar "
           onPress={async () => {
+            addWork({
+              work: {
+                action: 'repair_finish',
+                type: 'order',
+                details: {
+                  orderId: order.id
+                }
+              }
+            })
             await onRepairFinish({
               orderId: order.id,
               userId: user.id,
@@ -115,6 +124,15 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
           selectedLabel="Entregado "
           unselectedLabel="Entregar "
           onPress={async () => {
+            addWork({
+              work: {
+                action: 'repair_delivered',
+                type: 'order',
+                details: {
+                  orderId: order.id
+                }
+              }
+            })
             await onRepairDelivery({
               orderId: order.id,
               userId: user.id,

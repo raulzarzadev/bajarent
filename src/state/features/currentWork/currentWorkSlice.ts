@@ -51,31 +51,12 @@ export const selectCurrentWork = (state: { currentWork: CurrentWorkState }) =>
 export const currentWorkReducer = currentWorkSlice.reducer
 
 export const useCurrentWork = () => {
+  const dispatch = useDispatch()
+
   const { storeId } = useStore()
   const { user } = useAuth()
-  const dispatch = useDispatch()
-  const [data, setData] = useState<CurrentWorkType>(null)
-
-  const update = (data) =>
-    dispatch(fetchCurrentWorkSuccess(convertTimestamps(data, { to: 'string' })))
-  const fetch = () => {
-    ServiceCurrentWork.getTodayWork(storeId)
-      .then((data) => {
-        update(data)
-        setData(data)
-      })
-      .catch((error) => dispatch(fetchCurrentWorkFailure(error.message)))
-  }
   const currentWork = useSelector(selectCurrentWork)
-  const addWork = ({ work }: { work?: NewWorkUpdate }) => {
-    ServiceCurrentWork.addWork({
-      storeId,
-      work,
-      userId: user.id
-    }).then((res) => {
-      console.log(res)
-    })
-  }
+
   useEffect(() => {
     if (storeId) {
       fetch()
@@ -83,5 +64,25 @@ export const useCurrentWork = () => {
       update(null)
     }
   }, [storeId])
-  return { ...currentWork, update, fetch, data, addWork }
+
+  const update = (data) =>
+    dispatch(fetchCurrentWorkSuccess(convertTimestamps(data, { to: 'string' })))
+
+  const fetch = () => {
+    ServiceCurrentWork.getTodayWork(storeId)
+      .then((data) => {
+        update(data)
+      })
+      .catch((error) => dispatch(fetchCurrentWorkFailure(error.message)))
+  }
+  const addWork = ({ work }: { work?: NewWorkUpdate }) => {
+    ServiceCurrentWork.addWork({
+      storeId,
+      work,
+      userId: user.id
+    }).then((res) => {
+      update(res)
+    })
+  }
+  return { ...currentWork, update, fetch, addWork }
 }

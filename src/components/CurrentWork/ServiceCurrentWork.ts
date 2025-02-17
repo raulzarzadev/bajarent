@@ -35,13 +35,14 @@ class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
     userId: string
   }) {
     const doc = await this.getTodayWork(storeId)
-    const updateId = new Date().toISOString()
+    const updateId = new Date().toISOString().replace(/\./g, ':') //*replace "."->":" avoid problems to serialize and update values in redux
     if (doc) {
       return await this.update(doc.id, {
         updates: {
           ...doc.updates,
           [updateId]: {
             ...work,
+            id: updateId,
             createdBy: userId,
             createdAt: serverTimestamp()
           }
