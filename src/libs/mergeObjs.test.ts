@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { mergeObjs } from './mergeObjs'
 
 describe('mergeObjs', () => {

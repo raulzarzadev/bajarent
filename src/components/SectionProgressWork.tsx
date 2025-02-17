@@ -90,17 +90,8 @@ const ModalOrdersListOfProgressWork = ({
   const underLabel = `${doneOrders.length}/${
     doneOrders.length + pendingOrders.length
   }`
-  const progress = calculateProgress(doneOrders.length, pendingOrders.length)
   return (
     <View style={{ marginVertical: 6 }}>
-      <Pressable onPress={modal.toggleOpen}>
-        <ProgressWork
-          progress={progress}
-          label={label}
-          underLabel={underLabel}
-          icon={icon}
-        />
-      </Pressable>
       <StyledModal {...modal}>
         <ListOrders
           orders={doneOrders}

@@ -9,6 +9,7 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import FormRepairDelivery from './FormRepairDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { RepairItemConfigInfo } from '../OrderDetails'
+import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 
 const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
@@ -16,7 +17,7 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
   // const items = order?.items
 
   const { user } = useAuth()
-
+  const { addWork } = useCurrentWork()
   const handleStartRepair = async () => {
     //*pickup items
     modal.setOpen(false)
@@ -25,6 +26,15 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
       orderId: order.id,
       userId: user.id,
       storeId
+    })
+    addWork({
+      work: {
+        action: 'repair_start',
+        type: 'order',
+        details: {
+          orderId: order.id
+        }
+      }
     })
   }
 

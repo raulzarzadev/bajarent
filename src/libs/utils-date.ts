@@ -171,6 +171,12 @@ const convertDateToString = (date: Date) => {
   return date.toISOString()
 }
 
+/**
+ *
+ * @param obj any object that you want to pass to redux to avoid non serializable values
+ * @param options {to: 'date' | 'string'} to convert all Timestamps to Date or string
+ * @returns
+ */
 export const convertTimestamps = (
   obj: any,
   options: { to: 'date' | 'string' }

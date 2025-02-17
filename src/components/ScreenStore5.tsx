@@ -28,6 +28,7 @@ import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import ModalCloseOperations from '../ModalCloseOperations'
 import { StoreBalanceE } from './StoreBalance/StoreBalance'
+import { CurrentWorkListE } from './CurrentWork/CurrentWorkList'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()
@@ -148,6 +149,7 @@ const TabMovements = () => {
   return (
     <View>
       <ListMovements />
+      <CurrentWorkListE />
     </View>
   )
 }

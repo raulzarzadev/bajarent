@@ -30,6 +30,7 @@ import InputTextStyled from '../InputTextStyled'
 import useMyNav from '../../hooks/useMyNav'
 import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
 import StyledModal from '../StyledModal'
+import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 
 //* repaired
 function OrderActions() {
@@ -54,6 +55,8 @@ export const OrderActionsE = (props) => (
 const RepairOrderActions = ({ order }: { order: OrderType }) => {
   const { user } = useAuth()
   const { storeId } = useStore()
+  const { addWork } = useCurrentWork()
+
   const status = order?.status
   const isDelivered = status === order_status.DELIVERED
   const isRepaired = status === order_status.REPAIRED
@@ -74,6 +77,15 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
               orderId: order.id,
               userId: user.id,
               storeId
+            })
+            addWork({
+              work: {
+                action: 'repair_pickup_canceled',
+                type: 'order',
+                details: {
+                  orderId: order.id
+                }
+              }
             })
           }}
         />

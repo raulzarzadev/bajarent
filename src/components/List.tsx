@@ -40,7 +40,7 @@ export type ListPops<T extends { id: string }> = {
   sortFields?: { key: string; label: string }[]
   ComponentRow: FC<{ item: T }>
   defaultSortBy?: keyof T
-  filters: FilterListType<T>[]
+  filters?: FilterListType<T>[]
   defaultOrder?: 'asc' | 'des'
   sideButtons?: ListSideButton[]
   rowsPerPage?: number
@@ -63,7 +63,7 @@ function MyList<T extends { id: string }>({
   ComponentMultiActions,
   defaultSortBy,
   defaultOrder = 'asc',
-  filters,
+  filters = [],
   preFilteredIds,
   sideButtons = [],
   rowsPerPage = 10,
