@@ -5,6 +5,7 @@ import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlic
 const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const { data } = useCurrentWork()
   console.log({ data })
+  return null
   return (
     <View>
       <Text>Trabajo actual</Text>
