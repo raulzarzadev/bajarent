@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   CurrentWorkType,
+  CurrentWorkUpdate,
+  CurrentWorkUpdateDetails,
   NewWorkUpdate
 } from '../../../components/CurrentWork/CurrentWorkType'
 import { useEffect, useState } from 'react'
@@ -16,7 +18,7 @@ export type CurrentWorkState = {
   error: string | null
 }
 export const initialState: CurrentWorkState = {
-  data: null,
+  data: undefined,
   loading: false,
   error: null
 }
@@ -35,6 +37,15 @@ export const currentWorkSlice = createSlice({
     fetchCurrentWorkFailure(state, action: PayloadAction<string>) {
       state.loading = false
       state.error = action.payload
+    },
+    addWork(state, action: PayloadAction<CurrentWorkUpdate>) {
+      state.data = {
+        ...state.data,
+        updates: {
+          ...(state?.data?.updates || {}),
+          [action.payload.id]: action.payload
+        }
+      }
     }
   }
 })
@@ -42,7 +53,8 @@ export const currentWorkSlice = createSlice({
 export const {
   fetchCurrentWorkRequest,
   fetchCurrentWorkSuccess,
-  fetchCurrentWorkFailure
+  fetchCurrentWorkFailure,
+  addWork: addWorkToCurrentWork
 } = currentWorkSlice.actions
 
 export const selectCurrentWork = (state: { currentWork: CurrentWorkState }) =>
@@ -69,9 +81,9 @@ export const useCurrentWork = () => {
     dispatch(fetchCurrentWorkSuccess(convertTimestamps(data, { to: 'string' })))
 
   const fetch = () => {
-    ServiceCurrentWork.getTodayWork(storeId)
+    ServiceCurrentWork.getByDate({ storeId })
       .then((data) => {
-        update(data)
+        update(data || null)
       })
       .catch((error) => dispatch(fetchCurrentWorkFailure(error.message)))
   }
@@ -80,8 +92,8 @@ export const useCurrentWork = () => {
       storeId,
       work,
       userId: user.id
-    }).then((res) => {
-      update(res)
+    }).then((res: CurrentWorkUpdate) => {
+      dispatch(addWorkToCurrentWork(res))
     })
   }
   return { ...currentWork, update, fetch, addWork }

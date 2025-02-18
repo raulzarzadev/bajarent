@@ -19,6 +19,7 @@ import { useCustomers } from '../../state/features/costumers/costumersSlice'
 
 import { CustomerType } from '../../state/features/costumers/customerType'
 import { createUUID } from '../../libs/createId'
+import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { store, storeId } = useStore()
@@ -27,6 +28,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const [isDirty, setIsDirty] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
   const { create } = useCustomers()
+  const { addWork } = useCurrentWork()
+
   const handleRentStart = async ({
     lastPayment
   }: {
@@ -35,7 +38,15 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
     //*pickup items
     setIsLoading(true)
     await onRentStart({ order, userId: user.id, store, lastPayment })
-
+    addWork({
+      work: {
+        action: 'rent_delivered',
+        type: 'order',
+        details: {
+          orderId: order.id
+        }
+      }
+    })
     setIsLoading(false)
     modal.toggleOpen()
     return
@@ -96,32 +107,6 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
                 values.customerId = payload?.id
               }
             }
-            // if (!order.customerId) {
-            //   const customerImages = customerImagesFromOrder({
-            //     houseImage: values?.imageHouse || null,
-            //     ID: values?.imageID || null,
-            //     signature: values?.signature || null
-            //   })
-            //   const customerUpdates: Partial<CustomerType> = {
-            //     images: customerImages as Record<string, ImageDescriptionType>,
-            //     address: {
-            //       references: values.references || '',
-            //       neighborhood: values.neighborhood || '',
-            //       street: values.street || '',
-            //       locationURL: values.location || '',
-            //       coords: values.coords
-            //         ? `${values.coords[0]},${values.coords[1]}`
-            //         : null
-            //     }
-            //   }
-            //   await updateCustomer(order.customerId, customerUpdates)
-            //     .then((res) => {
-            //       console.log(res)
-            //     })
-            //     .catch((e) => {
-            //       console.error(e)
-            //     })
-            // }
 
             await ServiceOrders.update(order.id, values)
               .then((res) => console.log(res))
@@ -202,6 +187,8 @@ const AddPay = ({
     storeId: store.id,
     orderId: order.id
   }
+  const { addWork } = useCurrentWork()
+
   const handleSavePayment = async ({ values }) => {
     const amount = parseFloat(values.amount || 0)
     return await ServicePayments.orderPayment({
@@ -209,7 +196,6 @@ const AddPay = ({
       amount
     })
   }
-  //const paymentModal = useModal({ title: 'Registrar pago' })
   return (
     <View
       style={{
@@ -229,7 +215,19 @@ const AddPay = ({
             modal.toggleOpen()
             try {
               const res = await handleSavePayment({ values })
+
               handlePaidOrder(res.res.id)
+              const paymentId = res?.res?.id
+              addWork({
+                work: {
+                  action: 'payment_created',
+                  type: 'payment',
+                  details: {
+                    orderId: order.id,
+                    paymentId
+                  }
+                }
+              })
               return
             } catch (error) {
               console.error({ error })

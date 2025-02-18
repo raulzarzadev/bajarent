@@ -12,6 +12,7 @@ import { sumTimeToDate, translateTime } from '../../libs/expireDate'
 import { useOrderDetails } from '../../contexts/orderContext'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import { gStyles } from '../../styles'
+import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 
 const AddExtendExpire = ({
   orderId,
@@ -25,11 +26,19 @@ const AddExtendExpire = ({
   const [reason, setReason] = useState('')
   const [disabled, setDisabled] = useState(false)
   const [unit, setUnit] = useState<TimeType>('day')
-
+  const { addWork } = useCurrentWork()
   const { order } = useOrderDetails()
   const handleExtend = async () => {
     setDisabled(true)
-
+    addWork({
+      work: {
+        type: 'order',
+        action: 'rent_extended',
+        details: {
+          orderId
+        }
+      }
+    })
     await onExtend_V2({
       items: order.items,
       orderId: order.id,

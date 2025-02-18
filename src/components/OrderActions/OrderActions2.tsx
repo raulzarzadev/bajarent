@@ -225,6 +225,7 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
 }
 
 const ButtonCancelDelivery = ({ order, user }) => {
+  const { addWork } = useCurrentWork()
   return (
     <View style={{ marginVertical: 'auto' }}>
       <ButtonConfirm
@@ -238,6 +239,15 @@ const ButtonCancelDelivery = ({ order, user }) => {
         //openSize=""
         text="¿Estás seguro de que quieres cancelar entrega?"
         handleConfirm={async () => {
+          addWork({
+            work: {
+              action: 'rent_delivered_canceled',
+              type: 'order',
+              details: {
+                orderId: order.id
+              }
+            }
+          })
           //* UPDATE ORDER
           ServiceOrders.update(order.id, {
             status: order_status.AUTHORIZED,
@@ -362,6 +372,7 @@ const ButtonPickUp = ({}) => {
 }
 
 const ButtonCancel = ({ order, user }) => {
+  const { addWork } = useCurrentWork()
   const [comment, setComment] = useState('')
   const MIN_COMMENT_LENGTH = 10
   return (
@@ -387,6 +398,15 @@ const ButtonCancel = ({ order, user }) => {
               cancelledReason: comment
             }
             onCancel(res)
+            addWork({
+              work: {
+                action: 'rent_canceled',
+                type: 'order',
+                details: {
+                  orderId: order.id
+                }
+              }
+            })
           }}
         >
           <View style={{ marginBottom: 8 }}>
@@ -407,6 +427,7 @@ const ButtonCancel = ({ order, user }) => {
   )
 }
 const ButtonCancelPickUp = ({ order, user }) => {
+  const { addWork } = useCurrentWork()
   return (
     <View style={{ marginVertical: 'auto' }}>
       <ButtonConfirm
@@ -420,6 +441,15 @@ const ButtonCancelPickUp = ({ order, user }) => {
         // openSize="small"
         text="¿Estás seguro de que quieres cancelar la recolección?"
         handleConfirm={async () => {
+          addWork({
+            work: {
+              action: 'rent_picked_up_canceled',
+              type: 'order',
+              details: {
+                orderId: order.id
+              }
+            }
+          })
           //* UPDATE ORDER
           ServiceOrders.update(order.id, {
             status: order_status.DELIVERED,
@@ -492,6 +522,8 @@ const ButtonAction = ({
 }
 
 const ButtonAuthorize = ({ order, user }) => {
+  const { addWork } = useCurrentWork()
+
   //TODO: send whatsapp when order is authorized, complement with route and date of delivery
   return (
     <Button
@@ -501,6 +533,15 @@ const ButtonAuthorize = ({ order, user }) => {
           orderId: order.id,
           userId: user.id,
           storeId: order.storeId
+        })
+        addWork({
+          work: {
+            action: 'rent_authorized',
+            type: 'order',
+            details: {
+              orderId: order.id
+            }
+          }
         })
       }}
     />

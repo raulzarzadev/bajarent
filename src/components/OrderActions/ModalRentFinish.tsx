@@ -11,15 +11,27 @@ import { useAuth } from '../../contexts/authContext'
 import CardItem from '../CardItem'
 import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
 import { useStore } from '../../contexts/storeContext'
+import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 
 const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
   const { user } = useAuth()
   const { store } = useStore()
+  const { addWork } = useCurrentWork()
   const items = order?.items || []
   const handleRentFinish = async () => {
     //*pickup items
+
     modal.setOpen(false)
+    addWork({
+      work: {
+        type: 'order',
+        action: 'rent_picked_up',
+        details: {
+          orderId: order.id
+        }
+      }
+    })
     onRentFinish({ order, userId: user.id })
     onSendOrderWhatsapp({
       store,

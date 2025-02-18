@@ -41,6 +41,14 @@ export const dateFormat = (
   return res
 }
 
+export type PlaneDateType = `${number}-${number}-${number}`
+export const planeDate = (date: Date): PlaneDateType => {
+  return dateFormat(
+    new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+    'dd-MM-yyyy'
+  ) as PlaneDateType
+}
+
 const customLocale = {
   ...es,
   formatDistance: (

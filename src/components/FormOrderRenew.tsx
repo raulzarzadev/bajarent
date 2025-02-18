@@ -26,11 +26,13 @@ import { useAuth } from '../contexts/authContext'
 import { TimePriceType, TimeType } from '../types/PriceType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
   const { store } = useStore()
   const { user } = useAuth()
+  const { addWork } = useCurrentWork()
   const items = order?.items || []
   const [payment, setPayment] = useState<Partial<PaymentType>>({
     method: 'transfer',
@@ -81,6 +83,15 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     orderId: string
     payment?: PaymentType
   }) => {
+    addWork({
+      work: {
+        type: 'order',
+        action: 'rent_renewed',
+        details: {
+          orderId
+        }
+      }
+    })
     await onExtend_V2({
       orderId,
       reason: 'renew',

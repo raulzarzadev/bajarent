@@ -7,6 +7,7 @@ import { PaymentBase } from '../types/PaymentType'
 import ErrorBoundary from './ErrorBoundary'
 import { ServicePayments } from '../firebase/ServicePayments'
 import FormPayment from './FormPayment'
+import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
 
 export type ModalPaymentProps = {
   orderId: string
@@ -31,14 +32,27 @@ export const ModalPayment = ({
   const label = 'Registrar pago'
 
   const modal = useModal({ title: label })
-
+  const { addWork } = useCurrentWork()
   const handleSavePayment = async ({ values }) => {
     const amount = parseFloat(values.amount || 0)
     await ServicePayments.orderPayment({
       ...values,
       amount
     })
-      .then(console.log)
+      .then((res) => {
+        const paymentId = res?.res?.id
+        addWork({
+          work: {
+            action: 'payment_created',
+            type: 'payment',
+            details: {
+              orderId,
+              paymentId
+            }
+          }
+        })
+        console.log('Payment saved')
+      })
       .catch(console.error)
   }
 

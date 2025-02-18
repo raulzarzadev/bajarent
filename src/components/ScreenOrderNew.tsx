@@ -12,10 +12,12 @@ import { createUUID } from '../libs/createId'
 import { OrderProvider } from '../contexts/orderContext'
 import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
 import { getFavoriteCustomerPhone } from './Customers/lib/lib'
+import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
 //
 const ScreenOrderNew = (navigation) => {
   const customerId = navigation?.route?.params?.customerId
   const { storeId, store } = useStore()
+  const { addWork } = useCurrentWork()
   const { create } = useCustomers()
   const { user } = useAuth()
   const { toOrders } = useMyNav()
@@ -91,6 +93,15 @@ const ScreenOrderNew = (navigation) => {
     return await ServiceOrders.createSerialOrder(defaultValues).then(
       async (orderId) => {
         if (orderId) {
+          addWork({
+            work: {
+              type: 'order',
+              action: 'created',
+              details: {
+                orderId: orderId
+              }
+            }
+          })
           const shouldSendWhatsappWhenNewOrder =
             !!store.chatbot?.enabled && !!store.chatbot.config.sendNewStoreOrder
 

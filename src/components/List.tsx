@@ -416,7 +416,9 @@ function MyList<T extends { id: string }>({
         {/* CONTENT  */}
         <SectionList
           renderSectionHeader={({ section }) => {
-            // adding a gap if are collectionData customData
+            const otherSectionsAreEmpty =
+              pinnedRowsData?.length === 0 && collectionData?.length === 0
+            if (otherSectionsAreEmpty) return null //* avoid shows title if there are no other sections
             return section.data.length ? (
               <Text style={gStyles.helper}>{section?.title}</Text>
             ) : null

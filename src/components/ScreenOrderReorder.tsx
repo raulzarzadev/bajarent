@@ -6,10 +6,12 @@ import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
 
 const ScreenOrderReorder = ({ route }) => {
   const orderId = route?.params?.orderId
   const { navigate } = useNavigation()
+  const { addWork } = useCurrentWork()
   const { data: customers } = useCustomers()
   const [originalOrder, setOriginalOrder] = useState<OrderType | null>(null)
   useEffect(() => {
@@ -56,9 +58,19 @@ const ScreenOrderReorder = ({ route }) => {
           ...order,
           status: order_status.AUTHORIZED
         }
+
         // @ts-ignore
         await ServiceOrders.createSerialOrder(reOrder)
           .then((orderId) => {
+            addWork({
+              work: {
+                type: 'order',
+                action: 'reorder',
+                details: {
+                  orderId: orderId
+                }
+              }
+            })
             if (orderId) {
               // @ts-ignore
               navigate('OrderDetails', { orderId: orderId })
