@@ -138,7 +138,7 @@ const OrderStatus = ({
       {repairDelivered && (
         <Chip
           style={[chipStyles]}
-          title={dateFormat(asDate(order?.deliveredAt), 'dd / MMM')}
+          title={dateFormat(asDate(order?.deliveredAt), 'dd/MMM')}
           icon="home"
           color={theme.transparent}
           size={chipSize}
@@ -154,7 +154,7 @@ const OrderStatus = ({
       {isRent && isDelivered && !expiresTomorrow && !isExpired && (
         <Chip
           style={[chipStyles]}
-          title={dateFormat(asDate(order?.expireAt), 'dd / MMM')}
+          title={dateFormat(asDate(order?.expireAt), 'dd/MMM')}
           icon="home"
           color={theme.info}
           // titleColor={theme.white}

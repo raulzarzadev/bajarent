@@ -59,13 +59,15 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
               <View
                 style={{
                   // textAlign: 'center',
-                  flexDirection: 'row',
+                  flexDirection: 'column',
                   flex: 1,
                   width: '20%'
                 }}
               >
                 <Text numberOfLines={1}>{order?.folio}</Text>
-                {!!order?.note && <Text numberOfLines={1}>-{order?.note}</Text>}
+                <Text numberOfLines={1} style={gStyles.helper}>
+                  {order?.note}
+                </Text>
               </View>
 
               {/* CUSTOMER NAME */}

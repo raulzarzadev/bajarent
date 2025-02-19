@@ -1,12 +1,17 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
 import List from '../List'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 import { CurrentWorkUpdate } from './CurrentWorkType'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import { useEmployee } from '../../contexts/employeeContext'
+import { gStyles } from '../../styles'
+import Icon from '../Icon'
+import useMyNav from '../../hooks/useMyNav'
+import theme from '../../theme'
 const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const { data } = useCurrentWork()
+  const { toOrders, toPayments } = useMyNav()
   console.log({ data })
   const {
     permissions: { isAdmin }
@@ -18,7 +23,7 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
   if (currentWorks?.length === 0) return null
   return (
     <View>
-      <Text>Trabajo actual</Text>
+      <Text style={gStyles.h2}>Trabajo actual</Text>
       <List
         data={currentWorks}
         sortFields={[
@@ -37,6 +42,20 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
               </Text>
               <Text style={{ marginRight: 6 }}>{item.type}</Text>
               <Text style={{ marginRight: 6 }}>{item.action}</Text>
+              {item?.type === 'order' && (
+                <Pressable
+                  onPress={() => toOrders({ id: item?.details?.orderId })}
+                >
+                  <Icon icon="openEye" size={12} color={theme.primary} />
+                </Pressable>
+              )}
+              {item?.type === 'payment' && (
+                <Pressable
+                  onPress={() => toPayments({ id: item?.details?.paymentId })}
+                >
+                  <Icon icon="openEye" size={12} color={theme.primary} />
+                </Pressable>
+              )}
             </View>
           )
         }}

@@ -58,7 +58,7 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
 
       <View style={{ width: 50 }}>
         <Chip
-          style={[styles.chip, { justifyContent: 'flex-start' }]}
+          style={[styles.chip, { justifyContent: 'flex-start', padding: 2 }]}
           title={orderType}
           icon={typeOrderIcon(order?.type)}
           color={theme?.transparent}
