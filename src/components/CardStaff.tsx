@@ -7,7 +7,13 @@ import UserType from '../types/UserType'
 import { gStyles } from '../styles'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
+import { useStore } from '../contexts/storeContext'
 
+export const StaffName = ({ userId }: { userId: string }) => {
+  const { staff } = useStore()
+  const staffName = staff.find((s) => s.userId === userId)?.name
+  return <Text>{staffName}</Text>
+}
 const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
   const { navigate } = useNavigation()
   const [_user, _setUser] = useState(user)
@@ -28,7 +34,7 @@ const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
     <View style={{ justifyContent: 'center' }}>
       {/* <Text style={gStyles.h1}>usuario</Text> */}
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <Text style={[gStyles.h2, { marginRight: 4 }]}>{_user?.name}</Text>
+        <Text style={[gStyles.h2, { marginRight: 4 }]}>{_user?.name} </Text>
         <Button
           icon="edit"
           justIcon

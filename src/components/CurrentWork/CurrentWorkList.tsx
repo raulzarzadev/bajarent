@@ -9,16 +9,26 @@ import { gStyles } from '../../styles'
 import Icon from '../Icon'
 import useMyNav from '../../hooks/useMyNav'
 import theme from '../../theme'
+import { StaffName } from '../CardStaff'
+import { useStore } from '../../contexts/storeContext'
+
 const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const { data } = useCurrentWork()
+  const { staff } = useStore()
   const { toOrders, toPayments } = useMyNav()
-  console.log({ data })
   const {
     permissions: { isAdmin }
   } = useEmployee()
-  const currentWorks: CurrentWorkUpdate[] = Object.entries(
+  type CurrentWorkUpdateStaffName = CurrentWorkUpdate & {
+    createdByName: string
+  }
+  const currentWorks: CurrentWorkUpdateStaffName[] = Object.entries(
     data?.updates || {}
-  ).map(([id, value]) => ({ id, ...value }))
+  ).map(([id, value]) => {
+    const createdByName = staff.find((s) => s.userId === value.createdBy)?.name
+    return { id, ...value, createdByName }
+  })
+
   if (!isAdmin) return null
   if (currentWorks?.length === 0) return null
   return (
@@ -26,10 +36,21 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
       <Text style={gStyles.h2}>Trabajo actual</Text>
       <List
         data={currentWorks}
+        filters={[
+          {
+            field: 'createdByName',
+            label: 'Creado por: ',
+            icon: 'profile'
+          }
+        ]}
         sortFields={[
           {
             key: 'createdAt',
             label: 'Fecha'
+          },
+          {
+            key: 'createdBy',
+            label: 'Staff'
           }
         ]}
         defaultSortBy="createdAt"
@@ -37,11 +58,12 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
         ComponentRow={({ item }) => {
           return (
             <View style={{ flexDirection: 'row' }}>
-              <Text style={{ marginRight: 6 }}>
+              <Text style={{ marginHorizontal: 6 }}>
                 {dateFormat(asDate(item.createdAt), 'dd/MM/yy HH:mm:sss')}
               </Text>
-              <Text style={{ marginRight: 6 }}>{item.type}</Text>
-              <Text style={{ marginRight: 6 }}>{item.action}</Text>
+              {<StaffName userId={item?.createdBy} />}
+              <Text style={{ marginHorizontal: 6 }}>{item.type}</Text>
+              <Text style={{ marginHorizontal: 6 }}>{item.action}</Text>
               {item?.type === 'order' && (
                 <Pressable
                   onPress={() => toOrders({ id: item?.details?.orderId })}
