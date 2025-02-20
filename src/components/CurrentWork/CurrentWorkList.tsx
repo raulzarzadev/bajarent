@@ -59,7 +59,7 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
           return (
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ marginHorizontal: 6 }}>
-                {dateFormat(asDate(item.createdAt), 'dd/MM/yy HH:mm:sss')}
+                {dateFormat(asDate(item.createdAt), 'dd/MM/yy HH:mm:ss')}
               </Text>
               {<StaffName userId={item?.createdBy} />}
               <Text style={{ marginHorizontal: 6 }}>{item.type}</Text>
