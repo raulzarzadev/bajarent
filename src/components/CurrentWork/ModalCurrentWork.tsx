@@ -8,12 +8,15 @@ import InputSwitch from '../InputSwitch'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/authContext'
 import { ServicePayments } from '../../firebase/ServicePayments'
+import { BalanceAmountsE } from '../BalanceAmounts'
+import { CurrentWorkUpdate } from './CurrentWorkType'
+import { gStyles } from '../../styles'
 const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   const modal = useModal({ title: 'Trabajo actual' })
-  const { data: currentWork, loading } = useCurrentWork()
+  const { data: currentWork, loading, fetch } = useCurrentWork()
   const { user } = useAuth()
   const [workType, setWorkType] = useState<'personal' | 'sections'>('personal')
-
+  const [personalWorks, setPersonalWorks] = useState<CurrentWorkUpdate[]>([])
   const toggleWorkType = () => {
     setWorkType(workType === 'personal' ? 'sections' : 'personal')
   }
@@ -21,42 +24,71 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
 
   useEffect(() => {
     if (currentWork) {
-      const workUpdates = Object.values(currentWork?.updates || {})
-      const personalWork = workUpdates.filter(
+      const personalWork = Object.values(currentWork?.updates || {}).filter(
         (update) => update?.createdBy === user?.id
       )
+      setPersonalWorks(personalWork)
+    }
+  }, [currentWork])
 
-      const userPaymentsIds = personalWork
-        .filter((update) => update.type == 'payment')
-        .map((update) => update.details?.paymentId)
-      ServicePayments.list(userPaymentsIds).then((payments) => {
+  useEffect(() => {
+    if (personalWorks.length) {
+      const paymentsIs = personalWorks
+        .filter((work) => work.type === 'payment')
+        .map((w) => w.details.paymentId)
+      ServicePayments.list(paymentsIs).then((payments) => {
         setPayments(payments)
       })
     }
-  }, [currentWork])
-  console.log({ payments, currentWork, loading })
+  }, [personalWorks.length])
+
+  const disabledSwitch = true
 
   return (
     <View>
       <Button
         justIcon
-        icon="balance"
+        icon="folderCheck"
         onPress={modal.toggleOpen}
         variant="ghost"
       />
       <StyledModal {...modal}>
-        <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-          <Text>Por area</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            flexDirection: 'row',
+            marginBottom: 6
+          }}
+        >
+          <Text
+            style={[
+              workType === 'sections' && gStyles.tBold,
+              disabledSwitch && { opacity: 0.5 }
+            ]}
+          >
+            Por area
+          </Text>
           <InputSwitch
             value={workType === 'personal'}
-            disabled={true}
+            disabled={disabledSwitch}
             setValue={() => {
               toggleWorkType()
             }}
           />
-          <Text>Personal</Text>
+          <Text
+            style={[
+              workType === 'personal' && gStyles.tBold,
+              disabledSwitch && { opacity: 0.5 }
+            ]}
+          >
+            Personal
+          </Text>
         </View>
-        {workType === 'personal' && <View></View>}
+        {workType === 'personal' && (
+          <View>
+            <BalanceAmountsE payments={payments} disableLinks />
+          </View>
+        )}
       </StyledModal>
     </View>
   )

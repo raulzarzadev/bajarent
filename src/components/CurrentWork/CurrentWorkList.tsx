@@ -11,6 +11,7 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const {
     permissions: { isAdmin }
   } = useEmployee()
+
   const currentWorks: CurrentWorkUpdate[] = Object.entries(
     data?.updates || {}
   ).map(([id, value]) => ({ id, ...value }))

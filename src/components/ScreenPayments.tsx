@@ -104,7 +104,7 @@ export default function ScreenPayments({ navigation, route }) {
         data={payments.map((payment) => {
           payment.amount = parseFloat(`${payment.amount || 0}`) || 0
           payment.createdByName =
-            staff.find((s) => s.userId === payment.createdBy)?.name ||
+            staff?.find((s) => s.userId === payment.createdBy)?.name ||
             'sin nombre'
           return payment
         })}
