@@ -90,9 +90,11 @@ import { TbClipboardSearch } from 'react-icons/tb'
 import { IoIosGitMerge } from 'react-icons/io'
 import { BsClipboardCheck } from 'react-icons/bs'
 import { BsClipboardPlus } from 'react-icons/bs'
+import { RiFolderCheckFill } from 'react-icons/ri'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  folderCheck: RiFolderCheckFill,
   merge: IoIosGitMerge,
   orderAdd: BsClipboardPlus,
   orderDone: BsClipboardCheck,

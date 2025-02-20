@@ -19,10 +19,15 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
   const {
     permissions: { isAdmin }
   } = useEmployee()
+<<<<<<< HEAD
   type CurrentWorkUpdateStaffName = CurrentWorkUpdate & {
     createdByName: string
   }
   const currentWorks: CurrentWorkUpdateStaffName[] = Object.entries(
+=======
+
+  const currentWorks: CurrentWorkUpdate[] = Object.entries(
+>>>>>>> current-work-redux
     data?.updates || {}
   ).map(([id, value]) => {
     const createdByName = staff.find((s) => s.userId === value.createdBy)?.name

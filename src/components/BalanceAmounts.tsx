@@ -6,8 +6,14 @@ import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
 
-export type BalanceAmountsProps = { payments: Partial<PaymentType>[] }
-const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
+export type BalanceAmountsProps = {
+  payments: Partial<PaymentType>[]
+  disableLinks?: boolean
+}
+const BalanceAmounts = ({
+  payments = [],
+  disableLinks
+}: BalanceAmountsProps) => {
   const cashPayments = payments?.filter((p) => p.method === 'cash')
   const cardPayments = payments?.filter((p) => p.method === 'card')
   const transferPayments = payments?.filter((p) => p.method === 'transfer')
@@ -52,6 +58,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
             }}
           >
             <LinkPayments
+              disabled={disableLinks}
               paymentsIds={allPayments.map(({ id }) => id)}
               amount={incomes}
               title={'VENTAS'}
@@ -61,6 +68,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           {!!cash && (
             <View style={styles.row}>
               <LinkPayments
+                disabled={disableLinks}
                 paymentsIds={cashPayments.map(({ id }) => id)}
                 amount={cash}
                 title={'Efectivo'}
@@ -70,6 +78,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           {!!transfers && (
             <View style={styles.row}>
               <LinkPayments
+                disabled={disableLinks}
                 paymentsIds={transferPayments.map(({ id }) => id)}
                 amount={transfers}
                 title={'Transferencias'}
@@ -79,6 +88,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           {!!transfersNotVerified && (
             <View style={[styles.row]}>
               <LinkPayments
+                disabled={disableLinks}
                 labelStyle={gStyles.tError}
                 paymentsIds={notVerifiedTransfers.map(({ id }) => id)}
                 amount={transfersNotVerified}
@@ -89,6 +99,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           {!!card && (
             <View style={styles.row}>
               <LinkPayments
+                disabled={disableLinks}
                 paymentsIds={cardPayments.map(({ id }) => id)}
                 amount={card}
                 title={'Tarjetas'}
@@ -100,6 +111,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
         {bonus > 0 && (
           <View style={styles.row}>
             <LinkPayments
+              disabled={disableLinks}
               paymentsIds={retirementBonus.map(({ id }) => id)}
               amount={bonus * -1}
               title={'Bonos'}
@@ -109,6 +121,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
         {expense > 0 && (
           <View style={styles.row}>
             <LinkPayments
+              disabled={disableLinks}
               paymentsIds={retirementExpense.map(({ id }) => id)}
               amount={expense * -1}
               title={'Gastos'}
@@ -118,6 +131,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
         {missing > 0 && (
           <View style={styles.row}>
             <LinkPayments
+              disabled={disableLinks}
               paymentsIds={retirementMissing.map(({ id }) => id)}
               amount={missing * -1}
               title={'Faltante'}
@@ -129,6 +143,7 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
         {!!canceledPayments.length && (
           <View style={styles.row}>
             <LinkPayments
+              disabled={disableLinks}
               paymentsIds={canceledPayments.map(({ id }) => id)}
               amount={canceled}
               title={'Cancelados'}
@@ -136,7 +151,12 @@ const BalanceAmounts = ({ payments = [] }: BalanceAmountsProps) => {
           </View>
         )}
         <View style={styles.row}>
-          <LinkPayments amount={total} title={''} labelStyle={gStyles.tBold} />
+          <LinkPayments
+            disabled={disableLinks}
+            amount={total}
+            title={''}
+            labelStyle={gStyles.tBold}
+          />
         </View>
       </View>
     </View>
@@ -148,18 +168,21 @@ const LinkPayments = ({
   paymentsIds = [],
   amount = 0,
   isTotal = false,
-  labelStyle
+  labelStyle,
+  disabled
 }: {
   title: string
   paymentsIds?: string[]
   amount?: number
   isTotal?: boolean
   labelStyle?: TextStyle
+  disabled?: boolean
 }) => {
   const { navigate } = useNavigation()
   return (
     <View style={[{ flexDirection: 'row' }]}>
       <Pressable
+        disabled={disabled}
         onPress={() => {
           //@ts-ignore
           navigate('StackPayments', {
@@ -179,7 +202,7 @@ const LinkPayments = ({
           <Text
             style={{
               width: 80,
-              textDecorationLine: 'underline',
+              textDecorationLine: disabled ? 'none' : 'underline',
               textAlign: 'right',
               ...labelStyle
             }}
