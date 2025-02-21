@@ -101,7 +101,20 @@ FormikSelectCategoriesProps) => {
     helpers.setValue(newItems)
   }
 
+  const handlePressItem = (itemId: string) => {
+    if (itemSelected === itemId) {
+      setItemSelected('')
+    } else {
+      setItemSelected(itemId)
+    }
+    const itemCategory = employeeItems.find(
+      (item) => item.id === itemId
+    ).category
+    setCategory(categories.find((cat) => cat.id === itemCategory))
+  }
+
   const disabledAddItem = !price || (shouldSelectAnItem && !itemSelected)
+
   return (
     <>
       <View
@@ -143,19 +156,7 @@ FormikSelectCategoriesProps) => {
             <ListAssignedItemsE
               categoryId={category?.id}
               itemSelected={itemSelected}
-              selectOnPress={(id) => {
-                if (itemSelected === id) {
-                  setItemSelected('')
-                } else {
-                  setItemSelected(id)
-                }
-                const itemCategory = employeeItems.find(
-                  (item) => item.id === id
-                ).category
-                setCategory(categories.find((cat) => cat.id === itemCategory))
-              }}
-              // onSelectItem={(id) => {
-              // }}
+              onPressItem={(itemId) => handlePressItem(itemId)}
             />
           </View>
           {!!selectPrice && (

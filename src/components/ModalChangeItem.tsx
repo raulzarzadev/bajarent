@@ -88,26 +88,15 @@ const ModalChangeItem = ({
         )}
         {itemExist && (
           <View>
-            {/* <TextInfo
-              type="warning"
-              text="Sí el artículo que recojes NO existe, NO se creara uno nuevo. Asegurate de crearlo antes de cambiarlo sí es necesario"
-              defaultVisible={true}
-            /> */}
             {viewAllItems ? (
               <ListItemsSectionsE
-                // onPressItem={(e) => {
-                //   setItemSelected(e)
-                // }}
                 itemSelected={itemSelected}
-                selectOnPress={setItemSelected}
+                onPressItem={setItemSelected}
               />
             ) : (
               <ListAssignedItemsE
-                // onPressItem={(e) => {
-                //   setItemSelected(e)
-                // }}
+                onPressItem={setItemSelected}
                 itemSelected={itemSelected}
-                selectOnPress={setItemSelected}
               />
             )}
           </View>

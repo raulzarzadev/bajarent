@@ -1,5 +1,4 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
@@ -11,26 +10,18 @@ import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import ItemActions from './ItemActions'
 import CardItem from './CardItem'
-import Button from './Button'
 import { formatItems } from '../libs/workshop.libs'
 
 export type ListAssignedItemsProps = {
   categoryId?: CategoryType['id']
   onPressItem?: (itemId: string) => void
   itemSelected?: string
-  /**
-   * @deprecated use selectOnPress instead
-   */
-  onSelectItem?: (itemId: string) => void
   layout?: 'row' | 'flex'
-  selectOnPress?: SectionItem['selectOnPress']
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
-  const onSelectItem = props?.onSelectItem
   const itemSelected = props?.itemSelected
   const categoryId = props?.categoryId
-  const selectOnPress = props?.selectOnPress
 
   const { items: availableItems } = useEmployee()
   const { categories, sections: storeSections } = useStore()
@@ -50,9 +41,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
         items={formattedItems}
         itemSelected={itemSelected}
         onPressItem={onPressItem}
-        onSelectItem={onSelectItem}
         layout={props?.layout}
-        selectOnPress={selectOnPress}
       />
     </View>
   )
@@ -62,17 +51,13 @@ export type RowSectionItemsProps = {
   items: Partial<ItemType>[]
   itemSelected?: string
   onPressItem?: (itemId: string) => void
-  onSelectItem?: (itemId: string) => void
   layout?: 'row' | 'flex'
-  selectOnPress?: SectionItem['selectOnPress']
 }
 const RowSectionItems = ({
   items,
   itemSelected,
   onPressItem,
-  onSelectItem,
-  layout = 'row',
-  selectOnPress
+  layout = 'row'
 }: RowSectionItemsProps) => {
   const sortByNumber = (a: ItemType, b: ItemType) =>
     parseFloat(a.number) - parseFloat(b.number)
@@ -90,10 +75,8 @@ const RowSectionItems = ({
               key={item.id}
               item={item}
               selected={itemSelected === item.id}
-              onPress={() => {
-                onPressItem?.(item.id)
-              }}
-              selectOnPress={selectOnPress}
+              onPress={onPressItem}
+              openModal
             />
           ))}
         </View>
@@ -107,29 +90,12 @@ const RowSectionItems = ({
         data={items.sort(sortByNumber)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View>
-            <SectionItem
-              item={item}
-              selected={itemSelected === item.id}
-              onPress={() => {
-                onPressItem?.(item.id)
-              }}
-              selectOnPress={selectOnPress}
-            />
-            <View style={{ padding: 2, marginTop: 2 }}>
-              {!!onSelectItem && (
-                <Button
-                  variant={itemSelected === item.id ? 'filled' : 'ghost'}
-                  size="xs"
-                  fullWidth
-                  onPress={() => {
-                    onSelectItem(item.id)
-                  }}
-                  label="Seleccionar"
-                ></Button>
-              )}
-            </View>
-          </View>
+          <SectionItem
+            item={item}
+            selected={itemSelected === item.id}
+            onPress={onPressItem}
+            openModal
+          />
         )}
       />
     )
@@ -138,14 +104,14 @@ const RowSectionItems = ({
 export type SectionItem = {
   item: Partial<ItemType>
   selected?: boolean
-  onPress?: () => void
-  selectOnPress?: (itemId: string) => void
+  onPress?: (itemId: string) => void
+  openModal?: boolean
 }
 export const SectionItem = ({
   item,
   selected,
   onPress,
-  selectOnPress
+  openModal
 }: SectionItem) => {
   const modal = useModal({ title: `Acciones de artículo` })
   const OPACITY = 33
@@ -153,7 +119,8 @@ export const SectionItem = ({
     <>
       <Pressable
         onPress={() => {
-          selectOnPress ? selectOnPress(item.id) : modal.toggleOpen()
+          onPress?.(item.id)
+          openModal && modal.setOpen(true)
         }}
         style={{
           width: 120,
@@ -178,14 +145,8 @@ export const SectionItem = ({
         </View>
         <ItemActions
           // FIXME: avoid select options
-          actions={['select', 'assign', 'fix', 'details']}
+          actions={['assign', 'fix', 'details']}
           item={item}
-          onAction={(type) => {
-            if (type === 'select') {
-              onPress()
-            }
-            modal.toggleOpen()
-          }}
         />
       </StyledModal>
     </>

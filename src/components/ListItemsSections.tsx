@@ -4,19 +4,19 @@ import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import ItemType from '../types/ItemType'
 import { gStyles } from '../styles'
-import { RowSectionItemsE, SectionItem } from './ListAssignedItems'
+import { RowSectionItemsE } from './ListAssignedItems'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import useMyNav from '../hooks/useMyNav'
 import { formatItems } from '../libs/workshop.libs'
+
 export type ListItemsSectionsProps = {
   onPressItem?: (itemId: string) => void
   itemSelected?: string
-  selectOnPress?: SectionItem['selectOnPress']
 }
+
 const ListItemsSections = ({
   itemSelected,
-  onPressItem,
-  selectOnPress
+  onPressItem
 }: ListItemsSectionsProps) => {
   const { storeId, sections: storeSections, categories } = useStore()
   const { toItems } = useMyNav()
@@ -54,7 +54,6 @@ const ListItemsSections = ({
                 {`(${items.length})`}
               </Text>
               <RowSectionItemsE
-                selectOnPress={selectOnPress}
                 items={items.sort((a, b) => a.number.localeCompare(b.number))}
                 itemSelected={itemSelected}
                 onPressItem={(id) => {

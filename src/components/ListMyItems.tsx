@@ -35,6 +35,11 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
   const [filteredData, setFilteredData] = useState<Partial<ItemType>[]>(items)
   const { sections: storeSections } = useStore()
   const sections = groupSectionItems(filteredData || [], storeSections)
+  const [selectedItem, setSelectedItem] = useState<string | null>(null)
+  const handlePressItem = (itemId: string) => {
+    itemId === selectedItem ? setSelectedItem(null) : setSelectedItem(itemId)
+  }
+
   return (
     <View
       style={
@@ -90,7 +95,12 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
               <Text style={gStyles.h2}>
                 {asCapitalize(dictionary(key))} {`(${items?.length || 0})`}
               </Text>
-              <RowSectionItemsE items={items} layout="flex" />
+              <RowSectionItemsE
+                items={items}
+                layout="flex"
+                onPressItem={handlePressItem}
+                itemSelected={selectedItem}
+              />
             </View>
           )
         })}
