@@ -143,11 +143,7 @@ export const SectionItem = ({
         <View style={{ marginBottom: 8 }}>
           <CardItem item={item} showSerialNumber showFixNeeded />
         </View>
-        <ItemActions
-          // FIXME: avoid select options
-          actions={['assign', 'fix', 'details']}
-          item={item}
-        />
+        <ItemActions actions={['assign', 'fix', 'details']} item={item} />
       </StyledModal>
     </>
   )

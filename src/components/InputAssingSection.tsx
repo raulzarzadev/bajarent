@@ -42,6 +42,7 @@ const InputAssignSection = ({
     <ButtonConfirm
       openSize="small"
       openFullWidth
+      modalTitle="Asingar artículo"
       openDisabled={disabled}
       openLabel={assignedToSectionName || 'Asignar'}
       icon="swap"
