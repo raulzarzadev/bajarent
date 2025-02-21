@@ -3,6 +3,8 @@ import ErrorBoundary from './ErrorBoundary'
 import { ScreenWorkshopE } from './ScreenWorkshop'
 import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
+import StackOrders from './StackOrders'
+import StackMyItems from './StackMyItems'
 
 const Stack = createStackNavigator()
 function StackWorkshop() {
@@ -21,6 +23,16 @@ function StackWorkshop() {
           title: 'Historial de taller'
         })}
         component={ScreenWorkshopHistoryE}
+      />
+      <Stack.Screen
+        name="StackOrders"
+        component={StackOrders}
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="StackMyItems"
+        component={StackMyItems}
+        options={{ header: () => null }}
       />
     </Stack.Navigator>
   )

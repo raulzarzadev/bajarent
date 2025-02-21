@@ -13,6 +13,7 @@ import ErrorBoundary from './ErrorBoundary'
 import ItemActions from './ItemActions'
 import asDate, { dateFormat } from '../libs/utils-date'
 import SpanUser from './SpanUser'
+import theme from '../theme'
 
 const ItemDetails = ({
   item,
@@ -25,12 +26,31 @@ const ItemDetails = ({
 }) => {
   return (
     <View>
-      <DocMetadata item={item} />
-
-      <Text style={[gStyles.h2, { marginTop: 8 }]}>{item?.categoryName}</Text>
-      <Text style={gStyles.h3}>{item.number}</Text>
+      <DocMetadata
+        item={item}
+        style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+      />
+      <View style={{ marginTop: 18 }} />
+      <Text style={gStyles.h1}>{item.number}</Text>
+      <Text style={gStyles.h2}>{item?.categoryName}</Text>
       <Text style={[gStyles.helper, { textAlign: 'center' }]}>
         {item.brand || 'sin marca'} - {item.serial || 'si serie'}
+      </Text>
+
+      <Text
+        style={[
+          gStyles.tCenter,
+          {
+            marginVertical: 6,
+            backgroundColor: theme.info,
+            borderRadius: 99,
+            margin: 'auto',
+            paddingVertical: 2,
+            paddingHorizontal: 8
+          }
+        ]}
+      >
+        <Text style={gStyles.h1}>{asCapitalize(dictionary(item.status))}</Text>
       </Text>
       <Text
         style={{
@@ -43,9 +63,7 @@ const ItemDetails = ({
         {dateFormat(asDate(item?.lastInventoryAt), 'dd/MMM/yy HH:mm')} por{' '}
         <SpanUser userId={item?.lastInventoryBy} />
       </Text>
-      <Text style={[gStyles.tCenter, { marginTop: 6 }]}>
-        <Text style={gStyles.h1}>{asCapitalize(dictionary(item.status))}</Text>
-      </Text>
+
       {item.workshopStatus &&
         item.assignedSection === 'workshop' &&
         item.status === 'pickedUp' && (
