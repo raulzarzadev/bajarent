@@ -16,7 +16,6 @@ import SpanOrder from './SpanOrder'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
 import { useEmployee } from '../contexts/employeeContext'
-import InputSelect from './InputSelect'
 import Button from './Button'
 
 const ScreenItemsDetails = ({ route }) => {

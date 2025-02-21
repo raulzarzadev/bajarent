@@ -24,6 +24,7 @@ import SpanUser from './SpanUser'
 import { SquareItem } from './CardItem'
 import ModalFixItem from './ModalFixItem'
 import InputAssignSection from './InputAssingSection'
+import { useEmployee } from '../contexts/employeeContext'
 
 type Actions =
   | 'details'
@@ -50,7 +51,7 @@ const ItemActions = ({
   const itemSection = item?.assignedSection || ''
   const checkedInventoryToday = isToday(asDate(item?.lastInventoryAt))
   const { sections: storeSections, storeId } = useStore()
-
+  const { permissions } = useEmployee()
   const { user } = useAuth()
   const [sectionId, setSectionId] = React.useState<string | null>(
     itemSection || null
@@ -88,6 +89,10 @@ const ItemActions = ({
   const [comment, setComment] = React.useState('')
   const [disabled, setDisabled] = React.useState(false)
   const { toItems } = useMyNav()
+
+  const canEditItem = permissions.isAdmin || permissions.items.canEdit
+  const canDeleteItem = permissions.isAdmin || permissions.items.canDelete
+
   const retiredItem = item?.status === 'retired'
   const rentedItem = item?.status === 'rented'
   const disabledFix = item?.status === 'retired'
@@ -105,7 +110,33 @@ const ItemActions = ({
           flexWrap: 'wrap'
         }}
       >
-        {actions.includes('retire') && (
+        {actions?.includes('details') && (
+          <View style={{ margin: 2 }}>
+            <Button
+              label="Detalles"
+              variant="ghost"
+              onPress={() => {
+                onAction?.('details')
+                toItems({ id: itemId })
+              }}
+            />
+          </View>
+        )}
+        {/* --- DO THIS JUST IF YOU CAN DELETE IT ? */}
+        {canDeleteItem && actions.includes('delete') && (
+          <View style={{ margin: 2 }}>
+            <ButtonDeleteItem
+              disabled={disabled || disabledDelete}
+              itemId={item.id}
+              onDeleted={() => {
+                onAction?.('delete')
+              }}
+            />
+          </View>
+        )}
+
+        {/* --- DO THIS JUST IF YOU CAN EDIT IT ? */}
+        {canEditItem && actions.includes('retire') && (
           <View style={{ margin: 2 }}>
             <ButtonConfirm
               openDisabled={disabled || rentedItem}
@@ -125,18 +156,7 @@ const ItemActions = ({
             />
           </View>
         )}
-        {actions.includes('delete') && (
-          <View style={{ margin: 2 }}>
-            <ButtonDeleteItem
-              disabled={disabled || disabledDelete}
-              itemId={item.id}
-              onDeleted={() => {
-                onAction?.('delete')
-              }}
-            />
-          </View>
-        )}
-        {actions.includes('edit') && (
+        {canEditItem && actions.includes('edit') && (
           <View style={{ margin: 2 }}>
             <Button
               disabled={disabled || disabledEdit}
@@ -150,43 +170,7 @@ const ItemActions = ({
             />
           </View>
         )}
-        {actions?.includes('select') && (
-          <View style={{ margin: 2 }}>
-            <Button
-              label="Selecciona"
-              onPress={() => {
-                onAction?.('select')
-              }}
-            />
-          </View>
-        )}
-        {actions?.includes('details') && (
-          <View style={{ margin: 2 }}>
-            <Button
-              label="Detalles"
-              onPress={() => {
-                onAction?.('details')
-                toItems({ id: itemId })
-              }}
-            />
-          </View>
-        )}
-
-        {actions?.includes('assign') && (
-          <View style={{ margin: 2 }}>
-            <InputAssignSection
-              disabled={disabled || disabledAssign}
-              currentSection={sectionId}
-              setNewSection={async ({ sectionId }) => {
-                setSectionId(sectionId)
-                onAction?.('assign')
-                return await handleChangeItemSection({ sectionId })
-              }}
-            />
-          </View>
-        )}
-
-        {actions?.includes('history') && (
+        {canEditItem && actions?.includes('history') && (
           <View style={{ margin: 2 }}>
             <ButtonConfirm
               openDisabled={disabled || disabledHistory}
@@ -209,7 +193,7 @@ const ItemActions = ({
           </View>
         )}
 
-        {actions?.includes('inventory') && (
+        {canEditItem && actions?.includes('inventory') && (
           <View style={{ margin: 2 }}>
             <ButtonConfirm
               openDisabled={disabled || disabledInventory}
@@ -256,6 +240,20 @@ const ItemActions = ({
           </View>
         )}
 
+        {/* --- ANYONE CAN DO THIS ? */}
+        {actions?.includes('assign') && (
+          <View style={{ margin: 2 }}>
+            <InputAssignSection
+              disabled={disabled || disabledAssign}
+              currentSection={sectionId}
+              setNewSection={async ({ sectionId }) => {
+                setSectionId(sectionId)
+                onAction?.('assign')
+                return await handleChangeItemSection({ sectionId })
+              }}
+            />
+          </View>
+        )}
         {actions.includes('fix') && (
           <ModalFixItem
             item={item}

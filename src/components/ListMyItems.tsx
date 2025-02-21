@@ -37,7 +37,7 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
   const sections = groupSectionItems(filteredData || [], storeSections)
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
   const handlePressItem = (itemId: string) => {
-    itemId === selectedItem ? setSelectedItem(null) : setSelectedItem(itemId)
+    setSelectedItem(itemId)
   }
 
   return (

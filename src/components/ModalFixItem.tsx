@@ -55,6 +55,7 @@ const ModalFixItem = ({
         {!!needFix ? (
           <ButtonConfirm
             openDisabled={disabled || disabledFix}
+            openSize="small"
             icon="wrench"
             openColor={'error'}
             openVariant={'filled'}
@@ -74,6 +75,7 @@ const ModalFixItem = ({
         ) : (
           <ButtonConfirm
             openDisabled={disabled || disabledFix}
+            openSize="small"
             icon="wrench"
             openColor={'primary'}
             openVariant={'outline'}
