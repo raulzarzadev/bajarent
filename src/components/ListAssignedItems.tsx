@@ -17,11 +17,13 @@ export type ListAssignedItemsProps = {
   onPressItem?: (itemId: string) => void
   itemSelected?: string
   layout?: 'row' | 'flex'
+  openModal?: boolean
 }
 const ListAssignedItems = (props: ListAssignedItemsProps) => {
   const onPressItem = props?.onPressItem
   const itemSelected = props?.itemSelected
   const categoryId = props?.categoryId
+  const openModal = props?.openModal
 
   const { items: availableItems } = useEmployee()
   const { categories, sections: storeSections } = useStore()
@@ -42,6 +44,7 @@ const ListAssignedItems = (props: ListAssignedItemsProps) => {
         itemSelected={itemSelected}
         onPressItem={onPressItem}
         layout={props?.layout}
+        openModal={openModal}
       />
     </View>
   )
@@ -52,12 +55,14 @@ export type RowSectionItemsProps = {
   itemSelected?: string
   onPressItem?: (itemId: string) => void
   layout?: 'row' | 'flex'
+  openModal?: boolean
 }
 const RowSectionItems = ({
   items,
   itemSelected,
   onPressItem,
-  layout = 'row'
+  layout = 'row',
+  openModal = true
 }: RowSectionItemsProps) => {
   const sortByNumber = (a: ItemType, b: ItemType) =>
     parseFloat(a.number) - parseFloat(b.number)
@@ -76,7 +81,7 @@ const RowSectionItems = ({
               item={item}
               selected={itemSelected === item.id}
               onPress={onPressItem}
-              openModal
+              openModal={openModal}
             />
           ))}
         </View>
@@ -94,7 +99,7 @@ const RowSectionItems = ({
             item={item}
             selected={itemSelected === item.id}
             onPress={onPressItem}
-            openModal
+            openModal={openModal}
           />
         )}
       />

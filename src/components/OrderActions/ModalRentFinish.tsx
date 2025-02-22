@@ -12,12 +12,14 @@ import CardItem from '../CardItem'
 import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
 import { useStore } from '../../contexts/storeContext'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
 
 const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
   const { order } = useOrderDetails()
   const { user } = useAuth()
   const { store } = useStore()
   const { addWork } = useCurrentWork()
+  const { data: customers } = useCustomers()
   const items = order?.items || []
   const handleRentFinish = async () => {
     //*pickup items
@@ -37,7 +39,8 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
       store,
       order,
       type: 'pickup',
-      userId: user.id
+      userId: user.id,
+      customer: customers.find((customer) => customer.id === order.customerId)
     })
   }
 

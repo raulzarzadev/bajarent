@@ -156,7 +156,11 @@ FormikSelectCategoriesProps) => {
             <ListAssignedItemsE
               categoryId={category?.id}
               itemSelected={itemSelected}
-              onPressItem={(itemId) => handlePressItem(itemId)}
+              onPressItem={(itemId) => {
+                console.log('pressed')
+                handlePressItem(itemId)
+              }}
+              openModal={false}
             />
           </View>
           {!!selectPrice && (

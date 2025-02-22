@@ -168,7 +168,7 @@ const ListStoreItems = ({
     setLoading(false)
     return res
   }
-
+  const canCreateItems = permissions?.items?.canCreate || permissions.isAdmin
   return (
     <View>
       <ListE
@@ -247,7 +247,7 @@ const ListStoreItems = ({
               toItems({ screenNew: true })
             },
             label: 'Agregar',
-            visible: permissions?.items?.canCreate
+            visible: canCreateItems
           }
         ]}
         filters={[

@@ -14,6 +14,8 @@ import {
 import chooseOrderPhone from './chooseOrderPhone'
 import PaymentType from '../../types/PaymentType'
 import { CustomerType } from '../../state/features/costumers/customerType'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import { getFavoriteCustomerPhone } from '../../components/Customers/lib/lib'
 
 export type TypeOfMessage =
   | 'renew'
@@ -86,17 +88,20 @@ export const onSendOrderWhatsapp = async ({
 
   const staffName = store?.staff?.find((s) => s.userId === userId)?.position
   let message = messageOptions[type]
+  const customerPhone = getFavoriteCustomerPhone(customer.contacts)
+  if (store?.chatbot?.config?.includeSender && staffName)
+    message = message + `👤 ${staffName || ''}`
 
-  //if (store?.chatbot?.config?.includeSender)
-  message = message + `👤 ${staffName || ''}`
-  const phone = defaultPhone || chooseOrderPhone(order)
+  const phone = customerPhone || defaultPhone || chooseOrderPhone(order)
 
-  return await sendMessage({
+  const config = {
     phone,
     message,
     apiKey: store.chatbot?.apiKey,
     botId: store.chatbot?.id
-  })
+  }
+
+  return await sendMessage(config)
     .then((res) => {
       if (res?.data?.existsOnWhats === false) {
         return { success: false, error: 'no existe en whatsapp' }

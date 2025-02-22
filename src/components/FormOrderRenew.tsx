@@ -27,12 +27,16 @@ import { TimePriceType, TimeType } from '../types/PriceType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
+import { getFavoriteCustomerPhone } from './Customers/lib/lib'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
   const { goBack } = useNavigation()
   const { store } = useStore()
   const { user } = useAuth()
   const { addWork } = useCurrentWork()
+  const { data: customers } = useCustomers()
+
   const items = order?.items || []
   const [payment, setPayment] = useState<Partial<PaymentType>>({
     method: 'transfer',
@@ -108,12 +112,14 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
 
     //***** SEND RENEW MESSAGE */
     const updatedOrder = await ServiceOrders.get(orderId)
+
     onSendOrderWhatsapp({
       store,
       order: updatedOrder,
       type: 'renew',
       userId: user.id,
-      lastPayment: payment
+      lastPayment: payment,
+      customer: customers?.find((c) => c.id === order?.customerId)
     })
   }
   const [addPay, setAddPay] = useState(true)

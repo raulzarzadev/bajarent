@@ -132,12 +132,14 @@ const FormRentDelivery = ({
                   text="Asegurate de que ENTREGAS el siguiente artículo"
                 />
               </View>
+              <FormikSelectCategoriesE name="items" selectPrice />
 
-              {ORDER_FIELDS.includes('selectItems') && (
+              {/* //* TODO: this is disabled because in rent always need to select the items
+               {ORDER_FIELDS.includes('selectItems') && (
                 <View style={{ marginVertical: 8 }}>
                   <FormikSelectCategoriesE name="items" selectPrice />
                 </View>
-              )}
+              )} */}
               <FormikErrorsList />
 
               <Button
