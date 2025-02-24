@@ -9,7 +9,6 @@ import {
   useCustomers
 } from '../../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
-import TextInfo from '../TextInfo'
 import OrderType from '../../types/OrderType'
 import { customerFromOrder } from './lib/customerFromOrder'
 import { CustomerCardE } from './CustomerCard'
@@ -166,7 +165,6 @@ export const getSimilarCustomers = (
   customer: Partial<CustomerType>,
   customers: CustomerType[]
 ): CustomerType[] => {
-  console.log({ customer })
   return customers?.filter((c) => {
     const sameName =
       c?.name?.toLowerCase() === customer?.name?.toLowerCase() ||
@@ -189,7 +187,6 @@ const SimilarCustomers = ({ customer, onSelectCustomer, selectedCustomer }) => {
   useEffect(() => {
     if (customers.length) {
       const similarCustomers = getSimilarCustomers(customer, customers)
-      console.log({ similarCustomers })
       setSimilarCustomers(similarCustomers)
     }
   }, [])

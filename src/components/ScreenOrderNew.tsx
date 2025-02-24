@@ -111,7 +111,7 @@ const ScreenOrderNew = (navigation) => {
               store,
               type: 'newStoreOrder',
               userId: user.id,
-              phone: getFavoriteCustomerPhone(newCustomerCreated.contacts),
+              phone: getFavoriteCustomerPhone(newCustomerCreated?.contacts),
               order: { ...defaultValues, id: orderId }
             })
               .then((res) => console.log({ res }))
