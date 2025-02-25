@@ -210,12 +210,18 @@ const FormOrderA = ({
         {customerId && (
           <>
             <CustomerOrderE customerId={customerId} />
-            <Button
-              label="Omitir cliente"
-              onPress={() => {
-                setCustomerId(null)
-              }}
-            />
+            <View style={{ marginVertical: 8, justifyContent: 'center' }}>
+              <Button
+                size="xs"
+                fullWidth={false}
+                label="Omitir cliente"
+                icon="sub"
+                buttonStyles={{ margin: 'auto' }}
+                onPress={() => {
+                  setCustomerId(null)
+                }}
+              />
+            </View>
           </>
         )}
         <Formik
