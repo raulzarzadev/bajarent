@@ -23,6 +23,7 @@ const StoreBalance = () => {
 
   const [balance, setBalance] = useState<StoreBalanceType>()
   const [date, setDate] = useState(new Date())
+
   useEffect(() => {
     setBalance(currentBalance)
   }, [])

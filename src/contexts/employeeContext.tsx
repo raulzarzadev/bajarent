@@ -97,35 +97,23 @@ export const EmployeeContextProvider = ({ children }) => {
   //* otherwise you can only view the items assigned to your sections
   const canViewAllItems =
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
-  const canViewMyItems = !!employee?.permissions?.items?.canViewMyItems
-  const canViewAllOrders =
+g  const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
 
   useEffect(() => {
-    if (employee?.disabled || !employee) {
-      return // console.log('disable employee')
-    }
-    if (canViewAllItems) {
+    const disabledEmployee = employee?.disabled === true
+    if (disabledEmployee) {
+      setItems([])
+    } else {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
-        userSections: 'all',
+        userSections: canViewAllItems ? 'all' : assignedSections,
         cb: (items) => {
           setItems(formatItems(items, categories, storeSections))
         }
       })
-      return
     }
-    if (canViewMyItems) {
-      ServiceStoreItems.listenAvailableBySections({
-        storeId,
-        userSections: assignedSections,
-        cb: (items) => {
-          setItems(formatItems(items, categories, storeSections))
-        }
-      })
-      return
-    }
-  }, [canViewAllItems, canViewMyItems, employee?.disabled, assignedSections])
+  }, [employee?.disabled])
 
   const storePermissions = employee?.permissions?.store || {}
 
