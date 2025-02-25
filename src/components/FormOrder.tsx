@@ -221,6 +221,10 @@ const FormOrderA = ({
                   setCustomerId(null)
                 }}
               />
+              <Text style={[gStyles.helper, gStyles.tCenter, { opacity: 0.7 }]}>
+                * Al omitir cliente se borraran los datos y se podra crear una
+                orden sin cliente.
+              </Text>
             </View>
           </>
         )}
