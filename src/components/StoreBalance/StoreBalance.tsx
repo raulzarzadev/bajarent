@@ -46,7 +46,6 @@ const StoreBalance = () => {
 
   const handleSetBalanceDate = (date: Date) => {
     ServiceBalances.getLastInDate(store?.id, date).then((balance) => {
-      console.log({ balance })
       setBalance(balance[0])
     })
   }
