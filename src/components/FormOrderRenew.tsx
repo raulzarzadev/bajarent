@@ -27,7 +27,6 @@ import { TimePriceType, TimeType } from '../types/PriceType'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
-import { getFavoriteCustomerPhone } from './Customers/lib/lib'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 const FormOrderRenew = ({ order }: { order: OrderType }) => {
@@ -87,7 +86,8 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     orderId: string
     payment?: PaymentType
   }) => {
-    addWork({
+    //* add extension to current work
+    await addWork({
       work: {
         type: 'order',
         action: 'rent_renewed',
@@ -124,6 +124,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
   }
   const [addPay, setAddPay] = useState(true)
   const modalPayment = useModal({ title: 'Pago de renovación' })
+
   const handleSubmitPayment = async ({ payment }) => {
     // 1. pay
     // 2. handleExtend
@@ -134,7 +135,19 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       payment
     })
       .then(async (res) => {
+        //* add payment to current work
+        await addWork({
+          work: {
+            type: 'payment',
+            action: 'payment_created',
+            details: {
+              orderId: order.id,
+              paymentId: res.res.id
+            }
+          }
+        })
         const payment = await ServicePayments.get(res.res.id)
+
         await handleExtend({
           items: newItems,
           time: newItems[0].priceSelected.time,

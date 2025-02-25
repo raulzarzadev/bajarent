@@ -11,6 +11,7 @@ import { ServiceCurrentWork } from '../../../components/CurrentWork/ServiceCurre
 import { useStore } from '../../../contexts/storeContext'
 import { useAuth } from '../../../contexts/authContext'
 import { convertTimestamps } from '../../../libs/utils-date'
+import { createUUID } from '../../../libs/createId'
 
 export type CurrentWorkState = {
   data: CurrentWorkType
@@ -42,8 +43,8 @@ export const currentWorkSlice = createSlice({
       state.data = {
         ...state.data,
         updates: {
-          ...(state?.data?.updates || {}),
-          [action.payload.id]: action.payload
+          [action.payload.id]: action.payload,
+          ...(state?.data?.updates || {})
         }
       }
     }
@@ -87,13 +88,20 @@ export const useCurrentWork = () => {
       })
       .catch((error) => dispatch(fetchCurrentWorkFailure(error.message)))
   }
-  const addWork = ({ work }: { work?: NewWorkUpdate }) => {
-    ServiceCurrentWork.addWork({
+  const addWork = async ({ work }: { work?: NewWorkUpdate }) => {
+    await ServiceCurrentWork.addWork({
       storeId,
       work,
       userId: user.id
     }).then((res: CurrentWorkUpdate) => {
-      dispatch(addWorkToCurrentWork(res))
+      const serializableRes = convertTimestamps(
+        {
+          ...res,
+          createdAt: new Date() //*<--- this a temporal date until in the next fetch bring the real server date stamp
+        },
+        { to: 'string' }
+      )
+      dispatch(addWorkToCurrentWork(serializableRes))
     })
   }
   return { ...currentWork, update, fetch, addWork }

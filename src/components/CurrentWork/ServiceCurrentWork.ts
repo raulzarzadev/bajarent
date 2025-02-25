@@ -69,7 +69,7 @@ class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
           [newUpdate.id]: newUpdate
         }
       }).then((res) => {
-        return { ...work, id: updateId }
+        return { ...newUpdate }
       })
     } else {
       const newDocId = createUUID({ length: 22 })
@@ -82,7 +82,7 @@ class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
           [newUpdate.id]: newUpdate
         }
       }).then((res) => {
-        return { ...work, id: updateId }
+        return { ...newUpdate }
       })
     }
   }
