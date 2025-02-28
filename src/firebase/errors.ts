@@ -1,3 +1,5 @@
+//  lista de errores de login
+// auth code errors list
 export const authErrorsList = {
   'auth/app-deleted': { code: 1, text: 'No se encontró la base de datos' },
   'auth/expired-action-code': {
