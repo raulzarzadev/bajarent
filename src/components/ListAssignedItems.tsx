@@ -148,7 +148,15 @@ export const SectionItem = ({
         <View style={{ marginBottom: 8 }}>
           <CardItem item={item} showSerialNumber showFixNeeded />
         </View>
-        <ItemActions actions={['assign', 'fix', 'details']} item={item} />
+        <ItemActions
+          actions={['assign', 'fix', 'details']}
+          onAction={(action) => {
+            if (action === 'details') {
+              modal.setOpen(false)
+            }
+          }}
+          item={item}
+        />
       </StyledModal>
     </>
   )

@@ -97,7 +97,7 @@ export const EmployeeContextProvider = ({ children }) => {
   //* otherwise you can only view the items assigned to your sections
   const canViewAllItems =
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
-g  const canViewAllOrders =
+  const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
 
   useEffect(() => {

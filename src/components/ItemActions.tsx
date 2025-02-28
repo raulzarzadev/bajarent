@@ -116,8 +116,8 @@ const ItemActions = ({
               label="Detalles"
               variant="ghost"
               onPress={() => {
+                toItems({ id: itemId, to: 'details' })
                 onAction?.('details')
-                toItems({ id: itemId })
               }}
             />
           </View>

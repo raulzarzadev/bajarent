@@ -3,6 +3,7 @@ import ScreenItemNew from './ScreenItemNew'
 import ScreenItemsDetails from './ScreenItemsDetails'
 import { ScreenItemEditE } from './ScreenItemEdit'
 import ScreenMyItems from './ScreenMyItems'
+import StackItems from './StackItems'
 
 const Stack = createStackNavigator()
 function StackMyItems() {
@@ -17,13 +18,14 @@ function StackMyItems() {
       />
 
       <Stack.Screen
-        name="ScreenItemNew"
+        name="StackItems"
         options={{
-          title: 'Nuevo artículo'
+          title: 'Artículos',
+          headerShown: false
         }}
-        component={ScreenItemNew}
+        component={StackItems}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ScreenItemsDetails"
         options={{
           title: 'Detalles de artículo'
@@ -37,7 +39,7 @@ function StackMyItems() {
           title: 'Editar artículo'
         }}
         component={ScreenItemEditE}
-      />
+      /> */}
     </Stack.Navigator>
   )
 }

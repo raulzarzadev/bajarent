@@ -10,6 +10,7 @@ import CurrencyAmount from './CurrencyAmount'
 import { orderAmount } from '../libs/order-amount'
 import { gStyles } from '../styles'
 import { useEffect, useState } from 'react'
+
 const FormikSaleOrderItems = ({ name }: { name: string }) => {
   const layoutRow = Dimensions.get('window').width > 500
 
