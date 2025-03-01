@@ -244,7 +244,7 @@ const ListStoreItems = ({
           {
             icon: 'add',
             onPress() {
-              toItems({ screenNew: true })
+              toItems({ to: 'new', screenNew: true })
             },
             label: 'Agregar',
             visible: canCreateItems

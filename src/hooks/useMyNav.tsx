@@ -11,10 +11,23 @@ const useMyNav = () => {
   }: {
     to?: 'new' | 'edit' | 'details' | 'newOrder' | 'customerOrder'
     id?: string
+    /**
+     * @deprecated use to='new' instead
+     */
     screenNew?: boolean
+    /**
+     * @deprecated use to='new' instead
+     */
     screenEdit?: boolean
     ids?: string[]
   }) => {
+    if (to === 'new' || screenNew) {
+      //@ts-ignore
+
+      return navigate('StackItems', {
+        screen: 'ScreenItemNew'
+      })
+    }
     if (to === 'details' && id) {
       //@ts-ignore
       navigate('StackItems', {
