@@ -149,7 +149,7 @@ const WorkshopItem = ({
             if (item.isExternalRepair) {
               toOrders({ id: item.orderId })
             } else {
-              toItems({ id: item.id })
+              toItems({ id: item.id, to: 'details' })
             }
           }}
           label="Detalles"

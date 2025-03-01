@@ -5,6 +5,7 @@ import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import StackOrders from './StackOrders'
 import StackMyItems from './StackMyItems'
+import StackItems from './StackItems'
 
 const Stack = createStackNavigator()
 function StackWorkshop() {
@@ -33,6 +34,11 @@ function StackWorkshop() {
         name="StackMyItems"
         component={StackMyItems}
         options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="StackItems"
+        component={StackItems}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   )

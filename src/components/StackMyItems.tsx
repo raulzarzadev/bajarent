@@ -25,21 +25,6 @@ function StackMyItems() {
         }}
         component={StackItems}
       />
-      {/* <Stack.Screen
-        name="ScreenItemsDetails"
-        options={{
-          title: 'Detalles de artículo'
-        }}
-        component={ScreenItemsDetails}
-      />
-
-      <Stack.Screen
-        name="ScreenItemEdit"
-        options={{
-          title: 'Editar artículo'
-        }}
-        component={ScreenItemEditE}
-      /> */}
     </Stack.Navigator>
   )
 }
