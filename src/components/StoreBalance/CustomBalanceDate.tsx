@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import asDate, { dateFormat, startDate } from '../../libs/utils-date'
 import { BalanceView } from './StoreBalance'
 import { StoreBalanceType } from '../../types/StoreBalance'
-import { limit, where } from 'firebase/firestore'
+import { limit, orderBy, where } from 'firebase/firestore'
 import { payments_amount } from '../../libs/payments'
 import { StaffName } from '../CardStaff'
 import List from '../List'
@@ -92,9 +92,15 @@ export const ListCustomBalances = () => {
   const [count, setCount] = useState(5)
   const [loading, setLoading] = useState(true)
   const [limitFound, setLimitFound] = useState(false)
+  const { storeId } = useStore()
 
   useEffect(() => {
-    ServiceBalances.findMany([where('type', '==', 'custom'), limit(count)])
+    ServiceBalances.findMany([
+      where('type', '==', 'custom'),
+      where('storeId', '==', storeId),
+      limit(count),
+      orderBy('createdAt', 'desc')
+    ])
       .then(setBalances)
       .catch((e) => {
         console.error(e)
@@ -106,7 +112,7 @@ export const ListCustomBalances = () => {
 
   const handleGetMore = () => {
     setCount(count + 5)
-    if (count >= balances.length) {
+    if (count > balances.length) {
       setLimitFound(true)
     }
   }
