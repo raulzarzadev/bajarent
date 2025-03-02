@@ -228,6 +228,12 @@ const labels = {
   technician: 'Técnico',
   driver: 'Repartidor',
   reception: 'Recepción',
+
+  daily: 'Diario',
+  weekly: 'Semanal',
+  monthly: 'Mensual',
+  custom: 'Custom', // personalizado
+
   ' ': '',
   '': '',
 

@@ -16,6 +16,7 @@ import useMyNav from '../../hooks/useMyNav'
 import Loading from '../Loading'
 import { gStyles } from '../../styles'
 import CurrencyAmount from '../CurrencyAmount'
+import dictionary from '../../dictionary'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -132,6 +133,12 @@ export const ListCustomBalances = () => {
             label: 'Fecha'
           }
         ]}
+        filters={[
+          {
+            field: 'type',
+            label: 'Tipo'
+          }
+        ]}
       />
       {limitFound && (
         <Text style={[gStyles.helper, gStyles.tCenter]}>
@@ -163,19 +170,20 @@ export const RowCustomBalance = (props?: RowCustomBalanceProps) => {
         marginBottom: 4
       }}
     >
-      <Text style={{ width: '15%' }}>
+      <Text style={{ width: '10%' }}>
         <StaffName userId={balance?.createdBy} />
       </Text>
       <Text style={{ width: '15%' }}>
         {dateFormat(asDate(balance?.createdAt), 'dd/MM/yy HH:mm')}
       </Text>
+      <Text style={{ width: '10%' }}>{dictionary(balance.type)}</Text>
       <Text style={{ width: '15%' }}>
         {dateFormat(asDate(balance?.fromDate), 'dd/MM/yy HH:mm')}
       </Text>
       <Text style={{ width: '15%' }}>
         {dateFormat(asDate(balance?.toDate), 'dd/MM/yy HH:mm')}
       </Text>
-      <Text style={{ width: '15%' }}>{balance.payments.length}</Text>
+      <Text style={{ width: '5%' }}>{balance.payments.length}</Text>
       <Text style={{ width: '15%' }}>
         <CurrencyAmount amount={amounts.incomes} />
       </Text>
