@@ -42,6 +42,7 @@ const ScreenBalance_v3 = ({ route, navigation }) => {
           showTime
           showTimeAgo={false}
           labelBold
+          showDay
         />
         <Icon icon="rowRight" />
         <DateCell
@@ -50,6 +51,7 @@ const ScreenBalance_v3 = ({ route, navigation }) => {
           showTime
           showTimeAgo={false}
           labelBold
+          showDay
         />
       </View>
 

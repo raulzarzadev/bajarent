@@ -71,7 +71,7 @@ function MyList<T extends { id: string }>({
   onFetchMore,
   pinRows,
   onFetchMoreCount,
-  maxWidth = 600,
+  maxWidth = 800,
   rowSideButtons,
   pinMaxRows,
   onRowsSelected
@@ -247,7 +247,7 @@ function MyList<T extends { id: string }>({
               justifyContent: 'center',
               alignItems: 'flex-start',
               width: '100%',
-              maxWidth: 500,
+              //maxWidth: 500,
               margin: 'auto',
               padding: 4
             }}

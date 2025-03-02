@@ -15,6 +15,7 @@ import List from '../List'
 import useMyNav from '../../hooks/useMyNav'
 import Loading from '../Loading'
 import { gStyles } from '../../styles'
+import CurrencyAmount from '../CurrencyAmount'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -109,18 +110,23 @@ export const ListCustomBalances = () => {
       setLimitFound(true)
     }
   }
-  console.log({ count })
 
   if (loading) return <Loading />
 
   return (
-    <View style={{ width: '100%', maxWidth: 1000, margin: 'auto' }}>
+    <View style={{ width: '100%', margin: 'auto' }}>
       <List
         ComponentRow={({ item }) => <RowCustomBalance balance={item} />}
         data={balances}
         onPressRow={(itemId) => {
           toBalance({ to: 'details', id: itemId })
         }}
+        sortFields={[
+          {
+            key: 'createdAt',
+            label: 'Fecha'
+          }
+        ]}
       />
       {limitFound && (
         <Text style={[gStyles.helper, gStyles.tCenter]}>
@@ -143,12 +149,13 @@ export const ListCustomBalances = () => {
 export const RowCustomBalance = (props?: RowCustomBalanceProps) => {
   const { balance } = props
   const amounts = payments_amount(balance.payments)
-  console.log({ amounts })
   return (
     <View
       style={{
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 4
       }}
     >
       <Text style={{ width: '15%' }}>
@@ -164,7 +171,9 @@ export const RowCustomBalance = (props?: RowCustomBalanceProps) => {
         {dateFormat(asDate(balance?.toDate), 'dd/MM/yy HH:mm')}
       </Text>
       <Text style={{ width: '15%' }}>{balance.payments.length}</Text>
-      <Text style={{ width: '15%' }}>{amounts.incomes}</Text>
+      <Text style={{ width: '15%' }}>
+        <CurrencyAmount amount={amounts.incomes} />
+      </Text>
     </View>
   )
 }
