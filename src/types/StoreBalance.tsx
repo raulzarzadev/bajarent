@@ -13,6 +13,7 @@ export type StoreBalanceBase = {
   payments: BalancePayment[]
   orders: StoreBalanceOrder[]
   solvedReports: CommentType[]
+  type: 'custom' | 'daily' | 'monthly'
 }
 
 export type StoreBalanceOrder = {
@@ -60,6 +61,7 @@ export type BalanceItems = {
   categoryId?: string
   retiredAt?: Date
   createdAt?: Date
+
   /**
    * @deprecated it should be removed, status of item can change any time.
    * ! status is creating an error in the StoreBalance because is shows in rows and that is not ok

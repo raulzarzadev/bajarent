@@ -11,7 +11,7 @@ import { useStore } from '../contexts/storeContext'
 
 export const StaffName = ({ userId }: { userId: string }) => {
   const { staff } = useStore()
-  const staffName = staff.find((s) => s.userId === userId)?.name
+  const staffName = staff?.find((s) => s.userId === userId)?.name
   return <Text>{staffName}</Text>
 }
 const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {

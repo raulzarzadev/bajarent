@@ -35,7 +35,7 @@ const RowOrder = ({ item: order }: RowOrderProps) => {
             alignItems: 'center'
           }}
         >
-          <ModalOrderQuickActionsE orderId={order.id} />
+          <ModalOrderQuickActionsE orderId={order?.id} />
         </View>
       )
     },
