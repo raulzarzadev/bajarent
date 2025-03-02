@@ -37,9 +37,11 @@ const StoreBalance = () => {
     })
 
     if (newBalance) {
-      await ServiceBalances.saveBalance(newBalance).catch((e) => {
-        console.error(e)
-      })
+      await ServiceBalances.saveBalance({ ...newBalance, type: 'daily' }).catch(
+        (e) => {
+          console.error(e)
+        }
+      )
     }
 
     setLoading(false)

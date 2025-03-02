@@ -96,7 +96,6 @@ export const ListCustomBalances = () => {
 
   useEffect(() => {
     ServiceBalances.findMany([
-      where('type', '==', 'custom'),
       where('storeId', '==', storeId),
       limit(count),
       orderBy('createdAt', 'desc')
