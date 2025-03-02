@@ -166,6 +166,7 @@ const useMyNav = () => {
       })
     }
   }
+
   type ToOrdersType = {
     id?: string
     ids?: string[]
@@ -280,7 +281,20 @@ const useMyNav = () => {
     navigate('ScreenMessages')
   }
 
+  const toBalance = ({ to, id }: { to: 'details'; id: string }) => {
+    if (to === 'details' && id) {
+      //@ts-ignore
+      navigate('StackBalances', {
+        screen: 'ScreenBalance_v3',
+        params: {
+          id
+        }
+      })
+    }
+  }
+
   return {
+    toBalance,
     toItems,
     toOrders,
     toPayments,

@@ -12,6 +12,7 @@ import { limit, where } from 'firebase/firestore'
 import { payments_amount } from '../../libs/payments'
 import { StaffName } from '../CardStaff'
 import List from '../List'
+import useMyNav from '../../hooks/useMyNav'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -83,9 +84,11 @@ export const ListCustomBalancesE = () => {
   )
 }
 export const ListCustomBalances = () => {
+  const { toBalance } = useMyNav()
   const [lastBalances, setLastBalances] = useState<StoreBalanceType[]>([])
   const [count, setCount] = useState(5)
   const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     ServiceBalances.findMany([where('type', '==', 'custom'), limit(count)])
       .then(setLastBalances)
@@ -99,6 +102,9 @@ export const ListCustomBalances = () => {
       <List
         ComponentRow={({ item }) => <RowCustomBalance balance={item} />}
         data={lastBalances}
+        onPressRow={(itemId) => {
+          toBalance({ to: 'details', id: itemId })
+        }}
       />
     </View>
   )

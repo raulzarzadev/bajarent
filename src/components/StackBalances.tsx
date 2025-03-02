@@ -7,6 +7,7 @@ import ScreenBalancesNew from './ScreenBalancesNew'
 import StackOrders from './StackOrders'
 import { StackPaymentsE } from './StackPayments'
 import { CustomBalanceDateE } from './StoreBalance/CustomBalanceDate'
+import ScreenBalance_v3 from './ScreenBalance_v3'
 
 const Stack = createStackNavigator()
 function StackBalances() {
@@ -48,6 +49,13 @@ function StackBalances() {
           title: 'Detalles de corte'
         }}
         component={ScreenBalancesDetails}
+      />
+      <Stack.Screen
+        name="ScreenBalance_v3"
+        options={{
+          title: 'Detalles de corte (custom)'
+        }}
+        component={ScreenBalance_v3}
       />
       <Stack.Screen
         name="StackOrders"

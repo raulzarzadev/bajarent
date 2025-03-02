@@ -112,11 +112,7 @@ const StoreBalance = () => {
         <ModalCloseOperations />
       </View>
 
-      {!!balance && (
-        <>
-          <BalanceView balance={balance} />
-        </>
-      )}
+      {!!balance && <BalanceView balance={balance} />}
     </View>
   )
 }
