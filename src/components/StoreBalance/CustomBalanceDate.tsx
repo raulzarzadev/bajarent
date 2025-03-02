@@ -13,6 +13,8 @@ import { payments_amount } from '../../libs/payments'
 import { StaffName } from '../CardStaff'
 import List from '../List'
 import useMyNav from '../../hooks/useMyNav'
+import Loading from '../Loading'
+import { gStyles } from '../../styles'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -85,26 +87,54 @@ export const ListCustomBalancesE = () => {
 }
 export const ListCustomBalances = () => {
   const { toBalance } = useMyNav()
-  const [lastBalances, setLastBalances] = useState<StoreBalanceType[]>([])
+  const [balances, setBalances] = useState<StoreBalanceType[]>([])
   const [count, setCount] = useState(5)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [limitFound, setLimitFound] = useState(false)
 
   useEffect(() => {
     ServiceBalances.findMany([where('type', '==', 'custom'), limit(count)])
-      .then(setLastBalances)
+      .then(setBalances)
       .catch((e) => {
         console.error(e)
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [count])
+
+  const handleGetMore = () => {
+    setCount(count + 5)
+    if (count >= balances.length) {
+      setLimitFound(true)
+    }
+  }
+  console.log({ count })
+
+  if (loading) return <Loading />
 
   return (
     <View style={{ width: '100%', maxWidth: 1000, margin: 'auto' }}>
       <List
         ComponentRow={({ item }) => <RowCustomBalance balance={item} />}
-        data={lastBalances}
+        data={balances}
         onPressRow={(itemId) => {
           toBalance({ to: 'details', id: itemId })
         }}
+      />
+      {limitFound && (
+        <Text style={[gStyles.helper, gStyles.tCenter]}>
+          *No hay mas registros
+        </Text>
+      )}
+      <Button
+        onPress={() => {
+          handleGetMore()
+        }}
+        disabled={limitFound}
+        label="mostrar mas"
+        size="xs"
+        variant="ghost"
       />
     </View>
   )
