@@ -17,6 +17,7 @@ import Loading from '../Loading'
 import { gStyles } from '../../styles'
 import CurrencyAmount from '../CurrencyAmount'
 import dictionary from '../../dictionary'
+import { useEmployee } from '../../contexts/employeeContext'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -26,7 +27,9 @@ const CustomBalanceDate = () => {
     fromDate: startDate(new Date()),
     toDate: new Date()
   })
-
+  const {
+    permissions: { isAdmin }
+  } = useEmployee()
   const { store } = useStore()
 
   const handleCalculateBalance = () => {
@@ -67,7 +70,7 @@ const CustomBalanceDate = () => {
         />
       </View>
       {!!balance && <BalanceView balance={balance} />}
-      <ListCustomBalancesE />
+      {isAdmin && <ListCustomBalancesE />}
     </ScrollView>
   )
 }
