@@ -83,7 +83,6 @@ export const FormikCustomerContacts = () => {
     isFavorite: boolean,
     contacts: any
   ) => {
-    console.log({ contactId, isFavorite, contacts })
     const restContactsAsNotFavorite = Object.keys(contacts).reduce(
       (acc, curr) => {
         return {
@@ -96,10 +95,8 @@ export const FormikCustomerContacts = () => {
     )
 
     const res = mergeObjs(values, restContactsAsNotFavorite)
-    console.log({ restContactsAsNotFavorite, res })
     setValues(res)
   }
-  console.log({ values })
   return (
     <View>
       <Text style={gStyles.h3}>Contactos</Text>
