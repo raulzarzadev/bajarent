@@ -130,8 +130,12 @@ export const ListCustomBalances = () => {
         }}
         sortFields={[
           {
+            key: 'createdBy',
+            label: 'Autor'
+          },
+          {
             key: 'createdAt',
-            label: 'Fecha'
+            label: 'Creado'
           },
           {
             key: 'type',
