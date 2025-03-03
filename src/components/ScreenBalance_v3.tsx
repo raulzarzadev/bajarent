@@ -9,7 +9,6 @@ import asDate from '../libs/utils-date'
 import DocMetadata from './DocMetadata'
 import DateCell from './DateCell'
 import Icon from './Icon'
-import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
 import ButtonConfirm from './ButtonConfirm'
@@ -18,25 +17,19 @@ const ScreenBalance_v3 = ({ route }) => {
   const { permissions } = useEmployee()
   const [balance, setBalance] = useState<StoreBalanceType>(null)
   const navigation = useNavigation()
-  const [loading, setLoading] = useState(true)
   useEffect(() => {
     const fetchBalance = async () => {
-      ServiceBalances.get(route?.params?.id)
-        .then((balance) => {
-          setBalance(balance)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+      ServiceBalances.get(route?.params?.id).then((balance) => {
+        setBalance(balance)
+      })
     }
     fetchBalance()
   }, [])
 
   const handleDelete = async () => {
-    setLoading(true)
     await ServiceBalances.delete(balance.id)
     navigation.goBack()
-    setLoading(false)
+    return
   }
 
   if (!balance) return <View /> //*<-- this should be a loading spinner
