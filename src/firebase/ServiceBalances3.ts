@@ -39,22 +39,30 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   }
 
   async listenLastInDate(
-    storeId: string,
-    date: Date,
+    {
+      storeId,
+      date,
+      type
+    }: { storeId: string; date: Date; type: StoreBalanceType['type'] },
     cb: (data: StoreBalanceType) => void
   ) {
-    return this.listenMany(
-      [
-        where('storeId', '==', storeId),
-        where('createdAt', '<=', endDate(date)),
-        where('createdAt', '>=', startDate(date)),
-        orderBy('createdAt', 'desc'),
-        limit(1)
-      ],
-      (res) => {
-        cb(res?.[0] || null)
-      }
-    )
+    let filters = [
+      where('storeId', '==', storeId),
+      where('createdAt', '<=', endDate(date)),
+      where('createdAt', '>=', startDate(date)),
+      orderBy('createdAt', 'desc'),
+      limit(1)
+    ]
+    if (type === 'daily') {
+      //** this try to solve issue, many past balances has not type but they for sure are daily */
+      filters.push(where('type', 'not-in', ['custom', 'monthly']))
+    } else {
+      filters.push(where('type', '==', type))
+    }
+
+    return this.listenMany(filters, (res) => {
+      cb(res?.[0] || null)
+    })
   }
 
   async getOrders({ type, storeId, fromDate, toDate }: GetBalanceOrders) {

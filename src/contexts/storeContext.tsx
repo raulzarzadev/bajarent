@@ -63,8 +63,9 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     //* CURRENT BALANCE
     if (store?.id && isAuthenticated)
-      ServiceBalances.listenLastInDate(store?.id, new Date(), (balance) =>
-        setCurrentBalance(balance)
+      ServiceBalances.listenLastInDate(
+        { storeId: store?.id, date: new Date(), type: 'daily' },
+        (balance) => setCurrentBalance(balance)
       )
   }, [store?.id, isAuthenticated])
 
