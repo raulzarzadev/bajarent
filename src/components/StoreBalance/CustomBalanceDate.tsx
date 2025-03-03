@@ -122,6 +122,7 @@ export const ListCustomBalances = () => {
   return (
     <View style={{ width: '100%', margin: 'auto' }}>
       <List
+        rowsPerPage={40}
         ComponentRow={({ item }) => <RowCustomBalance balance={item} />}
         data={balances}
         onPressRow={(itemId) => {
@@ -131,6 +132,26 @@ export const ListCustomBalances = () => {
           {
             key: 'createdAt',
             label: 'Fecha'
+          },
+          {
+            key: 'type',
+            label: 'Tipo'
+          },
+          {
+            key: 'fromDate',
+            label: 'Desde'
+          },
+          {
+            key: 'toDate',
+            label: 'Hasta'
+          },
+          {
+            key: 'payments',
+            label: 'Pagos'
+          },
+          {
+            key: 'amounts',
+            label: 'Ingresos'
           }
         ]}
         filters={[
