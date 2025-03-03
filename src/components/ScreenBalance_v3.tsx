@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 
 import { ServiceBalances } from '../firebase/ServiceBalances3'
 import { StoreBalanceType } from '../types/StoreBalance'
-import { BalanceView } from './StoreBalance/StoreBalance'
 import asDate from '../libs/utils-date'
 
 import DocMetadata from './DocMetadata'
@@ -12,6 +11,7 @@ import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
 import ButtonConfirm from './ButtonConfirm'
+import { BalanceViewE } from './StoreBalance/BalanceView'
 
 const ScreenBalance_v3 = ({ route }) => {
   const { permissions } = useEmployee()
@@ -66,7 +66,7 @@ const ScreenBalance_v3 = ({ route }) => {
         />
       </View>
 
-      <BalanceView balance={balance} />
+      <BalanceViewE balance={balance} />
       <View
         style={{
           flexDirection: 'row',

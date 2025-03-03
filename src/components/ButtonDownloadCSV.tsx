@@ -135,6 +135,7 @@ const downloadLink = ({ res, fileName = 'download' }) => {
 
 const formatDate = (date) =>
   date ? dateFormat(asDate(date), 'yyyy-MM-dd HH:mm:ss') : ''
+
 const formatRentsToCSV = (rents, staff) => {
   const formatUser = (userId) => getUserName(staff, userId) || ''
   return rents.map((rent: Partial<OrderType>) => {

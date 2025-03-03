@@ -6,7 +6,6 @@ import { ServiceBalances } from '../../firebase/ServiceBalances3'
 import { useStore } from '../../contexts/storeContext'
 import { useEffect, useState } from 'react'
 import asDate, { dateFormat, startDate } from '../../libs/utils-date'
-import { BalanceView } from './StoreBalance'
 import { StoreBalanceType } from '../../types/StoreBalance'
 import { limit, orderBy, where } from 'firebase/firestore'
 import { payments_amount } from '../../libs/payments'
@@ -18,6 +17,7 @@ import { gStyles } from '../../styles'
 import CurrencyAmount from '../CurrencyAmount'
 import dictionary from '../../dictionary'
 import { useEmployee } from '../../contexts/employeeContext'
+import { BalanceViewE } from './BalanceView'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -69,7 +69,7 @@ const CustomBalanceDate = () => {
           progress={progress}
         />
       </View>
-      {!!balance && <BalanceView balance={balance} />}
+      {!!balance && <BalanceViewE balance={balance} />}
       {isAdmin && <ListCustomBalancesE />}
     </ScrollView>
   )

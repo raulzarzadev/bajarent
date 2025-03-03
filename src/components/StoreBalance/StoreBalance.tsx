@@ -1,21 +1,15 @@
-import { Text, View } from 'react-native'
-import Tabs from '../Tabs'
-import { RentsBalanceE } from './RentsBalance'
-import { SalesBalanceE } from './SalesBalance'
-import { RepairsBalanceE } from './RepairsBalance'
-import { GeneralBalanceE } from './GeneralBalance'
+import { View } from 'react-native'
 import Button from '../Button'
 import { ServiceBalances } from '../../firebase/ServiceBalances3'
 import { useStore } from '../../contexts/storeContext'
 import { useEffect, useState } from 'react'
-import asDate, { dateFormat } from '../../libs/utils-date'
 import ErrorBoundary from '../ErrorBoundary'
-import { gStyles } from '../../styles'
 import HeaderDate from '../HeaderDate'
 import { StoreBalanceType } from '../../types/StoreBalance'
 import { isToday } from 'date-fns'
 import ModalCloseOperations from '../../ModalCloseOperations'
 import { useNavigation } from '@react-navigation/native'
+import { BalanceViewE } from './BalanceView'
 
 const StoreBalance = () => {
   const { storeId, currentBalance, store } = useStore()
@@ -114,55 +108,7 @@ const StoreBalance = () => {
         <ModalCloseOperations />
       </View>
 
-      {!!balance && <BalanceView balance={balance} />}
-    </View>
-  )
-}
-
-export const BalanceView = ({ balance }: { balance: StoreBalanceType }) => {
-  return (
-    <View>
-      <Text
-        style={{
-          textAlign: 'center',
-          marginBottom: 12,
-          marginTop: 4,
-          ...gStyles.helper
-        }}
-      >
-        Última actualización:{' '}
-        <Text style={gStyles.tBold}>
-          {dateFormat(asDate(balance?.createdAt), 'dd/MMM/yy HH:mm')}
-        </Text>
-      </Text>
-      <Tabs
-        tabId="store-balance"
-        tabs={[
-          {
-            title: 'General',
-            content: <GeneralBalanceE balance={balance} />,
-            show: true
-            //disabled: true
-          },
-          {
-            title: 'Rentas',
-            content: <RentsBalanceE balance={balance} />,
-            show: true
-          },
-          {
-            title: 'Reparaciones',
-            content: <RepairsBalanceE balance={balance} />,
-            show: true
-            //disabled: true
-          },
-          {
-            title: 'Ventas',
-            content: <SalesBalanceE balance={balance} />,
-            show: true
-            // disabled: true
-          }
-        ]}
-      />
+      {!!balance && <BalanceViewE balance={balance} />}
     </View>
   )
 }
