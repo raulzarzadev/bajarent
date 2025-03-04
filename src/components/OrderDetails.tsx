@@ -96,6 +96,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       </View>
     )
   }
+  console.log({ order })
 
   return (
     <View>

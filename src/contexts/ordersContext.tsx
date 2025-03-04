@@ -61,7 +61,6 @@ export const OrdersContextProvider = ({
   const { storeId, isAuthenticated } = useAuth()
   const { store } = useStore()
   const { employee, permissions, disabledEmployee } = useEmployee()
-  const { data: customers } = useCustomers()
   const [orders, setOrders] = useState<OrderType[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
@@ -123,7 +122,7 @@ export const OrdersContextProvider = ({
       setOrders(null)
       setConsolidatedOrders(null)
     }
-  }, [disabledEmployee, isAuthenticated, customers])
+  }, [disabledEmployee, isAuthenticated])
 
   const handleGetOrders = async () => {
     const commentImportantAndReports =
@@ -156,8 +155,7 @@ export const OrdersContextProvider = ({
       // console.log({ reports })
       const formatted = formatOrders({
         orders: storeUnsolvedOrders,
-        reports: commentImportantAndReports,
-        customers
+        reports: commentImportantAndReports
       })
       setOrders(formatted)
     } else if (typeOfOrders === 'mine') {
