@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import useFilter, { CollectionSearch } from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -19,7 +19,7 @@ import OrderType, {
   order_type,
   typeOrderIcon
 } from '../types/OrderType'
-import { IconName } from './Icon'
+import Icon, { IconName } from './Icon'
 import Loading from './Loading'
 
 export type FilterListType<T> = {
@@ -225,13 +225,13 @@ function ModalFilterList<T>({
           onChangeText={(e) => {
             search(e)
           }}
-          hiddenInnerLeftIcon={searchValue.length === 0}
-          innerLeftIcon="close"
-          onLeftIconPress={() => {
+          leftIcon={
+            loading ? 'loading' : searchValue.length === 0 ? 'search' : 'close'
+          }
+          onPressLeftIcon={() => {
             search('')
           }}
         />
-        {loading && <Loading />}
 
         {filters?.length > 0 && (
           <View

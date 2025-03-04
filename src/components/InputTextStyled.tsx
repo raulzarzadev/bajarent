@@ -4,13 +4,15 @@ import {
   TextInputProps,
   Text,
   View,
-  ViewStyle
+  ViewStyle,
+  Pressable
 } from 'react-native'
 import theme, { BORDER_RADIUS, PADDING } from '../theme'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import Button from './Button'
 import Icon, { IconName } from './Icon'
 import { gStyles } from '../styles'
+import Loading from './Loading'
 
 /**
  * Componente de entrada de texto estilizado.
@@ -28,10 +30,21 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
   type?: 'number' | 'text'
   containerStyle?: ViewStyle
   label?: string
+  /**
+   * @deprecated
+   */
   innerLeftIcon?: IconName
-  onLeftIconPress?: () => void
+  /**
+   * @deprecated
+   */
   hiddenInnerLeftIcon?: boolean
+  /**
+   * @deprecated
+   */
+  onLeftIconPress?: () => void
   inputStyle?: ViewStyle
+  onPressLeftIcon?: () => void
+  leftIcon?: 'loading' | 'search' | 'close'
 }
 const InputTextStyled = ({
   disabled,
@@ -45,6 +58,8 @@ const InputTextStyled = ({
   onLeftIconPress,
   hiddenInnerLeftIcon,
   inputStyle,
+  onPressLeftIcon,
+  leftIcon,
   ...props
 }: InputTextProps): JSX.Element => {
   const [value, setValue] = useState<string | number>()
@@ -99,7 +114,19 @@ const InputTextStyled = ({
           }}
         />
 
-        {innerLeftIcon && !onLeftIconPress && !hiddenInnerLeftIcon && (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          {leftIcon === 'loading' && <Loading size={22} />}
+          {leftIcon === 'search' && (
+            <Icon icon="search" size={22} color={theme.primary} />
+          )}
+          <Pressable onPress={onPressLeftIcon}>
+            {leftIcon === 'close' && (
+              <Icon icon="close" size={22} color={theme.error} />
+            )}
+          </Pressable>
+        </View>
+
+        {/* {innerLeftIcon && !onLeftIconPress && !hiddenInnerLeftIcon && (
           <View
             style={{
               width: 20,
@@ -134,7 +161,7 @@ const InputTextStyled = ({
               size="xs"
             />
           </View>
-        )}
+        )} */}
       </View>
 
       {!!helperText && (

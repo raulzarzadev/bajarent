@@ -1,8 +1,7 @@
 import { ActivityIndicator } from 'react-native'
-import React from 'react'
 
-const Loading = () => {
-  return <ActivityIndicator />
+const Loading = ({ size = 22 }: { size?: number }) => {
+  return <ActivityIndicator size={size} />
 }
 
 export default Loading

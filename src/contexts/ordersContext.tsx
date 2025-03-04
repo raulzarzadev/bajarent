@@ -66,11 +66,6 @@ export const OrdersContextProvider = ({
     []
   )
 
-  const viewAllOrders = permissions.canViewAllOrders
-  // !!employee?.permissions?.order?.canViewAll ||
-  // !!employee?.permissions?.isAdmin ||
-  // !!employee?.permissions?.isOwner
-
   const [reports, setReports] = useState<CommentType[]>([])
   const [important, setImportant] = useState<CommentType[]>([])
   const [fetchTypeOrders, setFetchTypeOrders] =
@@ -161,23 +156,18 @@ export const OrdersContextProvider = ({
     } else if (typeOfOrders === 'mine') {
       console.log('mine orders')
       //* get orders from sections where  sectionsAssigned contains sections
-      const orders = await ServiceOrders.getUnsolvedByStore(
-        storeId,
-        {
-          getBySections: true,
-          sections: employee.sectionsAssigned,
-          reports: commentImportantAndReports,
-          getExpireTomorrow
-        }
-        // { fromCache: true }
-      ).catch((e) => {
+      const orders = await ServiceOrders.getUnsolvedByStore(storeId, {
+        getBySections: true,
+        sections: employee.sectionsAssigned,
+        reports: commentImportantAndReports,
+        getExpireTomorrow
+      }).catch((e) => {
         console.log(e)
         return []
       })
       const formatted = formatOrders({
         orders: orders,
-        reports: commentImportantAndReports,
-        customers
+        reports: commentImportantAndReports
       })
       setOrders(formatted)
     } else {
