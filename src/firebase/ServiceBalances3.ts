@@ -46,6 +46,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
     ]
 
     if (type === 'daily') {
+      //TODO: this should be optimized , every doc balance should includ type but is a new feature....
       //** this try to solve issue, many past balances has not type but they for sure are daily */
       filters.push(where('type', 'not-in', ['custom', 'monthly']))
     } else {
@@ -70,6 +71,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
       limit(1)
     ]
     if (type === 'daily') {
+      //TODO: this should be optimized , every doc balance should includ type but is a new feature....
       //** this try to solve issue, many past balances has not type but they for sure are daily */
       filters.push(where('type', 'not-in', ['custom', 'monthly']))
     } else {
