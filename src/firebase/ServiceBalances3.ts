@@ -39,19 +39,13 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   }) {
     let filters = [
       where('storeId', '==', storeId),
+      where('type', '==', type),
       where('createdAt', '<=', endDate(date)),
       where('createdAt', '>=', startDate(date)),
       orderBy('createdAt', 'desc'),
       limit(1)
     ]
 
-    if (type === 'daily') {
-      //TODO: this should be optimized , every doc balance should includ type but is a new feature....
-      //** this try to solve issue, many past balances has not type but they for sure are daily */
-      filters.push(where('type', 'not-in', ['custom', 'monthly']))
-    } else {
-      filters.push(where('type', '==', type))
-    }
     return this.getItems(filters)
   }
 
@@ -65,18 +59,12 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
   ) {
     let filters = [
       where('storeId', '==', storeId),
+      where('type', '==', type),
       where('createdAt', '<=', endDate(date)),
       where('createdAt', '>=', startDate(date)),
       orderBy('createdAt', 'desc'),
       limit(1)
     ]
-    if (type === 'daily') {
-      //TODO: this should be optimized , every doc balance should includ type but is a new feature....
-      //** this try to solve issue, many past balances has not type but they for sure are daily */
-      filters.push(where('type', 'not-in', ['custom', 'monthly']))
-    } else {
-      filters.push(where('type', '==', type))
-    }
 
     return this.listenMany(filters, (res) => {
       cb(res?.[0] || null)

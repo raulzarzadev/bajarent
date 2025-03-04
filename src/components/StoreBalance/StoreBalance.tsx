@@ -14,7 +14,6 @@ import { BalanceViewE } from './BalanceView'
 const StoreBalance = () => {
   const { storeId, currentBalance, store } = useStore()
   const { navigate } = useNavigation()
-
   const [balance, setBalance] = useState<StoreBalanceType>()
   const [date, setDate] = useState(new Date())
 
@@ -50,6 +49,8 @@ const StoreBalance = () => {
       setBalance(balance[0])
     })
   }
+  console.log({ balance })
+  console.log('sb')
 
   return (
     <View style={{ marginBottom: 44 }}>

@@ -41,3 +41,5 @@ yarn-error.*
 # cypress
 cypress/screenshots/
 cypress/downloads/
+
+service_accounts/

@@ -43,6 +43,8 @@ const ScreenStore = (props) => {
     }
   } = useEmployee()
 
+  console.log('ss')
+
   const scrollViewRef = useRef(null)
 
   const canViewSections = true
@@ -69,7 +71,6 @@ const ScreenStore = (props) => {
 
   if (store === undefined) return <Loading />
   if (store === null) return <Text>Store not found</Text>
-
   return (
     <ScrollView ref={scrollViewRef}>
       {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
