@@ -109,7 +109,6 @@ export const EmployeeContextProvider = ({ children }) => {
         storeId,
         userSections: canViewAllItems ? 'all' : assignedSections,
         cb: (items) => {
-          console.log({ items })
           setItems(formatItems(items, categories, storeSections))
         }
       })
