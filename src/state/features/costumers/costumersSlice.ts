@@ -18,6 +18,8 @@ import {
 import { useStore } from '../../../contexts/storeContext'
 import { useEmployee } from '../../../contexts/employeeContext'
 import { mergeObjs } from '../../../libs/mergeObjs'
+import { useOrdersCtx } from '../../../contexts/ordersContext'
+import { useEffect, useState } from 'react'
 export type CustomersState = {
   data: CustomerType[]
   loading: boolean
@@ -105,10 +107,19 @@ export const useCustomers = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { storeId } = useStore()
   const { permissions } = useEmployee()
-
+  const customers = useSelector(selectCustomers)
+  const { orders } = useOrdersCtx()
+  useEffect(() => {
+    fetch()
+  }, [])
   const fetch = async () => {
+    const onDemandList = orders?.map((order) => order.customerId)
     return await dispatch(
-      fetchCustomersThunk({ storeId, readAll: permissions?.customers?.read })
+      fetchCustomersThunk({
+        storeId,
+        readAll: permissions?.customers?.read,
+        onDemandList
+      })
     )
   }
   const update = async (id: string, changes: Partial<CustomerType>) => {
@@ -295,8 +306,6 @@ export const useCustomers = () => {
         })
     }
   }
-
-  const customers = useSelector(selectCustomers)
 
   return {
     ...customers,

@@ -295,4 +295,12 @@ export class FirebaseGenericService<T extends Identifiable> {
       filters
     })
   }
+
+  async listIds({ ids }: { ids: string[] }): Promise<T[]> | null {
+    const promises = ids.map((id) => this.get(id))
+    return Promise.all(promises).catch((e) => {
+      console.error(e)
+      return null
+    })
+  }
 }

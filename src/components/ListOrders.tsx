@@ -29,6 +29,7 @@ const ListOrders = ({
   const { toOrders } = useMyNav()
   const { sections: storeSections } = useStore()
   const { data: customers } = useCustomers()
+
   const formatOrders = orders
     ?.map((o) => {
       const assignedToSection =

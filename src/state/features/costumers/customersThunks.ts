@@ -7,17 +7,23 @@ export const fetchCustomers = createAsyncThunk(
   'customers/fetchCustomers',
   async ({
     storeId,
-    readAll
+    readAll,
+    onDemandList
   }: {
     storeId: string
     readAll: boolean
+    onDemandList?: string[]
   }): Promise<CustomerType[]> => {
     let response = []
+
     if (readAll) {
+      console.log('read all')
       response = await ServiceCustomers.getByStore(storeId)
     } else {
-      // get just on demand
+      console.log('read on demand')
+      response = await ServiceCustomers.listIds({ ids: onDemandList })
     }
+
     const customers = response.map((customer) =>
       convertTimestamps(customer, { to: 'string' })
     )

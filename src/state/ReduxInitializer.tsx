@@ -10,11 +10,8 @@ export const ReduxInitializer = ({ children }) => {
   //******************************
   //->>>
   useCurrentWork()
-  const { fetch: fetchCustomers } = useCustomers()
-  const canReadCustomers = !!employee?.permissions?.customers?.read
-  useEffect(() => {
-    canReadCustomers && fetchCustomers()
-  }, [canReadCustomers])
+  useCustomers()
+
   //->>>
   //*****************************
   //* REDUX WILL BE CHARGED IN THIS CONTEXT

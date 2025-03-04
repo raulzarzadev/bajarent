@@ -11,7 +11,7 @@ const ClientName = ({
   const clientName =
     order?.customerName ||
     order?.fullName ||
-    ` ${order?.firstName || ''} ${order?.lastName || ''}`
+    `${order?.firstName || ''}${order?.lastName || ''}`
   return <Text style={[style]}>{clientName}</Text>
 }
 
