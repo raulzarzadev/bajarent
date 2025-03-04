@@ -10,9 +10,17 @@ import asDate, { dateFormat } from '../../libs/utils-date'
 import Tabs from '../Tabs'
 import SpanCopy from '../SpanCopy'
 import { payments_amount } from '../../libs/payments'
+import { order_type } from '../../types/OrderType'
+import { useStore } from '../../contexts/storeContext'
 
 export const BalanceView = ({ balance }: BalanceViewProps) => {
-  const balanceCSV = generateBalanceCSV(balance)
+  const { sections } = useStore()
+  const balanceCSV = generateBalanceCSV(balance, {
+    sectionsNames: sections?.map((s) => ({
+      sectionId: s.id,
+      sectionName: s.name
+    }))
+  })
   return (
     <View>
       <Text
@@ -70,11 +78,24 @@ export const BalanceViewE = (props: BalanceViewProps) => (
   </ErrorBoundary>
 )
 
-const generateBalanceCSV = (balance: StoreBalanceType) => {
+const generateBalanceCSV = (
+  balance: StoreBalanceType,
+  {
+    sectionsNames
+  }: {
+    sectionsNames: { sectionId: string; sectionName: string }[]
+  }
+) => {
   // Función auxiliar para formatear valores
   const formatDate = (date) => dateFormat(asDate(date), 'dd/MMM/yy HH:mm')
   const formatCurrency = (value) =>
     (value || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+  const rentOrders = balance.orders.filter(
+    (order) => order.orderType === order_type.RENT
+  )
+  const rentPayments = rentOrders.map((o) => o.payments).flat()
+
   const {
     bonus,
     expense,
@@ -113,5 +134,51 @@ const generateBalanceCSV = (balance: StoreBalanceType) => {
   csv += `Faltante${JUM}${missing}${JUM}`
   csv += `Cancelados${JUM}${canceled}${JUM}`
 
+  // Sección Rentas
+  const rentAmounts = payments_amount(rentPayments)
+  csv += `${JUM}RESUMEN RENTAS${JUM}`
+  // Pagos de renta
+  csv += `Ventas${JUM}${rentAmounts.incomes}${JUM}`
+  csv += `Efectivo${JUM}${rentAmounts.cash}${JUM}`
+  csv += `Tarjeta${JUM}${rentAmounts.card}${JUM}`
+  csv += `Transferencias${JUM}${rentAmounts.transfers}${JUM}`
+  csv += `Egresos${JUM}${rentAmounts.outcomes}${JUM}`
+  csv += `Retiros${JUM}${rentAmounts.retirements}${JUM}`
+  csv += `Bonificaciones${JUM}${rentAmounts.bonus}${JUM}`
+  csv += `Gastos${JUM}${rentAmounts.expense}${JUM}`
+  csv += `Total${JUM}${rentAmounts.total}${JUM}`
+  csv += `Faltante${JUM}${rentAmounts.missing}${JUM}`
+  csv += `Cancelados${JUM}${rentAmounts.canceled}${JUM}`
+  // Encabezado de pagos de renta por área
+  csv += `${JUM}${JUM}RESUMEN RENTAS POR AREA${JUM}${JUM}`
+  //group by area
+  const rentOrdersByArea = rentOrders.reduce((acc, order) => {
+    const area = order.assignedSection || 'Sin área'
+    acc[area] = acc[area] || []
+    acc[area].push(order)
+    return acc
+  }, {})
+  Object.keys(rentOrdersByArea).forEach((area) => {
+    const orders = rentOrdersByArea[area]
+    const payments = orders.map((o) => o.payments).flat()
+    const amounts = payments_amount(payments)
+    csv += `${JUM}${
+      sectionsNames
+        ?.find((s) => s.sectionId === area)
+        ?.sectionName?.toUpperCase() || ''
+    }${JUM}`
+    csv += `Ventas${JUM}${amounts.incomes}${JUM}`
+    csv += `Efectivo${JUM}${amounts.cash}${JUM}`
+    csv += `Tarjeta${JUM}${amounts.card}${JUM}`
+    csv += `Transferencias
+    ${JUM}${amounts.transfers}${JUM}`
+    csv += `Egresos${JUM}${amounts.outcomes}${JUM}`
+    csv += `Retiros${JUM}${amounts.retirements}${JUM}`
+    csv += `Bonificaciones${JUM}${amounts.bonus}${JUM}`
+    csv += `Gastos${JUM}${amounts.expense}${JUM}`
+    csv += `Total${JUM}${amounts.total}${JUM}`
+    csv += `Faltante${JUM}${amounts.missing}${JUM}`
+    csv += `Cancelados${JUM}${amounts.canceled}${JUM}`
+  })
   return csv
 }
