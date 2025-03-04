@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useFilter, { CollectionSearch } from '../hooks/useFilter'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
@@ -19,8 +19,7 @@ import OrderType, {
   order_type,
   typeOrderIcon
 } from '../types/OrderType'
-import Icon, { IconName } from './Icon'
-import Loading from './Loading'
+import { IconName } from './Icon'
 
 export type FilterListType<T> = {
   field: keyof T

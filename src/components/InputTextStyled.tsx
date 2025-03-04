@@ -8,8 +8,7 @@ import {
   Pressable
 } from 'react-native'
 import theme, { BORDER_RADIUS, PADDING } from '../theme'
-import { ReactNode, useEffect, useState } from 'react'
-import Button from './Button'
+import { useEffect, useState } from 'react'
 import Icon, { IconName } from './Icon'
 import { gStyles } from '../styles'
 import Loading from './Loading'

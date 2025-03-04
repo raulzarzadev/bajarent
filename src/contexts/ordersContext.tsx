@@ -22,7 +22,6 @@ import { where } from 'firebase/firestore'
 import PaymentType from '../types/PaymentType'
 import { endDate, startDate } from '../libs/utils-date'
 import { useStore } from './storeContext'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export type FetchTypeOrders =
   | 'all'
