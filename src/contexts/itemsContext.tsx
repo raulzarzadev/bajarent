@@ -40,14 +40,13 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
       items: { canViewAllItems },
       isAdmin,
       isOwner
-    },
-    employee
+    }
   } = useEmployee()
 
   const getAllItems = isAdmin || isOwner || canViewAllItems
 
   useEffect(() => {
-    if (employee?.rol === 'technician' && isAuthenticated) {
+    if (getAllItems) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: ['workshop'],
@@ -56,7 +55,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
         }
       })
     }
-  }, [employee?.rol, isAuthenticated])
+  }, [getAllItems])
 
   useEffect(() => {
     if (storeId && getAllItems && isAuthenticated)

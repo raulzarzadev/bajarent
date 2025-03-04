@@ -4,6 +4,13 @@ import admin from 'firebase-admin'
 import { firebase_config_prod } from '../../../service_accounts/firebase_config_prod'
 const serviceAccount = require('../../../service_accounts/service_account_prod.json')
 
+//* THIS SCRIPT IS USED TO MIGRATE THE BALANCES COLLECTION TO DAILY BALANCES
+
+/* ******************************************** 
+?? THIS SCRIPT IS USED TO MIGRATE THE BALANCES COLLECTION TO DAILY BALANCES
+      !!!!   MIGRATION IS COMPLETED AND NOW IT SHOULD BE NOT NECESARY TO RUN THIS SCRIPT
+ *******************************************rz */
+
 dotenv.config() // Carga .env al inicio
 dotenv.config({ path: resolve(process.cwd(), '.env.local') })
 
@@ -51,7 +58,7 @@ async function migrateToDailyBalances() {
     console.log(`✅ Actualizados ${currentBatch.length} documentos`)
     totalUpdated += currentBatch.length
     console.log(
-      `✅ Batch ${Math.floor(i / BATCH_SIZE) + 1}: Actualizados ${
+      `✅ Batch ${i + 1}: Actualizados ${
         currentBatch.length
       } documentos (Total: ${totalUpdated})`
     )
