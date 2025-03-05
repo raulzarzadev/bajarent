@@ -208,7 +208,7 @@ function ModalFilterList<T>({
 
     return dictionary(value as Labels).toUpperCase()
   }
-
+  if (process.env.PRE_PRODUCTION) console.log({ filteredData })
   return (
     <View>
       <View

@@ -99,7 +99,6 @@ export default function useFilter<T extends { id?: string }>({
     }
     const isFilteredByDates = filtersBy.some((a) => a.field === 'dates')
     if (isFilteredByDates) {
-      console.log({ isFilteredByDates })
       filters = [...filtersBy, { field, value }]
       const res = filterDataByFields(
         filteredData,
@@ -122,7 +121,6 @@ export default function useFilter<T extends { id?: string }>({
   })
   const search = async (value: string) => {
     setSearchValue(value)
-
     if (!value) {
       setFilteredData(data)
       setCustomData([])
@@ -138,12 +136,12 @@ export default function useFilter<T extends { id?: string }>({
       if (m.matchBonus > 3) return true
     })
 
-    const matchesItemData = realMatches?.map((a) =>
-      filteredData.find((b) => b.id === a.item.split(' ')[0])
-    )
-    const similarMatchesItemData = similarMatches?.map((a) =>
-      filteredData.find((b) => b.id === a.item.split(' ')[0])
-    )
+    const matchesItemData = realMatches
+      ?.map((a) => filteredData.find((b) => b.id === a.item.split(' ')[0]))
+      .filter((a) => a)
+    const similarMatchesItemData = similarMatches
+      ?.map((a) => filteredData.find((b) => b.id === a.item.split(' ')[0]))
+      .filter((a) => a)
     if (matchesItemData.length > 0) {
       setFilteredData(matchesItemData)
     } else {
@@ -151,7 +149,6 @@ export default function useFilter<T extends { id?: string }>({
     }
 
     if (collectionSearch?.collectionName === 'orders') {
-      // console.log('custmom')
       const orders = await ServiceOrders.search({
         storeId,
         fields: collectionSearch?.fields,
