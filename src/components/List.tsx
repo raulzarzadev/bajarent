@@ -260,7 +260,7 @@ function MyList<T extends { id: string }>({
                       icon={button?.icon}
                       // label={button.label}
                       onPress={button?.onPress}
-                      size="xs"
+                      size="small"
                       disabled={button?.disabled}
                     ></Button>
                   </View>

@@ -207,7 +207,7 @@ function ModalFilterList<T>({
     return dictionary(value as Labels).toUpperCase()
   }
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: 'row'
