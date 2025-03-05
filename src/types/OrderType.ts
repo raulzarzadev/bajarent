@@ -286,11 +286,6 @@ export type OrderStatus = order_status
 
 type OrderType = OrderBase &
   BaseType & {
-    // ** If The order is sale de Type of ítems. Should be SaleOrderItem[]
-    items: TypeOfOrderType extends order_type.SALE
-      ? SaleOrderItem[]
-      : RentItem[]
-
     paidAt: Date
     paidBy: string
   }
@@ -348,6 +343,7 @@ export type SaleOrderItem = {
   quantity: number
   category: CategoryType['id']
   serial: string
+  categoryName?: string
 }
 
 export const typeOrderIcon = (type: OrderType['type']): IconName => {

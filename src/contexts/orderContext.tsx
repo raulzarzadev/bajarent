@@ -14,6 +14,7 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { CommentType } from '../types/CommentType'
 import { useOrdersCtx } from './ordersContext'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { useStore } from './storeContext'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -40,6 +41,7 @@ const OrderProvider = ({
   children: ReactNode
   orderId?: OrderType['id']
 }) => {
+  const { categories } = useStore()
   const { consolidatedOrders } = useOrdersCtx()
   const { data: customers } = useCustomers()
   const route = useRoute()
@@ -78,6 +80,7 @@ const OrderProvider = ({
     if (_orderId) {
       listenFullOrderData(_orderId, (order) => {
         let plainOrder: OrderType = order
+
         const customerIsSet = typeof order.customerId === 'string'
         if (customerIsSet) {
           const ctxCustomer = customers.find((c) => c.id === order.customerId)
@@ -90,8 +93,19 @@ const OrderProvider = ({
               .join(', ')
           }
         }
+        //******* SET CATEGORY NAME ITEMS
+        const orderItems = order?.items || []
+        const items = orderItems.map((item) => {
+          item.categoryName = categories.find(
+            (cat) => cat.id === item.category
+          )?.name
+          return item
+        })
 
-        if (order) return setOrder({ ...plainOrder })
+        //****** SET ORDER PAYMENTS
+
+        if (order) return setOrder({ ...plainOrder, items, payments })
+
         const consolidatedOrder = consolidatedOrders?.orders[_orderId]
         // @ts-ignore
         return setOrder({

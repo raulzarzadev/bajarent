@@ -443,6 +443,7 @@ export const ButtonSendWhatsappStatatus = (
   if (!order) return <></>
   return (
     <ButtonConfirm
+      modalTitle="Enviar mensaje de estado"
       openLabel="Enviar estado actual de la orden"
       openDisabled={sending}
       confirmDisabled={sending}

@@ -1,6 +1,11 @@
 import { isToday, isTomorrow } from 'date-fns'
 import dictionary from '../dictionary'
-import OrderType, { order_status, OrderQuoteType } from '../types/OrderType'
+import OrderType, {
+  order_status,
+  order_type,
+  OrderQuoteType,
+  SaleOrderItem
+} from '../types/OrderType'
 import StoreType from '../types/StoreType'
 import asDate, {
   dateFormat,
@@ -113,7 +118,45 @@ export const rentRenewed = ({
   \n${AGRADECIMIENTOS({ storeName })}
   `
 }
-export const orderStatus = ({ order, storeName }) => {
+export const ORDER_SALE_ITEMS = (items: SaleOrderItem[]) => `
+*ARTÍCULOS* (${items.length})
+  ${items
+    .map((i) => {
+      return `*${i.quantity}* x *${i.categoryName || ''} *$${item_sale_amount(
+        i
+      ).toFixed(2)}* `
+    })
+    .join('\n')}
+  \nTotal: *$${items_sale_total(items).toFixed(2)}*
+
+`
+
+const ORDER_SALE_PAYMENTS = (payments: PaymentType[]) => {
+  return `*PAGOS* (${payments.length})
+  ${payments
+    .map((p) => {
+      return `${dateFormat(asDate(p.createdAt), 'dd/MM/yy HH:mm')} *${
+        p?.amount
+      }* ${shortMethod(p.method)} `
+    })
+    .join('\n')}`
+}
+export const orderStatus = ({
+  order,
+  storeName
+}: {
+  order: Partial<OrderType>
+  storeName: string
+}) => {
+  //* FORMAT ORDER SALE STATUS
+  if (order.type === order_type.SALE) {
+    return `🧾 *ORDEN DE VENTA*
+
+    ${ORDER_SALE_ITEMS(order.items as SaleOrderItem[])}
+    ${ORDER_SALE_PAYMENTS(order?.payments as PaymentType[])}
+    \n${AGRADECIMIENTOS({ storeName })}
+    `
+  }
   return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
@@ -315,3 +358,14 @@ const BANK_INFO = ({
     return `🏦 ${bank} ${clabe}\n`
   })
   .join('')}`
+
+export const item_sale_amount = (item: SaleOrderItem) => {
+  const amount = Number(item?.price) * Number(item?.quantity)
+  return amount || 0
+}
+export const items_sale_total = (items: SaleOrderItem[]) => {
+  const total = items.reduce((prev, curr) => {
+    return prev + item_sale_amount(curr)
+  }, 0)
+  return total
+}
