@@ -102,9 +102,7 @@ const OrderProvider = ({
           return item
         })
 
-        //****** SET ORDER PAYMENTS
-
-        if (order) return setOrder({ ...plainOrder, items, payments })
+        if (order) return setOrder({ ...plainOrder, items })
 
         const consolidatedOrder = consolidatedOrders?.orders[_orderId]
         // @ts-ignore
@@ -120,7 +118,9 @@ const OrderProvider = ({
     <OrderContext.Provider
       value={{
         //@ts-ignore
-        order: !!order ? { ...order, comments: orderComments } : undefined,
+        order: !!order
+          ? { ...order, comments: orderComments, payments }
+          : undefined,
         setOrder,
         payments,
         setPaymentsCount,

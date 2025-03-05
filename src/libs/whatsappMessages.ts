@@ -131,10 +131,10 @@ export const ORDER_SALE_ITEMS = (items: SaleOrderItem[]) => `
 
 `
 
-const ORDER_SALE_PAYMENTS = (payments: PaymentType[]) => {
-  return `*PAGOS* (${payments.length})
+const ORDER_SALE_PAYMENTS = (payments: PaymentType[] = []) => {
+  return `*PAGOS* (${payments?.length})
   ${payments
-    .map((p) => {
+    ?.map((p) => {
       return `${dateFormat(asDate(p.createdAt), 'dd/MM/yy HH:mm')} *${
         p?.amount
       }* ${shortMethod(p.method)} `
