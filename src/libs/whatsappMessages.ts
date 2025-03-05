@@ -262,7 +262,7 @@ const expireDateString = (order: Partial<OrderType>, { feePerDay }) => {
   return ''
 }
 
-const repairORderStatus = ({ order }: { order: OrderType }) => {
+const repairORderStatus = ({ order }: { order: Partial<OrderType> }) => {
   const orderQuotes = order?.quotes as OrderQuoteType[]
   const orderStatus = order?.status
   const quotesTotal = orderQuotes?.reduce(
