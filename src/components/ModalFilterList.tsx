@@ -222,10 +222,16 @@ function ModalFilterList<T>({
             search(e)
           }}
           leftIcon={
-            loading ? 'loading' : searchValue.length === 0 ? 'search' : 'close'
+            loading
+              ? 'loading'
+              : (searchValue.length || filtersBy.length) === 0
+              ? 'search'
+              : 'close'
           }
-          onPressLeftIcon={() => {
-            search('')
+          onPressLeftIcon={(action) => {
+            if (action === 'close') {
+              handleClearFilters()
+            }
           }}
         />
 
@@ -242,7 +248,7 @@ function ModalFilterList<T>({
               }}
               justIcon
             />
-            {!!filtersBy?.length && (
+            {/* {!!filtersBy?.length && (
               <Button
                 icon="close"
                 justIcon
@@ -251,7 +257,7 @@ function ModalFilterList<T>({
                   handleClearFilters()
                 }}
               />
-            )}
+            )} */}
           </View>
         )}
       </View>

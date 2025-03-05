@@ -42,9 +42,10 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
    */
   onLeftIconPress?: () => void
   inputStyle?: ViewStyle
-  onPressLeftIcon?: () => void
-  leftIcon?: 'loading' | 'search' | 'close'
+  onPressLeftIcon?: (action?: IconsType) => void
+  leftIcon?: IconsType
 }
+type IconsType = 'loading' | 'search' | 'close' | 'none'
 const InputTextStyled = ({
   disabled,
   helperText,
@@ -113,54 +114,31 @@ const InputTextStyled = ({
           }}
         />
 
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          {leftIcon === 'loading' && <Loading size={22} />}
+        <Pressable
+          onPress={() => onPressLeftIcon?.(leftIcon)}
+          style={({ pressed }) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              bottom: 0,
+              backgroundColor: pressed ? theme.info : 'transparent',
+              opacity: pressed ? 0.5 : 1,
+              borderEndEndRadius: BORDER_RADIUS * 1.8,
+              borderTopEndRadius: BORDER_RADIUS * 1.8
+            }
+          }}
+        >
+          {leftIcon === 'loading' && <Loading size={24} />}
           {leftIcon === 'search' && (
-            <Icon icon="search" size={22} color={theme.primary} />
+            <Icon icon="search" size={24} color={theme.primary} />
           )}
-          <Pressable onPress={onPressLeftIcon}>
-            {leftIcon === 'close' && (
-              <Icon icon="close" size={22} color={theme.error} />
-            )}
-          </Pressable>
-        </View>
-
-        {/* {innerLeftIcon && !onLeftIconPress && !hiddenInnerLeftIcon && (
-          <View
-            style={{
-              width: 20,
-              height: '100%',
-              justifyContent: 'center',
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              bottom: 0
-            }}
-          >
-            <Icon icon={innerLeftIcon} />
-          </View>
-        )}
-        {innerLeftIcon && onLeftIconPress && !hiddenInnerLeftIcon && (
-          <View
-            style={{
-              width: 20,
-              height: '100%',
-              justifyContent: 'center',
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              bottom: 0
-            }}
-          >
-            <Button
-              justIcon
-              icon={innerLeftIcon}
-              onPress={onLeftIconPress}
-              variant="ghost"
-              size="xs"
-            />
-          </View>
-        )} */}
+          {leftIcon === 'close' && (
+            <Icon icon="close" size={24} color={theme.error} />
+          )}
+        </Pressable>
       </View>
 
       {!!helperText && (
@@ -182,12 +160,12 @@ const baseStyle = StyleSheet.create({
   },
   inputStyle: {
     borderWidth: 1,
-
     borderColor: theme.neutral,
     borderRadius: BORDER_RADIUS * 1.8,
     width: '100%',
     flexDirection: 'row',
-    alignContent: 'center'
+    alignContent: 'center',
+    position: 'relative'
   },
   input: {
     flex: 1,
