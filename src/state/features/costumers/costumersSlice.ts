@@ -108,17 +108,13 @@ export const useCustomers = () => {
   const { storeId } = useStore()
   const { permissions } = useEmployee()
   const customers = useSelector(selectCustomers)
-  const { orders } = useOrdersCtx()
-  useEffect(() => {
-    fetch()
-  }, [])
-  const fetch = async () => {
-    const onDemandList = orders?.map((order) => order.customerId)
+
+  const fetch = async (props?: { ids?: string[] }) => {
     return await dispatch(
       fetchCustomersThunk({
         storeId,
         readAll: permissions?.customers?.read,
-        onDemandList
+        onDemandList: props?.ids
       })
     )
   }
