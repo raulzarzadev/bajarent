@@ -37,13 +37,10 @@ export default function useFilter<T extends { id?: string }>({
   const [customData, setCustomData] = useState<T[]>([])
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
 
-  console.log({ filteredData })
   const filterBy = (
     field: string = 'status',
     value: string | boolean | number | string[]
   ) => {
-    debugger
-    console.log({ filteredData, field, value })
     let filters = [...filtersBy]
     const currentFilteredData = [...filteredData]
     //* CUSTOM FILTERS SHOULD PROVIDE AN ARRAY OF STRINGS (IDS )
