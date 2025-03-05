@@ -29,6 +29,7 @@ export default function useFilter<T extends { id?: string }>({
   const { permissions } = useEmployee()
   const { reports } = useOrdersCtx()
   const [filteredData, setFilteredData] = useState<T[]>([...data])
+  const [searchedData, setSearchedData] = useState<T[]>([])
   const [filteredBy, setFilteredBy] = useState<string | boolean | number>(
     'status'
   )
@@ -36,32 +37,20 @@ export default function useFilter<T extends { id?: string }>({
   const [customData, setCustomData] = useState<T[]>([])
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
 
-  const filterByDates = (
-    field: string,
-    dates: { fromDate: Date; toDate: Date }
-  ) => {
-    const res = [...data].filter((o) => {
-      const orderTime = asDate(o?.[field])?.getTime()
-      const fromTime = asDate(dates?.fromDate)?.getTime()
-      const toTime = asDate(dates?.toDate)?.getTime()
-      return orderTime >= fromTime && orderTime <= toTime
-    })
-    handleClearFilters()
-    setFiltersBy([{ field: 'dates', value: 'Custom Filter' }])
-    setFilteredData(res)
-  }
-
+  console.log({ filteredData })
   const filterBy = (
-    field = 'status',
+    field: string = 'status',
     value: string | boolean | number | string[]
   ) => {
+    debugger
+    console.log({ filteredData, field, value })
     let filters = [...filtersBy]
-
+    const currentFilteredData = [...filteredData]
     //* CUSTOM FILTERS SHOULD PROVIDE AN ARRAY OF STRINGS (IDS )
     if (field === 'customIds' && Array.isArray(value)) {
       filters = filters.filter((a) => a.field !== field)
       setFiltersBy([{ field: 'customIds', value: 'Custom Filter' }])
-      const res = [...data].filter((order) => {
+      const res = [...currentFilteredData].filter((order) => {
         return value.includes(order?.id)
       })
       setFilteredData(res)
@@ -83,7 +72,8 @@ export default function useFilter<T extends { id?: string }>({
       )
       filters = cleanedFilters
       setFiltersBy(filters)
-      const res = filterDataByFields(data, filters)
+      //? here should bee filtered data from search but it just changes
+      const res = filterDataByFields([...searchedData], filters)
       setFilteredData(res)
       return
     }
@@ -93,7 +83,7 @@ export default function useFilter<T extends { id?: string }>({
       const cleanedFilters = [...filters].filter((a) => !(a.field === field))
       filters = [...cleanedFilters, { field, value }]
       setFiltersBy(filters)
-      const res = filterDataByFields(data, filters)
+      const res = filterDataByFields(currentFilteredData, filters)
       setFilteredData(res)
       return
     }
@@ -101,7 +91,7 @@ export default function useFilter<T extends { id?: string }>({
     if (isFilteredByDates) {
       filters = [...filtersBy, { field, value }]
       const res = filterDataByFields(
-        filteredData,
+        currentFilteredData,
         filters?.filter((a) => a.field !== 'dates')
       )
       setFilteredData(res)
@@ -111,7 +101,7 @@ export default function useFilter<T extends { id?: string }>({
     //* if similar or same fails add it
     filters = [...filtersBy, { field, value }]
     setFiltersBy(filters)
-    const res = filterDataByFields(data, filters)
+    const res = filterDataByFields(currentFilteredData, filters)
     setFilteredData(res)
   }
 
@@ -123,10 +113,12 @@ export default function useFilter<T extends { id?: string }>({
     setSearchValue(value)
     if (!value) {
       setFilteredData(data)
+      setSearchedData(data)
       setCustomData([])
       return
     }
-    const filteredData = filterDataByFields(data, filtersBy)
+
+    const currentFilteredData = filterDataByFields([...filteredData], filtersBy)
     const { matches } = findBestMatches(arrayData, value)
 
     const realMatches = matches?.filter((m) => {
@@ -137,15 +129,21 @@ export default function useFilter<T extends { id?: string }>({
     })
 
     const matchesItemData = realMatches
-      ?.map((a) => filteredData.find((b) => b.id === a.item.split(' ')[0]))
+      ?.map((a) =>
+        currentFilteredData.find((b) => b.id === a.item.split(' ')[0])
+      )
       .filter((a) => a)
     const similarMatchesItemData = similarMatches
-      ?.map((a) => filteredData.find((b) => b.id === a.item.split(' ')[0]))
+      ?.map((a) =>
+        currentFilteredData.find((b) => b.id === a.item.split(' ')[0])
+      )
       .filter((a) => a)
     if (matchesItemData.length > 0) {
       setFilteredData(matchesItemData)
+      setSearchedData(matchesItemData)
     } else {
       setFilteredData(similarMatchesItemData)
+      setSearchedData(similarMatchesItemData)
     }
 
     if (collectionSearch?.collectionName === 'orders') {
@@ -178,10 +176,10 @@ export default function useFilter<T extends { id?: string }>({
   }
 
   const handleClearFilters = () => {
-    setFilteredData([...data])
     setFilteredBy('')
     setFiltersBy([])
     setSearchValue('')
+    setFilteredData([...data])
   }
 
   useEffect(() => {
@@ -212,7 +210,6 @@ export default function useFilter<T extends { id?: string }>({
     customData,
     filteredBy,
     handleClearFilters,
-    filterByDates,
     filterBy,
     search: searchDebounced,
     filtersBy,

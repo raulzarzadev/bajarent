@@ -13,7 +13,6 @@ import { formatDate } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
-import FIlterByDate from './FIlterByDate'
 import OrderType, {
   order_status,
   order_type,
@@ -61,7 +60,6 @@ function ModalFilterList<T>({
     filtersBy,
     search,
     searchValue,
-    filterByDates,
     loading
   } = useFilter<T>({
     data,
@@ -369,12 +367,6 @@ function ModalFilterList<T>({
             />
           </View>
         )}
-        <FIlterByDate
-          filters={filters}
-          onSubmit={(field, dates) => {
-            filterByDates(field as string, dates)
-          }}
-        />
 
         {filters
           ?.filter((f) => !f?.isDate) //* <-- avoid show date filters

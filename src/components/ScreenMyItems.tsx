@@ -4,7 +4,7 @@ import { ListMyItemsE } from './ListMyItems'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 
 const ScreenMyItems = () => {
-  const { items, employee } = useEmployee()
+  const { items } = useEmployee()
   return (
     <ScrollView>
       <ListMyItemsE items={items} />
