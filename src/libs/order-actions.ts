@@ -21,6 +21,7 @@ import { orderExpireAt } from './orders'
 import { createUUID } from './createId'
 
 import { onSendOrderWhatsapp } from './whatsapp/sendOrderMessage'
+import { CustomerType } from '../state/features/costumers/customerType'
 
 export const onComment = async ({
   orderId,
@@ -423,13 +424,15 @@ export const onRentStart = async ({
   userId,
   deliveredAt = new Date(),
   store,
-  lastPayment
+  lastPayment,
+  customer
 }: {
   order: Partial<OrderType>
   userId: string
   deliveredAt?: Date
   store: StoreType
   lastPayment?: PaymentType
+  customer: CustomerType
 }) => {
   const items = order?.items || []
   const storeId = order.storeId
@@ -493,7 +496,7 @@ export const onRentStart = async ({
     .catch((e) => console.error(e))
 
   //***** SEND RENT STARTED MESSAGE */
-  onSendOrderWhatsapp({
+  return onSendOrderWhatsapp({
     store,
     order: {
       ...order,
@@ -502,7 +505,8 @@ export const onRentStart = async ({
     },
     type: 'delivery',
     userId,
-    lastPayment
+    lastPayment,
+    customer
   })
 }
 

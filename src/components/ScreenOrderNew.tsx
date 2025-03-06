@@ -126,7 +126,8 @@ const ScreenOrderNew = (navigation) => {
               order: { ...defaultValues, id: orderId },
               userId: user.id,
               deliveredAt: values.scheduledAt,
-              store
+              store,
+              customer: newCustomerCreated
             })
           }
         }
