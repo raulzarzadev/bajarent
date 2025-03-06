@@ -3,6 +3,7 @@ import Tabs, { TabType } from './Tabs'
 import { useStore } from '../contexts/storeContext'
 import { SectionDetailsE } from './SectionDetails'
 import useMyNav from '../hooks/useMyNav'
+import { store_section_icons } from '../types/SectionType'
 
 const TabStoreSections = () => {
   const { sections: storeSections } = useStore()
@@ -14,8 +15,7 @@ const TabStoreSections = () => {
       </View>
     ),
     title: section.name,
-    icon: section?.icon,
-
+    icon: store_section_icons[section.type],
     show: true
   }))
 
