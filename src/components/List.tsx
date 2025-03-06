@@ -428,7 +428,7 @@ function MyList<T extends { id: string }>({
               title: 'Fijadas',
               data: pinnedRowsData
             },
-            { title: 'Otras coicidencias', data: collectionData },
+            { title: 'Otras coincidencias', data: collectionData },
             {
               title: 'Todas',
               data: slicedData.filter(
