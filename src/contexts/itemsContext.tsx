@@ -31,7 +31,7 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
   const { isAuthenticated } = useAuth()
-  const { storeId } = useStore()
+  const { storeId, sections } = useStore()
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
 
@@ -46,10 +46,11 @@ export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   const getAllItems = isAdmin || isOwner || canViewAllItems
 
   useEffect(() => {
+    const storeWorkshops = sections?.filter((s) => s.type === 'workshop')
     if (getAllItems) {
       ServiceStoreItems.listenAvailableBySections({
         storeId,
-        userSections: ['workshop'],
+        userSections: storeWorkshops?.map((s) => s?.id),
         cb: (res) => {
           setWorkshopItems(res)
         }
