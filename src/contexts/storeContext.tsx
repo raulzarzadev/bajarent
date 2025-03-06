@@ -138,15 +138,15 @@ const getStoreData = async (storeId: string) => {
     return { ...staff, sectionsAssigned }
   })
   const sectionsWithDefaultStoreSections = [
-    ...sections,
-    {
-      id: 'workshop',
-      name: 'Taller',
-      storeId,
-      description: 'Taller de reparaciones',
-      icon: 'tools',
-      defaultArea: true
-    }
+    ...sections
+    // {
+    //   id: 'workshop',
+    //   name: 'Taller',
+    //   storeId,
+    //   description: 'Taller de reparaciones',
+    //   icon: 'tools',
+    //   defaultArea: true
+    // }
   ]
 
   return {
