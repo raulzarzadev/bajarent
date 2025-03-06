@@ -21,9 +21,6 @@ const InputCheckbox = ({
   color?: string
   disabled?: boolean
   iconCheck?: IconName
-  /**
-   * @deprecated Use `iconCheck` instead
-   */
   iconLabel?: IconName
 }) => {
   const capitalizedLabel =
@@ -36,38 +33,42 @@ const InputCheckbox = ({
     <Pressable
       disabled={disabled}
       onPress={() => handlePress(!value)}
-      style={[{ flexDirection: 'row' }, style]}
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingRight: 2
+        },
+        style
+      ]}
     >
       <View
         style={{
           opacity: disabled ? 0.4 : 1,
           backgroundColor: value ? color : theme.white,
           borderWidth: 1,
-          borderColor: theme.primary,
+          borderColor: value ? theme.white : color,
           borderRadius: 99,
           padding: 2,
-          marginRight: 5,
+          marginRight: 2,
           width: 20,
           height: 20,
           justifyContent: 'center',
           alignItems: 'center'
         }}
       >
-        {value ? (
-          <Icon icon={iconCheck || 'done'} color={theme.white} size={16} />
-        ) : (
-          <>
-            {iconCheck && (
-              <Icon icon={iconCheck} color={theme.primary} size={16} />
-            )}
-          </>
-          //<Icon icon="add" color={theme.primary} size={12} />
-        )}
+        <Icon
+          icon={iconCheck || 'done'}
+          color={value ? theme.white : color}
+          size={16}
+        />
       </View>
+      {iconLabel && <Icon icon={iconLabel} color={theme.primary} size={16} />}
       <Text
         style={[
           {
-            textDecorationLine: 'none'
+            textDecorationLine: 'none',
+            marginLeft: 2
             //  textTransform: 'capitalize'
           },
           textStyle
@@ -76,45 +77,6 @@ const InputCheckbox = ({
         {capitalizedLabel}
       </Text>
     </Pressable>
-    // <BouncyCheckbox
-    //   fillColor={color}
-    //   style={[
-    //     // { marginHorizontal: 'auto' },
-    //     style,
-    //     //  disabled ? { opacity: 0.4 } : {},
-    //     { padding: 2 }
-    //   ]}
-    //   iconStyle={{
-    //     opacity: disabled ? 0.3 : 1
-    //   }}
-    //   size={20}
-    //   textComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
-    //   textContainerStyle={{ marginLeft: 4 }}
-    //   textStyle={[
-    //     {
-    //       textDecorationLine: 'none'
-    //       //  textTransform: 'capitalize'
-    //     },
-    //     textStyle
-    //   ]}
-    //   // iconComponent={iconLabel ? <Icon icon={iconLabel} /> : undefined}
-    //   iconComponent={
-    //     iconCheck ? (
-    //       <Icon icon={iconCheck} color={theme.white} size={12} />
-    //     ) : undefined
-    //   }
-    //   innerIconStyle={{
-    //     alignContent: 'center',
-    //     justifyContent: 'center',
-    //     alignItems: 'center'
-    //   }}
-    //   isChecked={value}
-    //   disabled={disabled}
-    //   onPress={(isChecked: boolean) => {
-    //     handlePress(isChecked)
-    //   }}
-    //   text={capitalizedLabel}
-    // />
   )
 }
 

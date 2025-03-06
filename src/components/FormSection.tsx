@@ -4,7 +4,7 @@ import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import Button from './Button'
 import FormikInputRadios from './FormikInputRadios'
-import { store_section_types } from '../types/SectionType'
+import { store_section_icons, store_section_types } from '../types/SectionType'
 
 const FormSection = ({
   defaultValues = {},
@@ -36,7 +36,7 @@ const FormSection = ({
             <FormikInputRadios
               options={Object.entries(store_section_types).map(
                 ([value, label]) => {
-                  return { value, label }
+                  return { value, label, iconLabel: store_section_icons[value] }
                 }
               )}
               name="type"

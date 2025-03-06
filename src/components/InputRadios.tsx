@@ -17,7 +17,11 @@ type InputRadiosProps<T = string> = {
   containerStyle?: ViewStyle
   disabled?: boolean
 }
-
+/**
+ * @deprecated use Input/InputRadios instead
+ * @param param0
+ * @returns
+ */
 const InputRadios = <T extends string = string>({
   options = [],
   setValue,

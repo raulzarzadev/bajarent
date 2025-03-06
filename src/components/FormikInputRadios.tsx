@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { useField } from 'formik'
-import InputRadios, { InputRadioOption } from './InputRadios'
+import InputRadios, { InputRadioOption } from './Inputs/InputRadios'
 
 const FormikInputRadios = ({
   name,
@@ -19,7 +19,7 @@ const FormikInputRadios = ({
   return (
     <InputRadios
       value={value}
-      setValue={helpers.setValue}
+      onChange={helpers.setValue}
       options={options}
       label={label}
       layout="row"

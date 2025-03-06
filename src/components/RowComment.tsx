@@ -13,6 +13,7 @@ import { FormattedComment } from '../types/CommentType'
 import Button from './Button'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
+import InputCheckbox from './InputCheckbox'
 
 export const CommentRow = ({
   comment: _comment,
@@ -85,6 +86,17 @@ export const CommentRow = ({
             flexWrap: 'wrap'
           }}
         >
+          {comment.type === 'report' && (
+            <InputCheckbox
+              value={comment?.solved}
+              color={comment?.solved ? theme.success : theme.error}
+              iconCheck={comment?.solved ? 'done' : 'siren'}
+              disabled={disabled}
+              setValue={() => {
+                handleToggleSolveReport(comment?.id, comment?.solved)
+              }}
+            />
+          )}
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
@@ -108,7 +120,7 @@ export const CommentRow = ({
               alignItems: 'flex-end'
             }}
           >
-            {comment?.type === 'report' && (
+            {/* {comment?.type === 'report' && (
               <View style={styles.badge}>
                 <Chip
                   disabled={disabled || comment?.solved}
@@ -119,7 +131,7 @@ export const CommentRow = ({
                   size="xs"
                 />
               </View>
-            )}
+            )} */}
             {comment?.type === 'important' && (
               <View style={styles.badge}>
                 <Chip
@@ -132,19 +144,6 @@ export const CommentRow = ({
                 />
               </View>
             )}
-            <View style={styles.badge}>
-              <Button
-                disabled={disabled}
-                icon="done"
-                color={comment?.solved ? 'success' : 'primary'}
-                variant={comment?.solved ? 'filled' : 'outline'}
-                onPress={() =>
-                  handleToggleSolveReport(comment?.id, comment?.solved)
-                }
-                justIcon
-                size="small"
-              />
-            </View>
 
             {showOrder && !!order && (
               <View style={styles.badge}>
