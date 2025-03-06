@@ -2,7 +2,6 @@ import { View } from 'react-native'
 import Tabs, { TabType } from './Tabs'
 import { useStore } from '../contexts/storeContext'
 import { SectionDetailsE } from './SectionDetails'
-import Button from './Button'
 import useMyNav from '../hooks/useMyNav'
 
 const TabStoreSections = () => {
@@ -21,19 +20,12 @@ const TabStoreSections = () => {
   }))
 
   return (
-    <View>
-      <Button
-        label="Agregar area"
-        onPress={() => toSections({ screenNew: true })}
-        fullWidth={false}
-        buttonStyles={{ marginHorizontal: 'auto', marginVertical: 16 }}
-        size="xs"
-        icon="add"
-      />
-      <View>
-        <Tabs tabs={sections} />
-      </View>
-    </View>
+    <Tabs
+      tabs={sections}
+      showAddTab
+      handlePressAdd={() => toSections({ screenNew: true })}
+      addTabTitle="Nueva sección"
+    />
   )
 }
 

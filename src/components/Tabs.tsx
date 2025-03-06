@@ -20,13 +20,19 @@ export type TabsProps = {
   defaultTab?: string | null
   showProgressBar?: boolean
   tabId?: string
+  showAddTab?: boolean
+  handlePressAdd?: () => void
+  addTabTitle?: string
 }
 
 const TabsA = ({
   tabs = [],
   defaultTab,
   showProgressBar,
-  tabId
+  tabId,
+  showAddTab,
+  handlePressAdd,
+  addTabTitle
 }: TabsProps) => {
   const visibleTabs = tabs.filter(({ show }) => show)
 
@@ -58,6 +64,33 @@ const TabsA = ({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tabBar}
         >
+          {showAddTab && (
+            <Pressable
+              role="tab"
+              style={({ pressed }) => [
+                styles.tabButton,
+                { minWidth: 40 },
+                pressed
+                  ? { backgroundColor: '#ddd' }
+                  : { backgroundColor: theme.primary },
+                { flexDirection: 'row' }
+              ]}
+              onPress={() => handlePressAdd()}
+            >
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'row'
+                }}
+              >
+                {addTabTitle && (
+                  <Text style={{ color: theme.white }}>{addTabTitle} </Text>
+                )}
+                <Icon icon={'add'} size={22} color={theme.white} />
+              </View>
+            </Pressable>
+          )}
           {visibleTabs.map((tab) => {
             const disabled = tab?.disabled
             return (
