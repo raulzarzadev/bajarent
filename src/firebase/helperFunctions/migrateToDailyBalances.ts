@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv'
 import { resolve } from 'path'
 import admin from 'firebase-admin'
-import { firebase_config_prod } from '../../../service_accounts/firebase_config_prod'
-const serviceAccount = require('../../../service_accounts/service_account_prod.json')
+//import { firebase_config_prod } from '../../../service_accounts/firebase_config_prod'
+//const serviceAccount = require('../../../service_accounts/service_account_prod.json')
 
 //* THIS SCRIPT IS USED TO MIGRATE THE BALANCES COLLECTION TO DAILY BALANCES
 
@@ -15,10 +15,10 @@ dotenv.config() // Carga .env al inicio
 dotenv.config({ path: resolve(process.cwd(), '.env.local') })
 
 //const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG || '')
-const FIREBASE_CONFIG = firebase_config_prod
+const FIREBASE_CONFIG = {}
 export const app = admin.initializeApp({
   ...FIREBASE_CONFIG,
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert({})
 })
 export const db = admin.firestore()
 
