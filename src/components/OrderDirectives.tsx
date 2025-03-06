@@ -18,6 +18,7 @@ import useModal from '../hooks/useModal'
 import { useState } from 'react'
 import { ServiceCustomers } from '../firebase/ServiceCustomers'
 import { CustomerCardE } from './Customers/CustomerCard'
+import { OrderContext, OrderProvider } from '../contexts/orderContext'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   if (!order) return null
@@ -67,7 +68,9 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
           size="sm"
         ></Chip>
       </View>
-      {order.customerId && <ModalCustomerChip customerId={order?.customerId} />}
+      {order.customerId && (
+        <ModalCustomerChip customerId={order?.customerId} order={order} />
+      )}
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
 
       {!!assignedSectionLabel && (
@@ -137,7 +140,10 @@ export const OrderDirectivesE = (props) => (
 export default OrderDirectives
 
 export const ModalCustomerChip = (
-  { customerId }: { customerId: Partial<OrderType['customerId']> } = {
+  {
+    customerId,
+    order
+  }: { order?: OrderType; customerId: Partial<OrderType['customerId']> } = {
     customerId: null
   }
 ) => {
@@ -165,7 +171,9 @@ export const ModalCustomerChip = (
         }}
       ></Chip>
       <StyledModal {...modal}>
-        <CustomerCardE customer={customer} />
+        <OrderContext.Provider value={{ order }}>
+          <CustomerCardE customer={customer} />
+        </OrderContext.Provider>
       </StyledModal>
     </>
   )
