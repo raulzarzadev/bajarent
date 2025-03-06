@@ -149,7 +149,7 @@ export const orderStatus = ({
   storeName: string
 }) => {
   //* FORMAT ORDER SALE STATUS
-  if (order.type === order_type.SALE) {
+  if (order?.type === order_type.SALE) {
     return `🧾 *ORDEN DE VENTA*
 
     ${ORDER_SALE_ITEMS(order.items as SaleOrderItem[])}

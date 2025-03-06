@@ -3,6 +3,8 @@ import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import Button from './Button'
+import FormikInputRadios from './FormikInputRadios'
+import { store_section_types } from '../types/SectionType'
 
 const FormSection = ({
   defaultValues = {},
@@ -29,6 +31,16 @@ const FormSection = ({
           </View>
           <View style={styles.input}>
             <FormikInputValue name={'description'} placeholder="Descripción" />
+          </View>
+          <View style={styles.input}>
+            <FormikInputRadios
+              options={Object.entries(store_section_types).map(
+                ([value, label]) => {
+                  return { value, label }
+                }
+              )}
+              name="type"
+            />
           </View>
 
           <View style={styles.input}>

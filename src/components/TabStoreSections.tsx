@@ -16,6 +16,7 @@ const TabStoreSections = () => {
     ),
     title: section.name,
     icon: section?.icon,
+
     show: true
   }))
 

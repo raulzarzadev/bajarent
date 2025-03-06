@@ -91,6 +91,7 @@ import { IoIosGitMerge } from 'react-icons/io'
 import { BsClipboardCheck } from 'react-icons/bs'
 import { BsClipboardPlus } from 'react-icons/bs'
 import { LuFolderCheck } from 'react-icons/lu'
+import { LuWarehouse } from 'react-icons/lu'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -218,6 +219,7 @@ const icons = {
   target: MdMyLocation,
   tools: LiaToolsSolid,
   comment: BiCommentDots,
+  warehouse: LuWarehouse,
   none: null
 } as const
 
