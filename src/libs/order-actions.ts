@@ -493,7 +493,7 @@ export const onRentStart = async ({
     .catch((e) => console.error(e))
 
   //***** SEND RENT STARTED MESSAGE */
-  onSendOrderWhatsapp({
+  return onSendOrderWhatsapp({
     store,
     order: {
       ...order,

@@ -102,7 +102,13 @@ export const onSendOrderWhatsapp = async ({
     apiKey: store.chatbot?.apiKey,
     botId: store.chatbot?.id
   }
-
+  if (process.env.PRE_PRODUCTION)
+    console.log({
+      phone: !!config.phone,
+      message: !!config.message,
+      apiKey: !!config.apiKey,
+      botId: !!config.botId
+    })
   return await sendMessage(config)
     .then((res) => {
       if (res?.data?.existsOnWhats === false) {
@@ -124,7 +130,7 @@ export const onSendOrderWhatsapp = async ({
       return { success: false, error: 'no enviado' }
     })
     .catch((e) => {
-      console.error(e)
+      //console.error(e)
       return { success: false, error: 'no enviado' }
     })
 }
