@@ -15,6 +15,7 @@ import { CommentType } from '../types/CommentType'
 import { useOrdersCtx } from './ordersContext'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useStore } from './storeContext'
+import { CustomerType } from '../state/features/costumers/customerType'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -28,6 +29,7 @@ interface OrderContextProps {
   setCommentsCount?: (count: number) => void
   paymentsCount?: number
   commentsCount?: number
+  customer?: CustomerType
 }
 
 // Create the initial context
@@ -125,7 +127,8 @@ const OrderProvider = ({
         setPaymentsCount,
         setCommentsCount,
         paymentsCount,
-        commentsCount
+        commentsCount,
+        customer: customers.find((c) => c.id === order?.customerId)
       }}
     >
       {children}

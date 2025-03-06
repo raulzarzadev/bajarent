@@ -23,7 +23,7 @@ import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlic
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   const { store, storeId } = useStore()
-  const { order } = useOrderDetails()
+  const { order, customer } = useOrderDetails()
   const { user } = useAuth()
   const [isDirty, setIsDirty] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -37,7 +37,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
   } = {}) => {
     //*pickup items
     setIsLoading(true)
-    await onRentStart({ order, userId: user.id, store, lastPayment })
+    await onRentStart({ order, userId: user.id, store, lastPayment, customer })
     addWork({
       work: {
         action: 'rent_delivered',
