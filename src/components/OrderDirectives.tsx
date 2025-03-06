@@ -143,8 +143,12 @@ export const ModalCustomerChip = (
   {
     customerId,
     order
-  }: { order?: OrderType; customerId: Partial<OrderType['customerId']> } = {
-    customerId: null
+  }: {
+    order?: Partial<OrderType>
+    customerId: Partial<OrderType['customerId']>
+  } = {
+    customerId: null,
+    order: null
   }
 ) => {
   const modal = useModal({ title: 'Detalles de cliente' })
@@ -171,7 +175,7 @@ export const ModalCustomerChip = (
         }}
       ></Chip>
       <StyledModal {...modal}>
-        <OrderContext.Provider value={{ order }}>
+        <OrderContext.Provider value={{ order: order as OrderType }}>
           <CustomerCardE customer={customer} />
         </OrderContext.Provider>
       </StyledModal>
