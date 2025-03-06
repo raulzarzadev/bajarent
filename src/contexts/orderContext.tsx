@@ -96,9 +96,8 @@ const OrderProvider = ({
         //******* SET CATEGORY NAME ITEMS
         const orderItems = order?.items || []
         const items = orderItems.map((item) => {
-          item.categoryName = categories.find(
-            (cat) => cat.id === item.category
-          )?.name
+          item.categoryName =
+            categories?.find((cat) => cat.id === item.category)?.name || null
           return item
         })
 
