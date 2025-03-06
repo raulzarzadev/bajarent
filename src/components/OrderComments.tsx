@@ -129,46 +129,22 @@ const InputComment = ({
                 label: 'Normal',
                 color: colors.blue,
                 value: 'comment',
-                iconLabel: 'comment'
+                iconCheck: 'comment'
               },
               {
                 label: 'Imp',
                 color: colors.yellow,
                 value: 'important',
-                iconLabel: 'warning'
+                iconCheck: 'warning'
               },
               {
                 label: 'Reporte',
                 color: colors.red,
                 value: 'report',
-                iconLabel: 'report'
+                iconCheck: 'report'
               }
             ]}
           />
-          {/* <InputRadios
-            value={commentType}
-            layout="row"
-            setValue={(value) => {
-              setCommentType(value)
-            }}
-            options={[
-              {
-                label: 'Normal',
-                color: colors.blue,
-                value: 'comment'
-              },
-              {
-                label: 'Imp',
-                color: colors.yellow,
-                value: 'important'
-              },
-              {
-                label: 'Reporte',
-                color: colors.red,
-                value: 'report'
-              }
-            ]}
-          /> */}
         </View>
 
         <Button

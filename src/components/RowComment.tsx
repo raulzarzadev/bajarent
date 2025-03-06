@@ -10,7 +10,6 @@ import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import { FormattedComment } from '../types/CommentType'
-import Button from './Button'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 import InputCheckbox from './InputCheckbox'
@@ -100,13 +99,7 @@ export const CommentRow = ({
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
-          <View
-            style={{ marginRight: 4 }}
-            //style={{ width: 55 }}
-          >
-            {/* <Text style={[gStyles.helper]}>
-              {dateFormat(comment?.createdAt, 'dd/MM HH:mm')}
-            </Text> */}
+          <View style={{ marginRight: 4 }}>
             <Text style={[gStyles.helper]}>
               <Text style={[gStyles.helper, { marginRight: 4 }]}>
                 {dateFormat(comment?.createdAt, 'dd/MM HH:mm')}
@@ -120,18 +113,6 @@ export const CommentRow = ({
               alignItems: 'flex-end'
             }}
           >
-            {/* {comment?.type === 'report' && (
-              <View style={styles.badge}>
-                <Chip
-                  disabled={disabled || comment?.solved}
-                  title={''}
-                  icon="report"
-                  color={theme.error}
-                  titleColor={theme.white}
-                  size="xs"
-                />
-              </View>
-            )} */}
             {comment?.type === 'important' && (
               <View style={styles.badge}>
                 <Chip
