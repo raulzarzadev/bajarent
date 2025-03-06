@@ -137,17 +137,7 @@ const getStoreData = async (storeId: string) => {
       .map((section) => section.id)
     return { ...staff, sectionsAssigned }
   })
-  const sectionsWithDefaultStoreSections = [
-    ...sections
-    // {
-    //   id: 'workshop',
-    //   name: 'Taller',
-    //   storeId,
-    //   description: 'Taller de reparaciones',
-    //   icon: 'tools',
-    //   defaultArea: true
-    // }
-  ]
+  const sectionsWithDefaultStoreSections = [...sections]
 
   return {
     sections: sectionsWithDefaultStoreSections.sort(sortSections),
