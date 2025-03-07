@@ -109,7 +109,7 @@ const ScreenOrderNew = (navigation) => {
             await onSendOrderWhatsapp({
               customer: newCustomerCreated,
               store,
-              type: 'newStoreOrder',
+              type: 'sendNewStoreOrder',
               userId: user.id,
               phone: getFavoriteCustomerPhone(newCustomerCreated?.contacts),
               order: { ...defaultValues, id: orderId }

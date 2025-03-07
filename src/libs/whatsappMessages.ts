@@ -151,8 +151,6 @@ export const orderStatus = ({
   order: Partial<OrderType>
   storeName: string
 }) => {
-  console.log({ order })
-  const orderStatus = order?.status
   return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
@@ -162,47 +160,6 @@ export const orderStatus = ({
   })}
   
   ${AGRADECIMIENTOS({ storeName })}
-  `
-  if (orderStatus === order_status.AUTHORIZED) {
-    return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
-  \n${WELCOME({ customerName: order?.fullName })}
-  ${ORDER_DETAILS({
-    orderType: order?.type,
-    orderFolio: order?.folio,
-    order
-  })}
-  \n ${ORDER_DETAILS({
-    orderType: order?.type,
-    orderFolio: order?.folio,
-    order
-  })}
-  ${AGRADECIMIENTOS({ storeName })}
-  `
-  }
-  //* FORMAT ORDER SALE STATUS
-  if (order?.type === order_type.SALE) {
-    return `🧾 *ORDEN DE VENTA*
-
-    ${ORDER_SALE_ITEMS(order.items as SaleOrderItem[])}
-    ${ORDER_SALE_PAYMENTS(order?.payments as PaymentType[])}
-    \n${AGRADECIMIENTOS({ storeName })}
-    `
-  }
-
-  return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
-  \n${WELCOME({ customerName: order?.fullName })}
-  ${ORDER_DETAILS({
-    orderType: order?.type,
-    orderFolio: order?.folio,
-    order
-  })}
-  \n${
-    order && order?.type === 'RENT'
-      ? expireDateString(order, { feePerDay: 100 })
-      : repairORderStatus({ order })
-  }
-  \n${LAST_PAYMENT({ lastPayment: order?.payments?.[0] })}
-  \n${AGRADECIMIENTOS({ storeName })}
   `
 }
 export const newStoreOrder = ({ order, storeName }) => {
@@ -215,6 +172,46 @@ export const newStoreOrder = ({ order, storeName }) => {
   })}
   \n Pronto un asesor se pondrá en contacto para confirmar la fecha de entrega.*
   \n${AGRADECIMIENTOS({ storeName })}
+  `
+}
+/**
+ * this message never will be send from here,
+ * it will always be sent from market api.
+ * @param param0
+ * @returns
+ */
+export const newWebOrder = ({
+  order,
+  storeName
+}: {
+  order: Partial<OrderType>
+  storeName: string
+}) => {
+  return `📝 PEDIDO REALIZADO CON ÉXITO
+  \nEstimado ${order?.customerName || ''}:
+  \n\n📦 Detalles del pedido:
+  \nFolio: ${order?.folio}
+  \nTipo: ${dictionary(order?.type) || ''}
+  \nPronto un asesor se pondrá en contacto para confirmar la fecha de entrega.*
+  \n${storeName} agradece su preferencia 🙏🏼
+  `
+}
+
+export const authorizedOrder = ({
+  order,
+  store
+}: {
+  order: Partial<OrderType>
+  store: StoreType
+}) => {
+  console.log({ order })
+  return `📝 *PEDIDO AUTORIZADO* 
+  \n${AUTHORIZED_ORDER({ order })}
+  \nℹ️ Puede realizar el pago a los siguientes números de cuenta:
+  \n${BANK_INFO({ store })}
+  \nℹ️ La fecha de entrega puede cambiar segun la disponibilidad de los artículos.
+
+  \n${AGRADECIMIENTOS({ storeName: store?.name })}
   `
 }
 
@@ -242,9 +239,9 @@ const ORDER_DETAILS = ({
   order: Partial<OrderType>
 }) => {
   if (!order) return 'no order data'
-  return `\nFolio: *${orderFolio}*\nTipo: *${dictionary(
-    orderType
-  )}*${defineOrderStatus(order)}`
+  return `\nFolio: *${orderFolio}*\nTipo: *${dictionary(orderType) || ''}*${
+    defineOrderStatus(order) || ''
+  }`
 }
 
 const ORDER_ITEMS = ({ order }) => {
@@ -418,16 +415,18 @@ export const defineOrderStatus = (order: Partial<OrderType>) => {
   `
   }
   if (status === order_status.AUTHORIZED) {
-    return `\n\nPENDIENTE DE ENTREGA${
-      order.scheduledAt
-        ? `\n\nFecha estimada de entrega:\n*${dateFormat(
-            asDate(order?.scheduledAt),
-            'EEEE dd MMMM yy'
-          )}*`
-        : 'Sin fecha estimada de entrega'
-    }`
+    return AUTHORIZED_ORDER({ order })
   }
   if (status === order_status.DELIVERED && order.type === order_type.RENT) {
     return `${ORDER_ITEMS({ order })}`
   }
 }
+export const AUTHORIZED_ORDER = ({ order }: { order: Partial<OrderType> }) =>
+  `PENDIENTE DE ENTREGA${
+    order.scheduledAt
+      ? `\n\nFecha estimada de entrega:\n*${dateFormat(
+          asDate(order?.scheduledAt),
+          'EEEE dd MMMM yy'
+        )}*`
+      : 'Sin fecha estimada de entrega'
+  }`

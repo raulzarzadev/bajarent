@@ -2,10 +2,12 @@ import { arrayUnion } from 'firebase/firestore'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import sendMessage from './sendMessage'
 import OrderType, { SentMessage } from '../../types/OrderType'
-import StoreType from '../../types/StoreType'
+import StoreType, { order_message_flow } from '../../types/StoreType'
 import {
+  authorizedOrder,
   expiredMessage,
   newStoreOrder,
+  newWebOrder,
   orderStatus,
   rentFinished,
   rentRenewed,
@@ -14,16 +16,10 @@ import {
 import chooseOrderPhone from './chooseOrderPhone'
 import PaymentType from '../../types/PaymentType'
 import { CustomerType } from '../../state/features/costumers/customerType'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { getFavoriteCustomerPhone } from '../../components/Customers/lib/lib'
 
-export type TypeOfMessage =
-  | 'renew'
-  | 'delivery'
-  | 'pickup'
-  | 'status'
-  | 'expire'
-  | 'newStoreOrder'
+export type OrderFlowMessages = keyof typeof order_message_flow
+
 export const onSendOrderWhatsapp = async ({
   store,
   order,
@@ -37,7 +33,7 @@ export const onSendOrderWhatsapp = async ({
   phone?: string
   order: Partial<OrderType>
   customer?: CustomerType
-  type: TypeOfMessage
+  type: OrderFlowMessages
   userId: string
   lastPayment?: PaymentType
 }): Promise<{
@@ -57,32 +53,41 @@ export const onSendOrderWhatsapp = async ({
 
   order.fullName = customer?.name || order?.fullName || ''
 
-  const messageOptions: Record<TypeOfMessage, string> = {
-    newStoreOrder: newStoreOrder({
-      order,
-      storeName: store.name
-    }),
-    status: orderStatus({
-      order,
-      storeName: store.name
-    }),
-    renew: rentRenewed({
-      order,
-      storeName: store.name,
-      lastPayment: lastPayment || order?.payments?.[0] || null
-    }),
-    delivery: rentStarted({
-      order,
-      storeName: store.name,
-      lastPayment: lastPayment || order?.payments?.[0] || null
-    }),
-    pickup: rentFinished({
-      order,
-      storeName: store.name
-    }),
-    expire: expiredMessage({
+  const messageOptions: Record<OrderFlowMessages, string> = {
+    sendAuthorizedOrder: authorizedOrder({
       order,
       store
+    }),
+    sendNewStoreOrder: newStoreOrder({
+      order,
+      storeName: store.name
+    }),
+
+    sendRenewed: rentRenewed({
+      order,
+      storeName: store.name,
+      lastPayment: lastPayment || order?.payments?.[0] || null
+    }),
+    sendDelivered: rentStarted({
+      order,
+      storeName: store.name,
+      lastPayment: lastPayment || order?.payments?.[0] || null
+    }),
+    sendPickedUp: rentFinished({
+      order,
+      storeName: store.name
+    }),
+    sendStatusOrder: orderStatus({
+      order,
+      storeName: store.name
+    }),
+    sendExpireOrder: expiredMessage({
+      order,
+      store
+    }),
+    sendNewWebOrder: newWebOrder({
+      order,
+      storeName: store.name
     })
   }
 
@@ -144,7 +149,7 @@ const validateChatbotConfig = ({
   messageType
 }: {
   chatbot: StoreType['chatbot']
-  messageType: TypeOfMessage
+  messageType: OrderFlowMessages
 }): ChatbotValidationResult => {
   if (!chatbot?.enabled) {
     return {
@@ -164,17 +169,10 @@ const validateChatbotConfig = ({
       isValid: false
     }
   }
-  if (messageType === 'expire') {
+  if (!chatbot?.config?.[messageType]) {
     return {
-      message: 'expire message is enabled',
-      isValid: true
-    }
-  }
-
-  if (messageType === 'status') {
-    return {
-      message: 'status message is enabled',
-      isValid: true
+      message: `message type ${messageType} is not enabled`,
+      isValid: false
     }
   }
   return {

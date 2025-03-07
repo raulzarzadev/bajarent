@@ -38,7 +38,7 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
     onSendOrderWhatsapp({
       store,
       order,
-      type: 'pickup',
+      type: 'sendPickedUp',
       userId: user.id,
       customer: customers.find((customer) => customer.id === order.customerId)
     })

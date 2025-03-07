@@ -396,15 +396,7 @@ export default function ModalSendWhatsapp({
           stylesRow={{ justifyContent: 'center' }}
           stylesOption={{ marginHorizontal: 4 }}
         />
-        {/* <InputRadios
-          options={options}
-          value={messageType}
-          setValue={(value) => {
-            setMessageType(value)
-            setMessage(messages.find((m) => m.type === value)?.content || '')
-          }}
-          layout="row"
-        /> */}
+
         {message && (
           <View style={{ marginVertical: 6 }}>
             <SpanCopy label={'Copiar'} copyValue={message} />
@@ -465,7 +457,7 @@ export const ButtonSendWhatsappStatatus = (
           order: { ...order, payments },
           phone: phone,
           store,
-          type: 'status',
+          type: 'sendAuthorizedOrder',
           userId: user.id
         })
           .then((res) => console.log({ res }))

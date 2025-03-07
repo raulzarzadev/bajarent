@@ -503,7 +503,7 @@ export const onRentStart = async ({
       expireAt,
       deliveredAt
     },
-    type: 'delivery',
+    type: 'sendDelivered',
     userId,
     lastPayment,
     customer

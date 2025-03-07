@@ -31,6 +31,8 @@ import useMyNav from '../../hooks/useMyNav'
 import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
 import StyledModal from '../StyledModal'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
+import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
+import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 
 //* repaired
 function OrderActions() {
@@ -523,7 +525,7 @@ const ButtonAction = ({
 
 const ButtonAuthorize = ({ order, user }) => {
   const { addWork } = useCurrentWork()
-
+  const { store } = useStore()
   //TODO: send whatsapp when order is authorized, complement with route and date of delivery
   return (
     <Button
@@ -542,6 +544,14 @@ const ButtonAuthorize = ({ order, user }) => {
               orderId: order.id
             }
           }
+        })
+        const customer = await ServiceCustomers.get(order.customerId)
+        onSendOrderWhatsapp({
+          order,
+          type: 'sendAuthorizedOrder',
+          store,
+          userId: user.id,
+          customer
         })
       }}
     />

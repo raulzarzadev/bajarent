@@ -58,24 +58,29 @@ export type BaseStoreType = {
   }
 }
 
-export enum store_bot_configs {
-  includeSender = 'Incluir remitente',
-  sendDelivered = 'Orden entregada',
-  sendPickedUp = 'Orden recogida',
-  sendRenewed = 'Orden renovada',
-  sendNewWebOrder = 'Nueva orden web',
-  sendNewStoreOrder = 'Nueva orden de tienda'
+// export enum store_bot_configs {
+//   includeSender = 'Incluir remitente',
+
+// }
+export const message_configs = {
+  includeSender: 'Incluir remitente'
+}
+export const order_message_flow = {
+  sendDelivered: 'Orden entregada',
+  sendPickedUp: 'Orden recogida',
+  sendRenewed: 'Orden renovada',
+  sendAuthorizedOrder: 'Orden autorizada',
+  sendStatusOrder: 'Estado de orden',
+  sendExpireOrder: 'Vencimiento de orden',
+  sendNewWebOrder: 'Orden web',
+  sendNewStoreOrder: 'Orden de tienda'
+}
+export const store_bot_configs = {
+  ...message_configs,
+  ...order_message_flow
 }
 
 export type StoreBotConfigsType = keyof typeof store_bot_configs
-
-// export const storeBotConfigs = {
-//   includeSender:{
-//     label: 'Incluir remitente',
-//   },
-//   sendDelivered: 'Orden entregada',
-//   sendPickedUp: 'Orden recogida'
-// }
 
 export type ChatBotConfigs = keyof typeof store_bot_configs
 

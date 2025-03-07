@@ -94,7 +94,7 @@ export default function ScreenMessages() {
           const res = await onSendOrderWhatsapp({
             order,
             store,
-            type: 'expire',
+            type: 'sendExpireOrder',
             userId
           })
           console.log('res', res)
