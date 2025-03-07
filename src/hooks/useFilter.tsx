@@ -91,7 +91,6 @@ export default function useFilter<T extends { id?: string }>({
         reports,
         customers
       })
-      console.log({ collectionData, formattedData })
 
       setCustomData([...formattedData])
     }
