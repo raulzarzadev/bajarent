@@ -34,7 +34,7 @@ export default function useFilter<T extends { id?: string }>({
   const { reports } = useOrdersCtx()
 
   const [filteredData, setFilteredData] = useState<T[]>([...data])
-  const [searchedData, setSearchedData] = useState<T[]>([...data])
+  const [searchedData, setSearchedData] = useState<T[]>([])
   const [customData, setCustomData] = useState<T[]>([])
   const [filtersBy, setFiltersBy] = useState<Filter[]>([])
   const [searchValue, setSearchValue] = useState('')
@@ -53,7 +53,8 @@ export default function useFilter<T extends { id?: string }>({
       filtersBy,
       field,
       value,
-      searchedData
+
+      searchedData?.length ? [...searchedData] : [...data]
     )
 
     setFiltersBy(filters)
@@ -102,6 +103,7 @@ export default function useFilter<T extends { id?: string }>({
     setSearchValue('')
     setFilteredData([...data])
     setCustomData([])
+    setSearchedData([])
   }
 
   useEffect(() => {
