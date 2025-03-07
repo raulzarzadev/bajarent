@@ -100,6 +100,7 @@ export default function useFilter<T extends { id?: string }>({
     setFiltersBy([])
     setSearchValue('')
     setFilteredData([...data])
+    setCustomData([])
   }
 
   useEffect(() => {
