@@ -96,6 +96,17 @@ export const CommentRow = ({
               }}
             />
           )}
+          {comment.type === 'important' && (
+            <InputCheckbox
+              value={comment?.solved}
+              color={comment?.solved ? theme.success : theme.warning}
+              iconCheck={comment?.solved ? 'done' : 'warning'}
+              disabled={disabled}
+              setValue={() => {
+                handleToggleSolveReport(comment?.id, comment?.solved)
+              }}
+            />
+          )}
           <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
             {commentCreatedBy}
           </Text>
@@ -113,19 +124,6 @@ export const CommentRow = ({
               alignItems: 'flex-end'
             }}
           >
-            {comment?.type === 'important' && (
-              <View style={styles.badge}>
-                <Chip
-                  disabled={disabled || comment?.solved}
-                  title={''}
-                  icon="warning"
-                  color={theme.warning}
-                  titleColor={theme.black}
-                  size="xs"
-                />
-              </View>
-            )}
-
             {showOrder && !!order && (
               <View style={styles.badge}>
                 <Chip

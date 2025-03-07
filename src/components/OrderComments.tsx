@@ -1,5 +1,5 @@
 import { FlatList, View } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { colors } from '../theme'
 import P from './P'
 import { ServiceComments } from '../firebase/ServiceComments'
@@ -9,13 +9,10 @@ import { useStore } from '../contexts/storeContext'
 import { gSpace } from '../styles'
 import { CommentType } from './ListComments'
 import { FormattedComment } from '../types/CommentType'
-import formatComments from '../libs/formatComments'
 import asDate from '../libs/utils-date'
-//import InputRadios from './InputRadios'
 import { CommentRow } from './RowComment'
 import InputRadios from './Inputs/InputRadios'
 import { useOrderDetails } from '../contexts/orderContext'
-import { create } from 'cypress/types/lodash'
 
 const OrderComments = ({ orderId }: { orderId: string }) => {
   const { order, setCommentsCount, commentsCount } = useOrderDetails()
