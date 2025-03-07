@@ -4,7 +4,6 @@ import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import OrderType from '../types/OrderType'
 import { useStore } from '../contexts/storeContext'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useEmployee } from '../contexts/employeeContext'
 import {
   Filter,
@@ -12,6 +11,7 @@ import {
   handleFilterUpdate,
   searchInLocalData
 } from './useFilterUtils'
+import { ServiceCustomers } from '../firebase/ServiceCustomers'
 
 export type CollectionSearch = {
   collectionName: string
@@ -32,7 +32,6 @@ export default function useFilter<T extends { id?: string }>({
   const { storeId } = useStore()
   const { permissions } = useEmployee()
   const { reports } = useOrdersCtx()
-  const { data: customers } = useCustomers()
 
   const [filteredData, setFilteredData] = useState<T[]>([...data])
   const [searchedData, setSearchedData] = useState<T[]>([...data])
@@ -76,22 +75,25 @@ export default function useFilter<T extends { id?: string }>({
     setSearchedData(matchedData)
 
     if (collectionSearch?.collectionName === 'orders') {
-      const orders = await ServiceOrders.search({
+      const collectionData = await ServiceOrders.search({
         storeId,
         fields: collectionSearch?.fields,
         value,
         sections: permissions.canViewAllOrders
           ? 'all'
           : collectionSearch?.assignedSections
-      }).then((res) => {
-        return formatOrders({
-          orders: res as Partial<OrderType>[],
-          reports,
-          customers
-        })
       })
+      const customers = await ServiceCustomers.listIds({
+        ids: collectionData.map((o: OrderType) => o.customerId)
+      })
+      const formattedData = formatOrders({
+        orders: collectionData,
+        reports,
+        customers
+      })
+      console.log({ collectionData, formattedData })
 
-      setCustomData([...orders])
+      setCustomData([...formattedData])
     }
   }
 

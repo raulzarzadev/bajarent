@@ -312,7 +312,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     value: string | number
     avoidIds?: string[]
     sections: string[] | 'all' //FIXME: if is undefined, search in all sections, if is an array search in the array
-  }): Promise<Partial<Type>[] | void> {
+  }): Promise<Partial<Type>[]> {
     const promises = fields
       ?.map((field) => {
         const asNumber = Number(value)
@@ -344,7 +344,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       .filter((a) => a !== null)
     return await Promise.all(promises)
       .then((res) => res.flat())
-      .catch((e) => console.log({ e }))
+      .catch((e) => {
+        console.error(e)
+        return []
+      })
   }
 
   async getRentItemsLocation(storeId: string) {

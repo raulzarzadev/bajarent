@@ -82,6 +82,8 @@ export const formatOrder = ({
     formattedOrder.neighborhood = customer.address.neighborhood
     formattedOrder.address = customer.address.street
     formattedOrder.phone = getFavoriteCustomerPhone(customer.contacts)
+    formattedOrder.customerName = customer?.name
+    formattedOrder.neighborhood = customer?.address?.neighborhood
   }
 
   if (formattedOrder?.type === 'RENT') {
