@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { useField } from 'formik'
-import InputCheckbox from './InputCheckbox'
+import InputCheckbox from './Inputs/InputCheckbox'
 import { TextStyle, ViewStyle } from 'react-native'
 
 const FormikCheckbox = ({

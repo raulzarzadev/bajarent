@@ -234,6 +234,12 @@ const labels = {
   monthly: 'Mensual',
   custom: 'Custom', // personalizado
 
+  //Images
+  ID: 'Identificación',
+  house: 'Fachada',
+  signature: 'Firma',
+  item: 'Artículo',
+
   ' ': '',
   '': '',
 

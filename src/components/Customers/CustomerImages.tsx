@@ -20,6 +20,7 @@ import { useAuth } from '../../contexts/authContext'
 import asDate from '../../libs/utils-date'
 import { useEmployee } from '../../contexts/employeeContext'
 import { useState } from 'react'
+import dictionary from '../../dictionary'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
@@ -79,7 +80,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
               image={image.src}
               height={100}
               width={100}
-              title={image.type}
+              title={dictionary(image.type)}
               description={image.description}
               formValues={image}
               handleSubmitForm={async (values) => {
@@ -90,7 +91,7 @@ const CustomerImages = (props?: CustomerImagesProps) => {
               }}
               ComponentForm={FormikImageDescription}
             />
-            <Text>{image.type}</Text>
+            <Text>{dictionary(image.type)}</Text>
             <Text style={[gStyles.helper, { maxWidth: 100 }]} numberOfLines={2}>
               {image.description}
             </Text>
@@ -175,6 +176,10 @@ export const FormikImageDescription = ({
                 {
                   label: 'Firma',
                   value: 'signature'
+                },
+                {
+                  label: 'Artículo',
+                  value: 'item'
                 }
               ]}
             />

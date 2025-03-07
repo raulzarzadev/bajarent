@@ -4,7 +4,7 @@ import InputTextStyled from './InputTextStyled'
 import InputRadios from './InputRadios'
 import Button from './Button'
 import { PriceType, TimeType } from '../types/PriceType'
-import InputCheckbox from './InputCheckbox'
+import InputCheckbox from './Inputs/InputCheckbox'
 import ErrorBoundary from './ErrorBoundary'
 export type FormPriceProps = {
   defaultPrice: Partial<PriceType>

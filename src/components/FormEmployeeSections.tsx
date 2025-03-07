@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { ServiceSections } from '../firebase/ServiceSections'
 import { useStore } from '../contexts/storeContext'
-import InputCheckbox from './InputCheckbox'
+import InputCheckbox from './Inputs/InputCheckbox'
 import { gStyles } from '../styles'
 
 const FormEmployeeSections = ({ employeeId }: { employeeId: string }) => {

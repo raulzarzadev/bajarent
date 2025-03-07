@@ -10,7 +10,7 @@ import { gStyles } from '../styles'
 import { onMarkQuoteAsDone } from '../libs/order-actions'
 import { ContactRow } from './OrderContacts'
 import LinkLocation from './LinkLocation'
-import InputCheckbox from './InputCheckbox'
+import InputCheckbox from './Inputs/InputCheckbox'
 import asDate, { dateFormat } from '../libs/utils-date'
 
 import theme from '../theme'

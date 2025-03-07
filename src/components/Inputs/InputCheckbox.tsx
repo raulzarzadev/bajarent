@@ -1,18 +1,7 @@
 import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native'
-import Icon, { IconName } from './Icon'
-import theme from '../theme'
-
-const InputCheckbox = ({
-  label,
-  setValue,
-  value = false,
-  style,
-  textStyle,
-  color = theme.success,
-  disabled,
-  iconLabel,
-  iconCheck
-}: {
+import Icon, { IconName } from '../Icon'
+import theme from '../../theme'
+export type InputCheckboxProps = {
   label?: string
   setValue: (value: boolean) => void
   value?: boolean
@@ -22,7 +11,20 @@ const InputCheckbox = ({
   disabled?: boolean
   iconCheck?: IconName
   iconLabel?: IconName
-}) => {
+  variant?: 'ghost' | 'outline'
+}
+const InputCheckbox = ({
+  label,
+  setValue,
+  value = false,
+  style,
+  textStyle,
+  color = theme.success,
+  disabled,
+  iconLabel,
+  iconCheck,
+  variant
+}: InputCheckboxProps) => {
   const capitalizedLabel =
     label?.charAt(0)?.toUpperCase() + label?.slice(1) || ''
 
@@ -45,9 +47,15 @@ const InputCheckbox = ({
       <View
         style={{
           opacity: disabled ? 0.4 : 1,
-          backgroundColor: value ? color : theme.white,
+          backgroundColor:
+            variant === 'ghost' && !value
+              ? 'transparent'
+              : value
+              ? color
+              : theme.white,
           borderWidth: 1,
-          borderColor: value ? theme.white : color,
+          borderColor:
+            variant === 'ghost' ? 'transparent' : value ? theme.white : color,
           borderRadius: 99,
           padding: 2,
           marginRight: 2,
@@ -63,12 +71,13 @@ const InputCheckbox = ({
           size={16}
         />
       </View>
-      {iconLabel && <Icon icon={iconLabel} color={theme.primary} size={16} />}
+      {iconLabel && <Icon icon={iconLabel} color={color} size={16} />}
       <Text
         style={[
           {
             textDecorationLine: 'none',
-            marginLeft: 2
+            marginLeft: 2,
+            opacity: disabled ? 0.4 : 1
             //  textTransform: 'capitalize'
           },
           textStyle

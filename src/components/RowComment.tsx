@@ -12,7 +12,7 @@ import { useOrdersCtx } from '../contexts/ordersContext'
 import { FormattedComment } from '../types/CommentType'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
-import InputCheckbox from './InputCheckbox'
+import InputCheckbox from './Inputs/InputCheckbox'
 
 export const CommentRow = ({
   comment: _comment,
@@ -72,9 +72,9 @@ export const CommentRow = ({
     <View
       style={{
         width: '100%',
-        marginHorizontal: 'auto',
+        marginHorizontal: 'auto'
         // maxWidth: 500,
-        marginBottom: 4
+        //marginBottom:
       }}
     >
       <View style={{ justifyContent: 'space-between' }}>
@@ -87,10 +87,11 @@ export const CommentRow = ({
         >
           {comment.type === 'report' && (
             <InputCheckbox
-              value={comment?.solved}
+              value={!comment?.solved}
               color={comment?.solved ? theme.success : theme.error}
-              iconCheck={comment?.solved ? 'done' : 'siren'}
+              iconCheck={'siren'}
               disabled={disabled}
+              variant="ghost"
               setValue={() => {
                 handleToggleSolveReport(comment?.id, comment?.solved)
               }}
@@ -98,9 +99,10 @@ export const CommentRow = ({
           )}
           {comment.type === 'important' && (
             <InputCheckbox
-              value={comment?.solved}
+              variant="ghost"
+              value={!comment?.solved}
               color={comment?.solved ? theme.success : theme.warning}
-              iconCheck={comment?.solved ? 'done' : 'warning'}
+              iconCheck={'warning'}
               disabled={disabled}
               setValue={() => {
                 handleToggleSolveReport(comment?.id, comment?.solved)
@@ -190,9 +192,9 @@ export const CommentRow = ({
         style={[
           {
             width: '100%',
-            textAlign: 'left',
-            paddingVertical: 3
-          }
+            textAlign: 'left'
+          },
+          gStyles.helper
         ]}
         numberOfLines={numberOfLines}
       >
@@ -211,6 +213,6 @@ export const CommentRow = ({
 
 const styles = StyleSheet.create({
   badge: {
-    marginRight: 6
+    marginRight: 1
   }
 })

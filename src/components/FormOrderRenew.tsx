@@ -7,7 +7,7 @@ import FormikSelectCategories, {
 import Button from './Button'
 import OrderType from '../types/OrderType'
 import { expireDate2, translateTime } from '../libs/expireDate'
-import InputCheckbox from './InputCheckbox'
+import InputCheckbox from './Inputs/InputCheckbox'
 import StyledModal from './StyledModal'
 import FormPayment from './FormPayment'
 import useModal from '../hooks/useModal'

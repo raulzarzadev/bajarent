@@ -1,6 +1,6 @@
 import { View, Text, ViewStyle } from 'react-native'
 import React from 'react'
-import InputCheckbox from '../InputCheckbox'
+import InputCheckbox from './InputCheckbox'
 import { IconName } from '../Icon'
 
 export type InputRadioOption<T = string> = {
@@ -14,7 +14,6 @@ export type InputRadioOption<T = string> = {
 export type InputRadiosProps<T = string> = {
   label?: string
   options: InputRadioOption<T>[]
-  //optionStyle?: any
   textStyle?: any
   layout?: 'row' | 'column'
   value?: T
@@ -23,11 +22,12 @@ export type InputRadiosProps<T = string> = {
   stylesContainer?: ViewStyle
   stylesRow?: ViewStyle
   stylesOption?: ViewStyle
+  variant?: 'ghost' | 'outline'
 }
+
 const InputRadios = <T extends string = string>({
   label,
   options,
-  // optionStyle,
   textStyle,
   layout = 'row',
   onChange,
@@ -35,7 +35,8 @@ const InputRadios = <T extends string = string>({
   disabled,
   stylesContainer,
   stylesRow,
-  stylesOption
+  stylesOption,
+  variant = 'outline'
 }: InputRadiosProps<T>) => {
   const [_value, _setValue] = React.useState<T>(value)
   const handleChooseOpt = (value: T) => {
@@ -74,6 +75,7 @@ const InputRadios = <T extends string = string>({
             style={stylesOption}
             textStyle={textStyle}
             iconCheck={option.iconCheck}
+            variant={variant}
           ></InputCheckbox>
         ))}
       </View>
