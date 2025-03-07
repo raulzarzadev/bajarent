@@ -11,7 +11,8 @@
     "type-check": "tsc --noEmit ",
     "merge:main": "git switch main && git merge dev && git switch dev",
     "push:main": "git push origin main",
-    "fast-push": "npm run merge:main && npm run push:main",
+    "fast-test": " tsc --noEmit && bun test",
+    "fast-push": "tsc --noEmit && bun test && npm run merge:main && npm run push:main",
     "fast-push:patch": "npm version patch && npm run merge:main && npm run push:main",
     "cy:open": "cypress open --e2e --browser chrome",
     "cy:run": "cypress run --e2e --browser chrome",
@@ -72,6 +73,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/bun": "^1.2.4",
     "@types/lodash": "^4.17.15",
     "@types/react-native": "^0.73.0",
     "@typescript-eslint/eslint-plugin": "^6.20.0",

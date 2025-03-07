@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import theme from '../theme'
 import { BalanceType } from '../types/BalanceType'
 import DateCell from './DateCell'
