@@ -37,7 +37,7 @@ const InputCheckbox = ({
         {
           flexDirection: 'row',
           alignItems: 'center',
-          paddingRight: 2
+          padding: 2
         },
         style
       ]}

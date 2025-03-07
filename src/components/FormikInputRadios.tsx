@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useField } from 'formik'
 import InputRadios, { InputRadioOption } from './Inputs/InputRadios'
 

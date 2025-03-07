@@ -18,7 +18,6 @@ import asDate, {
   isBeforeYesterday
 } from '../libs/utils-date'
 import { useStore } from '../contexts/storeContext'
-import InputRadios from './InputRadios'
 import { translateTime } from '../libs/expireDate'
 import SpanCopy from './SpanCopy'
 import { isToday, isTomorrow } from 'date-fns'
@@ -30,6 +29,7 @@ import ButtonConfirm from './ButtonConfirm'
 import TextInfo from './TextInfo'
 import { orderStatus } from '../libs/whatsappMessages'
 import { useCustomer } from './Customers/ScreenCustomer'
+import InputRadios from './Inputs/InputRadios'
 
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
@@ -333,29 +333,20 @@ export default function ModalSendWhatsapp({
   const [messageType, setMessageType] = useState<MessageType>(null)
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
-  let options = [
+  let options: { label: string; value: MessageType }[] = [
     { label: 'Vacío', value: 'hello' },
     { label: 'Encuesta', value: 'rent-quality-survey' },
     { label: 'Información', value: 'store-info' },
-    { label: 'Google Maps', value: 'google-maps-comment' }
+    { label: 'Google Maps', value: 'google-maps-comment' },
+    { label: 'No encontrado', value: 'not-found' }
   ]
   if (order?.type === order_type.RENT) {
-    options.push(
-      ...[
-        { label: 'Vencimiento', value: 'expireAt' },
-        { label: 'Recibo', value: 'receipt-rent' },
-        { label: 'No encontrado', value: 'not-found' }
-      ]
-    )
+    options.push({ label: 'Vencimiento', value: 'expireAt' })
+    options.push({ label: 'Recibo', value: 'receipt-rent' })
   }
   if (order?.type === order_type.REPAIR) {
-    options.push(
-      ...[
-        { label: 'Recibo', value: 'receipt-repair' },
-        { label: 'No encontrado', value: 'not-found' },
-        { label: 'Recogido', value: 'repair-picked-up' }
-      ]
-    )
+    options.push({ label: 'Recibo', value: 'receipt-repair' })
+    options.push({ label: 'Recogido', value: 'repair-picked-up' })
   }
 
   const handleResetMessage = () => {
@@ -397,12 +388,23 @@ export default function ModalSendWhatsapp({
         <InputRadios
           options={options}
           value={messageType}
+          onChange={(value) => {
+            setMessageType(value)
+            setMessage(messages.find((m) => m.type === value)?.content || '')
+          }}
+          layout="row"
+          stylesRow={{ justifyContent: 'center' }}
+          stylesOption={{ marginHorizontal: 4 }}
+        />
+        {/* <InputRadios
+          options={options}
+          value={messageType}
           setValue={(value) => {
             setMessageType(value)
             setMessage(messages.find((m) => m.type === value)?.content || '')
           }}
           layout="row"
-        />
+        /> */}
         {message && (
           <View style={{ marginVertical: 6 }}>
             <SpanCopy label={'Copiar'} copyValue={message} />

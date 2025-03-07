@@ -56,7 +56,8 @@ const InputRadios = <T extends string = string>({
       <View
         style={[
           {
-            flexDirection: layout === 'row' ? 'row' : 'column'
+            flexDirection: layout === 'row' ? 'row' : 'column',
+            flexWrap: 'wrap'
           },
           stylesRow
         ]}
