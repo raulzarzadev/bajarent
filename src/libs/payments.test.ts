@@ -1,4 +1,3 @@
-//@ts-nocheck
 import PaymentType, { payment_methods } from '../types/PaymentType'
 import { payments_amount, PaymentsAmount } from './payments'
 
