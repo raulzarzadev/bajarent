@@ -7,6 +7,7 @@ import { View } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import OrderChangeLabel from './OrderChangeLabel'
 import TextInfo from './TextInfo'
+import { CustomerCardE } from './Customers/CustomerCard'
 
 type ModalOrderQuickActionsProps = {
   orderId: string
@@ -22,8 +23,6 @@ const ModalOrderQuickActions = ({ orderId }: ModalOrderQuickActionsProps) => {
       hideConfirm
     >
       <OrderProvider orderId={orderId}>
-        <TextInfo text="Lista de contactos. Envía WhatsApp a marca de forma mas rápida, sin entrar a la orden" />
-        <ContactsList />
         <QuickActions />
       </OrderProvider>
     </ButtonConfirm>
@@ -31,12 +30,13 @@ const ModalOrderQuickActions = ({ orderId }: ModalOrderQuickActionsProps) => {
 }
 
 const QuickActions = () => {
-  const { order } = useOrderDetails()
+  const { order, customer } = useOrderDetails()
   const collectIt = order?.markedToCollect
   const chargeIt = order?.markedToCharge
 
   return (
     <View>
+      <CustomerCardE customer={customer} />
       <TextInfo text="Etiquetas de color. Clasificalas y filtralas por color." />
       <OrderChangeLabel currentColor={order?.colorLabel} orderId={order?.id} />
       <TextInfo text="Acciones rápidas. Te ayudarán a saber las acciones pendientes de esta orden" />

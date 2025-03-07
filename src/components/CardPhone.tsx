@@ -42,16 +42,7 @@ const CardPhone = ({ phone, style }: CardPhoneType) => {
               Linking.openURL(`tel:${phone}`)
             }}
           />
-          {/* <Button
-            buttonStyles={{ marginHorizontal: 4 }}
-            justIcon
-            icon="whatsapp"
-            variant="ghost"
-            color={'success'}
-            onPress={() => {
-              Linking.openURL(`https://wa.me/${phone.replace('+', '')}`)
-            }}
-          /> */}
+
           <ModalSendWhatsappE justIcon whatsappPhone={phone} />
         </>
       )}

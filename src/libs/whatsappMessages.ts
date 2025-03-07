@@ -28,9 +28,10 @@ export const expiredMessage = ({
   \n${expireDateString(order, { feePerDay: 100 })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order: order
   })}
-  ${ORDER_ITEMS({ order })} 
+ 
   \n${BANK_INFO({ store })}
   \nEnvíe su comprobante al Whatsapp  ${
     store?.contacts?.find((c) => c.type === 'whatsapp')?.value
@@ -49,7 +50,8 @@ export const receiptMessage = ({
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order
   })}
   ${ORDER_ITEMS({ order })} 
   ${LAST_PAYMENT({ lastPayment: order?.payments?.[0] })}
@@ -70,9 +72,10 @@ export const rentStarted = ({
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order
   })}
-  ${ORDER_ITEMS({ order })} 
+ 
   ${expireDateString(order, { feePerDay: 100 })}
   ${LAST_PAYMENT({ lastPayment: lastPayment || order?.payments?.[0] })}
   ${AGRADECIMIENTOS({ storeName })}
@@ -90,9 +93,9 @@ export const rentFinished = ({
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order
   })} 
-  ${ORDER_ITEMS({ order })} 
   ${AGRADECIMIENTOS({ storeName })}
   `
 }
@@ -110,9 +113,9 @@ export const rentRenewed = ({
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order
   })}
-  ${ORDER_ITEMS({ order })} 
   ${expireDateString(order, { feePerDay: 100 })}
   \n${LAST_PAYMENT({ lastPayment: lastPayment || order?.payments?.[0] })}
   \n${AGRADECIMIENTOS({ storeName })}
@@ -148,6 +151,34 @@ export const orderStatus = ({
   order: Partial<OrderType>
   storeName: string
 }) => {
+  console.log({ order })
+  const orderStatus = order?.status
+  return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
+  \n${WELCOME({ customerName: order?.fullName })}
+  ${ORDER_DETAILS({
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
+  
+  ${AGRADECIMIENTOS({ storeName })}
+  `
+  if (orderStatus === order_status.AUTHORIZED) {
+    return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
+  \n${WELCOME({ customerName: order?.fullName })}
+  ${ORDER_DETAILS({
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
+  \n ${ORDER_DETAILS({
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
+  ${AGRADECIMIENTOS({ storeName })}
+  `
+  }
   //* FORMAT ORDER SALE STATUS
   if (order?.type === order_type.SALE) {
     return `🧾 *ORDEN DE VENTA*
@@ -157,13 +188,14 @@ export const orderStatus = ({
     \n${AGRADECIMIENTOS({ storeName })}
     `
   }
+
   return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order
   })}
-  ${ORDER_ITEMS({ order })}
   \n${
     order && order?.type === 'RENT'
       ? expireDateString(order, { feePerDay: 100 })
@@ -178,7 +210,8 @@ export const newStoreOrder = ({ order, storeName }) => {
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
     orderType: order?.type,
-    orderFolio: order?.folio
+    orderFolio: order?.folio,
+    order
   })}
   \n Pronto un asesor se pondrá en contacto para confirmar la fecha de entrega.*
   \n${AGRADECIMIENTOS({ storeName })}
@@ -201,11 +234,18 @@ const WELCOME = ({ customerName }) => `Estimado *${customerName}* `
  */
 const ORDER_DETAILS = ({
   orderType,
-  orderFolio
+  orderFolio,
+  order
 }: {
   orderType: OrderType['type']
   orderFolio: OrderType['folio']
-}) => `\nFolio: *${orderFolio}*\nTipo: *${dictionary(orderType)}*`
+  order: Partial<OrderType>
+}) => {
+  if (!order) return 'no order data'
+  return `\nFolio: *${orderFolio}*\nTipo: *${dictionary(
+    orderType
+  )}*${defineOrderStatus(order)}`
+}
 
 const ORDER_ITEMS = ({ order }) => {
   if (order?.type === 'RENT') {
@@ -368,4 +408,26 @@ export const items_sale_total = (items: SaleOrderItem[]) => {
     return prev + item_sale_amount(curr)
   }, 0)
   return total
+}
+
+export const defineOrderStatus = (order: Partial<OrderType>) => {
+  const status = order?.status
+  if (status === order_status.PENDING) {
+    return ` \nPENDIENTE DE AUTORIZACIÓN
+  \n*Su pedido aún esta por confirmarse*
+  `
+  }
+  if (status === order_status.AUTHORIZED) {
+    return `\n\nPENDIENTE DE ENTREGA${
+      order.scheduledAt
+        ? `\n\nFecha estimada de entrega:\n*${dateFormat(
+            asDate(order?.scheduledAt),
+            'EEEE dd MMMM yy'
+          )}*`
+        : 'Sin fecha estimada de entrega'
+    }`
+  }
+  if (status === order_status.DELIVERED && order.type === order_type.RENT) {
+    return `${ORDER_ITEMS({ order })}`
+  }
 }

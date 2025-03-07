@@ -29,6 +29,7 @@ import { useAuth } from '../contexts/authContext'
 import ButtonConfirm from './ButtonConfirm'
 import TextInfo from './TextInfo'
 import { orderStatus } from '../libs/whatsappMessages'
+import { useCustomer } from './Customers/ScreenCustomer'
 
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
@@ -37,6 +38,7 @@ export default function ModalSendWhatsapp({
 }: ModalSendWhatsappType) {
   const modal = useModal({ title: 'Enviar mensaje' })
   const { order, payments } = useOrderDetails()
+  const { customer } = useCustomer()
   const phone = whatsappPhone
 
   const invalidPhone = !phone || phone?.length < 10
@@ -66,7 +68,9 @@ export default function ModalSendWhatsapp({
     }
   }
   //*********  MEMES
-  const WELCOME = `Estimado ${order?.fullName} cliente de ${store?.name}`
+  const WELCOME = `Estimado ${customer?.name || order?.fullName} cliente de ${
+    store?.name
+  }`
 
   const ORDER_TYPE = `Tipo de servicio: *${dictionary(
     order?.type
@@ -325,27 +329,29 @@ export default function ModalSendWhatsapp({
   const [messageType, setMessageType] = useState<MessageType>(null)
   const [message, setMessage] = useState<string>()
   // messages.find((m) => m.type === messageType)?.content
-  let options = []
+  let options = [
+    { label: 'Vacío', value: 'hello' },
+    { label: 'Encuesta', value: 'rent-quality-survey' },
+    { label: 'Información', value: 'store-info' },
+    { label: 'Google Maps', value: 'google-maps-comment' }
+  ]
   if (order?.type === order_type.RENT) {
-    options = [
-      { label: 'Vacío', value: 'hello' },
-      { label: 'Vencimiento', value: 'expireAt' },
-      { label: 'Recibo', value: 'receipt-rent' },
-      { label: 'No encontrado', value: 'not-found' },
-      { label: 'Encuesta', value: 'rent-quality-survey' },
-      { label: 'Información', value: 'store-info' },
-      { label: 'Google Maps', value: 'google-maps-comment' }
-    ]
+    options.push(
+      ...[
+        { label: 'Vencimiento', value: 'expireAt' },
+        { label: 'Recibo', value: 'receipt-rent' },
+        { label: 'No encontrado', value: 'not-found' }
+      ]
+    )
   }
   if (order?.type === order_type.REPAIR) {
-    options = [
-      { label: 'Vacío', value: 'hello' },
-      { label: 'Recibo', value: 'receipt-repair' },
-      { label: 'No encontrado', value: 'not-found' },
-      { label: 'Recogido', value: 'repair-picked-up' },
-      { label: 'Información', value: 'store-info' },
-      { label: 'Google Maps', value: 'google-maps-comment' }
-    ]
+    options.push(
+      ...[
+        { label: 'Recibo', value: 'receipt-repair' },
+        { label: 'No encontrado', value: 'not-found' },
+        { label: 'Recogido', value: 'repair-picked-up' }
+      ]
+    )
   }
 
   const handleResetMessage = () => {

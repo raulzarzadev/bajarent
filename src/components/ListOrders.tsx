@@ -59,6 +59,7 @@ const ListOrders = ({
       const customer = customers?.find((c) => c.id === o?.customerId)
       if (customer) {
         order.customerName = customer.name
+        order.neighborhood = customer?.address?.neighborhood
       }
       return o?.id ? order : null
     })

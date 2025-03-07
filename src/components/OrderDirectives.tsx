@@ -68,9 +68,9 @@ const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
           size="sm"
         ></Chip>
       </View>
-      {order.customerId && (
+      {/* {order.customerId && (
         <ModalCustomerChip customerId={order?.customerId} order={order} />
-      )}
+      )} */}
       <OrderStatus order={order} chipStyles={styles.chip} chipSize={'sm'} />
 
       {!!assignedSectionLabel && (
@@ -139,46 +139,46 @@ export const OrderDirectivesE = (props) => (
 
 export default OrderDirectives
 
-export const ModalCustomerChip = (
-  {
-    customerId,
-    order
-  }: {
-    order?: Partial<OrderType>
-    customerId: Partial<OrderType['customerId']>
-  } = {
-    customerId: null,
-    order: null
-  }
-) => {
-  const modal = useModal({ title: 'Detalles de cliente' })
-  const [customer, setCustomer] = useState(null)
-  const [loading, setLoading] = useState(false)
-  return (
-    <>
-      <Chip
-        disabled={loading}
-        style={[styles.chip]}
-        title={''}
-        icon={'customerCard'}
-        titleColor={theme?.primary}
-        color={theme?.transparent}
-        iconSize="sm"
-        size="sm"
-        onPress={async () => {
-          setLoading(true)
-          ServiceCustomers.get(customerId).then((res) => {
-            setCustomer(res)
-            setLoading(false)
-            modal.setOpen(true)
-          })
-        }}
-      ></Chip>
-      <StyledModal {...modal}>
-        <OrderContext.Provider value={{ order: order as OrderType }}>
-          <CustomerCardE customer={customer} />
-        </OrderContext.Provider>
-      </StyledModal>
-    </>
-  )
-}
+// export const ModalCustomerChip = (
+//   {
+//     customerId,
+//     order
+//   }: {
+//     order?: Partial<OrderType>
+//     customerId: Partial<OrderType['customerId']>
+//   } = {
+//     customerId: null,
+//     order: null
+//   }
+// ) => {
+//   const modal = useModal({ title: 'Detalles de cliente' })
+//   const [customer, setCustomer] = useState(null)
+//   const [loading, setLoading] = useState(false)
+//   return (
+//     <>
+//       <Chip
+//         disabled={loading}
+//         style={[styles.chip]}
+//         title={''}
+//         icon={'customerCard'}
+//         titleColor={theme?.primary}
+//         color={theme?.transparent}
+//         iconSize="sm"
+//         size="sm"
+//         onPress={async () => {
+//           setLoading(true)
+//           ServiceCustomers.get(customerId).then((res) => {
+//             setCustomer(res)
+//             setLoading(false)
+//             modal.setOpen(true)
+//           })
+//         }}
+//       ></Chip>
+//       <StyledModal {...modal}>
+//         <OrderContext.Provider value={{ order: order as OrderType }}>
+//           <CustomerCardE customer={customer} />
+//         </OrderContext.Provider>
+//       </StyledModal>
+//     </>
+//   )
+// }
