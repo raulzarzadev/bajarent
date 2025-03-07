@@ -241,9 +241,11 @@ export default function ModalSendWhatsapp({
     | 'hello'
     | 'google-maps-comment'
 
-  const CLIENT_NOT_FOUND = `${WELCOME}
-  \nNo pudimos ponernos en contacto con usted para atender ${ORDER_TYPE}
-  \nResponde este mensaje o póngase en contacto a lo teléfonos :
+  const CLIENT_NOT_FOUND = `
+  \n🔎*NO TE ENCOTRAMOS*
+  ${WELCOME}
+  \nNo pudimos ponernos en contacto con usted.
+  \nPor favor póngase en contacto a lo teléfonos:
   \n${PHONES}
   \n${ADDRESS}
   \n${AGRADECIMIENTOS}
@@ -262,8 +264,10 @@ export default function ModalSendWhatsapp({
   \n${ADDRESS}
   \n${AGRADECIMIENTOS}`
 
-  const QUALITY_SURVEY = `${WELCOME}
-  \nAyudanos a mejorar el servicio con esta breve encuesta.
+  const QUALITY_SURVEY = `
+  📨 *AYUDANOS A MEJORAR*
+  \n${WELCOME}
+  \nPor favor contesta la siguiente encuesta de calidad de servicio.
   \nhttps://forms.gle/1kBa9yeZyP9rc6YeA
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
