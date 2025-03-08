@@ -29,6 +29,7 @@ import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import ModalCloseOperations from '../ModalCloseOperations'
 import { StoreBalanceE } from './StoreBalance/StoreBalance'
 import { CurrentWorkListE } from './CurrentWork/CurrentWorkList'
+import { ScreenChatbotE } from './ScreenChatbot'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()
@@ -83,6 +84,12 @@ const ScreenStore = (props) => {
               content: <StoreDetailsE store={store} {...props} />,
               show: true,
               icon: 'info'
+            },
+            {
+              title: 'Chatbot 🤖',
+              content: <ScreenChatbotE />,
+              show: isAdmin
+              //icon: 'comment'
             },
             {
               title: 'Balance',

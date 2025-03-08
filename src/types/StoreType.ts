@@ -62,10 +62,10 @@ export type BaseStoreType = {
 //   includeSender = 'Incluir remitente',
 
 // }
-export const message_configs = {
+export const bot_configs_message_ops = {
   includeSender: 'Incluir remitente'
 }
-export const order_message_flow = {
+export const bot_configs_order_flow = {
   sendDelivered: 'Orden entregada',
   sendPickedUp: 'Orden recogida',
   sendRenewed: 'Orden renovada',
@@ -73,16 +73,16 @@ export const order_message_flow = {
   sendStatusOrder: 'Estado de orden',
   sendExpireOrder: 'Vencimiento de orden',
   sendNewWebOrder: 'Orden web',
-  sendNewStoreOrder: 'Orden de tienda'
+  sendNewStoreOrder: 'Orden '
 }
-export const store_bot_configs = {
-  ...message_configs,
-  ...order_message_flow
+export const bot_configs = {
+  ...bot_configs_message_ops,
+  ...bot_configs_order_flow
 }
 
-export type StoreBotConfigsType = keyof typeof store_bot_configs
+export type StoreBotConfigsType = keyof typeof bot_configs
 
-export type ChatBotConfigs = keyof typeof store_bot_configs
+export type ChatBotConfigs = keyof typeof bot_configs
 
 export type MultiFields = {
   type: string

@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native'
 import P from './P'
-import StoreType, { store_bot_configs } from '../types/StoreType'
+import StoreType, { bot_configs } from '../types/StoreType'
 import { gStyles } from '../styles'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import SpanCopy from './SpanCopy'
 import LinkLocation from './LinkLocation'
 import { Separator } from './Separator'
+import { ChatbotStatus } from './ScreenChatbot'
 
 const StoreDetails = ({ store }: { store: StoreType }) => {
   const { navigate } = useNavigation()
@@ -80,24 +81,7 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       {store?.bankAccounts?.map(({ label, value, type }, index) => (
         <RowInfo key={index} label={label} value={value} type={type} />
       ))}
-
-      <View>
-        <Text style={[gStyles.h3, { marginTop: 8 }]}>Chatbot</Text>
-        <Text style={gStyles.tCenter}>
-          Status: {store?.chatbot?.enabled ? '✅' : '❌'}
-        </Text>
-
-        {Object.entries(store_bot_configs).map(([key, value]) => (
-          <View key={key}>
-            <Text style={gStyles.tCenter}>
-              {value}:{' '}
-              <Text style={gStyles.tBold}>
-                {store?.chatbot?.config?.[key] ? '✅' : '❌'}
-              </Text>
-            </Text>
-          </View>
-        ))}
-      </View>
+      <ChatbotStatus chatbot={store?.chatbot} />
     </View>
   )
 }

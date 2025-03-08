@@ -3,7 +3,7 @@ import React from 'react'
 import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import Button from './Button'
-import StoreType, { store_bot_configs } from '../types/StoreType'
+import StoreType, { bot_configs } from '../types/StoreType'
 import FormikCheckbox from './FormikCheckbox'
 import { gStyles } from '../styles'
 import FormikInputImage from './FormikInputImage'
@@ -66,50 +66,6 @@ const FormStore = ({
             />
           </View>
 
-          <View
-            style={{
-              padding: 4,
-              backgroundColor: theme.white,
-              borderRadius: 8
-            }}
-          >
-            <Text style={gStyles.h3}>Chatbot</Text>
-            <FormikCheckbox
-              name="chatbot.enabled"
-              label="Activar chatbot"
-            ></FormikCheckbox>
-            {values?.chatbot?.enabled && (
-              <>
-                <View style={styles.input}>
-                  <FormikInputValue name="chatbot.id" label="Bot Id" />
-                </View>
-                <View style={styles.input}>
-                  <FormikInputValue name="chatbot.apiKey" label="Api Key" />
-                </View>
-                <View style={styles.input}>
-                  <FormikInputValue
-                    name="chatbot.hostNumber"
-                    label="Numero anfitrión"
-                  />
-                </View>
-
-                <View>
-                  <Text>Configuración de mensajes</Text>
-                  <Text style={gStyles.helper}>
-                    * Se enviaran los mensajes que esten marcados. Algunos
-                    corresponden al flujo de las ordenes y otros al contenido.
-                  </Text>
-                  {Object.entries(store_bot_configs).map(([key, value]) => (
-                    <FormikCheckbox
-                      key={key}
-                      name={`chatbot.config.${key}`}
-                      label={dictionary(key)}
-                    ></FormikCheckbox>
-                  ))}
-                </View>
-              </>
-            )}
-          </View>
           <Separator />
           <FormikFieldArrayE
             label="Contactos"

@@ -116,7 +116,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     onSendOrderWhatsapp({
       store,
       order: updatedOrder,
-      type: 'renew',
+      type: 'sendRenewed',
       userId: user.id,
       lastPayment: payment,
       customer: customers?.find((c) => c.id === order?.customerId)

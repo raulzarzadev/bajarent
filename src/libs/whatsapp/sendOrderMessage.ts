@@ -2,7 +2,7 @@ import { arrayUnion } from 'firebase/firestore'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import sendMessage from './sendMessage'
 import OrderType, { SentMessage } from '../../types/OrderType'
-import StoreType, { order_message_flow } from '../../types/StoreType'
+import StoreType, { bot_configs_order_flow } from '../../types/StoreType'
 import {
   authorizedOrder,
   expiredMessage,
@@ -18,7 +18,7 @@ import PaymentType from '../../types/PaymentType'
 import { CustomerType } from '../../state/features/costumers/customerType'
 import { getFavoriteCustomerPhone } from '../../components/Customers/lib/lib'
 
-export type OrderFlowMessages = keyof typeof order_message_flow
+export type OrderFlowMessages = keyof typeof bot_configs_order_flow
 
 export const onSendOrderWhatsapp = async ({
   store,
@@ -53,46 +53,8 @@ export const onSendOrderWhatsapp = async ({
 
   order.fullName = customer?.name || order?.fullName || ''
 
-  const messageOptions: Record<OrderFlowMessages, string> = {
-    sendAuthorizedOrder: authorizedOrder({
-      order,
-      store
-    }),
-    sendNewStoreOrder: newStoreOrder({
-      order,
-      storeName: store.name
-    }),
-
-    sendRenewed: rentRenewed({
-      order,
-      storeName: store.name,
-      lastPayment: lastPayment || order?.payments?.[0] || null
-    }),
-    sendDelivered: rentStarted({
-      order,
-      storeName: store.name,
-      lastPayment: lastPayment || order?.payments?.[0] || null
-    }),
-    sendPickedUp: rentFinished({
-      order,
-      storeName: store.name
-    }),
-    sendStatusOrder: orderStatus({
-      order,
-      storeName: store.name
-    }),
-    sendExpireOrder: expiredMessage({
-      order,
-      store
-    }),
-    sendNewWebOrder: newWebOrder({
-      order,
-      storeName: store.name
-    })
-  }
-
   const staffName = store?.staff?.find((s) => s.userId === userId)?.position
-  let message = messageOptions[type]
+  let message = messageOptions({ order, store, lastPayment })[type]
 
   const customerPhone = getFavoriteCustomerPhone(customer?.contacts)
 
@@ -138,6 +100,45 @@ export const onSendOrderWhatsapp = async ({
       //console.error(e)
       return { success: false, error: 'no enviado' }
     })
+}
+export const messageOptions = ({ order, store, lastPayment }) => {
+  return {
+    sendAuthorizedOrder: authorizedOrder({
+      order,
+      store
+    }),
+    sendNewStoreOrder: newStoreOrder({
+      order,
+      storeName: store.name
+    }),
+
+    sendRenewed: rentRenewed({
+      order,
+      storeName: store.name,
+      lastPayment: lastPayment || order?.payments?.[0] || null
+    }),
+    sendDelivered: rentStarted({
+      order,
+      storeName: store.name,
+      lastPayment: lastPayment || order?.payments?.[0] || null
+    }),
+    sendPickedUp: rentFinished({
+      order,
+      storeName: store.name
+    }),
+    sendStatusOrder: orderStatus({
+      order,
+      storeName: store.name
+    }),
+    sendExpireOrder: expiredMessage({
+      order,
+      store
+    }),
+    sendNewWebOrder: newWebOrder({
+      order,
+      storeName: store.name
+    })
+  }
 }
 
 export type ChatbotValidationResult = {

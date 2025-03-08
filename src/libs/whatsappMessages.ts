@@ -422,11 +422,11 @@ export const defineOrderStatus = (order: Partial<OrderType>) => {
   }
 }
 export const AUTHORIZED_ORDER = ({ order }: { order: Partial<OrderType> }) =>
-  `PENDIENTE DE ENTREGA${
+  `PENDIENTE DE ENTREGA\n${
     order.scheduledAt
-      ? `\n\nFecha estimada de entrega:\n*${dateFormat(
+      ? `\nFecha estimada de entrega:\n*${dateFormat(
           asDate(order?.scheduledAt),
           'EEEE dd MMMM yy'
         )}*`
-      : 'Sin fecha estimada de entrega'
+      : '\nSin fecha estimada de entrega'
   }`
