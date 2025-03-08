@@ -1,7 +1,10 @@
 import { View, Text } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
-import { bot_configs, bot_configs_order_flow } from '../types/StoreType'
+import StoreType, {
+  bot_configs,
+  bot_configs_order_flow
+} from '../types/StoreType'
 import { useStore } from '../contexts/storeContext'
 import { messageOptions } from '../libs/whatsapp/sendOrderMessage'
 import OrderType, { order_type } from '../types/OrderType'
@@ -20,12 +23,11 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
         values={store.chatbot}
         onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
       />
-      <ChatbotStatus chatbot={store?.chatbot} />
       <SampleMessages store={store} />
     </View>
   )
 }
-export const SampleMessages = ({ store }) => {
+export const SampleMessages = ({ store }: { store: StoreType }) => {
   return (
     <View>
       <Text style={gStyles.h2}>Mensajes de muestra</Text>
@@ -42,7 +44,10 @@ export const SampleMessages = ({ store }) => {
               backgroundColor: theme.white
             }}
           >
-            <Text style={gStyles.h3}>{value}</Text>
+            <Text style={gStyles.h3}>
+              {store?.chatbot?.config?.[key] ? '✅' : '❌'}
+              {value}
+            </Text>
             <Text>
               {
                 messageOptions({
@@ -94,6 +99,7 @@ const mockOrder: Partial<OrderType> = {
   type: order_type.RENT,
   expireAt: new Date(),
   deliveredAt: new Date(),
+
   items: [
     {
       brand: 'Maytag',
