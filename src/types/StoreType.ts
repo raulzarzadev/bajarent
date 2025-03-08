@@ -73,7 +73,7 @@ export const bot_configs_order_flow = {
   sendStatusOrder: 'Estado de orden',
   sendExpireOrder: 'Vencimiento de orden',
   sendNewWebOrder: 'Orden web',
-  sendNewStoreOrder: 'Orden '
+  sendNewStoreOrder: 'Orden de tienda'
 }
 export const bot_configs = {
   ...bot_configs_message_ops,

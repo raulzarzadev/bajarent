@@ -72,11 +72,11 @@ export const ChatbotStatus = ({ chatbot }) => {
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {Object.entries(bot_configs).map(([key, value]) => (
                 <View key={key}>
-                  <Text style={gStyles.tCenter}>
-                    {value}:{' '}
+                  <Text style={[gStyles.tCenter, { marginRight: 4 }]}>
                     <Text style={gStyles.tBold}>
                       {chatbot?.config?.[key] ? '✅' : '❌'}
                     </Text>
+                    {value}{' '}
                   </Text>
                 </View>
               ))}
