@@ -16,6 +16,7 @@ import InputMapLocation from '../InputMapLocation'
 import { ModalLocationE } from '../ModalLocation'
 import { updateCustomer } from '../../state/features/costumers/customersThunks'
 import CoordsType from '../../types/CoordsType'
+import { CustomerCardE } from './CustomerCard'
 
 export const CustomerContext = createContext({ customer: null })
 export const useCustomer = () => {
@@ -23,7 +24,7 @@ export const useCustomer = () => {
 }
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
-  const { data: customers, loading, remove, update } = useCustomers()
+  const { data: customers, loading, remove } = useCustomers()
 
   const { permissions } = useEmployee()
   const sortCustomerPermissions = permissions.customers
@@ -32,106 +33,12 @@ const ScreenCustomer = (params) => {
   const customer = customers.find((c) => c.id === customerId)
   if (loading) return <Text>Cargando...</Text>
   if (!customer) return <Text>Cliente no encontrado</Text>
-  const handleUpdateLocation = async (location: CoordsType | string) => {
-    return await update(customerId, {
-      // @ts-ignore
-      ['address.locationURL']: location
-    })
-  }
+
   return (
     <CustomerContext.Provider value={{ customer }}>
       <ScrollView>
         <DocMetadata item={customer} style={{ margin: 'auto' }} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginVertical: 8,
-            alignContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          {sortCustomerPermissions?.delete && (
-            <ButtonConfirm
-              handleConfirm={async () => {
-                remove(customer.id)
-                navigation.goBack()
-              }}
-              openLabel="Eliminar"
-              openColor="error"
-              openVariant="ghost"
-              openSize="small"
-              confirmColor="error"
-              icon="delete"
-              justIcon
-            >
-              <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-                ¡ Eliminar de forma permanente !
-              </Text>
-            </ButtonConfirm>
-          )}
-          {sortCustomerPermissions?.edit && (
-            <Button
-              icon="edit"
-              justIcon
-              variant="ghost"
-              size="small"
-              onPress={() => {
-                toCustomers({ to: 'edit', id: customer.id })
-              }}
-            ></Button>
-          )}
-
-          <Text style={[gStyles.h2]}>{customer?.name} </Text>
-
-          <Button
-            icon="orderAdd"
-            justIcon
-            color="success"
-            variant="ghost"
-            size="small"
-            onPress={() => {
-              toCustomers({ customerId: customer?.id, to: 'newOrder' })
-            }}
-          ></Button>
-        </View>
-        <Text style={gStyles.h3}>Dirección</Text>
-        <Text style={{ textAlign: 'center' }}>
-          Colonia: {customer?.address?.neighborhood}
-        </Text>
-        <Text style={{ textAlign: 'center' }}>
-          Calle: {customer?.address?.street}
-        </Text>
-        <Text style={{ textAlign: 'center' }}>
-          Referencias: {customer?.address?.references}
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            width: '100%',
-            marginVertical: 8
-          }}
-        >
-          {customer?.address?.locationURL && (
-            <ModalLocationE
-              location={customer?.address?.locationURL}
-              setLocation={(value) => {
-                handleUpdateLocation(value)
-              }}
-            />
-          )}
-        </View>
-        <CustomerContactsE
-          customerId={customer.id}
-          canAdd
-          customerContacts={customer.contacts}
-        />
-        <CustomerImagesE
-          images={customer?.images}
-          customerId={customer?.id}
-          canAdd
-        />
+        <CustomerCardE customer={customer} />
         <CustomerOrdersE customerId={customer.id} />
       </ScrollView>
     </CustomerContext.Provider>

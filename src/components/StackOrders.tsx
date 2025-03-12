@@ -37,7 +37,7 @@ function StackOrders() {
       <Stack.Screen
         name="OrderDetails"
         options={{
-          title: 'Detalle de orden'
+          title: 'Detalles de orden'
         }}
         component={ScreenOrderDetail}
       />

@@ -4,57 +4,142 @@ import { CustomerType } from '../../state/features/costumers/customerType'
 import { gStyles } from '../../styles'
 import Button from '../Button'
 import useMyNav from '../../hooks/useMyNav'
-import LinkLocation from '../LinkLocation'
 import { CustomerContactsE } from './CustomerContacts'
 import { CustomerImagesE } from './CustomerImages'
 import { useEmployee } from '../../contexts/employeeContext'
+import { ModalLocationE } from '../ModalLocation'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import CoordsType from '../../types/CoordsType'
+import ButtonConfirm from '../ButtonConfirm'
+import { useNavigation } from '@react-navigation/native'
 const CustomerCard = (props?: CustomerCardProps) => {
+  const navigation = useNavigation()
+  const { update, remove } = useCustomers()
   const customer = props?.customer
-  const canEdit = props?.canEdit
   const { permissions } = useEmployee()
   const { toCustomers } = useMyNav()
-  const location = customer?.address?.locationURL || customer?.address?.coords
   const customerId = customer?.id
+
   const canRead = customerId && permissions?.customers?.read
+  const canEdit = customerId && permissions?.customers?.edit
+  const canDelete = customerId && permissions?.customers?.delete
+
   if (!customer) return <Text>No hay cliente</Text>
+  const handleUpdateLocation = async (location: CoordsType | string) => {
+    return await update(customerId, {
+      // @ts-ignore
+      ['address.locationURL']: location
+    })
+  }
+  const customerLocation =
+    customer?.address?.locationURL || customer?.address?.coords
   return (
-    <View>
-      <Text
-        style={[gStyles.h1, { textAlign: 'center', justifyContent: 'center' }]}
+    <View style={{ justifyContent: 'center' }}>
+      {/* CUSTOMER ACTIONS SHOULD VERIFY EMPLOYEE PERMISSIOS */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          maxWidth: 700,
+          minWidth: 400,
+          marginVertical: 8,
+          marginHorizontal: 'auto'
+        }}
       >
-        {customer?.name}{' '}
-        {!!canRead && (
+        {/* ELIMINAR */}
+        {canDelete && (
+          <ButtonConfirm
+            openLabel="Eliminar"
+            icon="delete"
+            handleConfirm={async () => {
+              remove(customer.id)
+              navigation.goBack()
+            }}
+            openColor="error"
+            openVariant="ghost"
+            openSize="xs"
+            confirmColor="error"
+            //justIcon
+          >
+            <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+              ¡ Eliminar de forma permanente !
+            </Text>
+          </ButtonConfirm>
+        )}
+
+        {/* EDITAR */}
+        {canEdit && (
           <Button
-            icon="openEye"
+            label="Editar"
+            icon="edit"
             variant="ghost"
-            justIcon
             size="xs"
             onPress={() => {
-              toCustomers({ to: 'details', id: customerId })
+              toCustomers({ to: 'edit', id: customer.id })
+            }}
+          ></Button>
+        )}
+        {/* VER DETALLES */}
+        {canRead && (
+          <Button
+            label="ver"
+            icon="openEye"
+            size="xs"
+            color="secondary"
+            variant="ghost"
+            onPress={() => toCustomers({ to: 'details', id: customerId })}
+          ></Button>
+        )}
+        {/* CREAR NUEVA ORDEN */}
+        <Button
+          label="Orden"
+          icon="orderAdd"
+          color="success"
+          variant="ghost"
+          size="xs"
+          onPress={() => {
+            toCustomers({ customerId: customer?.id, to: 'newOrder' })
+          }}
+        ></Button>
+      </View>
+
+      <Text style={gStyles.h2}>{customer?.name}</Text>
+      <Text style={gStyles.h3}>Dirección</Text>
+      <Text style={{ textAlign: 'center' }}>
+        Colonia: {customer?.address?.neighborhood}
+      </Text>
+      <Text style={{ textAlign: 'center' }}>
+        Calle: {customer?.address?.street}
+      </Text>
+      <Text style={{ textAlign: 'center' }}>
+        Referencias: {customer?.address?.references}
+      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '100%',
+          marginVertical: 8
+        }}
+      >
+        {customerLocation && (
+          <ModalLocationE
+            location={customerLocation}
+            setLocation={(value) => {
+              handleUpdateLocation(value)
             }}
           />
         )}
-      </Text>
-      <Text style={[{ textAlign: 'center' }]}>
-        {customer?.address?.neighborhood}
-      </Text>
-      <Text style={[{ textAlign: 'center' }]}>{customer?.address?.street}</Text>
-      <Text style={[{ textAlign: 'center' }]}>
-        {customer?.address?.references}
-      </Text>
-      {!!location && <LinkLocation location={location} />}
-
-      <View style={{ marginBottom: 8 }} />
-
+      </View>
       <CustomerContactsE
-        customerId={customerId}
+        customerId={customer.id}
+        canAdd
         customerContacts={customer.contacts}
-        canAdd={canEdit}
       />
       <CustomerImagesE
         images={customer?.images}
-        customerId={customerId}
-        canAdd={canEdit}
+        customerId={customer?.id}
+        canAdd
       />
     </View>
   )
