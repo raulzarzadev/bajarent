@@ -24,8 +24,10 @@ export const getCoordinates = async (
   } else if (isShortUrl) {
     console.log('is a url', { isShortUrl })
     const { unshortened_url, success } = await unShortUrl(location)
+    console.log({ unshortened_url, success })
     if (success) {
       const { coords } = containCoordinates(unshortened_url)
+      console.log({ coords })
       return coords
     }
     //const coords = await getCoordinatesFromShortUrl(location)

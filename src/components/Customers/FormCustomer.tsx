@@ -10,6 +10,7 @@ import { FormikInputPhoneE } from '../FormikInputPhone'
 import { createUUID } from '../../libs/createId'
 import { useState } from 'react'
 import { mergeObjs } from '../../libs/mergeObjs'
+import InputLocationFormik from '../InputLocationFormik'
 
 const FormCustomer = (props?: FormCustomerProps) => {
   const defaultCustomer: Partial<CustomerType> = {
@@ -17,7 +18,7 @@ const FormCustomer = (props?: FormCustomerProps) => {
     ...(props.defaultValues || {})
   }
   const [disabled, setDisabled] = useState(false)
-
+  console.log({ propsDef: props.defaultValues })
   return (
     <View>
       <Formik
@@ -50,10 +51,11 @@ const FormCustomer = (props?: FormCustomerProps) => {
                 />
               </View>
               <View style={styles.input}>
-                <FormikInputValue
+                <InputLocationFormik name="address.locationURL" />
+                {/* <FormikInputValue
                   name="address.locationURL"
                   label="Ubicación (URL)"
-                />
+                /> */}
               </View>
 
               <FormikCustomerContacts />
