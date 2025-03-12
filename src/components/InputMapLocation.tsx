@@ -33,7 +33,7 @@ const InputMapLocation = ({
 }) => {
   const INITIAL_POSITION: CoordsType = location || [24.145708, -110.311002]
   const [mapCenter, setMapCenter] = useState(INITIAL_POSITION)
-
+  const [mapZoom, setMapZoom] = useState(16)
   const handleSetCenter = (center: CoordsType) => {
     console.log('set map center', center)
     setMapCenter(center)
@@ -54,7 +54,7 @@ const InputMapLocation = ({
             style={styles.map}
             //@ts-ignore
             center={mapCenter}
-            zoom={16}
+            zoom={mapZoom}
             key={mapCenter.toString()}
 
             // scrollWheelZoom={false}
@@ -69,6 +69,11 @@ const InputMapLocation = ({
             <MapCenterTracker
               onCenterChange={(center) => {
                 handleSetCenter(center)
+              }}
+            />
+            <MapZoomTracker
+              onZoomChange={(zoom) => {
+                setMapZoom(zoom)
               }}
             />
           </MapContainer>
@@ -343,4 +348,30 @@ function MapCenterTracker({
   }, [map, onCenterChange])
 
   return null // Este componente no renderiza nada
+}
+
+function MapZoomTracker({
+  onZoomChange
+}: {
+  onZoomChange: (zoom: number) => void
+}) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!map) return
+
+    const updateZoom = () => {
+      const currentZoom = map.getZoom()
+      onZoomChange(currentZoom)
+    }
+
+    // También puedes escuchar 'zoom' para actualizaciones en tiempo real
+    map.on('zoomend', updateZoom)
+
+    return () => {
+      map.off('zoomend', updateZoom)
+    }
+  }, [map, onZoomChange])
+
+  return null
 }
