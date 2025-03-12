@@ -42,7 +42,6 @@ const InputLocation = ({
   return (
     <View>
       <Text>📍 Ubicación</Text>
-
       <View style={styles.group}>
         <InputTextStyled
           placeholder="Ubicación"
@@ -65,28 +64,6 @@ const InputLocation = ({
                 : ''
             }
           />
-        </View>
-        <View style={{ width: 32, height: 32, marginLeft: 4 }}>
-          {loading ? (
-            <ActivityIndicator />
-          ) : (
-            <Button
-              justIcon
-              disabled={location?.status === 'denied'}
-              icon={'location'}
-              variant="ghost"
-              onPress={async () => {
-                const res = await getLocation()
-                if (res?.status === 'granted' && res.coords) {
-                  const lat = res?.coords?.lat
-                  const lon = res?.coords?.lon
-                  setValue([lat, lon])
-                } else {
-                  setValue(null)
-                }
-              }}
-            />
-          )}
         </View>
       </View>
     </View>

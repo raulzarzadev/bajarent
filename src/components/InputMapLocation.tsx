@@ -8,6 +8,7 @@ import useDebounce from '../hooks/useDebunce'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
 import CoordsType from '../types/CoordsType'
+import Loading from './Loading'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({
@@ -34,6 +35,7 @@ const InputMapLocation = ({
   const [mapCenter, setMapCenter] = useState(INITIAL_POSITION)
 
   const handleSetCenter = (center: CoordsType) => {
+    console.log('set map center', center)
     setMapCenter(center)
     setLocation?.(center)
   }
@@ -50,6 +52,7 @@ const InputMapLocation = ({
             center={mapCenter}
             zoom={16}
             key={mapCenter.toString()}
+
             // scrollWheelZoom={false}
           >
             <TileLayer
@@ -59,6 +62,11 @@ const InputMapLocation = ({
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <DraggableMarker center={mapCenter} setCenter={handleSetCenter} />
+            <MapCenterTracker
+              onCenterChange={(center) => {
+                handleSetCenter(center)
+              }}
+            />
           </MapContainer>
         </View>
         <View
@@ -113,6 +121,7 @@ const SearchAddressLocation = ({
   maxResults?: number
   defaultSearch?: string
 }) => {
+  const [loading, setLoading] = useState(false)
   const { location, getLocation } = useLocation()
   const [searchQuery, setSearchQuery] = useState(defaultSearch)
   const [responses, setResponses] = useState(undefined)
@@ -183,24 +192,30 @@ const SearchAddressLocation = ({
             }
           }}
         />
-        <Button
-          justIcon
-          disabled={location?.status === 'denied'}
-          icon={'target'}
-          variant="ghost"
-          onPress={async () => {
-            const res = await getLocation()
-            console.log({ res })
-            if (res?.status === 'granted' && res.coords) {
-              const lat = res?.coords?.lat
-              const lon = res?.coords?.lon
-              setLocation([lat, lon])
-              console.log({ lat, lon })
-            } else {
-              setLocation(null)
-            }
-          }}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <Button
+            justIcon
+            disabled={location?.status === 'denied'}
+            icon={'target'}
+            variant="ghost"
+            onPress={async () => {
+              setLoading(true)
+              const res = await getLocation()
+              console.log({ res })
+              if (res?.status === 'granted' && res.coords) {
+                const lat = res?.coords?.lat
+                const lon = res?.coords?.lon
+                setLocation([lat, lon])
+                console.log({ lat, lon })
+              } else {
+                setLocation(null)
+              }
+              setLoading(false)
+            }}
+          />
+        )}
       </View>
       <View style={{ zIndex: 99999999 }}>
         {responses === -1 && <Text>Error al buscar la dirección</Text>}
@@ -297,3 +312,31 @@ const styles = StyleSheet.create({
     height: '100%'
   }
 })
+
+function MapCenterTracker({
+  onCenterChange
+}: {
+  onCenterChange: (center: CoordsType) => void
+}) {
+  const map = useMap()
+
+  // Este efecto se ejecuta cuando el mapa se mueve
+  useEffect(() => {
+    if (!map) return
+
+    const updateCenter = () => {
+      const center = map.getCenter()
+      const newCenter: CoordsType = [center.lat, center.lng]
+      onCenterChange(newCenter)
+    }
+
+    map.on('moveend', updateCenter)
+    // También puedes detectar otros eventos como 'zoom', 'drag', etc.
+
+    return () => {
+      map.off('moveend', updateCenter)
+    }
+  }, [map, onCenterChange])
+
+  return null // Este componente no renderiza nada
+}
