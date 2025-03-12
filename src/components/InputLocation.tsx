@@ -1,11 +1,5 @@
-import {
-  ActivityIndicator,
-  Linking,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import React, { useEffect, useMemo, useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
 import useLocation from '../hooks/useLocation'
@@ -14,20 +8,15 @@ import StyledModal from './StyledModal'
 import InputMapLocation from './InputMapLocation'
 import { getCoordinates } from '../libs/maps'
 import CoordsType from '../types/CoordsType'
+import ErrorBoundary from './ErrorBoundary'
 const InputLocation = ({
   value,
   setValue,
   helperText,
   neighborhood,
   address
-}: {
-  value: string | CoordsType
-  setValue: (value: CoordsType) => void
-  helperText?: string
-  neighborhood?: string
-  address?: string
-}) => {
-  const { getLocation, loading, location } = useLocation()
+}: InputLocationProps) => {
+  //const { getLocation, loading, location } = useLocation()
   const [coords, setCoords] = useState<CoordsType>(null)
   useEffect(() => {
     if (value) {
@@ -69,6 +58,19 @@ const InputLocation = ({
     </View>
   )
 }
+
+export type InputLocationProps = {
+  value: string | CoordsType
+  setValue: (value: CoordsType) => void
+  helperText?: string
+  neighborhood?: string
+  address?: string
+}
+export const InputLocationE = (props: InputLocationProps) => (
+  <ErrorBoundary componentName="InputLocation">
+    <InputLocation {...props} />
+  </ErrorBoundary>
+)
 
 const ModalSelectLocation = ({
   setValue,

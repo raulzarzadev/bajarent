@@ -122,14 +122,12 @@ const CustomerCard = (props?: CustomerCardProps) => {
           marginVertical: 8
         }}
       >
-        {customerLocation && (
-          <ModalLocationE
-            location={customerLocation}
-            setLocation={(value) => {
-              handleUpdateLocation(value)
-            }}
-          />
-        )}
+        <ModalLocationE
+          location={customerLocation}
+          setLocation={(value) => {
+            handleUpdateLocation(value)
+          }}
+        />
       </View>
       <CustomerContactsE
         customerId={customer.id}

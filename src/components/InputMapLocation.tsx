@@ -35,14 +35,9 @@ const InputMapLocation = ({
   const [mapCenter, setMapCenter] = useState(INITIAL_POSITION)
   const [mapZoom, setMapZoom] = useState(16)
   const handleSetCenter = (center: CoordsType) => {
-    console.log('set map center', center)
     setMapCenter(center)
     setLocation?.(center)
   }
-
-  useEffect(() => {
-    console.log({ location })
-  }, [location])
 
   const INPUT_HEIGHT = 40
 

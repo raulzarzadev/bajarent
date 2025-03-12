@@ -1,20 +1,25 @@
-import { View, Linking } from 'react-native'
+import { View, Linking, Text } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import Button from './Button'
 import { CircleMarker, MapContainer, TileLayer } from 'react-leaflet'
 import theme from '../theme'
-import { useState } from 'react'
-import InputLocation from './InputLocation'
+import { useEffect, useState } from 'react'
+import InputLocation, { InputLocationE } from './InputLocation'
 import CoordsType from '../types/CoordsType'
+import { getCoordinates } from '../libs/maps'
+import Loading from './Loading'
+import { gStyles } from '../styles'
 const ModalLocation = (props?: ModalLocationProps) => {
+  const location = props?.location
   const modal = useModal({ title: 'Ubicación' })
   const [edit, setEdit] = useState(false)
   const handleEdit = () => {
     setEdit(!edit)
   }
-  const [newLocation, setNewLocation] = useState(props.location)
+
+  const [newLocation, setNewLocation] = useState(location)
   const handleUpdateLocation = async () => {
     await props?.setLocation?.(newLocation)
     handleEdit()
@@ -31,10 +36,10 @@ const ModalLocation = (props?: ModalLocationProps) => {
       <StyledModal {...modal} size="full">
         {edit ? (
           <>
-            <InputLocation
+            <InputLocationE
               setValue={setNewLocation}
-              value={props.location}
-            ></InputLocation>
+              value={location}
+            ></InputLocationE>
             <View
               style={{
                 flexDirection: 'row',
@@ -88,7 +93,7 @@ const ModalLocation = (props?: ModalLocationProps) => {
                 color="success"
               ></Button>
             </View>
-            <MapLocation center={props.location} />
+            <MapLocationE center={location} />
           </>
         )}
       </StyledModal>
@@ -106,20 +111,40 @@ export const ModalLocationE = (props: ModalLocationProps) => (
   </ErrorBoundary>
 )
 
-export const MapLocation = ({ center }) => {
+export type MapLocationProps = {
+  center: CoordsType | string
+}
+export const MapLocationE = (props: MapLocationProps) => (
+  <ErrorBoundary componentName="MapLocation">
+    <MapLocation {...props} />
+  </ErrorBoundary>
+)
+export const MapLocation = (props: MapLocationProps) => {
+  const center = props?.center
+  const [coords, setCoords] = useState<CoordsType | null>(undefined)
+  useEffect(() => {
+    getCoordinates(center).then((coords) => {
+      setCoords(coords)
+    })
+  }, [center])
+
+  if (coords === undefined) return <Loading></Loading>
+  if (coords === null)
+    return (
+      <View>
+        <Text style={gStyles.h3}>No hay una ubicación aún</Text>
+      </View>
+    )
+
   return (
     <MapContainer
       style={{ height: '70vh', width: '100%', minHeight: 400 }}
       //@ts-ignore
-      center={center}
+      center={coords}
       zoom={13}
-      // key={mapCenter.toString()}
-
-      // scrollWheelZoom={false}
     >
       <TileLayer
         //@ts-ignore
-
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
@@ -135,19 +160,6 @@ export const MapLocation = ({ center }) => {
           fillOpacity: 0.5
         }}
       />
-      {/* 
-      
-              <DraggableMarker center={mapCenter} setCenter={handleSetCenter} />
-              <MapCenterTracker
-                onCenterChange={(center) => {
-                  handleSetCenter(center)
-                }}
-              />
-              <MapZoomTracker
-                onZoomChange={(zoom) => {
-                  setMapZoom(zoom)
-                }}
-              /> */}
     </MapContainer>
   )
 }
