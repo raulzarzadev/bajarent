@@ -22,7 +22,12 @@ const ModalLocation = (props?: ModalLocationProps) => {
   }
   return (
     <View>
-      <Button justIcon icon="map" onPress={modal.toggleOpen}></Button>
+      <Button
+        justIcon
+        icon="map"
+        onPress={modal.toggleOpen}
+        variant="ghost"
+      ></Button>
       <StyledModal {...modal} size="full">
         {edit ? (
           <>

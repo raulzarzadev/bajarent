@@ -34,6 +34,7 @@ const ScreenCustomer = (params) => {
   if (!customer) return <Text>Cliente no encontrado</Text>
   const handleUpdateLocation = async (location: CoordsType | string) => {
     return await update(customerId, {
+      // @ts-ignore
       ['address.locationURL']: location
     })
   }
@@ -104,15 +105,23 @@ const ScreenCustomer = (params) => {
         <Text style={{ textAlign: 'center' }}>
           Referencias: {customer?.address?.references}
         </Text>
-        {customer?.address?.locationURL && (
-          <ModalLocationE
-            location={customer?.address?.locationURL}
-            setLocation={(value) => {
-              handleUpdateLocation(value)
-            }}
-          />
-          // <Button justIcon icon="location" onPress={() => {}}></Button>
-        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            width: '100%',
+            marginVertical: 8
+          }}
+        >
+          {customer?.address?.locationURL && (
+            <ModalLocationE
+              location={customer?.address?.locationURL}
+              setLocation={(value) => {
+                handleUpdateLocation(value)
+              }}
+            />
+          )}
+        </View>
         <CustomerContactsE
           customerId={customer.id}
           canAdd
