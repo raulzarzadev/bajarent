@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import React from 'react'
 import { useField } from 'formik'
 import InputLocation from './InputLocation'
 

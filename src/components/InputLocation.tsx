@@ -49,6 +49,7 @@ const InputLocation = ({
           onChangeText={(text) => {
             getCoordinates(text).then((coords) => {
               setValue(coords)
+              setCoords(coords)
             })
           }}
           helperText={helperText}
@@ -81,7 +82,6 @@ const ModalSelectLocation = ({
 }) => {
   const modal = useModal({ title: 'Selecciona la ubicación' })
   const coords = value
-
   return (
     <>
       <Button

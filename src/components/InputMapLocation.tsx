@@ -40,6 +40,10 @@ const InputMapLocation = ({
     setLocation?.(center)
   }
 
+  useEffect(() => {
+    console.log({ location })
+  }, [location])
+
   const INPUT_HEIGHT = 40
 
   return (
