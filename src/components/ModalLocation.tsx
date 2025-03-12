@@ -150,7 +150,7 @@ export const MapLocation = (props: MapLocationProps) => {
       />
 
       <CircleMarker
-        center={center}
+        center={coords}
         //@ts-ignore
         radius={10}
         pathOptions={{

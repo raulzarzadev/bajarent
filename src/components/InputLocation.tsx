@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import InputTextStyled from './InputTextStyled'
 import Button from './Button'
-import useLocation from '../hooks/useLocation'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'
 import InputMapLocation from './InputMapLocation'
@@ -16,12 +15,10 @@ const InputLocation = ({
   neighborhood,
   address
 }: InputLocationProps) => {
-  //const { getLocation, loading, location } = useLocation()
   const [coords, setCoords] = useState<CoordsType>(null)
   useEffect(() => {
     if (value) {
       getCoordinates(value).then((coords) => {
-        console.log({ value, coords })
         setCoords(coords)
       })
     }
@@ -33,7 +30,7 @@ const InputLocation = ({
       <View style={styles.group}>
         <InputTextStyled
           placeholder="Ubicación"
-          value={value as string}
+          value={coords ? `${coords[0]},${coords[1]}` : (value as string)}
           onChangeText={(text) => {
             getCoordinates(text).then((coords) => {
               setValue(coords)
@@ -45,7 +42,10 @@ const InputLocation = ({
         />
         <View style={{ width: 32, height: 32, marginLeft: 4 }}>
           <ModalSelectLocation
-            setValue={setValue}
+            setValue={(coords) => {
+              setValue(coords)
+              setCoords(coords)
+            }}
             value={coords}
             defaultSearch={
               neighborhood || address

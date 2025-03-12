@@ -51,12 +51,9 @@ const InputMapLocation = ({
             center={mapCenter}
             zoom={mapZoom}
             key={mapCenter.toString()}
-
-            // scrollWheelZoom={false}
           >
             <TileLayer
               //@ts-ignore
-
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
@@ -207,12 +204,10 @@ const SearchAddressLocation = ({
             onPress={async () => {
               setLoading(true)
               const res = await getLocation()
-              console.log({ res })
               if (res?.status === 'granted' && res.coords) {
                 const lat = res?.coords?.lat
                 const lon = res?.coords?.lon
                 setLocation([lat, lon])
-                console.log({ lat, lon })
               } else {
                 setLocation(null)
               }
@@ -267,7 +262,6 @@ function DraggableMarker({
 }) {
   const [position, setPosition] = useState(center)
   const markerRef = useRef(null)
-  const map = useMap()
   const eventHandlers = useMemo(
     () => ({
       dragend() {
