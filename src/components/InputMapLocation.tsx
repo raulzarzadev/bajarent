@@ -278,14 +278,13 @@ function DraggableMarker({
       dragend() {
         const marker = markerRef.current
 
-        if (marker != null) {
+        if (marker !== null) {
           const coords: CoordsType = [
             marker.getLatLng()?.lat,
             marker.getLatLng()?.lng
           ]
           setPosition(coords)
           setCenter(coords)
-          map.setView(coords)
         }
       }
     }),
