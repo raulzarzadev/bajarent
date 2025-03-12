@@ -14,7 +14,6 @@ import StyledModal from './StyledModal'
 import InputMapLocation from './InputMapLocation'
 import { getCoordinates } from '../libs/maps'
 import CoordsType from '../types/CoordsType'
-
 const InputLocation = ({
   value,
   setValue,
@@ -22,9 +21,9 @@ const InputLocation = ({
   neighborhood,
   address
 }: {
-  value: string
+  value: string | CoordsType
   setValue: (value: CoordsType) => void
-  helperText: string
+  helperText?: string
   neighborhood?: string
   address?: string
 }) => {
@@ -45,7 +44,7 @@ const InputLocation = ({
       <View style={styles.group}>
         <InputTextStyled
           placeholder="Ubicación"
-          value={value}
+          value={value as string}
           onChangeText={(text) => {
             getCoordinates(text).then((coords) => {
               setValue(coords)
@@ -82,6 +81,7 @@ const ModalSelectLocation = ({
 }) => {
   const modal = useModal({ title: 'Selecciona la ubicación' })
   const coords = value
+
   return (
     <>
       <Button

@@ -12,6 +12,10 @@ import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from '../ButtonConfirm'
 import { useEmployee } from '../../contexts/employeeContext'
 import { createContext, useContext } from 'react'
+import InputMapLocation from '../InputMapLocation'
+import { ModalLocationE } from '../ModalLocation'
+import { updateCustomer } from '../../state/features/costumers/customersThunks'
+import CoordsType from '../../types/CoordsType'
 
 export const CustomerContext = createContext({ customer: null })
 export const useCustomer = () => {
@@ -19,7 +23,7 @@ export const useCustomer = () => {
 }
 const ScreenCustomer = (params) => {
   const customerId = params.route.params.id
-  const { data: customers, loading, remove } = useCustomers()
+  const { data: customers, loading, remove, update } = useCustomers()
 
   const { permissions } = useEmployee()
   const sortCustomerPermissions = permissions.customers
@@ -28,7 +32,11 @@ const ScreenCustomer = (params) => {
   const customer = customers.find((c) => c.id === customerId)
   if (loading) return <Text>Cargando...</Text>
   if (!customer) return <Text>Cliente no encontrado</Text>
-
+  const handleUpdateLocation = async (location: CoordsType | string) => {
+    return await update(customerId, {
+      ['address.locationURL']: location
+    })
+  }
   return (
     <CustomerContext.Provider value={{ customer }}>
       <ScrollView>
@@ -96,6 +104,15 @@ const ScreenCustomer = (params) => {
         <Text style={{ textAlign: 'center' }}>
           Referencias: {customer?.address?.references}
         </Text>
+        {customer?.address?.locationURL && (
+          <ModalLocationE
+            location={customer?.address?.locationURL}
+            setLocation={(value) => {
+              handleUpdateLocation(value)
+            }}
+          />
+          // <Button justIcon icon="location" onPress={() => {}}></Button>
+        )}
         <CustomerContactsE
           customerId={customer.id}
           canAdd

@@ -11,7 +11,7 @@ import {
 import React, { ReactNode } from 'react'
 import Icon from './Icon'
 
-const windowHeight = Dimensions.get('window').height
+const { height: windowHeight, width: windowWidth } = Dimensions.get('window')
 
 export type StyledModalProps = {
   open?: boolean
@@ -33,6 +33,7 @@ const StyledModal = ({
     setOpen(!open)
     onclose()
   }
+  const isSmallView = windowWidth < 600
   return (
     <View>
       <View style={styles.centeredView}>
@@ -57,8 +58,9 @@ const StyledModal = ({
                 <View
                   style={[
                     styles.modalView,
-                    size === 'full' && styles.fullSizeModal,
-                    size === 'md' && styles.mdSizeModal
+                    isSmallView ? styles.fullSizeModal : styles.mdSizeModal
+                    // size === 'full' && styles.fullSizeModal,
+                    // size === 'md' && styles.mdSizeModal
                   ]}
                 >
                   <>

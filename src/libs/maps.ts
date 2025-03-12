@@ -14,10 +14,14 @@ export const isCoordinates = (str: string): boolean => {
 }
 
 export const getCoordinates = async (
-  location = ''
+  location: string | CoordsType
 ): Promise<CoordsType | null> | null => {
+  if (!location) return null
+  if (typeof location !== 'string') {
+    return location
+  }
   const isLocationCoordinates = isCoordinates(location)
-  const isShortUrl = location.match(/^https:\/\/\S+/)
+  const isShortUrl = location?.match(/^https:\/\/\S+/)
   if (isLocationCoordinates) {
     const coords = location?.split(',')
     return [parseFloat(coords[0]), parseFloat(coords[1])]
