@@ -56,7 +56,7 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
       setSubmitting(true)
       await handleExtend({
         items: values.items,
-        time: values.items[0].priceSelected.time,
+        time: values.items?.[0]?.priceSelected?.time,
         startAt: order.expireAt,
         orderId: order.id
       })
