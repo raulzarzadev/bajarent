@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { gStyles } from '../styles'
-import FormOrderRenew from './FormOrderRenew'
+import FormOrderRenew, { FormOrderRenewE } from './FormOrderRenew'
 import InputImagePicker from './InputImagePicker'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import InputLocation from './InputLocation'
@@ -72,7 +72,7 @@ const ScreenOrderRenew = ({ route }) => {
             </View>
           </>
         )}
-        <FormOrderRenew order={order} />
+        <FormOrderRenewE order={order} />
       </View>
     </ScrollView>
   )

@@ -28,8 +28,9 @@ import { ServicePayments } from '../firebase/ServicePayments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import ErrorBoundary from './ErrorBoundary'
 
-const FormOrderRenew = ({ order }: { order: OrderType }) => {
+const FormOrderRenew = ({ order }: FormOrderRenewProps) => {
   const { goBack } = useNavigation()
   const { store } = useStore()
   const { user } = useAuth()
@@ -283,6 +284,12 @@ const FormOrderRenew = ({ order }: { order: OrderType }) => {
     </View>
   )
 }
+export type FormOrderRenewProps = { order: OrderType }
+export const FormOrderRenewE = (props: FormOrderRenewProps) => (
+  <ErrorBoundary componentName="FormOrderRenew">
+    <FormOrderRenew {...props} />
+  </ErrorBoundary>
+)
 
 export default FormOrderRenew
 
