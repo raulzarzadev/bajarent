@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import FormSelectPrice from './FormSelectPrice'
 import { useStore } from '../contexts/storeContext'
 import { PriceType } from '../types/PriceType'
-import { set } from 'cypress/types/lodash'
 import ErrorBoundary from './ErrorBoundary'
 
 export type ModalSelectCategoryPriceProps = {
@@ -22,12 +21,17 @@ const ModalSelectCategoryPrice = ({
     useState<string>(priceSelectedId)
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
   useEffect(() => {
-    setCategoryPrices(categories.find((c) => c.id === categoryId)?.prices || [])
+    setCategoryPrices(
+      categories?.find((c) => c.id === categoryId)?.prices || []
+    )
   }, [categories, categoryId])
+
+  //console.log({ categories, categoryPrices, categoryId })
 
   return (
     <View>
       <ButtonConfirm
+        openDisabled={categoryPrices.length === 0}
         handleConfirm={async () => {
           const itemPriceSelected = categoryPrices.find(
             //* this is necessary to find the correct price

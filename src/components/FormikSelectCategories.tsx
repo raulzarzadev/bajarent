@@ -266,19 +266,35 @@ export const ItemRow = ({
   handleChangeItemPrice?: (price: Partial<PriceType>) => void
 }) => {
   const { storeId, categories } = useStore()
-  const [shouldCreateItem, setShouldCreateItem] = useState(false)
+  const [storeItem, setStoreItem] = useState<ItemType>()
+
+  const [shouldCreateItem, setShouldCreateItem] = useState(undefined)
   const [_item, _setItem] = useState<Partial<ItemType>>(item)
   useEffect(() => {
-    ServiceStoreItems.get({ itemId: item?.id, storeId })
-      .then((res) => {
-        _setItem(res)
-      })
-      .catch((e) => {
-        console.log({ e })
-        setShouldCreateItem(true)
-        _setItem({ ...item })
-      })
+    if (item.id)
+      ServiceStoreItems.get({ storeId, itemId: item.id })
+        .then((res) => {
+          setStoreItem(res)
+          setShouldCreateItem(false)
+        })
+        .catch((e) => {
+          // console.log({ e })
+          setShouldCreateItem(true)
+          _setItem({ ...item })
+        })
   }, [item.id])
+  // useEffect(() => {
+  //   ServiceStoreItems.get({ itemId: item?.id, storeId })
+  //     .then((res) => {
+  //       _setItem(res)
+  //     })
+  //     .catch((e) => {
+  //       console.log({ e })
+  //       setShouldCreateItem(true)
+  //       _setItem({ ...item })
+  //     })
+  // }, [item.id])
+  // console.log({ storeItem })
   const assignedSection = _item?.assignedSection || ''
   const category = _item?.category || ''
   const brand = _item?.brand || ''
@@ -286,8 +302,11 @@ export const ItemRow = ({
   const serial = _item?.serial || ''
 
   const itemCategoryId = categories?.find(
-    (cat) => item?.category === cat?.id || item.categoryName === cat?.name
+    (cat) =>
+      storeItem?.category === cat?.id || storeItem?.categoryName === cat?.name
   )?.id
+
+  ///console.log({ itemCategoryId, item, storeItem, _item })
 
   //@ts-ignore //TODO: <--- this should be fixed
   const priceSelectedId = item?.priceSelected?.id
@@ -322,7 +341,7 @@ export const ItemRow = ({
           borderRadius: gSpace(2)
         }}
       />
-      {shouldCreateItem && createItem && (
+      {shouldCreateItem === true && createItem && (
         <ButtonConfirm
           handleConfirm={async () => {}}
           confirmLabel="Cerrar"

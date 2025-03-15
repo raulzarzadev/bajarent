@@ -219,12 +219,12 @@ const FormOrderRenew = ({ order }: FormOrderRenewProps) => {
                           { textDecorationLine: 'underline' }
                         ]}
                       >
-                        {translateTime(currentPriceSelected.time)}{' '}
+                        {translateTime(currentPriceSelected?.time)}{' '}
                       </Text>
                     </View>
                     <CurrencyAmount
                       style={{ textAlign: 'center' }}
-                      amount={currentPriceSelected.amount}
+                      amount={currentPriceSelected?.amount}
                     />
 
                     <Text style={[{ marginBottom: 8, textAlign: 'center' }]}>
@@ -264,7 +264,7 @@ const FormOrderRenew = ({ order }: FormOrderRenewProps) => {
                       handleSubmit()
                     }}
                     label={`Renovar ${translateTime(
-                      currentPriceSelected.time
+                      currentPriceSelected?.time
                     )}`}
                   />
                 </View>
