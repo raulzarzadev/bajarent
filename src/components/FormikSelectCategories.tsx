@@ -249,7 +249,7 @@ const ListItems = ({
     ></FlatList>
   )
 }
-
+// TODO: FIXME: fix all this fucking mess, its look that _item is not being updated properly
 export const ItemRow = ({
   item,
   onPressDelete,
@@ -266,7 +266,7 @@ export const ItemRow = ({
   handleChangeItemPrice?: (price: Partial<PriceType>) => void
 }) => {
   const { storeId, categories } = useStore()
-  const [storeItem, setStoreItem] = useState<ItemType>()
+  const [storeItem, setStoreItem] = useState<Partial<ItemType>>()
 
   const [shouldCreateItem, setShouldCreateItem] = useState(undefined)
   const [_item, _setItem] = useState<Partial<ItemType>>(item)
