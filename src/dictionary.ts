@@ -240,6 +240,8 @@ const labels = {
   signature: 'Firma',
   item: 'Artículo',
 
+  contractSignature: 'Firma de contrato',
+
   ' ': '',
   '': '',
 

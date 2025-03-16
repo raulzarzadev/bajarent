@@ -9,9 +9,17 @@ import { gStyles } from '../styles'
 import { order_status, order_type } from '../types/OrderType'
 import { RowOrderE } from './RowOrder'
 
+import { InputContractSignatureE } from './InputContractSignature'
+import { useState } from 'react'
+
 const ScreenComponents = () => {
+  const [values, setValues] = useState<any>()
+  //console.log({ values })
   return (
     <ScrollView>
+      <>
+        <InputContractSignatureE setValues={setValues} values={values} />
+      </>
       <View style={gStyles.container}>
         {/* <ModalCreateCustomersE
           ordersIds={[

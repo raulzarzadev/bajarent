@@ -16,6 +16,7 @@ import FormikInputSignature from '../FormikInputSignature'
 import FormikErrorsList, { ErrorsList } from '../FormikErrorsList'
 import { CustomerOrderE } from '../Customers/CustomerOrder'
 import TextInfo from '../TextInfo'
+import { FormikContractSignatureE } from '../FormikContractSignature'
 
 const FormRentDelivery = ({
   initialValues,
@@ -84,7 +85,7 @@ const FormRentDelivery = ({
             <>
               {customerIdAlreadySet && <CustomerOrderE />}
               {ORDER_FIELDS.includes('note') && (
-                <FormikInputValue name="note" label="Contrato" />
+                <FormikInputValue name="note" label="No. de contrato" />
               )}
               {/* IT ALREADY INCLUDE CUSTOMER ID, SOME FIELDS ARE NOT NECESARI */}
               {!customerIdAlreadySet && (
@@ -133,6 +134,10 @@ const FormRentDelivery = ({
                 />
               </View>
               <FormikSelectCategoriesE name="items" selectPrice />
+
+              {ORDER_FIELDS.includes('contractSignature') && (
+                <FormikContractSignatureE name="contractSignature" />
+              )}
 
               {/* //* TODO: this is disabled because in rent always need to select the items
                {ORDER_FIELDS.includes('selectItems') && (

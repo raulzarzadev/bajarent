@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import SignatureScreen from 'react-signature-canvas'
 import Button from './Button'
@@ -35,16 +35,22 @@ const InputSignature = ({
     }
   }, [value])
 
+  const isSigned = !!value
+
   const modal = useModal({ title: 'Firma' })
 
   return (
     <View>
       {!!value && (
-        <ImagePreview image={value} title="Firma" height={100} width={'100%'} />
+        <View style={{ marginHorizontal: 'auto' }}>
+          <ImagePreview image={value} title="Firma" height={100} width={100} />
+        </View>
       )}
       <Button
         onPress={modal.toggleOpen}
-        label="Firmar"
+        buttonStyles={{ margin: 'auto', marginTop: 4 }}
+        label={isSigned ? 'Actualizar firma' : 'Firmar'}
+        color={isSigned ? 'success' : 'primary'}
         icon="signature"
         size="xs"
         disabled={disabled}

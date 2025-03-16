@@ -10,6 +10,10 @@ import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 import { IconName } from '../components/Icon'
+import {
+  InputContractSignatureProps,
+  InputContractSignatureValues
+} from '../components/InputContractSignature'
 
 export type ContactType = {
   name: string
@@ -115,6 +119,8 @@ export type OrderBase = {
   assignToSection?: string
   assignToSectionName?: string
   assignToStaff?: string
+
+  contractSignature?: InputContractSignatureValues
 
   /**
    * @deprecated use assignToStaff instead

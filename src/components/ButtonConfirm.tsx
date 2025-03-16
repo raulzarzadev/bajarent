@@ -28,9 +28,10 @@ const ButtonConfirm = ({
   onOpen,
   confirmDisabledHelper,
   cancelButton = false,
-  handleCancel = () => console.log('cancel'),
+  handleCancel,
   progress,
-  openStyles
+  openStyles,
+  cancelLabel
 }: {
   openFullWidth?: boolean
   progress?: ButtonProps['progress']
@@ -52,8 +53,12 @@ const ButtonConfirm = ({
   openDisabled?: ButtonProps['disabled']
   onOpen?: () => void
   confirmDisabledHelper?: string
+  /**
+   * @deprecated
+   */
   cancelButton?: boolean
   hideConfirm?: boolean
+  cancelLabel?: string
   handleCancel?: () => void
   openStyles?: ButtonProps['buttonStyles']
 }) => {
@@ -104,14 +109,14 @@ const ButtonConfirm = ({
           </Text>
         )}
         <View style={styles.buttons}>
-          {cancelButton && (
+          {(!!handleCancel || cancelButton) && (
             <Button
               variant="ghost"
               onPress={() => {
                 modal.toggleOpen()
                 handleCancel()
               }}
-              label="Cancelar"
+              label={cancelLabel || 'Cancelar'}
             ></Button>
           )}
           {!hideConfirm && (

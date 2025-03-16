@@ -71,6 +71,7 @@ const ImagePreview = ({
               source={{ uri: image }}
               width={100}
               height={100}
+              resizeMode="contain"
               style={{
                 flex: 1,
                 width: '100%',
@@ -78,7 +79,7 @@ const ImagePreview = ({
                 marginVertical: 2,
                 minWidth: '100%',
                 minHeight: 100,
-                resizeMode: 'contain',
+                // resizeMode: 'contain',
                 alignItems: 'center'
               }}
             />
@@ -108,6 +109,7 @@ const ImagePreview = ({
         ) : (
           <Image
             source={{ uri: image }}
+            resizeMode="cover"
             style={{
               //backgroundColor: colors.lightGray,
               shadowColor: '#000',
@@ -115,8 +117,8 @@ const ImagePreview = ({
               height,
               flex: 1,
               minHeight: height,
-              marginVertical: 2,
-              resizeMode: 'cover'
+              marginVertical: 2
+              // resizeMode: 'cover'
             }}
           />
         )}

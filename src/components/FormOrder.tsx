@@ -61,7 +61,9 @@ export const LIST_OF_FORM_ORDER_FIELDS = [
   'repairDescription', // Field name is 'description' in the form
   'quoteDetails',
   'startRepair',
-  'selectItems'
+  'selectItems',
+
+  'contractSignature'
 
   // 'folio'
 ] as const

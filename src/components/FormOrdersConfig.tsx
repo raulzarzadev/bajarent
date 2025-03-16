@@ -4,11 +4,7 @@ import { Formik } from 'formik'
 import { gSpace, gStyles } from '../styles'
 import FormikCheckbox from './FormikCheckbox'
 import dictionary from '../dictionary'
-import {
-  FormOrderFields,
-  LIST_OF_FORM_ORDER_FIELDS,
-  mutableFormOrderFields
-} from './FormOrder'
+import { FormOrderFields, mutableFormOrderFields } from './FormOrder'
 import Button from './Button'
 import StoreType from '../types/StoreType'
 import FormikInputValue from './FormikInputValue'

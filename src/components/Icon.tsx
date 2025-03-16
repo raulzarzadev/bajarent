@@ -1,4 +1,5 @@
 import { IoMdSwap, IoMdAdd } from 'react-icons/io'
+import { FaFileContract } from 'react-icons/fa6'
 
 import {
   MdEdit,
@@ -105,7 +106,7 @@ const icons = {
   orderList: LuClipboardList,
   order: LuClipboard,
   orderRemove: LuClipboardMinus,
-
+  contract: FaFileContract,
   email: MdOutlineMailOutline,
   customerCard: FaAddressCard,
   backup: FaCloudDownloadAlt,
