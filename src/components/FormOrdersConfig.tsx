@@ -10,19 +10,21 @@ import StoreType from '../types/StoreType'
 import FormikInputValue from './FormikInputValue'
 import ErrorBoundary from './ErrorBoundary'
 import FormikInputImage from './FormikInputImage'
+import { InputDocumentPickerE } from './InputDocumentPicker'
 
 export type OrdersConfigType = Pick<StoreType, 'orderTypes' | 'orderFields'>
 export type FormOrdersConfigProps = {
   onSubmit: (values: OrdersConfigType) => Promise<any>
   defaultValues: Partial<OrdersConfigType>
 }
+
 const FormOrdersConfig = ({
   onSubmit,
   defaultValues
 }: FormOrdersConfigProps) => {
   const ordersTypes = ['RENT', 'SALE', 'REPAIR']
   const [isSubmitting, setIsSubmitting] = useState(false)
-
+  const [contractValue, setContractValue] = useState('')
   return (
     <View>
       <Formik
@@ -55,6 +57,20 @@ const FormOrdersConfig = ({
                     name={'orderTypes.' + type}
                     label={dictionary(type)}
                   />
+                  <InputDocumentPickerE
+                    name="contract"
+                    label="Contrato del cliente"
+                    value={contractValue}
+                    setValue={(value) => {
+                      console.log('setValue', value)
+                      setContractValue(value)
+                    }}
+                    mimeTypes={['application/pdf']} // Solo PDFs
+                    onUploading={(progress) =>
+                      console.log('Progreso:', progress)
+                    }
+                  />
+
                   {/* <FormikInputImage
                     name={`orderTypesContract.${type}`}
                     label="Contrato"
