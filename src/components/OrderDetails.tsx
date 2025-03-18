@@ -35,8 +35,11 @@ import { useEmployee } from '../contexts/employeeContext'
 import { SaleItemsInfoE } from './SaleItemsInfo'
 import { CustomerOrderE } from './Customers/CustomerOrder'
 import OrderBigStatus from './OrderBigStatus'
+import { InputContractSignatureE } from './InputContractSignature'
+import { OrderContractSignatureE } from './OrderContractSignature'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
+  const { store } = useStore()
   if (order?.isConsolidated) {
     const consolidated = order as unknown as ConsolidatedOrderType
     return (
@@ -96,7 +99,10 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       </View>
     )
   }
-
+  const handleSetSignature = (values: any) => {
+    console.log('handleSetSignature', values)
+  }
+  const orderFields = store?.orderFields?.[order?.type]
   return (
     <View>
       <OrderMetadata order={order} />
@@ -113,8 +119,16 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 
       <CustomerOrderE />
       <View style={{ marginTop: 8 }} />
-      {/*//* <-----Order actions flow */}
 
+      {/*//* <-----Order signature ?*/}
+
+      {orderFields?.contractSignature && (
+        <View style={{ marginVertical: 12 }}>
+          <OrderContractSignatureE />
+        </View>
+      )}
+
+      {/*//* <-----Order actions flow */}
       <OrderActionsE />
       {/*//* <-----Order actions flow */}
 

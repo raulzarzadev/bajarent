@@ -7,6 +7,7 @@ import Button from './Button'
 import pica from 'pica'
 import ImagePreview from './ImagePreview'
 import ProgressBar from './ProgressBar'
+import { gStyles } from '../styles'
 
 const MIN_SIZE = 100000
 export default function InputImagePicker({
@@ -153,15 +154,16 @@ export default function InputImagePicker({
             width: '100%'
           }}
         ></View>
+        <Text style={gStyles.helper}>{label}</Text>
         <Button
           onPress={() => {
             pickImage()
           }}
-          label={label}
+          // label={label}
           icon="addImage"
           size="xs"
           buttonStyles={{
-            width: 50,
+            minWidth: 50,
             position: 'absolute',
             left: '50%',
             transform: [{ translateX: -25 }],

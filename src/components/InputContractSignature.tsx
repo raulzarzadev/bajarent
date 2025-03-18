@@ -1,10 +1,9 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import ButtonConfirm from './ButtonConfirm'
 import InputSignature from './InputSignature'
 import InputCheckbox from './Inputs/InputCheckbox'
 import { useState } from 'react'
-import { set } from 'cypress/types/lodash'
 const InputContractSignature = (props?: InputContractSignatureProps) => {
   const [accept, setAccept] = useState(props?.values?.accept || false)
   const [sendCopy, setSendCopy] = useState(props?.values?.sendCopy || false)
@@ -21,10 +20,10 @@ const InputContractSignature = (props?: InputContractSignatureProps) => {
         modalTitle="Firma de contrato"
         icon="contract"
         openSize="xs"
-        openLabel={isSigned ? 'Firmado de conformidad' : 'Firmar contrato'}
+        openLabel={isSigned ? 'Contrato firmado' : 'Firmar contrato'}
         openStyles={{ margin: 'auto' }}
         handleConfirm={async () => {
-          //handleSetValues()
+          handleSetValues()
         }}
         handleCancel={async () => {
           setAccept(false)

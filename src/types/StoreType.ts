@@ -25,7 +25,7 @@ export type BaseStoreType = {
   location?: string
   orderTypes?: Record<TypeOrderKey, boolean>
   orderFields?: Record<TypeOrderKey, Record<FormOrderFields, boolean>>
-
+  orderTypesContract?: Record<TypeOrderKey, ContractType>
   /**
    * @deprecated use bankAccounts instead
    */
@@ -57,11 +57,11 @@ export type BaseStoreType = {
     config?: Record<ChatBotConfigs, boolean>
   }
 }
+export type ContractType = {
+  version: string
+  url: string
+}
 
-// export enum store_bot_configs {
-//   includeSender = 'Incluir remitente',
-
-// }
 export const bot_configs_message_ops = {
   includeSender: 'Incluir remitente'
 }

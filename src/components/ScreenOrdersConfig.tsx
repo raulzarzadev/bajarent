@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const ScreenOrdersConfig = () => {
   const navigation = useNavigation()
+  const { store } = useStore()
   const handleSubmit = async (values) => {
     try {
       const res = await ServiceStores.update(store.id, values)
@@ -18,10 +19,10 @@ const ScreenOrdersConfig = () => {
       console.error({ e })
     }
   }
-  const { store } = useStore()
   const storeOrdersConfig = {
     orderTypes: store?.orderTypes || null,
-    orderFields: store?.orderFields || null
+    orderFields: store?.orderFields || null,
+    orderTypesContract: store?.orderTypesContract || null
   }
 
   if (!store) return <Loading />

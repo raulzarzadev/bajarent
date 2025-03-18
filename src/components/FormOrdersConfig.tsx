@@ -9,6 +9,7 @@ import Button from './Button'
 import StoreType from '../types/StoreType'
 import FormikInputValue from './FormikInputValue'
 import ErrorBoundary from './ErrorBoundary'
+import FormikInputImage from './FormikInputImage'
 
 export type OrdersConfigType = Pick<StoreType, 'orderTypes' | 'orderFields'>
 export type FormOrdersConfigProps = {
@@ -21,6 +22,7 @@ const FormOrdersConfig = ({
 }: FormOrdersConfigProps) => {
   const ordersTypes = ['RENT', 'SALE', 'REPAIR']
   const [isSubmitting, setIsSubmitting] = useState(false)
+
   return (
     <View>
       <Formik
@@ -45,11 +47,18 @@ const FormOrdersConfig = ({
             </Text>
             <View style={[styles.input, styles.type]}>
               {ordersTypes.sort().map((type) => (
-                <View key={type} style={[styles.type]}>
+                <View
+                  key={type}
+                  style={[styles.type, { flexDirection: 'column' }]}
+                >
                   <FormikCheckbox
                     name={'orderTypes.' + type}
                     label={dictionary(type)}
                   />
+                  {/* <FormikInputImage
+                    name={`orderTypesContract.${type}`}
+                    label="Contrato"
+                  /> */}
                 </View>
               ))}
             </View>
