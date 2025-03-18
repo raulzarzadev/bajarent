@@ -9,8 +9,9 @@ import Button from './Button'
 import StoreType from '../types/StoreType'
 import FormikInputValue from './FormikInputValue'
 import ErrorBoundary from './ErrorBoundary'
-import FormikInputImage from './FormikInputImage'
 import { InputDocumentPickerE } from './InputDocumentPicker'
+import { FormikDocumentPickerE } from './FormikDocumentPicker'
+import { useStore } from '../contexts/storeContext'
 
 export type OrdersConfigType = Pick<StoreType, 'orderTypes' | 'orderFields'>
 export type FormOrdersConfigProps = {
@@ -22,6 +23,7 @@ const FormOrdersConfig = ({
   onSubmit,
   defaultValues
 }: FormOrdersConfigProps) => {
+  const { store } = useStore()
   const ordersTypes = ['RENT', 'SALE', 'REPAIR']
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [contractValue, setContractValue] = useState('')
@@ -57,24 +59,12 @@ const FormOrdersConfig = ({
                     name={'orderTypes.' + type}
                     label={dictionary(type)}
                   />
-                  <InputDocumentPickerE
-                    name="contract"
-                    label="Contrato del cliente"
-                    value={contractValue}
-                    setValue={(value) => {
-                      console.log('setValue', value)
-                      setContractValue(value)
-                    }}
-                    mimeTypes={['application/pdf']} // Solo PDFs
-                    onUploading={(progress) =>
-                      console.log('Progreso:', progress)
-                    }
-                  />
-
-                  {/* <FormikInputImage
-                    name={`orderTypesContract.${type}`}
-                    label="Contrato"
-                  /> */}
+                  {values?.orderTypes?.[type] && (
+                    <FormikDocumentPickerE
+                      fieldName={`${store?.name} ${type} Contrato `}
+                      name={`orderTypesContract.${type}`}
+                    />
+                  )}
                 </View>
               ))}
             </View>

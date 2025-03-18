@@ -34,6 +34,7 @@ import { ScreenChatbotE } from './ScreenChatbot'
 const ScreenStore = (props) => {
   const { user } = useAuth()
   const { store } = useStore()
+  console.log({ store })
   const {
     permissions: {
       isAdmin,

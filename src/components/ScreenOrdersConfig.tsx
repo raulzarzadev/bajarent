@@ -12,7 +12,7 @@ const ScreenOrdersConfig = () => {
   const handleSubmit = async (values) => {
     try {
       const res = await ServiceStores.update(store.id, values)
-      console.log({ res })
+      console.log({ res, values })
       navigation.goBack()
       return res
     } catch (e) {

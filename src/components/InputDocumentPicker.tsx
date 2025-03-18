@@ -1,5 +1,4 @@
-// InputDocumentPicker.tsx
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { View, Text } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
 import { uploadFile } from '../firebase/files'
@@ -15,19 +14,18 @@ export default function InputDocumentPicker({
   setValue,
   name,
   onUploading,
-  mimeTypes = ['application/pdf'] // Tipos de documentos permitidos
+  mimeTypes = ['application/pdf'], // Tipos de documentos permitidos
+  fileName: initialFileName = ''
 }: InputDocumentPickerProps) {
   const [document, setDocument] = useState(value)
   const [progress, setProgress] = useState(null)
-  const [fileName, setFileName] = useState('')
-
+  const [fileName, setFileName] = useState(initialFileName)
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: mimeTypes,
         copyToCacheDirectory: true
       })
-      console.log({ result })
 
       if (result.canceled === false) {
         const { uri, name: docName } = result.assets[0]
@@ -41,12 +39,16 @@ export default function InputDocumentPicker({
           .then((blob) => {
             // Los documentos PDF no necesitan redimensionamiento
             // Solo subir el archivo
-            uploadFile(blob, name, ({ progress, downloadURL }) => {
-              onUploading?.(progress)
-              if (progress < 0) return console.error('Error uploading file')
-              if (progress >= 80) setProgress(progress)
-              if (downloadURL) setValue(downloadURL)
-            })
+            uploadFile(
+              blob,
+              initialFileName || name,
+              ({ progress, downloadURL }) => {
+                onUploading?.(progress)
+                if (progress < 0) return console.error('Error uploading file')
+                if (progress >= 80) setProgress(progress)
+                if (downloadURL) setValue(downloadURL)
+              }
+            )
           })
           .catch((error) => {
             console.error('Error procesando el documento:', error)
@@ -69,6 +71,8 @@ export default function InputDocumentPicker({
       }
     }, 100)
   }
+
+  const INPUT_WIDTH = 120
 
   return (
     <>
@@ -105,17 +109,17 @@ export default function InputDocumentPicker({
               padding: 10,
               backgroundColor: '#f0f0f0',
               borderRadius: 5,
-              marginBottom: 10,
-              width: '100%',
+              marginVertical: 8,
+              width: INPUT_WIDTH,
               alignItems: 'center'
             }}
           >
             <Text
               numberOfLines={1}
               ellipsizeMode="middle"
-              style={{ maxWidth: '90%' }}
+              style={{ maxWidth: INPUT_WIDTH }}
             >
-              {fileName || 'Documento PDF'}
+              {initialFileName || fileName || 'Documento PDF'}
             </Text>
             {/* Botón para abrir el PDF */}
             <Button
@@ -137,11 +141,11 @@ export default function InputDocumentPicker({
         <Text style={gStyles.helper}>{label}</Text>
         <Button
           onPress={pickDocument}
-          icon="document"
-          label="Seleccionar PDF"
+          icon="upload"
+          label="Archivo PDF"
           size="xs"
           buttonStyles={{
-            minWidth: 150,
+            width: INPUT_WIDTH,
             opacity: value ? 0.8 : 1
           }}
         />
@@ -157,6 +161,7 @@ export type InputDocumentPickerProps = {
   setValue: any
   onUploading?: (progress: number) => void
   mimeTypes?: string[]
+  fileName?: string
 }
 export const InputDocumentPickerE = (props: InputDocumentPickerProps) => (
   <ErrorBoundary componentName="InputDocumentPicker">
