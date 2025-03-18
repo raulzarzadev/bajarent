@@ -18,7 +18,6 @@ const FormCustomer = (props?: FormCustomerProps) => {
     ...(props.defaultValues || {})
   }
   const [disabled, setDisabled] = useState(false)
-  console.log({ propsDef: props.defaultValues })
   return (
     <View>
       <Formik
@@ -52,10 +51,6 @@ const FormCustomer = (props?: FormCustomerProps) => {
               </View>
               <View style={styles.input}>
                 <InputLocationFormik name="address.locationURL" />
-                {/* <FormikInputValue
-                  name="address.locationURL"
-                  label="Ubicación (URL)"
-                /> */}
               </View>
 
               <FormikCustomerContacts />

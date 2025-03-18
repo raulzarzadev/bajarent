@@ -14,6 +14,7 @@ import {
   InputContractSignatureProps,
   InputContractSignatureValues
 } from '../components/InputContractSignature'
+import { ImageDescriptionType } from '../state/features/costumers/customerType'
 
 export type ContactType = {
   name: string
@@ -70,7 +71,12 @@ export type OrderBase = {
 
   contacts?: ContactType[] | FieldValue
 
+  orderImages?: OrderImagesType
+
   imageID: string
+  /**
+   * @deprecated use customer image instead
+   */
   imageHouse: string
 
   street?: string
@@ -231,7 +237,10 @@ export type OrderQuoteType = {
   doneAt?: Date | null
   doneBy?: string | null
 }
-
+export type OrderImagesType = Record<
+  ImageDescriptionType['id'],
+  Partial<ImageDescriptionType>
+>
 export enum order_status {
   PENDING = 'PENDING',
   AUTHORIZED = 'AUTHORIZED',

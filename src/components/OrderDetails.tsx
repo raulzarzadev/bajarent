@@ -35,8 +35,8 @@ import { useEmployee } from '../contexts/employeeContext'
 import { SaleItemsInfoE } from './SaleItemsInfo'
 import { CustomerOrderE } from './Customers/CustomerOrder'
 import OrderBigStatus from './OrderBigStatus'
-import { InputContractSignatureE } from './InputContractSignature'
 import { OrderContractSignatureE } from './OrderContractSignature'
+import { OrderImagesUpdateE } from './OrderImagesUpdate'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const { store } = useStore()
@@ -99,13 +99,12 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
       </View>
     )
   }
-  const handleSetSignature = (values: any) => {
-    console.log('handleSetSignature', values)
-  }
+
   const orderFields = store?.orderFields?.[order?.type]
   return (
     <View>
       <OrderMetadata order={order} />
+
       <View
         style={{
           justifyContent: 'center',
@@ -117,38 +116,25 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
         <OrderDirectivesE order={order} />
       </View>
 
-      <CustomerOrderE />
-      <View style={{ marginTop: 8 }} />
+      <OrderDetailSection>
+        <CustomerOrderE />
+      </OrderDetailSection>
 
-      {/*//* <-----Order signature ?*/}
+      <OrderDetailSection>
+        {/*//* <-----Order actions flow */}
+        <OrderActionsE />
+        {/*//* <-----Order actions flow */}
+      </OrderDetailSection>
 
-      {orderFields?.contractSignature && (
-        <View style={{ marginVertical: 12 }}>
-          <OrderContractSignatureE />
-        </View>
-      )}
-
-      {/*//* <-----Order actions flow */}
-      <OrderActionsE />
-      {/*//* <-----Order actions flow */}
-
-      {order.type === order_type.RENT && (
-        <ErrorBoundary componentName="RentItemsInfo">
-          <View
-            style={{
-              marginVertical: 8,
-              paddingBottom: 16,
-              backgroundColor: theme?.base,
-              width: '100%',
-              paddingHorizontal: 4
-            }}
-          >
+      <OrderDetailSection>
+        {order.type === order_type.RENT && (
+          <ErrorBoundary componentName="RentItemsInfo">
             <RentItemsInfo order={order} />
             <Totals items={order.items} />
             {order?.extensions ? (
               <OrderExtensions order={order} />
             ) : (
-              <View style={{ marginTop: gSpace(3) }}>
+              <View>
                 <OrderDates
                   status={order.status}
                   expireAt={order.expireAt}
@@ -159,51 +145,67 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
                 />
               </View>
             )}
-          </View>
-        </ErrorBoundary>
+          </ErrorBoundary>
+        )}
+
+        {order.type === order_type.SALE && <SaleItemsInfoE />}
+
+        {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
+
+        {/* Order images */}
+        <OrderImagesUpdateE />
+      </OrderDetailSection>
+
+      {orderFields?.contractSignature && (
+        <OrderDetailSection>
+          {/*//* <-----Order signature ?*/}
+          <OrderContractSignatureE />
+        </OrderDetailSection>
       )}
 
-      {order.type === order_type.SALE && <SaleItemsInfoE />}
+      <OrderDetailSection>
+        <OrderPayments orderId={order.id} />
+      </OrderDetailSection>
 
-      {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
+      <OrderDetailSection>
+        <ErrorBoundary componentName="OrderActions">
+          {[
+            order_type.RENT,
+            order_type.MULTI_RENT,
+            order_type.STORE_RENT,
+            order_type.DELIVERY_RENT
+          ].includes(order.type) && (
+            <OrderActions
+              orderId={order.id}
+              orderType={'RENT'}
+              orderStatus={order.status}
+              storeId={order.storeId}
+            />
+          )}
+          {order.type === order_type.SALE && (
+            <OrderActions
+              orderId={order.id}
+              orderType={'SALE'}
+              orderStatus={order.status}
+              storeId={order.storeId}
+            />
+          )}
+          {order.type === order_type.REPAIR && (
+            <OrderActions
+              orderId={order.id}
+              orderType={'REPAIR'}
+              orderStatus={order.status}
+              storeId={order.storeId}
+            />
+          )}
+        </ErrorBoundary>
+      </OrderDetailSection>
 
-      <OrderPayments orderId={order.id} />
-
-      <ErrorBoundary componentName="OrderActions">
-        {[
-          order_type.RENT,
-          order_type.MULTI_RENT,
-          order_type.STORE_RENT,
-          order_type.DELIVERY_RENT
-        ].includes(order.type) && (
-          <OrderActions
-            orderId={order.id}
-            orderType={'RENT'}
-            orderStatus={order.status}
-            storeId={order.storeId}
-          />
-        )}
-        {order.type === order_type.SALE && (
-          <OrderActions
-            orderId={order.id}
-            orderType={'SALE'}
-            orderStatus={order.status}
-            storeId={order.storeId}
-          />
-        )}
-        {order.type === order_type.REPAIR && (
-          <OrderActions
-            orderId={order.id}
-            orderType={'REPAIR'}
-            orderStatus={order.status}
-            storeId={order.storeId}
-          />
-        )}
-      </ErrorBoundary>
-
-      <ErrorBoundary componentName="OrderComments">
-        <OrderComments orderId={order.id} />
-      </ErrorBoundary>
+      <OrderDetailSection>
+        <ErrorBoundary componentName="OrderComments">
+          <OrderComments orderId={order.id} />
+        </ErrorBoundary>
+      </OrderDetailSection>
     </View>
   )
 }
@@ -212,20 +214,28 @@ export const RepairItemConfigInfo = () => {
   const { order } = useOrderDetails()
   return (
     <ErrorBoundary componentName="ModalRepairQuote">
-      <View
-        style={{
-          marginVertical: 16,
-          paddingVertical: 16,
-          backgroundColor: theme?.base,
-          width: '100%'
-        }}
-      >
-        <View style={{ marginBottom: gSpace(4) }}>
-          <ModalRepairItem />
-        </View>
-        <ModalRepairQuote orderId={order?.id} />
+      <View style={{ marginBottom: gSpace(4) }}>
+        <ModalRepairItem />
       </View>
+      <ModalRepairQuote orderId={order?.id} />
     </ErrorBoundary>
+  )
+}
+
+export const OrderDetailSection = ({ children }) => {
+  return (
+    <View
+      style={{
+        marginVertical: 8,
+        backgroundColor: theme?.base,
+        width: '100%',
+        paddingHorizontal: 4,
+        borderRadius: 8,
+        paddingVertical: 4
+      }}
+    >
+      {children}
+    </View>
   )
 }
 

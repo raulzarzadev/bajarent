@@ -17,59 +17,50 @@ export const SaleItemsInfo = () => {
   )
   return (
     <ErrorBoundary componentName="SaleItemsInfo">
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
+          Categoria
+        </Text>
+        <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
+          Serie
+        </Text>
+        <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
+          Precio
+        </Text>
+        <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
+          Cantidad
+        </Text>
+        <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
+          Monto
+        </Text>
+      </View>
+
+      {items?.map((item, i) => (
+        <View
+          key={item.id || i}
+          style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+        >
+          <Text style={styles.saleItemCell}>
+            {categories?.find((cat) => cat.id === item.category)?.name}
+          </Text>
+          <Text style={styles.saleItemCell}>{item.serial}</Text>
+          <CurrencyAmount style={styles.saleItemCell} amount={item.price} />
+          <Text style={styles.saleItemCell}>{item.quantity}</Text>
+          <CurrencyAmount
+            style={styles.saleItemCell}
+            amount={item.price * item.quantity}
+          />
+        </View>
+      ))}
       <View
         style={{
-          marginVertical: 16,
-          paddingVertical: 16,
-          backgroundColor: theme?.base,
-          width: '100%'
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          marginTop: 8
         }}
       >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
-            Categoria
-          </Text>
-          <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
-            Serie
-          </Text>
-          <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
-            Precio
-          </Text>
-          <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
-            Cantidad
-          </Text>
-          <Text style={[styles.saleItemCell, styles.saleItemCellTitle]}>
-            Monto
-          </Text>
-        </View>
-
-        {items?.map((item, i) => (
-          <View
-            key={item.id || i}
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <Text style={styles.saleItemCell}>
-              {categories?.find((cat) => cat.id === item.category)?.name}
-            </Text>
-            <Text style={styles.saleItemCell}>{item.serial}</Text>
-            <CurrencyAmount style={styles.saleItemCell} amount={item.price} />
-            <Text style={styles.saleItemCell}>{item.quantity}</Text>
-            <CurrencyAmount
-              style={styles.saleItemCell}
-              amount={item.price * item.quantity}
-            />
-          </View>
-        ))}
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            marginTop: 8
-          }}
-        >
-          <Text>Total: </Text>
-          <CurrencyAmount amount={total} style={gStyles.h3} />
-        </View>
+        <Text>Total: </Text>
+        <CurrencyAmount amount={total} style={gStyles.h3} />
       </View>
     </ErrorBoundary>
   )

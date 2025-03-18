@@ -36,7 +36,7 @@ export type CustomerImages = Record<
 export type ImageDescriptionType = {
   description: string
   src: string
-  type: 'house' | 'ID' | 'signature'
+  type: 'house' | 'ID' | 'signature' | 'item'
 } & BaseType
 
 export type NewCustomer = Partial<Omit<CustomerBase, 'storeId'>> &
