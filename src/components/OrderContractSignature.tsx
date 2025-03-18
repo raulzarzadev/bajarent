@@ -6,10 +6,11 @@ import {
 } from './InputContractSignature'
 import { useOrderDetails } from '../contexts/orderContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { useStore } from '../contexts/storeContext'
 const OrderContractSignature = (props?: OrderContractSignatureProps) => {
   const { order } = useOrderDetails()
+  const { store } = useStore()
   const handleSignOrder = async (values: InputContractSignatureValues) => {
-    console.log('handleSignOrder', values)
     ServiceOrders.update(order?.id, {
       contractSignature: values
     })
@@ -19,6 +20,7 @@ const OrderContractSignature = (props?: OrderContractSignatureProps) => {
       <InputContractSignatureE
         values={order.contractSignature}
         setValues={handleSignOrder}
+        contractURL={store.orderTypesContract[order.type]}
       />
     </View>
   )

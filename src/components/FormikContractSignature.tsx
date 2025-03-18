@@ -9,12 +9,14 @@ const FormikContractSignature = (props?: FormikContractSignatureProps) => {
       setValues={(values) => {
         helpers.setValue(values)
       }}
+      contractURL={props?.contractURL}
     />
   )
 }
 export default FormikContractSignature
 export type FormikContractSignatureProps = {
   name: string
+  contractURL: string
 }
 export const FormikContractSignatureE = (
   props: FormikContractSignatureProps

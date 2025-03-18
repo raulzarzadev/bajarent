@@ -16,7 +16,6 @@ import FormikInputSignature from '../FormikInputSignature'
 import FormikErrorsList, { ErrorsList } from '../FormikErrorsList'
 import { CustomerOrderE } from '../Customers/CustomerOrder'
 import TextInfo from '../TextInfo'
-import { FormikContractSignatureE } from '../FormikContractSignature'
 
 const FormRentDelivery = ({
   initialValues,
@@ -135,16 +134,6 @@ const FormRentDelivery = ({
               </View>
               <FormikSelectCategoriesE name="items" selectPrice />
 
-              {/* {ORDER_FIELDS.includes('contractSignature') && (
-                <FormikContractSignatureE name="contractSignature" />
-              )} */}
-
-              {/* //* TODO: this is disabled because in rent always need to select the items
-               {ORDER_FIELDS.includes('selectItems') && (
-                <View style={{ marginVertical: 8 }}>
-                  <FormikSelectCategoriesE name="items" selectPrice />
-                </View>
-              )} */}
               <FormikErrorsList />
 
               <Button

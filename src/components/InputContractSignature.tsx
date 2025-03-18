@@ -1,9 +1,10 @@
-import { View } from 'react-native'
+import { Linking, View } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import ButtonConfirm from './ButtonConfirm'
 import InputSignature from './InputSignature'
 import InputCheckbox from './Inputs/InputCheckbox'
 import { useState } from 'react'
+import Button from './Button'
 const InputContractSignature = (props?: InputContractSignatureProps) => {
   const [accept, setAccept] = useState(props?.values?.accept || false)
   const [sendCopy, setSendCopy] = useState(props?.values?.sendCopy || false)
@@ -32,24 +33,24 @@ const InputContractSignature = (props?: InputContractSignatureProps) => {
         confirmDisabled={!accept || !signature}
       >
         <View>
-          <ButtonConfirm
-            modalTitle="Terminos del contrato"
+          <Button
+            onPress={() => {
+              Linking.openURL(props.contractURL)
+            }}
+            label="Ver contrato"
             icon="contract"
-            openVariant="ghost"
-            openSize="xs"
-            openLabel="Leer contrato"
-            openStyles={{ margin: 'auto' }}
-            handleConfirm={async () => {
-              setAccept(true)
-            }}
-            handleCancel={async () => {
-              setAccept(false)
-            }}
-            openColor="primary"
-          ></ButtonConfirm>
+            buttonStyles={{ margin: 'auto' }}
+            variant="ghost"
+          />
         </View>
         <View style={{ marginVertical: 8 }}>
-          <InputSignature setValue={setSignature} value={signature} />
+          <InputSignature
+            setValue={(value) => {
+              setSignature(value)
+              setAccept(true)
+            }}
+            value={signature}
+          />
         </View>
         <View style={{ marginVertical: 8 }}>
           <InputCheckbox
@@ -78,6 +79,7 @@ export type InputContractSignatureValues = {
 export type InputContractSignatureProps = {
   setValues: (values: InputContractSignatureValues) => void | Promise<void>
   values: InputContractSignatureValues
+  contractURL: string
 }
 
 export const InputContractSignatureE = (props: InputContractSignatureProps) => (
