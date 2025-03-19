@@ -21,6 +21,7 @@ import asDate from '../../libs/utils-date'
 import { useEmployee } from '../../contexts/employeeContext'
 import { useState } from 'react'
 import dictionary from '../../dictionary'
+import { ModalEditImages } from '../ImagesInputAndPreview/ModalEditImages'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
   const customerId = props?.customerId
@@ -33,6 +34,12 @@ const CustomerImages = (props?: CustomerImagesProps) => {
 
   const handleDeleteImage = async (imageId: string) => {
     update(customerId, { [`images.${imageId}.deletedAt`]: new Date() })
+  }
+
+  const handleUpdateImages = async (values: ImageDescriptionType) => {
+    update(customerId, {
+      [`images.${values.id}`]: values
+    })
   }
   const customerImages = Object.entries(images || customerPropImages || {})
     .reduce((acc, [id, image]) => {
@@ -55,7 +62,13 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         }}
       >
         <Text style={[gStyles.helper, gStyles.tCenter]}>No hay imagenes</Text>
-        {showAddButton && <ModalEditImages customerId={customerId} />}
+        {showAddButton && (
+          <ModalEditImages
+            handleUpdate={async (values) => {
+              await update(customerId, { [`images.${values?.id}`]: values })
+            }}
+          />
+        )}
       </View>
     )
   return (
@@ -68,7 +81,13 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         }}
       >
         <Text style={gStyles.h3}>Imagenes </Text>
-        {showAddButton && <ModalEditImages customerId={customerId} />}
+        {showAddButton && (
+          <ModalEditImages
+            handleUpdate={(image) => {
+              update(customerId, { [`images.${createUUID()}`]: image })
+            }}
+          />
+        )}
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {customerImages?.map((image) => (
@@ -99,37 +118,6 @@ const CustomerImages = (props?: CustomerImagesProps) => {
         ))}
       </View>
     </View>
-  )
-}
-
-export const ModalEditImages = ({ customerId }) => {
-  const { update } = useCustomers()
-
-  const modal = useModal({ title: 'Agregar imagen' })
-  const handleAddCustomerImage = async (image: ImageDescriptionType) => {
-    const imageId = createUUID({ length: 8 })
-    await update(customerId, { [`images.${imageId}`]: image })
-    modal.toggleOpen()
-  }
-  return (
-    <>
-      <Button
-        icon="add"
-        onPress={modal.toggleOpen}
-        variant="ghost"
-        size="small"
-        justIcon
-      />
-      <StyledModal {...modal}>
-        <FormikImageDescription
-          handleSubmit={async (values) => {
-            await handleAddCustomerImage(values)
-            modal.toggleOpen()
-            return
-          }}
-        />
-      </StyledModal>
-    </>
   )
 }
 

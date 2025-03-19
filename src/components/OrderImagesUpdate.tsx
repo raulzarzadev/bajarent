@@ -4,14 +4,9 @@ import asDate from '../libs/utils-date'
 import { gStyles } from '../styles'
 import ImagePreview from './ImagePreview'
 import dictionary from '../dictionary'
-import useModal from '../hooks/useModal'
 import { createUUID } from '../libs/createId'
-import {
-  CustomerType,
-  ImageDescriptionType
-} from '../state/features/costumers/customerType'
+import { ImageDescriptionType } from '../state/features/costumers/customerType'
 import Button from './Button'
-import StyledModal from './StyledModal'
 import { useAuth } from '../contexts/authContext'
 import { useState } from 'react'
 import { Formik } from 'formik'
@@ -21,6 +16,7 @@ import { useOrderDetails } from '../contexts/orderContext'
 import FormikInputValue from './FormikInputValue'
 import FormikInputImage from './FormikInputImage'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ModalEditImages } from './ImagesInputAndPreview/ModalEditImages'
 
 const OrderImagesUpdate = (props?: OrderImagesUpdateProps) => {
   const { order } = useOrderDetails()
@@ -29,7 +25,6 @@ const OrderImagesUpdate = (props?: OrderImagesUpdateProps) => {
   const { permissions } = useEmployee()
 
   const handleDeleteImage = async (imageId: string) => {
-    //update(order.id, { [`images.${imageId}.deletedAt`]: new Date() })
     return await ServiceOrders.update(order.id, {
       [`orderImages.${imageId}.deletedAt`]: new Date()
     })
@@ -91,7 +86,11 @@ const OrderImagesUpdate = (props?: OrderImagesUpdateProps) => {
           <View key={image.id} style={{ margin: 4 }}>
             <ImagePreview
               onDelete={
-                canDeleteImages ? () => handleDeleteImage(image.id) : undefined
+                canDeleteImages
+                  ? () => {
+                      handleDeleteImage(image.id)
+                    }
+                  : undefined
               }
               image={image.src}
               height={100}
@@ -114,36 +113,6 @@ const OrderImagesUpdate = (props?: OrderImagesUpdateProps) => {
         ))}
       </View>
     </View>
-  )
-}
-
-export const ModalEditImages = ({
-  handleUpdate
-}: {
-  handleUpdate?: (values: ImageDescriptionType) => Promise<void> | void
-}) => {
-  const modal = useModal({ title: 'Agregar imagen' })
-
-  return (
-    <>
-      <Button
-        icon="add"
-        onPress={modal.toggleOpen}
-        variant="ghost"
-        size="small"
-        justIcon
-      />
-      <StyledModal {...modal}>
-        <FormikImageDescription
-          handleSubmit={async (values) => {
-            await handleUpdate?.(values)
-
-            modal.toggleOpen()
-            return
-          }}
-        />
-      </StyledModal>
-    </>
   )
 }
 
