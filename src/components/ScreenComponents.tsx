@@ -9,8 +9,8 @@ import { gStyles } from '../styles'
 import { order_status, order_type } from '../types/OrderType'
 import { RowOrderE } from './RowOrder'
 
-import { InputContractSignatureE } from './InputContractSignature'
 import { useState } from 'react'
+import { InputContractSignatureE } from './InputContractSignature'
 
 const ScreenComponents = () => {
   const [values, setValues] = useState<any>()
@@ -18,7 +18,11 @@ const ScreenComponents = () => {
   return (
     <ScrollView>
       <>
-        <InputContractSignatureE setValues={setValues} values={values} />
+        <InputContractSignatureE
+          contractURL=""
+          setValues={setValues}
+          values={values}
+        />
       </>
       <View style={gStyles.container}>
         {/* <ModalCreateCustomersE
