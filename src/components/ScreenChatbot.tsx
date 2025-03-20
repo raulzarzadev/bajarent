@@ -12,6 +12,12 @@ import { Payment } from '../libs/paymentsUtils'
 import { FormChatbotE } from './FormChatbot'
 import { ServiceStores } from '../firebase/ServiceStore'
 import theme from '../theme'
+import Button from './Button'
+import StyledModal from './StyledModal'
+import useModal from '../hooks/useModal'
+import InputTextStyled from './InputTextStyled'
+import { useState } from 'react'
+import sendMessage from '../libs/whatsapp/sendMessage'
 const ScreenChatbot = (props?: ScreenChatbotProps) => {
   const { store } = useStore()
   const handleUpdateChatbot = async (values: { chatbot: any }) => {
@@ -19,6 +25,7 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
   }
   return (
     <View>
+      <RandomMessage />
       <FormChatbotE
         values={store.chatbot}
         onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
@@ -118,3 +125,73 @@ export const ScreenChatbotE = (props: ScreenChatbotProps) => (
     <ScreenChatbot {...props} />
   </ErrorBoundary>
 )
+
+export const RandomMessage = ({}) => {
+  const modal = useModal()
+  const { store } = useStore()
+  const [message, setMessage] = useState('')
+  const [number, setNumber] = useState('+52')
+  const [disabled, setDisabled] = useState(false)
+  const [response, setResponse] = useState('')
+  const responses = {
+    NOT_DEPLOYED: 'El chatbot no esta activado',
+    WAITED: 'Mensaje enviado correctamente'
+  }
+
+  const handleSendMessage = () => {
+    setDisabled(true)
+    // console.log('send message', message, number)
+    sendMessage({
+      phone: number,
+      message,
+      apiKey: store.chatbot.apiKey,
+      botId: store.chatbot.id
+    })
+      .then((res) => {
+        if (res.data.error === 'Deploy not found') {
+          setResponse(responses.NOT_DEPLOYED)
+        }
+        if (res.data.error) {
+          setResponse(res.data.error)
+        }
+        if (res.data.waited) {
+          setResponse(responses.WAITED)
+        }
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setResponse('')
+          setDisabled(false)
+        }, 3000)
+      })
+  }
+  return (
+    <>
+      <Button
+        label="Mensaje personalizado (pruebas)"
+        size="xs"
+        buttonStyles={{ marginHorizontal: 'auto', marginVertical: 8 }}
+        onPress={modal.toggleOpen}
+      ></Button>
+      <StyledModal {...modal}>
+        <InputTextStyled
+          value={message}
+          onChangeText={setMessage}
+          placeholder="Mensaje"
+        ></InputTextStyled>
+        <InputTextStyled
+          value={number}
+          onChangeText={setNumber}
+          placeholder="Número (con código de país)"
+        ></InputTextStyled>
+        {response && <Text style={gStyles.helper}>*{response}</Text>}
+        <Button onPress={handleSendMessage} disabled={disabled}>
+          Enviar
+        </Button>
+      </StyledModal>
+    </>
+  )
+}

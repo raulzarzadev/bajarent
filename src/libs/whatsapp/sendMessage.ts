@@ -5,7 +5,9 @@ const sendMessage = async ({
   message = 'hola',
   botId,
   apiKey
-}): Promise<{ data: { existsOnWhats?: boolean; waited?: boolean } }> => {
+}): Promise<{
+  data: { existsOnWhats?: boolean; waited?: boolean; error?: string }
+}> => {
   const data = {
     message: message
       //* This is a workaround to fix the line break issue on web
