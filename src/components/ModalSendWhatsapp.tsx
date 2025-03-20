@@ -353,6 +353,7 @@ export default function ModalSendWhatsapp({
     setMessageType(null)
     setMessage(null)
   }
+  const [error, setError] = useState('')
 
   return (
     <View>
@@ -425,7 +426,8 @@ export default function ModalSendWhatsapp({
           }}
         ></Button>
         <View style={{ marginVertical: 8 }}>
-          <ButtonSendWhatsappStatatusE phone={phone} />
+          <ButtonSendWhatsappStatatusE phone={phone} setError={setError} />
+          {!!error && <Text style={gStyles.helperError}>*Error: {error}</Text>}
         </View>
       </StyledModal>
     </View>
@@ -460,7 +462,10 @@ export const ButtonSendWhatsappStatatus = (
           type: 'sendAuthorizedOrder',
           userId: user.id
         })
-          .then((res) => console.log({ res }))
+          .then((res) => {
+            console.log(res)
+            res.error && props?.setError(res.error)
+          })
           .catch((e) => console.log({ e }))
         setSending(false)
       }}
@@ -478,7 +483,10 @@ export const ButtonSendWhatsappStatatus = (
     </ButtonConfirm>
   )
 }
-export type ButtonSendWhatsappStatatusProps = { phone: string }
+export type ButtonSendWhatsappStatatusProps = {
+  phone: string
+  setError: (e: string) => void
+}
 export const ButtonSendWhatsappStatatusE = (
   props: ButtonSendWhatsappStatatusProps
 ) => (

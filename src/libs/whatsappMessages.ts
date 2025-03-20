@@ -73,7 +73,8 @@ export const rentStarted = ({
   ${ORDER_DETAILS({
     orderType: order?.type,
     orderFolio: order?.folio,
-    order
+    order,
+    type: 'delivered'
   })}
  
   ${expireDateString(order, { feePerDay: 100 })}
@@ -232,15 +233,17 @@ const WELCOME = ({ customerName }) => `Estimado *${customerName}* `
 const ORDER_DETAILS = ({
   orderType,
   orderFolio,
-  order
+  order,
+  type
 }: {
   orderType: OrderType['type']
   orderFolio: OrderType['folio']
   order: Partial<OrderType>
+  type?: 'delivered' | 'rented' | 'repaired'
 }) => {
   if (!order) return 'no order data'
   return `\nFolio: *${orderFolio}*\nTipo: *${dictionary(orderType) || ''}*${
-    defineOrderStatus(order) || ''
+    type === 'delivered' ? '' : defineOrderStatus(order) || ''
   }`
 }
 
