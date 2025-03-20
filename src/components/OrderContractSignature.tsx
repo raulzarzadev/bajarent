@@ -20,8 +20,8 @@ const OrderContractSignature = (props?: OrderContractSignatureProps) => {
       <InputContractSignatureE
         values={order.contractSignature}
         setValues={handleSignOrder}
-        contractURL={store.orderTypesContract[order.type]}
-        showReadContract={!!store.orderTypesContract[order.type]}
+        contractURL={store?.orderTypesContract?.[order.type]}
+        showReadContract={!!store?.orderTypesContract?.[order.type]}
       />
     </View>
   )
