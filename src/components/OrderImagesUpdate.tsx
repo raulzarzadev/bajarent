@@ -100,7 +100,6 @@ const OrderImagesUpdate = (props?: OrderImagesUpdateProps) => {
               formValues={image}
               handleSubmitForm={async (values) => {
                 handleUpdateImages(values)
-
                 return
               }}
               ComponentForm={FormikImageDescription}
@@ -147,6 +146,7 @@ export const FormikImageDescription = ({
           <View>
             <FormikInputSelect
               name="type"
+              placeholder="Selecciona tipo de imagen"
               options={[
                 {
                   label: 'Artículo',
@@ -159,6 +159,10 @@ export const FormikImageDescription = ({
                 {
                   label: 'Identificación',
                   value: 'ID'
+                },
+                {
+                  label: 'Firma',
+                  value: 'signature'
                 }
               ]}
             />

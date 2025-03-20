@@ -10,10 +10,7 @@ import { FieldValue } from 'firebase/firestore'
 import CoordsType from './CoordsType'
 import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 import { IconName } from '../components/Icon'
-import {
-  InputContractSignatureProps,
-  InputContractSignatureValues
-} from '../components/InputContractSignature'
+import { InputContractSignatureValues } from '../components/InputContractSignature'
 import { ImageDescriptionType } from '../state/features/costumers/customerType'
 
 export type ContactType = {

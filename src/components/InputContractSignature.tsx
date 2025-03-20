@@ -18,7 +18,7 @@ const InputContractSignature = (props?: InputContractSignatureProps) => {
   return (
     <View>
       <ButtonConfirm
-        modalTitle="Firma de contrato"
+        modalTitle="Firmar orden "
         icon="contract"
         openSize="xs"
         openLabel={isSigned ? 'Contrato firmado' : 'Firmar contrato'}
@@ -33,15 +33,17 @@ const InputContractSignature = (props?: InputContractSignatureProps) => {
         confirmDisabled={!accept || !signature}
       >
         <View>
-          <Button
-            onPress={() => {
-              Linking.openURL(props.contractURL)
-            }}
-            label="Ver contrato"
-            icon="contract"
-            buttonStyles={{ margin: 'auto' }}
-            variant="ghost"
-          />
+          {props.showReadContract && (
+            <Button
+              onPress={() => {
+                Linking.openURL(props.contractURL)
+              }}
+              label="Ver contrato"
+              icon="contract"
+              buttonStyles={{ margin: 'auto' }}
+              variant="ghost"
+            />
+          )}
         </View>
         <View style={{ marginVertical: 8 }}>
           <InputSignature
@@ -80,6 +82,7 @@ export type InputContractSignatureProps = {
   setValues: (values: InputContractSignatureValues) => void | Promise<void>
   values: InputContractSignatureValues
   contractURL: string
+  showReadContract?: boolean
 }
 
 export const InputContractSignatureE = (props: InputContractSignatureProps) => (

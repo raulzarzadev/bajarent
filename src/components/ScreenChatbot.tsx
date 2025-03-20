@@ -187,7 +187,7 @@ export const RandomMessage = ({}) => {
           onChangeText={setNumber}
           placeholder="Número (con código de país)"
         ></InputTextStyled>
-        {response && <Text style={gStyles.helper}>*{response}</Text>}
+        {!!response && <Text style={gStyles.helper}>*{response}</Text>}
         <Button onPress={handleSendMessage} disabled={disabled}>
           Enviar
         </Button>

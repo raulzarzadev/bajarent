@@ -7,6 +7,7 @@ import Button from './Button'
 import ProgressBar from './ProgressBar'
 import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
+import ButtonConfirm from './ButtonConfirm'
 
 export default function InputDocumentPicker({
   label,
@@ -74,6 +75,12 @@ export default function InputDocumentPicker({
 
   const INPUT_WIDTH = 120
 
+  const handleDeleteContract = () => {
+    setDocument(null)
+    setFileName('')
+    setValue(null)
+  }
+
   return (
     <>
       <View
@@ -102,6 +109,42 @@ export default function InputDocumentPicker({
           </Text>
         )}
 
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            onPress={() => {
+              // Abrir el PDF si es posible
+              if (value) {
+                window.open(value, '_blank')
+              }
+            }}
+            disabled={!value}
+            // label="Ver PDF"
+            icon="openEye"
+            size="xs"
+            variant="ghost"
+          />
+          {/* Botón para eliminar el PDF */}
+          <ButtonConfirm
+            openDisabled={!value}
+            icon="delete"
+            openColor="error"
+            openSize="xs"
+            openVariant="ghost"
+            handleConfirm={async () => {
+              handleDeleteContract()
+            }}
+          ></ButtonConfirm>
+          <Button
+            onPress={pickDocument}
+            icon="upload"
+            //label="Archivo PDF"
+            size="xs"
+            variant="ghost"
+            buttonStyles={{
+              marginVertical: 'auto'
+            }}
+          />
+        </View>
         {/* Mostrar nombre del documento en lugar de vista previa */}
         {value && (
           <View
@@ -122,33 +165,11 @@ export default function InputDocumentPicker({
               {initialFileName || fileName || 'Documento PDF'}
             </Text>
             {/* Botón para abrir el PDF */}
-            <Button
-              onPress={() => {
-                // Abrir el PDF si es posible
-                if (value) {
-                  window.open(value, '_blank')
-                }
-              }}
-              label="Ver PDF"
-              icon="openEye"
-              size="xs"
-              variant="ghost"
-            />
           </View>
         )}
 
         <ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
         <Text style={gStyles.helper}>{label}</Text>
-        <Button
-          onPress={pickDocument}
-          icon="upload"
-          label="Archivo PDF"
-          size="xs"
-          buttonStyles={{
-            width: INPUT_WIDTH,
-            opacity: value ? 0.8 : 1
-          }}
-        />
       </View>
     </>
   )
