@@ -61,11 +61,11 @@ const InputContractSignature = (props?: InputContractSignatureProps) => {
             label="Acepto los terminos del contrato"
           ></InputCheckbox>
         </View>
-        <InputCheckbox
+        {/* <InputCheckbox
           value={sendCopy}
           setValue={setSendCopy}
           label="Enviar copia a mi correo"
-        ></InputCheckbox>
+        ></InputCheckbox> */}
       </ButtonConfirm>
     </View>
   )
