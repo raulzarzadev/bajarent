@@ -161,8 +161,8 @@ export const FormikImageDescription = ({
                   value: 'ID'
                 },
                 {
-                  label: 'Firma',
-                  value: 'signature'
+                  label: 'Otra',
+                  value: 'other'
                 }
               ]}
             />
