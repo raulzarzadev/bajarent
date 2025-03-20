@@ -15,7 +15,6 @@ const OrderContractSignature = (props?: OrderContractSignatureProps) => {
       contractSignature: values
     })
   }
-  console.log({ contract: store.orderTypesContract[order.type] })
   return (
     <View>
       <InputContractSignatureE

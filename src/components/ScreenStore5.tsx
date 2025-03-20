@@ -34,7 +34,6 @@ import { ScreenChatbotE } from './ScreenChatbot'
 const ScreenStore = (props) => {
   const { user } = useAuth()
   const { store } = useStore()
-  console.log({ store })
   const {
     permissions: {
       isAdmin,
@@ -44,8 +43,6 @@ const ScreenStore = (props) => {
       canManageItems
     }
   } = useEmployee()
-
-  console.log('ss')
 
   const scrollViewRef = useRef(null)
 
@@ -75,7 +72,6 @@ const ScreenStore = (props) => {
   if (store === null) return <Text>Store not found</Text>
   return (
     <ScrollView ref={scrollViewRef}>
-      {/* {!!user && <StoreDetailsE store={store} {...props} />} */}
       {!!user && (
         <Tabs
           tabId="screen-store"
@@ -87,44 +83,24 @@ const ScreenStore = (props) => {
               icon: 'info'
             },
             {
-              title: 'Chatbot 🤖',
-              content: <ScreenChatbotE />,
-              show: isAdmin
-              //icon: 'comment'
+              title: 'Artículos',
+              content: <CheckedTabItems />,
+              show: canManageItems
             },
+
             {
               title: 'Balance',
               content: <CheckedStoreBalance />,
               show: canViewCashbox,
               icon: 'balance'
             },
-            {
-              title: 'Caja',
-              content: <CheckedTabCashbox />,
-              show: canViewCashbox,
-              icon: 'cashbox'
-            },
 
             {
-              title: 'Cuentas',
-              content: <CheckedStoreCounts />,
-              show: false
+              title: 'Chatbot 🤖',
+              content: <ScreenChatbotE />,
+              show: isAdmin
             },
-            {
-              title: 'Ordenes',
-              content: <CheckedTabOrders />,
-              show: canViewOrders
-            },
-            {
-              title: 'Clientes',
-              content: <CheckedTabClients />,
-              show: false
-            },
-            {
-              title: 'Movimientos',
-              content: <CheckedTabMovements />,
-              show: canViewMovements
-            },
+
             {
               title: 'Staff',
               content: <CheckedTabStaff {...props} />,
@@ -138,15 +114,36 @@ const ScreenStore = (props) => {
               icon: 'windows'
             },
             {
-              title: 'Artículos',
-              content: <CheckedTabItems />,
-              show: canManageItems
+              title: 'Clientes',
+              content: <CheckedTabClients />,
+              show: false
             },
             {
-              title: 'Mapa',
-              content: <CheckedTabMap />,
-              show: false
+              title: 'Movimientos',
+              content: <CheckedTabMovements />,
+              show: canViewMovements
+            },
+            {
+              title: 'Ordenes',
+              content: <CheckedTabOrders />,
+              show: canViewOrders
+            },
+            {
+              title: 'Caja',
+              content: <CheckedTabCashbox />,
+              show: canViewCashbox,
+              icon: 'cashbox'
             }
+            // {
+            //   title: 'Cuentas',
+            //   content: <CheckedStoreCounts />,
+            //   show: false
+            // },
+            // {
+            //   title: 'Mapa',
+            //   content: <CheckedTabMap />,
+            //   show: false
+            // },
           ]}
         />
       )}

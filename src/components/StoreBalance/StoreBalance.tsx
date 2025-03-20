@@ -49,8 +49,6 @@ const StoreBalance = () => {
       setBalance(balance[0])
     })
   }
-  console.log({ balance })
-  console.log('sb')
 
   return (
     <View style={{ marginBottom: 44 }}>
