@@ -30,6 +30,7 @@ import ModalCloseOperations from '../ModalCloseOperations'
 import { StoreBalanceE } from './StoreBalance/StoreBalance'
 import { CurrentWorkListE } from './CurrentWork/CurrentWorkList'
 import { ScreenChatbotE } from './ScreenChatbot'
+import TextInfo from './TextInfo'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()
@@ -77,62 +78,61 @@ const ScreenStore = (props) => {
           tabId="screen-store"
           tabs={[
             {
-              title: 'Información',
+              title: 'ℹ️Información',
               content: <StoreDetailsE store={store} {...props} />,
-              show: true,
-              icon: 'info'
+              show: true
+              // icon: 'info'
             },
             {
-              title: 'Artículos',
+              title: '🧰Artículos',
               content: <CheckedTabItems />,
               show: canManageItems
             },
 
             {
-              title: 'Balance',
+              title: '⚖️Balance',
               content: <CheckedStoreBalance />,
-              show: canViewCashbox,
-              icon: 'balance'
+              show: canViewCashbox
+              // icon: 'balance'
             },
 
             {
-              title: 'Chatbot 🤖',
-              content: <ScreenChatbotE />,
-              show: isAdmin
-            },
-
-            {
-              title: 'Staff',
+              title: '👷‍♂️Staff',
               content: <CheckedTabStaff {...props} />,
-              show: canViewSections,
-              icon: 'profile'
+              show: canViewSections
+              //icon: 'profile'
             },
             {
-              title: 'Areas',
+              title: '🧑‍🧑‍🧒‍🧒Areas',
               content: <CheckedTabSections />,
-              show: true,
-              icon: 'windows'
+              show: true
+              // icon: 'windows'
             },
             {
-              title: 'Clientes',
+              title: '👤Clientes',
               content: <CheckedTabClients />,
               show: false
             },
             {
-              title: 'Movimientos',
+              title: '📋Historal',
               content: <CheckedTabMovements />,
               show: canViewMovements
             },
             {
-              title: 'Ordenes',
+              title: '🤖Chatbot',
+              content: <ScreenChatbotE />,
+              show: isAdmin
+            },
+            {
+              title: '⚙️Ordenes',
               content: <CheckedTabOrders />,
               show: canViewOrders
             },
             {
-              title: 'Caja',
+              title: '*Caja',
               content: <CheckedTabCashbox />,
-              show: canViewCashbox,
-              icon: 'cashbox'
+              show: canViewCashbox
+              // icon: 'cashbox'
             }
             // {
             //   title: 'Cuentas',
@@ -281,6 +281,11 @@ const TabCashbox = () => {
   const disabled = true
   return (
     <ScrollView>
+      <TextInfo
+        defaultVisible
+        type="error"
+        text="Este tab ya no esta actualizado. Pronto desaperecera. La información que hay aquí puede no estar actualizada"
+      />
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button
           label="Corte"
