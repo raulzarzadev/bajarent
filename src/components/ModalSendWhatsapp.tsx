@@ -191,21 +191,29 @@ export default function ModalSendWhatsapp({
 
   const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
 
-  const QUOTE = `🧾 *Cotización*
+  const QUOTE = `🔧 *Servicios:*
   ${orderQuotes
-    .map(
-      (q) => `
-  💲*${parseFloat(`${q.amount}`).toFixed(2)}* ${q.description}`
-    )
+    .map((q) => `${q.description} *$${parseFloat(`${q.amount}`).toFixed(2)}* `)
     .join('\n')}
-
-    Cotización total:      💲*${orderQuotes
+    \nTotal:*$${orderQuotes
       .reduce((prev, curr) => prev + parseFloat(`${curr.amount}`), 0)
       .toFixed(2)}*
   `
 
   const ORDER_DATES = `Fechas
   \n${getReceiptDates(order)}`
+
+  const REPAIR_QUOTE = `🧾 *COTIZACIÓN*
+ 
+  \n🔧 *Información del aparato*
+  🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
+  #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
+  \n${QUOTE}
+  🗓️ Garantía 1 Mes
+  
+  \n${CONTACTS}
+  \n${ADDRESS}
+  \n${AGRADECIMIENTOS}`
 
   const REPAIR_RECEIPT = `${RECEIPT_START}
   \n📆${ORDER_DATES}
@@ -240,6 +248,7 @@ export default function ModalSendWhatsapp({
     | 'store-info'
     | 'hello'
     | 'google-maps-comment'
+    | 'repair-quote'
 
   const CLIENT_NOT_FOUND = `
   \n🔎*NO TE ENCOTRAMOS*
@@ -327,6 +336,10 @@ export default function ModalSendWhatsapp({
     {
       type: 'google-maps-comment',
       content: GOOGLE_MAPS_COMMENT
+    },
+    {
+      type: 'repair-quote',
+      content: REPAIR_QUOTE
     }
   ]
 
@@ -347,6 +360,7 @@ export default function ModalSendWhatsapp({
   if (order?.type === order_type.REPAIR) {
     options.push({ label: 'Recibo', value: 'receipt-repair' })
     options.push({ label: 'Recogido', value: 'repair-picked-up' })
+    options.push({ label: 'Cotización', value: 'repair-quote' })
   }
 
   const handleResetMessage = () => {
@@ -425,6 +439,11 @@ export default function ModalSendWhatsapp({
             )
           }}
         ></Button>
+        <TextInfo
+          text="⬇Los siguientes mensajes se envían desde el numero de la tienda"
+          defaultVisible
+          type="info"
+        ></TextInfo>
         <View style={{ marginVertical: 8 }}>
           <ButtonSendWhatsappStatatusE phone={phone} setError={setError} />
           {!!error && <Text style={gStyles.helperError}>*Error: {error}</Text>}
