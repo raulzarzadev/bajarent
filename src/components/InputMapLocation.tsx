@@ -200,6 +200,7 @@ const SearchAddressLocation = ({
         {!!coords && (
           <Button
             // label="Ir"
+            size="small"
             variant="ghost"
             icon="navigate"
             color="success"
