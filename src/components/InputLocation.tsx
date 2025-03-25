@@ -99,16 +99,9 @@ const ModalSelectLocation = ({
           setCoords={(coords) => {
             setValue(coords)
           }}
-          coords={coords}
+          defaultCoords={coords}
           defaultSearch={defaultSearch}
         />
-        <Button
-          label="Cerrar"
-          variant="outline"
-          onPress={() => {
-            modal.toggleOpen()
-          }}
-        ></Button>
       </StyledModal>
     </>
   )
