@@ -32,7 +32,8 @@ const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
         action: 'repair_start',
         type: 'order',
         details: {
-          orderId: order.id
+          orderId: order.id,
+          sectionId: order?.sectionId || null
         }
       }
     })

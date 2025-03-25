@@ -93,7 +93,8 @@ const FormOrderRenew = ({ order }: FormOrderRenewProps) => {
         type: 'order',
         action: 'rent_renewed',
         details: {
-          orderId
+          orderId,
+          sectionId: order?.assignToSection || null
         }
       }
     })

@@ -14,11 +14,13 @@ export type ModalPaymentProps = {
   paymentId?: string
   storeId: string
   defaultAmount?: number
+  orderSectionId: string
 }
 export const ModalPayment = ({
   orderId,
   paymentId,
   storeId,
+  orderSectionId,
   defaultAmount = 0
 }: ModalPaymentProps) => {
   const payment: PaymentBase = {
@@ -47,7 +49,8 @@ export const ModalPayment = ({
             type: 'payment',
             details: {
               orderId,
-              paymentId
+              paymentId,
+              sectionId: orderSectionId || null
             }
           }
         })

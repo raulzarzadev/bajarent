@@ -24,6 +24,7 @@ export type CurrentWorkUpdateDetails = {
   orderId?: string
   itemId?: string
   paymentId?: string
+  sectionId?: string
 }
 
 export type NewWorkUpdate = Pick<

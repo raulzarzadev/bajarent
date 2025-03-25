@@ -30,7 +30,8 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
         type: 'order',
         action: 'rent_picked_up',
         details: {
-          orderId: order.id
+          orderId: order.id,
+          sectionId: order?.assignToSection || null
         }
       }
     })

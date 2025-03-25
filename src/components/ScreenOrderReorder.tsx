@@ -67,7 +67,8 @@ const ScreenOrderReorder = ({ route }) => {
                 type: 'order',
                 action: 'reorder',
                 details: {
-                  orderId: orderId
+                  orderId: orderId,
+                  sectionId: order?.assignToSection || null
                 }
               }
             })

@@ -1,17 +1,18 @@
-import { StyleSheet, Switch, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Switch } from 'react-native'
 import theme, { Colors } from '../theme'
 
 const InputSwitch = ({
   value,
   disabled,
   setValue,
-  color = 'primary'
+  color = 'primary',
+  colorFalse = 'neutral'
 }: {
   value: boolean
   disabled?: boolean
   setValue: (value: boolean) => void
   color?: Colors
+  colorFalse?: Colors
 }) => {
   return (
     <Switch
@@ -21,7 +22,7 @@ const InputSwitch = ({
       }}
       trackColor={{
         true: theme[color],
-        false: theme.neutral
+        false: theme[colorFalse]
       }}
       onValueChange={setValue}
       value={value}

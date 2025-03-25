@@ -43,7 +43,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
         action: 'rent_delivered',
         type: 'order',
         details: {
-          orderId: order.id
+          orderId: order.id,
+          sectionId: order?.assignToSection || null
         }
       }
     })
@@ -224,7 +225,8 @@ const AddPay = ({
                   type: 'payment',
                   details: {
                     orderId: order.id,
-                    paymentId
+                    paymentId,
+                    sectionId: order?.assignToSection || null
                   }
                 }
               })

@@ -98,7 +98,8 @@ const ScreenOrderNew = (navigation) => {
               type: 'order',
               action: 'created',
               details: {
-                orderId: orderId
+                orderId: orderId,
+                sectionId: defaultValues.assignToSection || null
               }
             }
           })

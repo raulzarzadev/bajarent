@@ -35,7 +35,8 @@ const AddExtendExpire = ({
         type: 'order',
         action: 'rent_extended',
         details: {
-          orderId
+          orderId,
+          sectionId: order?.assignToSection || null
         }
       }
     })

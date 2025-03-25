@@ -11,25 +11,34 @@ import { ServicePayments } from '../../firebase/ServicePayments'
 import { BalanceAmountsE } from '../BalanceAmounts'
 import { CurrentWorkUpdate } from './CurrentWorkType'
 import { gStyles } from '../../styles'
+import { useEmployee } from '../../contexts/employeeContext'
 const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   const modal = useModal({ title: 'Trabajo actual' })
-  const { data: currentWork, loading, fetch } = useCurrentWork()
+  const { data: currentWork } = useCurrentWork()
   const { user } = useAuth()
-  const [workType, setWorkType] = useState<'personal' | 'sections'>('personal')
+  const { employee } = useEmployee()
+  const [workType, setWorkType] = useState<'personal' | 'sections'>('sections')
   const [personalWorks, setPersonalWorks] = useState<CurrentWorkUpdate[]>([])
+  const [sectionWorks, setSectionWorks] = useState<CurrentWorkUpdate[]>([])
   const toggleWorkType = () => {
     setWorkType(workType === 'personal' ? 'sections' : 'personal')
   }
-  const [payments, setPayments] = useState([])
+  const [personalPayments, setPersonalPayments] = useState([])
+  const [sectionPayments, setSectionPayments] = useState([])
 
   useEffect(() => {
     if (currentWork) {
       const personalWork = Object.values(currentWork?.updates || {}).filter(
         (update) => update?.createdBy === user?.id
       )
+      const sectionWork = Object.values(currentWork?.updates || {}).filter(
+        (update) =>
+          employee?.sectionsAssigned?.includes(update?.details?.sectionId)
+      )
+      setSectionWorks(sectionWork)
       setPersonalWorks(personalWork)
     }
-  }, [currentWork])
+  }, [currentWork, employee?.sectionsAssigned])
 
   useEffect(() => {
     if (personalWorks.length) {
@@ -37,12 +46,23 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         .filter((work) => work.type === 'payment')
         .map((w) => w.details.paymentId)
       ServicePayments.list(paymentsIs).then((payments) => {
-        setPayments(payments)
+        setPersonalPayments(payments)
       })
     }
   }, [personalWorks.length])
 
-  const disabledSwitch = true
+  useEffect(() => {
+    if (workType === 'sections' && sectionWorks.length) {
+      const paymentsIs = sectionWorks
+        .filter((work) => work.type === 'payment')
+        .map((w) => w.details.paymentId)
+      ServicePayments.list(paymentsIs).then((payments) => {
+        setSectionPayments(payments)
+      })
+    }
+  }, [sectionWorks.length, workType])
+
+  const disabledSwitch = false
 
   return (
     <View>
@@ -70,6 +90,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
           </Text>
           <InputSwitch
             value={workType === 'personal'}
+            colorFalse="success"
             disabled={disabledSwitch}
             setValue={() => {
               toggleWorkType()
@@ -86,7 +107,12 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         </View>
         {workType === 'personal' && (
           <View>
-            <BalanceAmountsE payments={payments} disableLinks />
+            <BalanceAmountsE payments={personalPayments} disableLinks />
+          </View>
+        )}
+        {workType === 'sections' && (
+          <View>
+            <BalanceAmountsE payments={sectionPayments} disableLinks />
           </View>
         )}
       </StyledModal>

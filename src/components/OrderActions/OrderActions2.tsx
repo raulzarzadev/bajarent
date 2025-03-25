@@ -33,6 +33,7 @@ import StyledModal from '../StyledModal'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
+import UserType from '../../types/UserType'
 
 //* repaired
 function OrderActions() {
@@ -85,7 +86,8 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
                 action: 'repair_authorized',
                 type: 'order',
                 details: {
-                  orderId: order.id
+                  orderId: order.id,
+                  sectionId: order?.assignToSection ?? null
                 }
               }
             })
@@ -246,7 +248,8 @@ const ButtonCancelDelivery = ({ order, user }) => {
               action: 'rent_delivered_canceled',
               type: 'order',
               details: {
-                orderId: order.id
+                orderId: order.id,
+                sectionId: order?.assignToSection ?? null
               }
             }
           })
@@ -373,7 +376,13 @@ const ButtonPickUp = ({}) => {
   )
 }
 
-const ButtonCancel = ({ order, user }) => {
+const ButtonCancel = ({
+  order,
+  user
+}: {
+  order: OrderType
+  user: UserType
+}) => {
   const { addWork } = useCurrentWork()
   const [comment, setComment] = useState('')
   const MIN_COMMENT_LENGTH = 10
@@ -405,7 +414,8 @@ const ButtonCancel = ({ order, user }) => {
                 action: 'rent_canceled',
                 type: 'order',
                 details: {
-                  orderId: order.id
+                  orderId: order.id,
+                  sectionId: order?.assignToSection ?? null
                 }
               }
             })
@@ -448,7 +458,8 @@ const ButtonCancelPickUp = ({ order, user }) => {
               action: 'rent_picked_up_canceled',
               type: 'order',
               details: {
-                orderId: order.id
+                orderId: order.id,
+                sectionId: order?.assignToSection ?? null
               }
             }
           })
@@ -541,7 +552,8 @@ const ButtonAuthorize = ({ order, user }) => {
             action: 'rent_authorized',
             type: 'order',
             details: {
-              orderId: order.id
+              orderId: order.id,
+              sectionId: order?.assignToSection ?? null
             }
           }
         })

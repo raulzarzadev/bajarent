@@ -386,6 +386,8 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
       : -1
   }
 
+  const { order } = useOrderDetails()
+
   return (
     <View>
       <ErrorBoundary componentName="OrderPayments">
@@ -409,7 +411,11 @@ const OrderPayments = ({ orderId }: { orderId: string }) => {
             <Text style={[gStyles.h3, { marginRight: 8, marginBottom: 0 }]}>
               Pagos
             </Text>
-            <ModalPayment orderId={orderId} storeId={storeId} />
+            <ModalPayment
+              orderId={orderId}
+              storeId={storeId}
+              orderSectionId={order?.assignToSection}
+            />
           </View>
           {payments.sort(sortByCreatedAt)?.map((payment) => (
             <Pressable
