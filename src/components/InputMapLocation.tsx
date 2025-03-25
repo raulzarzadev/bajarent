@@ -30,24 +30,34 @@ const customIcon = L.icon({
 })
 
 const InputMapLocation = ({
-  setLocation,
-  location,
-  currentCoords,
+  setCoords,
+  coords,
+  defaultCoords,
   defaultSearch
 }: {
-  location?: CoordsType
-  currentCoords?: CoordsType
-  setLocation?: (coords: CoordsType) => void
+  coords?: CoordsType
+  defaultCoords?: CoordsType
+  setCoords?: (coords: CoordsType) => void | Promise<void>
   defaultSearch?: string
 }) => {
-  const INITIAL_POSITION: CoordsType = location || [24.145708, -110.311002]
+  const INITIAL_POSITION: CoordsType = defaultCoords || [24.145708, -110.311002]
   const [mapCenter, setMapCenter] = useState(INITIAL_POSITION)
   const [mapZoom, setMapZoom] = useState(16)
   const handleSetCenter = (center: CoordsType) => {
     setMapCenter(center)
-    setLocation?.(center)
   }
 
+  const handleUpdateLocation = async () => {
+    await setCoords?.(mapCenter)
+    return
+  }
+  const handleReset = () => {
+    setMapCenter(defaultCoords || INITIAL_POSITION)
+  }
+
+  const isDirtyLocation =
+    JSON.stringify(mapCenter) !== JSON.stringify(defaultCoords)
+  console.log({ isDirtyLocation, mapCenter, defaultCoords })
   const INPUT_HEIGHT = 40
 
   return (
@@ -66,15 +76,15 @@ const InputMapLocation = ({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {currentCoords && (
+            {defaultCoords && (
               <CircleMarker
-                center={currentCoords}
+                center={defaultCoords}
                 //@ts-ignore
                 radius={10}
                 pathOptions={{
-                  color: theme.black,
-                  weight: 1,
-                  fillColor: 'transparent',
+                  color: theme.primary,
+                  weight: 2,
+                  fillColor: theme.primary,
                   fillOpacity: 0.5
                 }}
               />
@@ -106,12 +116,36 @@ const InputMapLocation = ({
         >
           <SearchAddressLocation
             defaultSearch={defaultSearch}
-            setLocation={(coords) => {
+            setCoords={(coords) => {
               handleSetCenter(coords)
             }}
             coords={mapCenter}
           />
         </View>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          marginVertical: 8
+        }}
+      >
+        <Button
+          onPress={handleReset}
+          label="Restablecer"
+          icon="refresh"
+          size="xs"
+          variant="ghost"
+          disabled={!isDirtyLocation}
+        ></Button>
+        <Button
+          onPress={handleUpdateLocation}
+          label="Actualizar ubicación"
+          icon="save"
+          disabled={!isDirtyLocation}
+          size="xs"
+          color={isDirtyLocation ? 'success' : 'transparent'}
+        ></Button>
       </View>
     </View>
   )
@@ -136,13 +170,13 @@ interface NominatimResult {
 }
 const SearchAddressLocation = ({
   setOptions,
-  setLocation,
+  setCoords,
   maxResults = 6,
   defaultSearch,
   coords
 }: {
   setOptions?: (options: NominatimResult[]) => void
-  setLocation?: (coords: CoordsType) => void
+  setCoords?: (coords: CoordsType) => void
   maxResults?: number
   defaultSearch?: string
   coords?: CoordsType
@@ -170,7 +204,7 @@ const SearchAddressLocation = ({
         setOptions?.(slicedResult)
         const { lat, lon } = data[0]
         const newCenter: CoordsType = [parseFloat(lat), parseFloat(lon)]
-        // setLocation(newCenter)
+        // setCoords(newCenter)
       } else {
         // alert('No se encontraron resultados')
         setResponses([])
@@ -246,9 +280,9 @@ const SearchAddressLocation = ({
               if (res?.status === 'granted' && res.coords) {
                 const lat = res?.coords?.lat
                 const lon = res?.coords?.lon
-                setLocation([lat, lon])
+                setCoords([lat, lon])
               } else {
-                setLocation(null)
+                setCoords(null)
               }
               setLoading(false)
             }}
@@ -279,7 +313,7 @@ const SearchAddressLocation = ({
                     parseFloat(response.lat),
                     parseFloat(response.lon)
                   ]
-                  setLocation(newCenter)
+                  setCoords(newCenter)
                   setShowResponses(false)
                 }}
               >
@@ -341,7 +375,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 'auto',
     width: '100%',
-    minHeight: 400
+    minHeight: 300
   },
   map: {
     width: '100%',

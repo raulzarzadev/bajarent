@@ -96,10 +96,10 @@ const ModalSelectLocation = ({
       />
       <StyledModal {...modal}>
         <InputMapLocation
-          setLocation={(coords) => {
+          setCoords={(coords) => {
             setValue(coords)
           }}
-          location={coords}
+          coords={coords}
           defaultSearch={defaultSearch}
         />
         <Button

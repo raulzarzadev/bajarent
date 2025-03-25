@@ -12,6 +12,8 @@ import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import CoordsType from '../../types/CoordsType'
 import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
+import { getCoordinates } from '../../libs/maps'
+import { useEffect, useState } from 'react'
 const CustomerCard = (props?: CustomerCardProps) => {
   const navigation = useNavigation()
   const { update, remove } = useCustomers()
@@ -31,8 +33,13 @@ const CustomerCard = (props?: CustomerCardProps) => {
       ['address.locationURL']: location
     })
   }
-  const customerLocation =
-    customer?.address?.locationURL || customer?.address?.coords
+  const [customerLocation, setCustomerLocation] = useState<CoordsType>()
+  useEffect(() => {
+    getCoordinates(customer?.address?.locationURL).then((coords) => {
+      setCustomerLocation(coords)
+    })
+  }, [customer.address.locationURL, customer.address.coords])
+
   return (
     <View style={{ justifyContent: 'center' }}>
       {/* CUSTOMER ACTIONS SHOULD VERIFY EMPLOYEE PERMISSIOS */}
@@ -123,8 +130,8 @@ const CustomerCard = (props?: CustomerCardProps) => {
         }}
       >
         <ModalLocationE
-          location={customerLocation}
-          setLocation={(value) => {
+          coords={customerLocation}
+          setCoords={(value) => {
             handleUpdateLocation(value)
           }}
         />
