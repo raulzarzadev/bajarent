@@ -197,16 +197,19 @@ const SearchAddressLocation = ({
           marginVertical: 4
         }}
       >
-        <Button
-          label="Ir"
-          variant="ghost"
-          icon="navigate"
-          onPress={() => {
-            Linking.openURL(
-              `https://www.google.com/maps/search/?api=1&query=${coords}`
-            )
-          }}
-        />
+        {!!coords && (
+          <Button
+            // label="Ir"
+            variant="ghost"
+            icon="navigate"
+            color="success"
+            onPress={() => {
+              Linking.openURL(
+                `https://www.google.com/maps/search/?api=1&query=${coords}`
+              )
+            }}
+          />
+        )}
         <InputTextStyled
           containerStyle={{ flex: 1 }}
           onChangeText={(text) => {
