@@ -1,5 +1,6 @@
 import { IoMdSwap, IoMdAdd } from 'react-icons/io'
 import { FaFileContract } from 'react-icons/fa6'
+import { TbMapShare } from 'react-icons/tb'
 
 import {
   MdEdit,
@@ -96,6 +97,7 @@ import { LuWarehouse } from 'react-icons/lu'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  navigate: TbMapShare,
   folderCheck: LuFolderCheck,
   merge: IoIosGitMerge,
   orderAdd: BsClipboardPlus,

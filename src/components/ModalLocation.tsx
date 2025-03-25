@@ -6,25 +6,39 @@ import Button from './Button'
 import { CircleMarker, MapContainer, TileLayer } from 'react-leaflet'
 import theme from '../theme'
 import { useEffect, useState } from 'react'
-import InputLocation, { InputLocationE } from './InputLocation'
 import CoordsType from '../types/CoordsType'
 import { getCoordinates } from '../libs/maps'
 import Loading from './Loading'
 import { gStyles } from '../styles'
+import useLocation from '../hooks/useLocation'
+import InputMapLocation from './InputMapLocation'
+
 const ModalLocation = (props?: ModalLocationProps) => {
   const location = props?.location
   const modal = useModal({ title: 'Ubicación' })
-  const [edit, setEdit] = useState(false)
-  const handleEdit = () => {
-    setEdit(!edit)
-  }
 
   const [newLocation, setNewLocation] = useState(location)
+
+  const [coords, setCoords] = useState<CoordsType | null>(undefined)
+
+  useEffect(() => {
+    getCoordinates(location).then((coords) => {
+      setCoords(coords)
+    })
+  }, [location])
+
   const handleUpdateLocation = async () => {
     await props?.setLocation?.(newLocation)
-    handleEdit()
     return
   }
+  const handleReset = () => {
+    setNewLocation(location)
+    getCoordinates(location).then((coords) => {
+      setCoords(coords)
+    })
+  }
+
+  const isDirtyLocation = newLocation !== location
   return (
     <View>
       <Button
@@ -34,7 +48,31 @@ const ModalLocation = (props?: ModalLocationProps) => {
         variant="ghost"
       ></Button>
       <StyledModal {...modal} size="full">
-        {edit ? (
+        <InputMapLocation
+          currentCoords={location as CoordsType}
+          location={coords}
+          setLocation={setNewLocation}
+        />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+          <Button
+            onPress={handleReset}
+            label="Restablecer"
+            icon="refresh"
+            size="xs"
+            variant="ghost"
+            disabled={!isDirtyLocation}
+          ></Button>
+          <Button
+            onPress={handleUpdateLocation}
+            label="Actualizar ubicación"
+            icon="save"
+            disabled={!isDirtyLocation}
+            size="xs"
+            color={isDirtyLocation ? 'success' : 'transparent'}
+          ></Button>
+        </View>
+        {/* <MapLocationE center={location} /> */}
+        {/* {edit ? (
           <>
             <InputLocationE
               setValue={setNewLocation}
@@ -95,7 +133,7 @@ const ModalLocation = (props?: ModalLocationProps) => {
             </View>
             <MapLocationE center={location} />
           </>
-        )}
+        )} */}
       </StyledModal>
     </View>
   )
@@ -111,55 +149,65 @@ export const ModalLocationE = (props: ModalLocationProps) => (
   </ErrorBoundary>
 )
 
-export type MapLocationProps = {
-  center: CoordsType | string
-}
-export const MapLocationE = (props: MapLocationProps) => (
-  <ErrorBoundary componentName="MapLocation">
-    <MapLocation {...props} />
-  </ErrorBoundary>
-)
-export const MapLocation = (props: MapLocationProps) => {
-  const center = props?.center
-  const [coords, setCoords] = useState<CoordsType | null>(undefined)
-  useEffect(() => {
-    getCoordinates(center).then((coords) => {
-      setCoords(coords)
-    })
-  }, [center])
+// export type MapLocationProps = {
+//   center: CoordsType | string
+// }
+// export const MapLocationE = (props: MapLocationProps) => (
+//   <ErrorBoundary componentName="MapLocation">
+//     <MapLocation {...props} />
+//   </ErrorBoundary>
+// )
+// export const MapLocation = (props: MapLocationProps) => {
+//   const center = props?.center
+//   const [coords, setCoords] = useState<CoordsType | null>(undefined)
+//   useEffect(() => {
+//     getCoordinates(center).then((coords) => {
+//       setCoords(coords)
+//     })
+//   }, [center])
 
-  if (coords === undefined) return <Loading></Loading>
-  if (coords === null)
-    return (
-      <View>
-        <Text style={gStyles.h3}>No hay una ubicación aún</Text>
-      </View>
-    )
+//   const { getLocation } = useLocation()
 
-  return (
-    <MapContainer
-      style={{ height: '70vh', width: '100%', minHeight: 400 }}
-      //@ts-ignore
-      center={coords}
-      zoom={13}
-    >
-      <TileLayer
-        //@ts-ignore
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+//   useEffect(() => {
+//     if (coords === null) {
+//       getLocation().then((res) => {
+//         setCoords([res.coords.lat, res.coords.lon])
+//       })
+//     }
+//   }, [coords])
 
-      <CircleMarker
-        center={coords}
-        //@ts-ignore
-        radius={10}
-        pathOptions={{
-          color: theme.black,
-          weight: 1,
-          fillColor: 'transparent',
-          fillOpacity: 0.5
-        }}
-      />
-    </MapContainer>
-  )
-}
+//   if (coords === undefined) return <Loading></Loading>
+//   if (coords === null)
+//     return (
+//       <View>
+//         <Text style={gStyles.h3}>No hay una ubicación aún</Text>
+//       </View>
+//     )
+
+//   return (
+//     <MapContainer
+//       style={{ height: '70vh', width: '100%', minHeight: 400 }}
+//       //@ts-ignore
+//       center={coords}
+//       zoom={13}
+//     >
+//       <TileLayer
+//         //@ts-ignore
+//         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//       />
+
+//       <CircleMarker
+//         center={coords}
+//         //@ts-ignore
+//         radius={10}
+//         pathOptions={{
+//           color: theme.black,
+//           weight: 1,
+//           fillColor: 'transparent',
+//           fillOpacity: 0.5
+//         }}
+//       />
+//     </MapContainer>
+//   )
+// }

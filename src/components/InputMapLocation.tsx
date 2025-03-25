@@ -1,6 +1,12 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  CircleMarker,
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMap
+} from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import InputTextStyled from './InputTextStyled'
@@ -9,6 +15,7 @@ import Button from './Button'
 import useLocation from '../hooks/useLocation'
 import CoordsType from '../types/CoordsType'
 import Loading from './Loading'
+import theme from '../theme'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({
@@ -25,9 +32,11 @@ const customIcon = L.icon({
 const InputMapLocation = ({
   setLocation,
   location,
+  currentCoords,
   defaultSearch
 }: {
   location?: CoordsType
+  currentCoords?: CoordsType
   setLocation?: (coords: CoordsType) => void
   defaultSearch?: string
 }) => {
@@ -57,6 +66,19 @@ const InputMapLocation = ({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            {currentCoords && (
+              <CircleMarker
+                center={currentCoords}
+                //@ts-ignore
+                radius={10}
+                pathOptions={{
+                  color: theme.black,
+                  weight: 1,
+                  fillColor: 'transparent',
+                  fillOpacity: 0.5
+                }}
+              />
+            )}
             <DraggableMarker center={mapCenter} setCenter={handleSetCenter} />
             <MapCenterTracker
               onCenterChange={(center) => {
@@ -87,6 +109,7 @@ const InputMapLocation = ({
             setLocation={(coords) => {
               handleSetCenter(coords)
             }}
+            coords={mapCenter}
           />
         </View>
       </View>
@@ -115,12 +138,14 @@ const SearchAddressLocation = ({
   setOptions,
   setLocation,
   maxResults = 6,
-  defaultSearch
+  defaultSearch,
+  coords
 }: {
   setOptions?: (options: NominatimResult[]) => void
   setLocation?: (coords: CoordsType) => void
   maxResults?: number
   defaultSearch?: string
+  coords?: CoordsType
 }) => {
   const [loading, setLoading] = useState(false)
   const { location, getLocation } = useLocation()
@@ -172,6 +197,16 @@ const SearchAddressLocation = ({
           marginVertical: 4
         }}
       >
+        <Button
+          label="Ir"
+          variant="ghost"
+          icon="navigate"
+          onPress={() => {
+            Linking.openURL(
+              `https://www.google.com/maps/search/?api=1&query=${coords}`
+            )
+          }}
+        />
         <InputTextStyled
           containerStyle={{ flex: 1 }}
           onChangeText={(text) => {
