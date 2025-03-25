@@ -12,6 +12,7 @@ import { BalanceAmountsE } from '../BalanceAmounts'
 import { CurrentWorkUpdate } from './CurrentWorkType'
 import { gStyles } from '../../styles'
 import { useEmployee } from '../../contexts/employeeContext'
+
 const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   const modal = useModal({ title: 'Trabajo actual' })
   const { data: currentWork } = useCurrentWork()

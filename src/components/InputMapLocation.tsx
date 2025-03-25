@@ -57,7 +57,6 @@ const InputMapLocation = ({
 
   const isDirtyLocation =
     JSON.stringify(mapCenter) !== JSON.stringify(defaultCoords)
-  console.log({ isDirtyLocation, mapCenter, defaultCoords })
   const INPUT_HEIGHT = 40
 
   return (

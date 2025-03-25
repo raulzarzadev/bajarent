@@ -5,15 +5,12 @@ import StyledModal from './StyledModal'
 import Button from './Button'
 import CoordsType from '../types/CoordsType'
 import InputMapLocation from './InputMapLocation'
-import Loading from './Loading'
 
 const ModalLocation = (props?: ModalLocationProps) => {
   const defaultCoords = props?.coords
   const disabled = props?.disabled
   const setCoords = props?.setCoords
   const modal = useModal({ title: 'Ubicación' })
-
-  if (!defaultCoords) return <Loading />
 
   return (
     <View>
