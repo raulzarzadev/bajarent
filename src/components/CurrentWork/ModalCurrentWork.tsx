@@ -12,6 +12,7 @@ import { BalanceAmountsE } from '../BalanceAmounts'
 import { CurrentWorkUpdate } from './CurrentWorkType'
 import { gStyles } from '../../styles'
 import { useEmployee } from '../../contexts/employeeContext'
+import { EmployeeSections } from '../CardEmployee'
 
 const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   const modal = useModal({ title: 'Trabajo actual' })
@@ -93,8 +94,9 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
               disabledSwitch && { opacity: 0.5 }
             ]}
           >
-            Por area
+            Areas{' '}
           </Text>
+
           <InputSwitch
             value={workType === 'personal'}
             colorFalse="success"
@@ -119,6 +121,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         )}
         {workType === 'sections' && (
           <View>
+            <EmployeeSections />
             <BalanceAmountsE payments={sectionPayments} disableLinks />
           </View>
         )}

@@ -48,37 +48,7 @@ const CardEmployee = () => {
 
           <Text style={[gStyles.helper, gStyles.tCenter]}>Puesto:</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
-
-          <Text style={[gStyles.helper, gStyles.tCenter]}>
-            Areas asignadas:
-          </Text>
-          {!employee?.sectionsAssigned?.length && (
-            <Text style={[gStyles.p, gStyles.tCenter]}>
-              No estas asignado a ni un area
-            </Text>
-          )}
-
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center'
-            }}
-          >
-            {employee?.sectionsAssigned?.length &&
-              employee?.sectionsAssigned.map((sectionId) => {
-                const section = sections?.find((s) => s?.id === sectionId)
-                return (
-                  <Chip
-                    size="sm"
-                    title={section?.name}
-                    color={theme.white}
-                    titleColor={theme.secondary}
-                    key={sectionId}
-                  ></Chip>
-                )
-              })}
-          </View>
+          <EmployeeSections />
           <Text style={[gStyles.helper, gStyles.tCenter]}>Roles:</Text>
 
           <View
@@ -102,20 +72,44 @@ const CardEmployee = () => {
           </View>
         </>
       )}
+    </View>
+  )
+}
 
-      {/* {employee?.roles > 0 && (
-        <>
-          <Text style={gStyles.h3}>Roles</Text>
-          {Object.entries(employee?.roles).map(([rol, value]) => {
+export const EmployeeSections = () => {
+  const { employee } = useEmployee()
+  const { sections } = useStore()
+  return (
+    <>
+      <Text style={[gStyles.helper, gStyles.tCenter]}>Areas asignadas:</Text>
+      {!employee?.sectionsAssigned?.length && (
+        <Text style={[gStyles.p, gStyles.tCenter]}>
+          No estas asignado a ni un area
+        </Text>
+      )}
+
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}
+      >
+        {employee?.sectionsAssigned?.length &&
+          employee?.sectionsAssigned.map((sectionId) => {
+            const section = sections?.find((s) => s?.id === sectionId)
             return (
-              <Text style={[gStyles.p, gStyles.tCenter]}>
-                {staff_roles[rol]} {value ? '✔️' : '❌'}
-              </Text>
+              <Chip
+                size="sm"
+                title={section?.name}
+                color={theme.white}
+                titleColor={theme.secondary}
+                key={sectionId}
+              ></Chip>
             )
           })}
-        </>
-      )} */}
-    </View>
+      </View>
+    </>
   )
 }
 export const CardEmployeeE = (props) => {
