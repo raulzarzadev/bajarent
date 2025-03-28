@@ -28,6 +28,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   const [personalPayments, setPersonalPayments] = useState([])
   const [sectionPayments, setSectionPayments] = useState([])
   const [allPayments, setAllPayments] = useState([])
+
   useEffect(() => {
     if (currentWork) {
       const personalWork = Object.values(currentWork?.updates || {}).filter(
@@ -60,10 +61,12 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   }, [personalWorks.length])
 
   useEffect(() => {
+    console.log({ sectionWorks })
     if (workType === 'sections' && sectionWorks.length) {
       const paymentsIs = sectionWorks
         .filter((work) => work.type === 'payment')
         .map((w) => w.details.paymentId)
+      console.log({ paymentsIs })
       ServicePayments.list(paymentsIs).then((payments) => {
         setSectionPayments(payments)
       })

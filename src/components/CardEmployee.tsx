@@ -11,10 +11,9 @@ import Chip from './Chip'
 import theme from '../theme'
 
 const CardEmployee = () => {
-  const { store, sections } = useStore()
+  const { store } = useStore()
   const { employee } = useEmployee()
   const { navigate } = useNavigation()
-  console.log(employee?.roles)
   const staffRoles = Object.entries(employee?.roles || {}).reduce(
     (acc, [key, value]) => {
       if (value) {

@@ -112,7 +112,8 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
                 action: 'repair_finish',
                 type: 'order',
                 details: {
-                  orderId: order.id
+                  orderId: order.id,
+                  sectionId: order?.assignToSection ?? null
                 }
               }
             })
@@ -133,7 +134,8 @@ const RepairOrderActions = ({ order }: { order: OrderType }) => {
                 action: 'repair_delivered',
                 type: 'order',
                 details: {
-                  orderId: order.id
+                  orderId: order.id,
+                  sectionId: order?.assignToSection ?? null
                 }
               }
             })

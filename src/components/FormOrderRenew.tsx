@@ -144,7 +144,8 @@ const FormOrderRenew = ({ order }: FormOrderRenewProps) => {
             action: 'payment_created',
             details: {
               orderId: order.id,
-              paymentId: res.res.id
+              paymentId: res.res.id,
+              sectionId: order?.assignToSection || null
             }
           }
         })
