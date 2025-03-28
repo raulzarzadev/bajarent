@@ -48,6 +48,9 @@ export type StaffRoles = keyof typeof staff_roles
 export type old_StaffPermissionType = StaffPermissionType
 export type BaseStaffType = {
   storeId: string
+  /**
+   * @deprecated use roles instead
+   */
   position?: string
   userId: string
 
@@ -58,7 +61,12 @@ export type BaseStaffType = {
   sectionsAssigned?: string[]
   store?: Partial<StoreType>
 
+  /**
+   * @deprecated use roles instead
+   */
+
   rol: StaffRoles
+  roles: Record<keyof typeof staff_roles, boolean>
 
   disabled?: boolean
 

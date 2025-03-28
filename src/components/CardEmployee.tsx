@@ -8,9 +8,10 @@ import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
 
 const CardEmployee = () => {
-  const { store } = useStore()
+  const { store, sections } = useStore()
   const { employee } = useEmployee()
   const { navigate } = useNavigation()
+
   return (
     <View>
       {store && (
@@ -32,8 +33,23 @@ const CardEmployee = () => {
           */}
           <BadgesStore />
 
-          <Text style={gStyles.h3}>{employee?.name}</Text>
+          <Text style={[gStyles.helper, gStyles.tCenter]}>Puesto:</Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
+
+          <Text style={gStyles.h3}>Areas asignadas</Text>
+          {!employee?.sectionsAssigned?.length && (
+            <Text style={[gStyles.p, gStyles.tCenter]}>
+              No estas asignado a ni un area
+            </Text>
+          )}
+          {employee?.sectionsAssigned?.length &&
+            employee?.sectionsAssigned.map((sectionId) => {
+              return (
+                <Text key={sectionId} style={[gStyles.p, gStyles.tCenter]}>
+                  {sections?.find((s) => s?.id === sectionId)?.name}
+                </Text>
+              )
+            })}
         </>
       )}
     </View>

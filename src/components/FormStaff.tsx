@@ -7,7 +7,7 @@ import ErrorBoundary from './ErrorBoundary'
 import FormikCheckbox from './FormikCheckbox'
 import dictionary from '../dictionary'
 const screenWidth = Dimensions.get('window').width
-import {
+import StaffType, {
   permissionsOrderKeys,
   permissionsStoreKeys,
   permissionsItemsKeys,
@@ -26,16 +26,11 @@ const FormStaff = ({
     console.log(values)
   }
 }: {
-  defaultValues?: {
-    userId?: string
-    position?: string
-    name?: string
-    id?: string
-  }
+  defaultValues?: Partial<StaffType>
   onSubmit?: (values: any) => Promise<void>
 }) => {
   const [loading, setLoading] = React.useState(false)
-
+  console.log({ defaultValues })
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
@@ -62,27 +57,25 @@ const FormStaff = ({
               <FormikInputValue
                 name={'position'}
                 placeholder="Puesto"
-                helperText="Nombre, referencia o puesto que desempeñara"
+                helperText="Nombre público(corto). Puede ser usado para mostrar movimientos o comunicación con el cliente y mas."
               />
             </View>
-
-            <View style={styles.input}>
+            {!!defaultValues.rol && (
               <FormikInputSelect
-                name="rol"
+                disabled
                 placeholder="Selecciona un rol"
+                name="rol"
                 options={Object.keys(staff_roles).map((key) => ({
                   label: dictionary(key),
                   value: key
                 }))}
+                helperText='Deshabilitado. Pronto desaperecera de esta zona. Usa el input "Roles" para asignar rol'
               />
-            </View>
-
-            <FormEmployeeSections employeeId={defaultValues?.id} />
-
+            )}
             {/*
              *** *** *** PERMISSIONS
              */}
-            <Text>Permisos especiales</Text>
+            <Text style={gStyles.h3}>Permisos especiales</Text>
             <View>
               <FormikCheckbox
                 style={{
@@ -93,6 +86,44 @@ const FormStaff = ({
                 name={`permissions.isAdmin`}
                 label={'Admin'}
               />
+              <>
+                <Text
+                  style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}
+                >
+                  Roles
+                </Text>
+                <Text style={gStyles.helper}>
+                  ℹ️ Le permitira acceder a algunas herramientas especificas
+                  dentro de la app
+                </Text>
+                <View
+                  style={[
+                    styles.input,
+                    {
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      width: '100%',
+                      justifyContent: 'space-between'
+                    }
+                  ]}
+                >
+                  {Object.entries(staff_roles).map(([key, label]) => (
+                    <View style={{ margin: 4 }} key={key}>
+                      <FormikCheckbox
+                        disabled={loading}
+                        label={dictionary(label)}
+                        name={`roles.${key}`}
+                      />
+                    </View>
+                  ))}
+                </View>
+              </>
+
+              {/* Areas asingadas */}
+
+              <FormEmployeeSections employeeId={defaultValues?.id} />
+
+              {/* Permisos de ordenes */}
 
               <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
                 Permisos de ordenes

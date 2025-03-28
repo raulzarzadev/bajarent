@@ -26,7 +26,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   }
   const [personalPayments, setPersonalPayments] = useState([])
   const [sectionPayments, setSectionPayments] = useState([])
-
+  const [allPayments, setAllPayments] = useState([])
   useEffect(() => {
     if (currentWork) {
       const personalWork = Object.values(currentWork?.updates || {}).filter(
@@ -48,6 +48,12 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         .map((w) => w.details.paymentId)
       ServicePayments.list(paymentsIs).then((payments) => {
         setPersonalPayments(payments)
+      })
+      const allPaymentsIds = Object.values(currentWork.updates || {})
+        .filter((update) => update.type === 'payment')
+        .map((update) => update.details.paymentId)
+      ServicePayments.list(allPaymentsIds).then((payments) => {
+        setAllPayments(payments)
       })
     }
   }, [personalWorks.length])

@@ -7,12 +7,14 @@ const FormikCheckbox = ({
   name,
   label,
   textStyle,
-  style
+  style,
+  disabled
 }: {
   name: string
   label: string
   textStyle?: TextStyle
   style?: ViewStyle
+  disabled?: boolean
 }) => {
   const [field, meta, helpers] = useField(name)
   const value = useMemo(() => field.value, [field.value])
@@ -25,6 +27,7 @@ const FormikCheckbox = ({
       value={value}
       style={style}
       textStyle={textStyle}
+      disabled={disabled}
     />
   )
 }
