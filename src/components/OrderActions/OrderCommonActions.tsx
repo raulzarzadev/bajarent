@@ -14,7 +14,7 @@ import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
 import TextInfo from '../TextInfo'
-import { ButtonDownloadOrderE } from './ButtonDownloadOrde'
+import { ButtonDownloadOrderE } from './ButtonDownloadOrder'
 
 export type OrderCommonActionsType = {
   storeId: string

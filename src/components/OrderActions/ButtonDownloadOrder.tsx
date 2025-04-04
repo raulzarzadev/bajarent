@@ -13,58 +13,6 @@ import dictionary from '../../dictionary'
 import CurrencyAmount from '../CurrencyAmount'
 import { gStyles } from '../../styles'
 
-// Función para mostrar opciones de acción
-const showActionOptions = async (options: string[]): Promise<string> => {
-  return new Promise((resolve) => {
-    Alert.alert(
-      'Selecciona una opción',
-      'Elige qué hacer con el documento',
-      options.map((option) => ({
-        text: option,
-        onPress: () => resolve(option)
-      })),
-      { cancelable: true, onDismiss: () => resolve('') }
-    )
-  })
-}
-
-// Función para descargar el archivo
-const downloadFile = async (filePath: string): Promise<void> => {
-  try {
-    // En dispositivos móviles, esto generalmente implica guardar en el almacenamiento
-    Alert.alert(
-      'Documento Guardado',
-      `El documento se ha guardado en: ${filePath}`
-    )
-  } catch (error) {
-    console.error('Error al descargar el archivo:', error)
-    throw new Error('No se pudo descargar el archivo')
-  }
-}
-
-// Función para enviar por email
-const sendOrderByEmail = async (
-  filePath: string,
-  customerEmail?: string
-): Promise<void> => {
-  try {
-    if (!customerEmail) {
-      throw new Error('Email del cliente no proporcionado')
-    }
-
-    // En una implementación real, esto podría enviar el archivo a través de una API
-    // Por ahora, usamos la función Share para simular la compartición
-    await Share.share({
-      title: 'Orden PDF',
-      message: `Tu orden ha sido procesada. Enviando a: ${customerEmail}`,
-      url: `file://${filePath}`
-    })
-  } catch (error) {
-    console.error('Error al enviar email:', error)
-    throw new Error('No se pudo enviar el email')
-  }
-}
-
 const ButtonDownloadOrder = (props?: ButtonDownloadOrderProps) => {
   const modal = useModal({ title: 'Descargar PDF' })
   return (
@@ -328,11 +276,11 @@ export const OrderPDF = () => {
         </View>
         {/* Firma de aceptación y enlace de contrato */}
         <View style={{ width: '100%', alignItems: 'center' }}>
-          {order.contractSignature.accept ? (
+          {order?.contractSignature?.accept ? (
             <View style={{ alignItems: 'center' }}>
               <Text style={{ fontSize: 16, marginBottom: 5 }}>Aceptada ✅</Text>
               <Image
-                source={{ uri: order.contractSignature.signature }}
+                source={{ uri: order?.contractSignature?.signature }}
                 style={{
                   width: 200,
                   height: 200,
