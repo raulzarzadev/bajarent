@@ -176,9 +176,6 @@ const OrderCommonActions = ({
           flexWrap: 'wrap'
         }}
       >
-        <View style={{ padding: 4, width: '50%' }}>
-          <ButtonDownloadOrderE order={order} />
-        </View>
         {buttons.map(
           (button, i) =>
             button && (
@@ -208,6 +205,9 @@ const OrderCommonActions = ({
               </View>
             )
         )}
+        <View style={{ padding: 4, width: '50%' }}>
+          <ButtonDownloadOrderE order={order} />
+        </View>
         {/* To fix las element */}
         <View style={{ flex: 1 }} />
       </View>
