@@ -47,7 +47,7 @@ export const ButtonDownloadOrderE = (props: ButtonDownloadOrderProps) => (
 export const OrderPDF = () => {
   const { order, customer } = useOrderDetails()
   const { toPDF, targetRef } = usePDF({
-    filename: `orden-${order?.folio}-${customer.name}.pdf`,
+    filename: `orden-${order?.folio}-${customer.name.split(' ').join('-')}.pdf`,
     page: {
       format: [120, 200],
       orientation: 'portrait',
@@ -56,8 +56,8 @@ export const OrderPDF = () => {
     canvas: {
       mimeType: 'image/png',
       qualityRatio: 1
-    },
-    method: 'open'
+    }
+    //   method: 'open'
   })
 
   return (
