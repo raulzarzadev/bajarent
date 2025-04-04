@@ -101,14 +101,15 @@ export const OrderPDF = () => {
   const { toPDF, targetRef } = usePDF({
     filename: `orden-${order?.folio}-${customer.name}.pdf`,
     page: {
-      format: [100, 60],
+      format: [120, 200],
       orientation: 'portrait',
-      margin: { top: 2, right: 2, bottom: 2, left: 2 }
+      margin: 2
     },
     canvas: {
       mimeType: 'image/png',
       qualityRatio: 1
-    }
+    },
+    method: 'open'
   })
 
   return (
@@ -116,9 +117,9 @@ export const OrderPDF = () => {
       <View
         ref={targetRef}
         style={{
-          padding: 20,
+          padding: 10,
           width: '100%',
-          maxWidth: 595, // Ancho estándar A4 en px (72dpi)
+          maxWidth: 'auto', // Ancho estándar A4 en px (72dpi)
           alignSelf: 'center',
           display: 'flex',
           flexDirection: 'column',
@@ -160,10 +161,16 @@ export const OrderPDF = () => {
           >
             Tipo: {dictionary(order.type)}
           </Text>
-          {!!order?.deliveryDate && (
+          {!!order?.repairingAt && (
+            <Text style={{ fontSize: 14, color: '#666', textAlign: 'center' }}>
+              Fecha de inicio:{' '}
+              {dateFormat(asDate(order?.repairingAt), 'EE dd/MMM/yy HH:mm')}
+            </Text>
+          )}
+          {!!order?.deliveredAt && (
             <Text style={{ fontSize: 14, color: '#666', textAlign: 'center' }}>
               Fecha de entrega:{' '}
-              {dateFormat(asDate(order?.deliveryDate), 'EE dd/MMM/yy HH:mm')}
+              {dateFormat(asDate(order?.deliveredAt), 'EE dd/MMM/yy HH:mm')}
             </Text>
           )}
         </View>
