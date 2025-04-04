@@ -1,10 +1,12 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Linking } from 'react-native'
 import Button from '../Button'
 import ErrorBoundary from '../ErrorBoundary'
 // Corregir la importación de RNHTMLtoPDF
 import { useOrderDetails } from '../../contexts/orderContext'
 import OrderType, { order_type } from '../../types/OrderType'
 import { usePDF } from 'react-to-pdf'
+import generatePDF from 'react-to-pdf'
+
 import StyledModal from '../StyledModal'
 import useModal from '../../hooks/useModal'
 import asDate, { dateFormat } from '../../libs/utils-date'
@@ -297,7 +299,40 @@ export const OrderPDF = () => {
         </View>
       </View>
 
-      <Button onPress={toPDF} label="Descargar PDF" fullWidth={true} />
+      <Button
+        onPress={toPDF}
+        label="Descargar PDF"
+        icon="download"
+        fullWidth={true}
+      />
+      <Button
+        onPress={() => {
+          const pdfBlob = generatePDF(targetRef, {
+            filename: `orden-${order?.folio}-${customer.name
+              .split(' ')
+              .join('-')}.pdf`,
+            page: {
+              format: [120, 200],
+              orientation: 'portrait',
+              margin: 2
+            },
+            canvas: {
+              mimeType: 'image/png',
+              qualityRatio: 1
+            },
+            method: 'save'
+
+            // Esto retorna un blob
+          }).then((res) => {
+            const pdfBlob = res.output('blob')
+            console.log({ pdfBlob })
+          })
+        }}
+        label="Enviar WS"
+        icon="whatsapp"
+        color="success"
+        fullWidth={true}
+      />
     </>
   )
 }

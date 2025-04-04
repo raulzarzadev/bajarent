@@ -61,12 +61,10 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   }, [personalWorks.length])
 
   useEffect(() => {
-    console.log({ sectionWorks })
     if (workType === 'sections' && sectionWorks.length) {
       const paymentsIs = sectionWorks
         .filter((work) => work.type === 'payment')
         .map((w) => w.details.paymentId)
-      console.log({ paymentsIs })
       ServicePayments.list(paymentsIs).then((payments) => {
         setSectionPayments(payments)
       })
