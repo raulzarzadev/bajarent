@@ -94,9 +94,11 @@ import { BsClipboardCheck } from 'react-icons/bs'
 import { BsClipboardPlus } from 'react-icons/bs'
 import { LuFolderCheck } from 'react-icons/lu'
 import { LuWarehouse } from 'react-icons/lu'
+import { FaRegFilePdf } from 'react-icons/fa6'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
+  filePDF: FaRegFilePdf,
   navigate: TbMapShare,
   folderCheck: LuFolderCheck,
   merge: IoIosGitMerge,

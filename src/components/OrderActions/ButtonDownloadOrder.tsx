@@ -2,7 +2,6 @@ import { View, Text, Image } from 'react-native'
 import Button from '../Button'
 import ErrorBoundary from '../ErrorBoundary'
 // Corregir la importación de RNHTMLtoPDF
-import { Alert, Share, Platform } from 'react-native'
 import { useOrderDetails } from '../../contexts/orderContext'
 import OrderType, { order_type } from '../../types/OrderType'
 import { usePDF } from 'react-to-pdf'
@@ -21,8 +20,8 @@ const ButtonDownloadOrder = (props?: ButtonDownloadOrderProps) => {
         size="small"
         fullWidth={true}
         variant="outline"
-        label="Descargar"
-        icon="download"
+        label="PDF"
+        icon="filePDF"
         onPress={async () => {
           modal.toggleOpen()
         }}
