@@ -16,6 +16,7 @@ import { useOrdersCtx } from './ordersContext'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useStore } from './storeContext'
 import { CustomerType } from '../state/features/costumers/customerType'
+import { ServiceCustomers } from '../firebase/ServiceCustomers'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -115,6 +116,15 @@ const OrderProvider = ({
     }
   }, [_orderId, consolidatedOrders])
 
+  const [customer, setCustomer] = useState<CustomerType>()
+  useEffect(() => {
+    if (order?.customerId) {
+      ServiceCustomers.get(order.customerId).then((customer) => {
+        setCustomer(customer)
+      })
+    }
+  }, [order?.customerId, customers])
+
   return (
     <OrderContext.Provider
       value={{
@@ -128,7 +138,7 @@ const OrderProvider = ({
         setCommentsCount,
         paymentsCount,
         commentsCount,
-        customer: customers.find((c) => c.id === order?.customerId)
+        customer: customer || customers.find((c) => c.id === order?.customerId)
       }}
     >
       {children}

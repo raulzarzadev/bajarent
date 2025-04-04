@@ -14,6 +14,7 @@ import InputTextStyled from '../InputTextStyled'
 import { useState } from 'react'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
 import TextInfo from '../TextInfo'
+import { ButtonDownloadOrderE } from './ButtonDownloadOrde'
 
 export type OrderCommonActionsType = {
   storeId: string
@@ -175,6 +176,9 @@ const OrderCommonActions = ({
           flexWrap: 'wrap'
         }}
       >
+        <View style={{ padding: 4, width: '50%' }}>
+          <ButtonDownloadOrderE order={order} />
+        </View>
         {buttons.map(
           (button, i) =>
             button && (
