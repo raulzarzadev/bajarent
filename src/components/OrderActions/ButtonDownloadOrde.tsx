@@ -224,6 +224,8 @@ export const OrderPDF = () => {
         {order.type === order_type.REPAIR && (
           <>
             <Text style={{ width: '100%' }}>Cotización:</Text>
+            {/*
+  //@ts-ignore  */}
             {order?.quotes?.map((item, index) => (
               <View
                 key={index}
