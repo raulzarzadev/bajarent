@@ -39,10 +39,11 @@ export default function ModalSendWhatsapp({
   const modal = useModal({ title: 'Enviar mensaje' })
   const { order, payments } = useOrderDetails()
   const { customer } = useCustomer()
+  const { store, categories } = useStore()
+  console.log({ order })
   const phone = whatsappPhone
 
   const invalidPhone = !phone || phone?.length < 10
-  const { store } = useStore()
   const item = order?.items?.[0]
   const FEE_PER_DAY = 100
   const getLateFee = ({
@@ -164,6 +165,13 @@ export default function ModalSendWhatsapp({
   const SOCIAL_MEDIA = `📲 Síguenos en nuestras redes sociales:
   ${SOCIALS || ''}`
 
+  const orderNote = order.note || ''
+
+  const ORDER_DETAILS = `
+  Folio: *${order?.folio}*${orderNote && `\nNota: ${orderNote}`}
+  Servicio: ${dictionary(order?.type)}
+  Status: ${dictionary(order?.status)}`
+
   const RENT_EXPIRE_DATE = `🚨 *ALERTA DE VENCIMIENTO* 
   \n${WELCOME}
   \n${ORDER_TYPE}
@@ -191,7 +199,10 @@ export default function ModalSendWhatsapp({
 
   const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
 
-  const QUOTE = `🔧 *Servicios:*
+  const QUOTE =
+    orderQuotes.length > 0
+      ? `
+  🔧 *Servicios:*
   ${orderQuotes
     .map((q) => `${q.description} *$${parseFloat(`${q.amount}`).toFixed(2)}* `)
     .join('\n')}
@@ -199,16 +210,26 @@ export default function ModalSendWhatsapp({
       .reduce((prev, curr) => prev + parseFloat(`${curr.amount}`), 0)
       .toFixed(2)}*
   `
+      : ''
 
   const ORDER_DATES = `Fechas
   \n${getReceiptDates(order)}`
-
+  const orderItemCategoryName =
+    categories?.find((cat) => cat?.id === order?.item?.categoryId)?.name || ''
+  const itemFailure =
+    order?.item?.failDescription ?? order?.failDescription ?? ''
+  const itemSerial = order?.item?.serial || order?.itemSerial || ''
+  const ORDER_ITEM_DETAILS = `
+  ℹ️ *Información del artículo*
+  🧸 Tipo: ${orderItemCategoryName}
+  🏷️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
+  ${itemSerial && `#️⃣ Serie: ${itemSerial}`}
+  ${itemFailure && `❕ Falla: ${itemFailure}`}
+`
   const REPAIR_QUOTE = `🧾 *COTIZACIÓN*
- 
-  \n🔧 *Información del aparato*
-  🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
-  #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
-  \n${QUOTE}
+  ${ORDER_DETAILS}
+  ${ORDER_ITEM_DETAILS}  
+  ${QUOTE}
   🗓️ Garantía 1 Mes
   
   \n${CONTACTS}
@@ -217,7 +238,7 @@ export default function ModalSendWhatsapp({
 
   const REPAIR_RECEIPT = `${RECEIPT_START}
   \n📆${ORDER_DATES}
-  \n🔧 *Información del aparato*
+  
   🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
   #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
   \n${QUOTE}
@@ -260,7 +281,7 @@ export default function ModalSendWhatsapp({
   \n${AGRADECIMIENTOS}
   `
 
-  const REPAIR_PICKED_UP = `
+  const REPAIR_PICKED_UP = `🚛 No 
   \n${WELCOME}
   \n${ORDER_TYPE}
   \n⬆️🔧 Se recogió para servicio el  📆${dFormat(order?.repairingAt)}
