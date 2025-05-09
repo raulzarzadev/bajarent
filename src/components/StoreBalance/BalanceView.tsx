@@ -99,10 +99,6 @@ const generateBalanceCSV = (
   const rentedItems = rentOrders.map((o) => o.items).flat()
   const unrentedItems = balance.items
 
-  console.log({
-    rentedItems,
-    unrentedItems
-  })
   const {
     bonus,
     expense,
