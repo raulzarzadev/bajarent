@@ -103,10 +103,13 @@ const generateBalanceCSV = (
   const rentedItemsCount = rentedItems.length
   const unrentedItemsCount = unrentedItems.length
   const rentedItemsEco = rentedItems
-    .map((i) => i.itemEco)
+    .map((i) => i?.itemEco || '0')
     .sort((a, b) => parseInt(b) - parseInt(a))
     .join(',')
-  const unrentedItemsEco = unrentedItems.map((i) => i.itemEco).join(',')
+  const unrentedItemsEco = unrentedItems
+    .map((i) => i?.itemEco || '0')
+    .sort((a, b) => parseInt(b) - parseInt(a))
+    .join(',')
 
   const {
     bonus,
