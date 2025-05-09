@@ -165,7 +165,7 @@ export default function ModalSendWhatsapp({
   const SOCIAL_MEDIA = `📲 Síguenos en nuestras redes sociales:
   ${SOCIALS || ''}`
 
-  const orderNote = order.note || ''
+  const orderNote = order?.note || ''
 
   const ORDER_DETAILS = `
   Folio: *${order?.folio}*${orderNote && `\nNota: ${orderNote}`}
