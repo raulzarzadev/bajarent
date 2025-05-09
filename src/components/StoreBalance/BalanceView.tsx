@@ -96,6 +96,13 @@ const generateBalanceCSV = (
   )
   const rentPayments = rentOrders.map((o) => o.payments).flat()
 
+  const rentedItems = rentOrders.map((o) => o.items).flat()
+  const unrentedItems = balance.items
+
+  console.log({
+    rentedItems,
+    unrentedItems
+  })
   const {
     bonus,
     expense,
@@ -122,6 +129,11 @@ const generateBalanceCSV = (
   csv += `Generado el ${JUM} ${formatDate(balance.createdAt)} ${JUM}`
   // Sección General
   csv += `RESUMEN GENERAL${JUM}`
+  csv += `${JUM}ITEMS${JUM}`
+  csv += `En renta${JUM}${rentedItems.length}${JUM}`
+  csv += `Disponibles${JUM}${unrentedItems.length}${JUM}`
+  csv += `Total${JUM}${rentedItems.length + unrentedItems.length}${JUM}`
+  csv += `${JUM}CAJA${JUM}`
   csv += `Ventas${JUM}${incomes}${JUM}`
   csv += `Efectivo${JUM}${cash}${JUM}`
   csv += `Tarjeta${JUM}${card}${JUM}`
