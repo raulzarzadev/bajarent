@@ -78,6 +78,7 @@ export const BalanceViewE = (props: BalanceViewProps) => (
   </ErrorBoundary>
 )
 
+//#region generateBalanceCSV
 const generateBalanceCSV = (
   balance: StoreBalanceType,
   {
@@ -99,6 +100,14 @@ const generateBalanceCSV = (
   const rentedItems = rentOrders.map((o) => o.items).flat()
   const unrentedItems = balance.items
 
+  const rentedItemsCount = rentedItems.length
+  const unrentedItemsCount = unrentedItems.length
+  const rentedItemsEco = rentedItems
+    .map((i) => i.itemEco)
+    .sort((a, b) => parseInt(b) - parseInt(a))
+    .join(',')
+  const unrentedItemsEco = unrentedItems.map((i) => i.itemEco).join(',')
+
   const {
     bonus,
     expense,
@@ -115,7 +124,7 @@ const generateBalanceCSV = (
 
   // Definir tabulación como separador
   const SPL = '\t' // SPLIT CELLS
-  const JUM = '\n' // SALTO DE LINEA
+  const JUM = `\n'` // SALTO DE LINEA
 
   // Encabezado con separación por tabulaciones
   let csv = ''
@@ -123,12 +132,9 @@ const generateBalanceCSV = (
     balance.toDate
   )}${JUM}`
   csv += `Generado el ${JUM} ${formatDate(balance.createdAt)} ${JUM}`
-  // Sección General
+  //#region  General
   csv += `RESUMEN GENERAL${JUM}`
-  csv += `${JUM}ITEMS${JUM}`
-  csv += `En renta${JUM}${rentedItems.length}${JUM}`
-  csv += `Disponibles${JUM}${unrentedItems.length}${JUM}`
-  csv += `Total${JUM}${rentedItems.length + unrentedItems.length}${JUM}`
+
   csv += `${JUM}CAJA${JUM}`
   csv += `Ventas${JUM}${incomes}${JUM}`
   csv += `Efectivo${JUM}${cash}${JUM}`
@@ -142,7 +148,7 @@ const generateBalanceCSV = (
   csv += `Faltante${JUM}${missing}${JUM}`
   csv += `Cancelados${JUM}${canceled}${JUM}`
 
-  // Sección Rentas
+  //#region Rentas
   const rentAmounts = payments_amount(rentPayments)
   csv += `${JUM}RESUMEN RENTAS${JUM}`
   // Pagos de renta
@@ -166,6 +172,7 @@ const generateBalanceCSV = (
     acc[area].push(order)
     return acc
   }, {})
+  //#region areas
   Object.keys(rentOrdersByArea).forEach((area) => {
     const orders = rentOrdersByArea[area]
     const payments = orders.map((o) => o.payments).flat()
@@ -188,5 +195,10 @@ const generateBalanceCSV = (
     csv += `Faltante${JUM}${amounts.missing}${JUM}`
     csv += `Cancelados${JUM}${amounts.canceled}${JUM}`
   })
+  //#region items
+  csv += `${JUM}ITEMS${JUM}`
+  csv += `En renta${JUM}${rentedItemsCount}${JUM}${rentedItemsEco}${JUM}`
+  csv += `Disponibles${JUM}${unrentedItemsCount}${JUM}${unrentedItemsEco}${JUM}`
+  csv += `Total${JUM}${rentedItems.length + unrentedItems.length}${JUM}`
   return csv
 }
