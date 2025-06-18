@@ -20,6 +20,7 @@ const BottomAppBar = () => {
   const { store } = useStore()
   const { permissions, employee } = useEmployee()
   const viewWorkshop =
+    employee?.roles?.technician ||
     employee?.rol === 'technician' ||
     permissions?.isAdmin ||
     permissions?.isOwner
