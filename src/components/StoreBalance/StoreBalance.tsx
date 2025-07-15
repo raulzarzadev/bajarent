@@ -21,10 +21,11 @@ const StoreBalance = () => {
     const localStorageDate = localStorage.getItem('storeBalanceDate')
     if (localStorageDate) {
       setDate(new Date(localStorageDate))
+      handleSetBalanceDate(new Date(localStorageDate))
     } else {
       const date = new Date()
       localStorage.setItem('storeBalanceDate', date.toISOString())
-      setDate(new Date())
+      handleSetBalanceDate(date)
     }
   }, [])
   console.log({ date })
