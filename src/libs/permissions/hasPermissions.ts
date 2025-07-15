@@ -4,7 +4,6 @@ export const hasPermissions = (
   action: StaffPermissionsKeys,
   staffPermissions: StaffPermissions
 ) => {
-  console.log({ staffPermissions })
   const permissions = staffPermissions || {}
 
   // Handle nested properties like "items.canAssign"
@@ -20,5 +19,5 @@ export const hasPermissions = (
     return Boolean(current)
   }
 
-  return permissions[`$${action}`] || false
+  return permissions[action] || false
 }
