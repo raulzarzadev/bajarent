@@ -22,6 +22,7 @@ const StoreBalance = () => {
     if (localStorageDate) {
       setDate(new Date(localStorageDate))
     } else {
+      const date = new Date()
       localStorage.setItem('storeBalanceDate', date.toISOString())
       setDate(new Date())
     }
@@ -47,7 +48,6 @@ const StoreBalance = () => {
   }
 
   const handleSetBalanceDate = (date: Date) => {
-    localStorage.setItem('storeBalanceDate', date.toISOString())
     ServiceBalances.getLastInDate({
       storeId,
       date,
