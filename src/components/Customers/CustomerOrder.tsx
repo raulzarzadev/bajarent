@@ -19,6 +19,7 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
   const { order } = useOrderDetails()
   const { data: customers, loading } = useCustomers()
   const [customer, setCustomer] = useState<CustomerType | undefined>()
+
   useEffect(() => {
     const customerId = props?.customerId || order?.customerId
     const customer = customers?.find((c) => c.id === customerId)
@@ -35,6 +36,7 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
         })
     }
   }, [customers, order])
+
   if (order?.excludeCustomer)
     return (
       <View>
@@ -50,6 +52,7 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
         {order?.fullName},{order?.neighborhood},{order?.address},{' '}
         {order?.references}
       </Text>
+
       {customer ? (
         <CustomerCardE customer={customer} canEdit />
       ) : (

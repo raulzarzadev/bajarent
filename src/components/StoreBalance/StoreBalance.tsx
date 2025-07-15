@@ -13,7 +13,7 @@ import { BalanceViewE } from './BalanceView'
 import Loading from '../Loading'
 
 const StoreBalance = () => {
-  const { storeId, currentBalance } = useStore()
+  const { storeId } = useStore()
   const { navigate } = useNavigation()
   const [balance, setBalance] = useState<StoreBalanceType>()
   const [date, setDate] = useState<Date>()
@@ -28,7 +28,6 @@ const StoreBalance = () => {
       handleSetBalanceDate(date)
     }
   }, [])
-  console.log({ date })
   const [loading, setLoading] = useState(false)
 
   const handleUpdateBalance = async () => {

@@ -15,6 +15,7 @@ import { useState } from 'react'
 import ButtonSetOrderLocation from './ButtonSetOrderLocation'
 import TextInfo from '../TextInfo'
 import { ButtonDownloadOrderE } from './ButtonDownloadOrder'
+import { ButtonChangeOrderCustomer } from '../Customers/ButtonChangeOrderCustomer'
 
 export type OrderCommonActionsType = {
   storeId: string
@@ -207,6 +208,13 @@ const OrderCommonActions = ({
         )}
         <View style={{ padding: 4, width: '50%' }}>
           <ButtonDownloadOrderE order={order} />
+        </View>
+
+        <View style={{ padding: 4, width: '50%' }}>
+          <ButtonChangeOrderCustomer
+            orderId={order?.id}
+            customerId={order.customerId}
+          />
         </View>
         {/* To fix las element */}
         <View style={{ flex: 1 }} />

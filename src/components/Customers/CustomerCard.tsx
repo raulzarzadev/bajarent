@@ -14,6 +14,7 @@ import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
 import { getCoordinates } from '../../libs/maps'
 import { useEffect, useState } from 'react'
+
 const CustomerCard = (props?: CustomerCardProps) => {
   const navigation = useNavigation()
   const { update, remove } = useCustomers()
