@@ -12,15 +12,17 @@ const HeaderDate = ({
   onChangeDate,
   showTime = false,
   documentDate,
-  debounce = 0
+  debounce = 0,
+  defaultDate = new Date()
 }: {
   label?: string
   onChangeDate: (date: Date) => void
   showTime?: boolean
   documentDate?: Date
   debounce?: number
+  defaultDate?: Date
 }) => {
-  const [date, setDate] = React.useState(new Date())
+  const [date, setDate] = React.useState(defaultDate)
 
   const handleMoveDate = (days = 0) => {
     handleDebounce()

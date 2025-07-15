@@ -63,10 +63,8 @@ const ScreenStore = (props) => {
   const CheckedTabCashbox = CheckedTab(TabCashbox)
   const CheckedTabStaff = CheckedTab(TabStaff)
   const CheckedTabItems = CheckedTab(TabItems)
-  const CheckedTabMap = CheckedTab(StoreTabMap)
   const CheckedTabClients = CheckedTab(TabClients)
   const CheckedTabOrders = CheckedTab(TabOrders)
-  const CheckedStoreCounts = CheckedTab(StoreCounts)
   const CheckedStoreBalance = CheckedTab(StoreBalanceE)
 
   if (store === undefined) return <Loading />

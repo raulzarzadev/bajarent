@@ -10,17 +10,23 @@ import { isToday } from 'date-fns'
 import ModalCloseOperations from '../../ModalCloseOperations'
 import { useNavigation } from '@react-navigation/native'
 import { BalanceViewE } from './BalanceView'
+import Loading from '../Loading'
 
 const StoreBalance = () => {
-  const { storeId, currentBalance, store } = useStore()
+  const { storeId, currentBalance } = useStore()
   const { navigate } = useNavigation()
   const [balance, setBalance] = useState<StoreBalanceType>()
-  const [date, setDate] = useState(new Date())
-
+  const [date, setDate] = useState<Date>()
   useEffect(() => {
-    setBalance(currentBalance)
+    const localStorageDate = localStorage.getItem('storeBalanceDate')
+    if (localStorageDate) {
+      setDate(new Date(localStorageDate))
+    } else {
+      localStorage.setItem('storeBalanceDate', date.toISOString())
+      setDate(new Date())
+    }
   }, [])
-
+  console.log({ date })
   const [loading, setLoading] = useState(false)
 
   const handleUpdateBalance = async () => {
@@ -41,6 +47,7 @@ const StoreBalance = () => {
   }
 
   const handleSetBalanceDate = (date: Date) => {
+    localStorage.setItem('storeBalanceDate', date.toISOString())
     ServiceBalances.getLastInDate({
       storeId,
       date,
@@ -50,13 +57,15 @@ const StoreBalance = () => {
     })
   }
 
+  if (!date) return <Loading />
+
   return (
     <View style={{ marginBottom: 44 }}>
       <HeaderDate
+        defaultDate={date}
         debounce={400}
         onChangeDate={(date) => {
           handleSetBalanceDate(date)
-          setDate(date)
         }}
       />
       <View
