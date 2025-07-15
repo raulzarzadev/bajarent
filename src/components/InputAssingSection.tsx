@@ -1,8 +1,8 @@
 import { View } from 'react-native'
 import React, { useEffect } from 'react'
 import ButtonConfirm from './ButtonConfirm'
-import InputRadios from './InputRadios'
 import { useStore } from '../contexts/storeContext'
+import InputRadios from './Inputs/InputRadios'
 
 const InputAssignSection = ({
   currentSection,
@@ -42,7 +42,7 @@ const InputAssignSection = ({
     <ButtonConfirm
       openSize="small"
       openFullWidth
-      modalTitle="Asingar artículo"
+      modalTitle="Asignar artículo"
       openDisabled={disabled}
       openLabel={assignedToSectionName || 'Asignar'}
       icon="swap"
@@ -59,10 +59,10 @@ const InputAssignSection = ({
       <InputRadios
         layout="row"
         label="Selecciona un area"
-        setValue={(sectionId) => {
+        onChange={(sectionId) => {
           setSectionId(sectionId)
         }}
-        containerStyle={{ marginVertical: 6 }}
+        stylesOption={{ marginVertical: 8, marginRight: 8 }}
         value={sectionId}
         options={[
           { label: 'Sin', value: null },
