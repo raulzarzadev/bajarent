@@ -31,6 +31,8 @@ import { ModalPaymentSale } from './ModalPaymentSale'
 import { CustomerOrderE } from './Customers/CustomerOrder'
 import FormikInputSearch from './FormikInputSearch'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { CustomerCardE } from './Customers/CustomerCard'
+import { CustomerType } from '../state/features/costumers/customerType'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -430,6 +432,9 @@ const FormFieldsA = ({
   const { store } = useStore()
   const { data: customers } = useCustomers()
   const { employee } = useEmployee()
+
+  // Formatear clientes para el search
+  const formattedCustomers = customers.map(formatCustomerForSearch)
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
@@ -520,10 +525,10 @@ const FormFieldsA = ({
 
     fullName: (
       <FormikInputSearch
-        suggestions={customers}
-        labelKey="name"
+        suggestions={formattedCustomers}
+        labelKey="contactsText"
         name={'fullName'}
-        placeholder="Nombre completo"
+        placeholder="Nombre completo y contactos"
         //helperText={!values.fullName && 'Nombre es requerido'}
       />
     ),
@@ -654,14 +659,56 @@ const FormFieldsA = ({
       <FormikCheckbox name="startRepair" label="Comenzar reparación" />
     )
   }
+  const customerFields: FormOrderFields[] = [
+    'fullName',
+    'phone',
+    'address',
+    'neighborhood',
+    'location',
+    'references',
+    'imageID',
+    'imageHouse',
+    'signature'
+  ]
+
+  const customerId = values.customerId || null
 
   return (
     <View>
-      {fields.map((field, i) => (
-        <View key={i} style={[styles.item]}>
-          {inputFields[field]}
+      {customerId && (
+        <View>
+          <CustomerCardE
+            customer={customers.find((c) => c.id === customerId)}
+          />
+          <Button
+            size="small"
+            fullWidth={false}
+            label="Omitir cliente"
+            icon="sub"
+            buttonStyles={{ margin: 'auto', marginVertical: 8 }}
+            onPress={() => {
+              setValues({ ...values, customerId: null })
+            }}
+          />
+          <Text style={[gStyles.helper, gStyles.tCenter, { opacity: 0.7 }]}>
+            * Al omitir cliente se borraran los datos y se podra crear una orden
+            con un cliente nuevo.
+          </Text>
         </View>
-      ))}
+      )}
+      {fields
+        .filter((field) => {
+          // if customerId is set omit customer fields
+          if (customerId) {
+            return !customerFields.includes(field)
+          }
+          return true
+        })
+        .map((field, i) => (
+          <View key={i} style={[styles.item]}>
+            {inputFields[field]}
+          </View>
+        ))}
     </View>
   )
 }
@@ -727,4 +774,36 @@ export const getOrderFields = (fields: OrderFields): FormOrderFields[] => {
   const removeDuplicates = [...new Set(res)]
   //console.log({ res })
   return removeDuplicates
+}
+
+export const formatCustomerForSearch = (customer: CustomerType) => {
+  // Formatear contactos para mostrar como {contacto1: valor, contacto2: valor}
+  let formattedContacts = {}
+  let contactsText = ''
+
+  if (customer.contacts && typeof customer.contacts === 'object') {
+    // Si contacts es un objeto con propiedades
+    const contactEntries = Object.entries(customer.contacts)
+    formattedContacts = contactEntries.reduce((acc, [key, contact], index) => {
+      const contactKey =
+        contact.label === 'Default'
+          ? `contacto${index + 1}`
+          : contact.label.toLowerCase().replace(/\s+/g, '')
+      acc[contactKey] = contact.value
+      return acc
+    }, {} as Record<string, string>)
+
+    // Crear una representación de texto de los contactos para búsqueda
+    contactsText = Object.entries(formattedContacts)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(', ')
+  }
+
+  return {
+    ...customer,
+    // Crear una representación de texto de los contactos para búsqueda
+    contactsText: `${customer.name} - ${contactsText}`,
+    // Mantener los contactos formateados para uso posterior
+    ...formattedContacts
+  }
 }

@@ -40,7 +40,6 @@ export default function ModalSendWhatsapp({
   const { order, payments } = useOrderDetails()
   const { customer } = useCustomer()
   const { store, categories } = useStore()
-  console.log({ order })
   const phone = whatsappPhone
 
   const invalidPhone = !phone || phone?.length < 10
