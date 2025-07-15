@@ -1,14 +1,15 @@
-import { View } from 'react-native'
 import React, { useEffect } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import { useStore } from '../contexts/storeContext'
 import InputRadios from './Inputs/InputRadios'
 
 const InputAssignSection = ({
+  modalTitle = 'Cambiar de area',
   currentSection,
   disabled,
   setNewSection
 }: {
+  modalTitle?: string
   currentSection?: string | null
   disabled?: boolean
   setNewSection?: ({
@@ -42,7 +43,7 @@ const InputAssignSection = ({
     <ButtonConfirm
       openSize="small"
       openFullWidth
-      modalTitle="Asignar artículo"
+      modalTitle={modalTitle}
       openDisabled={disabled}
       openLabel={assignedToSectionName || 'Asignar'}
       icon="swap"
