@@ -44,6 +44,7 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
   inputStyle?: ViewStyle
   onPressLeftIcon?: (action?: IconsType) => void
   leftIcon?: IconsType
+  ref?: React.RefObject<TextInput>
 }
 type IconsType = 'loading' | 'search' | 'close' | 'none'
 const InputTextStyled = ({
@@ -60,6 +61,7 @@ const InputTextStyled = ({
   inputStyle,
   onPressLeftIcon,
   leftIcon,
+  ref,
   ...props
 }: InputTextProps): JSX.Element => {
   const [value, setValue] = useState<string | number>()
@@ -80,6 +82,7 @@ const InputTextStyled = ({
       >
         <TextInput
           {...props}
+          ref={ref}
           style={[baseStyle.input, inputStyle, { flex: 1, maxWidth: '100%' }]}
           editable={!disabled}
           value={String(value || '')}

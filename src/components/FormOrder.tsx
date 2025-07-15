@@ -29,6 +29,8 @@ import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import { InputDateE } from './InputDate'
 import { ModalPaymentSale } from './ModalPaymentSale'
 import { CustomerOrderE } from './Customers/CustomerOrder'
+import FormikInputSearch from './FormikInputSearch'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -426,6 +428,7 @@ const FormFieldsA = ({
   setLoading
 }: FormFieldsProps) => {
   const { store } = useStore()
+  const { data: customers } = useCustomers()
   const { employee } = useEmployee()
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
@@ -516,7 +519,9 @@ const FormFieldsA = ({
     ),
 
     fullName: (
-      <InputValueFormik
+      <FormikInputSearch
+        suggestions={customers}
+        labelKey="name"
         name={'fullName'}
         placeholder="Nombre completo"
         //helperText={!values.fullName && 'Nombre es requerido'}

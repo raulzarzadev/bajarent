@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   View,
   TextInput,
@@ -8,8 +8,10 @@ import {
   StyleSheet,
   Keyboard
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import InputTextStyled from '../InputTextStyled'
 
-type InputSearchProps<T extends { id: string | number }> = {
+export type InputSearchProps<T extends { id: string | number }> = {
   placeholder?: string
   suggestions?: T[]
   labelKey: keyof T
@@ -48,6 +50,14 @@ const InputSearch = <T extends { id: string | number }>({
     }
   }, [value, suggestions, maxSuggestions, labelKey])
 
+  const handleClearInput = () => {
+    setValue('')
+    setShowSuggestions(false)
+    setHoveredItem(null)
+    onChange?.('')
+    inputRef.current?.focus()
+  }
+
   const handleInputChange = (newValue: string) => {
     setValue(newValue)
     onChange?.(newValue)
@@ -81,22 +91,36 @@ const InputSearch = <T extends { id: string | number }>({
   }
 
   return (
-    <View style={[styles.container, style]}>
-      <TextInput
-        ref={inputRef}
-        value={value}
-        onChangeText={handleInputChange}
-        onFocus={() => value.trim() && setShowSuggestions(true)}
-        onBlur={() =>
-          setTimeout(() => {
-            setShowSuggestions(false)
-            setHoveredItem(null)
-          }, 200)
-        }
-        placeholder={placeholder}
-        style={styles.input}
-        placeholderTextColor="#9CA3AF"
-      />
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={value.trim() ? handleClearInput : undefined}
+          activeOpacity={value.trim() ? 0.7 : 1}
+        >
+          <Ionicons
+            name={value.trim() ? 'close' : 'search'}
+            size={20}
+            color={value.trim() ? '#6B7280' : '#9CA3AF'}
+          />
+        </TouchableOpacity>
+        <InputTextStyled
+          ref={inputRef}
+          value={value}
+          onChangeText={handleInputChange}
+          onFocus={() => value.trim() && setShowSuggestions(true)}
+          onBlur={() =>
+            setTimeout(() => {
+              setShowSuggestions(false)
+              setHoveredItem(null)
+            }, 200)
+          }
+          placeholder={placeholder}
+          placeholderTextColor="#9CA3AF"
+          style={styles.inputWithIcon}
+          containerStyle={{ flex: 1 }}
+        />
+      </View>
 
       {showSuggestions && filteredSuggestions.length > 0 && (
         <View style={styles.suggestionsContainer}>
@@ -118,6 +142,20 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     zIndex: 1000
+  },
+  inputContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  iconContainer: {
+    position: 'absolute',
+    left: 12,
+    zIndex: 1,
+    padding: 2
+  },
+  inputWithIcon: {
+    paddingLeft: 40
   },
   input: {
     backgroundColor: '#FFFFFF',
