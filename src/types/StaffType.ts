@@ -141,7 +141,8 @@ export enum permissions_items {
   canEdit,
   canDelete,
   canViewAllItems,
-  canViewMyItems
+  canViewMyItems,
+  canAssign
 }
 
 export type PermissionsOrder = Record<keyof typeof permissions_orders, boolean>
@@ -164,6 +165,13 @@ export type StaffPermissions = {
   items?: Partial<PermissionsItems>
   customers?: Partial<PermissionsCustomers>
 }
+export type StaffPermissionsKeys =
+  | 'isOwner'
+  | 'isAdmin'
+  | `order.${keyof typeof permissions_orders}`
+  | `store.${keyof typeof permissions_store}`
+  | `items.${keyof typeof permissions_items}`
+  | `customers.${keyof typeof permissions_customers}`
 
 export const staffPermissions = {
   isOwner: 'isOwner',

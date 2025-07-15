@@ -141,7 +141,6 @@ const ModalAssignOrders = ({ ordersIds }: { ordersIds: string[] }) => {
         setNewSection={async ({ sectionId, sectionName }) => {
           await handleAssignOrders({ sectionId, sectionName, ordersIds })
         }}
-        disabled={false}
       />
     </View>
   )

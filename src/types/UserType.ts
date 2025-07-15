@@ -11,6 +11,9 @@ export type UserBase = {
   permissions?: UserPermissions
 }
 
+/**
+ * @deprecated Use Staff permissions instead
+ */
 export type UserPermissions = {
   orders?: {
     canCreate?: boolean

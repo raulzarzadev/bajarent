@@ -25,6 +25,7 @@ import { SquareItem } from './CardItem'
 import ModalFixItem from './ModalFixItem'
 import InputAssignSection from './InputAssingSection'
 import { useEmployee } from '../contexts/employeeContext'
+import { hasPermissions } from '../libs/permissions/hasPermissions'
 
 type Actions =
   | 'details'
@@ -92,11 +93,12 @@ const ItemActions = ({
 
   const canEditItem = permissions.isAdmin || permissions.items.canEdit
   const canDeleteItem = permissions.isAdmin || permissions.items.canDelete
-
+  const canAssignItem = hasPermissions('items.canAssign', permissions)
+  console.log({ canAssignItem })
   const retiredItem = item?.status === 'retired'
   const rentedItem = item?.status === 'rented'
   const disabledFix = item?.status === 'retired'
-  const disabledAssign = item?.status === 'retired'
+  const disabledAssign = item?.status === 'retired' || !canAssignItem
   const disabledDelete = item?.status === 'retired'
   const disabledEdit = item?.status === 'retired'
   const disabledHistory = item?.status === 'retired'
