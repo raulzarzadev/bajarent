@@ -7,7 +7,6 @@ import ScreenComponents from './ScreenComponents'
 import Icon, { IconName } from './Icon'
 import MyStaffLabel from './MyStaffLabel'
 import { useEmployee } from '../contexts/employeeContext'
-import StackConsolidated from './StackConsolidated'
 import StackItems from './StackItems'
 import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
@@ -82,18 +81,6 @@ const BottomAppBar = () => {
           //* hide the tab bar button on the store screen
           tabBarButton: showStoreButton ? undefined : () => null
         }}
-      />
-
-      <Tab.Screen
-        name="StackConsolidated"
-        component={StackConsolidated}
-        options={({ route }) => ({
-          headerShown: false,
-          title: 'Consolidadas',
-          tabBarButton: showConsolidated ? undefined : () => null
-          // tabBarButton:
-          //   !canSeeOrders || !isAuthenticated ? () => null : undefined
-        })}
       />
 
       <Tab.Screen

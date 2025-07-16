@@ -6,6 +6,10 @@ import StackItems from './StackItems'
 import StackOrders from './StackOrders'
 
 const Stack = createStackNavigator()
+/**
+ *
+ * @deprecated This stack is deprecated and will be removed in future versions. Use StackOrders instead.
+ */
 function StackConsolidated() {
   return (
     <Stack.Navigator
