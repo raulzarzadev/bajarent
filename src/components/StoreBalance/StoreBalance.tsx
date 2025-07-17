@@ -6,28 +6,33 @@ import { useEffect, useState } from 'react'
 import ErrorBoundary from '../ErrorBoundary'
 import HeaderDate from '../HeaderDate'
 import { StoreBalanceType } from '../../types/StoreBalance'
-import { isToday } from 'date-fns'
+import { isToday, toDate } from 'date-fns'
 import ModalCloseOperations from '../../ModalCloseOperations'
 import { useNavigation } from '@react-navigation/native'
 import { BalanceViewE } from './BalanceView'
 import Loading from '../Loading'
+import { getItem, setItem } from '../../libs/storage'
 
 const StoreBalance = () => {
   const { storeId } = useStore()
   const { navigate } = useNavigation()
   const [balance, setBalance] = useState<StoreBalanceType>()
   const [date, setDate] = useState<Date>()
+
   useEffect(() => {
-    const localStorageDate = localStorage.getItem('storeBalanceDate')
-    if (localStorageDate) {
-      setDate(new Date(localStorageDate))
-      handleSetBalanceDate(new Date(localStorageDate))
-    } else {
-      const date = new Date()
-      localStorage.setItem('storeBalanceDate', date.toISOString())
-      handleSetBalanceDate(date)
-    }
+    const today = new Date()
+    getItem('storeBalanceDate').then((storeDate) => {
+      if (storeDate) {
+        const storedDate = toDate(storeDate)
+        setDate(storedDate)
+        handleSetBalanceDate(storedDate)
+      } else {
+        setDate(today)
+        handleSetBalanceDate(today)
+      }
+    })
   }, [])
+
   const [loading, setLoading] = useState(false)
 
   const handleUpdateBalance = async () => {
@@ -48,6 +53,8 @@ const StoreBalance = () => {
   }
 
   const handleSetBalanceDate = (date: Date) => {
+    setDate(date)
+    setItem('storeBalanceDate', date.toISOString())
     ServiceBalances.getLastInDate({
       storeId,
       date,
