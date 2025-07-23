@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useCustomers } from './features/costumers/costumersSlice'
-import { useCurrentWork } from './features/currentWork/currentWorkSlice'
+import { useCurrentWorkFetch } from './features/currentWork/currentWorkSlice'
 import { useOrdersCtx } from '../contexts/ordersContext'
 
 export const ReduxInitializer = ({ children }) => {
@@ -8,7 +8,7 @@ export const ReduxInitializer = ({ children }) => {
   //* REDUX WILL BE CHARGED IN THIS CONTEXT
   //******************************
   //->>>
-  useCurrentWork()
+  useCurrentWorkFetch()
 
   //** ---- FETCHING CUSTOMERS JUST ONCE----- */
   const { fetch: fetchCustomers } = useCustomers()

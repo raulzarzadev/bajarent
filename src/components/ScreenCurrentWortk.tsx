@@ -4,7 +4,7 @@ import ErrorBoundary from './ErrorBoundary'
 
 export const ScreenCurrentWork = () => {
   return (
-    <View>
+    <View style={{ marginTop: 12 }}>
       <ViewCurrentWorkE />
     </View>
   )

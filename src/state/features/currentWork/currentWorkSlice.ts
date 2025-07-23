@@ -63,13 +63,10 @@ export const selectCurrentWork = (state: { currentWork: CurrentWorkState }) =>
 
 export const currentWorkReducer = currentWorkSlice.reducer
 
-export const useCurrentWork = () => {
-  const dispatch = useDispatch()
-
+export const useCurrentWorkFetch = () => {
   const { storeId } = useStore()
-  const { user } = useAuth()
-  const currentWork = useSelector(selectCurrentWork)
 
+  const { fetch, update } = useCurrentWork()
   useEffect(() => {
     if (storeId) {
       fetch()
@@ -77,6 +74,14 @@ export const useCurrentWork = () => {
       update(null)
     }
   }, [storeId])
+}
+
+export const useCurrentWork = () => {
+  const dispatch = useDispatch()
+
+  const { storeId } = useStore()
+  const { user } = useAuth()
+  const currentWork = useSelector(selectCurrentWork)
 
   const update = (data) =>
     dispatch(fetchCurrentWorkSuccess(convertTimestamps(data, { to: 'string' })))

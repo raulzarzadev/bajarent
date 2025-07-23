@@ -1,5 +1,4 @@
 import { View } from 'react-native'
-import React from 'react'
 import StyledModal from '../StyledModal'
 import { ReturnModal } from '../../hooks/useModal'
 import Button from '../Button'
