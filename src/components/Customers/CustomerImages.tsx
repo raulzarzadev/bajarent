@@ -36,11 +36,6 @@ const CustomerImages = (props?: CustomerImagesProps) => {
     update(customerId, { [`images.${imageId}.deletedAt`]: new Date() })
   }
 
-  const handleUpdateImages = async (values: ImageDescriptionType) => {
-    update(customerId, {
-      [`images.${values.id}`]: values
-    })
-  }
   const customerImages = Object.entries(images || customerPropImages || {})
     .reduce((acc, [id, image]) => {
       if (!image?.deletedAt) acc.push({ ...image, id })

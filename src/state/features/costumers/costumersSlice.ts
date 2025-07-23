@@ -121,8 +121,8 @@ export const useCustomers = () => {
   const update = async (id: string, changes: Partial<CustomerType>) => {
     return await dispatch(
       updateCustomerThunk({
-        customer: changes,
-        customerId: id
+        customerId: id,
+        customer: changes
       })
     )
   }

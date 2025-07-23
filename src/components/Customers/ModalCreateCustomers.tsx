@@ -29,7 +29,6 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
   const [disabled, setDisabled] = useState(false)
   const [progress, setProgress] = useState(0)
   const { storeId } = useStore()
-  // const { create: createCustomer } = useCustomers()
   const [storeCustomers, setStoreCustomers] = useState<Partial<CustomerType>[]>(
     []
   )

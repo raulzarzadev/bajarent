@@ -17,7 +17,7 @@ import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 
 const CustomerOrder = (props?: CustomerOrderProps) => {
   const { order } = useOrderDetails()
-  const { data: customers, loading } = useCustomers()
+  const { data: customers } = useCustomers()
   const [customer, setCustomer] = useState<CustomerType | undefined>()
 
   useEffect(() => {
