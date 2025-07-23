@@ -26,10 +26,9 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
     setWorkType(workType === 'personal' ? 'sections' : 'personal')
   }
   const [personalPayments, setPersonalPayments] = useState([])
-  const [allPayments, setAllPayments] = useState([])
 
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
-  const [sectionPayments, setSectionPayments] = useState([])
+  const [selectedSectionPayment, setSelectedSectionPayments] = useState([])
 
   useEffect(() => {
     if (currentWork) {
@@ -53,12 +52,6 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
       ServicePayments.list(paymentsIs).then((payments) => {
         setPersonalPayments(payments)
       })
-      const allPaymentsIds = Object.values(currentWork.updates || {})
-        .filter((update) => update.type === 'payment')
-        .map((update) => update.details.paymentId)
-      ServicePayments.list(allPaymentsIds).then((payments) => {
-        setAllPayments(payments)
-      })
     }
   }, [personalWorks.length])
 
@@ -68,7 +61,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         .filter((work) => work.type === 'payment')
         .map((w) => w.details.paymentId)
       ServicePayments.list(paymentsIs).then((payments) => {
-        setSectionPayments(payments)
+        setSelectedSectionPayments(payments)
       })
     }
   }, [sectionWorks.length, workType])
@@ -78,7 +71,12 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
   const handleFilterBySection = ({ sectionId }: { sectionId: string }) => {
     if (selectedSection === sectionId) {
       setSelectedSection(null)
-      setSectionPayments(allPayments)
+      const paymentsIs = sectionWorks
+        .filter((work) => work.type === 'payment')
+        .map((w) => w.details.paymentId)
+      ServicePayments.list(paymentsIs).then((payments) => {
+        setSelectedSectionPayments(payments)
+      })
     } else {
       setSelectedSection(sectionId)
       const sectionFilteredWorks = sectionWorks.filter(
@@ -88,10 +86,11 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         .filter((work) => work.type === 'payment')
         .map((w) => w.details.paymentId)
       ServicePayments.list(paymentsIs).then((payments) => {
-        setSectionPayments(payments)
+        setSelectedSectionPayments(payments)
       })
     }
   }
+  console.log({ selectedSectionPayment })
 
   return (
     <View>
@@ -149,7 +148,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
               }}
               selectedSection={selectedSection}
             />
-            <BalanceAmountsE payments={sectionPayments} disableLinks />
+            <BalanceAmountsE payments={selectedSectionPayment} disableLinks />
           </View>
         )}
       </StyledModal>
