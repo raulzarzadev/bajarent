@@ -1,26 +1,49 @@
 import { useStore } from '../contexts/storeContext'
 import ListOrders from './ListOrders'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import useOrders from '../hooks/useOrders'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEmployee } from '../contexts/employeeContext'
 import { ScrollView, Text } from 'react-native'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import useMyNav from '../hooks/useMyNav'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
   const hasOrderList = !!route?.params?.orders
-  const { orders = [], handleRefresh: refreshOrders } = useOrdersCtx()
-  const { orders: preOrders, fetchOrders: refreshPreOrders } = useOrders({
+  const { orders } = useOrdersRedux()
+  const { fetchOrders } = useOrders({
     ids: route?.params?.orders
   })
+  const [preOrders, setPreOrders] = useState([])
+
+  useEffect(() => {
+    if (hasOrderList) {
+      fetchOrders({ ordersIds: route?.params?.orders })
+        .then((res) => {
+          setDisabled(false)
+          setPreOrders(res)
+        })
+        .catch((error) => {
+          console.error('Error fetching orders:', error)
+          setDisabled(false)
+        })
+    }
+  }, [])
 
   const [disabled, setDisabled] = useState(false)
   const handleRefresh = () => {
     setDisabled(true)
-    refreshOrders()
-    refreshPreOrders()
+
+    fetchOrders({ ordersIds: route?.params?.orders })
+      .then((res) => {
+        setDisabled(false)
+        setPreOrders(res)
+      })
+      .catch((error) => {
+        console.error('Error fetching orders:', error)
+        setDisabled(false)
+      })
     setTimeout(() => setDisabled(false), 4000)
   }
 
@@ -29,6 +52,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const userSections = employee?.sectionsAssigned
 
   const { toMessages } = useMyNav()
+
   return (
     <ScrollView>
       <ListOrders

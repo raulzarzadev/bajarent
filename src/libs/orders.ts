@@ -26,7 +26,7 @@ export const formatOrders = ({
   reports?: CommentType[]
   justActive?: boolean
   customers?: Partial<CustomerType>[]
-}) => {
+}): Partial<OrderType>[] => {
   const ordersWithExpireDate = orders
     .map((order) => {
       const customer = customers.find((c) => c.id === order?.customerId)

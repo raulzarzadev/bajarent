@@ -1,0 +1,469 @@
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import OrderType, { order_status, order_type } from '../../../types/OrderType'
+import { ServiceOrders } from '../../../firebase/ServiceOrders'
+import { ServiceComments } from '../../../firebase/ServiceComments'
+import { formatOrders } from '../../../libs/orders'
+import { CommentType } from '../../../types/CommentType'
+
+// Types
+export type FetchTypeOrders =
+  | 'all'
+  | 'solved'
+  | 'unsolved'
+  | 'mine'
+  | 'mineSolved'
+  | 'mineUnsolved'
+
+export interface OrdersState {
+  // Entities - normalized data
+  orders: Record<string, OrderType>
+  orderIds: string[]
+
+  // Filtered lists for performance
+  unsolvedOrders: string[]
+  solvedOrders: string[]
+  myOrders: string[]
+  rentOrders: string[]
+  repairOrders: string[]
+  saleOrders: string[]
+  expiredOrders: string[]
+
+  // Comments and reports
+  reports: CommentType[]
+  comments: Record<string, CommentType>
+
+  // Loading states
+  loading: boolean
+  refreshing: boolean
+  lastFetch: number | null
+
+  // Error handling
+  error: string | null
+
+  // Filters and settings
+  fetchType: FetchTypeOrders
+  storeId: string | null
+  sections: string[]
+  getBySections: boolean
+
+  // Performance optimization
+  cacheExpiry: number // 5 minutes
+  listeners: Set<string>
+}
+
+const initialState: OrdersState = {
+  orders: {},
+  orderIds: [],
+  unsolvedOrders: [],
+  solvedOrders: [],
+  myOrders: [],
+  rentOrders: [],
+  repairOrders: [],
+  saleOrders: [],
+  expiredOrders: [],
+  reports: [],
+  comments: {},
+  loading: false,
+  refreshing: false,
+  lastFetch: null,
+  error: null,
+  fetchType: 'mine',
+  storeId: null,
+  sections: [],
+  getBySections: false,
+  cacheExpiry: 5 * 60 * 1000, // 5 minutes
+  listeners: new Set()
+}
+
+// Async Thunks
+export const fetchUnsolvedOrders = createAsyncThunk(
+  'orders/fetchUnsolved',
+  async (
+    params: {
+      storeId: string
+      sections?: string[]
+      getBySections?: boolean
+      getExpireTomorrow?: boolean
+      forceRefresh?: boolean
+    },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      const state = getState() as { orders: OrdersState }
+      const now = Date.now()
+
+      // Check cache validity unless force refresh
+      if (
+        !params.forceRefresh &&
+        state.orders.lastFetch &&
+        now - state.orders.lastFetch < state.orders.cacheExpiry
+      ) {
+        return { orders: [], reports: [], cached: true }
+      }
+
+      // Fetch comments and reports first
+      const reports = await ServiceComments.getUnsolvedImportantAndReports(
+        params.storeId
+      )
+
+      // Fetch orders based on sections
+      const orders = await ServiceOrders.getUnsolvedByStore(params.storeId, {
+        getBySections: params.getBySections || false,
+        sections: params.sections || [],
+        reports,
+        getExpireTomorrow: params.getExpireTomorrow || false
+      })
+
+      const formattedOrders = formatOrders({ orders, reports })
+
+      return {
+        orders: formattedOrders,
+        reports,
+        cached: false,
+        timestamp: now
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error)
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+export const fetchOrdersByType = createAsyncThunk(
+  'orders/fetchByType',
+  async (
+    params: {
+      storeId: string
+      type: FetchTypeOrders
+      sections?: string[]
+      employee?: any
+      permissions?: any
+    },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const { storeId, type, sections = [], employee, permissions } = params
+
+      switch (type) {
+        case 'all':
+          if (permissions?.canViewAllOrders) {
+            return dispatch(
+              fetchUnsolvedOrders({
+                storeId,
+                getBySections: false,
+                sections: []
+              })
+            )
+          }
+          break
+
+        case 'mine':
+          if (permissions?.orders?.canViewMy && employee?.sectionsAssigned) {
+            return dispatch(
+              fetchUnsolvedOrders({
+                storeId,
+                getBySections: true,
+                sections: employee.sectionsAssigned
+              })
+            )
+          }
+          break
+
+        case 'unsolved':
+          return dispatch(fetchUnsolvedOrders({ storeId }))
+
+        default:
+          break
+      }
+
+      return { orders: [], reports: [] }
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+// Utility functions for normalization
+const normalizeOrders = (orders: OrderType[]) => {
+  const entities: Record<string, OrderType> = {}
+  const ids: string[] = []
+
+  orders.forEach((order) => {
+    if (order.id) {
+      entities[order.id] = order
+      ids.push(order.id)
+    }
+  })
+
+  return { entities, ids }
+}
+
+const categorizeOrders = (orders: OrderType[], sections: string[] = []) => {
+  const categories = {
+    unsolved: [] as string[],
+    solved: [] as string[],
+    my: [] as string[],
+    rent: [] as string[],
+    repair: [] as string[],
+    sale: [] as string[],
+    expired: [] as string[]
+  }
+
+  orders.forEach((order) => {
+    if (!order.id) return
+
+    // Status categorization
+    if (
+      [
+        order_status.PENDING,
+        order_status.AUTHORIZED,
+        order_status.DELIVERED,
+        order_status.REPAIRING,
+        order_status.REPAIRED,
+        order_status.PICKED_UP
+      ].includes(order.status)
+    ) {
+      categories.unsolved.push(order.id)
+    } else {
+      categories.solved.push(order.id)
+    }
+
+    // Section categorization
+    if (
+      sections.length > 0 &&
+      order.assignToSection &&
+      sections.includes(order.assignToSection)
+    ) {
+      categories.my.push(order.id)
+    }
+
+    // Type categorization
+    switch (order.type) {
+      case order_type.RENT:
+      case order_type.DELIVERY_RENT:
+        categories.rent.push(order.id)
+        break
+      case order_type.REPAIR:
+        categories.repair.push(order.id)
+        break
+      case order_type.SALE:
+        categories.sale.push(order.id)
+        break
+    }
+
+    // Expired orders
+    if (order.expireAt && new Date(order.expireAt) <= new Date()) {
+      categories.expired.push(order.id)
+    }
+  })
+
+  return categories
+}
+
+// Slice
+const ordersSlice = createSlice({
+  name: 'orders',
+  initialState,
+  reducers: {
+    // Settings
+    setFetchType: (state, action: PayloadAction<FetchTypeOrders>) => {
+      state.fetchType = action.payload
+    },
+
+    setStoreConfig: (
+      state,
+      action: PayloadAction<{
+        storeId: string
+        sections?: string[]
+        getBySections?: boolean
+      }>
+    ) => {
+      state.storeId = action.payload.storeId
+      state.sections = action.payload.sections || []
+      state.getBySections = action.payload.getBySections || false
+    },
+
+    // Real-time updates
+    upsertOrder: (state, action: PayloadAction<OrderType>) => {
+      const order = action.payload
+      if (order.id) {
+        state.orders[order.id] = order
+        if (!state.orderIds.includes(order.id)) {
+          state.orderIds.push(order.id)
+        }
+
+        // Update categorized lists
+        const categories = categorizeOrders([order], state.sections)
+        Object.entries(categories).forEach(([key, ids]) => {
+          const stateKey = `${key}Orders` as keyof OrdersState
+          if (Array.isArray(state[stateKey])) {
+            ids.forEach((id) => {
+              if (!(state[stateKey] as string[]).includes(id)) {
+                ;(state[stateKey] as string[]).push(id)
+              }
+            })
+          }
+        })
+      }
+    },
+
+    removeOrder: (state, action: PayloadAction<string>) => {
+      const orderId = action.payload
+      delete state.orders[orderId]
+      state.orderIds = state.orderIds.filter((id) => id !== orderId)
+
+      // Remove from all categorized lists
+      state.unsolvedOrders = state.unsolvedOrders.filter((id) => id !== orderId)
+      state.solvedOrders = state.solvedOrders.filter((id) => id !== orderId)
+      state.myOrders = state.myOrders.filter((id) => id !== orderId)
+      state.rentOrders = state.rentOrders.filter((id) => id !== orderId)
+      state.repairOrders = state.repairOrders.filter((id) => id !== orderId)
+      state.saleOrders = state.saleOrders.filter((id) => id !== orderId)
+      state.expiredOrders = state.expiredOrders.filter((id) => id !== orderId)
+    },
+
+    // Comments and reports
+    setReports: (state, action: PayloadAction<CommentType[]>) => {
+      state.reports = action.payload
+    },
+
+    addComment: (state, action: PayloadAction<CommentType>) => {
+      const comment = action.payload
+      if (comment.id) {
+        state.comments[comment.id] = comment
+      }
+    },
+
+    // Cache management
+    invalidateCache: (state) => {
+      state.lastFetch = null
+    },
+
+    clearError: (state) => {
+      state.error = null
+    },
+
+    // Performance optimization
+    addListener: (state, action: PayloadAction<string>) => {
+      state.listeners.add(action.payload)
+    },
+
+    removeListener: (state, action: PayloadAction<string>) => {
+      state.listeners.delete(action.payload)
+    }
+  },
+
+  extraReducers: (builder) => {
+    builder
+      // fetchUnsolvedOrders
+      .addCase(fetchUnsolvedOrders.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchUnsolvedOrders.fulfilled, (state, action) => {
+        if (action.payload.cached) {
+          state.loading = false
+          return
+        }
+
+        const { orders, reports, timestamp } = action.payload
+
+        // Normalize and categorize orders
+        const { entities, ids } = normalizeOrders(orders)
+        const categories = categorizeOrders(orders, state.sections)
+
+        state.orders = entities
+        state.orderIds = ids
+        state.unsolvedOrders = categories.unsolved
+        state.solvedOrders = categories.solved
+        state.myOrders = categories.my
+        state.rentOrders = categories.rent
+        state.repairOrders = categories.repair
+        state.saleOrders = categories.sale
+        state.expiredOrders = categories.expired
+        state.reports = reports
+        state.lastFetch = timestamp
+        state.loading = false
+      })
+      .addCase(fetchUnsolvedOrders.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+
+      // fetchOrdersByType
+      .addCase(fetchOrdersByType.pending, (state) => {
+        state.refreshing = true
+        state.error = null
+      })
+      .addCase(fetchOrdersByType.fulfilled, (state) => {
+        state.refreshing = false
+      })
+      .addCase(fetchOrdersByType.rejected, (state, action) => {
+        state.refreshing = false
+        state.error = action.payload as string
+      })
+  }
+})
+
+// Selectors
+export const selectAllOrders = (state: { orders: OrdersState }) =>
+  state.orders.orderIds.map((id) => state.orders.orders[id])
+
+export const selectUnsolvedOrders = (state: { orders: OrdersState }) =>
+  state.orders.unsolvedOrders.map((id) => state.orders.orders[id])
+
+export const selectMyOrders = (state: { orders: OrdersState }) =>
+  state.orders.myOrders.map((id) => state.orders.orders[id])
+
+export const selectOrdersByType = (
+  state: { orders: OrdersState },
+  type: string
+) => {
+  const key = `${type}Orders` as keyof OrdersState
+  const orderIds = state.orders[key] as string[]
+  return orderIds?.map((id) => state.orders.orders[id]) || []
+}
+
+export const selectOrderById = (
+  state: { orders: OrdersState },
+  orderId: string
+) => state.orders.orders[orderId]
+
+export const selectOrdersLoading = (state: { orders: OrdersState }) =>
+  state.orders.loading
+
+export const selectOrdersError = (state: { orders: OrdersState }) =>
+  state.orders.error
+
+export const selectReports = (state: { orders: OrdersState }) =>
+  state.orders.reports
+
+export const selectOrdersStats = (state: { orders: OrdersState }) => ({
+  total: state.orders.orderIds.length,
+  unsolved: state.orders.unsolvedOrders.length,
+  solved: state.orders.solvedOrders.length,
+  my: state.orders.myOrders.length,
+  rent: state.orders.rentOrders.length,
+  repair: state.orders.repairOrders.length,
+  sale: state.orders.saleOrders.length,
+  expired: state.orders.expiredOrders.length
+})
+
+// Actions
+export const {
+  setFetchType,
+  setStoreConfig,
+  upsertOrder,
+  removeOrder,
+  setReports,
+  addComment,
+  invalidateCache,
+  clearError,
+  addListener,
+  removeListener
+} = ordersSlice.actions
+
+// Reducer
+export const ordersReducer = ordersSlice.reducer
+
+export default ordersSlice.reducer
