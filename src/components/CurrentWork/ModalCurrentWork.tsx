@@ -147,7 +147,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
               }}
               selectedSection={selectedSection}
             />
-            <BalanceAmountsE payments={selectedSectionPayment} disableLinks />
+            <BalanceAmountsE payments={selectedSectionPayment} detailsAsModal />
           </View>
         )}
       </StyledModal>

@@ -5,14 +5,21 @@ import { gStyles } from '../styles'
 import CurrencyAmount from './CurrencyAmount'
 import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
+import useModal from '../hooks/useModal'
+import StyledModal from './StyledModal'
+import ListPayments from './ListPayments'
+import { ServicePayments } from '../firebase/ServicePayments'
+import { useState } from 'react'
 
 export type BalanceAmountsProps = {
   payments: Partial<PaymentType>[]
   disableLinks?: boolean
+  detailsAsModal?: boolean
 }
 const BalanceAmounts = ({
   payments = [],
-  disableLinks
+  disableLinks,
+  detailsAsModal
 }: BalanceAmountsProps) => {
   const cashPayments = payments?.filter((p) => p.method === 'cash')
   const cardPayments = payments?.filter((p) => p.method === 'card')
@@ -63,6 +70,7 @@ const BalanceAmounts = ({
               amount={incomes}
               title={'VENTAS'}
               isTotal
+              asModal={detailsAsModal}
             />
           </View>
           {!!cash && (
@@ -72,6 +80,7 @@ const BalanceAmounts = ({
                 paymentsIds={cashPayments.map(({ id }) => id)}
                 amount={cash}
                 title={'Efectivo'}
+                asModal={detailsAsModal}
               />
             </View>
           )}
@@ -82,6 +91,7 @@ const BalanceAmounts = ({
                 paymentsIds={transferPayments.map(({ id }) => id)}
                 amount={transfers}
                 title={'Transferencias'}
+                asModal={detailsAsModal}
               />
             </View>
           )}
@@ -93,6 +103,7 @@ const BalanceAmounts = ({
                 paymentsIds={notVerifiedTransfers.map(({ id }) => id)}
                 amount={transfersNotVerified}
                 title={'No verificados'}
+                asModal={detailsAsModal}
               />
             </View>
           )}
@@ -103,6 +114,7 @@ const BalanceAmounts = ({
                 paymentsIds={cardPayments.map(({ id }) => id)}
                 amount={card}
                 title={'Tarjetas'}
+                asModal={detailsAsModal}
               />
             </View>
           )}
@@ -115,6 +127,7 @@ const BalanceAmounts = ({
               paymentsIds={retirementBonus.map(({ id }) => id)}
               amount={bonus * -1}
               title={'Bonos'}
+              asModal={detailsAsModal}
             />
           </View>
         )}
@@ -125,6 +138,7 @@ const BalanceAmounts = ({
               paymentsIds={retirementExpense.map(({ id }) => id)}
               amount={expense * -1}
               title={'Gastos'}
+              asModal={detailsAsModal}
             />
           </View>
         )}
@@ -135,6 +149,7 @@ const BalanceAmounts = ({
               paymentsIds={retirementMissing.map(({ id }) => id)}
               amount={missing * -1}
               title={'Faltante'}
+              asModal={detailsAsModal}
             />
           </View>
         )}
@@ -147,6 +162,7 @@ const BalanceAmounts = ({
               paymentsIds={canceledPayments.map(({ id }) => id)}
               amount={canceled}
               title={'Cancelados'}
+              asModal={detailsAsModal}
             />
           </View>
         )}
@@ -156,6 +172,7 @@ const BalanceAmounts = ({
             amount={total}
             title={''}
             labelStyle={gStyles.tBold}
+            asModal={detailsAsModal}
           />
         </View>
       </View>
@@ -169,7 +186,8 @@ const LinkPayments = ({
   amount = 0,
   isTotal = false,
   labelStyle,
-  disabled
+  disabled,
+  asModal = false
 }: {
   title: string
   paymentsIds?: string[]
@@ -177,21 +195,41 @@ const LinkPayments = ({
   isTotal?: boolean
   labelStyle?: TextStyle
   disabled?: boolean
+  asModal?: boolean
 }) => {
   const { navigate } = useNavigation()
+  const modal = useModal({ title })
+  const [payments, setPayments] = useState<PaymentType[]>([])
+
+  const handlePress = () => {
+    if (asModal) {
+      modal.toggleOpen()
+      ServicePayments.list(paymentsIds).then((res) => {
+        setPayments(res)
+      })
+    } else {
+      //@ts-ignore
+      navigate('StackPayments', {
+        screen: 'ScreenPayments',
+        params: {
+          title,
+          payments: paymentsIds
+        }
+      })
+    }
+  }
   return (
     <View style={[{ flexDirection: 'row' }]}>
+      <StyledModal {...modal}>
+        <ListPayments
+          payments={payments}
+          onPressRow={() => modal.toggleOpen()}
+        />
+      </StyledModal>
       <Pressable
         disabled={disabled}
         onPress={() => {
-          //@ts-ignore
-          navigate('StackPayments', {
-            screen: 'ScreenPayments',
-            params: {
-              title,
-              payments: paymentsIds
-            }
-          })
+          handlePress()
         }}
       >
         <View
