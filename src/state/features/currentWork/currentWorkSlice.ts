@@ -2,16 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   CurrentWorkType,
   CurrentWorkUpdate,
-  CurrentWorkUpdateDetails,
   NewWorkUpdate
 } from '../../../components/CurrentWork/CurrentWorkType'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ServiceCurrentWork } from '../../../components/CurrentWork/ServiceCurrentWork'
 import { useStore } from '../../../contexts/storeContext'
 import { useAuth } from '../../../contexts/authContext'
 import { convertTimestamps } from '../../../libs/utils-date'
-import { createUUID } from '../../../libs/createId'
 
 export type CurrentWorkState = {
   data: CurrentWorkType
