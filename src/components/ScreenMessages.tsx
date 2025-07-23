@@ -4,7 +4,6 @@ import InputRadios from './InputRadios'
 import { gStyles } from '../styles'
 import { useState } from 'react'
 import ButtonConfirm from './ButtonConfirm'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import OrderType, { order_status } from '../types/OrderType'
 import { expiredMessage } from '../libs/whatsappMessages'
 import { useStore } from '../contexts/storeContext'
@@ -19,6 +18,7 @@ import asDate, { endDate } from '../libs/utils-date'
 import { isBefore, subDays } from 'date-fns'
 import Loading from './Loading'
 import { sleep } from '../libs/sleep'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
 
 export default function ScreenMessages() {
   const { permissions, employee } = useEmployee()
@@ -29,7 +29,7 @@ export default function ScreenMessages() {
   const [progress, setProgress] = useState(0)
   const [messageType, setMessageType] = useState<MessageType>(undefined)
   const [target, setTarget] = useState<MessageTarget>(undefined)
-  const { orders = [] } = useOrdersCtx()
+  const { orders = [] } = useOrdersRedux()
   const { store } = useStore()
   const [selectedOrders, setSelectedOrders] = useState<any[]>([])
   const [message, setMessage] = useState('')

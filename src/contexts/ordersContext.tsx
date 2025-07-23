@@ -33,7 +33,7 @@ export type FetchTypeOrders =
 
 export type OrderTypeOption = { label: string; value: FetchTypeOrders }
 export type OrdersContextType = {
-  orders?: OrderType[]
+  orders?: Partial<OrderType>[]
   fetchTypeOrders?: FetchTypeOrders
   setFetchTypeOrders?: (fetchType: FetchTypeOrders) => void
   orderTypeOptions?: OrderTypeOption[]
@@ -60,7 +60,7 @@ export const OrdersContextProvider = ({
   const { storeId, isAuthenticated } = useAuth()
   const { store } = useStore()
   const { employee, permissions, disabledEmployee } = useEmployee()
-  const [orders, setOrders] = useState<OrderType[]>(undefined)
+  const [orders, setOrders] = useState<Partial<OrderType>[]>(undefined)
   const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
     []
   )

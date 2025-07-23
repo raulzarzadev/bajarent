@@ -1,10 +1,4 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions
-} from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
@@ -17,8 +11,7 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { ModalFilterListE } from './ModalFilterList'
 
 const ScreenItemsMap = () => {
-  const screenWidth = useWindowDimensions().width
-  const [locatedOrders, setLocatedOrders] = useState<OrderType[]>([])
+  const [locatedOrders, setLocatedOrders] = useState<Partial<OrderType>[]>([])
   const { storeId } = useStore()
   useEffect(() => {
     if (storeId) {

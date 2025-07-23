@@ -47,7 +47,7 @@ export const getCoordinatesAsString = (
 }
 
 export const formatItemsMaps = async (
-  orders: OrderType[]
+  orders: Partial<OrderType>[]
 ): Promise<ItemMap[]> => {
   return await Promise.all(
     orders?.map(async (item) => {

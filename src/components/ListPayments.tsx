@@ -3,11 +3,12 @@ import { Payment } from '../libs/paymentsUtils'
 import ButtonConfirm from './ButtonConfirm'
 import { ListE } from './List'
 import PaymentType from '../types/PaymentType'
-import { ConsolidatedStoreOrdersType } from '../firebase/ServiceConsolidatedOrders'
 import { onInvalidatePayment, onVerifyPayment } from '../libs/payments'
 import { useStore } from '../contexts/storeContext'
 import RowPayment from './RowPayment'
 import { useNavigation } from '@react-navigation/native'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
+import OrderType from '../types/OrderType'
 
 export default function ListPayments({
   payments,
@@ -16,9 +17,10 @@ export default function ListPayments({
   payments: PaymentType[]
   onPressRow?: (paymentId: string) => void
 }) {
+  const { orders } = useOrdersRedux()
   const formattedPayments = formatPaymentWithOrder({
     payments,
-    orders: {} as ConsolidatedStoreOrdersType['orders']
+    orders
   })
   const navigation = useNavigation()
   const sortFields = [
@@ -168,14 +170,15 @@ export const formatPaymentWithOrder = ({
   orders
 }: {
   payments: PaymentType[]
-  orders: ConsolidatedStoreOrdersType['orders']
+  orders: Partial<OrderType>[]
 }): (PaymentType & {
   orderFolio: number
   orderName: string
   orderNote: string
 })[] => {
   const paymentWithOrderData = payments?.map((p) => {
-    const consolidateOrder = orders?.[p?.orderId]
+    const consolidateOrder = orders?.find((o) => o.id === p.orderId)
+
     return {
       ...p,
       orderFolio: consolidateOrder?.folio ?? 0, // Usar ?? para proporcionar un valor predeterminado

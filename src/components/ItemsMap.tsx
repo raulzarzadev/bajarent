@@ -1,17 +1,16 @@
 // App.js
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
-import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import ErrorBoundary from './ErrorBoundary'
-import OrderType, { order_status } from '../types/OrderType'
+import OrderType from '../types/OrderType'
 import theme, { colors } from '../theme'
 import LinkLocation from './LinkLocation'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 import { formatItemsMaps } from '../libs/maps'
 const INITIAL_POSITION = [24.145708, -110.311002]
-const LAVARENTA_COORD = [24.150635, -110.316583]
 
 export type ItemMap = {
   itemId: string
@@ -23,7 +22,7 @@ export type ItemMap = {
 }
 export type ItemsMapProps = {
   //items: ItemMap[]
-  orders?: OrderType[]
+  orders?: Partial<OrderType>[]
   items?: ItemMap[]
 }
 const SvgIcon = ({ color }) => (

@@ -93,7 +93,7 @@ export default function useFilter<T extends { id?: string }>({
         customers
       })
 
-      setCustomData([...formattedData])
+      setCustomData([...(formattedData as T[])])
     }
   }
 

@@ -16,7 +16,7 @@ export type FetchTypeOrders =
 
 export interface OrdersState {
   // Entities - normalized data
-  orders: Record<string, OrderType>
+  orders: Record<string, Partial<OrderType>>
   orderIds: string[]
 
   // Filtered lists for performance
@@ -184,13 +184,13 @@ export const fetchOrdersByType = createAsyncThunk(
 )
 
 // Utility functions for normalization
-const normalizeOrders = (orders: OrderType[]) => {
-  const entities: Record<string, OrderType> = {}
+const normalizeOrders = (orders: Partial<OrderType>[]) => {
+  const entities: Record<string, Partial<OrderType>> = {}
   const ids: string[] = []
 
   orders.forEach((order) => {
     if (order.id) {
-      entities[order.id] = order
+      entities[order?.id] = order
       ids.push(order.id)
     }
   })
@@ -198,7 +198,10 @@ const normalizeOrders = (orders: OrderType[]) => {
   return { entities, ids }
 }
 
-const categorizeOrders = (orders: OrderType[], sections: string[] = []) => {
+const categorizeOrders = (
+  orders: Partial<OrderType>[],
+  sections: string[] = []
+) => {
   const categories = {
     unsolved: [] as string[],
     solved: [] as string[],
