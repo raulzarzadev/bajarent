@@ -1,5 +1,4 @@
 import { Text, View, StyleSheet } from 'react-native'
-import React from 'react'
 import CurrencyAmount from './CurrencyAmount'
 import dictionary from '../dictionary'
 import DateCell from './DateCell'
@@ -9,7 +8,6 @@ import PaymentVerify from './PaymentVerify'
 import PaymentType from '../types/PaymentType'
 import SpanStoreSection from './SpanStoreSection'
 import ImagePreview from './ImagePreview'
-import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 const RowPayment = ({
