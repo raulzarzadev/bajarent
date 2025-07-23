@@ -90,7 +90,6 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
       })
     }
   }
-  console.log({ selectedSectionPayment })
 
   return (
     <View>
