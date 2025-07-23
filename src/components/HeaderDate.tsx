@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Button from './Button'
-import { addDays } from 'date-fns'
+import { addDays, isToday } from 'date-fns'
 import { gStyles } from '../styles'
 import DateCell from './DateCell'
 import useDebounce from '../hooks/useDebunce'
@@ -25,7 +25,7 @@ const HeaderDate = ({
   const [date, setDate] = React.useState(defaultDate)
 
   const handleMoveDate = (days = 0) => {
-    handleDebounce()
+    //handleDebounce()
     const newDate = addDays(date, days)
     handleChangeDate(newDate)
   }
@@ -43,7 +43,7 @@ const HeaderDate = ({
   }
 
   return (
-    <View>
+    <View style={{ marginTop: 12 }}>
       {!!label && <Text style={gStyles.h1}>{label}</Text>}
 
       <View
@@ -51,13 +51,14 @@ const HeaderDate = ({
           flexDirection: 'row',
           justifyContent: 'center',
           margin: 'auto',
-          alignItems: 'center'
+          alignItems: 'center',
+          gap: 6
         }}
       >
         <Button
           disabled={disabled}
           justIcon
-          variant="ghost"
+          variant="outline"
           icon="rowLeft"
           label="Atras"
           onPress={() => {
@@ -73,7 +74,7 @@ const HeaderDate = ({
           format="EEE dd MMM yy"
           openButtonProps={{
             size: 'small',
-            variant: 'ghost',
+            variant: 'outline',
             buttonStyles: { width: 180 },
             uppercase: false
           }}
@@ -81,22 +82,25 @@ const HeaderDate = ({
         <Button
           disabled={disabled}
           justIcon
-          variant="ghost"
+          variant="outline"
           icon="rowRight"
           label="Adelante"
           onPress={() => {
             handleMoveDate(+1)
           }}
         />
+
+        {!isToday(date) && (
+          <Button
+            label="hoy"
+            onPress={() => {
+              handleChangeDate(new Date())
+            }}
+            size="small"
+          ></Button>
+        )}
       </View>
 
-      {/* <DateCell
-        date={date}
-        showTimeAgo={false}
-        showTime={showTime}
-        dateBold
-        showDay
-      /> */}
       {!!documentDate && (
         <DateCell
           date={documentDate}
