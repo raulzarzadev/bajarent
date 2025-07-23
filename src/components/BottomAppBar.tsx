@@ -12,6 +12,7 @@ import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
 import { useStore } from '../contexts/storeContext'
 import { StackCustomersE } from './Customers/StackCustomers'
+import { StackCurrentWorkE } from './StackCurrentWork'
 
 const Tab = createBottomTabNavigator()
 

@@ -200,7 +200,7 @@ const LinkPayments = ({
   const { navigate } = useNavigation()
   const modal = useModal({ title })
   const [payments, setPayments] = useState<PaymentType[]>([])
-
+  //TODO: this refactor or aproach is not the best, modals do not bee needed, we should use a new screen
   const handlePress = () => {
     if (asModal) {
       modal.toggleOpen()

@@ -5,7 +5,7 @@ import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
-import { ModalCurrentWorkE } from './CurrentWork/ModalCurrentWork'
+import { LinkModalCurrentWorkE } from './CurrentWork/LinkModalCurrentWork'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
@@ -22,7 +22,7 @@ const MyStaffLabel = () => {
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <ModalCurrentWorkE />
+        <LinkModalCurrentWorkE />
         {__DEV__ && (
           <Button
             icon="broom"

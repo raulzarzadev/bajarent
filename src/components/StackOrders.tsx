@@ -12,6 +12,7 @@ import StackItems from './StackItems'
 import { ScreenMessagesE } from './ScreenMessages'
 import ScreenOrderNew from './ScreenOrderNew'
 import { StackCustomersE } from './Customers/StackCustomers'
+import { StackCurrentWorkE } from './StackCurrentWork'
 
 const Stack = createStackNavigator()
 function StackOrders() {
@@ -135,6 +136,14 @@ function StackOrders() {
           title: route?.params?.title || 'Mensajería' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
         component={ScreenMessagesE}
+      />
+      <Stack.Screen
+        name="StackCurrentWork"
+        options={{
+          title: 'Trabajo Actual',
+          headerShown: false
+        }}
+        component={StackCurrentWorkE}
       />
     </Stack.Navigator>
   )
