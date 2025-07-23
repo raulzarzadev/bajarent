@@ -27,7 +27,7 @@ export default function ListPayments({
     { key: 'amount', label: 'Cantidad' },
     { key: 'method', label: 'Método' },
     { key: 'reference', label: 'Referencia' },
-    { key: 'createdByName', label: 'Creado por' }
+    { key: 'createdBy', label: 'Creado por' }
   ]
   const { staff } = useStore()
   return (
@@ -44,7 +44,7 @@ export default function ListPayments({
       // }}
       data={formattedPayments.map((payment) => {
         payment.amount = parseFloat(`${payment.amount || 0}`) || 0
-        payment.createdByName =
+        payment.createdBy =
           staff?.find((s) => s.userId === payment.createdBy)?.name ||
           'sin nombre'
         return payment
@@ -77,7 +77,7 @@ export default function ListPayments({
         //   label: 'Fecha'
         // },
         {
-          field: 'createdByName',
+          field: 'createdBy',
           label: 'Creado por'
         },
         {

@@ -10,6 +10,7 @@ import InputSwitch from '../InputSwitch'
 import { gStyles } from '../../styles'
 import { BalanceAmountsE } from '../BalanceAmounts'
 import { EmployeeSections } from '../CardEmployee'
+
 const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   const { data: currentWork } = useCurrentWork()
   const { user } = useAuth()

@@ -12,7 +12,6 @@ import StackMyItems from './StackMyItems'
 import { StackWorkshopE } from './StackWorkshop'
 import { useStore } from '../contexts/storeContext'
 import { StackCustomersE } from './Customers/StackCustomers'
-import { StackCurrentWorkE } from './StackCurrentWork'
 
 const Tab = createBottomTabNavigator()
 
@@ -28,7 +27,6 @@ const BottomAppBar = () => {
   const showProfileButton = true
   const showOrdersButton = !!store
   const showStoreButton = !!store
-  const showConsolidated = permissions.canViewAllOrders
   const viewItemsTab =
     permissions.items.canViewAllItems ||
     permissions.items.canViewMyItems ||
@@ -108,7 +106,7 @@ const BottomAppBar = () => {
         component={StackOrders}
         options={({ route }) => ({
           headerShown: false,
-          title: 'Mis Ordenes',
+          title: 'Ordenes',
           tabBarButton: showOrdersButton ? undefined : () => null
           // tabBarButton:
           //   !canSeeOrders || !isAuthenticated ? () => null : undefined

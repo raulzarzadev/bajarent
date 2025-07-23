@@ -9,6 +9,8 @@ import PaymentVerify from './PaymentVerify'
 import PaymentType from '../types/PaymentType'
 import SpanStoreSection from './SpanStoreSection'
 import ImagePreview from './ImagePreview'
+import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 const RowPayment = ({
   item,
@@ -18,6 +20,8 @@ const RowPayment = ({
   onVerified?: () => void
 }) => {
   const isRetirement = !!item?.isRetirement
+  const employee = useEmployee()
+  const isAdmin = !!employee?.permissions?.isAdmin
   return (
     <View
       style={[
@@ -77,7 +81,7 @@ const RowPayment = ({
         </Text>
       </View>
       <ImagePreview image={item.image} width={40} height={40} />
-      <PaymentVerify payment={item} onVerified={onVerified} />
+      {isAdmin && <PaymentVerify payment={item} onVerified={onVerified} />}
     </View>
   )
 }

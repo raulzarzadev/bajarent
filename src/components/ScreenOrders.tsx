@@ -65,6 +65,17 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             visible:
               store?.chatbot?.enabled &&
               (permissions?.isAdmin || permissions?.store?.canSendMessages)
+          },
+          {
+            icon: 'folderCheck',
+            label: 'Trabajo Actual',
+            onPress: () => {
+              navigate('StackCurrentWork', {
+                screen: 'ScreenCurrentWork',
+                params: { title: 'Trabajo Actual' }
+              })
+            },
+            visible: true
           }
         ]}
       />

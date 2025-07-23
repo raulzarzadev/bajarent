@@ -57,7 +57,7 @@ const PaymentVerify = ({
         )} */}
         {isVerified ? (
           <ButtonConfirm
-            openDisabled={!canValidatePayments}
+            openDisabled={!canValidatePayments || disabled}
             openSize="xs"
             modalTitle="Invalidar pago"
             openVariant="filled"
@@ -76,7 +76,7 @@ const PaymentVerify = ({
           />
         ) : (
           <ButtonConfirm
-            openDisabled={!canValidatePayments}
+            openDisabled={!canValidatePayments || disabled}
             openSize="xs"
             modalTitle="Verifcar pago"
             openVariant="ghost"

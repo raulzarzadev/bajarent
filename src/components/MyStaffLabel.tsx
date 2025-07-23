@@ -5,7 +5,6 @@ import { setItem } from '../libs/storage'
 import { PERSISTENCE_KEY } from '../../App'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
-import { LinkModalCurrentWorkE } from './CurrentWork/LinkModalCurrentWork'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
@@ -16,13 +15,10 @@ const MyStaffLabel = () => {
   const handleClearHistory = () => {
     setItem(PERSISTENCE_KEY, '')
   }
-  //console.l
-  // og({ store, canCreateNewOrders, permissions, employee })
 
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <LinkModalCurrentWorkE />
         {__DEV__ && (
           <Button
             icon="broom"
