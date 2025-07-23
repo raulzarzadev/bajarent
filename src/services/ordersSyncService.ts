@@ -8,7 +8,6 @@ import {
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServiceComments } from '../firebase/ServiceComments'
 import OrderType from '../types/OrderType'
-import { CommentType } from '../types/CommentType'
 
 class OrdersSyncService {
   private dispatch: AppDispatch | null = null

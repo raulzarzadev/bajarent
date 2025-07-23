@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import OrderType from '../types/OrderType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
