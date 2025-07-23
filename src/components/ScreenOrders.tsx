@@ -11,7 +11,7 @@ import { useOrdersRedux } from '../hooks/useOrdersRedux'
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
   const hasOrderList = !!route?.params?.orders
-  const { orders } = useOrdersRedux()
+  const { orders, forceRefresh } = useOrdersRedux()
   const { fetchOrders } = useOrders({
     ids: route?.params?.orders
   })
@@ -34,16 +34,16 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const [disabled, setDisabled] = useState(false)
   const handleRefresh = () => {
     setDisabled(true)
-
-    fetchOrders({ ordersIds: route?.params?.orders })
-      .then((res) => {
-        setDisabled(false)
-        setPreOrders(res)
-      })
-      .catch((error) => {
-        console.error('Error fetching orders:', error)
-        setDisabled(false)
-      })
+    forceRefresh()
+    // fetchOrders({ ordersIds: route?.params?.orders })
+    //   .then((res) => {
+    //     setDisabled(false)
+    //     setPreOrders(res)
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching orders:', error)
+    //     setDisabled(false)
+    //   })
     setTimeout(() => setDisabled(false), 4000)
   }
 
