@@ -26,8 +26,10 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
     setWorkType(workType === 'personal' ? 'sections' : 'personal')
   }
   const [personalPayments, setPersonalPayments] = useState([])
-  const [sectionPayments, setSectionPayments] = useState([])
   const [allPayments, setAllPayments] = useState([])
+
+  const [selectedSection, setSelectedSection] = useState<string | null>(null)
+  const [sectionPayments, setSectionPayments] = useState([])
 
   useEffect(() => {
     if (currentWork) {
@@ -73,6 +75,24 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
 
   const disabledSwitch = false
 
+  const handleFilterBySection = ({ sectionId }: { sectionId: string }) => {
+    if (selectedSection === sectionId) {
+      setSelectedSection(null)
+      setSectionPayments(allPayments)
+    } else {
+      setSelectedSection(sectionId)
+      const sectionFilteredWorks = sectionWorks.filter(
+        (work) => work.details?.sectionId === sectionId
+      )
+      const paymentsIs = sectionFilteredWorks
+        .filter((work) => work.type === 'payment')
+        .map((w) => w.details.paymentId)
+      ServicePayments.list(paymentsIs).then((payments) => {
+        setSectionPayments(payments)
+      })
+    }
+  }
+
   return (
     <View>
       <Button
@@ -82,6 +102,7 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         variant="ghost"
       />
       <StyledModal {...modal}>
+        {/* ********************** Switch between work type */}
         <View
           style={{
             justifyContent: 'center',
@@ -122,7 +143,12 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
         )}
         {workType === 'sections' && (
           <View>
-            <EmployeeSections />
+            <EmployeeSections
+              onPressSection={({ sectionId }) => {
+                handleFilterBySection({ sectionId })
+              }}
+              selectedSection={selectedSection}
+            />
             <BalanceAmountsE payments={sectionPayments} disableLinks />
           </View>
         )}

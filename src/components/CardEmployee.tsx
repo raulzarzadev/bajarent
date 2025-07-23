@@ -75,7 +75,13 @@ const CardEmployee = () => {
   )
 }
 
-export const EmployeeSections = () => {
+export const EmployeeSections = ({
+  onPressSection,
+  selectedSection
+}: {
+  onPressSection?: ({ sectionId }: { sectionId: string }) => void
+  selectedSection?: string | null
+}) => {
   const { employee } = useEmployee()
   const { sections } = useStore()
   return (
@@ -99,11 +105,20 @@ export const EmployeeSections = () => {
             const section = sections?.find((s) => s?.id === sectionId)
             return (
               <Chip
+                style={{
+                  margin: 4,
+                  borderWidth: 2,
+                  borderColor:
+                    selectedSection && selectedSection === sectionId
+                      ? theme.primary
+                      : theme.transparent
+                }}
                 size="sm"
                 title={section?.name}
                 color={theme.white}
                 titleColor={theme.secondary}
                 key={sectionId}
+                onPress={() => onPressSection?.({ sectionId })}
               ></Chip>
             )
           })}
