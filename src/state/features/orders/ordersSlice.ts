@@ -143,6 +143,7 @@ export const fetchOrdersByType = createAsyncThunk(
   ) => {
     try {
       const { storeId, type, sections = [], employee, permissions } = params
+      const getExpireTomorrow = permissions.orders?.getExpireTomorrow || false
 
       switch (type) {
         case 'all':
@@ -151,7 +152,8 @@ export const fetchOrdersByType = createAsyncThunk(
               fetchUnsolvedOrders({
                 storeId,
                 getBySections: false,
-                sections: []
+                sections: [],
+                getExpireTomorrow: getExpireTomorrow
               })
             )
           }
@@ -163,7 +165,8 @@ export const fetchOrdersByType = createAsyncThunk(
               fetchUnsolvedOrders({
                 storeId,
                 getBySections: true,
-                sections: employee.sectionsAssigned
+                sections: employee.sectionsAssigned,
+                getExpireTomorrow: getExpireTomorrow
               })
             )
           }

@@ -21,13 +21,11 @@ import {
 } from '../state/features/orders/ordersSlice'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
-import { useStore } from '../contexts/storeContext'
 
 export const useOrdersRedux = (componentId?: string) => {
   const dispatch = useDispatch<AppDispatch>()
   const { storeId } = useAuth()
   const { employee, permissions, disabledEmployee } = useEmployee()
-  const { store } = useStore()
 
   // Selectors
   const allOrders = useSelector(selectAllOrders)
