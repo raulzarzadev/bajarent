@@ -1,5 +1,5 @@
 import { FlatList, View } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { colors } from '../theme'
 import P from './P'
 import { ServiceComments } from '../firebase/ServiceComments'
@@ -29,11 +29,33 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
       }
     }) || []
   const orderComments = order?.comments || []
-  const comments = [...orderComments, ...sentMessagesAsComments].sort(
-    (a, b) => asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
-  )
 
-  console.log({ comments })
+  const [reportsAndImportantUnsolved, setReportsAndImportantUnsolved] =
+    useState<CommentType[]>([])
+  useEffect(() => {
+    ServiceComments.getReportsAndImportantUnsolvedByOrder(orderId).then(
+      (res) => {
+        setReportsAndImportantUnsolved(res)
+      }
+    )
+  }, [orderId])
+
+  const comments = [
+    ...reportsAndImportantUnsolved,
+    ...orderComments,
+    ...sentMessagesAsComments
+  ].sort((a, b) => {
+    // Put reports and important unsolved at the top
+    const aIsReportOrImportant = a.type === 'report' || a.type === 'important'
+    const bIsReportOrImportant = b.type === 'report' || b.type === 'important'
+
+    if (aIsReportOrImportant && !bIsReportOrImportant) return -1
+    if (!aIsReportOrImportant && bIsReportOrImportant) return 1
+
+    // If both are same priority, sort by date
+    return asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
+  })
+
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>

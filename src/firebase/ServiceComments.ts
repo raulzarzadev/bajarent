@@ -121,6 +121,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       cb
     )
   }
+
   listenImportantUnsolved(storeId: string, cb: CallableFunction) {
     return this.listenMany(
       [
@@ -130,6 +131,14 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       ],
       cb
     )
+  }
+
+  getReportsAndImportantUnsolvedByOrder(orderId: string) {
+    return this.findMany([
+      where('orderId', '==', orderId),
+      where('type', 'in', ['report', 'important']),
+      where('solved', '==', false)
+    ])
   }
 
   getReportsUnsolved(storeId: string, ops?: GetItemsOps) {
