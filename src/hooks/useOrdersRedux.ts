@@ -21,6 +21,8 @@ import {
 } from '../state/features/orders/ordersSlice'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
+import { formatOrders } from '../libs/orders'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export const useOrdersRedux = (componentId?: string) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -36,6 +38,8 @@ export const useOrdersRedux = (componentId?: string) => {
   const reports = useSelector(selectReports)
   const stats = useSelector(selectOrdersStats)
 
+  const { data: customers } = useCustomers()
+  console.log({ customers })
   const ordersState = useSelector((state: RootState) => state.orders)
 
   // Register component listener for performance tracking
@@ -163,7 +167,7 @@ export const useOrdersRedux = (componentId?: string) => {
 
   return {
     // Data
-    orders: allOrders,
+    orders: formatOrders({ orders: allOrders, reports, customers }),
     unsolvedOrders,
     myOrders,
     reports,
