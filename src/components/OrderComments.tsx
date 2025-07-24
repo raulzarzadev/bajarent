@@ -29,16 +29,18 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
       }
     }) || []
   const orderComments = order?.comments || []
+  const comments = [...orderComments, ...sentMessagesAsComments].sort(
+    (a, b) => asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
+  )
+
+  console.log({ comments })
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
       <P bold>Comentarios</P>
       <InputComment orderId={orderId} />
       <View style={{ padding: 0 }}>
         <FlatList
-          data={[...orderComments, ...sentMessagesAsComments].sort(
-            (a, b) =>
-              asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
-          )}
+          data={comments}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <CommentRow comment={item} />}
         />

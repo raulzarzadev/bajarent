@@ -1,24 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import OrderStatus from './OrderStatus'
-import OrderType, {
-  order_status,
-  order_type,
-  typeOrderIcon
-} from '../types/OrderType'
+import OrderType, { order_status, typeOrderIcon } from '../types/OrderType'
 import theme, { ORDER_TYPE_COLOR } from '../theme'
 import Chip from './Chip'
 import { useStore } from '../contexts/storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { currentRentPeriod } from '../libs/orders'
-import Icon, { IconName } from './Icon'
+import Icon from './Icon'
 import { isToday } from 'date-fns'
 import asDate from '../libs/utils-date'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import { useState } from 'react'
-import { ServiceCustomers } from '../firebase/ServiceCustomers'
-import { CustomerCardE } from './Customers/CustomerCard'
-import { OrderContext, OrderProvider } from '../contexts/orderContext'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
   if (!order) return null
@@ -138,47 +128,3 @@ export const OrderDirectivesE = (props) => (
 )
 
 export default OrderDirectives
-
-// export const ModalCustomerChip = (
-//   {
-//     customerId,
-//     order
-//   }: {
-//     order?: Partial<OrderType>
-//     customerId: Partial<OrderType['customerId']>
-//   } = {
-//     customerId: null,
-//     order: null
-//   }
-// ) => {
-//   const modal = useModal({ title: 'Detalles de cliente' })
-//   const [customer, setCustomer] = useState(null)
-//   const [loading, setLoading] = useState(false)
-//   return (
-//     <>
-//       <Chip
-//         disabled={loading}
-//         style={[styles.chip]}
-//         title={''}
-//         icon={'customerCard'}
-//         titleColor={theme?.primary}
-//         color={theme?.transparent}
-//         iconSize="sm"
-//         size="sm"
-//         onPress={async () => {
-//           setLoading(true)
-//           ServiceCustomers.get(customerId).then((res) => {
-//             setCustomer(res)
-//             setLoading(false)
-//             modal.setOpen(true)
-//           })
-//         }}
-//       ></Chip>
-//       <StyledModal {...modal}>
-//         <OrderContext.Provider value={{ order: order as OrderType }}>
-//           <CustomerCardE customer={customer} />
-//         </OrderContext.Provider>
-//       </StyledModal>
-//     </>
-//   )
-// }
