@@ -51,17 +51,26 @@ export const onSendOrderWhatsapp = async ({
       error: validationMessage
     }
 
-  order.fullName = customer?.name || order?.fullName || ''
+  // Create a new order object with fullName instead of mutating
+  const orderWithCustomerName = {
+    ...order,
+    fullName: customer?.name || order?.fullName || ''
+  }
 
   const staffName = store?.staff?.find((s) => s.userId === userId)?.position
-  let message = messageOptions({ order, store, lastPayment })[type]
+  let message = messageOptions({
+    order: orderWithCustomerName,
+    store,
+    lastPayment
+  })[type]
 
   const customerPhone = getFavoriteCustomerPhone(customer?.contacts)
 
   if (store?.chatbot?.config?.includeSender && staffName)
     message = message + `👤 ${staffName || ''}`
 
-  const phone = customerPhone || defaultPhone || chooseOrderPhone(order)
+  const phone =
+    customerPhone || defaultPhone || chooseOrderPhone(orderWithCustomerName)
 
   const config = {
     phone,
@@ -88,7 +97,7 @@ export const onSendOrderWhatsapp = async ({
           number: phone,
           sentBy: userId
         }
-        ServiceOrders.update(order.id, {
+        ServiceOrders.update(orderWithCustomerName.id, {
           //@ts-ignore
           sentMessages: arrayUnion(sentMessage)
         })

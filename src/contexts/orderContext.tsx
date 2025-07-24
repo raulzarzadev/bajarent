@@ -35,7 +35,7 @@ interface OrderContextProps {
 
 // Create the initial context
 const OrderContext = createContext<OrderContextProps>({})
-
+let count = 0
 // Create the OrderContext provider component
 const OrderProvider = ({
   children,
@@ -80,29 +80,35 @@ const OrderProvider = ({
   }, [_orderId, commentsCount])
 
   useEffect(() => {
+    __DEV__ && console.log('orctx', count)
+    count++
     if (_orderId) {
       listenFullOrderData(_orderId, (order) => {
-        let plainOrder: OrderType = order
+        // Create a new object instead of mutating directly
+        let plainOrder: OrderType = { ...order }
 
         const customerIsSet = typeof order.customerId === 'string'
         if (customerIsSet) {
           const ctxCustomer = customers.find((c) => c.id === order.customerId)
           if (ctxCustomer) {
-            plainOrder.fullName = ctxCustomer.name
-            plainOrder.phone = Object.values(ctxCustomer.contacts)
-              .filter((c) => c.type === 'phone')
-              .filter((c) => c.deletedAt)
-              .map((c) => c.value)
-              .join(', ')
+            plainOrder = {
+              ...plainOrder,
+              fullName: ctxCustomer.name,
+              phone: Object.values(ctxCustomer.contacts)
+                .filter((c) => c.type === 'phone')
+                .filter((c) => !c.deletedAt) // Fixed: should be !c.deletedAt
+                .map((c) => c.value)
+                .join(', ')
+            }
           }
         }
         //******* SET CATEGORY NAME ITEMS
         const orderItems = order?.items || []
-        const items = orderItems.map((item) => {
-          item.categoryName =
+        const items = orderItems.map((item) => ({
+          ...item, // Create new item object instead of mutating
+          categoryName:
             categories?.find((cat) => cat.id === item.category)?.name || null
-          return item
-        })
+        }))
 
         if (order) return setOrder({ ...plainOrder, items })
 
@@ -114,7 +120,7 @@ const OrderProvider = ({
         })
       })
     }
-  }, [_orderId, consolidatedOrders])
+  }, [_orderId, consolidatedOrders, customers, categories])
 
   const [customer, setCustomer] = useState<CustomerType>()
   useEffect(() => {

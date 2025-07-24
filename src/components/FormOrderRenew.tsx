@@ -36,7 +36,6 @@ const FormOrderRenew = ({ order }: FormOrderRenewProps) => {
   const { user } = useAuth()
   const { addWork } = useCurrentWork()
   const { data: customers } = useCustomers()
-
   const items = order?.items || []
   const [payment, setPayment] = useState<Partial<PaymentType>>({
     method: 'transfer',
