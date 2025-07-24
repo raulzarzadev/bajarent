@@ -33,7 +33,7 @@ const FormUser = ({
             <FormikInputValue name={'name'} placeholder="Nombre" />
           </View>
           <View style={styles.input}>
-            <FormikInputValue name={'phone'} placeholder="Telefono" disabled />
+            <FormikInputValue name={'phone'} placeholder="Teléfono" disabled />
           </View>
           <View style={styles.input}>
             <FormikInputValue name={'email'} placeholder="Correo" />

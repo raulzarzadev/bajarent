@@ -446,7 +446,7 @@ export default function ModalSendWhatsapp({
               { textAlign: 'center', marginVertical: 6 }
             ]}
           >
-            *Numero de telefono invalido
+            *Numero de Teléfono invalido
           </Text>
         )}
 

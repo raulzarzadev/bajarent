@@ -83,7 +83,7 @@ const FormStore = ({
                 type: 'phone'
               },
               {
-                label: 'Telefono fijo',
+                label: 'Teléfono fijo',
                 value: 'phone',
                 type: 'phone'
               },

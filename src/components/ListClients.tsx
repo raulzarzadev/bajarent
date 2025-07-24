@@ -70,7 +70,7 @@ const ListCustomers = () => {
           },
           {
             key: 'phone',
-            label: 'Telefono'
+            label: 'Teléfono'
           },
           {
             key: 'neighborhood',

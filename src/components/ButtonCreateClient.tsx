@@ -130,7 +130,7 @@ const ListOfSimilarClients = ({
           {
             component: (
               <View>
-                <Text>Telefono</Text>
+                <Text>Teléfono</Text>
               </View>
             ),
             width: 'rest'
