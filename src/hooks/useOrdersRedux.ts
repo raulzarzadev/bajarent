@@ -39,7 +39,6 @@ export const useOrdersRedux = (componentId?: string) => {
   const stats = useSelector(selectOrdersStats)
 
   const { data: customers } = useCustomers()
-  console.log({ customers })
   const ordersState = useSelector((state: RootState) => state.orders)
 
   // Register component listener for performance tracking
