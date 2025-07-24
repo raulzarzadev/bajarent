@@ -45,8 +45,7 @@ const OrderProvider = ({
   orderId?: OrderType['id']
 }) => {
   const { categories } = useStore()
-  const { consolidatedOrders } = useOrdersCtx()
-  const { data: customers } = useCustomers()
+  const { data: customers, loading: loadingCustomers } = useCustomers()
   const route = useRoute()
   //@ts-ignore
   const _orderId = orderId || route?.params?.orderId
@@ -80,9 +79,10 @@ const OrderProvider = ({
   }, [_orderId, commentsCount])
 
   useEffect(() => {
-    __DEV__ && console.log('orctx', count)
-    count++
     if (_orderId) {
+      __DEV__ && console.log('orctx', { count, loadingCustomers, categories })
+      count++
+
       listenFullOrderData(_orderId, (order) => {
         // Create a new object instead of mutating directly
         let plainOrder: OrderType = { ...order }
@@ -104,23 +104,11 @@ const OrderProvider = ({
         }
         //******* SET CATEGORY NAME ITEMS
         const orderItems = order?.items || []
-        const items = orderItems.map((item) => ({
-          ...item, // Create new item object instead of mutating
-          categoryName:
-            categories?.find((cat) => cat.id === item.category)?.name || null
-        }))
 
-        if (order) return setOrder({ ...plainOrder, items })
-
-        const consolidatedOrder = consolidatedOrders?.orders[_orderId]
-        // @ts-ignore
-        return setOrder({
-          ...consolidatedOrder,
-          isConsolidated: true
-        })
+        if (order) return setOrder({ ...plainOrder, items: orderItems })
       })
     }
-  }, [_orderId, consolidatedOrders, customers, categories])
+  }, [_orderId])
 
   const [customer, setCustomer] = useState<CustomerType>()
   useEffect(() => {
