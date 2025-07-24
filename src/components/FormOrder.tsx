@@ -260,7 +260,6 @@ const FormOrderA = ({
           validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
             //*<---- check if include customer
-            console.log({ customerId, values })
             const customerChosen = customerId || values?.customerId
             if (!values?.excludeCustomer) {
               if (!values.fullName && !customerChosen)
