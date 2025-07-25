@@ -30,7 +30,6 @@ const FormStaff = ({
   onSubmit?: (values: any) => Promise<void>
 }) => {
   const [loading, setLoading] = React.useState(false)
-  console.log({ defaultValues })
   return (
     <Formik
       initialValues={{ name: '', ...defaultValues }}
