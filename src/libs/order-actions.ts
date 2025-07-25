@@ -22,6 +22,7 @@ import { createUUID } from './createId'
 
 import { onSendOrderWhatsapp } from './whatsapp/sendOrderMessage'
 import { CustomerType } from '../state/features/costumers/customerType'
+import { ServiceCurrentWork } from '../components/CurrentWork/ServiceCurrentWork'
 
 export const onComment = async ({
   orderId,
@@ -580,6 +581,7 @@ export const onAssignOrder = async ({
     assignToSection: sectionId,
     assignToSectionName: sectionName
   })
+
   onComment({
     orderId,
     content: `Asignada${

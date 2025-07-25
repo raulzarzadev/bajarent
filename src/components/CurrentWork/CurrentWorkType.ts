@@ -1,7 +1,6 @@
 import { FieldValue, Timestamp } from 'firebase/firestore'
 import BaseType from '../../types/BaseType'
 import { PlaneDateType } from '../../libs/utils-date'
-import { create } from 'cypress/types/lodash'
 
 export type CurrentWorkBase = {
   storeId: string
@@ -60,7 +59,8 @@ export const orders_work_actions = {
   order_authorized: 'Orden autorizada',
   order_created: 'Orden creada',
   order_updated: 'Orden actualizada',
-  order_deleted: 'Orden eliminada'
+  order_deleted: 'Orden eliminada',
+  order_reassigned: 'Orden reasignada'
 }
 export const items_work_actions = {
   item_repaired: 'Artículo reparado',

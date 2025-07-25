@@ -18,9 +18,7 @@ import { useStore } from '../../contexts/storeContext'
 import ButtonConfirm from '../ButtonConfirm'
 import ModalEditMultiOrders from './ModalEditMultiOrders'
 import useMyNav from '../../hooks/useMyNav'
-import ModalCreateCustomers, {
-  ModalCreateCustomersE
-} from '../Customers/ModalCreateCustomers'
+import { ModalCreateCustomersE } from '../Customers/ModalCreateCustomers'
 
 const MultiOrderActions = ({
   ordersIds = [],
@@ -124,12 +122,26 @@ const MultiOrderActions = ({
 
 const ModalAssignOrders = ({ ordersIds }: { ordersIds: string[] }) => {
   const { storeId } = useStore()
+
   const handleAssignOrders = async ({ sectionId, sectionName, ordersIds }) => {
     try {
       const promises = ordersIds.map((orderId) =>
         onAssignOrder({ orderId, sectionId, sectionName, storeId })
       )
-      return await Promise.all(promises)
+
+      const res = await Promise.all(promises)
+      //TODO:  reasign multiple orders
+      //  addWork({
+      //   work: {
+      //     type: 'order',
+      //     action: 'order_reassigned',
+      //     details: {
+      //       sectionId,
+      //       orderId
+      //     }
+      //   }
+      // })
+      return res
     } catch (e) {
       console.error({ e })
     }

@@ -129,6 +129,22 @@ export const fetchUnsolvedOrders = createAsyncThunk(
   }
 )
 
+export const fetchOrdersByIds = createAsyncThunk(
+  'orders/fetchByIds',
+  async ({ ordersIds }: { ordersIds: string[] }, { rejectWithValue }) => {
+    try {
+      if (!ordersIds || ordersIds.length === 0) {
+        return { orders: [], reports: [], cached: true }
+      }
+      const orders = await ServiceOrders.getList(ordersIds)
+
+      return { orders }
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
 export const fetchOrdersByType = createAsyncThunk(
   'orders/fetchByType',
   async (
@@ -349,6 +365,23 @@ const ordersSlice = createSlice({
       state.error = null
     },
 
+    // Reset state - útil cuando cambias de tienda o necesitas limpiar todo
+    resetOrders: (state) => {
+      state.orders = {}
+      state.orderIds = []
+      state.unsolvedOrders = []
+      state.solvedOrders = []
+      state.myOrders = []
+      state.rentOrders = []
+      state.repairOrders = []
+      state.saleOrders = []
+      state.expiredOrders = []
+      state.reports = []
+      state.comments = {}
+      state.lastFetch = null
+      state.error = null
+    },
+
     // Performance optimization
     addListener: (state, action: PayloadAction<string>) => {
       state.listeners.add(action.payload)
@@ -374,19 +407,32 @@ const ordersSlice = createSlice({
 
         const { orders, reports, timestamp } = action.payload
 
-        // Normalize and categorize orders
-        const { entities, ids } = normalizeOrders(orders)
-        const categories = categorizeOrders(orders, state.sections)
+        if (orders && orders.length > 0) {
+          // Normalizar las nuevas órdenes
+          const { entities: newEntities, ids: newIds } = normalizeOrders(orders)
 
-        state.orders = entities
-        state.orderIds = ids
-        state.unsolvedOrders = categories.unsolved
-        state.solvedOrders = categories.solved
-        state.myOrders = categories.my
-        state.rentOrders = categories.rent
-        state.repairOrders = categories.repair
-        state.saleOrders = categories.sale
-        state.expiredOrders = categories.expired
+          // Combinar con las órdenes existentes sin sobrescribir
+          state.orders = { ...state.orders, ...newEntities }
+
+          // Agregar los nuevos IDs sin duplicar
+          const existingIdsSet = new Set(state.orderIds)
+          const idsToAdd = newIds.filter((id) => !existingIdsSet.has(id))
+          state.orderIds = [...state.orderIds, ...idsToAdd]
+
+          // Recategorizar todas las órdenes para actualizar las listas filtradas
+          const allOrders = Object.values(state.orders)
+          const categories = categorizeOrders(allOrders, state.sections)
+
+          state.unsolvedOrders = categories.unsolved
+          state.solvedOrders = categories.solved
+          state.myOrders = categories.my
+          state.rentOrders = categories.rent
+          state.repairOrders = categories.repair
+          state.saleOrders = categories.sale
+          state.expiredOrders = categories.expired
+        }
+
+        // Actualizar reports y timestamp
         state.reports = reports
         state.lastFetch = timestamp
         state.loading = false
@@ -406,6 +452,45 @@ const ordersSlice = createSlice({
       })
       .addCase(fetchOrdersByType.rejected, (state, action) => {
         state.refreshing = false
+        state.error = action.payload as string
+      })
+
+      // fetchOrdersByIds - agregar órdenes sin eliminar las existentes
+      .addCase(fetchOrdersByIds.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchOrdersByIds.fulfilled, (state, action) => {
+        const { orders } = action.payload
+        if (orders && orders.length > 0) {
+          // Normalizar las nuevas órdenes
+          const { entities: newEntities, ids: newIds } = normalizeOrders(orders)
+
+          // Combinar con las órdenes existentes
+          state.orders = { ...state.orders, ...newEntities }
+
+          // Agregar los nuevos IDs sin duplicar
+          const existingIdsSet = new Set(state.orderIds)
+          const idsToAdd = newIds.filter((id) => !existingIdsSet.has(id))
+          state.orderIds = [...state.orderIds, ...idsToAdd]
+
+          // Recategorizar todas las órdenes para actualizar las listas filtradas
+          const allOrders = Object.values(state.orders)
+          const categories = categorizeOrders(allOrders, state.sections)
+
+          state.unsolvedOrders = categories.unsolved
+          state.solvedOrders = categories.solved
+          state.myOrders = categories.my
+          state.rentOrders = categories.rent
+          state.repairOrders = categories.repair
+          state.saleOrders = categories.sale
+          state.expiredOrders = categories.expired
+        }
+
+        state.loading = false
+      })
+      .addCase(fetchOrdersByIds.rejected, (state, action) => {
+        state.loading = false
         state.error = action.payload as string
       })
   }
@@ -465,6 +550,7 @@ export const {
   addComment,
   invalidateCache,
   clearError,
+  resetOrders,
   addListener,
   removeListener
 } = ordersSlice.actions

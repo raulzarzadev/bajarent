@@ -2,11 +2,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback } from 'react'
 import { AppDispatch, RootState } from '../state/store'
 import {
-  fetchUnsolvedOrders,
   fetchOrdersByType,
   setFetchType,
   setStoreConfig,
   invalidateCache,
+  resetOrders,
   addListener,
   removeListener,
   selectAllOrders,
@@ -17,7 +17,8 @@ import {
   selectOrdersError,
   selectReports,
   selectOrdersStats,
-  FetchTypeOrders
+  FetchTypeOrders,
+  fetchOrdersByIds
 } from '../state/features/orders/ordersSlice'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
@@ -164,6 +165,19 @@ export const useOrdersRedux = (componentId?: string) => {
     }
   }, [stats, ordersState])
 
+  const setSomeOtherOrders = ({ ordersIds }: { ordersIds: string[] }) => {
+    const uniqueOrdersIds = Array.from(new Set(ordersIds))
+    dispatch(
+      fetchOrdersByIds({
+        ordersIds: uniqueOrdersIds
+      })
+    )
+  }
+
+  const clearAllOrders = useCallback(() => {
+    dispatch(resetOrders())
+  }, [dispatch])
+
   return {
     // Data
     orders: formatOrders({ orders: allOrders, reports, customers }),
@@ -171,6 +185,7 @@ export const useOrdersRedux = (componentId?: string) => {
     myOrders,
     reports,
     stats,
+    setSomeOtherOrders,
 
     // State
     loading,
@@ -182,6 +197,7 @@ export const useOrdersRedux = (componentId?: string) => {
     forceRefresh,
     changeFetchType,
     getOrdersByType,
+    clearAllOrders,
 
     // Utils
     getPerformanceMetrics,
