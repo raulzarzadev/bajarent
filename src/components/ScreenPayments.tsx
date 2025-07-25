@@ -12,14 +12,14 @@ import ListPayments from './ListPayments'
 
 export default function ScreenPayments({ navigation, route }) {
   const preList = route?.params?.payments || null
-  const { consolidatedOrders } = useOrdersCtx()
   const { storeId } = useStore()
   const [days, setDays] = useState(1)
   const [payments, setPayments] = useState([])
 
   useEffect(() => {
     handleGetPayments()
-  }, [consolidatedOrders])
+  }, [])
+
   const handleGetPayments = () => {
     if (preList?.length) {
       ServicePayments.list(preList).then((res) => setPayments(res))
@@ -30,7 +30,6 @@ export default function ScreenPayments({ navigation, route }) {
     }
   }
 
-  const { staff } = useStore()
   const modalDays = useModal({
     title: `Consultar ${days >= 365 ? 'un año atras' : `${days} días atras`}`
   })
@@ -59,7 +58,6 @@ export default function ScreenPayments({ navigation, route }) {
           <Button
             label="Buscar"
             onPress={() => {
-              handleGetPayments()
               modalDays.toggleOpen()
             }}
           ></Button>

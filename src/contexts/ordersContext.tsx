@@ -39,6 +39,9 @@ export type OrdersContextType = {
   orderTypeOptions?: OrderTypeOption[]
   handleRefresh?: () => Promise<void> | void
   reports?: CommentType[]
+  /**
+   * @deprecated DO NOT USE CONSOLIDATED ORDERS IN NEW CODE
+   */
   consolidatedOrders?: ConsolidatedStoreOrdersType
   repairOrders?: unknown[]
   payments?: PaymentType[]
