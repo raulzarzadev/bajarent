@@ -14,66 +14,79 @@ import asDate, { dateFormat } from '../../libs/utils-date'
 import dictionary from '../../dictionary'
 import { useStore } from '../../contexts/storeContext'
 import { useOrdersRedux } from '../../hooks/useOrdersRedux'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import OrderType from '../../types/OrderType'
+import { CustomerType } from '../../state/features/costumers/customerType'
 
 const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
+  type CurrentWorkTypeWithOrderAndCustomerData = CurrentWorkUpdate & {
+    order?: Partial<OrderType>
+    customer?: Partial<CustomerType>
+  }
   const { data: currentWork } = useCurrentWork()
   const { user } = useAuth()
   const { employee } = useEmployee()
   const { sections } = useStore()
+  const { data: customers } = useCustomers()
   const [workType, setWorkType] = useState<'personal' | 'sections'>('sections')
   const [personalWorks, setPersonalWorks] = useState<CurrentWorkUpdate[]>([])
   const [sectionWorks, setSectionWorks] = useState<CurrentWorkUpdate[]>([])
-  const [currentUpdates, setCurrentUpdates] = useState<CurrentWorkUpdate[]>([])
+  const [currentUpdates, setCurrentUpdates] = useState<
+    CurrentWorkTypeWithOrderAndCustomerData[]
+  >([])
   const { orders, setSomeOtherOrders } = useOrdersRedux()
 
   const toggleWorkType = () => {
+    console.log({ orders, customers })
     setWorkType(workType === 'personal' ? 'sections' : 'personal')
     if (workType === 'personal') {
-      const personalUpdates = Object.values(currentWork?.updates || {}).filter(
-        (update) => update?.createdBy === user?.id
-      )
+      const personalUpdates = Object.values(currentWork?.updates || {})
+        .filter((update) => update?.createdBy === user?.id)
+        .map((update) => {
+          const order = orders.find((o) => o.id === update.details?.orderId)
+          const customer = customers.find((c) => c.id === order?.customerId)
+          return {
+            ...update,
+            order,
+            customer
+          }
+        })
       setCurrentUpdates(personalUpdates)
     } else {
       const assignedSectionsUpdates = getSectionsWorks({
         currentWork,
         sections: employee?.sectionsAssigned || []
       })
-      setCurrentUpdates(assignedSectionsUpdates)
+
+      setCurrentUpdates(
+        assignedSectionsUpdates.map((update) => {
+          const order = orders.find((o) => o.id === update.details?.orderId)
+          const customer = customers.find((c) => c.id === order?.customerId)
+          return {
+            ...update,
+            order,
+            customer
+          }
+        })
+      )
     }
   }
+
+  useEffect(() => {
+    if (currentWork) {
+      toggleWorkType()
+      setSomeOtherOrders({
+        ordersIds: Object.values(currentWork?.updates || {})
+          .filter((update) => update?.type === 'order')
+          .map((update) => update.details?.orderId)
+      })
+    }
+  }, [currentWork])
+
   const [personalPayments, setPersonalPayments] = useState([])
 
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
   const [selectedSectionPayment, setSelectedSectionPayments] = useState([])
-
-  useEffect(() => {
-    if (currentWork) {
-      const personalWork = Object.values(currentWork?.updates || {}).filter(
-        (update) => update?.createdBy === user?.id
-      )
-      const sectionWork = getSectionsWorks({
-        currentWork,
-        sections: employee?.sectionsAssigned || []
-      })
-      setCurrentUpdates(workType === 'personal' ? personalWork : sectionWork)
-      setSectionWorks(sectionWork)
-      setPersonalWorks(personalWork)
-
-      const ordersIds = Object.values(currentWork?.updates || {})
-        .filter((update) => update?.type === 'order')
-        .map((update) => update.details?.orderId)
-
-      if (ordersIds.length) {
-        const uniqueOrdersIds = Array.from(new Set(ordersIds))
-        setSomeOtherOrders({ ordersIds: uniqueOrdersIds })
-        console.log({
-          orders,
-          uniqueOrdersIds,
-          foundOrders: orders.filter((o) => uniqueOrdersIds.includes(o.id))
-        })
-      }
-    }
-  }, [currentWork, employee?.sectionsAssigned])
 
   useEffect(() => {
     if (personalWorks.length) {
@@ -96,42 +109,6 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       })
     }
   }, [sectionWorks.length, workType])
-
-  const currentWorkUpdates = Object.values(currentWork?.updates || {})
-
-  const sectionalWorks = currentWorkUpdates?.filter((work) =>
-    employee?.sectionsAssigned?.includes(work.details?.sectionId)
-  )
-
-  const currentSections = sectionalWorks
-    .filter((a) => a.details.sectionId)
-    .sort(
-      (a, b) => asDate(a.createdAt).getTime() - asDate(b.createdAt).getTime()
-    )
-    .reduce((acc, a) => {
-      const { orderId, sectionId } = a.details
-      const action = a.action
-      // inicializamos array si no existía
-      if (!acc[sectionId]) acc[sectionId] = []
-      // si no está ya incluido, lo añadimos
-      const update = {
-        orderId,
-        action,
-        createdAt: a.createdAt,
-        orderFolio: orders.find((o) => o.id === orderId)?.folio || null
-      }
-      const existingIndex = acc[sectionId].findIndex(
-        (item) => item.orderId === orderId
-      )
-      if (existingIndex === -1) {
-        acc[sectionId].push(update)
-      }
-      return acc
-    }, {})
-
-  const currentSectionsByOrder = getOrdersByCurrentSection(currentSections)
-
-  console.log({ currentSections, currentSectionsByOrder })
 
   const disabledSwitch = false
 
@@ -158,7 +135,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     }
   }
 
-  console.log({ orders })
+  console.log({ currentUpdates })
 
   return (
     <View style={[gStyles.container]}>
@@ -226,7 +203,21 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
               <Text style={[{ marginRight: 4 }, gStyles.helper]}>
                 {dateFormat(asDate(update.createdAt), 'HH:mm:ss')}
               </Text>
-              <Text style={gStyles.helper}>{dictionary(update.action)} - </Text>
+              <Text style={[{ marginRight: 4 }, gStyles.helper, gStyles.tBold]}>
+                {update?.order?.folio}
+              </Text>
+              {!!update?.customer && (
+                <>
+                  <Text style={gStyles.helper}>
+                    {dictionary(update.action)} -{' '}
+                  </Text>
+                  <Text style={[{ marginRight: 4 }, gStyles.helper]}>
+                    {update?.customer?.name}
+                  </Text>
+                </>
+              )}
+
+              <Text style={gStyles.helper}> - </Text>
               {update.details?.sectionId && (
                 <Text style={gStyles.helper}>
                   <Text style={gStyles.tBold}>

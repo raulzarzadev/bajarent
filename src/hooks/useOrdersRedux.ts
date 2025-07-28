@@ -89,37 +89,39 @@ export const useOrdersRedux = (componentId?: string) => {
           type: fetchType,
           sections: employee?.sectionsAssigned || [],
           employee,
-          permissions
+          permissions,
+          forceRefresh: false // En el inicio, no necesitas forzar refresh
         })
       )
     }
   }, [dispatch, storeId, disabledEmployee, permissions, employee])
 
   // Methods
-  const refreshOrders = useCallback(async () => {
-    if (!storeId) return
+  const refreshOrders = useCallback(
+    async (forceRefresh: boolean = false) => {
+      if (!storeId) return
 
-    const fetchType: FetchTypeOrders = permissions?.canViewAllOrders
-      ? 'all'
-      : 'mine'
+      const fetchType: FetchTypeOrders = permissions?.canViewAllOrders
+        ? 'all'
+        : 'mine'
 
-    return dispatch(
-      fetchOrdersByType({
-        storeId,
-        type: fetchType,
-        sections: employee?.sectionsAssigned || [],
-        employee,
-        permissions
-      })
-    )
-  }, [dispatch, storeId, permissions, employee])
+      return dispatch(
+        fetchOrdersByType({
+          storeId,
+          type: fetchType,
+          sections: employee?.sectionsAssigned || [],
+          employee,
+          permissions,
+          forceRefresh
+        })
+      )
+    },
+    [dispatch, storeId, permissions, employee]
+  )
 
   const forceRefresh = useCallback(async () => {
-    if (!storeId) return
-
-    dispatch(invalidateCache())
-    return refreshOrders()
-  }, [dispatch, storeId, refreshOrders])
+    return refreshOrders(true)
+  }, [refreshOrders])
 
   const changeFetchType = useCallback(
     (type: FetchTypeOrders) => {
@@ -132,7 +134,8 @@ export const useOrdersRedux = (componentId?: string) => {
             type,
             sections: employee?.sectionsAssigned || [],
             employee,
-            permissions
+            permissions,
+            forceRefresh: true // Cuando cambias el tipo, quieres reemplazar las órdenes
           })
         )
       }

@@ -154,11 +154,19 @@ export const fetchOrdersByType = createAsyncThunk(
       sections?: string[]
       employee?: any
       permissions?: any
+      forceRefresh?: boolean
     },
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const { storeId, type, sections = [], employee, permissions } = params
+      const {
+        storeId,
+        type,
+        sections = [],
+        employee,
+        permissions,
+        forceRefresh = false
+      } = params
       const getExpireTomorrow = permissions.orders?.getExpireTomorrow || false
 
       switch (type) {
@@ -169,7 +177,8 @@ export const fetchOrdersByType = createAsyncThunk(
                 storeId,
                 getBySections: false,
                 sections: [],
-                getExpireTomorrow: getExpireTomorrow
+                getExpireTomorrow: getExpireTomorrow,
+                forceRefresh
               })
             )
           }
@@ -182,14 +191,15 @@ export const fetchOrdersByType = createAsyncThunk(
                 storeId,
                 getBySections: true,
                 sections: employee.sectionsAssigned,
-                getExpireTomorrow: getExpireTomorrow
+                getExpireTomorrow: getExpireTomorrow,
+                forceRefresh
               })
             )
           }
           break
 
         case 'unsolved':
-          return dispatch(fetchUnsolvedOrders({ storeId }))
+          return dispatch(fetchUnsolvedOrders({ storeId, forceRefresh }))
 
         default:
           break
@@ -406,18 +416,25 @@ const ordersSlice = createSlice({
         }
 
         const { orders, reports, timestamp } = action.payload
+        const isForceRefresh = action.meta.arg.forceRefresh
 
         if (orders && orders.length > 0) {
           // Normalizar las nuevas órdenes
           const { entities: newEntities, ids: newIds } = normalizeOrders(orders)
 
-          // Combinar con las órdenes existentes sin sobrescribir
-          state.orders = { ...state.orders, ...newEntities }
+          if (isForceRefresh) {
+            // ForceRefresh: reemplazar completamente las órdenes
+            state.orders = newEntities
+            state.orderIds = newIds
+          } else {
+            // Refresh normal: combinar con las órdenes existentes sin sobrescribir
+            state.orders = { ...state.orders, ...newEntities }
 
-          // Agregar los nuevos IDs sin duplicar
-          const existingIdsSet = new Set(state.orderIds)
-          const idsToAdd = newIds.filter((id) => !existingIdsSet.has(id))
-          state.orderIds = [...state.orderIds, ...idsToAdd]
+            // Agregar los nuevos IDs sin duplicar
+            const existingIdsSet = new Set(state.orderIds)
+            const idsToAdd = newIds.filter((id) => !existingIdsSet.has(id))
+            state.orderIds = [...state.orderIds, ...idsToAdd]
+          }
 
           // Recategorizar todas las órdenes para actualizar las listas filtradas
           const allOrders = Object.values(state.orders)
@@ -447,8 +464,10 @@ const ordersSlice = createSlice({
         state.refreshing = true
         state.error = null
       })
-      .addCase(fetchOrdersByType.fulfilled, (state) => {
+      .addCase(fetchOrdersByType.fulfilled, (state, action) => {
         state.refreshing = false
+        // fetchOrdersByType delega a fetchUnsolvedOrders, así que el estado ya se actualiza
+        // en el reducer de fetchUnsolvedOrders.fulfilled
       })
       .addCase(fetchOrdersByType.rejected, (state, action) => {
         state.refreshing = false
