@@ -153,7 +153,7 @@ export const useOrdersRedux = (componentId?: string) => {
 
     return {
       totalOrders: stats.total,
-      listenersCount: ordersState.listeners.size,
+      listenersCount: ordersState.listeners.length,
       cacheAge: ordersState.lastFetch
         ? Date.now() - ordersState.lastFetch
         : null,

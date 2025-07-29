@@ -48,7 +48,7 @@ export interface OrdersState {
 
   // Performance optimization
   cacheExpiry: number // 5 minutes
-  listeners: Set<string>
+  listeners: string[]
 }
 
 const initialState: OrdersState = {
@@ -72,7 +72,7 @@ const initialState: OrdersState = {
   sections: [],
   getBySections: false,
   cacheExpiry: 5 * 60 * 1000, // 5 minutes
-  listeners: new Set()
+  listeners: []
 }
 
 // Async Thunks
@@ -386,11 +386,13 @@ const ordersSlice = createSlice({
 
     // Performance optimization
     addListener: (state, action: PayloadAction<string>) => {
-      state.listeners.add(action.payload)
+      state.listeners.push(action.payload)
     },
 
     removeListener: (state, action: PayloadAction<string>) => {
-      state.listeners.delete(action.payload)
+      state.listeners = state.listeners.filter(
+        (listener) => listener !== action.payload
+      )
     }
   },
 
