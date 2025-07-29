@@ -490,7 +490,6 @@ const ordersSlice = createSlice({
           // Recategorizar todas las órdenes para actualizar las listas filtradas
           const allOrders = Object.values(state.orders)
           const categories = categorizeOrders(allOrders, state.sections)
-          console.log({ categories })
           state.unsolvedOrders = categories.unsolved
           state.solvedOrders = categories.solved
           state.myOrders = categories.my
