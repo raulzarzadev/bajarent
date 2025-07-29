@@ -18,7 +18,7 @@ import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { addDays, isSaturday, isValid } from 'date-fns'
+import { addDays, isSaturday, isValid, startOfDay } from 'date-fns'
 import { createUUID } from '../libs/createId'
 import { auth } from './auth'
 import { expireDate2 } from '../libs/expireDate'
@@ -298,6 +298,19 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       ...order,
       comments: reportsNotSolved.filter(({ orderId }) => orderId === order.id)
     }))
+  }
+
+  async getOrdersUpdatedDate({
+    date,
+    storeId
+  }: {
+    date: Date
+    storeId: string
+  }) {
+    return this.findMany([
+      where('storeId', '==', storeId),
+      where('updatedAt', '>=', date)
+    ])
   }
 
   async search({

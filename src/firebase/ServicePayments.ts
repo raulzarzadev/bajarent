@@ -112,22 +112,13 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
     } catch (error) {
       console.error('Error getting batch:', error)
     }
-    // for (const batch of batches) {
-    //   const batchResults = await this.getItems([
-    //     where(field, 'in', batch),
-    //     ...moreFilters
-    //   ]).catch((error) => {
-    //     console.error('Error getting batch:', error)
-    //     return []
-    //   })
-    //   results.push(...batchResults)
-    // }
   }
+
   async getToday(storeId: string) {
-    return this.getItems([
+    return this.findMany([
       where('storeId', '==', storeId),
-      where('createdAt', '>=', new Date().setHours(0, 0, 0, 0)),
-      where('createdAt', '<=', new Date().setHours(23, 59, 59, 999))
+      where('createdAt', '>=', new Date(new Date().setHours(0, 0, 0, 0))),
+      where('createdAt', '<=', new Date(new Date().setHours(23, 59, 59, 999)))
     ])
   }
 

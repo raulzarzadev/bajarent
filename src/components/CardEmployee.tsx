@@ -9,6 +9,7 @@ import { useStore } from '../contexts/storeContext'
 import { staff_roles } from '../types/StaffType'
 import Chip from './Chip'
 import theme from '../theme'
+import { BadgeListSectionsE } from './BadgeListSections'
 
 const CardEmployee = () => {
   const { store } = useStore()
@@ -92,37 +93,11 @@ export const EmployeeSections = ({
           No estas asignado a ni un area
         </Text>
       )}
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
-        }}
-      >
-        {employee?.sectionsAssigned?.length &&
-          employee?.sectionsAssigned.map((sectionId) => {
-            const section = sections?.find((s) => s?.id === sectionId)
-            return (
-              <Chip
-                style={{
-                  margin: 4,
-                  borderWidth: 2,
-                  borderColor:
-                    selectedSection && selectedSection === sectionId
-                      ? theme.primary
-                      : theme.transparent
-                }}
-                size="sm"
-                title={section?.name}
-                color={theme.white}
-                titleColor={theme.secondary}
-                key={sectionId}
-                onPress={() => onPressSection?.({ sectionId })}
-              ></Chip>
-            )
-          })}
-      </View>
+      <BadgeListSectionsE
+        sections={sections}
+        selectedSection={selectedSection}
+        onPressSection={onPressSection}
+      />
     </>
   )
 }
