@@ -85,6 +85,7 @@ export const EmployeeSections = ({
 }) => {
   const { employee } = useEmployee()
   const { sections } = useStore()
+
   return (
     <>
       <Text style={[gStyles.helper, gStyles.tCenter]}>Areas asignadas:</Text>
@@ -93,8 +94,11 @@ export const EmployeeSections = ({
           No estas asignado a ni un area
         </Text>
       )}
+
       <BadgeListSectionsE
-        sections={sections}
+        sections={sections.filter((section) =>
+          employee?.sectionsAssigned?.includes(section.id)
+        )}
         selectedSection={selectedSection}
         onPressSection={onPressSection}
       />
