@@ -4,6 +4,7 @@ import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import { ServiceComments } from '../../../firebase/ServiceComments'
 import { formatOrders, isUnsolvedOrder } from '../../../libs/orders'
 import { CommentType } from '../../../types/CommentType'
+import { serializeObj } from '../../libs/serializeObj'
 
 // Types
 export type FetchTypeOrders =
@@ -117,8 +118,8 @@ export const fetchUnsolvedOrders = createAsyncThunk(
       const formattedOrders = formatOrders({ orders, reports })
 
       return {
-        orders: formattedOrders,
-        reports,
+        orders: serializeObj(formattedOrders),
+        reports: serializeObj(reports),
         cached: false,
         timestamp: now
       }
