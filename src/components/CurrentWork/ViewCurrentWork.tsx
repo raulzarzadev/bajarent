@@ -43,6 +43,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   const [workType, setWorkType] = useState<CurrentWorkView>('sections')
 
   const [orders, setOrders] = useState<OrderType[]>([])
+
   const [currentUpdates, setCurrentUpdates] = useState<
     CurrentWorkTypeWithOrderAndCustomerData[]
   >([])
@@ -156,8 +157,16 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   const handleSetSelectedSection = (sectionId: string) => {
     if (selectedSection === sectionId) {
       setSelectedSection(null)
+      setPayments(todayPayments) // Reset to all payments
     } else {
       setSelectedSection(sectionId)
+      const sectionOrders = orders.filter(
+        (o) => o.assignToSection === sectionId
+      )
+      const sectionPayments = todayPayments.filter((p) =>
+        sectionOrders.some((o) => o.id === p.orderId)
+      )
+      setPayments(sectionPayments)
     }
   }
 
@@ -215,42 +224,46 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       </View>
       {/* ********** UPDATES LIST ********** */}
 
-      {currentUpdates?.map((update, i) => (
-        <View
-          key={i}
-          style={{
-            marginBottom: 8,
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}
-        >
-          <Text style={[{ marginRight: 4 }, gStyles.helper]}>
-            {dateFormat(asDate(update.createdAt), 'HH:mm:ss')}
-          </Text>
-          <Text style={[{ marginRight: 4 }, gStyles.helper, gStyles.tBold]}>
-            {update?.order?.folio}
-          </Text>
-          {!!update?.customer && (
-            <>
-              <Text style={gStyles.helper}>{dictionary(update.action)} - </Text>
-              <Text style={[{ marginRight: 4 }, gStyles.helper]}>
-                {update?.customer?.name}
-              </Text>
-            </>
-          )}
-
-          <Text style={gStyles.helper}> - </Text>
-          {update.details?.sectionId && (
-            <Text style={gStyles.helper}>
-              <Text style={gStyles.tBold}>
-                {sections.find(
-                  (section) => section.id === update.details.sectionId
-                )?.name || update.details.sectionId}
-              </Text>
+      {currentUpdates
+        .sort((a, b) => {
+          return asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
+        })
+        ?.map((update, i) => (
+          <View
+            key={i}
+            style={{
+              marginBottom: 8,
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
+          >
+            <Text style={[{ marginRight: 4 }, gStyles.helper]}>
+              {dateFormat(asDate(update.createdAt), 'HH:mm:ss')}
             </Text>
-          )}
-        </View>
-      ))}
+            <Text style={[{ marginRight: 4 }, gStyles.helper, gStyles.tBold]}>
+              {update?.order?.folio}
+            </Text>
+            {!!update?.customer && (
+              <>
+                <Text style={gStyles.helper}>
+                  {dictionary(update.action)} -{' '}
+                </Text>
+                <Text style={[{ marginRight: 4 }, gStyles.helper]}>
+                  {update?.customer?.name}
+                </Text>
+              </>
+            )}
+
+            <Text style={gStyles.helper}> - </Text>
+            {update.order.assignToSection && (
+              <Text style={[gStyles.helper, gStyles.tBold]}>
+                {sections.find(
+                  (section) => section.id === update.order.assignToSection
+                )?.name || update.order.assignToSection}
+              </Text>
+            )}
+          </View>
+        ))}
     </View>
   )
 }
