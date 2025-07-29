@@ -127,27 +127,29 @@ export const formatOrder = ({
 }
 
 export const activeOrders = (ordersFormatted: OrderType[]) => {
-  return ordersFormatted.filter((o) => {
-    //* if has reports not solved, return true
-    if (o.hasNotSolvedReports) return true
-    //* if is cancelled or renewed, return false
-    if ([order_status.CANCELLED, order_status.RENEWED].includes(o.status))
-      return false
-
-    //* if is REPAIR and status is in [AUTHORIZED, PICKED_UP,REPAIRING, REPAIRED], return true
-    if (o.type === 'REPAIR') {
-      return [
-        order_status.AUTHORIZED,
-        order_status.REPAIRING,
-        order_status.REPAIRED,
-        order_status.PICKED_UP
-      ].includes(o.status)
-    }
-    //* if is RENT and status is in [AUTHORIZED], or isExpired return true
-    if (o.type === 'RENT') {
-      if (o.status === order_status.AUTHORIZED || o.isExpired) return true
-    }
-  })
+  return ordersFormatted.filter((o) => isUnsolvedOrder(o))
+}
+export const isUnsolvedOrder = (order: OrderType) => {
+  //* if has reports not solved, return true
+  if (order.hasNotSolvedReports) return true
+  //* if is cancelled or renewed, return false
+  if ([order_status.CANCELLED, order_status.RENEWED].includes(order.status))
+    return false
+  //* if is REPAIR and status is in [AUTHORIZED, PICKED_UP,REPAIRING, REPAIRED], return true
+  if (order.type === 'REPAIR') {
+    return [
+      order_status.AUTHORIZED,
+      order_status.REPAIRING,
+      order_status.REPAIRED,
+      order_status.PICKED_UP
+    ].includes(order.status)
+  }
+  //* if is RENT and status is in [AUTHORIZED], or isExpired return true
+  if (order.type === 'RENT') {
+    if (order.status === order_status.PICKED_UP) return false
+    return order.status === order_status.AUTHORIZED || order.isExpired
+  }
+  return false
 }
 
 export const orderExpireAt = ({

@@ -22,7 +22,7 @@ import {
 } from '../state/features/orders/ordersSlice'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
-import { formatOrders } from '../libs/orders'
+import { formatOrders, isUnsolvedOrder } from '../libs/orders'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 
 export const useOrdersRedux = (componentId?: string) => {
@@ -181,10 +181,16 @@ export const useOrdersRedux = (componentId?: string) => {
     dispatch(resetOrders())
   }, [dispatch])
 
+  const allFormattedOrders = formatOrders({
+    orders: allOrders,
+    reports,
+    customers
+  })
+
   return {
     // Data
-    orders: formatOrders({ orders: allOrders, reports, customers }),
-    unsolvedOrders,
+    orders: allFormattedOrders,
+    unsolvedOrders: allFormattedOrders.filter(isUnsolvedOrder),
     myOrders,
     reports,
     stats,

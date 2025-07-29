@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import OrderType, { order_status, order_type } from '../../../types/OrderType'
 import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import { ServiceComments } from '../../../firebase/ServiceComments'
-import { formatOrders } from '../../../libs/orders'
+import { formatOrders, isUnsolvedOrder } from '../../../libs/orders'
 import { CommentType } from '../../../types/CommentType'
 
 // Types
@@ -242,19 +242,9 @@ const categorizeOrders = (
   }
 
   orders.forEach((order) => {
-    if (!order.id) return
-
     // Status categorization
-    if (
-      [
-        order_status.PENDING,
-        order_status.AUTHORIZED,
-        order_status.DELIVERED,
-        order_status.REPAIRING,
-        order_status.REPAIRED,
-        order_status.PICKED_UP
-      ].includes(order.status)
-    ) {
+
+    if (isUnsolvedOrder(order as OrderType)) {
       categories.unsolved.push(order.id)
     } else {
       categories.solved.push(order.id)
@@ -496,7 +486,7 @@ const ordersSlice = createSlice({
           // Recategorizar todas las órdenes para actualizar las listas filtradas
           const allOrders = Object.values(state.orders)
           const categories = categorizeOrders(allOrders, state.sections)
-
+          console.log({ categories })
           state.unsolvedOrders = categories.unsolved
           state.solvedOrders = categories.solved
           state.myOrders = categories.my

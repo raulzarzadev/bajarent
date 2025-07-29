@@ -11,10 +11,19 @@ import { useOrdersRedux } from '../hooks/useOrdersRedux'
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
   const hasOrderList = !!route?.params?.orders
-  const { orders, forceRefresh } = useOrdersRedux()
+  const {
+    forceRefresh,
+    //* using unsolved orders its new but im not sure if its the best way
+    unsolvedOrders: orders
+  } = useOrdersRedux()
   const { fetchOrders } = useOrders({
     ids: route?.params?.orders
   })
+
+  // console.log({
+  //   orders,
+  //   allOrders
+  // })
   const [preOrders, setPreOrders] = useState([])
 
   useEffect(() => {
@@ -35,15 +44,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   const handleRefresh = () => {
     setDisabled(true)
     forceRefresh()
-    // fetchOrders({ ordersIds: route?.params?.orders })
-    //   .then((res) => {
-    //     setDisabled(false)
-    //     setPreOrders(res)
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching orders:', error)
-    //     setDisabled(false)
-    //   })
     setTimeout(() => setDisabled(false), 4000)
   }
 
