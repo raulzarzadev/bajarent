@@ -12,7 +12,7 @@ import { BalanceAmountsE } from '../BalanceAmounts'
 import asDate, { dateFormat } from '../../libs/utils-date'
 import dictionary from '../../dictionary'
 import { useStore } from '../../contexts/storeContext'
-import { useOrdersRedux } from '../../hooks/useOrdersRedux'
+
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import OrderType from '../../types/OrderType'
 import { CustomerType } from '../../state/features/costumers/customerType'
