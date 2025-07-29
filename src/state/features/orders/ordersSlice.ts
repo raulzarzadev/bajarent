@@ -242,6 +242,8 @@ const categorizeOrders = (
   }
 
   orders.forEach((order) => {
+    if (!order.id) return
+
     // Status categorization
 
     if (isUnsolvedOrder(order as OrderType)) {
