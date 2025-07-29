@@ -3,7 +3,7 @@ import ErrorBoundary from '../ErrorBoundary'
 import { useAuth } from '../../contexts/authContext'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 import { useEmployee } from '../../contexts/employeeContext'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { CurrentWorkType, CurrentWorkUpdate } from './CurrentWorkType'
 import { ServicePayments } from '../../firebase/ServicePayments'
 import InputSwitch from '../InputSwitch'
@@ -84,95 +84,148 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     }
   }, [storeId])
 
-  const currentUpdatesWithData = currentUpdates.map((update) => {
-    const order = orders.find((o) => o.id === update.details?.orderId)
-    const customer = customers.find((c) => c.id === order?.customerId)
-    return {
-      ...update,
-      order,
-      customer
-    } as CurrentWorkTypeWithOrderAndCustomerData
-  })
+  const handleSetCurrentWorks = useCallback(
+    (workType: CurrentWorkView) => {
+      const currentUpdatesWithData = currentUpdates.map((update) => {
+        const order = orders.find((o) => o.id === update.details?.orderId)
+        const customer = customers.find((c) => c.id === order?.customerId)
+        return {
+          ...update,
+          order,
+          customer
+        } as CurrentWorkTypeWithOrderAndCustomerData
+      })
 
-  const toggleWorkType = () => {
+      if (workType === 'personal') {
+        //* 1. SET PERSONAL UPDATES
+        const personalUpdates = currentUpdatesWithData.filter(
+          (update) => update?.createdBy === user?.id
+        )
+
+        setFilteredUpdates(personalUpdates)
+
+        //* GET SECTIONS WITH
+        const sectionsWithUpdates = personalUpdates
+          .map((update) => update.details?.sectionId)
+          .filter((sectionId) => sectionId)
+          .filter((sectionId, index, self) => self.indexOf(sectionId) === index)
+        setSectionsWithUpdates(sectionsWithUpdates)
+
+        // set personal payments from orders
+        const personalPayments = todayPayments.filter(
+          (p) => p.createdBy === user?.id && p.storeId === storeId
+        )
+        setPayments(personalPayments)
+      } else {
+        //* 1. SET MY SECTIONS UPDATES
+        //* ** ! should be calculated from the current order state.
+        const mySections = employee?.sectionsAssigned || []
+        const workOrdersBySections = mySections.reduce((acc, section) => {
+          const sectionOrders = orders.filter(
+            (o) => o.assignToSection === section
+          )
+          if (sectionOrders.length > 0) {
+            acc[section] = sectionOrders
+          }
+          return acc
+        }, {})
+        setSectionsWithUpdates(Object.keys(workOrdersBySections))
+
+        const sectionsUpdates = currentUpdatesWithData.filter((update) =>
+          mySections.includes(update.order?.assignToSection)
+        )
+
+        setFilteredUpdates(sectionsUpdates)
+
+        //TODO: set sections payments
+        const sectionOrders = Object.values(
+          workOrdersBySections
+        ).flat() as OrderType[]
+        const sectionPayments = todayPayments.filter((p) =>
+          sectionOrders.some((o) => o.id === p.orderId)
+        )
+        setPayments(sectionPayments)
+      }
+    },
+    [
+      currentUpdates,
+      orders,
+      customers,
+      user?.id,
+      todayPayments,
+      storeId,
+      employee?.sectionsAssigned
+    ]
+  )
+
+  // Ejecutar handleSetCurrentWorks cuando tengamos todos los datos necesarios
+  useEffect(() => {
+    if (
+      currentUpdates.length > 0 &&
+      orders.length > 0 &&
+      customers.length > 0 &&
+      filteredUpdates.length === 0 // Solo ejecutar si no hay datos filtrados aún
+    ) {
+      handleSetCurrentWorks(workType)
+    }
+  }, [
+    currentUpdates.length,
+    orders.length,
+    customers.length,
+    filteredUpdates.length,
+    workType,
+    handleSetCurrentWorks
+  ])
+
+  const toggleWorkType = useCallback(() => {
     const newWorkType = workType === 'sections' ? 'personal' : 'sections'
     setWorkType(newWorkType)
     handleSetCurrentWorks(newWorkType)
-  }
+  }, [workType, handleSetCurrentWorks])
 
-  const handleSetCurrentWorks = (workType: CurrentWorkView) => {
-    if (workType === 'personal') {
-      //* 1. SET PERSONAL UPDATES
-      const personalUpdates = currentUpdatesWithData.filter(
-        (update) => update?.createdBy === user?.id
-      )
-
-      setFilteredUpdates(personalUpdates)
-
-      //* GET SECTIONS WITH
-      const sectionsWithUpdates = personalUpdates
-        .map((update) => update.details?.sectionId)
-        .filter((sectionId) => sectionId)
-        .filter((sectionId, index, self) => self.indexOf(sectionId) === index)
-      setSectionsWithUpdates(sectionsWithUpdates)
-
-      // set personal payments from orders
-      const personalPayments = todayPayments.filter(
-        (p) => p.createdBy === user?.id && p.storeId === storeId
-      )
-      setPayments(personalPayments)
-    } else {
-      //* 1. SET MY SECTIONS UPDATES
-      //* ** ! should be calculated from the current order state.
-      const mySections = employee?.sectionsAssigned || []
-      const workOrdersBySections = mySections.reduce((acc, section) => {
+  const handleSetSelectedSection = useCallback(
+    (sectionId: string) => {
+      if (selectedSection === sectionId) {
+        setSelectedSection(null)
+        setPayments(todayPayments) // Reset to all payments
+        handleSetCurrentWorks(workType)
+      } else {
+        setSelectedSection(sectionId)
         const sectionOrders = orders.filter(
-          (o) => o.assignToSection === section
+          (o) => o.assignToSection === sectionId
         )
-        if (sectionOrders.length > 0) {
-          acc[section] = sectionOrders
-        }
-        return acc
-      }, {})
-      setSectionsWithUpdates(Object.keys(workOrdersBySections))
+        const sectionPayments = todayPayments.filter((p) =>
+          sectionOrders.some((o) => o.id === p.orderId)
+        )
 
-      const sectionsUpdates = currentUpdatesWithData.filter((update) =>
-        mySections.includes(update.order?.assignToSection)
-      )
+        // Recalcular currentUpdatesWithData aquí también
+        const currentUpdatesWithData = currentUpdates.map((update) => {
+          const order = orders.find((o) => o.id === update.details?.orderId)
+          const customer = customers.find((c) => c.id === order?.customerId)
+          return {
+            ...update,
+            order,
+            customer
+          } as CurrentWorkTypeWithOrderAndCustomerData
+        })
 
-      setFilteredUpdates(sectionsUpdates)
-
-      //TODO: set sections payments
-      const sectionOrders = Object.values(
-        workOrdersBySections
-      ).flat() as OrderType[]
-      const sectionPayments = todayPayments.filter((p) =>
-        sectionOrders.some((o) => o.id === p.orderId)
-      )
-      setPayments(sectionPayments)
-    }
-  }
-
-  const handleSetSelectedSection = (sectionId: string) => {
-    if (selectedSection === sectionId) {
-      setSelectedSection(null)
-      setPayments(todayPayments) // Reset to all payments
-      handleSetCurrentWorks(workType)
-    } else {
-      setSelectedSection(sectionId)
-      const sectionOrders = orders.filter(
-        (o) => o.assignToSection === sectionId
-      )
-      const sectionPayments = todayPayments.filter((p) =>
-        sectionOrders.some((o) => o.id === p.orderId)
-      )
-      const sectionUpdates = currentUpdatesWithData.filter(
-        (update) => update?.order?.assignToSection === sectionId
-      )
-      setFilteredUpdates(sectionUpdates)
-      setPayments(sectionPayments)
-    }
-  }
+        const sectionUpdates = currentUpdatesWithData.filter(
+          (update) => update?.order?.assignToSection === sectionId
+        )
+        setFilteredUpdates(sectionUpdates)
+        setPayments(sectionPayments)
+      }
+    },
+    [
+      selectedSection,
+      todayPayments,
+      workType,
+      handleSetCurrentWorks,
+      orders,
+      currentUpdates,
+      customers
+    ]
+  )
 
   const DISABLED_SWITCH = false
 
