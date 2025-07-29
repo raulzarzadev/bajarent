@@ -19,6 +19,8 @@ import { CustomerType } from '../../state/features/costumers/customerType'
 import { BadgeListSectionsE } from '../BadgeListSections'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import PaymentType from '../../types/PaymentType'
+import { useOrdersRedux } from '../../hooks/useOrdersRedux'
+import Loading from '../Loading'
 
 export const current_works_view = ['sections', 'personal'] as const
 export type CurrentWorkView = (typeof current_works_view)[number]
@@ -33,6 +35,8 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     customer?: Partial<CustomerType>
   }
   const { data: currentWork } = useCurrentWork()
+  const { orders, setSomeOtherOrders } = useOrdersRedux()
+
   const { user } = useAuth()
   const { employee } = useEmployee()
   const { sections, storeId } = useStore()
@@ -41,8 +45,6 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
 
   const [workType, setWorkType] = useState<CurrentWorkView>('sections')
-
-  const [orders, setOrders] = useState<OrderType[]>([])
 
   const [currentUpdates, setCurrentUpdates] = useState<
     CurrentWorkTypeWithOrderAndCustomerData[]
@@ -58,22 +60,19 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
 
   const [payments, setPayments] = useState<PaymentType[]>([])
 
-  const toggleWorkType = () => {
-    const newWorkType = workType === 'sections' ? 'personal' : 'sections'
-    setWorkType(newWorkType)
-    handleSetCurrentWorks(newWorkType)
-  }
-
   useEffect(() => {
-    //* find all orders that have updates in the current work
-    const ordersWitUpdatesUniqueIds = Object.values(currentWork?.updates || {})
-      .map((update) => update.details?.orderId)
-      .filter((id) => id)
-      .filter((id, index, self) => self.indexOf(id) === index)
-    ServiceOrders.getList(ordersWitUpdatesUniqueIds).then((orders) => {
-      setOrders(orders)
-    })
-  }, [currentWork?.updates])
+    if (currentWork) {
+      const ordersWitUpdatesUniqueIds = Object.values(
+        currentWork?.updates || {}
+      )
+        .map((update) => update.details?.orderId)
+        .filter((id) => id)
+        .filter((id, index, self) => self.indexOf(id) === index)
+
+      setSomeOtherOrders({ ordersIds: ordersWitUpdatesUniqueIds })
+      setCurrentUpdates(Object.values(currentWork?.updates || {}))
+    }
+  }, [currentWork])
 
   useEffect(() => {
     if (storeId) {
@@ -85,27 +84,26 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     }
   }, [storeId])
 
-  useEffect(() => {
-    if (customers.length && orders.length) {
-      handleSetCurrentWorks(workType)
-      setCurrentUpdates(
-        Object.values(currentWork?.updates || {}).map((update) => {
-          const order = orders.find((o) => o.id === update.details?.orderId)
-          const customer = customers.find((c) => c.id === order?.customerId)
-          return {
-            ...update,
-            order,
-            customer
-          } as CurrentWorkTypeWithOrderAndCustomerData
-        })
-      )
-    }
-  }, [customers, orders])
+  const currentUpdatesWithData = currentUpdates.map((update) => {
+    const order = orders.find((o) => o.id === update.details?.orderId)
+    const customer = customers.find((c) => c.id === order?.customerId)
+    return {
+      ...update,
+      order,
+      customer
+    } as CurrentWorkTypeWithOrderAndCustomerData
+  })
+
+  const toggleWorkType = () => {
+    const newWorkType = workType === 'sections' ? 'personal' : 'sections'
+    setWorkType(newWorkType)
+    handleSetCurrentWorks(newWorkType)
+  }
 
   const handleSetCurrentWorks = (workType: CurrentWorkView) => {
     if (workType === 'personal') {
       //* 1. SET PERSONAL UPDATES
-      const personalUpdates = currentUpdates.filter(
+      const personalUpdates = currentUpdatesWithData.filter(
         (update) => update?.createdBy === user?.id
       )
 
@@ -138,7 +136,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       }, {})
       setSectionsWithUpdates(Object.keys(workOrdersBySections))
 
-      const sectionsUpdates = currentUpdates.filter((update) =>
+      const sectionsUpdates = currentUpdatesWithData.filter((update) =>
         mySections.includes(update.order?.assignToSection)
       )
 
@@ -168,7 +166,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       const sectionPayments = todayPayments.filter((p) =>
         sectionOrders.some((o) => o.id === p.orderId)
       )
-      const sectionUpdates = currentUpdates.filter(
+      const sectionUpdates = currentUpdatesWithData.filter(
         (update) => update?.order?.assignToSection === sectionId
       )
       setFilteredUpdates(sectionUpdates)
@@ -177,6 +175,8 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   }
 
   const DISABLED_SWITCH = false
+
+  if (!currentWork) return <Loading />
 
   return (
     <View style={[gStyles.container]}>
@@ -261,7 +261,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
             )}
 
             <Text style={gStyles.helper}> - </Text>
-            {update.order.assignToSection && (
+            {update?.order?.assignToSection && (
               <Text style={[gStyles.helper, gStyles.tBold]}>
                 {sections.find(
                   (section) => section.id === update.order.assignToSection
@@ -296,43 +296,3 @@ export const getSectionsWorks = ({
 
   return res
 }
-
-/**
- * Dado un objeto donde cada clave es un sectionId y su valor
- * es un array de actualizaciones (con orderId y createdAt),
- * devuelve un objeto que mapea cada sectionId a un array
- * con los orderId que están actualmente en esa sección.
- *
- * @param {Object<string, Array<{ orderId: string, createdAt: string }>>} sectionsMap
- * @returns {Object<string, string[]>} sectionId → [orderId, ...]
- */
-// function getOrdersByCurrentSection(sectionsMap) {
-//   // 1. Primero calculamos para cada orderId su última sección
-//   const latestByOrder = {}
-
-//   for (const sectionId in sectionsMap) {
-//     for (const update of sectionsMap[sectionId]) {
-//       const { orderId, createdAt } = update
-//       const timestamp = new Date(createdAt)
-
-//       if (
-//         !latestByOrder[orderId] ||
-//         timestamp > new Date(latestByOrder[orderId].createdAt)
-//       ) {
-//         latestByOrder[orderId] = { sectionId, createdAt }
-//       }
-//     }
-//   }
-
-//   // 2. Ahora invertimos ese mapping para agrupar por sección
-//   const ordersBySection = {}
-
-//   for (const [orderId, { sectionId }] of Object.entries(latestByOrder)) {
-//     if (!ordersBySection[sectionId]) {
-//       ordersBySection[sectionId] = []
-//     }
-//     ordersBySection[sectionId].push(orderId)
-//   }
-
-//   return ordersBySection
-// }
