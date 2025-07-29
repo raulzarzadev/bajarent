@@ -79,7 +79,7 @@ const RowPayment = ({
         </Text>
       </View>
       <ImagePreview image={item.image} width={40} height={40} />
-      {isAdmin && <PaymentVerify payment={item} onVerified={onVerified} />}
+      <PaymentVerify payment={item} onVerified={onVerified} />
     </View>
   )
 }
