@@ -21,11 +21,11 @@ import { ServiceOrders } from '../../firebase/ServiceOrders'
 import PaymentType from '../../types/PaymentType'
 
 export const current_works_view = ['sections', 'personal'] as const
+export type CurrentWorkView = (typeof current_works_view)[number]
 export const current_works_labels: Record<CurrentWorkView, string> = {
   sections: 'Areas',
   personal: 'Personal'
 }
-export type CurrentWorkView = (typeof current_works_view)[number]
 
 const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   type CurrentWorkTypeWithOrderAndCustomerData = CurrentWorkUpdate & {
@@ -40,7 +40,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
 
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
 
-  const [workType, setWorkType] = useState<'personal' | 'sections'>('sections')
+  const [workType, setWorkType] = useState<CurrentWorkView>('sections')
 
   const [orders, setOrders] = useState<OrderType[]>([])
   const [currentUpdates, setCurrentUpdates] = useState<
@@ -74,7 +74,6 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     if (storeId) {
       ServicePayments.getToday(storeId)
         .then((payments) => {
-          console.log({ payments })
           setTodayPayments(payments)
         })
         .catch(console.error)
@@ -275,7 +274,6 @@ export const getSectionsWorks = ({
   const res = updates.filter((update) =>
     sections.includes(update?.details?.sectionId)
   )
-  console.log({ res, updates })
 
   return res
 }
