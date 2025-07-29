@@ -48,6 +48,10 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     CurrentWorkTypeWithOrderAndCustomerData[]
   >([])
 
+  const [filteredUpdates, setFilteredUpdates] = useState<
+    CurrentWorkTypeWithOrderAndCustomerData[]
+  >([])
+
   const [todayPayments, setTodayPayments] = useState<PaymentType[]>([])
 
   const [sectionsWithUpdates, setSectionsWithUpdates] = useState<string[]>([])
@@ -84,24 +88,28 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
   useEffect(() => {
     if (customers.length && orders.length) {
       handleSetCurrentWorks(workType)
-    }
-  }, [customers, orders])
-
-  const handleSetCurrentWorks = (workType: CurrentWorkView) => {
-    if (workType === 'personal') {
-      //* 1. SET PERSONAL UPDATES
-      const personalUpdates = Object.values(currentWork?.updates || {})
-        .filter((update) => update?.createdBy === user?.id)
-        .map((update) => {
+      setCurrentUpdates(
+        Object.values(currentWork?.updates || {}).map((update) => {
           const order = orders.find((o) => o.id === update.details?.orderId)
           const customer = customers.find((c) => c.id === order?.customerId)
           return {
             ...update,
             order,
             customer
-          }
+          } as CurrentWorkTypeWithOrderAndCustomerData
         })
-      setCurrentUpdates(personalUpdates)
+      )
+    }
+  }, [customers, orders])
+
+  const handleSetCurrentWorks = (workType: CurrentWorkView) => {
+    if (workType === 'personal') {
+      //* 1. SET PERSONAL UPDATES
+      const personalUpdates = currentUpdates.filter(
+        (update) => update?.createdBy === user?.id
+      )
+
+      setFilteredUpdates(personalUpdates)
 
       //* GET SECTIONS WITH
       const sectionsWithUpdates = personalUpdates
@@ -110,7 +118,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
         .filter((sectionId, index, self) => self.indexOf(sectionId) === index)
       setSectionsWithUpdates(sectionsWithUpdates)
 
-      //TODO: set personal payments from orders
+      // set personal payments from orders
       const personalPayments = todayPayments.filter(
         (p) => p.createdBy === user?.id && p.storeId === storeId
       )
@@ -130,18 +138,11 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       }, {})
       setSectionsWithUpdates(Object.keys(workOrdersBySections))
 
-      const sectionsUpdates = Object.values(currentWork?.updates || {})
-        .filter((update) => mySections.includes(update.details?.sectionId))
-        .map((update) => {
-          const order = orders.find((o) => o.id === update.details?.orderId)
-          const customer = customers.find((c) => c.id === order?.customerId)
-          return {
-            ...update,
-            order,
-            customer
-          }
-        })
-      setCurrentUpdates(sectionsUpdates)
+      const sectionsUpdates = currentUpdates.filter((update) =>
+        mySections.includes(update.order?.assignToSection)
+      )
+
+      setFilteredUpdates(sectionsUpdates)
 
       //TODO: set sections payments
       const sectionOrders = Object.values(
@@ -158,6 +159,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     if (selectedSection === sectionId) {
       setSelectedSection(null)
       setPayments(todayPayments) // Reset to all payments
+      handleSetCurrentWorks(workType)
     } else {
       setSelectedSection(sectionId)
       const sectionOrders = orders.filter(
@@ -166,6 +168,10 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       const sectionPayments = todayPayments.filter((p) =>
         sectionOrders.some((o) => o.id === p.orderId)
       )
+      const sectionUpdates = currentUpdates.filter(
+        (update) => update?.order?.assignToSection === sectionId
+      )
+      setFilteredUpdates(sectionUpdates)
       setPayments(sectionPayments)
     }
   }
@@ -224,7 +230,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
       </View>
       {/* ********** UPDATES LIST ********** */}
 
-      {currentUpdates
+      {filteredUpdates
         .sort((a, b) => {
           return asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
         })
