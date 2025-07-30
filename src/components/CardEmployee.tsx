@@ -96,7 +96,7 @@ export const EmployeeSections = ({
       )}
 
       <BadgeListSectionsE
-        sections={sections.filter((section) =>
+        sections={sections?.filter((section) =>
           employee?.sectionsAssigned?.includes(section.id)
         )}
         selectedSection={selectedSection}
