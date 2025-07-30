@@ -44,7 +44,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
 
   const [selectedSection, setSelectedSection] = useState<string | null>(null)
 
-  const [workType, setWorkType] = useState<CurrentWorkView>('sections')
+  const [workType, setWorkType] = useState<CurrentWorkView>()
 
   const [currentUpdates, setCurrentUpdates] = useState<
     CurrentWorkTypeWithOrderAndCustomerData[]
@@ -158,30 +158,11 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
     ]
   )
 
-  // Ejecutar handleSetCurrentWorks cuando tengamos todos los datos necesarios
-  useEffect(() => {
-    if (
-      currentUpdates.length > 0 &&
-      orders.length > 0 &&
-      customers.length > 0 &&
-      filteredUpdates.length === 0 // Solo ejecutar si no hay datos filtrados aún
-    ) {
-      handleSetCurrentWorks(workType)
-    }
-  }, [
-    currentUpdates.length,
-    orders.length,
-    customers.length,
-    filteredUpdates.length,
-    workType,
-    handleSetCurrentWorks
-  ])
-
-  const toggleWorkType = useCallback(() => {
+  const toggleWorkType = () => {
     const newWorkType = workType === 'sections' ? 'personal' : 'sections'
     setWorkType(newWorkType)
     handleSetCurrentWorks(newWorkType)
-  }, [workType, handleSetCurrentWorks])
+  }
 
   const handleSetSelectedSection = useCallback(
     (sectionId: string) => {

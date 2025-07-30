@@ -190,7 +190,13 @@ export const useOrdersRedux = (componentId?: string) => {
   return {
     // Data
     orders: allFormattedOrders,
-    unsolvedOrders: allFormattedOrders.filter(isUnsolvedOrder),
+    unsolvedOrders: allFormattedOrders.filter(isUnsolvedOrder).filter(
+      // filter out orders that are not assigned to me
+      (order) =>
+        permissions.canViewAllOrders
+          ? true
+          : employee.sectionsAssigned.includes(order.assignToSection)
+    ),
     myOrders,
     reports,
     stats,
