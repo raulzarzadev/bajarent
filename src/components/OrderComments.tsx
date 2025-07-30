@@ -30,31 +30,19 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
     }) || []
   const orderComments = order?.comments || []
 
-  const [reportsAndImportantUnsolved, setReportsAndImportantUnsolved] =
-    useState<CommentType[]>([])
-  useEffect(() => {
-    ServiceComments.getReportsAndImportantUnsolvedByOrder(orderId).then(
-      (res) => {
-        setReportsAndImportantUnsolved(res)
-      }
-    )
-  }, [orderId])
+  const comments = [...orderComments, ...sentMessagesAsComments].sort(
+    (a, b) => {
+      // Put reports and important unsolved at the top
+      const aIsReportOrImportant = a.type === 'report' || a.type === 'important'
+      const bIsReportOrImportant = b.type === 'report' || b.type === 'important'
 
-  const comments = [
-    ...reportsAndImportantUnsolved,
-    ...orderComments,
-    ...sentMessagesAsComments
-  ].sort((a, b) => {
-    // Put reports and important unsolved at the top
-    const aIsReportOrImportant = a.type === 'report' || a.type === 'important'
-    const bIsReportOrImportant = b.type === 'report' || b.type === 'important'
+      if (aIsReportOrImportant && !bIsReportOrImportant) return -1
+      if (!aIsReportOrImportant && bIsReportOrImportant) return 1
 
-    if (aIsReportOrImportant && !bIsReportOrImportant) return -1
-    if (!aIsReportOrImportant && bIsReportOrImportant) return 1
-
-    // If both are same priority, sort by date
-    return asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
-  })
+      // If both are same priority, sort by date
+      return asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
+    }
+  )
 
   return (
     <View style={{ maxWidth: 400, marginHorizontal: 'auto', width: '100%' }}>
