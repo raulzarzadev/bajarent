@@ -139,7 +139,7 @@ export const fetchOrdersByIds = createAsyncThunk(
       }
       const orders = await ServiceOrders.getList(ordersIds)
 
-      return { orders }
+      return { orders: serializeObj(orders) }
     } catch (error) {
       return rejectWithValue(error.message)
     }
