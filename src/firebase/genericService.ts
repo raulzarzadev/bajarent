@@ -6,9 +6,9 @@ import {
   doc,
   where
 } from 'firebase/firestore'
-import { storage } from './auth'
+import { getStorage } from 'firebase/storage'
 import { FirebaseCRUD, GetItemsOps } from './firebase.CRUD'
-import { db } from './main'
+import { db, app } from './main'
 
 type CreateItem<T> = Partial<T>
 
@@ -17,9 +17,10 @@ interface Identifiable {
 }
 export class FirebaseGenericService<T extends Identifiable> {
   private itemCRUD: FirebaseCRUD
+  private storage = getStorage(app)
 
   constructor(private COLLECTION_NAME: string) {
-    this.itemCRUD = new FirebaseCRUD(this.COLLECTION_NAME, db, storage)
+    this.itemCRUD = new FirebaseCRUD(this.COLLECTION_NAME, db, this.storage)
   }
 
   async create(newItem: CreateItem<T>) {

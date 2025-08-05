@@ -3,17 +3,14 @@ import {
   useState,
   SetStateAction,
   useContext,
-  useEffect,
   useMemo
 } from 'react'
-import { authStateChanged } from '../firebase/auth'
 import UserType from '../types/UserType'
 import { Platform } from 'react-native'
 import StaffType from '../types/StaffType'
 import StoreType from '../types/StoreType'
-import { getItem, setItem } from '../libs/storage'
+import { setItem } from '../libs/storage'
 import { ServiceStores } from '../firebase/ServiceStore'
-import useMyNav from '../hooks/useMyNav'
 
 const initialAutState: {
   isAuthenticated: boolean
@@ -30,51 +27,32 @@ const initialAutState: {
    * @deprecated use employee instead
    */
   staff?: StaffType
+  handleSetUserStores?: (userId: string) => Promise<void>
 } = {
   isAuthenticated: false,
   user: undefined,
   storeId: '', //*<- get the storeId from localStorage
   setAuth: (value: SetStateAction<typeof initialAutState>) => {}, // Modify the setAuth definition to accept at least one argument
   handleSetStoreId: (storeId: string) => {} // Add the handleSetStoreId function
+  // Add the handleSetUserStores function
 }
 
 const AuthContext = createContext(initialAutState)
 let at = 0
 const AuthContextProvider = ({ children }) => {
-  const { toProfile } = useMyNav()
   const [auth, setAuth] = useState(initialAutState)
   const [storeId, setStoreId] = useState<string>('')
   const [stores, setStores] = useState<StoreType[]>([])
 
-  useEffect(() => {
-    authStateChanged((user) => {
-      setAuth({ ...auth, isAuthenticated: !!user, user })
-    })
-    getItem('storeId').then((res) => {
-      handleSetStoreId(res)
-    })
-  }, [])
-
-  useEffect(() => {
-    if (auth.user === null) {
-      toProfile()
-    }
-    if (auth.user) {
-      getUserStores()
-    }
-  }, [auth.user])
-
-  const getUserStores = async () => {
-    if (auth.user) {
-      const userStores = await ServiceStores.userStores(auth.user.id)
+  const handleSetUserStores = async (userId: string) => {
+    const userStores = await ServiceStores.userStores(userId)
+    if (userStores && userStores.length > 0) {
       setStores(userStores)
     } else {
       setStores([])
     }
   }
-
   const handleSetStoreId = async (storeId: string) => {
-    getUserStores()
     if (storeId) {
       setStoreId(storeId)
       setItem('storeId', storeId) //*<- save the storeId in localStorage
@@ -90,7 +68,8 @@ const AuthContextProvider = ({ children }) => {
       setAuth,
       storeId,
       stores,
-      handleSetStoreId
+      handleSetStoreId,
+      handleSetUserStores
     }),
     [auth, setAuth, storeId, stores]
   )
