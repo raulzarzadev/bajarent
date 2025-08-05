@@ -46,28 +46,28 @@ const StoreContextProvider = ({ children }) => {
       .catch((e) => console.error({ e }))
   }
 
-  useEffect(() => {
-    if (storeId && isAuthenticated)
-      ServiceStores.listen(storeId, (store) => {
-        store.staff = storeCtx?.staff
-        setStore(store)
-      })
-  }, [storeId, storeCtx?.staff, isAuthenticated])
+  // useEffect(() => {
+  //   if (storeId && isAuthenticated)
+  //     ServiceStores.listen(storeId, (store) => {
+  //       store.staff = storeCtx?.staff
+  //       setStore(store)
+  //     })
+  // }, [storeId, storeCtx?.staff, isAuthenticated])
 
-  useEffect(() => {
-    if (storeId && isAuthenticated) {
-      handleUpdateStore()
-    }
-  }, [storeId, isAuthenticated])
+  // useEffect(() => {
+  //   if (storeId && isAuthenticated) {
+  //     handleUpdateStore()
+  //   }
+  // }, [storeId, isAuthenticated])
 
-  useEffect(() => {
-    //* CURRENT BALANCE
-    if (store?.id && isAuthenticated)
-      ServiceBalances.listenLastInDate(
-        { storeId: store?.id, date: new Date(), type: 'daily' },
-        (balance) => setCurrentBalance(balance)
-      )
-  }, [store?.id, isAuthenticated])
+  // useEffect(() => {
+  //   //* CURRENT BALANCE
+  //   if (store?.id && isAuthenticated)
+  //     ServiceBalances.listenLastInDate(
+  //       { storeId: store?.id, date: new Date(), type: 'daily' },
+  //       (balance) => setCurrentBalance(balance)
+  //     )
+  // }, [store?.id, isAuthenticated])
 
   sc++
   if (__DEV__) console.log({ sc })
