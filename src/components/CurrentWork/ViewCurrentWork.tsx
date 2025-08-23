@@ -9,7 +9,7 @@ import { ServicePayments } from '../../firebase/ServicePayments'
 import InputSwitch from '../InputSwitch'
 import { gStyles } from '../../styles'
 import { BalanceAmountsE } from '../BalanceAmounts'
-import asDate, { dateFormat } from '../../libs/utils-date'
+import asDate, { dateFormat, getTimeSafe } from '../../libs/utils-date'
 import dictionary from '../../dictionary'
 import { useStore } from '../../contexts/storeContext'
 
@@ -212,6 +212,17 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
 
   if (!currentWork) return <Loading />
 
+  const formatTimeSafe = (value: unknown): string => {
+    try {
+      const d: any = asDate(value as any)
+      return d && typeof d.getTime === 'function' && !isNaN(d.getTime())
+        ? dateFormat(d, 'HH:mm:ss')
+        : ''
+    } catch {
+      return ''
+    }
+  }
+
   return (
     <View style={[gStyles.container]}>
       <View
@@ -266,7 +277,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
 
       {filteredUpdates
         .sort((a, b) => {
-          return asDate(b.createdAt).getTime() - asDate(a.createdAt).getTime()
+          return getTimeSafe(b?.createdAt) - getTimeSafe(a?.createdAt)
         })
         ?.map((update, i) => (
           <View
@@ -278,7 +289,7 @@ const ViewCurrentWork = (props?: ViewCurrentWorkProps) => {
             }}
           >
             <Text style={[{ marginRight: 4 }, gStyles.helper]}>
-              {dateFormat(asDate(update.createdAt), 'HH:mm:ss')}
+              {formatTimeSafe(update.createdAt)}
             </Text>
             <Text style={[{ marginRight: 4 }, gStyles.helper, gStyles.tBold]}>
               {update?.order?.folio}

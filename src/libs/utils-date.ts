@@ -231,3 +231,15 @@ export const convertTimestamps = (
 
   return obj
 }
+
+// Helpers to safely handle possibly null/invalid dates
+export const getTimeSafe = (value: unknown): number => {
+  try {
+    const d: any = asDate(value as any)
+    return d && typeof d.getTime === 'function' && !isNaN(d.getTime())
+      ? d.getTime()
+      : 0
+  } catch {
+    return 0
+  }
+}
