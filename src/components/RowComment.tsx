@@ -8,30 +8,25 @@ import { ServiceComments } from '../firebase/ServiceComments'
 import { useState } from 'react'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import { FormattedComment } from '../types/CommentType'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 import InputCheckbox from './Inputs/InputCheckbox'
 
+const LINES_DEFAULT = 1
+
 export const CommentRow = ({
   comment: _comment,
   showOrder = false
-}: // refetch
-// orderId
-{
+}: {
   comment: FormattedComment
   showOrder?: boolean
   refetch?: (props?: { id?: string }) => void
 }) => {
-  const { toOrders, toItems } = useMyNav()
+  const { toItems } = useMyNav()
   const [disabled, setDisabled] = useState(false)
   const { staff } = useStore()
   const { user } = useAuth()
-
-  const { consolidatedOrders } = useOrdersCtx()
-  const orders = consolidatedOrders?.orders || {}
-  const order = orders[_comment?.orderId]
 
   const [comment, setComment] = useState<FormattedComment>(_comment)
 
@@ -63,7 +58,7 @@ export const CommentRow = ({
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
-  const LINES_DEFAULT = 1
+
   const [numberOfLines, setNumberOfLines] = useState(LINES_DEFAULT)
 
   if (!comment) return null
@@ -126,34 +121,6 @@ export const CommentRow = ({
               alignItems: 'flex-end'
             }}
           >
-            {showOrder && !!order && (
-              <View style={styles.badge}>
-                <Chip
-                  title={`${order?.folio}  ${order?.fullName}`}
-                  size="sm"
-                  color={theme.primary}
-                  titleColor={theme.white}
-                  onPress={() => {
-                    toOrders({ id: comment?.orderId })
-                  }}
-                  maxWidth={120}
-                ></Chip>
-              </View>
-            )}
-            {showOrder && !order && !!comment?.orderId && (
-              <View style={styles.badge}>
-                <Chip
-                  title={`ver orden`}
-                  size="sm"
-                  color={theme.primary}
-                  titleColor={theme.white}
-                  onPress={() => {
-                    toOrders({ id: comment?.orderId })
-                  }}
-                ></Chip>
-              </View>
-            )}
-
             {!!comment?.itemId && (
               <View style={styles.badge}>
                 <Chip
