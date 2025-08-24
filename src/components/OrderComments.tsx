@@ -33,11 +33,11 @@ const OrderComments = ({ orderId }: { orderId: string }) => {
   const comments = [...orderComments, ...sentMessagesAsComments].sort(
     (a, b) => {
       // Put reports and important unsolved at the top
-      const aIsReportOrImportant = a.type === 'report' || a.type === 'important'
-      const bIsReportOrImportant = b.type === 'report' || b.type === 'important'
+      // const aIsReportOrImportant = a.type === 'report' || a.type === 'important'
+      // const bIsReportOrImportant = b.type === 'report' || b.type === 'important'
 
-      if (aIsReportOrImportant && !bIsReportOrImportant) return -1
-      if (!aIsReportOrImportant && bIsReportOrImportant) return 1
+      // if (aIsReportOrImportant && !bIsReportOrImportant) return -1
+      // if (!aIsReportOrImportant && bIsReportOrImportant) return 1
 
       // If both are same priority, sort by date
       return asDate(b?.createdAt)?.getTime() - asDate(a?.createdAt)?.getTime()
