@@ -7,7 +7,6 @@ import { ScrollView, Text } from 'react-native'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import useMyNav from '../hooks/useMyNav'
 import { useOrdersRedux } from '../hooks/useOrdersRedux'
-import { order_status } from '../types/OrderType'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
