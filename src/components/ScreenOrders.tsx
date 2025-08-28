@@ -21,13 +21,6 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     ids: route?.params?.orders
   })
 
-  // console.log({
-  //   orders: orders.filter((orders) => orders.marketOrder).sort((o) => o.folio)
-  // })
-
-  console.log({
-    orders
-  })
   const [preOrders, setPreOrders] = useState([])
 
   useEffect(() => {
