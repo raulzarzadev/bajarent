@@ -1,5 +1,4 @@
 import { View } from 'react-native'
-import { Payment } from '../libs/paymentsUtils'
 import ButtonConfirm from './ButtonConfirm'
 import { ListE } from './List'
 import PaymentType from '../types/PaymentType'

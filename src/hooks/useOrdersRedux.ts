@@ -1,13 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useCallback } from 'react'
+import { useCallback } from 'react'
 import { AppDispatch, RootState } from '../state/store'
 import {
   fetchOrdersByType,
   setFetchType,
-  setStoreConfig,
   resetOrders,
-  addListener,
-  removeListener,
   selectAllOrders,
   selectMyOrders,
   selectOrdersByType,
@@ -35,65 +32,9 @@ export const useOrdersRedux = (componentId?: string) => {
   const error = useSelector(selectOrdersError)
   const reports = useSelector(selectReports)
   const stats = useSelector(selectOrdersStats)
-
   const { data: customers } = useCustomers()
   const ordersState = useSelector((state: RootState) => state.orders)
 
-  // Register component listener for performance tracking
-  useEffect(() => {
-    if (componentId) {
-      dispatch(addListener(componentId))
-      return () => {
-        dispatch(removeListener(componentId))
-      }
-    }
-  }, [dispatch, componentId])
-
-  // Configure store settings when available
-  useEffect(() => {
-    if (storeId && employee?.sectionsAssigned) {
-      dispatch(
-        setStoreConfig({
-          storeId,
-          sections: employee.sectionsAssigned,
-          getBySections: !permissions?.canViewAllOrders
-        })
-      )
-    }
-  }, [
-    dispatch,
-    storeId,
-    employee?.sectionsAssigned,
-    permissions?.canViewAllOrders
-  ])
-
-  // Auto-fetch orders on authentication and permissions change
-  useEffect(() => {
-    if (
-      storeId &&
-      !disabledEmployee &&
-      (permissions?.isAdmin ||
-        permissions?.orders?.canViewMy ||
-        permissions?.canViewAllOrders)
-    ) {
-      const fetchType: FetchTypeOrders = permissions?.canViewAllOrders
-        ? 'all'
-        : 'mine'
-
-      dispatch(
-        fetchOrdersByType({
-          storeId,
-          type: fetchType,
-          sections: employee?.sectionsAssigned || [],
-          employee,
-          permissions,
-          forceRefresh: false // En el inicio, no necesitas forzar refresh
-        })
-      )
-    }
-  }, [dispatch, storeId, disabledEmployee, permissions, employee])
-
-  // Methods
   const refreshOrders = useCallback(
     async (forceRefresh: boolean = false) => {
       if (!storeId) return
