@@ -130,6 +130,7 @@ export const activeOrders = (ordersFormatted: OrderType[]) => {
   return ordersFormatted.filter((o) => isUnsolvedOrder(o))
 }
 export const isUnsolvedOrder = (order: OrderType) => {
+  if (order.status === order_status.PENDING) return true
   //* if has reports not solved, return true
   if (order.hasNotSolvedReports) return true
   //* if is cancelled or renewed, return false

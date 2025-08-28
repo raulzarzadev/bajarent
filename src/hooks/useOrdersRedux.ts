@@ -187,6 +187,10 @@ export const useOrdersRedux = (componentId?: string) => {
     customers
   })
 
+  console.log({
+    allFormattedOrders: allFormattedOrders.filter((a) => a.folio === 240)
+  })
+
   return {
     // Data
     orders: allFormattedOrders,
