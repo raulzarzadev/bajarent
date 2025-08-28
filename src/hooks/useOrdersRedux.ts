@@ -5,12 +5,10 @@ import {
   fetchOrdersByType,
   setFetchType,
   setStoreConfig,
-  invalidateCache,
   resetOrders,
   addListener,
   removeListener,
   selectAllOrders,
-  selectUnsolvedOrders,
   selectMyOrders,
   selectOrdersByType,
   selectOrdersLoading,
@@ -32,7 +30,6 @@ export const useOrdersRedux = (componentId?: string) => {
 
   // Selectors
   const allOrders = useSelector(selectAllOrders)
-  const unsolvedOrders = useSelector(selectUnsolvedOrders)
   const myOrders = useSelector(selectMyOrders)
   const loading = useSelector(selectOrdersLoading)
   const error = useSelector(selectOrdersError)
@@ -185,10 +182,6 @@ export const useOrdersRedux = (componentId?: string) => {
     orders: allOrders,
     reports,
     customers
-  })
-
-  console.log({
-    allFormattedOrders: allFormattedOrders.filter((a) => a.folio === 240)
   })
 
   return {
