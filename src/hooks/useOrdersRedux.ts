@@ -5,12 +5,12 @@ import {
   fetchOrdersByType,
   setFetchType,
   setStoreConfig,
-  invalidateCache,
+  // invalidateCache,
   resetOrders,
   addListener,
   removeListener,
   selectAllOrders,
-  selectUnsolvedOrders,
+  //  selectUnsolvedOrders,
   selectMyOrders,
   selectOrdersByType,
   selectOrdersLoading,
@@ -32,69 +32,68 @@ export const useOrdersRedux = (componentId?: string) => {
 
   // Selectors
   const allOrders = useSelector(selectAllOrders)
-  const unsolvedOrders = useSelector(selectUnsolvedOrders)
+  //const unsolvedOrders = useSelector(selectUnsolvedOrders)
   const myOrders = useSelector(selectMyOrders)
   const loading = useSelector(selectOrdersLoading)
   const error = useSelector(selectOrdersError)
   const reports = useSelector(selectReports)
   const stats = useSelector(selectOrdersStats)
-
   const { data: customers } = useCustomers()
   const ordersState = useSelector((state: RootState) => state.orders)
 
-  // Register component listener for performance tracking
-  useEffect(() => {
-    if (componentId) {
-      dispatch(addListener(componentId))
-      return () => {
-        dispatch(removeListener(componentId))
-      }
-    }
-  }, [dispatch, componentId])
+  // // Register component listener for performance tracking
+  // useEffect(() => {
+  //   if (componentId) {
+  //     dispatch(addListener(componentId))
+  //     return () => {
+  //       dispatch(removeListener(componentId))
+  //     }
+  //   }
+  // }, [dispatch, componentId])
 
-  // Configure store settings when available
-  useEffect(() => {
-    if (storeId && employee?.sectionsAssigned) {
-      dispatch(
-        setStoreConfig({
-          storeId,
-          sections: employee.sectionsAssigned,
-          getBySections: !permissions?.canViewAllOrders
-        })
-      )
-    }
-  }, [
-    dispatch,
-    storeId,
-    employee?.sectionsAssigned,
-    permissions?.canViewAllOrders
-  ])
+  // // Configure store settings when available
+  // useEffect(() => {
+  //   if (storeId && employee?.sectionsAssigned) {
+  //     dispatch(
+  //       setStoreConfig({
+  //         storeId,
+  //         sections: employee.sectionsAssigned,
+  //         getBySections: !permissions?.canViewAllOrders
+  //       })
+  //     )
+  //   }
+  // }, [
+  //   dispatch,
+  //   storeId,
+  //   employee?.sectionsAssigned,
+  //   permissions?.canViewAllOrders
+  // ])
 
-  // Auto-fetch orders on authentication and permissions change
-  useEffect(() => {
-    if (
-      storeId &&
-      !disabledEmployee &&
-      (permissions?.isAdmin ||
-        permissions?.orders?.canViewMy ||
-        permissions?.canViewAllOrders)
-    ) {
-      const fetchType: FetchTypeOrders = permissions?.canViewAllOrders
-        ? 'all'
-        : 'mine'
+  // // Auto-fetch orders on authentication and permissions change
+  // useEffect(() => {
+  //   if (
+  //     storeId &&
+  //     !disabledEmployee &&
+  //     (permissions?.isAdmin ||
+  //       permissions?.orders?.canViewMy ||
+  //       permissions?.canViewAllOrders)
+  //   ) {
+  //     const fetchType: FetchTypeOrders = permissions?.canViewAllOrders
+  //       ? 'all'
+  //       : 'mine'
 
-      dispatch(
-        fetchOrdersByType({
-          storeId,
-          type: fetchType,
-          sections: employee?.sectionsAssigned || [],
-          employee,
-          permissions,
-          forceRefresh: false // En el inicio, no necesitas forzar refresh
-        })
-      )
-    }
-  }, [dispatch, storeId, disabledEmployee, permissions, employee])
+  //     dispatch(
+  //       fetchOrdersByType({
+  //         storeId,
+  //         type: fetchType,
+  //         sections: employee?.sectionsAssigned || [],
+  //         employee,
+  //         permissions,
+  //         forceRefresh: false // En el inicio, no necesitas forzar refresh
+  //       })
+  //     )
+  //   }
+  // }, [dispatch, storeId, disabledEmployee, permissions, employee])
 
   // Methods
   const refreshOrders = useCallback(
