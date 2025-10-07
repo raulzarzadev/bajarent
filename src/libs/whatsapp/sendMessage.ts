@@ -1,31 +1,69 @@
 import axios from 'axios'
+import formatMxWhatsappPhone from './formatMxWhatsapPhone'
+
+export const BOT_SENDERS = ['builderbot', 'auto-ws'] as const
+export type WSSender = (typeof BOT_SENDERS)[number]
 
 const sendMessage = async ({
   phone,
   message = 'hola',
   botId,
-  apiKey
+  apiKey,
+  sender = 'builderbot'
 }): Promise<{
-  data: { existsOnWhats?: boolean; waited?: boolean; error?: string }
+  data: {
+    existsOnWhats?: boolean
+    waited?: boolean
+    error?: string
+    sender?: WSSender
+  }
 }> => {
-  const data = {
-    message: message
-      //* This is a workaround to fix the line break issue on web
-      //  .replace(/\n/g, getOperatingSystem() === 'mac' ? '\r' : '\n'),
-      .replace(/\n/g, '\r'),
-
-    phone,
-    botId,
-    apiKey
+  if (sender === 'builderbot') {
+    const endpoint = `https://app.builderbot.cloud/api/v2/${botId}/messages`
+    const number = formatMxWhatsappPhone(phone)
+    const mediaUrl = undefined
+    return fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-builderbot': apiKey || ''
+      },
+      body: JSON.stringify({
+        number,
+        checkIfExists: true,
+        messages: {
+          content: message,
+          mediaUrl
+        }
+      })
+    })
+      .then(async (res) => {
+        const data = await res.json()
+        return { data }
+      })
+      .catch((err) => {
+        console.log('err', err)
+        throw new Error(err?.response?.data?.message || 'Error desconocido')
+      })
   }
 
-  const endpoint = __DEV__
-    ? 'http://localhost:3000/api/messages'
-    : 'https://bajarent.app/api/messages'
+  if (sender === 'auto-ws') {
+    const data = {
+      to: phone,
+      content: {
+        text: message
+      }
+    }
 
-  return axios.post(endpoint, data)
-  // .then((response) => console.log(response))
-  // .catch((error) => console.error(error))
+    const endpoint = `https://auto-ws.vercel.app/api/instances/${botId}/messages`
+
+    return axios.post(endpoint, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey || ''
+      }
+    })
+  }
 }
 
 export default sendMessage

@@ -50,6 +50,10 @@ export type BaseStoreType = {
   items?: StoreItems
 
   chatbot?: {
+    enabledAutoWs: any
+    autoWsApiKey?: string
+    autoWsId?: string
+    sender: 'bajarent' | 'auto-ws'
     id?: string
     apiKey?: string
     hostNumber?: string

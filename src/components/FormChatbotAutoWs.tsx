@@ -7,7 +7,7 @@ import { Formik } from 'formik'
 import FormikInputValue from './FormikInputValue'
 import StoreType, { bot_configs } from '../types/StoreType'
 import Button from './Button'
-const FormChatbot = (props?: FormChatbotProps) => {
+const FormChatbotAutoWs = (props?: FormChatbotProps) => {
   const defaultValues: StoreType['chatbot'] = props.values
 
   console.log({ defaultValues })
@@ -29,16 +29,16 @@ const FormChatbot = (props?: FormChatbotProps) => {
           >
             <Text style={gStyles.h3}>Chatbot</Text>
             <FormikCheckbox
-              name="enabled"
+              name="enabledAutoWs"
               label="Activar chatbot"
             ></FormikCheckbox>
-            {values?.enabled && (
+            {values?.enabledAutoWs && (
               <>
                 <View style={styles.input}>
-                  <FormikInputValue name="id" label="Bot Id" />
+                  <FormikInputValue name="autoWsId" label="Bot Id" />
                 </View>
                 <View style={styles.input}>
-                  <FormikInputValue name="apiKey" label="Api Key" />
+                  <FormikInputValue name="autoWsApiKey" label="Api Key" />
                 </View>
                 <View style={styles.input}>
                   <FormikInputValue
@@ -68,14 +68,14 @@ const FormChatbot = (props?: FormChatbotProps) => {
     </View>
   )
 }
-export default FormChatbot
+export default FormChatbotAutoWs
 export type FormChatbotProps = {
   values?: StoreType['chatbot']
   onSubmit?: (values: StoreType['chatbot']) => Promise<any>
 }
 export const FormChatbotE = (props: FormChatbotProps) => (
-  <ErrorBoundary componentName="FormChatbot">
-    <FormChatbot {...props} />
+  <ErrorBoundary componentName="FormChatbotAutoWs">
+    <FormChatbotAutoWs {...props} />
   </ErrorBoundary>
 )
 const styles = StyleSheet.create({

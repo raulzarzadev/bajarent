@@ -17,7 +17,12 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import InputTextStyled from './InputTextStyled'
 import { useState } from 'react'
-import sendMessage from '../libs/whatsapp/sendMessage'
+import sendMessage, { WSSender } from '../libs/whatsapp/sendMessage'
+import Tabs from './Tabs'
+import FormikCheckbox from './FormikCheckbox'
+import dictionary from '../dictionary'
+import { Formik } from 'formik'
+import FormChatbotAutoWs from './FormChatbotAutoWs'
 const ScreenChatbot = (props?: ScreenChatbotProps) => {
   const { store } = useStore()
   const handleUpdateChatbot = async (values: { chatbot: any }) => {
@@ -25,12 +30,105 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
   }
   return (
     <View>
-      <RandomMessage />
-      <FormChatbotE
-        values={store.chatbot}
-        onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
-      />
-      <SampleMessages store={store} />
+      <Tabs
+        defaultTab="Auto-ws"
+        tabId="chatbot-tabs"
+        tabs={[
+          {
+            title: 'BuilderBot',
+            show: true,
+            content: (
+              <>
+                <RandomMessage sender="builderbot" />
+                <FormChatbotE
+                  values={store.chatbot}
+                  onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
+                />
+              </>
+            )
+          },
+          {
+            title: 'Auto-ws',
+            content: (
+              <>
+                <RandomMessage sender="auto-ws" />
+                <FormChatbotAutoWs
+                  values={store.chatbot}
+                  onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
+                />
+              </>
+            ),
+
+            show: true
+          },
+          {
+            title: 'Mensajes',
+            content: (
+              <>
+                <View>
+                  <Text>Configuración de mensajes</Text>
+                  <Text style={gStyles.helper}>
+                    * Se enviaran los mensajes que esten marcados. Algunos
+                    corresponden al flujo de las ordenes y otros al contenido.
+                  </Text>
+                  <Formik
+                    initialValues={store.chatbot}
+                    onSubmit={(values) => {
+                      handleUpdateChatbot({ chatbot: values })
+                    }}
+                  >
+                    {({ values, handleSubmit, isSubmitting }) => (
+                      <View
+                        style={{
+                          padding: 4,
+                          backgroundColor: theme.white,
+                          borderRadius: 8
+                        }}
+                      >
+                        <Text style={gStyles.h3}>Chatbot</Text>
+                        <FormikCheckbox
+                          name="enabled"
+                          label="Activar chatbot"
+                        ></FormikCheckbox>
+
+                        <View
+                          style={{ flexDirection: 'row', flexWrap: 'wrap' }}
+                        >
+                          {Object.entries(bot_configs).map(([key, value]) => (
+                            <FormikCheckbox
+                              key={key}
+                              name={`config.${key}`}
+                              label={dictionary(key)}
+                            ></FormikCheckbox>
+                          ))}
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            marginVertical: 16
+                          }}
+                        >
+                          <Button
+                            size="xs"
+                            label="Actualizar"
+                            onPress={handleSubmit}
+                            disabled={isSubmitting}
+                          ></Button>
+                        </View>
+                      </View>
+                    )}
+                  </Formik>
+                </View>
+                <SampleMessages store={store} />
+              </>
+            ),
+
+            show: true
+          }
+        ]}
+      ></Tabs>
+      {/*  */}
     </View>
   )
 }
@@ -126,8 +224,8 @@ export const ScreenChatbotE = (props: ScreenChatbotProps) => (
   </ErrorBoundary>
 )
 
-export const RandomMessage = ({}) => {
-  const modal = useModal()
+export const RandomMessage = ({ sender }: { sender: WSSender }) => {
+  const modal = useModal({ title: 'Enviar mensaje de prueba' })
   const { store } = useStore()
   const [message, setMessage] = useState('')
   const [number, setNumber] = useState('+52')
@@ -141,13 +239,23 @@ export const RandomMessage = ({}) => {
   const handleSendMessage = () => {
     setDisabled(true)
     // console.log('send message', message, number)
-    sendMessage({
+    let configDependOfSender = {
       phone: number,
       message,
       apiKey: store.chatbot.apiKey,
       botId: store.chatbot.id
-    })
+    }
+
+    if (sender === 'auto-ws') {
+      configDependOfSender.apiKey = store.chatbot?.autoWsApiKey
+      configDependOfSender.botId = store.chatbot?.autoWsId
+    }
+
+    sendMessage({ ...configDependOfSender, sender })
       .then((res) => {
+        console.log({ res })
+        if (!res) return
+        if (!res.data) return
         if (res.data.error === 'Deploy not found') {
           setResponse(responses.NOT_DEPLOYED)
         }
@@ -160,6 +268,7 @@ export const RandomMessage = ({}) => {
       })
       .catch((err) => {
         console.log('err', err)
+        setResponse(err.message || 'Error desconocido')
       })
       .finally(() => {
         setTimeout(() => {

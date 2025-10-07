@@ -205,7 +205,6 @@ export const authorizedOrder = ({
   order: Partial<OrderType>
   store: StoreType
 }) => {
-  console.log({ order })
   return `📝 *PEDIDO AUTORIZADO* 
   \n${AUTHORIZED_ORDER({ order })}
   \nℹ️ Puede realizar el pago a los siguientes números de cuenta:
