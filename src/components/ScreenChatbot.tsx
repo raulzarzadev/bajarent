@@ -31,7 +31,7 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
   return (
     <View>
       <Tabs
-        defaultTab="Auto-ws"
+        defaultTab="BuilderBot"
         tabId="chatbot-tabs"
         tabs={[
           {
@@ -51,11 +51,12 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
             title: 'Auto-ws',
             content: (
               <>
-                <RandomMessage sender="auto-ws" />
+                <Text>Este sender no esta configurado aún</Text>
+                {/* <RandomMessage sender="auto-ws" />
                 <FormChatbotAutoWs
                   values={store.chatbot}
                   onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
-                />
+                /> */}
               </>
             ),
 
