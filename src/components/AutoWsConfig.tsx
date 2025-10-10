@@ -8,7 +8,6 @@ export const AutoWSConfig = () => {
   const handleUpdateChatbot = async (values: { chatbot: any }) => {
     return await ServiceStores.update(store.id, { chatbot: values.chatbot })
   }
-  console.log(store.chatbot)
   return (
     <>
       <RandomMessage sender="builderbot" />
