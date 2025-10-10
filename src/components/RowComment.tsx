@@ -12,6 +12,7 @@ import { FormattedComment } from '../types/CommentType'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 import InputCheckbox from './Inputs/InputCheckbox'
+import Button from './Button'
 
 const LINES_DEFAULT = 1
 
@@ -23,7 +24,7 @@ export const CommentRow = ({
   showOrder?: boolean
   refetch?: (props?: { id?: string }) => void
 }) => {
-  const { toItems } = useMyNav()
+  const { toItems, toOrders } = useMyNav()
   const [disabled, setDisabled] = useState(false)
   const { staff } = useStore()
   const { user } = useAuth()
@@ -92,6 +93,7 @@ export const CommentRow = ({
               }}
             />
           )}
+
           {comment.type === 'important' && (
             <InputCheckbox
               variant="ghost"
@@ -132,6 +134,19 @@ export const CommentRow = ({
                     toItems({ id: comment?.itemId })
                   }}
                 ></Chip>
+              </View>
+            )}
+            {showOrder && comment?.orderId && (
+              <View style={{ marginHorizontal: 6 }}>
+                <Button
+                  icon="openEye"
+                  justIcon
+                  variant="ghost"
+                  size="xs"
+                  onPress={() => {
+                    toOrders({ id: comment?.orderId })
+                  }}
+                />
               </View>
             )}
 
