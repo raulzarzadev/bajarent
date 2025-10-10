@@ -11,7 +11,7 @@ export const AutoWSConfig = () => {
   console.log(store.chatbot)
   return (
     <>
-      <RandomMessage />
+      <RandomMessage sender="builderbot" />
       <FormChatbotE
         values={store.chatbot}
         onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
