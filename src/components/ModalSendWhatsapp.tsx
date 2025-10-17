@@ -30,6 +30,7 @@ import TextInfo from './TextInfo'
 import { orderStatus } from '../libs/whatsappMessages'
 import { useCustomer } from './Customers/ScreenCustomer'
 import InputRadios from './Inputs/InputRadios'
+import { useEmployee } from '../contexts/employeeContext'
 
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
@@ -37,9 +38,11 @@ export default function ModalSendWhatsapp({
   whatsappPhone
 }: ModalSendWhatsappType) {
   const modal = useModal({ title: 'Enviar mensaje' })
+
   const { order, payments } = useOrderDetails()
   const { customer } = useCustomer()
   const { store, categories } = useStore()
+  const { employee } = useEmployee()
   const phone = whatsappPhone
 
   const invalidPhone = !phone || phone?.length < 10
@@ -68,9 +71,9 @@ export default function ModalSendWhatsapp({
     }
   }
   //*********  MEMES
-  const WELCOME = `Estimado ${customer?.name || order?.fullName} cliente de ${
-    store?.name
-  }`
+  const WELCOME = `Estimado ${
+    customer?.name || order?.fullName || ''
+  } cliente de ${store?.name}`
 
   const ORDER_TYPE = `Tipo de servicio: *${dictionary(
     order?.type
@@ -225,6 +228,7 @@ export default function ModalSendWhatsapp({
   ${itemSerial && `#️⃣ Serie: ${itemSerial}`}
   ${itemFailure && `❕ Falla: ${itemFailure}`}
 `
+
   const REPAIR_QUOTE = `🧾 *COTIZACIÓN*
   ${ORDER_DETAILS}
   ${ORDER_ITEM_DETAILS}  
@@ -301,10 +305,11 @@ export default function ModalSendWhatsapp({
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
   `
-  const GOOGLE_MAPS_COMMENT = `🌟 *COMPARTE * 
+  const GOOGLE_MAPS_COMMENT = `🌟 *Reseña* 
   \n${WELCOME}
-  \nNos encantaría recibir tus comentarios. Publica una opinión en nuestro perfil.
-  \nhttps://g.page/r/CeBtdpdVAA_cEBE/review
+  \nLe agradecemos, si puede regálenos una buena reseña de 5 estrellas en https://g.page/r/CeBtdpdVAA_cEBM/review  y  mencione que lo antendio: ${
+    employee?.name || ''
+  }
   \n${AGRADECIMIENTOS}
   \n${CONTACTS}
   `
@@ -370,7 +375,7 @@ export default function ModalSendWhatsapp({
     { label: 'Vacío', value: 'hello' },
     { label: 'Encuesta', value: 'rent-quality-survey' },
     { label: 'Información', value: 'store-info' },
-    { label: 'Google Maps', value: 'google-maps-comment' },
+    { label: '5 estrellas', value: 'google-maps-comment' },
     { label: 'No encontrado', value: 'not-found' }
   ]
   if (order?.type === order_type.RENT) {
