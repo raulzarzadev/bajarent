@@ -52,13 +52,7 @@ const FormStaff = ({
             {/*
              *** *** *** INFORMATION
              */}
-            <View style={styles.input}>
-              <FormikInputValue
-                name={'position'}
-                placeholder="Puesto"
-                helperText="Nombre público(corto). Puede ser usado para mostrar movimientos o comunicación con el cliente y mas."
-              />
-            </View>
+
             {!!defaultValues.rol && (
               <FormikInputSelect
                 disabled

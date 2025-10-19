@@ -47,7 +47,7 @@ const CardEmployee = () => {
           <BadgesStore />
 
           <Text style={[gStyles.helper, gStyles.tCenter]}>Puesto:</Text>
-          <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.position}</Text>
+          <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.name}</Text>
           <EmployeeSections />
           <Text style={[gStyles.helper, gStyles.tCenter]}>Roles:</Text>
 

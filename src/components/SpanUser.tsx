@@ -14,7 +14,7 @@ const SpanUser = ({ userId }) => {
 
 export const getUserName = (staff: StoreType['staff'], userId: string) =>
   staff?.find((s) => s.userId === userId)?.name ||
-  staff?.find((s) => s.userId === userId)?.position ||
+  staff?.find((s) => s.userId === userId)?.name ||
   staff?.find((s) => s.id === userId)?.name
 
 export default SpanUser

@@ -51,9 +51,7 @@ const ListSections = ({
               {item?.staff
                 ?.map((staffId: string) => staff.find((s) => s.id === staffId))
                 ?.map((staff: StaffType, i: number) => (
-                  <Text key={i}>
-                    {staff?.position} {staff?.name}
-                  </Text>
+                  <Text key={i}>{staff?.name}</Text>
                 ))}
             </View>
           )}

@@ -64,7 +64,7 @@ const ScreenStoreEmployee = ({ staffId }: ScreenStoreEmployeeProps) => {
 
       <Formik
         initialValues={{
-          position: employee?.position || '',
+          // position: employee?.name || '',
           predefinedPermission: employee?.predefinedPermission || '',
           permissions: employee?.permissions || null
         }}

@@ -57,7 +57,7 @@ export const onSendOrderWhatsapp = async ({
     fullName: customer?.name || order?.fullName || ''
   }
 
-  const staffName = store?.staff?.find((s) => s.userId === userId)?.position
+  const staffName = store?.staff?.find((s) => s.userId === userId)?.name
   let message = messageOptions({
     order: orderWithCustomerName,
     store,

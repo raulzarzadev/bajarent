@@ -35,7 +35,6 @@ const ListStaff = ({
       <ListE
         sortFields={[
           { key: 'name', label: 'Nombre' },
-          { key: 'position', label: 'NickName' },
           { key: 'disabled', label: 'Habilitado' }
         ]}
         ComponentRow={({ item }) => (
@@ -88,7 +87,6 @@ const StaffRow = ({
 
   const fields: ListRowField[] = [
     { component: <Text>{staff?.name}</Text>, width: 120 },
-    { component: <Text>{staff?.position}</Text>, width: 120 },
     {
       component: (
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>

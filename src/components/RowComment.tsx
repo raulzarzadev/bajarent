@@ -54,7 +54,7 @@ export const CommentRow = ({
     })
   }
   const staffInfo = staff?.find((s) => s.userId === comment?.createdBy)
-  const commentCreatedBy = staffInfo?.position || staffInfo?.name
+  const commentCreatedBy = staffInfo?.name || 'Unknown'
 
   const {
     permissions: { isAdmin, isOwner }
@@ -73,11 +73,34 @@ export const CommentRow = ({
         //marginBottom:
       }}
     >
+      <>
+        {/* *************** COMMENT CONTENT  ************** */}
+        <Text
+          style={[
+            {
+              width: '100%',
+              textAlign: 'left'
+            }
+          ]}
+          numberOfLines={numberOfLines}
+        >
+          {comment?.content}{' '}
+        </Text>
+        {comment?.content.length > 40 && numberOfLines === LINES_DEFAULT && (
+          <Pressable onPress={() => setNumberOfLines(99)}>
+            <Text style={[{ color: theme.primary, fontWeight: 'bold' }]}>
+              ver
+            </Text>
+          </Pressable>
+        )}
+      </>
+
+      {/* *************** COMMENT metadata  ************** */}
       <View style={{ justifyContent: 'space-between' }}>
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'flex-end',
+            alignItems: 'flex-start',
             flexWrap: 'wrap'
           }}
         >
@@ -106,7 +129,7 @@ export const CommentRow = ({
               }}
             />
           )}
-          <Text style={{ fontWeight: 'bold', marginRight: 4 }}>
+          <Text style={[{ marginRight: 4 }, gStyles.helper, gStyles.tBold]}>
             {commentCreatedBy}
           </Text>
           <View style={{ marginRight: 4 }}>
@@ -114,7 +137,7 @@ export const CommentRow = ({
               <Text style={[gStyles.helper, { marginRight: 4 }]}>
                 {dateFormat(comment?.createdAt, 'dd/MM HH:mm')}
               </Text>
-              {fromNow(comment?.createdAt)}
+              {/* {fromNow(comment?.createdAt)} */}
             </Text>
           </View>
           <View
@@ -170,25 +193,6 @@ export const CommentRow = ({
           </View>
         </View>
       </View>
-      <Text
-        style={[
-          {
-            width: '100%',
-            textAlign: 'left'
-          },
-          gStyles.helper
-        ]}
-        numberOfLines={numberOfLines}
-      >
-        {comment?.content}{' '}
-      </Text>
-      {comment?.content.length > 40 && numberOfLines === LINES_DEFAULT && (
-        <Pressable onPress={() => setNumberOfLines(99)}>
-          <Text style={[{ color: theme.primary, fontWeight: 'bold' }]}>
-            ver
-          </Text>
-        </Pressable>
-      )}
     </View>
   )
 }
