@@ -69,7 +69,10 @@ export const EmployeeContextProvider = ({ children }) => {
 
       if (employee) {
         ServiceStaff.listen(employee?.id, (employee) => {
-          setEmployee(employee)
+          setEmployee({
+            ...employee,
+            name: user?.name || 'Unknown'
+          })
           const sectionsAssigned = storeSections
             ?.filter(({ staff }) => staff?.includes(employee?.id))
             .map(({ id }) => id)

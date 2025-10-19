@@ -307,7 +307,7 @@ export default function ModalSendWhatsapp({
   `
   const GOOGLE_MAPS_COMMENT = `🌟 *Reseña* 
   \n${WELCOME}
-  \nLe agradecemos, si puede regálenos una buena reseña de 5 estrellas en https://g.page/r/CeBtdpdVAA_cEBM/review  y  mencione que lo antendio: ${
+  \nLe agradecemos, si puede regálenos una buena reseña de 5 estrellas en https://g.page/r/CeBtdpdVAA_cEBM/review  y  mencione que lo atendio: ${
     employee?.name || ''
   }
   \n${AGRADECIMIENTOS}

@@ -137,7 +137,6 @@ export const CommentRow = ({
               <Text style={[gStyles.helper, { marginRight: 4 }]}>
                 {dateFormat(comment?.createdAt, 'dd/MM HH:mm')}
               </Text>
-              {/* {fromNow(comment?.createdAt)} */}
             </Text>
           </View>
           <View
