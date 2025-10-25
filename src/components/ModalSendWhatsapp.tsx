@@ -203,11 +203,12 @@ export default function ModalSendWhatsapp({
 
   const QUOTE =
     orderQuotes.length > 0
-      ? `
-  🔧 *Servicios:*
-  ${orderQuotes
-    .map((q) => `${q.description} *$${parseFloat(`${q.amount}`).toFixed(2)}* `)
-    .join('\n')}
+      ? `🔧 *Servicios:*\n${orderQuotes
+          .map(
+            (q) =>
+              `${q.description} *$${parseFloat(`${q.amount}`).toFixed(2)}* `
+          )
+          .join('\n')}
     \nTotal:*$${orderQuotes
       .reduce((prev, curr) => prev + parseFloat(`${curr.amount}`), 0)
       .toFixed(2)}*
@@ -219,14 +220,18 @@ export default function ModalSendWhatsapp({
   const orderItemCategoryName =
     categories?.find((cat) => cat?.id === order?.item?.categoryId)?.name || ''
   const itemFailure =
-    order?.item?.failDescription ?? order?.failDescription ?? ''
+    order.type === order_type.REPAIR &&
+    (order?.item?.failDescription || order?.itemFailure || '')
+
+  order?.item?.failDescription ?? order?.failDescription ?? ''
+
   const itemSerial = order?.item?.serial || order?.itemSerial || ''
   const ORDER_ITEM_DETAILS = `
   ℹ️ *Información del artículo*
   🧸 Tipo: ${orderItemCategoryName}
-  🏷️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
-  ${itemSerial && `#️⃣ Serie: ${itemSerial}`}
-  ${itemFailure && `❕ Falla: ${itemFailure}`}
+  🏷️ Marca: ${order?.item?.brand || order?.itemBrand || ''} ${
+    itemSerial && `\n#️⃣ Serie: ${itemSerial}`
+  } ${itemFailure && `\n❕ Falla: ${itemFailure}`}
 `
 
   const REPAIR_QUOTE = `🧾 *COTIZACIÓN*
@@ -284,15 +289,10 @@ export default function ModalSendWhatsapp({
   \n${AGRADECIMIENTOS}
   `
 
-  const REPAIR_PICKED_UP = `🚛 No 
-  \n${WELCOME}
-  \n${ORDER_TYPE}
-  \n⬆️🔧 Se recogió para servicio el  📆${dFormat(order?.repairingAt)}
-  \n🛠️ Marca: ${order?.item?.brand || order?.itemBrand || ''}
-  #️⃣ Serie: ${order?.item?.serial || order?.itemSerial || ''} 
-  🧾 Falla: ${order?.item?.failDescription || order?.failDescription || ''}
-  💲 Cotización:  $${order?.repairTotal || 0}
-  
+  const REPAIR_PICKED_UP = `🚛 REPARACIÓN RECOLECTADA
+  ${ORDER_DETAILS}
+  ${ORDER_ITEM_DETAILS}
+  ${QUOTE}
   \n${CONTACTS}
   \n${ADDRESS}
   \n${AGRADECIMIENTOS}`
