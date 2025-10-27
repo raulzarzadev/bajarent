@@ -161,7 +161,7 @@ export default function ModalSendWhatsapp({
   }
 
   const SOCIALS = store?.socialMedia
-    ?.map((s) => `${s.type || ''}: ${s.value || ''}`)
+    ?.map((s) => `${s?.type || ''}: ${s?.value || ''}`)
     ?.join('\n')
 
   const SOCIAL_MEDIA = `📲 Síguenos en nuestras redes sociales:
@@ -220,7 +220,7 @@ export default function ModalSendWhatsapp({
   const orderItemCategoryName =
     categories?.find((cat) => cat?.id === order?.item?.categoryId)?.name || ''
   const itemFailure =
-    order.type === order_type.REPAIR &&
+    order?.type === order_type.REPAIR &&
     (order?.item?.failDescription || order?.itemFailure || '')
 
   order?.item?.failDescription ?? order?.failDescription ?? ''
@@ -430,7 +430,7 @@ export default function ModalSendWhatsapp({
           value={messageType}
           onChange={(value) => {
             setMessageType(value)
-            setMessage(messages.find((m) => m.type === value)?.content || '')
+            setMessage(messages.find((m) => m?.type === value)?.content || '')
           }}
           layout="row"
           stylesRow={{ justifyContent: 'center' }}
