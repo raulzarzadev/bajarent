@@ -50,19 +50,22 @@ const OrderImagesUpdate = (props?: OrderImagesUpdateProps) => {
 
   if (orderImages.length === 0)
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <Text style={[gStyles.helper, gStyles.tCenter]}>No hay imagenes</Text>
-        <ModalEditImages
-          handleUpdate={(values) => {
-            handleUpdateImages(values)
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
-        />
+        >
+          <Text style={gStyles.h3}>Imagenes (Orden) </Text>
+          <ModalEditImages
+            handleUpdate={(values) => {
+              handleUpdateImages(values)
+            }}
+          />
+        </View>
+        <Text style={[gStyles.helper, gStyles.tCenter]}>No hay imagenes</Text>
       </View>
     )
   return (

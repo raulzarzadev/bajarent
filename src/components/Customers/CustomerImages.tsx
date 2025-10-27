@@ -49,21 +49,25 @@ const CustomerImages = (props?: CustomerImagesProps) => {
 
   if (customerImages.length === 0)
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Text style={gStyles.h3}>Imagenes (cliente) </Text>
+
+          {showAddButton && (
+            <ModalEditImages
+              handleUpdate={async (values) => {
+                await update(customerId, { [`images.${values?.id}`]: values })
+              }}
+            />
+          )}
+        </View>
         <Text style={[gStyles.helper, gStyles.tCenter]}>No hay imagenes</Text>
-        {showAddButton && (
-          <ModalEditImages
-            handleUpdate={async (values) => {
-              await update(customerId, { [`images.${values?.id}`]: values })
-            }}
-          />
-        )}
       </View>
     )
   return (
