@@ -68,6 +68,7 @@ const ListOrders = ({
   return (
     <View style={{ paddingLeft: 2 }}>
       <ListE
+        id="list-orders"
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
         rowsPerPage={20}

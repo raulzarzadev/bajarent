@@ -9,6 +9,7 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
   return (
     <View>
       <ListE
+        id="list-balances"
         defaultSortBy="createdAt"
         defaultOrder="des"
         onPressRow={(id) => {

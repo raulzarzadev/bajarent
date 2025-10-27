@@ -33,6 +33,7 @@ export default function ListPayments({
   const { staff } = useStore()
   return (
     <ListE
+      id="list-payments"
       // ComponentMultiActions={({ ids }) => {
       //   return (
       //     <ModalVerifyPayments

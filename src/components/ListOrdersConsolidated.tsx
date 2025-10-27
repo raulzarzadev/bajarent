@@ -116,6 +116,7 @@ const ListOrdersConsolidated = () => {
         </Pressable>
 
         <ListE
+          id="list-orders-consolidated"
           ComponentRow={({ item }) => <ComponentRow item={item} />}
           pinRows
           collectionSearch={{

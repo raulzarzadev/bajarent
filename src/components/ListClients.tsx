@@ -48,6 +48,7 @@ const ListCustomers = () => {
   return (
     <View>
       <ListE
+        id="list-customers"
         rowsPerPage={20}
         sideButtons={[
           {

@@ -50,6 +50,7 @@ const ListMovements = () => {
       />
       {loading && <Loading />}
       <ListE
+        id="list-movements"
         ComponentRow={({ item }) => <CommentRow comment={item} showOrder />}
         data={data}
         filters={[

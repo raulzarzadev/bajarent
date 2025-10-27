@@ -34,6 +34,7 @@ export type ListSideButton = {
   color?: ButtonProps['color']
 }
 export type ListPops<T extends { id: string }> = {
+  id: string
   data: T[]
   preFilteredIds?: string[]
   onPressRow?: (orderId: string) => void
@@ -57,6 +58,7 @@ export type ListPops<T extends { id: string }> = {
 
 function MyList<T extends { id: string }>({
   data,
+  id,
   onPressRow,
   sortFields,
   ComponentRow,
@@ -172,7 +174,7 @@ function MyList<T extends { id: string }>({
   const handleUnpinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
       const newPinnedRows = prevPinnedRows.filter((rowId) => rowId !== id)
-      setItem('pinnedRows', JSON.stringify(newPinnedRows || []))
+      setItem(`pinnedRows-${id}`, JSON.stringify(newPinnedRows || []))
       return newPinnedRows
     })
   }
@@ -180,7 +182,7 @@ function MyList<T extends { id: string }>({
   const handlePinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
       const newPinnedRows = [...prevPinnedRows, id]
-      setItem('pinnedRows', JSON.stringify(newPinnedRows || []))
+      setItem(`pinnedRows-${id}`, JSON.stringify(newPinnedRows || []))
       return newPinnedRows
     })
   }
@@ -668,7 +670,7 @@ export default function <T extends { id: string }>(props: ListPops<T>) {
 export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
   if (props?.data === undefined) return <Loading />
   return (
-    <ErrorBoundary componentName="MyList">
+    <ErrorBoundary componentName={`ListE-${props.id}`}>
       <MyList {...props}></MyList>
     </ErrorBoundary>
   )

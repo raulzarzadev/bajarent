@@ -89,6 +89,7 @@ const ListComments = ({
         </Text>
       </View>
       <List
+        id="list-comments"
         sideButtons={[
           {
             icon: 'download',

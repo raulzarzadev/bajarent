@@ -33,6 +33,7 @@ const ListStaff = ({
   return (
     <View>
       <ListE
+        id="list-staff"
         sortFields={[
           { key: 'name', label: 'Nombre' },
           { key: 'disabled', label: 'Habilitado' }

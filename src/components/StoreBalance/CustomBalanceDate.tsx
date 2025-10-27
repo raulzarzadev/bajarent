@@ -125,6 +125,7 @@ export const ListCustomBalances = () => {
   return (
     <View style={{ width: '100%', margin: 'auto' }}>
       <List
+        id="list-custom-balances"
         rowsPerPage={40}
         ComponentRow={({ item }) => <RowCustomBalance balance={item} />}
         data={balances}

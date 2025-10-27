@@ -36,6 +36,7 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
     <View>
       <Text style={gStyles.h2}>Trabajo actual</Text>
       <List
+        id="current-work-list"
         data={currentWorks}
         filters={[
           {

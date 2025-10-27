@@ -172,6 +172,7 @@ const ListStoreItems = ({
   return (
     <View>
       <ListE
+        id="list-store-items"
         maxWidth={1000}
         defaultOrder="des"
         defaultSortBy="number"
