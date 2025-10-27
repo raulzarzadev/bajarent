@@ -58,7 +58,7 @@ export type ListPops<T extends { id: string }> = {
 
 function MyList<T extends { id: string }>({
   data,
-  id,
+  id: tableId,
   onPressRow,
   sortFields,
   ComponentRow,
@@ -78,6 +78,7 @@ function MyList<T extends { id: string }>({
   pinMaxRows,
   onRowsSelected
 }: ListPops<T>) {
+  const pinnedTableID = `table-${tableId}`
   const [filteredData, setFilteredData] = useState<T[]>(undefined)
   const [collectionData, setCollectionData] = useState<T[]>([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -107,7 +108,7 @@ function MyList<T extends { id: string }>({
 
   useEffect(() => {
     ;(async () => {
-      const storedPinnedRows = await getItem('pinnedRows')
+      const storedPinnedRows = await getItem(pinnedTableID)
       if (storedPinnedRows) {
         const items = JSON.parse(storedPinnedRows || '[]')
         const validItems = items?.filter((id) =>
@@ -174,7 +175,7 @@ function MyList<T extends { id: string }>({
   const handleUnpinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
       const newPinnedRows = prevPinnedRows.filter((rowId) => rowId !== id)
-      setItem(`pinnedRows-${id}`, JSON.stringify(newPinnedRows || []))
+      setItem(pinnedTableID, JSON.stringify(newPinnedRows || []))
       return newPinnedRows
     })
   }
@@ -182,7 +183,7 @@ function MyList<T extends { id: string }>({
   const handlePinRow = (id: string) => {
     setPinnedRows((prevPinnedRows) => {
       const newPinnedRows = [...prevPinnedRows, id]
-      setItem(`pinnedRows-${id}`, JSON.stringify(newPinnedRows || []))
+      setItem(pinnedTableID, JSON.stringify(newPinnedRows || []))
       return newPinnedRows
     })
   }
