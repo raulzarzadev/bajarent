@@ -10,7 +10,6 @@ import Button from './Button'
 const FormChatbot = (props?: FormChatbotProps) => {
   const defaultValues: StoreType['chatbot'] = props.values
 
-  console.log({ defaultValues })
   return (
     <View>
       <Formik
