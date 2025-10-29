@@ -18,7 +18,8 @@
     "cy:run": "cypress run --e2e --browser chrome",
     "push:patch": "npm version patch --follow-tags && git push",
     "push:minor": "npm version minor --follow-tags && git push",
-    "commit": "git status && bun type-check  && bun cy:run && git add . &&  git commit"
+    "commit": "git status && bun type-check  && bun cy:run && git add . &&  git commit",
+    "perf:audit": "bun scripts/performance-audit.ts"
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
