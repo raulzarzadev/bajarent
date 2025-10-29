@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
-import { useOrdersCtx } from '../contexts/ordersContext'
+import { useOrdersRedux } from './useOrdersRedux'
 import OrderType from '../types/OrderType'
 import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
@@ -31,7 +31,7 @@ export default function useFilter<T extends { id?: string }>({
 }) {
   const { storeId } = useStore()
   const { permissions } = useEmployee()
-  const { reports } = useOrdersCtx()
+  const { reports } = useOrdersRedux('useFilter')
 
   const [filteredData, setFilteredData] = useState<T[]>([...data])
   const [searchedData, setSearchedData] = useState<T[]>([])

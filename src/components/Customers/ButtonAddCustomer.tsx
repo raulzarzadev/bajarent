@@ -14,11 +14,11 @@ import { customerFromOrder } from './lib/customerFromOrder'
 import { CustomerCardE } from './CustomerCard'
 import { CustomerType } from '../../state/features/costumers/customerType'
 import { useEmployee } from '../../contexts/employeeContext'
-import { useOrdersCtx } from '../../contexts/ordersContext'
+import { useOrdersRedux } from '../../hooks/useOrdersRedux'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 
 const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
-  const { orders } = useOrdersCtx()
+  const { orders } = useOrdersRedux('ButtonAddCustomer')
   const { handleCreateCustomer } = useCustomers()
 
   const [order, setOrder] = useState<Partial<OrderType>>(props?.order)

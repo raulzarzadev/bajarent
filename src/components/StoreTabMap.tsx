@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { MapOrderType, OrdersMapE } from './OrdersMap'
-import { useOrdersCtx } from '../contexts/ordersContext'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
 import { order_status, order_type } from '../types/OrderType'
 import unShortUrl from '../libs/unShortUrl'
 import extractCoordsFromUrl from '../libs/extractCoordsFromUrl'
@@ -71,7 +71,7 @@ const testOrders: MapOrderType[] = [
 ]
 const StoreTabMap = () => {
   const [orders, setOrders] = useState<MapOrderType[]>([])
-  const { orders: consolidated } = useOrdersCtx()
+  const { orders: consolidated } = useOrdersRedux('StoreTabMap')
   useEffect(() => {
     const formatted = consolidated
       ?.filter((order) => {

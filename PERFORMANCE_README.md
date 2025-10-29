@@ -24,7 +24,7 @@ import { useMyOrders } from '../hooks/useOrdersRedux'
 
 const MyComponent = () => {
   const { orders, loading, stats, refresh } = useMyOrders('MyComponent')
-  
+
   return (
     <View>
       {loading && <Loader />}
@@ -66,12 +66,12 @@ useEffect(() => {
 
 ## Hooks Disponibles
 
-| Hook | Uso | Performance |
-|------|-----|-------------|
-| `useOrdersRedux()` | Todas las órdenes | ⚡ Con cache, normalizado |
-| `useMyOrders()` | Solo mis órdenes | ⚡⚡ Filtrado optimizado |
+| Hook                  | Uso                  | Performance                |
+| --------------------- | -------------------- | -------------------------- |
+| `useOrdersRedux()`    | Todas las órdenes    | ⚡ Con cache, normalizado  |
+| `useMyOrders()`       | Solo mis órdenes     | ⚡⚡ Filtrado optimizado   |
 | `useUnsolvedOrders()` | Órdenes sin resolver | ⚡⚡ Pre-filtrado en Redux |
-| `useOrdersStats()` | Solo estadísticas | ⚡⚡⚡ Sin cargar órdenes |
+| `useOrdersStats()`    | Solo estadísticas    | ⚡⚡⚡ Sin cargar órdenes  |
 
 ## Comandos Útiles
 
@@ -95,15 +95,18 @@ bun type-check
 ## Prioridades de Migración
 
 **🔴 Alta Prioridad** (impacto inmediato):
+
 - `ScreenWorkshop.tsx` - Pantalla principal con muchos re-renders
 - `SpanOrder.tsx` - Usado en múltiples lugares
 
 **🟡 Media Prioridad**:
+
 - `ListOrdersConsolidated.tsx`
 - `ScreenStore5.tsx`
 - `StoreTabMap.tsx`
 
 **🟢 Baja Prioridad**:
+
 - `ButtonAddCustomer.tsx`
 - `useFilter.tsx`
 
@@ -117,12 +120,14 @@ bun type-check
 ## Métricas Clave
 
 ### Antes (Context API)
+
 - 📉 4-6 queries por carga
 - 📉 Sin cache
 - 📉 Re-renders completos
 - 📉 Datos duplicados
 
 ### Ahora (Redux)
+
 - 📈 1 query con cache de 5min
 - 📈 Cache automático
 - 📈 Re-renders selectivos
@@ -131,6 +136,7 @@ bun type-check
 ## Problemas Comunes
 
 ### Error: "Cannot assign to read only property"
+
 ```typescript
 // ❌ WRONG
 order.fullName = customer.name
@@ -140,6 +146,7 @@ const updatedOrder = { ...order, fullName: customer.name }
 ```
 
 ### Cache no se actualiza
+
 ```typescript
 // Usa forceRefresh() en lugar de refreshOrders()
 const { forceRefresh } = useOrdersRedux('MyComponent')
@@ -147,6 +154,7 @@ await forceRefresh()
 ```
 
 ### Componente no se actualiza con nuevos datos
+
 ```typescript
 // Asegúrate de usar el componentId único
 const { orders } = useOrdersRedux('UniqueComponentName')

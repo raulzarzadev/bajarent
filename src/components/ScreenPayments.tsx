@@ -1,7 +1,6 @@
 import { ScrollView, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useStore } from '../contexts/storeContext'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import { ServicePayments } from '../firebase/ServicePayments'
 import useModal from '../hooks/useModal'
 import StyledModal from './StyledModal'

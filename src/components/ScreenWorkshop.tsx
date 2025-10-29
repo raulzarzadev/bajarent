@@ -12,11 +12,17 @@ import Divider from './Divider'
 import { Switch } from 'react-native-elements'
 import useMyNav from '../hooks/useMyNav'
 import Button from './Button'
-import { useOrdersCtx } from '../contexts/ordersContext'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
+import { order_type } from '../types/OrderType'
 
 const ScreenWorkshop = () => {
   const { workshopItems } = useItemsCtx()
-  const { repairOrders } = useOrdersCtx()
+  const { orders } = useOrdersRedux('ScreenWorkshop')
+
+  // Filter repair orders from Redux orders
+  const repairOrders = orders.filter(
+    (order) => order.type === order_type.REPAIR
+  )
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )

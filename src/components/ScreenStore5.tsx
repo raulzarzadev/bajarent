@@ -9,7 +9,7 @@ import { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
-import { useOrdersCtx } from '../contexts/ordersContext'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
 import { useRef } from 'react'
@@ -135,7 +135,7 @@ const TabMovements = () => {
 const StoreNumbersRow = () => {
   const { store } = useStore()
   const { navigate } = useNavigation()
-  const { orders, reports } = useOrdersCtx()
+  const { orders, reports } = useOrdersRedux('StoreNumbersRow')
 
   const OrdersAuthorized = orders?.filter(
     (order) => order.status === order_status.AUTHORIZED

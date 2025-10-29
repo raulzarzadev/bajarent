@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import { useOrdersCtx } from '../contexts/ordersContext'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
 import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { lastExtensionTime } from '../libs/orders'
 import { translateTime } from '../libs/expireDate'
@@ -36,35 +36,28 @@ const SpanOrder = ({
 }) => {
   const [order, setOrder] =
     useState<Partial<ConsolidatedOrderType | OrderType>>()
-  const { orders, payments } = useOrdersCtx()
+  const { orders } = useOrdersRedux('SpanOrder')
   const { toOrders } = useMyNav()
 
   useEffect(() => {
     const searchOrder = async () => {
-      // -> Search and return from CURRENT CONTEXT orders
+      // -> Search and return from CURRENT CONTEXT orders (Redux)
       const currentOrdersFound = orders?.find((o) => o.id === orderId)
       if (currentOrdersFound) {
-        return {
-          ...currentOrdersFound,
-          payments: payments?.filter((p) => p.orderId === orderId)
-        }
+        return currentOrdersFound
       }
 
       // -> Search and return from DATABASE orders
       const dbOrder = await ServiceOrders.get(orderId)
       if (dbOrder) {
-        return {
-          ...dbOrder,
-          payments: payments?.filter((p) => p.orderId === orderId)
-        }
+        return dbOrder
       }
     }
 
     searchOrder().then((res) => {
-      //  console.log({ order: res })
       setOrder(res)
     })
-  }, [])
+  }, [orderId, orders])
 
   if (redirect) {
     return (
