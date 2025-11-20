@@ -28,6 +28,7 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
   const handleUpdateChatbot = async (values: { chatbot: any }) => {
     return await ServiceStores.update(store.id, { chatbot: values.chatbot })
   }
+
   return (
     <View>
       <Tabs
@@ -39,7 +40,6 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
             show: true,
             content: (
               <>
-                <RandomMessage sender="builderbot" />
                 <FormChatbotE
                   values={store.chatbot}
                   onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
@@ -60,18 +60,22 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
               </>
             ),
 
-            show: true
+            show: false
           },
           {
             title: 'Mensajes',
             content: (
               <>
                 <View>
-                  <Text>Configuración de mensajes</Text>
-                  <Text style={gStyles.helper}>
+                  <View style={{ marginVertical: 4 }}>
+                    <RandomMessage sender="builderbot" />
+                  </View>
+                  <Text style={gStyles.h2}>Configuración de mensajes</Text>
+                  <Text style={[gStyles.tCenter]}>
                     * Se enviaran los mensajes que esten marcados. Algunos
                     corresponden al flujo de las ordenes y otros al contenido.
                   </Text>
+
                   <Formik
                     initialValues={store.chatbot || {}}
                     onSubmit={(values) => {
@@ -87,10 +91,10 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
                         }}
                       >
                         <Text style={gStyles.h3}>Chatbot</Text>
-                        <FormikCheckbox
+                        {/* <FormikCheckbox
                           name="enabled"
                           label="Activar chatbot"
-                        ></FormikCheckbox>
+                        ></FormikCheckbox> */}
 
                         <View
                           style={{ flexDirection: 'row', flexWrap: 'wrap' }}
@@ -125,7 +129,7 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
               </>
             ),
 
-            show: true
+            show: store.chatbot?.enabled === true
           }
         ]}
       ></Tabs>
