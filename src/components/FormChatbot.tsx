@@ -8,7 +8,14 @@ import FormikInputValue from './FormikInputValue'
 import StoreType, { bot_configs } from '../types/StoreType'
 import Button from './Button'
 const FormChatbot = (props?: FormChatbotProps) => {
-  const defaultValues: StoreType['chatbot'] = props.values
+  const defaultValues: StoreType['chatbot'] = props.values||{
+    enabled: false,
+    id: '',
+    apiKey: '',
+    hostNumber: '',
+    enabledAutoWs: false,
+    sender: 'bajarent'
+  }
 
   return (
     <View>
