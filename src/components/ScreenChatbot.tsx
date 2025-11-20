@@ -73,7 +73,7 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
                     corresponden al flujo de las ordenes y otros al contenido.
                   </Text>
                   <Formik
-                    initialValues={store.chatbot}
+                    initialValues={store.chatbot || {}}
                     onSubmit={(values) => {
                       handleUpdateChatbot({ chatbot: values })
                     }}
