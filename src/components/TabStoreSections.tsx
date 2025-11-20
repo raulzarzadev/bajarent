@@ -21,6 +21,8 @@ const TabStoreSections = () => {
       show: true
     }))
 
+  console.log({ sections })
+
   return (
     <Tabs
       tabs={sections}

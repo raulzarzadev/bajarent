@@ -54,7 +54,7 @@ const TabsA = ({
     setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
   }
   const [scrollWidth, setScrollWidth] = useState(100 / tabs.length)
-  if (visibleTabs.length === 0)
+  if (visibleTabs.length === 0 && showAddTab === false)
     return <Text style={gStyles.h2}>No hay tabs visibles</Text>
   return (
     <View style={styles.container}>
