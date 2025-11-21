@@ -1,7 +1,6 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
 import FormikCheckbox from './FormikCheckbox'
