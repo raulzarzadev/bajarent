@@ -94,12 +94,13 @@ export function searchInLocalData<T extends { id?: string }>(
   searchValue: string,
   filters: Filter[] = []
 ): { matchedData: T[]; allMatchedData: T[] } {
+  debugger
   if (!searchValue) {
     return { matchedData: data, allMatchedData: data }
   }
 
   const processedData = data.map(processData)
-  const { matches } = findBestMatches(processedData, searchValue)
+  const { matches = [] } = findBestMatches(processedData, searchValue)
 
   // Filtrar por matches exactos (keywordMatches > 0)
   const realMatches = matches?.filter((m) => m.keywordMatches > 0)
@@ -123,7 +124,10 @@ export function searchInLocalData<T extends { id?: string }>(
       : matchedItemData
 
   return {
-    matchedData: filteredMatchedData,
-    allMatchedData: [...matchedItemData, ...similarMatchedItemData]
+    matchedData: filteredMatchedData || [],
+    allMatchedData: [
+      ...(matchedItemData || []),
+      ...(similarMatchedItemData || [])
+    ]
   }
 }

@@ -70,7 +70,6 @@ export default function useFilter<T extends { id?: string }>({
       setCustomData([])
       return
     }
-
     const { matchedData } = searchInLocalData(data, value, filtersBy)
     setFilteredData(matchedData)
     setSearchedData(matchedData)
