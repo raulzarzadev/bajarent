@@ -94,7 +94,6 @@ export function searchInLocalData<T extends { id?: string }>(
   searchValue: string,
   filters: Filter[] = []
 ): { matchedData: T[]; allMatchedData: T[] } {
-  debugger
   if (!searchValue) {
     return { matchedData: data, allMatchedData: data }
   }
