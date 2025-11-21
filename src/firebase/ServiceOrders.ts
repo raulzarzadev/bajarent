@@ -18,7 +18,7 @@ import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
 import { CommentType, CreateCommentType } from '../types/CommentType'
 import { ServiceStores } from './ServiceStore'
-import { addDays, isSaturday, isValid, startOfDay } from 'date-fns'
+import { addDays, isSaturday, isValid, startOfDay, endOfDay } from 'date-fns'
 import { createUUID } from '../libs/createId'
 import { auth } from './auth'
 import { expireDate2 } from '../libs/expireDate'
@@ -168,6 +168,22 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return this.findMany([
       where('storeId', '==', storeId),
       where('status', 'in', ORDER_STATUS_SOLVED)
+    ])
+  }
+
+  async getOrderExpiresOnDate({
+    date,
+    storeId
+  }: {
+    date: Date
+    storeId: string
+  }) {
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    return await this.findMany([
+      where('storeId', '==', storeId),
+      where('expireAt', '>=', start),
+      where('expireAt', '<=', end)
     ])
   }
 

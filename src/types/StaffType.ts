@@ -112,6 +112,7 @@ export enum permissions_orders {
   // showOrderTotal,
   // showOrderTime,
   getExpireTomorrow,
+  canViewOtherDates,
   canDeleteExtension,
   canCancelPickedUp,
   shouldChooseExactItem,

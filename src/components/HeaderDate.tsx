@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React from 'react'
 import Button from './Button'
 import { addDays, isToday } from 'date-fns'
@@ -13,7 +13,8 @@ const HeaderDate = ({
   showTime = false,
   documentDate,
   debounce = 0,
-  defaultDate = new Date()
+  defaultDate = new Date(),
+  styles
 }: {
   label?: string
   onChangeDate: (date: Date) => void
@@ -21,6 +22,7 @@ const HeaderDate = ({
   documentDate?: Date
   debounce?: number
   defaultDate?: Date
+  styles?: ViewStyle
 }) => {
   const [date, setDate] = React.useState(defaultDate)
 
@@ -43,7 +45,7 @@ const HeaderDate = ({
   }
 
   return (
-    <View style={{ marginTop: 12 }}>
+    <View style={{ marginVertical: 6 }}>
       {!!label && <Text style={gStyles.h1}>{label}</Text>}
 
       <View
@@ -114,5 +116,3 @@ const HeaderDate = ({
 }
 
 export default HeaderDate
-
-const styles = StyleSheet.create({})
