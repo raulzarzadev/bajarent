@@ -28,6 +28,7 @@ const ListStaff = ({
   const {
     permissions: { canEditStaff }
   } = useEmployee()
+  const disableAdd = !canEditStaff
 
   return (
     <View>
