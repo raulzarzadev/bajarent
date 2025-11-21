@@ -251,7 +251,8 @@ const labels = {
   [repair_order_types.SALE_WARRANTY]: 'Garantía de venta',
   [repair_order_types.CLIENT_FREQUENT]: 'Nuevo cliente',
   [repair_order_types.CLIENT_NEW]: 'Cliente frecuente',
-  [repair_order_types.CLIENT_VIP]: 'Cliente VIP'
+  [repair_order_types.CLIENT_VIP]: 'Cliente VIP',
+  canViewOtherDates: 'Ver otras fechas'
 } as const
 
 const labels_lowercase = Object.keys(labels).reduce((acc, key) => {
