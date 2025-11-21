@@ -49,7 +49,8 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     if (storeId && isAuthenticated)
       ServiceStores.listen(storeId, (store) => {
-        store.staff = storeCtx?.staff
+        // console.log({ storeStaff: store.staff, contestStaff: storeCtx?.staff })
+        // store.staff = storeCtx?.staff
         setStore(store)
       })
   }, [storeId, storeCtx?.staff, isAuthenticated])

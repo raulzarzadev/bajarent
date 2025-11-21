@@ -49,25 +49,6 @@ const FormStaff = ({
       {({ handleSubmit }) => {
         return (
           <View style={styles.form}>
-            {/*
-             *** *** *** INFORMATION
-             */}
-
-            {!!defaultValues.rol && (
-              <FormikInputSelect
-                disabled
-                placeholder="Selecciona un rol"
-                name="rol"
-                options={Object.keys(staff_roles).map((key) => ({
-                  label: dictionary(key),
-                  value: key
-                }))}
-                helperText='Deshabilitado. Pronto desaperecera de esta zona. Usa el input "Roles" para asignar rol'
-              />
-            )}
-            {/*
-             *** *** *** PERMISSIONS
-             */}
             <Text style={gStyles.h3}>Permisos especiales</Text>
             <View>
               <FormikCheckbox
