@@ -1,6 +1,6 @@
 {
   "name": "bajarent",
-  "version": "0.5.54",
+  "version": "0.5.55",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
