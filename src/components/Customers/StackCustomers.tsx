@@ -3,10 +3,16 @@ import MyStaffLabel from '../MyStaffLabel'
 import ErrorBoundary from '../ErrorBoundary'
 import { ScreenCustomersE } from './ScreenCustomers'
 import { ScreenCustomerE } from './ScreenCustomer'
-import ScreenCustomerForm, { ScreenCustomerFormE } from './ScreenCustomerForm'
-import StackOrders from '../StackOrders'
+import { ScreenCustomerFormE } from './ScreenCustomerForm'
+// import StackOrders from '../StackOrders'
 
 const Stack = createStackNavigator()
+
+const StackOrdersLazy = (props) => {
+  const StackOrders = require('../StackOrders').default
+  return <StackOrders {...props} />
+}
+
 export function StackCustomers() {
   return (
     <Stack.Navigator
@@ -48,11 +54,11 @@ export function StackCustomers() {
           //@ts-ignore
           title: `Editar cliente`
         })}
-        component={ScreenCustomerForm}
+        component={ScreenCustomerFormE}
       />
       <Stack.Screen
         name="StackOrders"
-        component={StackOrders}
+        component={StackOrdersLazy}
         options={{
           headerShown: false
         }}

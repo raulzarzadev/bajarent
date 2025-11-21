@@ -76,6 +76,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
       {canViewOtherDates && (
         <HeaderDate onChangeDate={handleChangeDate} debounce={700} />
       )}
+
       {isOtherDateOrders && (
         <ListOrders
           orders={dateOrders}
@@ -180,4 +181,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   )
 }
 
-export default withDisabledCheck(ScreenOrders)
+const ScreenOrdersWithCheck = withDisabledCheck(ScreenOrders)
+// @ts-ignore
+ScreenOrdersWithCheck.whyDidYouRender = true
+export default ScreenOrdersWithCheck
