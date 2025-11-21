@@ -16,35 +16,34 @@ import { ReduxInitializer } from './src/state/ReduxInitializer'
 
 export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {
-  const [isReady, setIsReady] = useState(!__DEV__)
-
+  const [isReady, setIsReady] = useState(false)
   const [initialState, setInitialState] = useState()
 
   useEffect(() => {
+    if (isReady) return
+
     const restoreState = async () => {
       try {
-        const savedStateString = await AsyncStorage?.getItem(PERSISTENCE_KEY)
-        if (savedStateString === 'undefined') return
-
-        const state = savedStateString
-          ? JSON?.parse(savedStateString)
-          : undefined
-
-        if (state !== undefined) {
-          setInitialState(state)
+        const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY)
+        if (savedStateString) {
+          setInitialState(JSON.parse(savedStateString))
         }
+      } catch (e) {
+        console.warn('Error restoring navigation state:', e)
       } finally {
         setIsReady(true)
       }
     }
 
-    if (!isReady) {
-      restoreState()
-    }
-  }, [isReady])
+    restoreState()
+  }, [])
 
   if (!isReady) {
-    return <ActivityIndicator />
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
   }
 
   return (
