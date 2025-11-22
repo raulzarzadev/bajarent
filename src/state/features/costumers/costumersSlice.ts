@@ -18,8 +18,7 @@ import {
 import { useStore } from '../../../contexts/storeContext'
 import { useEmployee } from '../../../contexts/employeeContext'
 import { mergeObjs } from '../../../libs/mergeObjs'
-import { useOrdersCtx } from '../../../contexts/ordersContext'
-import { useEffect, useState } from 'react'
+
 export type CustomersState = {
   data: CustomerType[]
   loading: boolean
