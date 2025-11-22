@@ -88,7 +88,6 @@ const StaffRow = ({
 
   const disabled =
     canEditStaff === false && isAdmin === false && isOwner === false
-  console.log({ canEditStaff, isAdmin, isOwner })
   const fields: ListRowField[] = [
     { component: <Text>{staff?.name}</Text>, width: 120 },
     {
