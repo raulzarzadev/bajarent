@@ -46,30 +46,35 @@ const CardEmployee = () => {
           */}
           <BadgesStore />
 
-          <Text style={[gStyles.helper, gStyles.tCenter]}>Puesto:</Text>
+          <Text style={[gStyles.helper, gStyles.tCenter]}>
+            Nombre del empleado:
+          </Text>
           <Text style={[gStyles.p, gStyles.tCenter]}>{employee?.name}</Text>
           <EmployeeSections />
-          <Text style={[gStyles.helper, gStyles.tCenter]}>Roles:</Text>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center'
-            }}
-          >
-            {staffRoles.map((role) => {
-              return (
-                <Chip
-                  size="sm"
-                  color={theme.info}
-                  title={staff_roles[role]}
-                  key={role}
-                  style={{ margin: 4 }}
-                ></Chip>
-              )
-            })}
-          </View>
+          {staffRoles.length > 0 && (
+            <>
+              <Text style={[gStyles.helper, gStyles.tCenter]}>Roles:</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center'
+                }}
+              >
+                {staffRoles.map((role) => {
+                  return (
+                    <Chip
+                      size="sm"
+                      color={theme.info}
+                      title={staff_roles[role]}
+                      key={role}
+                      style={{ margin: 4 }}
+                    ></Chip>
+                  )
+                })}
+              </View>
+            </>
+          )}
         </>
       )}
     </View>

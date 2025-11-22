@@ -13,6 +13,7 @@ import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 import InputCheckbox from './Inputs/InputCheckbox'
 import Button from './Button'
+import { useShop } from '../hooks/useShop'
 
 const LINES_DEFAULT = 1
 
@@ -26,8 +27,9 @@ export const CommentRow = ({
 }) => {
   const { toItems, toOrders } = useMyNav()
   const [disabled, setDisabled] = useState(false)
-  const { staff } = useStore()
   const { user } = useAuth()
+  const { shop } = useShop()
+  const staffShop = shop?.staff || []
 
   const [comment, setComment] = useState<FormattedComment>(_comment)
 
@@ -53,8 +55,8 @@ export const CommentRow = ({
       setComment(res)
     })
   }
-  const staffInfo = staff?.find((s) => s.userId === comment?.createdBy)
-  const commentCreatedBy = staffInfo?.name || 'Unknown'
+  const staffInfo = staffShop?.find((s) => s.userId === comment?.createdBy)
+  const commentCreatedBy = staffInfo?.name || 'SN'
 
   const {
     permissions: { isAdmin, isOwner }
