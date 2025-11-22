@@ -10,7 +10,6 @@ import catchError from '../libs/catchError'
 const InputDisabledStaff = ({ staffId }) => {
   const { shop } = useShop()
   const shopStaff = shop?.staff || []
-  console.log({ shopStaff })
   const { staff: staffs, handleUpdateStore } = useStore()
   const { permissions } = useEmployee()
   const canDisabledStaff =
@@ -36,7 +35,6 @@ const InputDisabledStaff = ({ staffId }) => {
     if (err) {
       console.error(err)
     }
-    console.log({ res })
 
     try {
       // update staff in each shop serviceStaff will be deprecated later
