@@ -56,8 +56,7 @@ export const OrderActionsE = (props) => (
 )
 
 const RepairOrderActions = ({ order }: { order: OrderType }) => {
-  const { user } = useAuth()
-  const { storeId } = useStore()
+  const { user, storeId } = useAuth()
   const { addWork } = useCurrentWork()
 
   const status = order?.status

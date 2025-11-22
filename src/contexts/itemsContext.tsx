@@ -30,8 +30,8 @@ const ItemsContext = createContext<ItemsContextProps | undefined>(undefined)
 export const ItemsProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
-  const { isAuthenticated } = useAuth()
-  const { storeId, sections } = useStore()
+  const { isAuthenticated, storeId } = useAuth()
+  const { sections } = useStore()
   const [items, setItems] = useState<Partial<ItemType>[]>(undefined)
   const [workshopItems, setWorkshopItems] = useState<Partial<ItemType>[]>([])
 

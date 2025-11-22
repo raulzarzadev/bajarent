@@ -7,7 +7,6 @@ import {
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ServiceCurrentWork } from '../../../components/CurrentWork/ServiceCurrentWork'
-import { useStore } from '../../../contexts/storeContext'
 import { useAuth } from '../../../contexts/authContext'
 import { convertTimestamps } from '../../../libs/utils-date'
 
@@ -62,7 +61,7 @@ export const selectCurrentWork = (state: { currentWork: CurrentWorkState }) =>
 export const currentWorkReducer = currentWorkSlice.reducer
 
 export const useCurrentWorkFetch = () => {
-  const { storeId } = useStore()
+  const { storeId } = useAuth()
 
   const { fetch, update } = useCurrentWork()
   useEffect(() => {
@@ -77,8 +76,7 @@ export const useCurrentWorkFetch = () => {
 export const useCurrentWork = () => {
   const dispatch = useDispatch()
 
-  const { storeId } = useStore()
-  const { user } = useAuth()
+  const { user, storeId } = useAuth()
   const currentWork = useSelector(selectCurrentWork)
 
   const update = (data) =>

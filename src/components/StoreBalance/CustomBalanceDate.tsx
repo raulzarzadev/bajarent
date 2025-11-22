@@ -18,6 +18,7 @@ import CurrencyAmount from '../CurrencyAmount'
 import dictionary from '../../dictionary'
 import { useEmployee } from '../../contexts/employeeContext'
 import { BalanceViewE } from './BalanceView'
+import { useAuth } from '../../contexts/authContext'
 
 const CustomBalanceDate = () => {
   const [loading, setLoading] = useState(false)
@@ -92,11 +93,12 @@ export const ListCustomBalancesE = () => {
 }
 export const ListCustomBalances = () => {
   const { toBalance } = useMyNav()
+  const { storeId } = useAuth()
+  
   const [balances, setBalances] = useState<StoreBalanceType[]>([])
   const [count, setCount] = useState(5)
   const [loading, setLoading] = useState(true)
   const [limitFound, setLimitFound] = useState(false)
-  const { storeId } = useStore()
 
   useEffect(() => {
     ServiceBalances.findMany([

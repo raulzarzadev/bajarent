@@ -15,9 +15,9 @@ import {
   mergeCustomers,
   normalizeCustomerName
 } from '../../../components/Customers/lib/customerFromOrder'
-import { useStore } from '../../../contexts/storeContext'
 import { useEmployee } from '../../../contexts/employeeContext'
 import { mergeObjs } from '../../../libs/mergeObjs'
+import { useAuth } from '../../../contexts/authContext'
 
 export type CustomersState = {
   data: CustomerType[]
@@ -104,7 +104,7 @@ export const customersReducer = customersSlice.reducer
 
 export const useCustomers = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const { storeId } = useStore()
+  const { storeId } = useAuth()
   const { permissions } = useEmployee()
   const customers = useSelector(selectCustomers)
 

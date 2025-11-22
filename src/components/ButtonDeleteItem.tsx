@@ -1,9 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import { onDeleteItem } from '../firebase/actions/item-actions'
-import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
+import { useAuth } from '../contexts/authContext'
 
 const ButtonDeleteItem = ({
   itemId,
@@ -14,7 +13,7 @@ const ButtonDeleteItem = ({
   onDeleted?: () => void
   disabled?: boolean
 }) => {
-  const { storeId } = useStore()
+  const { storeId } = useAuth()
   const {
     permissions: { canDeleteItems }
   } = useEmployee()

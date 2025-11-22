@@ -3,7 +3,6 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import { useOrdersCtx } from '../contexts/ordersContext'
 import OrderType from '../types/OrderType'
-import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
 import {
   Filter,
@@ -12,6 +11,7 @@ import {
   searchInLocalData
 } from './useFilterUtils'
 import { ServiceCustomers } from '../firebase/ServiceCustomers'
+import { useAuth } from '../contexts/authContext'
 
 export type CollectionSearch = {
   collectionName: string
@@ -29,7 +29,7 @@ export default function useFilter<T extends { id?: string }>({
   collectionSearch?: CollectionSearch
   debounceSearch?: number
 }) {
-  const { storeId } = useStore()
+  const { storeId } = useAuth()
   const { permissions } = useEmployee()
   const { reports } = useOrdersCtx()
 

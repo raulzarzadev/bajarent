@@ -1,10 +1,12 @@
+import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { ServiceCategories } from '../firebase/ServiceCategories'
 import { CategoryType } from '../types/RentItem'
 import usePrices from './usePrices'
 
 function useCategories() {
-  const { storeId, handleUpdateStore } = useStore()
+  const { storeId } = useAuth()
+  const {  handleUpdateStore } = useStore()
   const { createPrice, updatePrice, deletePrice } = usePrices()
 
   const createCategory = async (values: Partial<CategoryType>) => {

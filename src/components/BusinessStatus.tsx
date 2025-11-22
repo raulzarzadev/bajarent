@@ -21,6 +21,7 @@ import { OrderExtensionType } from '../types/OrderType'
 import Divider from './Divider'
 import { setItem, getItem } from '../libs/storage'
 import { ExpandibleListE } from './ExpandibleList'
+import { useAuth } from '../contexts/authContext'
 
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 export type BusinessStatusProps = { balance: Partial<BalanceType2> }
@@ -384,7 +385,7 @@ export const CellItems = ({
   items: string[]
   label: string
 }) => {
-  const { storeId } = useStore()
+  const { storeId } = useAuth()
   const { toItems } = useMyNav()
   const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>()
 
