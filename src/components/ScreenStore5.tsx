@@ -22,10 +22,11 @@ import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import { StoreBalanceE } from './StoreBalance/StoreBalance'
 import { CurrentWorkListE } from './CurrentWork/CurrentWorkList'
 import { ScreenChatbotE } from './ScreenChatbot'
+import { useShop } from '../hooks/useShop'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()
-  const { store } = useStore()
+  const { shop } = useShop()
   const {
     permissions: {
       isAdmin,
@@ -57,8 +58,8 @@ const ScreenStore = (props) => {
   const CheckedTabOrders = CheckedTab(TabOrders)
   const CheckedStoreBalance = CheckedTab(StoreBalanceE)
 
-  if (store === undefined) return <Loading />
-  if (store === null) return <Text>Store not found</Text>
+  if (shop === undefined) return <Loading />
+  if (shop === null) return <Text>Store not found</Text>
   return (
     <ScrollView ref={scrollViewRef}>
       {!!user && (
