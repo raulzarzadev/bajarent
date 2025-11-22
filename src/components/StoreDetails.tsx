@@ -11,12 +11,15 @@ import SpanCopy from './SpanCopy'
 import LinkLocation from './LinkLocation'
 import { Separator } from './Separator'
 import { ChatbotStatus } from './ScreenChatbot'
+import { useShop } from '../hooks/useShop'
 
-const StoreDetails = ({ store }: { store: StoreType }) => {
+const StoreDetails = () => {
   const { navigate } = useNavigation()
   const {
     permissions: { isAdmin, isOwner }
   } = useEmployee()
+
+  const { shop: store } = useShop()
 
   return (
     <View>
@@ -81,7 +84,6 @@ const StoreDetails = ({ store }: { store: StoreType }) => {
       {store?.bankAccounts?.map(({ label, value, type }, index) => (
         <RowInfo key={index} label={label} value={value} type={type} />
       ))}
-      <ChatbotStatus chatbot={store?.chatbot} />
     </View>
   )
 }

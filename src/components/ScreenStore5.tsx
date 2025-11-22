@@ -67,7 +67,7 @@ const ScreenStore = (props) => {
           tabs={[
             {
               title: 'ℹ️Información',
-              content: <StoreDetailsE store={store} {...props} />,
+              content: <StoreDetailsE {...props} />,
               show: true
               // icon: 'info'
             },

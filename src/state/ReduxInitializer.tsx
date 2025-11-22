@@ -5,7 +5,6 @@ import { FetchTypeOrders, useOrdersCtx } from '../contexts/ordersContext'
 import { useAuth } from '../contexts/authContext'
 import { authStateChanged } from '../firebase/auth'
 import { getItem } from '../libs/storage'
-import { useStore } from '../contexts/storeContext'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from './store'
 import { useEmployee } from '../contexts/employeeContext'
@@ -13,10 +12,14 @@ import {
   fetchOrdersByType,
   setStoreConfig
 } from './features/orders/ordersSlice'
+import { setShop } from './features/shop/shopSlice'
+import { ServiceStores } from '../firebase/ServiceStore'
+import { convertTimestamps } from '../libs/utils-date'
 
 export const ReduxInitializer = ({ children }) => {
   // * ========================================
   const { setAuth, handleSetStoreId, handleSetUserStores } = useAuth()
+
   useEffect(() => {
     authStateChanged((user) => {
       setAuth({ isAuthenticated: !!user, user })
@@ -29,14 +32,6 @@ export const ReduxInitializer = ({ children }) => {
     })
   }, [])
 
-  // useEffect(() => {
-  //   if (auth.user === null) {
-  //     toProfile()
-  //   }
-  //   if (auth.user) {
-  //     getUserStores()
-  //   }
-  // }, [auth.user])
   // * ========================================
   //*****************************
   //* REDUX WILL BE CHARGED IN THIS CONTEXT
@@ -48,9 +43,12 @@ export const ReduxInitializer = ({ children }) => {
 
   useCurrentWorkFetch()
 
+  useInitializeShop()
+
   //** ---- FETCHING CUSTOMERS JUST ONCE----- */
   const { fetch: fetchCustomers } = useCustomers()
   const { orders } = useOrdersCtx()
+
   useEffect(() => {
     fetchCustomers({ ids: orders?.map((o) => o.customerId) })
   }, [orders])
@@ -64,16 +62,7 @@ export const ReduxInitializer = ({ children }) => {
 }
 
 const useInitializeOrdersState = () => {
-  // // Register component listener for performance tracking
-  // useEffect(() => {
-  //   if (componentId) {
-  //     dispatch(addListener(componentId))
-  //     return () => {
-  //       dispatch(removeListener(componentId))
-  //     }
-  //   }
-  // }, [dispatch, componentId])
-  const { storeId } = useStore()
+  const { storeId } = useAuth()
   const { employee, permissions, disabledEmployee } = useEmployee()
   const dispatch = useDispatch<AppDispatch>()
 
@@ -120,4 +109,17 @@ const useInitializeOrdersState = () => {
       )
     }
   }, [dispatch, storeId, disabledEmployee, permissions, employee])
+}
+
+const useInitializeShop = () => {
+  const { storeId } = useAuth()
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    if (!storeId) return
+    ServiceStores.listen(storeId, (store) => {
+      const normalizeData = convertTimestamps(store, { to: 'string' })
+      dispatch(setShop(normalizeData))
+    })
+  }, [storeId])
+  return null
 }

@@ -3,13 +3,15 @@ import { counterReducer } from './features/counter/counterSlice'
 import { customersReducer } from './features/costumers/costumersSlice'
 import { currentWorkReducer } from './features/currentWork/currentWorkSlice'
 import { ordersReducer } from './features/orders/ordersSlice'
+import { shopReducer } from './features/shop/shopSlice'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     customers: customersReducer,
     currentWork: currentWorkReducer,
-    orders: ordersReducer
+    orders: ordersReducer,
+    shop: shopReducer
   }
 })
 
