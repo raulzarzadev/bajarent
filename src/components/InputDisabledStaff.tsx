@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import InputSwitch from './InputSwitch'
-import { useStore } from '../contexts/storeContext'
-import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useEmployee } from '../contexts/employeeContext'
 import { useShop } from '../hooks/useShop'
 import { ServiceStores } from '../firebase/ServiceStore'
@@ -10,7 +8,6 @@ import catchError from '../libs/catchError'
 const InputDisabledStaff = ({ staffId }) => {
   const { shop } = useShop()
   const shopStaff = shop?.staff || []
-  const { staff: staffs, handleUpdateStore } = useStore()
   const { permissions } = useEmployee()
   const canDisabledStaff =
     permissions.isAdmin ||
@@ -33,19 +30,9 @@ const InputDisabledStaff = ({ staffId }) => {
       })
     )
     if (err) {
-      console.error(err)
+      return console.error(err)
     }
-
-    try {
-      // update staff in each shop serviceStaff will be deprecated later
-      //const res = await ServiceStaff.update(staff.id, { disabled: value })
-      // console.log(res)
-      // handleUpdateStore()
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setInputDisabled(false)
-    }
+    setInputDisabled(false)
   }
 
   return (
