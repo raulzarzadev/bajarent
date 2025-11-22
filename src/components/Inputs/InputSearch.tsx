@@ -2,23 +2,25 @@ import { useState, useEffect, useRef } from 'react'
 import {
   View,
   TextInput,
-  TouchableOpacity,
   Text,
   FlatList,
   StyleSheet,
-  Keyboard
+  Keyboard,
+  Pressable
 } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import InputTextStyled from '../InputTextStyled'
 
 export type InputSearchProps<T extends { id: string | number }> = {
   placeholder?: string
   suggestions?: T[]
-  labelKey: keyof T
+  labelKey?: keyof T
   maxSuggestions?: number
   onSelect?: (value: T) => void
   onChange?: (value: string) => void
   style?: any
+  helperText?: string
+  value?: string
+  loading?: boolean
 }
 
 const InputSearch = <T extends { id: string | number }>({
@@ -28,15 +30,19 @@ const InputSearch = <T extends { id: string | number }>({
   maxSuggestions = 5,
   onSelect,
   onChange,
-  style
+  style,
+  loading,
+  helperText,
+  value: defaultValue
 }: InputSearchProps<T>) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(defaultValue || '')
   const [filteredSuggestions, setFilteredSuggestions] = useState<T[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
   const inputRef = useRef<TextInput>(null)
 
   useEffect(() => {
+    if (!labelKey) return
     if (value.trim()) {
       const filtered = suggestions
         .filter((item) =>
@@ -75,35 +81,24 @@ const InputSearch = <T extends { id: string | number }>({
     const isHovered = hoveredItem === item.id
 
     return (
-      <TouchableOpacity
+      <Pressable
         style={[
           styles.suggestionItem,
-          isHovered && styles.suggestionItemHovered
+          isHovered && styles.suggestionItemHovered,
+          { opacity: 0.7 }
         ]}
         onPress={() => handleSuggestionClick(item)}
         onPressIn={() => setHoveredItem(item.id)}
         onPressOut={() => setHoveredItem(null)}
-        activeOpacity={0.7}
       >
         <Text style={styles.suggestionText}>{String(item[labelKey])}</Text>
-      </TouchableOpacity>
+      </Pressable>
     )
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={value.trim() ? handleClearInput : undefined}
-          activeOpacity={value.trim() ? 0.7 : 1}
-        >
-          <Ionicons
-            name={value.trim() ? 'close' : 'search'}
-            size={20}
-            color={value.trim() ? '#6B7280' : '#9CA3AF'}
-          />
-        </TouchableOpacity>
         <InputTextStyled
           ref={inputRef}
           value={value}
@@ -115,10 +110,20 @@ const InputSearch = <T extends { id: string | number }>({
               setHoveredItem(null)
             }, 200)
           }
+          leftIcon={
+            loading
+              ? 'loading'
+              : (value.length || value.length) === 0
+              ? 'search'
+              : 'close'
+          }
           placeholder={placeholder}
           placeholderTextColor="#9CA3AF"
-          style={styles.inputWithIcon}
           containerStyle={{ flex: 1 }}
+          helperText={helperText}
+          onPressLeftIcon={() => {
+            handleClearInput()
+          }}
         />
       </View>
 
@@ -141,7 +146,8 @@ const InputSearch = <T extends { id: string | number }>({
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    zIndex: 1000
+    zIndex: 1000,
+    width: '100%'
   },
   inputContainer: {
     position: 'relative',
@@ -154,9 +160,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     padding: 2
   },
-  inputWithIcon: {
-    paddingLeft: 40
-  },
+
   input: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,

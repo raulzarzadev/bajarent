@@ -10,19 +10,29 @@ import useModal from '../hooks/useModal'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
 import { useShop } from '../hooks/useShop'
+import { ServiceStores } from '../firebase/ServiceStore'
+import catchError from '../libs/catchError'
+import { useAuth } from '../contexts/authContext'
 
 const ScreenStaff = ({ navigation }) => {
-  const { staff, store } = useStore()
+  const { storeId } = useAuth()
   const { shop } = useShop()
   const shopStaff = shop?.staff || []
   const modal = useModal({ title: 'Eliminar empleado' })
 
   const [staffId, setStaffId] = useState('')
   const [disabled, setDisabled] = useState(false)
-  if (!store) return <Loading />
+  if (!shop) return <Loading id="ScreenStaff" />
   const handleDeleteStaff = async () => {
     setDisabled(true)
-    await ServiceStaff.removeStaffFromStore(store.id, staffId)
+    const [err, res] = await catchError(
+      ServiceStores.removeStaff({
+        storeId: storeId,
+        staffId
+      })
+    )
+    console.log({ err, res })
+    await ServiceStaff.removeStaffFromStore(storeId, staffId)
       .then(console.log)
       .catch(console.log)
     modal.toggleOpen()

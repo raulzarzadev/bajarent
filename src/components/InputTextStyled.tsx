@@ -127,6 +127,7 @@ const InputTextStyled = ({
               right: 0,
               top: 0,
               bottom: 0,
+              marginRight: 10,
               backgroundColor: pressed ? theme.info : 'transparent',
               opacity: pressed ? 0.5 : 1,
               borderEndEndRadius: BORDER_RADIUS * 1.8,

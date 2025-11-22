@@ -25,7 +25,7 @@ export const shopSlice = createSlice({
 
 export const { setShop } = shopSlice.actions
 
-export const selectShop = (state: RootState) => state.shop.shop
+export const selectShop = (state: RootState) => state.shop
 
 export const shopReducer = shopSlice.reducer
 export default shopSlice.reducer

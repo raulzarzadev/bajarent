@@ -11,6 +11,7 @@ import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { useShop } from '../hooks/useShop'
 
 export type EmployeeContextType = {
   employee: Partial<StaffType> | null
@@ -47,54 +48,21 @@ const EmployeeContext = createContext<EmployeeContextType>({
 
 let em = 0
 export const EmployeeContextProvider = ({ children }) => {
-  const { user } = useAuth()
-  const {
-    store,
-    staff,
-    sections: storeSections,
-    storeId,
-    categories
-  } = useStore()
-  const [employee, setEmployee] = useState<Partial<StaffType> | null>(null)
-  const [assignedSections, setAssignedSections] = useState<string[]>([])
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isOwner, setIsOwner] = useState(false)
-  const [disabledEmployee, setDisabledEmployee] = useState<boolean>()
-
-  useEffect(() => {
-    if (staff) {
-      const employee = staff.find(
-        (s) => s.userId === user?.id && s.storeId === storeId
-      )
-
-      if (employee) {
-        ServiceStaff.listen(employee?.id, (employee) => {
-          setEmployee({
-            ...employee,
-            name: user?.name || 'Unknown'
-          })
-          const sectionsAssigned = storeSections
-            ?.filter(({ staff }) => staff?.includes(employee?.id))
-            .map(({ id }) => id)
-
-          setDisabledEmployee(employee.disabled || null)
-          setIsAdmin(employee?.permissions?.isAdmin)
-          setIsOwner(store && store?.createdBy === user?.id)
-          setAssignedSections(sectionsAssigned)
-        })
-      } else {
-        setEmployee({
-          ...user
-        })
-        setDisabledEmployee(false)
-        setIsAdmin(true)
-        setIsOwner(true)
-        setAssignedSections(null)
-      }
-    }
-  }, [staff])
+  const { user, storeId } = useAuth()
+  const { shop } = useShop()
+  const { sections: storeSections, categories } = useStore()
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
+
+  const shopStaff = shop?.staff || []
+  const employee = shopStaff.find(
+    (s) => s.userId === user?.id && s.storeId === storeId
+  )
+  const assignedSections = employee?.sectionsAssigned || []
+  const isAdmin = employee?.permissions?.isAdmin || false
+  const isOwner = shop && shop?.createdBy === user?.id
+
+  const disabledEmployee = !!employee?.disabled
 
   //* You can view all items if you are an admin, owner or have the permission to view all items
   //* otherwise you can only view the items assigned to your sections
@@ -166,12 +134,13 @@ export const EmployeeContextProvider = ({ children }) => {
       employee,
       isAdmin,
       isOwner,
-      store?.id,
+      shop?.id,
       assignedSections,
       items,
       disabledEmployee
     ]
   )
+
   em++
   if (__DEV__) console.log({ em })
   return (

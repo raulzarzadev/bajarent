@@ -4,6 +4,8 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import ButtonConfirm from './ButtonConfirm'
 import { ScreenStoreEmployeeE } from './ScreenStoreEmployee'
 import { useStore } from '../contexts/storeContext'
+import catchError from '../libs/catchError'
+import { ServiceStores } from '../firebase/ServiceStore'
 
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
@@ -29,6 +31,13 @@ const ScreenStaffDetails = ({ route, navigation }) => {
             confirmLabel="Eliminar"
             modalTitle="Eliminar Empleado"
             handleConfirm={async () => {
+              const [err, res] = await catchError(
+                ServiceStores.removeStaff({
+                  storeId: employee.storeId,
+                  staffId: staffId
+                })
+              )
+              console.log({ err, res })
               return await ServiceStaff.removeStaffFromStore(
                 employee.storeId,
                 staffId

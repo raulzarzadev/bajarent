@@ -5,13 +5,20 @@ import { ServiceStaff } from '../firebase/ServiceStaff'
 import CardUser from './CardUser'
 import { gStyles } from '../styles'
 import UserType from '../types/UserType'
+import { ServiceStores } from '../firebase/ServiceStore'
+import { useShop } from '../hooks/useShop'
+import { useAuth } from '../contexts/authContext'
+import catchError from '../libs/catchError'
 
 const ScreenStaffEdit = ({ route, navigation }) => {
+  const { storeId } = useAuth()
+  const { shop } = useShop()
+  const shopStaff = shop?.staff || []
   const { staff } = useStore() // <--Buscar staff
   if (!staff?.length) return <ActivityIndicator />
 
   const staffId = route.params.staffId
-  const employee = staff?.find(({ id }) => id === staffId)
+  const employee = shopStaff?.find(({ id }) => id === staffId)
   return (
     <ScrollView>
       <View style={gStyles.container}>
@@ -20,6 +27,16 @@ const ScreenStaffEdit = ({ route, navigation }) => {
         <FormStaffE
           defaultValues={employee}
           onSubmit={async (values) => {
+            const [err, res] = await catchError(
+              ServiceStores.updateStaff({
+                staffId,
+                storeId,
+                staff: {
+                  ...values
+                }
+              })
+            )
+            console.log({ err, res })
             ServiceStaff.update(staffId, values)
               .then((res) => {
                 console.log(res)

@@ -19,6 +19,7 @@ import OrderType, {
   typeOrderIcon
 } from '../types/OrderType'
 import { IconName } from './Icon'
+import InputSearch from './Inputs/InputSearch'
 
 export type FilterListType<T> = {
   field: keyof T
@@ -213,7 +214,28 @@ function ModalFilterList<T>({
           flexDirection: 'row'
         }}
       >
-        <InputTextStyled
+        <InputSearch
+          style={{ width: '100%' }}
+          placeholder="Buscar..."
+          value={searchValue}
+          onChange={(e) => {
+            search(e)
+          }}
+          loading={loading}
+          // leftIcon={
+          //   loading
+          //     ? 'loading'
+          //     : (searchValue.length || filtersBy.length) === 0
+          //     ? 'search'
+          //     : 'close'
+          // }
+          // onPressLeftIcon={(action) => {
+          //   if (action === 'close') {
+          //     handleClearFilters()
+          //   }
+          // }}
+        />
+        {/* <InputTextStyled
           style={{ width: '100%' }}
           containerStyle={{ flex: 1 }}
           placeholder="Buscar..."
@@ -233,7 +255,7 @@ function ModalFilterList<T>({
               handleClearFilters()
             }
           }}
-        />
+        /> */}
 
         {filters?.length > 0 && (
           <View

@@ -21,7 +21,8 @@ const withDisabledCheck = <P extends object>(
     } = useEmployee()
     const { ...otherProps } = props
     // ** admin or owner can't be disabled
-    if (disabledEmployee === undefined) return <Loading />
+    if (disabledEmployee === undefined)
+      return <Loading id="withDisabledCheck" />
     if (isAdmin || isOwner) return <WrappedComponent {...(otherProps as P)} />
     if (disabledEmployee) return <DisabledEmployee />
 

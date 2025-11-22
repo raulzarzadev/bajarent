@@ -24,10 +24,15 @@ import { ServiceSections } from '../firebase/ServiceSections'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
 import TextInfo from './TextInfo'
+import { useShop } from '../hooks/useShop'
+import catchError from '../libs/catchError'
+import InputSearch from './Inputs/InputSearch'
 
 const ScreenStaffNew = ({ route }) => {
-  const { store, staff } = useStore()
-  const staffNotInSection = staff.filter(
+  const { store, staff = [] } = useStore()
+  const { shop } = useShop()
+  const shopStaff = shop?.staff || []
+  const staffNotInSection = staff?.filter(
     (s) =>
       !s.sectionsAssigned?.length ||
       !s.sectionsAssigned.includes(route?.params?.sectionId)
@@ -79,7 +84,7 @@ const ScreenStaffNew = ({ route }) => {
           />
         )}
       </View>
-      <View>
+      {/* <View>
         {staffNotInSection?.length > 0 && (
           <>
             {sectionId ? (
@@ -112,7 +117,7 @@ const ScreenStaffNew = ({ route }) => {
             />
           </>
         )}
-      </View>
+      </View> */}
     </ScrollView>
   )
 }
@@ -121,46 +126,62 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
   const [text, setText] = React.useState('')
   const [error, setError] = React.useState<string | null>('')
   const [loading, setLoading] = React.useState(false)
-  const debouncedSearchTerm = useDebounce(text, 800)
   const { staff } = useStore()
   const [users, setUsers] = React.useState([])
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      ServiceUsers.searchUser(debouncedSearchTerm)
-        .then((res) => {
-          if (!res.length) {
-            setError(
-              'Usuario no encontrado, asegurate que esta registrado sus datos son correctos'
-            )
-          } else {
-            setUsers(res)
-            setError(null)
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          setLoading(false)
-        })
+    if (text?.length <= 0) {
+      setUsers([])
+      setLoading(false)
+      setError(null)
+      return
     }
-  }, [debouncedSearchTerm])
+  }, [text])
 
   const alreadyIsStaff = (userId: string) => {
     return staff.some((s) => s.userId === userId)
   }
 
   return (
-    <View style={{ maxWidth: 500, width: '100%', marginHorizontal: 'auto' }}>
-      <TextInfo text="Para agregar un nuevo miembro al staff. Este debe estar previamente registrado" />
+    <View style={{ width: '100%', marginHorizontal: 'auto' }}>
       <Text>Buscar usuario</Text>
-      <InputTextStyled
-        value={text}
-        onChangeText={(text) => {
+      <InputSearch
+        // value={text}
+        onChange={(text) => {
           setText(text)
+        }}
+        placeholder="Buscar usuario por telefono"
+        helperText="*El usuario debe estar registrado en la plataforma"
+      />
+      <Button
+        label="Buscar"
+        icon="search"
+        onPress={async () => {
           setLoading(true)
           setError(null)
+          const [err, res] = await catchError(ServiceUsers.searchUser(text))
+          if (err) {
+            setError(
+              'Usuario no encontrado, asegurate que esta registrado sus datos son correctos'
+            )
+            setUsers([])
+          } else {
+            if (!res.length) {
+              setError(
+                'Usuario no encontrado, asegurate que esta registrado sus datos son correctos'
+              )
+              setUsers([])
+            } else {
+              setUsers(res)
+              setError(null)
+            }
+          }
+          setLoading(false)
         }}
-        placeholder="Nombre, teléfono o email"
-        // helperText="Usuario deberá estar previamente registrado"
+        buttonStyles={{
+          marginVertical: 10,
+          width: 140,
+          marginHorizontal: 'auto'
+        }}
       />
       {!!error && <P styles={{ color: theme.error }}>{error}</P>}
 

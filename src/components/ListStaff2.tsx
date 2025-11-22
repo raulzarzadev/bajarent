@@ -26,7 +26,7 @@ const ListStaff = ({
 }) => {
   const { navigate } = useNavigation()
   const {
-    permissions: { canEditStaff }
+    permissions: { canEditStaff, isAdmin }
   } = useEmployee()
   const disableAdd = !canEditStaff
 
@@ -83,9 +83,12 @@ const StaffRow = ({
   handleEdit?: (rowId: string) => void
 }) => {
   const {
-    permissions: { canEditStaff }
+    permissions: { canEditStaff, isAdmin, isOwner }
   } = useEmployee()
 
+  const disabled =
+    canEditStaff === false && isAdmin === false && isOwner === false
+  console.log({ canEditStaff, isAdmin, isOwner })
   const fields: ListRowField[] = [
     { component: <Text>{staff?.name}</Text>, width: 120 },
     {
@@ -103,7 +106,7 @@ const StaffRow = ({
                 console.log('delete')
                 handleSubtract?.(staff?.id)
               }}
-              disabled={!canEditStaff}
+              disabled={disabled}
             />
           )}
           {handleEdit && (
@@ -115,7 +118,7 @@ const StaffRow = ({
                 console.log('edit')
                 handleEdit?.(staff?.id)
               }}
-              disabled={!canEditStaff}
+              disabled={disabled}
             />
           )}
           {handleAdd && (
@@ -128,7 +131,7 @@ const StaffRow = ({
                 console.log('add')
                 handleAdd?.(staff?.id)
               }}
-              disabled={!canEditStaff}
+              disabled={disabled}
             />
           )}
         </View>

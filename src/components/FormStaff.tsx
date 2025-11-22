@@ -14,8 +14,7 @@ import StaffType, {
   permissionsCustomersKeys
 } from '../types/StaffType'
 import { gStyles } from '../styles'
-import FormEmployeeSections from './FormEmployeeSections'
-import FormikInputSelect from './FormikInputSelect'
+import { useStore } from '../contexts/storeContext'
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
 
@@ -29,13 +28,38 @@ const FormStaff = ({
   onSubmit?: (values: any) => Promise<void>
 }) => {
   const [loading, setLoading] = React.useState(false)
+  const { sections: storeSections } = useStore()
+
+  // * Transform array ['id1', 'id2'] to object { id1: true, id2: true } for the form
+  const initialSections = (defaultValues.sectionsAssigned || []).reduce(
+    (acc, curr) => ({
+      ...acc,
+      [curr]: true
+    }),
+    {}
+  )
+
   return (
     <Formik
-      initialValues={{ name: '', ...defaultValues }}
+      initialValues={{
+        name: '',
+        ...defaultValues,
+        sectionsAssigned: initialSections
+      }}
       onSubmit={async (values) => {
         try {
           setLoading(true)
-          await onSubmit(values).then(console.log).catch(console.error)
+          // * Transform object { id1: true, id2: false } back to array ['id1']
+          const sectionsArray = Object.entries(values.sectionsAssigned || {})
+            .filter(([key, value]) => value === true)
+            .map(([key]) => key)
+
+          const valuesToSend = {
+            ...values,
+            sectionsAssigned: sectionsArray
+          }
+
+          await onSubmit(valuesToSend).then(console.log).catch(console.error)
         } catch (error) {
           console.error(error)
         } finally {
@@ -94,7 +118,28 @@ const FormStaff = ({
 
               {/* Areas asingadas */}
 
-              <FormEmployeeSections employeeId={defaultValues?.id} />
+              <Text style={[gStyles.h3, { textAlign: 'left', marginTop: 12 }]}>
+                Areas asignadas
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-evenly'
+                }}
+              >
+                {storeSections?.map(({ name, staff, id }) => (
+                  <View style={{ margin: 4 }} key={id}>
+                    <FormikCheckbox
+                      style={{ width: checkboxWidth, marginVertical: 4 }}
+                      key={id}
+                      //name={`permissions.store.${permission}`}
+                      name={`sectionsAssigned.${id}`}
+                      label={name}
+                    />
+                  </View>
+                ))}
+              </View>
 
               {/* Permisos de ordenes */}
 

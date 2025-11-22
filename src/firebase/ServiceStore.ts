@@ -55,6 +55,34 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     return this.update(storeId, { staff: updatedStaff })
   }
 
+  async removeStaff({
+    storeId,
+    staffId
+  }: {
+    storeId: string
+    staffId: string
+  }) {
+    const store = await this.get(storeId)
+    if (!store) throw new Error('Store not found')
+    const currentStaff = store.staff || []
+    const updatedStaff = currentStaff.filter((s) => s.id !== staffId)
+    return this.update(storeId, { staff: updatedStaff })
+  }
+
+  async addStaff({
+    storeId,
+    staff
+  }: {
+    storeId: string
+    staff: Partial<StaffType>
+  }) {
+    const store = await this.get(storeId)
+    if (!store) throw new Error('Store not found')
+    const currentStaff = store.staff || []
+    const updatedStaff = [...currentStaff, staff as StaffType]
+    return this.update(storeId, { staff: updatedStaff })
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado
