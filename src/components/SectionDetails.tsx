@@ -82,25 +82,25 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
       </View>
 
       <Tabs
+        tabId="section-details"
         tabs={[
           {
             title: 'Staff',
             content: (
               <>
-                <TextInfo text="Descarta o edita staff que ya pertenece a esta AREA" />
                 <ListStaff
                   staff={staffSection}
                   sectionId={section.id}
-                  handleSubtract={(staffId) => {
-                    handleRemoveStaff(staffId)
-                  }}
-                  handleEdit={(staffId) => {
-                    //@ts-ignore
-                    navigation.navigate('StackStaff', {
-                      screen: 'ScreenStaffEdit',
-                      params: { staffId }
-                    })
-                  }}
+                  // handleSubtract={(staffId) => {
+                  //   handleRemoveStaff(staffId)
+                  // }}
+                  // handleEdit={(staffId) => {
+                  //   //@ts-ignore
+                  //   navigation.navigate('StackStaff', {
+                  //     screen: 'ScreenStaffEdit',
+                  //     params: { staffId }
+                  //   })
+                  // }}
                 />
               </>
             ),

@@ -9,7 +9,7 @@ const TabStoreSections = () => {
   const { sections: storeSections } = useStore()
   const { toSections } = useMyNav()
   const sections: TabType[] = storeSections
-    .sort(sortSectionsByType)
+    ?.sort(sortSectionsByType)
     ?.map((section) => ({
       content: (
         <View style={{ marginTop: 16 }}>
@@ -23,6 +23,7 @@ const TabStoreSections = () => {
 
   return (
     <Tabs
+      tabId="store-sections"
       tabs={sections}
       showAddTab
       handlePressAdd={() => toSections({ screenNew: true })}

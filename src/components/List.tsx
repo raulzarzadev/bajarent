@@ -244,47 +244,15 @@ function MyList<T extends { id: string }>({
       >
         <View>
           {/* SEARCH FILTER AND SIDE BUTTONS   */}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              width: '100%',
-              //maxWidth: 500,
-              margin: 'auto',
-              padding: 4
-            }}
-          >
-            {sideButtons?.map(
-              (button, index) =>
-                button.visible && (
-                  <View key={index} style={{ marginHorizontal: 2 }}>
-                    <Button
-                      icon={button?.icon}
-                      // label={button.label}
-                      onPress={button?.onPress}
-                      size="small"
-                      disabled={button?.disabled}
-                    ></Button>
-                  </View>
-                )
-            )}
-
-            <ModalFilterList
-              collectionSearch={collectionSearch}
-              preFilteredIds={preFilteredIds}
-              data={data}
-              setData={(data) => {
-                setFilteredData(data)
-                //setCurrentPage(1) //* FIXME: this mai cause a bug if uncomment
-              }}
-              filters={filters}
-              setCollectionData={(data) => {
-                setCollectionData(data)
-              }}
-            />
-          </View>
-
+          <SearchAndFilter
+            collectionSearch={collectionSearch}
+            preFilteredIds={preFilteredIds}
+            data={data}
+            setFilteredData={setFilteredData}
+            setCollectionData={setCollectionData}
+            filters={filters}
+            sideButtons={sideButtons}
+          />
           {/* PAGINATION */}
 
           <View
@@ -674,5 +642,66 @@ export const ListE = <T extends { id: string }>(props: ListPops<T>) => {
     <ErrorBoundary componentName={`ListE-${props.id}`}>
       <MyList {...props}></MyList>
     </ErrorBoundary>
+  )
+}
+
+const SearchAndFilter = ({
+  collectionSearch,
+  preFilteredIds,
+  data,
+  setFilteredData,
+  setCollectionData,
+  filters,
+  sideButtons
+}: {
+  collectionSearch?: CollectionSearch
+  preFilteredIds?: string[]
+  data: any[]
+  setFilteredData: (data: any[]) => void
+  setCollectionData: (data: any[]) => void
+  filters: FilterListType<any>[]
+  sideButtons?: ListSideButton[]
+}) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        width: '100%',
+        //maxWidth: 500,
+        margin: 'auto',
+        padding: 4
+      }}
+    >
+      {sideButtons?.map(
+        (button, index) =>
+          button.visible && (
+            <View key={index} style={{ marginHorizontal: 2 }}>
+              <Button
+                icon={button?.icon}
+                // label={button.label}
+                onPress={button?.onPress}
+                size="small"
+                disabled={button?.disabled}
+              ></Button>
+            </View>
+          )
+      )}
+
+      <ModalFilterList
+        collectionSearch={collectionSearch}
+        preFilteredIds={preFilteredIds}
+        data={data}
+        setData={(data) => {
+          setFilteredData(data)
+          //setCurrentPage(1) //* FIXME: this mai cause a bug if uncomment
+        }}
+        filters={filters}
+        setCollectionData={(data) => {
+          setCollectionData(data)
+        }}
+      />
+    </View>
   )
 }

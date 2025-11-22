@@ -88,12 +88,13 @@ const StaffRow = ({
 
   const disabled =
     canEditStaff === false && isAdmin === false && isOwner === false
+
   const fields: ListRowField[] = [
     { component: <Text>{staff?.name}</Text>, width: 120 },
     {
       component: (
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-          <InputDisabledStaff staffId={staff.id} />
+          <InputDisabledStaff staffId={staff?.id} />
 
           {handleSubtract && (
             <Button

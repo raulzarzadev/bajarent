@@ -7,6 +7,12 @@ import { useStore } from '../contexts/storeContext'
 import catchError from '../libs/catchError'
 import { ServiceStores } from '../firebase/ServiceStore'
 
+/**
+ * TODO:Delete this component
+ * @deprecated I thing is not used anymore
+ * @param param0
+ * @returns
+ */
 const ScreenStaffDetails = ({ route, navigation }) => {
   const staffId = route.params.staffId
   const { staff } = useStore()
