@@ -12,7 +12,6 @@ import { PriceType } from '../types/PriceType'
 import { StoreBalanceType } from '../types/StoreBalance'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { ServiceBalances } from '../firebase/ServiceBalances3'
-import { useShop } from '../hooks/useShop'
 
 export type StoreContextType = {
   store?: null | StoreType
@@ -29,8 +28,6 @@ export type StoreContextType = {
 let sc = 0
 const StoreContext = createContext<StoreContextType>({})
 const StoreContextProvider = ({ children }) => {
-  // const { shop } = useShop()
-  // console.log({ shop })
   const [currentBalance, setCurrentBalance] = useState<StoreBalanceType>()
   //#region hooks
   const { storeId, isAuthenticated, user } = useAuth()
