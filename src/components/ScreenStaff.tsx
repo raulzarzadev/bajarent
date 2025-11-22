@@ -9,9 +9,12 @@ import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
+import { useShop } from '../hooks/useShop'
 
 const ScreenStaff = ({ navigation }) => {
   const { staff, store } = useStore()
+  const { shop } = useShop()
+  const shopStaff = shop?.staff || []
   const modal = useModal({ title: 'Eliminar empleado' })
 
   const [staffId, setStaffId] = useState('')
@@ -33,7 +36,7 @@ const ScreenStaff = ({ navigation }) => {
     >
       <View style={gStyles.container}>
         <ListStaff
-          staff={staff}
+          staff={shopStaff}
           handleSubtract={(staffId: string) => {
             setStaffId(staffId)
             modal.toggleOpen()

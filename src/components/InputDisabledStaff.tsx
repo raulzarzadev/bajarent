@@ -3,8 +3,14 @@ import InputSwitch from './InputSwitch'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useEmployee } from '../contexts/employeeContext'
+import { useShop } from '../hooks/useShop'
+import { ServiceStores } from '../firebase/ServiceStore'
+import catchError from '../libs/catchError'
 
 const InputDisabledStaff = ({ staffId }) => {
+  const { shop } = useShop()
+  const shopStaff = shop?.staff || []
+  console.log({ shopStaff })
   const { staff: staffs, handleUpdateStore } = useStore()
   const { permissions } = useEmployee()
   const canDisabledStaff =
@@ -12,16 +18,31 @@ const InputDisabledStaff = ({ staffId }) => {
     permissions.isOwner ||
     permissions?.store?.disabledStaff
 
-  const staff = staffs.find((staff) => staff.id === staffId)
+  const staff = shopStaff.find((staff) => staff.id === staffId)
   const [staffDisabled, setStaffDisabled] = useState(staff?.disabled)
   const [inputDisabled, setInputDisabled] = useState(false)
   const toggleDisabled = async (value) => {
     setInputDisabled(true)
     setStaffDisabled(value)
+    const [err, res] = await catchError(
+      ServiceStores.updateStaff({
+        storeId: shop.id,
+        staffId: staff.id,
+        staff: {
+          disabled: value
+        }
+      })
+    )
+    if (err) {
+      console.error(err)
+    }
+    console.log({ res })
+
     try {
-      const res = await ServiceStaff.update(staff.id, { disabled: value })
-      console.log(res)
-      handleUpdateStore()
+      // update staff in each shop serviceStaff will be deprecated later
+      //const res = await ServiceStaff.update(staff.id, { disabled: value })
+      // console.log(res)
+      // handleUpdateStore()
     } catch (e) {
       console.error(e)
     } finally {

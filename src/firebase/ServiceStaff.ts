@@ -67,4 +67,7 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
   }
 }
 
+/**
+ * @deprecated use ServiceStore.updateStaff from src/hooks/useShop
+ */
 export const ServiceStaff = new ServiceStaffClass()

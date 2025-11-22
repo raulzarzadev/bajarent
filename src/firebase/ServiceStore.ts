@@ -2,6 +2,7 @@ import { where } from 'firebase/firestore'
 import StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStaff } from './ServiceStaff'
+import StaffType from '../types/StaffType'
 export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   constructor() {
     super('stores')
@@ -31,6 +32,27 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     return Array.from(uniqueStores).map((id) =>
       [...asStaff, ...asOwner].find((store) => store.id === id)
     )
+  }
+
+  async updateStaff({
+    storeId,
+    staffId,
+    staff
+  }: {
+    storeId: string
+    staffId: string
+    staff: Partial<StaffType>
+  }) {
+    const store = await this.get(storeId)
+    if (!store) throw new Error('Store not found')
+    const currentStaff = store.staff || []
+    const employee = currentStaff.find((s) => s.id === staffId)
+    if (!employee) throw new Error('Staff member not found in store')
+    const updatedStaff = currentStaff.map((s) =>
+      s.id === staffId ? { ...s, ...staff } : s
+    )
+
+    return this.update(storeId, { staff: updatedStaff })
   }
 
   // Agrega tus métodos aquí

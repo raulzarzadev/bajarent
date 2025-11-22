@@ -116,8 +116,8 @@ const useInitializeShop = () => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     if (!storeId) return
-    ServiceStores.listen(storeId, (store) => {
-      const normalizeData = convertTimestamps(store, { to: 'string' })
+    ServiceStores.listen(storeId, async (store) => {
+      const normalizeData = convertTimestamps({ ...store }, { to: 'string' })
       dispatch(setShop(normalizeData))
     })
   }, [storeId])
