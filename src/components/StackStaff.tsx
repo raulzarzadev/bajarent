@@ -35,13 +35,13 @@ function StackStaff() {
         component={ScreenStaffNew}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ScreenStaffDetails"
         options={{
           title: 'Detalles de Staff '
         }}
         component={ScreenStaffDetails}
-      />
+      /> */}
 
       <Stack.Screen
         name="ScreenStaffEdit"

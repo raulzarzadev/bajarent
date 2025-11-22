@@ -38,6 +38,7 @@ const ScreenStaffDetails = ({ route, navigation }) => {
                 })
               )
               console.log({ err, res })
+              //*TODO:   Remove after migration staff is completely removed from store
               return await ServiceStaff.removeStaffFromStore(
                 employee.storeId,
                 staffId

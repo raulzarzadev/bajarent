@@ -8,7 +8,6 @@ import Loading from './Loading'
 import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import { ServiceStaff } from '../firebase/ServiceStaff'
-import { useStore } from '../contexts/storeContext'
 import { useShop } from '../hooks/useShop'
 import { ServiceStores } from '../firebase/ServiceStore'
 import catchError from '../libs/catchError'
@@ -32,6 +31,7 @@ const ScreenStaff = ({ navigation }) => {
       })
     )
     console.log({ err, res })
+    //*TODO:   Remove after migration staff is completely removed from store
     await ServiceStaff.removeStaffFromStore(storeId, staffId)
       .then(console.log)
       .catch(console.log)

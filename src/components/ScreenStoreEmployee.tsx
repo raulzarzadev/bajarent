@@ -1,5 +1,5 @@
 import { Dimensions, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import FormikCheckbox from './FormikCheckbox'
 import Button from './Button'
 import { ServiceStaff } from '../firebase/ServiceStaff'

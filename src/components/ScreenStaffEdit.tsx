@@ -37,6 +37,7 @@ const ScreenStaffEdit = ({ route }) => {
               })
             )
             console.log({ err, res })
+            //*TODO:   Remove after migration staff is completely removed from store
             ServiceStaff.update(staffId, values)
               .then((res) => {
                 console.log(res)
