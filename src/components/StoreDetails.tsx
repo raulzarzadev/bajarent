@@ -1,6 +1,5 @@
 import { Text, View } from 'react-native'
 import P from './P'
-import StoreType, { bot_configs } from '../types/StoreType'
 import { gStyles } from '../styles'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
@@ -10,7 +9,6 @@ import { useNavigation } from '@react-navigation/native'
 import SpanCopy from './SpanCopy'
 import LinkLocation from './LinkLocation'
 import { Separator } from './Separator'
-import { ChatbotStatus } from './ScreenChatbot'
 import { useShop } from '../hooks/useShop'
 
 const StoreDetails = () => {
