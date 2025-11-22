@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import Icon, { IconName } from './Icon'
 import { gStyles } from '../styles'
 import Loading from './Loading'
+import React, { forwardRef } from 'react'
 
 /**
  * Componente de entrada de texto estilizado.
@@ -47,112 +48,119 @@ export type InputTextProps = Omit<TextInputProps, 'value'> & {
   ref?: React.RefObject<TextInput>
 }
 type IconsType = 'loading' | 'search' | 'close' | 'none'
-const InputTextStyled = ({
-  disabled,
-  helperText,
-  helperTextColor,
-  type = 'text',
-  value: defValue,
-  containerStyle,
-  label,
-  innerLeftIcon,
-  onLeftIconPress,
-  hiddenInnerLeftIcon,
-  inputStyle,
-  onPressLeftIcon,
-  leftIcon,
-  ref,
-  ...props
-}: InputTextProps): JSX.Element => {
-  const [value, setValue] = useState<string | number>()
 
-  useEffect(() => {
-    setValue(defValue)
-  }, [defValue])
+const InputTextStyled = forwardRef<TextInput, InputTextProps>(
+  (
+    {
+      disabled,
+      helperText,
+      helperTextColor,
+      type = 'text',
+      value: defValue,
+      containerStyle,
+      label,
+      innerLeftIcon,
+      onLeftIconPress,
+      hiddenInnerLeftIcon,
+      inputStyle,
+      onPressLeftIcon,
+      leftIcon,
+      ...props
+    },
+    ref
+  ): JSX.Element => {
+    const [value, setValue] = useState<string | number>()
 
-  return (
-    <View style={containerStyle}>
-      {label && <Text>{label}</Text>}
-      <View
-        style={[
-          baseStyle.inputStyle,
-          disabled && { opacity: 0.5 },
-          props.style
-        ]}
-      >
-        <TextInput
-          {...props}
-          ref={ref}
-          style={[baseStyle.input, inputStyle, { flex: 1, maxWidth: '100%' }]}
-          editable={!disabled}
-          value={String(value || '')}
-          onChangeText={(text) => {
-            if (text === '') {
-              setValue('')
-              return props?.onChangeText?.('')
-            }
-            if (type === 'number') {
-              let numericText = text.replace(/[^0-9.]/g, '')
-              const decimalPointIndex = numericText.indexOf('.')
-              if (decimalPointIndex !== -1) {
-                const beforeDecimalPoint = numericText.slice(
-                  0,
-                  decimalPointIndex + 1
-                )
-                const afterDecimalPoint = numericText.slice(
-                  decimalPointIndex + 1
-                )
-                const sanitizedAfterDecimalPoint = afterDecimalPoint.replace(
-                  /\./g,
-                  ''
-                )
-                numericText = beforeDecimalPoint + sanitizedAfterDecimalPoint
-              }
-              setValue(numericText) // Actualiza el estado aquí
-              return props?.onChangeText?.(numericText)
-            } else {
-              setValue(text) // Actualiza el estado aquí
-              return props?.onChangeText?.(text)
-            }
-          }}
-        />
+    useEffect(() => {
+      setValue(defValue)
+    }, [defValue])
 
-        <Pressable
-          onPress={() => onPressLeftIcon?.(leftIcon)}
-          style={({ pressed }) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              bottom: 0,
-              marginRight: 10,
-              backgroundColor: pressed ? theme.info : 'transparent',
-              opacity: pressed ? 0.5 : 1,
-              borderEndEndRadius: BORDER_RADIUS * 1.8,
-              borderTopEndRadius: BORDER_RADIUS * 1.8
-            }
-          }}
+    return (
+      <View style={containerStyle}>
+        {label && <Text>{label}</Text>}
+        <View
+          style={[
+            baseStyle.inputStyle,
+            disabled && { opacity: 0.5 },
+            props.style
+          ]}
         >
-          {leftIcon === 'loading' && <Loading size={24} />}
-          {leftIcon === 'search' && (
-            <Icon icon="search" size={24} color={theme.primary} />
-          )}
-          {leftIcon === 'close' && (
-            <Icon icon="close" size={24} color={theme.error} />
-          )}
-        </Pressable>
-      </View>
+          <TextInput
+            ref={ref}
+            {...props}
+            style={[baseStyle.input, inputStyle, { flex: 1, maxWidth: '100%' }]}
+            editable={!disabled}
+            value={String(value || '')}
+            onChangeText={(text) => {
+              if (text === '') {
+                setValue('')
+                return props?.onChangeText?.('')
+              }
+              if (type === 'number') {
+                let numericText = text.replace(/[^0-9.]/g, '')
+                const decimalPointIndex = numericText.indexOf('.')
+                if (decimalPointIndex !== -1) {
+                  const beforeDecimalPoint = numericText.slice(
+                    0,
+                    decimalPointIndex + 1
+                  )
+                  const afterDecimalPoint = numericText.slice(
+                    decimalPointIndex + 1
+                  )
+                  const sanitizedAfterDecimalPoint = afterDecimalPoint.replace(
+                    /\./g,
+                    ''
+                  )
+                  numericText = beforeDecimalPoint + sanitizedAfterDecimalPoint
+                }
+                setValue(numericText) // Actualiza el estado aquí
+                return props?.onChangeText?.(numericText)
+              } else {
+                setValue(text) // Actualiza el estado aquí
+                return props?.onChangeText?.(text)
+              }
+            }}
+          />
 
-      {!!helperText && (
-        <Text style={[gStyles.inputHelper, { color: theme[helperTextColor] }]}>
-          {helperText}
-        </Text>
-      )}
-    </View>
-  )
-}
+          <Pressable
+            onPress={() => onPressLeftIcon?.(leftIcon)}
+            style={({ pressed }) => {
+              return {
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                bottom: 0,
+                marginRight: 10,
+                backgroundColor: pressed ? theme.info : 'transparent',
+                opacity: pressed ? 0.5 : 1,
+                borderEndEndRadius: BORDER_RADIUS * 1.8,
+                borderTopEndRadius: BORDER_RADIUS * 1.8
+              }
+            }}
+          >
+            {leftIcon === 'loading' && <Loading size={24} />}
+            {leftIcon === 'search' && (
+              <Icon icon="search" size={24} color={theme.primary} />
+            )}
+            {leftIcon === 'close' && (
+              <Icon icon="close" size={24} color={theme.error} />
+            )}
+          </Pressable>
+        </View>
+
+        {!!helperText && (
+          <Text
+            style={[gStyles.inputHelper, { color: theme[helperTextColor] }]}
+          >
+            {helperText}
+          </Text>
+        )}
+      </View>
+    )
+  }
+)
 
 export default InputTextStyled
 const placeholderOpacity = 'ee'

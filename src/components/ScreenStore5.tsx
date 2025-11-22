@@ -33,13 +33,14 @@ const ScreenStore = (props) => {
       isOwner,
       orders,
       store: storePermissions,
-      canManageItems
+      canManageItems,
+      canEditStaff
     }
   } = useEmployee()
 
   const scrollViewRef = useRef(null)
 
-  const canViewSections = true
+  const canViewSections = isAdmin || isOwner || canEditStaff
   const canViewOrders = isAdmin || isOwner || orders.canViewAll
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
@@ -94,7 +95,7 @@ const ScreenStore = (props) => {
             {
               title: '🧑‍🧑‍🧒‍🧒Areas',
               content: <CheckedTabSections />,
-              show: true
+              show: canViewSections
               // icon: 'windows'
             },
             {
