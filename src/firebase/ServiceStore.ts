@@ -3,6 +3,7 @@ import StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStaff } from './ServiceStaff'
 import StaffType from '../types/StaffType'
+import { createUUID } from '../libs/createId'
 export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   constructor() {
     super('stores')
@@ -78,7 +79,9 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   }) {
     const store = await this.get(storeId)
     if (!store) throw new Error('Store not found')
+
     const currentStaff = store.staff || []
+    staff.id = createUUID()
     const updatedStaff = [...currentStaff, staff as StaffType]
     return this.update(storeId, { staff: updatedStaff })
   }

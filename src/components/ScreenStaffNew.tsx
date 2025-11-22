@@ -9,9 +9,7 @@ import React, { useEffect } from 'react'
 import FormStaff from './FormStaff'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useStore } from '../contexts/storeContext'
-import InputTextStyled from './InputTextStyled'
 import { ServiceUsers } from '../firebase/ServiceUser'
-import useDebounce from '../hooks/useDebunce'
 import theme, { colors } from '../theme'
 import UserType from '../types/UserType'
 import P from './P'
@@ -19,14 +17,12 @@ import CardUser from './CardUser'
 import StaffType, { CreateStaffType } from '../types/StaffType'
 import { gStyles } from '../styles'
 import Loading from './Loading'
-import ListStaff from './ListStaff2'
-import { ServiceSections } from '../firebase/ServiceSections'
 import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
-import TextInfo from './TextInfo'
 import { useShop } from '../hooks/useShop'
 import catchError from '../libs/catchError'
 import InputSearch from './Inputs/InputSearch'
+import { ServiceStores } from '../firebase/ServiceStore'
 
 const ScreenStaffNew = ({ route }) => {
   const { store, staff = [] } = useStore()
@@ -76,6 +72,13 @@ const ScreenStaffNew = ({ route }) => {
                 storeId: store.id,
                 userId: user.id || ''
               }
+              const [err, res] = await catchError(
+                ServiceStores.addStaff({
+                  storeId: store.id,
+                  staff: newStaff
+                })
+              )
+              console.log({ err, res })
               ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
                 setUser(undefined)
                 goBack()
@@ -126,7 +129,8 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
   const [text, setText] = React.useState('')
   const [error, setError] = React.useState<string | null>('')
   const [loading, setLoading] = React.useState(false)
-  const { staff } = useStore()
+  const { shop } = useShop()
+  const shopStaff = shop?.staff || []
   const [users, setUsers] = React.useState([])
   useEffect(() => {
     if (text?.length <= 0) {
@@ -138,7 +142,7 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
   }, [text])
 
   const alreadyIsStaff = (userId: string) => {
-    return staff.some((s) => s.userId === userId)
+    return shopStaff.some((s) => s.userId === userId)
   }
 
   return (
@@ -149,7 +153,7 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
         onChange={(text) => {
           setText(text)
         }}
-        placeholder="Buscar usuario por telefono"
+        placeholder="Buscar usuario por telefono, nombre o email"
         helperText="*El usuario debe estar registrado en la plataforma"
       />
       <Button
