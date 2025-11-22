@@ -15,6 +15,7 @@ import StaffType, {
 } from '../types/StaffType'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
+import FormikInputValue from './FormikInputValue'
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'
 
@@ -73,6 +74,12 @@ const FormStaff = ({
         return (
           <View style={styles.form}>
             <Text style={gStyles.h3}>Permisos especiales</Text>
+            <FormikInputValue
+              name="name"
+              label="Nombre completo"
+              placeholder="Nombre del empleado"
+              style={styles.input}
+            />
             <View>
               <FormikCheckbox
                 style={{
