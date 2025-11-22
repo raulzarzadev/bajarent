@@ -10,7 +10,7 @@ import { useShop } from '../hooks/useShop'
 import { useAuth } from '../contexts/authContext'
 import catchError from '../libs/catchError'
 
-const ScreenStaffEdit = ({ route, navigation }) => {
+const ScreenStaffEdit = ({ route }) => {
   const { storeId } = useAuth()
   const { shop } = useShop()
   const shopStaff = shop?.staff || []
@@ -40,7 +40,6 @@ const ScreenStaffEdit = ({ route, navigation }) => {
             ServiceStaff.update(staffId, values)
               .then((res) => {
                 console.log(res)
-                navigation.goBack()
               })
               .catch(console.error)
           }}
