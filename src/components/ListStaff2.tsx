@@ -14,7 +14,8 @@ const ListStaff = ({
   showNewStaff = true,
   handleAdd,
   handleSubtract,
-  handleEdit
+  handleEdit,
+  hideSearchAndFilters = false
 }: {
   staff: StaffType[]
   sectionId?: string
@@ -23,6 +24,7 @@ const ListStaff = ({
   handleAdd?: (rowId: string) => void
   handleSubtract?: (rowId: string) => void
   handleEdit?: (rowId: string) => void
+  hideSearchAndFilters?: boolean
 }) => {
   const { navigate } = useNavigation()
   const {
@@ -33,6 +35,7 @@ const ListStaff = ({
   return (
     <View>
       <ListE
+        hideSearchAndFilters={hideSearchAndFilters}
         id="list-staff"
         sortFields={[
           { key: 'name', label: 'Nombre' },

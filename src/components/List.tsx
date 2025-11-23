@@ -54,6 +54,7 @@ export type ListPops<T extends { id: string }> = {
   rowSideButtons?: ListSideButton[]
   pinMaxRows?: number
   onRowsSelected?: (ids: string[]) => void
+  hideSearchAndFilters?: boolean
 }
 
 function MyList<T extends { id: string }>({
@@ -76,10 +77,11 @@ function MyList<T extends { id: string }>({
   maxWidth = 800,
   rowSideButtons,
   pinMaxRows,
-  onRowsSelected
+  onRowsSelected,
+  hideSearchAndFilters = false
 }: ListPops<T>) {
   const pinnedTableID = `table-${tableId}`
-  const [filteredData, setFilteredData] = useState<T[]>(undefined)
+  const [filteredData, setFilteredData] = useState<T[]>(data || [])
   const [collectionData, setCollectionData] = useState<T[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [multiSelect, setMultiSelect] = useState(false)
@@ -105,6 +107,11 @@ function MyList<T extends { id: string }>({
   const endIndex = Math.min(startIndex + rowsPerPage, sortedData.length)
 
   //#region effects
+  useEffect(() => {
+    if (data) {
+      setFilteredData(data)
+    }
+  }, [data])
 
   useEffect(() => {
     ;(async () => {
@@ -137,10 +144,6 @@ function MyList<T extends { id: string }>({
 
   //#region handlers
 
-  // const handleMultiSelect = () => {
-  //   setMultiSelect(!multiSelect)
-  //   if (!multiSelect) setSelectedRows([])
-  // }
   const handleSelectRow = (id: string) => {
     if (selectedRows.includes(id)) {
       const newSelectedRows = selectedRows.filter((rowId) => rowId !== id)
@@ -244,22 +247,24 @@ function MyList<T extends { id: string }>({
       >
         <View>
           {/* SEARCH FILTER AND SIDE BUTTONS   */}
-          <SearchAndFilter
-            collectionSearch={collectionSearch}
-            preFilteredIds={preFilteredIds}
-            data={data}
-            setFilteredData={setFilteredData}
-            setCollectionData={setCollectionData}
-            filters={filters}
-            sideButtons={sideButtons}
-          />
+          {!hideSearchAndFilters && (
+            <SearchAndFilter
+              collectionSearch={collectionSearch}
+              preFilteredIds={preFilteredIds}
+              data={data}
+              setFilteredData={setFilteredData}
+              setCollectionData={setCollectionData}
+              filters={filters}
+              sideButtons={sideButtons}
+            />
+          )}
           {/* PAGINATION */}
 
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <View style={{ width: '30%', justifyContent: 'center' }}>
-              {!multiSelect && (
+              {!!ComponentMultiActions && !multiSelect && (
                 <Button
                   label={'Seleccionar'}
                   variant={'ghost'}
@@ -554,17 +559,6 @@ const PinButton = ({
       />
     </Pressable>
   )
-  // return (
-  //   <Pressable
-  //     disabled={disabled}
-  //     icon={unpin ? 'unPin' : 'pin'}
-  //     justIcon
-  //     onPress={() => handlePin()}
-  //
-  //     variant="ghost"
-  //     size="medium"
-  //   />
-  // )
 }
 
 //#region pagination

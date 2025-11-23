@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { SectionType } from '../types/SectionType'
-
 import { useStore } from '../contexts/storeContext'
 import { ServiceSections } from '../firebase/ServiceSections'
 import ListStaff from './ListStaff2'
@@ -9,7 +8,6 @@ import { useNavigation } from '@react-navigation/native'
 import ButtonConfirm from './ButtonConfirm'
 import Tabs from './Tabs'
 import ErrorBoundary from './ErrorBoundary'
-import TextInfo from './TextInfo'
 import { useEmployee } from '../contexts/employeeContext'
 import ListStoreItems from './ListStoreItems'
 import useMyNav from '../hooks/useMyNav'
@@ -21,12 +19,6 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
   const {
     permissions: { canEditStaff }
   } = useEmployee()
-
-  const handleRemoveStaff = (staffId: string) => {
-    ServiceSections.removeStaff(section?.id, staffId)
-      .then((res) => console.log(res))
-      .catch((e) => console.log(e))
-  }
 
   const staffSection = section?.staff?.map((staffId) =>
     staff?.find((s) => s?.id === staffId)
@@ -91,16 +83,17 @@ const SectionDetails = ({ section }: { section: SectionType }) => {
                 <ListStaff
                   staff={staffSection}
                   sectionId={section.id}
+                  hideSearchAndFilters
                   // handleSubtract={(staffId) => {
                   //   handleRemoveStaff(staffId)
                   // }}
-                  // handleEdit={(staffId) => {
-                  //   //@ts-ignore
-                  //   navigation.navigate('StackStaff', {
-                  //     screen: 'ScreenStaffEdit',
-                  //     params: { staffId }
-                  //   })
-                  // }}
+                  handleEdit={(staffId) => {
+                    //@ts-ignore
+                    navigation.navigate('StackStaff', {
+                      screen: 'ScreenStaffEdit',
+                      params: { staffId }
+                    })
+                  }}
                 />
               </>
             ),
