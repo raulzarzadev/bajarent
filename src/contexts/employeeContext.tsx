@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useRef
+} from 'react'
 import StaffType, {
   PermissionsCustomers,
   PermissionsItems,
@@ -9,6 +16,8 @@ import { useAuth } from './authContext'
 import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { ServiceStaff } from '../firebase/ServiceStaff'
+import { ServiceStores } from '../firebase/ServiceStore'
 import { formatItems } from '../libs/workshop.libs'
 import { useShop } from '../hooks/useShop'
 
@@ -52,6 +61,7 @@ export const EmployeeContextProvider = ({ children }) => {
   const { sections: storeSections, categories } = useStore()
 
   const [items, setItems] = useState<Partial<ItemType>[]>([])
+  const ownerProvisionedStoreId = useRef<string | null>(null)
 
   const shopStaff = shop?.staff || []
   const employee = shopStaff.find(
@@ -73,6 +83,57 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
   const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
+
+  useEffect(() => {
+    const storeIdentifier = shop?.id
+    if (
+      !isOwner ||
+      employee ||
+      !storeIdentifier ||
+      !user?.id ||
+      ownerProvisionedStoreId.current === storeIdentifier
+    )
+      return
+
+    let cancelled = false
+    const provisionOwner = async () => {
+      try {
+        const ownerStaff: Partial<StaffType> = {
+          userId: user.id,
+          storeId: storeIdentifier,
+          name: user?.name || 'Propietario',
+          email: user?.email || '',
+          phone: user?.phone || '',
+          rol: 'admin',
+          roles: {
+            admin: true,
+            technician: false,
+            driver: false,
+            reception: false
+          },
+          permissions: {
+            isOwner: true,
+            isAdmin: true
+          }
+        }
+
+        await ServiceStores.addStaff({
+          storeId: storeIdentifier,
+          staff: ownerStaff
+        })
+        await ServiceStaff.addStaffToStore(storeIdentifier, ownerStaff)
+
+        if (!cancelled) ownerProvisionedStoreId.current = storeIdentifier
+      } catch (error) {
+        console.error('Error provisioning owner as staff', error)
+      }
+    }
+
+    provisionOwner()
+    return () => {
+      cancelled = true
+    }
+  }, [isOwner, employee, shop?.id, user?.id])
 
   useEffect(() => {
     if (!employee) return
