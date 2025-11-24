@@ -34,7 +34,7 @@ const TabsA = ({
   handlePressAdd,
   addTabTitle
 }: TabsProps) => {
-  const visibleTabs = tabs.filter(({ show }) => show)
+  const visibleTabs = tabs?.filter(({ show }) => show)
 
   const [selectedTab, setSelectedTab] = useState(undefined)
 
@@ -50,7 +50,9 @@ const TabsA = ({
     setSelectedTab(tab)
     setItem(`tab-${tabId}`, tab)
     // const visibleTabs = tabs.filter(({ show }) => show)
-    const tabIndexSelected = visibleTabs.findIndex(({ title }) => title === tab)
+    const tabIndexSelected = visibleTabs?.findIndex(
+      ({ title }) => title === tab
+    )
     setScrollWidth((100 / visibleTabs.length) * (tabIndexSelected + 1))
   }
   const [scrollWidth, setScrollWidth] = useState(100 / tabs.length)
@@ -134,7 +136,7 @@ const TabsA = ({
         )}
       </View>
       <View style={styles.tabContent}>
-        {visibleTabs.find((tab) => tab.title === selectedTab)?.content}
+        {visibleTabs?.find((tab) => tab.title === selectedTab)?.content}
       </View>
     </View>
   )
