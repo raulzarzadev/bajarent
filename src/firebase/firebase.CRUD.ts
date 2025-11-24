@@ -349,7 +349,7 @@ export class FirebaseCRUD {
     return res
   }
 
-  async listenItem(itemId: string, cb: CallableFunction) {
+  listenItem(itemId: string, cb: CallableFunction) {
     if (!itemId)
       return console.error('invalid value', {
         itemId,
@@ -357,7 +357,7 @@ export class FirebaseCRUD {
       })
     const q = doc(this.db, this.collectionName, itemId)
 
-    onSnapshot(q, (snapshotDoc) => {
+    return onSnapshot(q, (snapshotDoc) => {
       //* <------ Show getting data in DEV mode
       this.showSnapshot(snapshotDoc)
 
@@ -370,11 +370,11 @@ export class FirebaseCRUD {
    * @param filters[]: where(itemField,'==','value')
    * @param cb callback with array of items
    */
-  async listenItems(filters: QueryConstraint[], cb: CallableFunction) {
+  listenItems(filters: QueryConstraint[], cb: CallableFunction) {
     this.validateFilters(filters, this.collectionName)
 
     const q = query(collection(this.db, this.collectionName), ...filters)
-    onSnapshot(q, (querySnapshot) => {
+    return onSnapshot(q, (querySnapshot) => {
       const res: any[] = []
 
       //* <------ Show getting data in DEV mode
@@ -387,10 +387,10 @@ export class FirebaseCRUD {
     })
   }
 
-  async listenUserItems(filters: QueryConstraint[] = [], cb: CallableFunction) {
+  listenUserItems(filters: QueryConstraint[] = [], cb: CallableFunction) {
     const userId = getAuth().currentUser?.uid
 
-    this.listenItems([where('userId', '==', userId), ...filters], cb)
+    return this.listenItems([where('userId', '==', userId), ...filters], cb)
   }
 
   // -------------------------------------------------------------> SUB COLLECTIONS
@@ -656,7 +656,7 @@ export class FirebaseCRUD {
     filters?: QueryConstraint[]
   }) {
     const q: Query<DocumentData> = query(ref, ...filters)
-    onSnapshot(q, (querySnapshot) => {
+    return onSnapshot(q, (querySnapshot) => {
       const res: any[] = []
       querySnapshot.forEach((doc) => {
         res.push(this.normalizeItem(doc))
@@ -684,7 +684,7 @@ export class FirebaseCRUD {
   }) {
     const ref = collection(this.db, parentCollection, parentId, subCollection)
     const queryRef = query(ref, ...filters)
-    onSnapshot(queryRef, (querySnapshot) => {
+    return onSnapshot(queryRef, (querySnapshot) => {
       //* <------ Show getting data in DEV mode
       this.showSnapshot(querySnapshot)
 

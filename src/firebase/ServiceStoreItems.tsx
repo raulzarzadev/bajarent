@@ -100,7 +100,7 @@ export class ServiceStoreItemsClass {
       ops
     )
   }
-  async listenAvailableBySections({
+  listenAvailableBySections({
     storeId,
     userSections = [],
     cb

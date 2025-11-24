@@ -73,10 +73,11 @@ export const EmployeeContextProvider = ({ children }) => {
 
   useEffect(() => {
     const disabledEmployee = employee?.disabled === true
+    let unsubscribe: any
     if (disabledEmployee) {
       setItems([])
     } else {
-      ServiceStoreItems.listenAvailableBySections({
+      unsubscribe = ServiceStoreItems.listenAvailableBySections({
         storeId,
         userSections: canViewAllItems ? 'all' : assignedSections,
         cb: (items) => {
@@ -84,6 +85,7 @@ export const EmployeeContextProvider = ({ children }) => {
         }
       })
     }
+    return () => unsubscribe && unsubscribe()
   }, [employee?.disabled, canViewAllItems, assignedSections, disabledEmployee])
 
   const storePermissions = employee?.permissions?.store || {}

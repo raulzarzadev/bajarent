@@ -43,12 +43,12 @@ export class FirebaseGenericService<T extends Identifiable> {
     return await this.itemCRUD.getItem(itemId || '')
   }
 
-  async listen(itemId: T['id'], cb: CallableFunction) {
-    return await this.itemCRUD.listenItem(itemId || '', cb)
+  listen(itemId: T['id'], cb: CallableFunction) {
+    return this.itemCRUD.listenItem(itemId || '', cb)
   }
 
-  async listenMany(filters: QueryConstraint[] = [], cb: CallableFunction) {
-    return await this.itemCRUD.listenItems(filters, cb)
+  listenMany(filters: QueryConstraint[] = [], cb: CallableFunction) {
+    return this.itemCRUD.listenItems(filters, cb)
   }
 
   async getItems(filters: QueryConstraint[] = [], ops?: GetItemsOps) {
@@ -277,7 +277,7 @@ export class FirebaseGenericService<T extends Identifiable> {
     filters: QueryConstraint[]
     cb: CallableFunction
   }) {
-    this.itemCRUD.listenRefItems({
+    return this.itemCRUD.listenRefItems({
       ref: collectionRef,
       filters,
       cb

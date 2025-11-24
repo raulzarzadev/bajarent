@@ -47,13 +47,15 @@ const StoreContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (storeId && isAuthenticated)
-      ServiceStores.listen(storeId, (store) => {
+    if (storeId && isAuthenticated) {
+      const unsubscribe = ServiceStores.listen(storeId, (store) => {
         // console.log({ storeStaff: store.staff, contestStaff: storeCtx?.staff })
         // store.staff = storeCtx?.staff
         setStore(store)
       })
-  }, [storeId, storeCtx?.staff, isAuthenticated])
+      return () => unsubscribe && unsubscribe()
+    }
+  }, [storeId, isAuthenticated])
 
   useEffect(() => {
     if (storeId && isAuthenticated) {
@@ -63,11 +65,13 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     //* CURRENT BALANCE
-    if (store?.id && isAuthenticated)
-      ServiceBalances.listenLastInDate(
+    if (store?.id && isAuthenticated) {
+      const unsubscribe = ServiceBalances.listenLastInDate(
         { storeId: store?.id, date: new Date(), type: 'daily' },
         (balance) => setCurrentBalance(balance)
       )
+      return () => unsubscribe && unsubscribe()
+    }
   }, [store?.id, isAuthenticated])
 
   sc++

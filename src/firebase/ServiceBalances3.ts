@@ -49,7 +49,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
     return this.getItems(filters)
   }
 
-  async listenLastInDate(
+  listenLastInDate(
     {
       storeId,
       date,

@@ -116,10 +116,11 @@ const useInitializeShop = () => {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     if (!storeId) return
-    ServiceStores.listen(storeId, async (store) => {
+    const unsubscribe = ServiceStores.listen(storeId, async (store) => {
       const normalizeData = convertTimestamps({ ...store }, { to: 'string' })
       dispatch(setShop(normalizeData))
     })
+    return () => unsubscribe && unsubscribe()
   }, [storeId])
   return null
 }
