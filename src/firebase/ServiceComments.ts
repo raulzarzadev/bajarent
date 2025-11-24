@@ -14,7 +14,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     return super.create({ ...comment, solved: false })
   }
 
-  orderComments(orderId: string, cb: CallableFunction): Promise<void> {
+  orderComments(orderId: string, cb: CallableFunction) {
     return super.listenMany(
       [
         where('orderId', '==', orderId),
@@ -24,7 +24,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
     )
   }
 
-  storeComments(storeId: string, cb: CallableFunction): Promise<void> {
+  storeComments(storeId: string, cb: CallableFunction) {
     return super.listenMany([where('storeId', '==', storeId)], cb)
   }
 

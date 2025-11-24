@@ -22,7 +22,7 @@ class ConsolidatedOrdersClass extends FirebaseGenericService<Type> {
       limit(1)
     ])
   }
-  async listenByStore(storeId: string, cb: CallableFunction) {
+  listenByStore(storeId: string, cb: CallableFunction) {
     return this.listenMany(
       [where('storeId', '==', storeId), orderBy('createdAt', 'desc'), limit(1)],
       cb

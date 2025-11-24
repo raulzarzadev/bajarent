@@ -54,8 +54,11 @@ class OrdersSyncService {
       )
 
       // If it returns a promise with unsubscribe function
-      if (listenerResult && typeof listenerResult.then === 'function') {
-        listenerResult
+      if (
+        listenerResult &&
+        typeof (listenerResult as any).then === 'function'
+      ) {
+        ;(listenerResult as any)
           .then((unsubscribe) => {
             if (typeof unsubscribe === 'function') {
               this.listeners.set('orders', unsubscribe)
@@ -67,7 +70,7 @@ class OrdersSyncService {
       } else {
         // If it's synchronous and returns an unsubscribe function directly
         if (typeof listenerResult === 'function') {
-          this.listeners.set('orders', listenerResult)
+          this.listeners.set('orders', listenerResult as any)
         }
       }
     } catch (error) {

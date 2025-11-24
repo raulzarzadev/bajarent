@@ -17,7 +17,7 @@ class ServiceStaffClass extends FirebaseGenericService<Type> {
     return this.delete(staffId)
   }
 
-  storeStaff(storeId: string, cb: CallableFunction): Promise<void> {
+  storeStaff(storeId: string, cb: CallableFunction) {
     return super.listenMany([where('storeId', '==', storeId)], cb)
   }
 
