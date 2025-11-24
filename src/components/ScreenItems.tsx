@@ -34,7 +34,7 @@ const ScreenItems = () => {
 const StoreCategories = () => {
   const [selected, setSelected] = useState<string | null>(null)
   const { navigate } = useNavigation()
-  const { categories, storeId } = useStore()
+  const { categories = [], storeId } = useStore()
 
   const { deleteCategory, createPrice, deletePrice, updatePrice } =
     useCategories()
@@ -59,7 +59,7 @@ const StoreCategories = () => {
   const [categoryPrices, setCategoryPrices] = useState<Partial<PriceType>[]>([])
 
   useEffect(() => {
-    const prices = categories.find((c) => c.id === selected)?.prices || []
+    const prices = categories?.find((c) => c.id === selected)?.prices || []
     prices.sort(sortPricesByTime)
     setCategoryPrices(prices)
   }, [selected, categories])
