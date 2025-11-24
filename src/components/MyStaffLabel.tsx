@@ -2,9 +2,9 @@ import { View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import Button from './Button'
 import { setItem } from '../libs/storage'
-import { PERSISTENCE_KEY } from '../../App'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
+import { PERSISTENCE_KEY } from '../utils/navigationPersistence'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
