@@ -58,7 +58,11 @@ export const EmployeeContextProvider = ({ children }) => {
   const employee = shopStaff.find(
     (s) => s.userId === user?.id && s.storeId === storeId
   )
-  const assignedSections = employee?.sectionsAssigned || []
+  const assignedSectionsRaw = employee?.sectionsAssigned
+  const assignedSections = useMemo(
+    () => assignedSectionsRaw || [],
+    [assignedSectionsRaw]
+  )
   const isAdmin = employee?.permissions?.isAdmin || false
   const isOwner = shop && shop?.createdBy === user?.id
 
