@@ -91,7 +91,6 @@ export const EmployeeSections = ({
 }) => {
   const { employee } = useEmployee()
   const { sections } = useStore()
-  console.log({ employee, sections })
   return (
     <>
       <Text style={[gStyles.helper, gStyles.tCenter]}>Areas asignadas:</Text>

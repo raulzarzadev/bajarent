@@ -40,7 +40,7 @@ const ScreenStaffEdit = ({ route }) => {
             //*TODO:   Remove after migration staff is completely removed from store
             ServiceStaff.update(staffId, values)
               .then((res) => {
-                console.log(res)
+                //console.log(res)
               })
               .catch(console.error)
           }}
