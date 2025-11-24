@@ -122,10 +122,10 @@ export const getStoreData = async (storeId: string) => {
   const pricesPromise = ServicePrices.getByStore(storeId)
   const [
     //store,
-    categories,
-    sections,
-    staff,
-    prices
+    categories = [],
+    sections = [],
+    staff = [],
+    prices = []
   ] = await Promise.all([
     // storePromise,
     categoriesPromise,
@@ -133,7 +133,7 @@ export const getStoreData = async (storeId: string) => {
     staffPromise,
     pricesPromise
   ])
-  const categoriesWithPrices = categories.map((cat) => ({
+  const categoriesWithPrices = categories?.map((cat) => ({
     ...cat,
     prices: prices.filter((p) => p.categoryId === cat.id)
   }))
