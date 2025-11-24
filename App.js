@@ -4,7 +4,6 @@ import { AuthContextProvider, useAuth } from './src/contexts/authContext'
 import { StoreContextProvider } from './src/contexts/storeContext'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ThemeProvider } from './src/contexts/themeContext'
 import { EmployeeContextProvider } from './src/contexts/employeeContext'
 import { OrdersContextProvider } from './src/contexts/ordersContext'
@@ -13,8 +12,11 @@ import { ItemsProvider } from './src/contexts/itemsContext'
 import { Provider } from 'react-redux'
 import { store } from './src/state/store'
 import { ReduxInitializer } from './src/state/ReduxInitializer'
+import {
+  loadNavigationState,
+  persistNavigationState
+} from './src/utils/navigationPersistence'
 
-export const PERSISTENCE_KEY = 'NAVIGATION_STATE_V1'
 export default function App() {
   const [isReady, setIsReady] = useState(false)
   const [initialState, setInitialState] = useState()
@@ -23,20 +25,13 @@ export default function App() {
     if (isReady) return
 
     const restoreState = async () => {
-      try {
-        const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY)
-        if (savedStateString) {
-          setInitialState(JSON.parse(savedStateString))
-        }
-      } catch (e) {
-        console.warn('Error restoring navigation state:', e)
-      } finally {
-        setIsReady(true)
-      }
+      const state = await loadNavigationState()
+      setInitialState(state)
+      setIsReady(true)
     }
 
     restoreState()
-  }, [])
+  }, [isReady])
 
   if (!isReady) {
     return (
@@ -52,7 +47,7 @@ export default function App() {
         <NavigationContainer
           initialState={initialState}
           onStateChange={(state) => {
-            AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+            persistNavigationState(state)
           }}
         >
           <AuthContextProvider>
