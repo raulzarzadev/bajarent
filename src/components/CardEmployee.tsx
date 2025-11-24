@@ -13,6 +13,7 @@ import { BadgeListSectionsE } from './BadgeListSections'
 
 const CardEmployee = () => {
   const { store } = useStore()
+
   const { employee } = useEmployee()
   const { navigate } = useNavigation()
   const staffRoles = Object.entries(employee?.roles || {}).reduce(
@@ -90,7 +91,7 @@ export const EmployeeSections = ({
 }) => {
   const { employee } = useEmployee()
   const { sections } = useStore()
-  console.log({ employee })
+  console.log({ employee, sections })
   return (
     <>
       <Text style={[gStyles.helper, gStyles.tCenter]}>Areas asignadas:</Text>

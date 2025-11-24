@@ -72,6 +72,7 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
 
   useEffect(() => {
+    if (!employee) return
     const disabledEmployee = employee?.disabled === true
     let unsubscribe: any
     if (disabledEmployee) {
