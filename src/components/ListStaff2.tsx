@@ -106,7 +106,6 @@ const StaffRow = ({
               color="error"
               justIcon
               onPress={() => {
-                console.log('delete')
                 handleSubtract?.(staff?.id)
               }}
               disabled={disabled}
@@ -118,7 +117,6 @@ const StaffRow = ({
               icon="edit"
               justIcon
               onPress={() => {
-                console.log('edit')
                 handleEdit?.(staff?.id)
               }}
               disabled={disabled}
@@ -131,7 +129,6 @@ const StaffRow = ({
               color="info"
               justIcon
               onPress={() => {
-                console.log('add')
                 handleAdd?.(staff?.id)
               }}
               disabled={disabled}

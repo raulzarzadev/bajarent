@@ -8,7 +8,7 @@ import { gStyles } from '../styles'
 
 const ButtonConfirm = ({
   openLabel,
-  modalTitle = 'Confirmar',
+  modalTitle,
   confirmLabel = 'Aceptar',
   text = '',
   openFullWidth,
@@ -62,7 +62,7 @@ const ButtonConfirm = ({
   handleCancel?: () => void
   openStyles?: ButtonProps['buttonStyles']
 }) => {
-  const modal = useModal({ title: modalTitle })
+  const modal = useModal({ title: modalTitle || openLabel })
   const [sending, setSending] = React.useState(false)
   return (
     <View>

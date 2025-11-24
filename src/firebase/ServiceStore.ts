@@ -86,6 +86,73 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     return this.update(storeId, { staff: updatedStaff })
   }
 
+  /**
+   * Add or remove staff to section, by updating each staff members assignedSections
+   * Put this section in each assignedSection staff
+   * @param param0 storeId, sectionId staffIds[]
+   * @returns Promise<void>
+   */
+  async setStaffToSection({
+    storeId,
+    sectionId,
+    staffIds
+  }: {
+    storeId: string
+    sectionId: string
+    staffIds: string[]
+  }) {
+    const shop = await this.get(storeId)
+    if (!shop) throw new Error('Store not found')
+    const shopStaff = shop.staff || []
+
+    const staffUpdated = shopStaff.map((s) => {
+      if (staffIds.includes(s.id)) {
+        return {
+          ...s,
+          sectionsAssigned: s.sectionsAssigned
+            ? Array.from(new Set([...s.sectionsAssigned, sectionId]))
+            : [sectionId]
+        }
+      } else {
+        return {
+          ...s,
+          sectionsAssigned: s.sectionsAssigned
+            ? s.sectionsAssigned.filter((secId) => secId !== sectionId)
+            : []
+        }
+      }
+    })
+    return this.update(storeId, { staff: staffUpdated })
+  }
+
+  async addStaffToSection({
+    storeId,
+    sectionId,
+    staffIds
+  }: {
+    storeId: string
+    sectionId: string
+    staffIds: string[]
+  }) {
+    const store = await this.get(storeId)
+    if (!store) throw new Error('Store not found')
+
+    const currentStaff = store.staff || []
+    const updatedStaff = currentStaff.map((s) => {
+      if (staffIds.includes(s.id)) {
+        const sectionsAssigned = s.sectionsAssigned || []
+        if (!sectionsAssigned.includes(sectionId)) {
+          return {
+            ...s,
+            sectionsAssigned: [...sectionsAssigned, sectionId]
+          }
+        }
+      }
+      return s
+    })
+    return this.update(storeId, { staff: updatedStaff })
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

@@ -3,7 +3,6 @@ import MyStaffLabel from './MyStaffLabel'
 import ErrorBoundary from './ErrorBoundary'
 import { ScreenStaffE } from './ScreenStaff'
 import ScreenStaffNew from './ScreenStaffNew'
-import ScreenStaffDetails from './ScreenStaffDetails'
 import ScreenStaffEdit from './ScreenStaffEdit'
 
 const Stack = createStackNavigator()
@@ -34,7 +33,6 @@ function StackStaff() {
         }}
         component={ScreenStaffNew}
       />
-
 
       <Stack.Screen
         name="ScreenStaffEdit"

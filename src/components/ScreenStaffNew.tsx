@@ -25,14 +25,7 @@ import InputSearch from './Inputs/InputSearch'
 import { ServiceStores } from '../firebase/ServiceStore'
 
 const ScreenStaffNew = ({ route }) => {
-  const { store, staff = [] } = useStore()
   const { shop } = useShop()
-  const shopStaff = shop?.staff || []
-  const staffNotInSection = staff?.filter(
-    (s) =>
-      !s.sectionsAssigned?.length ||
-      !s.sectionsAssigned.includes(route?.params?.sectionId)
-  )
   const { goBack } = useNavigation()
   const [user, setUser] = React.useState<UserType>()
   const defaultValues: Partial<StaffType> = {
@@ -42,7 +35,7 @@ const ScreenStaffNew = ({ route }) => {
   }
   const sectionId = route?.params?.sectionId
 
-  if (!store) return <Loading />
+  if (!shop) return <Loading />
   if (sectionId) defaultValues.sectionsAssigned = [sectionId]
   return (
     <ScrollView style={{ width: '100%' }}>
@@ -69,18 +62,18 @@ const ScreenStaffNew = ({ route }) => {
 
                 ...values,
                 position: values.position || '',
-                storeId: store.id,
+                storeId: shop.id,
                 userId: user.id || ''
               }
               const [err, res] = await catchError(
                 ServiceStores.addStaff({
-                  storeId: store.id,
+                  storeId: shop.id,
                   staff: newStaff
                 })
               )
               console.log({ err, res })
               //*TODO:   Remove after migration staff is completely removed from store
-              ServiceStaff.addStaffToStore(store?.id, newStaff).then((res) => {
+              ServiceStaff.addStaffToStore(shop?.id, newStaff).then((res) => {
                 setUser(undefined)
                 goBack()
               })
@@ -88,40 +81,6 @@ const ScreenStaffNew = ({ route }) => {
           />
         )}
       </View>
-      {/* <View>
-        {staffNotInSection?.length > 0 && (
-          <>
-            {sectionId ? (
-              <Text style={gStyles.h3}>
-                O agrega a una persona que ya es Staff{' '}
-              </Text>
-            ) : (
-              <Text style={gStyles.h3}>Staff actual</Text>
-            )}
-            <ListStaff
-              showNewStaff={false}
-              staff={staffNotInSection}
-              onPressRow={(staffId) => {
-                ServiceSections.addStaff(sectionId, staffId).then(() => {
-                  goBack()
-                })
-              }}
-              handleAdd={
-                sectionId
-                  ? async (rowId) => {
-                      await ServiceSections.addStaff(sectionId, rowId)
-                        .then((res) => {
-                          goBack()
-                          console.log(res)
-                        })
-                        .catch((err) => console.log(err))
-                    }
-                  : undefined
-              }
-            />
-          </>
-        )}
-      </View> */}
     </ScrollView>
   )
 }
@@ -150,7 +109,6 @@ const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
     <View style={{ width: '100%', marginHorizontal: 'auto' }}>
       <Text>Buscar usuario</Text>
       <InputSearch
-        // value={text}
         onChange={(text) => {
           setText(text)
         }}
