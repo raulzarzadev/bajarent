@@ -10,11 +10,14 @@ import { useOrdersRedux } from '../hooks/useOrdersRedux'
 import HeaderDate from './HeaderDate'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { isToday } from 'date-fns'
+import catchError from '../libs/catchError'
+import Loading from './Loading'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
   const hasOrderList = !!route?.params?.orders
   const { employee, permissions } = useEmployee()
+  const [loading, setLoading] = useState(true)
 
   const {
     forceRefresh,
@@ -25,7 +28,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
     ids: route?.params?.orders
   })
 
-  const [dateOrders, setDateOrders] = useState([])
+  const [dateOrders, setDateOrders] = useState(null)
 
   const [preOrders, setPreOrders] = useState([])
 
@@ -40,10 +43,14 @@ function ScreenOrders({ route, navigation: { navigate } }) {
           console.error('Error fetching orders:', error)
           setDisabled(false)
         })
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }, [])
 
   const [disabled, setDisabled] = useState(false)
+
   const handleRefresh = () => {
     setDisabled(true)
     forceRefresh()
@@ -57,20 +64,30 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
   const { toMessages } = useMyNav()
 
-  const handleChangeDate = (date: Date) => {
-    if (!isToday(date)) {
-      return ServiceOrders.getOrderExpiresOnDate({
-        date,
-        storeId: store.id
-      }).then((orders) => {
-        setDateOrders(orders)
-      })
+  const handleChangeDate = async (date: Date) => {
+    if (isToday(date)) {
+      return setDateOrders(null)
     }
-    setDateOrders([])
+    setLoading(true)
+    const promiseExpires = ServiceOrders.getOrderExpiresOnDate({
+      date,
+      storeId: store.id
+    })
+    const promiseScheduled = ServiceOrders.getOrdersScheduledAt({
+      date,
+      storeId: store.id
+    })
+    const [err, res] = await catchError(
+      Promise.all([promiseExpires, promiseScheduled]).then(
+        ([expires, scheduled]) => [...expires, ...scheduled]
+      )
+    )
+    setLoading(false)
+    if (err) return console.error(err)
+    setDateOrders(res)
   }
 
-  const isOtherDateOrders = dateOrders?.length > 0
-
+  const isOtherDateOrders = !(dateOrders === null)
   return (
     <ScrollView>
       {canViewOtherDates && (
@@ -79,6 +96,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
 
       {isOtherDateOrders && (
         <ListOrders
+          loading={loading}
           orders={dateOrders}
           collectionSearch={{
             assignedSections: viewAllOrders ? 'all' : userSections,

@@ -20,7 +20,7 @@ const InputAssignSection = ({
     sectionName: string
   }) => Promise<void>
 }) => {
-  const { sections: storeSections } = useStore()
+  const { sections: storeSections = [] } = useStore()
   const [sectionId, setSectionId] = React.useState<string | null>(null)
 
   const assignedToSectionName =
@@ -33,7 +33,7 @@ const InputAssignSection = ({
     setSectionId(currentSection)
   }, [currentSection])
 
-  const storeSectionOptions = storeSections.map(({ id, name }) => {
+  const storeSectionOptions = storeSections?.map(({ id, name }) => {
     return {
       label: name,
       value: id

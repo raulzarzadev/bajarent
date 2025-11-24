@@ -29,7 +29,7 @@ const ModalCreateOrderItem = ({ itemId }: { itemId: ItemType['id'] }) => {
   const [progress, setProgress] = useState(0)
   const createModal = useModal({ title: 'Crear artículo' })
 
-  const orderItemInfo = order.items.find((i) => i.id === itemId)
+  const orderItemInfo = order?.items?.find((i) => i.id === itemId)
 
   const orderId = order?.id
   const isRent = order.type === order_type.RENT
@@ -159,7 +159,7 @@ export default ModalCreateOrderItem
 const formatNewItem = ({
   order,
   item,
-  storeSections,
+  storeSections = [],
   storeCategories
 }: {
   order: Partial<OrderType>

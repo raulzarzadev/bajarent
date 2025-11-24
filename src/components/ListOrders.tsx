@@ -17,6 +17,7 @@ export type ListOrderProps = {
   collectionSearch?: CollectionSearch
   onPressRow?: (id: string) => void
   rowSideButtons?: ListSideButton[]
+  loading?: boolean
 }
 const ListOrders = ({
   orders,
@@ -24,7 +25,8 @@ const ListOrders = ({
   sideButtons = [],
   collectionSearch,
   onPressRow,
-  rowSideButtons
+  rowSideButtons,
+  loading
 }: ListOrderProps) => {
   const { toOrders } = useMyNav()
   const { sections: storeSections } = useStore()
@@ -69,6 +71,7 @@ const ListOrders = ({
     <View style={{ paddingLeft: 2 }}>
       <ListE
         id="list-orders"
+        loading={loading}
         ComponentRow={({ item }) => <RowOrderE item={item} />}
         data={formatOrders}
         rowsPerPage={20}

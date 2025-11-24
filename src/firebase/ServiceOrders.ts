@@ -186,6 +186,21 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
       where('expireAt', '<=', end)
     ])
   }
+  async getOrdersScheduledAt({
+    date,
+    storeId
+  }: {
+    date: Date
+    storeId: string
+  }) {
+    const start = startOfDay(date)
+    const end = endOfDay(date)
+    return await this.findMany([
+      where('storeId', '==', storeId),
+      where('scheduledAt', '>=', start),
+      where('scheduledAt', '<=', end)
+    ])
+  }
 
   getUnsolved(storeId: string) {
     // ? this means that order is not solved because is in use

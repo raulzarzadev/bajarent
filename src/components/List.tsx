@@ -55,6 +55,7 @@ export type ListPops<T extends { id: string }> = {
   pinMaxRows?: number
   onRowsSelected?: (ids: string[]) => void
   hideSearchAndFilters?: boolean
+  loading?: boolean
 }
 
 function MyList<T extends { id: string }>({
@@ -78,6 +79,7 @@ function MyList<T extends { id: string }>({
   rowSideButtons,
   pinMaxRows,
   onRowsSelected,
+  loading,
   hideSearchAndFilters = false
 }: ListPops<T>) {
   const pinnedTableID = `table-${tableId}`
@@ -390,114 +392,118 @@ function MyList<T extends { id: string }>({
         )}
 
         {/* CONTENT  */}
-        <SectionList
-          renderSectionHeader={({ section }) => {
-            const otherSectionsAreEmpty =
-              pinnedRowsData?.length === 0 && collectionData?.length === 0
-            if (otherSectionsAreEmpty) return null //* avoid shows title if there are no other sections
-            return section.data.length ? (
-              <Text style={gStyles.helper}>{section?.title}</Text>
-            ) : null
-          }}
-          sections={[
-            {
-              title: 'Fijadas',
-              data: pinnedRowsData
-            },
-            { title: 'Otras coincidencias', data: collectionData },
-            {
-              title: 'Todas',
-              data: slicedData.filter(
-                (o) => !pinnedRowsData.some((p) => p.id === o.id)
-              )
-            }
-          ]}
-          keyExtractor={(item) => item?.id}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  flex: 1,
-                  alignItems: 'center'
-                }}
-              >
-                {multiSelect && (
-                  <InputCheckbox
-                    key={item?.id}
-                    setValue={() => {
-                      handleSelectRow(item?.id)
-                      _setPressedRow(item?.id)
-                    }}
-                    value={selectedRows.includes(item?.id)}
-                  />
-                )}
-                <Pressable
+        {loading ? (
+          <Loading />
+        ) : (
+          <SectionList
+            renderSectionHeader={({ section }) => {
+              const otherSectionsAreEmpty =
+                pinnedRowsData?.length === 0 && collectionData?.length === 0
+              if (otherSectionsAreEmpty) return null //* avoid shows title if there are no other sections
+              return section.data.length ? (
+                <Text style={gStyles.helper}>{section?.title}</Text>
+              ) : null
+            }}
+            sections={[
+              {
+                title: 'Fijadas',
+                data: pinnedRowsData
+              },
+              { title: 'Otras coincidencias', data: collectionData },
+              {
+                title: 'Todas',
+                data: slicedData.filter(
+                  (o) => !pinnedRowsData.some((p) => p.id === o.id)
+                )
+              }
+            ]}
+            keyExtractor={(item) => item?.id}
+            renderItem={({ item }) => {
+              return (
+                <View
                   style={{
-                    flex: 1,
+                    width: '100%',
                     flexDirection: 'row',
-                    backgroundColor:
-                      _pressedRow === item?.id ? '#00000020' : 'transparent'
-                  }}
-                  onPress={() => {
-                    _setPressedRow(item?.id)
-                    if (multiSelect) {
-                      handleSelectRow(item?.id)
-                    } else {
-                      onPressRow && onPressRow(item?.id)
-                    }
+                    flex: 1,
+                    alignItems: 'center'
                   }}
                 >
-                  <ComponentRow item={item} />
-                </Pressable>
-                {rowSideButtons?.map((button, index) => (
-                  <View
-                    key={index}
+                  {multiSelect && (
+                    <InputCheckbox
+                      key={item?.id}
+                      setValue={() => {
+                        handleSelectRow(item?.id)
+                        _setPressedRow(item?.id)
+                      }}
+                      value={selectedRows.includes(item?.id)}
+                    />
+                  )}
+                  <Pressable
                     style={{
-                      marginHorizontal: 2,
-                      justifyContent: 'center',
-                      alignItems: 'center'
+                      flex: 1,
+                      flexDirection: 'row',
+                      backgroundColor:
+                        _pressedRow === item?.id ? '#00000020' : 'transparent'
+                    }}
+                    onPress={() => {
+                      _setPressedRow(item?.id)
+                      if (multiSelect) {
+                        handleSelectRow(item?.id)
+                      } else {
+                        onPressRow && onPressRow(item?.id)
+                      }
                     }}
                   >
-                    <Button
-                      icon={button?.icon}
-                      justIcon={!!button?.icon}
-                      color={button?.color}
-                      // label={button.label}
-                      onPress={() => button?.onPress(item?.id)}
-                      size="xs"
-                      disabled={button?.disabled}
-                    ></Button>
-                  </View>
-                ))}
+                    <ComponentRow item={item} />
+                  </Pressable>
+                  {rowSideButtons?.map((button, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        marginHorizontal: 2,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Button
+                        icon={button?.icon}
+                        justIcon={!!button?.icon}
+                        color={button?.color}
+                        // label={button.label}
+                        onPress={() => button?.onPress(item?.id)}
+                        size="xs"
+                        disabled={button?.disabled}
+                      ></Button>
+                    </View>
+                  ))}
 
-                {pinRows && (
-                  <>
-                    {/* ***************** ******* ***** PIN BUTTON  */}
-                    {!pinnedRows.includes(item?.id) ? (
-                      <PinButton
-                        disabled={pinnedRows.length >= pinMaxRows}
-                        handlePin={() => {
-                          handlePinRow(item?.id)
-                        }}
-                      />
-                    ) : (
-                      <PinButton
-                        handlePin={() => {
-                          handleUnpinRow(item?.id)
-                        }}
-                        unpin={true}
-                      />
-                    )}
+                  {pinRows && (
+                    <>
+                      {/* ***************** ******* ***** PIN BUTTON  */}
+                      {!pinnedRows.includes(item?.id) ? (
+                        <PinButton
+                          disabled={pinnedRows.length >= pinMaxRows}
+                          handlePin={() => {
+                            handlePinRow(item?.id)
+                          }}
+                        />
+                      ) : (
+                        <PinButton
+                          handlePin={() => {
+                            handleUnpinRow(item?.id)
+                          }}
+                          unpin={true}
+                        />
+                      )}
 
-                    {/* ***************** ******* ***** PIN BUTTON  */}
-                  </>
-                )}
-              </View>
-            )
-          }}
-        ></SectionList>
+                      {/* ***************** ******* ***** PIN BUTTON  */}
+                    </>
+                  )}
+                </View>
+              )
+            }}
+          ></SectionList>
+        )}
         {/* SEE MORE   */}
         <View>
           {onFetchMore && (
