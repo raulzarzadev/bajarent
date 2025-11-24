@@ -58,7 +58,7 @@ const ScreenStoreDetails = ({ navigation }) => {
         )}
         {store && (
           <>
-            <StoreDetails store={store} />
+            <StoreDetails />
           </>
         )}
       </View>
