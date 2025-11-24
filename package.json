@@ -16,8 +16,8 @@
     "fast-push:patch": "npm version patch && npm run merge:main && npm run push:main",
     "cy:open": "cypress open --e2e --browser chrome",
     "cy:run": "cypress run --e2e --browser chrome",
-    "push:patch": "npm version patch --follow-tags && git push",
-    "push:minor": "npm version minor --follow-tags && git push",
+    "push:patch": "npm run fast-test && npm version patch --follow-tags && git push",
+    "push:minor": "npm run fast-test && npm version minor --follow-tags && git push",
     "commit": "git status && bun type-check  && bun cy:run && git add . &&  git commit"
   },
   "dependencies": {

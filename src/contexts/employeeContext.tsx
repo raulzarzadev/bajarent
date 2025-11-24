@@ -10,7 +10,6 @@ import { useStore } from './storeContext'
 import ItemType from '../types/ItemType'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import { formatItems } from '../libs/workshop.libs'
-import { ServiceStaff } from '../firebase/ServiceStaff'
 import { useShop } from '../hooks/useShop'
 
 export type EmployeeContextType = {
