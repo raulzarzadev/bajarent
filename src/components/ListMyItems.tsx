@@ -117,7 +117,7 @@ const groupSectionItems = (
   items.forEach((item: any) => {
     const assignedSection = item?.assignedSection || 'unassigned'
     const sectionName =
-      storeSections.find((section) => section.id === assignedSection)?.name ||
+      storeSections?.find((section) => section.id === assignedSection)?.name ||
       'unassigned'
     if (!groupedItems[sectionName]) {
       groupedItems[sectionName] = []
