@@ -215,7 +215,7 @@ function ModalFilterList<T>({
         }}
       >
         <InputSearch
-          style={{ width: '100%' }}
+          style={{ flex: 1 }}
           placeholder="Buscar..."
           value={searchValue}
           onChange={(e) => {

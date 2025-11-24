@@ -97,7 +97,7 @@ const InputSearch = <T extends { id: string | number }>({
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.inputContainer}>
         <InputTextStyled
           ref={inputRef}
@@ -146,13 +146,13 @@ const InputSearch = <T extends { id: string | number }>({
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    zIndex: 1000,
-    width: '100%'
+    zIndex: 1000
   },
   inputContainer: {
     position: 'relative',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%'
   },
   iconContainer: {
     position: 'absolute',
