@@ -1,26 +1,34 @@
 import { View } from 'react-native'
-import { useStore } from '../contexts/storeContext'
 import Button from './Button'
-import { setItem } from '../libs/storage'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
-import { PERSISTENCE_KEY } from '../utils/navigationPersistence'
+import { useEffect, useState } from 'react'
+import { useShop } from '../hooks/useShop'
 
 const MyStaffLabel = () => {
-  const { store } = useStore()
+  const { shop } = useShop()
   const { disabledEmployee, permissions } = useEmployee()
   const { isAdmin, isOwner, orders } = permissions
-  const canCreateNewOrders = orders?.canCreate || isAdmin
+  const [disabledReload, setDisabledReload] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDisabledReload(false)
+    }, 4000)
+  }, [])
+
   const { toOrders } = useMyNav()
   const handleClearHistory = () => {
-    setItem(PERSISTENCE_KEY, '')
     window.location.reload()
   }
+
+  const showCreateOrder = !!shop && (orders?.canCreate || isAdmin)
 
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Button
+          disabled={disabledReload}
           icon="refresh"
           onPress={() => {
             handleClearHistory()
@@ -30,7 +38,7 @@ const MyStaffLabel = () => {
           buttonStyles={{ marginRight: 12 }}
         ></Button>
 
-        {store && canCreateNewOrders && (
+        {showCreateOrder && (
           <Button
             //* disabled for disabledEmployees and not admin or owner
             disabled={disabledEmployee && !(isAdmin || isOwner)}
