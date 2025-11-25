@@ -29,10 +29,12 @@ export type ButtonProps = {
   progress?: number
   uppercase?: boolean
   autoFocus?: boolean
+  onLongPress?: () => void
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
   onPress,
+  onLongPress,
   label,
   disabled = false,
   children,
@@ -95,6 +97,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   return (
     <Pressable
       {...props}
+      onLongPress={onLongPress}
       role="button"
       style={({ pressed }) => [
         !fullWidth && { flex: 1, alignSelf: 'flex-start' },

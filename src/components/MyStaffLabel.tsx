@@ -20,11 +20,6 @@ const MyStaffLabel = () => {
   }, [])
 
   const { toOrders } = useMyNav()
-  const handleClearHistory = () => {
-    setDisabledReload(true)
-    //clearNavigationState()
-    window.location.reload()
-  }
 
   const showCreateOrder = !!shop && (orders?.canCreate || isAdmin)
 
@@ -39,7 +34,13 @@ const MyStaffLabel = () => {
               disabled={disabledReload}
               icon="refresh"
               onPress={() => {
-                handleClearHistory()
+                setDisabledReload(true)
+                window.location.reload()
+              }}
+              onLongPress={() => {
+                setDisabledReload(true)
+                clearNavigationState()
+                window.location.reload()
               }}
               justIcon
               variant="outline"
