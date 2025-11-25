@@ -6,6 +6,8 @@ import Icon, { IconName } from './Icon'
 import { useNavigation } from '@react-navigation/native'
 import StoreType from '../types/StoreType'
 import { useAuth } from '../contexts/authContext'
+import Button from './Button'
+import { reloadApp } from '../libs/reloadApp'
 
 const ChooseProfile = () => {
   const { navigate } = useNavigation()
@@ -13,7 +15,8 @@ const ChooseProfile = () => {
     stores: userStores = [],
     storeId: storeSelected,
     user,
-    handleSetStoreId
+    handleSetStoreId,
+    clearStoreSelection
   } = useAuth()
   const sortUserStore = (userStores, storeSelected) => {
     let res = []
@@ -36,27 +39,30 @@ const ChooseProfile = () => {
   useEffect(() => {
     const sortedUserStores = sortUserStore(userStores, storeSelected)
     setUserStoresSorted(sortedUserStores)
-  }, [userStores])
+  }, [userStores, storeSelected])
 
   const [stores, setStores] = useState(userStoresSorted)
 
   const [storeSelectedId, setStoreSelectedId] = useState<string>()
-  const handleSelectStore = (id) => {
+  const handleSelectStore = async (id) => {
     if (id === 'createStore') {
       // @ts-ignore
       navigate('CreateStore')
       return
     }
-    window?.location?.reload()
+    if (storeSelected === id) {
+      return
+    }
     setStoreSelectedId(id) //* <-- component state
-    handleSetStoreId(id) //* <-- context state
+    await handleSetStoreId(id) //* <-- context state
+    await reloadApp()
   }
   useEffect(() => {
     setStoreSelectedId(storeSelected)
   }, [storeSelected])
 
   useEffect(() => {
-    const showStores = userStoresSorted
+    const showStores = [...userStoresSorted]
     if (user.canCreateStore) {
       showStores.push({ id: 'createStore', name: 'Crear tienda' })
     }
@@ -96,6 +102,15 @@ const ChooseProfile = () => {
           />
         )}
       />
+      {!!storeSelected && (
+        <View style={{ marginTop: 12 }}>
+          <Button
+            variant="ghost"
+            label="Cambiar de tienda"
+            onPress={() => clearStoreSelection?.()}
+          />
+        </View>
+      )}
     </View>
   )
 }

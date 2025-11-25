@@ -22,6 +22,7 @@ export type StoreContextType = {
   staff?: StaffType[]
   categories?: Partial<CategoryType>[]
   handleUpdateStore?: () => void //! TODO: this is so bad, shuold be removed or refactored
+  isStoreReady?: boolean
   //! *<----- Thing this can be avoid if we use the redux
 }
 
@@ -33,6 +34,13 @@ const StoreContextProvider = ({ children }) => {
   const { storeId, isAuthenticated, user } = useAuth()
   const [storeCtx, setStoreCtx] = useState<StoreContextType>()
   const [store, setStore] = useState<StoreType>()
+  useEffect(() => {
+    if (!storeId || !isAuthenticated) {
+      setStore(undefined)
+      setStoreCtx(undefined)
+      setCurrentBalance(undefined)
+    }
+  }, [storeId, isAuthenticated])
   const handleUpdateStore = async () => {
     getStoreData(storeId)
       .then(({ categories, sections = [], staff, prices }) => {
@@ -75,15 +83,17 @@ const StoreContextProvider = ({ children }) => {
   sc++
   if (__DEV__) console.log({ sc })
   //#region render
+  const storeReady = Boolean(storeId && store && storeCtx)
   const value = useMemo(() => {
     return {
       ...storeCtx,
       store,
       storeId,
       currentBalance,
-      handleUpdateStore
+      handleUpdateStore,
+      isStoreReady: storeReady
     }
-  }, [storeCtx, store, storeId, currentBalance])
+  }, [storeCtx, store, storeId, currentBalance, storeReady])
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
 

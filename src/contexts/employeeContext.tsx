@@ -25,6 +25,7 @@ export type EmployeeContextType = {
   employee: Partial<StaffType> | null
 
   disabledEmployee?: boolean
+  isEmployeeReady?: boolean
   permissions: {
     canCancelPickedUp?: boolean
     isAdmin: boolean
@@ -83,6 +84,12 @@ export const EmployeeContextProvider = ({ children }) => {
     isAdmin || isOwner || !!employee?.permissions?.items?.canViewAllItems
   const canViewAllOrders =
     isAdmin || isOwner || !!employee?.permissions?.order?.canViewAll
+
+  useEffect(() => {
+    if (!storeId) {
+      setItems([])
+    }
+  }, [storeId])
 
   useEffect(() => {
     const storeIdentifier = shop?.id
@@ -151,9 +158,21 @@ export const EmployeeContextProvider = ({ children }) => {
       })
     }
     return () => unsubscribe && unsubscribe()
-  }, [employee?.disabled, canViewAllItems, assignedSections, disabledEmployee])
+  }, [
+    employee?.disabled,
+    canViewAllItems,
+    assignedSections,
+    disabledEmployee,
+    storeId,
+    categories,
+    storeSections
+  ])
 
   const storePermissions = employee?.permissions?.store || {}
+
+  const employeeReady = Boolean(
+    storeId && shop !== undefined && (isOwner || employee)
+  )
 
   const value = useMemo(
     () => ({
@@ -162,6 +181,7 @@ export const EmployeeContextProvider = ({ children }) => {
         ? { ...employee, sectionsAssigned: assignedSections }
         : undefined,
       disabledEmployee,
+      isEmployeeReady: employeeReady,
 
       permissions: {
         isAdmin: !!isAdmin || isOwner, //* <--- Owner now is an admin always
@@ -204,7 +224,10 @@ export const EmployeeContextProvider = ({ children }) => {
       shop?.id,
       assignedSections,
       items,
-      disabledEmployee
+      disabledEmployee,
+      employeeReady,
+      canViewAllItems,
+      canViewAllOrders
     ]
   )
 

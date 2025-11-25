@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native'
-import { BottomAppBarE } from './src/components/BottomAppBar'
+import AppBootstrap from './src/components/AppBootstrap'
 import { AuthContextProvider, useAuth } from './src/contexts/authContext'
 import { StoreContextProvider } from './src/contexts/storeContext'
 import { useEffect, useState } from 'react'
@@ -57,7 +57,7 @@ export default function App() {
                   <ItemsProvider>
                     <ReduxInitializer>
                       <ThemeProvider>
-                        <BottomAppBarE />
+                        <AppBootstrap />
                       </ThemeProvider>
                     </ReduxInitializer>
                   </ItemsProvider>

@@ -37,8 +37,8 @@ export const createUserFromGoogleProvider = async (newItem: any) => {
   return await usersCRUD.setItem(uid, userFormatted)
 }
 
-export async function authStateChanged(cb: CallableFunction) {
-  onAuthStateChanged(auth, async (user) => {
+export function authStateChanged(cb: CallableFunction) {
+  return onAuthStateChanged(auth, async (user) => {
     if (user?.uid) {
       const dbUser = await ServiceUsers.get(user.uid)
       if (dbUser) return cb(dbUser)

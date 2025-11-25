@@ -21,15 +21,16 @@ export const ReduxInitializer = ({ children }) => {
   const { setAuth, handleSetStoreId, handleSetUserStores } = useAuth()
 
   useEffect(() => {
-    authStateChanged((user) => {
+    const unsubscribe = authStateChanged((user) => {
       setAuth({ isAuthenticated: !!user, user })
-      if (user) {
-        handleSetUserStores(user.id)
-      }
+      handleSetUserStores(user?.id)
     })
     getItem('storeId').then((res) => {
-      handleSetStoreId(res)
+      if (res) {
+        handleSetStoreId(res)
+      }
     })
+    return () => unsubscribe && unsubscribe()
   }, [])
 
   // * ========================================

@@ -22,7 +22,7 @@ const MyStaffLabel = () => {
   const { toOrders } = useMyNav()
   const handleClearHistory = () => {
     setDisabledReload(true)
-    clearNavigationState()
+    //clearNavigationState()
     window.location.reload()
   }
 
