@@ -8,28 +8,28 @@ import { PERSISTENCE_KEY } from '../utils/navigationPersistence'
 
 const MyStaffLabel = () => {
   const { store } = useStore()
-  const { disabledEmployee, permissions, employee } = useEmployee()
+  const { disabledEmployee, permissions } = useEmployee()
   const { isAdmin, isOwner, orders } = permissions
   const canCreateNewOrders = orders?.canCreate || isAdmin
   const { toOrders } = useMyNav()
   const handleClearHistory = () => {
     setItem(PERSISTENCE_KEY, '')
+    window.location.reload()
   }
 
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {__DEV__ && (
-          <Button
-            icon="broom"
-            onPress={() => {
-              handleClearHistory()
-            }}
-            justIcon
-            variant="outline"
-            buttonStyles={{ marginRight: 12 }}
-          ></Button>
-        )}
+        <Button
+          icon="refresh"
+          onPress={() => {
+            handleClearHistory()
+          }}
+          justIcon
+          variant="outline"
+          buttonStyles={{ marginRight: 12 }}
+        ></Button>
+
         {store && canCreateNewOrders && (
           <Button
             //* disabled for disabledEmployees and not admin or owner

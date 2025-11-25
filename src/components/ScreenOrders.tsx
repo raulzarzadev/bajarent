@@ -112,15 +112,15 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             ]
           }}
           sideButtons={[
-            {
-              icon: 'refresh',
-              label: '',
-              onPress: () => {
-                handleRefresh()
-              },
-              visible: true,
-              disabled: disabled
-            },
+            // {
+            //   icon: 'refresh',
+            //   label: '',
+            //   onPress: () => {
+            //     handleRefresh()
+            //   },
+            //   visible: true,
+            //   disabled: disabled
+            // },
             {
               icon: 'comment',
               label: '',
@@ -162,15 +162,15 @@ function ScreenOrders({ route, navigation: { navigate } }) {
             ]
           }}
           sideButtons={[
-            {
-              icon: 'refresh',
-              label: '',
-              onPress: () => {
-                handleRefresh()
-              },
-              visible: true,
-              disabled: disabled
-            },
+            // {
+            //   icon: 'refresh',
+            //   label: '',
+            //   onPress: () => {
+            //     handleRefresh()
+            //   },
+            //   visible: true,
+            //   disabled: disabled
+            // },
             {
               icon: 'comment',
               label: '',
