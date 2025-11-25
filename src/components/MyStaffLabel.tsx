@@ -4,6 +4,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { useEffect, useState } from 'react'
 import { useShop } from '../hooks/useShop'
+import { clearNavigationState } from '../utils/navigationPersistence'
 
 const MyStaffLabel = () => {
   const { shop } = useShop()
@@ -19,6 +20,7 @@ const MyStaffLabel = () => {
 
   const { toOrders } = useMyNav()
   const handleClearHistory = () => {
+    clearNavigationState()
     window.location.reload()
   }
 
