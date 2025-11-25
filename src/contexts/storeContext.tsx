@@ -35,7 +35,7 @@ const StoreContextProvider = ({ children }) => {
   const [store, setStore] = useState<StoreType>()
   const handleUpdateStore = async () => {
     getStoreData(storeId)
-      .then(({ categories, sections, staff, prices }) => {
+      .then(({ categories, sections = [], staff, prices }) => {
         setStoreCtx({
           categories,
           sections,
@@ -49,8 +49,6 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     if (storeId && isAuthenticated) {
       const unsubscribe = ServiceStores.listen(storeId, (store) => {
-        // console.log({ storeStaff: store.staff, contestStaff: storeCtx?.staff })
-        // store.staff = storeCtx?.staff
         setStore(store)
       })
       return () => unsubscribe && unsubscribe()
