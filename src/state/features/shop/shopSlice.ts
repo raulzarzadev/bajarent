@@ -10,7 +10,7 @@ interface ShopState {
 }
 
 const initialState: ShopState = {
-  shop: null
+  shop: undefined
 }
 
 export const shopSlice = createSlice({
