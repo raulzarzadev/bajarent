@@ -47,7 +47,6 @@ const BottomAppBar = () => {
               Components: 'components',
               MyOrders: 'myOrders',
               StackOrders: 'orders',
-              StackConsolidated: 'orders',
               StackMyItems: 'washMachine',
               Workshop: 'tools',
               StackCustomers: 'customerCard'

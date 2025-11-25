@@ -6,7 +6,6 @@ import ScreenAssignOrder from './ScreenAssignOrder'
 import ScreenOrderRenew from './ScreenOrderRenew2'
 import MyStaffLabel from './MyStaffLabel'
 import ScreenOrderReorder from './ScreenOrderReorder'
-import ScreenOrdersConsolidated from './ScreenOrdersConsolidated'
 import { StackPaymentsE } from './StackPayments'
 import StackItems from './StackItems'
 import { ScreenMessagesE } from './ScreenMessages'
@@ -93,13 +92,6 @@ function StackOrders() {
       {/* 
 //* Consolidated orders
 */}
-      <Stack.Screen
-        name="ScreenOrdersConsolidated"
-        options={{
-          title: 'Ordenes consolidadas'
-        }}
-        component={ScreenOrdersConsolidated}
-      />
 
       {/* ------ NESTED STACKS  */}
       <Stack.Screen

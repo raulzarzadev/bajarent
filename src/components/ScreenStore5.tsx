@@ -68,55 +68,63 @@ const ScreenStore = (props) => {
           tabId="screen-store"
           tabs={[
             {
-              title: 'ℹ️Información',
+              title: 'Información',
               content: <StoreDetailsE {...props} />,
-              show: true
-              // icon: 'info'
+              show: true,
+              icon: 'info'
             },
             {
-              title: '🧰Artículos',
+              title: 'Artículos',
               content: <CheckedTabItems />,
-              show: canManageItems
+              show: canManageItems,
+              icon: 'camera'
             },
 
             {
-              title: '⚖️Balance',
+              title: 'Balance',
               content: <CheckedStoreBalance />,
-              show: canViewCashbox
+              show: canViewCashbox,
+              icon: 'balance'
               // icon: 'balance'
             },
 
             {
-              title: '👷‍♂️Staff',
+              title: 'Staff',
               content: <CheckedTabStaff {...props} />,
-              show: canViewSections
+              show: canViewSections,
+              icon: 'profile'
               //icon: 'profile'
             },
             {
-              title: '🧑‍🧑‍🧒‍🧒Areas',
+              title: 'Areas',
               content: <CheckedTabSections />,
-              show: canViewSections
+              show: canViewSections,
+              icon: 'list'
               // icon: 'windows'
             },
             {
-              title: '👤Clientes',
+              title: 'Clientes',
               content: <CheckedTabClients />,
-              show: false
+              show: false,
+              icon: 'customerCard'
             },
             {
-              title: '📋Historal',
+              title: ' Historal',
               content: <CheckedTabMovements />,
-              show: canViewMovements
+              show: canViewMovements,
+              icon: 'history'
             },
             {
-              title: '🤖Chatbot',
+              title: 'Chatbot',
               content: <ScreenChatbotE />,
-              show: isAdmin
+              show: isAdmin,
+              icon: 'chatbot'
             },
             {
-              title: '⚙️Ordenes',
+              title: 'Configuración',
               content: <CheckedTabOrders />,
-              show: canViewOrders
+              show: canViewOrders,
+              icon: 'settings'
             }
           ]}
         />
@@ -245,17 +253,6 @@ const TabOrders = () => {
           flexWrap: 'wrap'
         }}
       >
-        <Button
-          label="Consolidadas"
-          onPress={() => {
-            //@ts-ignore
-            navigate('StackOrders', {
-              screen: 'ScreenOrdersConsolidated',
-              params: {}
-            })
-          }}
-          variant="ghost"
-        />
         {isAdmin || isOwner ? (
           <>
             <Button

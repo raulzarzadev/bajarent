@@ -95,6 +95,7 @@ import { BsClipboardPlus } from 'react-icons/bs'
 import { LuFolderCheck } from 'react-icons/lu'
 import { LuWarehouse } from 'react-icons/lu'
 import { FaRegFilePdf } from 'react-icons/fa6'
+import { LuBot } from 'react-icons/lu'
 
 // https://react-icons.github.io/react-icons/
 const icons = {
@@ -225,7 +226,8 @@ const icons = {
   tools: LiaToolsSolid,
   comment: BiCommentDots,
   warehouse: LuWarehouse,
-  none: null
+  none: null,
+  chatbot: LuBot
 } as const
 
 export type IconName = keyof typeof icons
