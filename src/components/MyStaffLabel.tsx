@@ -5,6 +5,7 @@ import useMyNav from '../hooks/useMyNav'
 import { useEffect, useState } from 'react'
 import { useShop } from '../hooks/useShop'
 import { clearNavigationState } from '../utils/navigationPersistence'
+import Loading from './Loading'
 
 const MyStaffLabel = () => {
   const { shop } = useShop()
@@ -20,6 +21,7 @@ const MyStaffLabel = () => {
 
   const { toOrders } = useMyNav()
   const handleClearHistory = () => {
+    setDisabledReload(true)
     clearNavigationState()
     window.location.reload()
   }
@@ -29,16 +31,21 @@ const MyStaffLabel = () => {
   return (
     <View>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Button
-          disabled={disabledReload}
-          icon="refresh"
-          onPress={() => {
-            handleClearHistory()
-          }}
-          justIcon
-          variant="outline"
-          buttonStyles={{ marginRight: 12 }}
-        ></Button>
+        <View style={{ marginRight: 12 }}>
+          {disabledReload ? (
+            <Loading id="page-reloading" />
+          ) : (
+            <Button
+              disabled={disabledReload}
+              icon="refresh"
+              onPress={() => {
+                handleClearHistory()
+              }}
+              justIcon
+              variant="outline"
+            ></Button>
+          )}
+        </View>
 
         {showCreateOrder && (
           <Button
