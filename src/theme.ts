@@ -14,6 +14,7 @@ export type Theme = {
   black: string
   placeholder?: string
   transparent: string
+  infoLight?: string
 }
 
 export const colors = {
@@ -51,6 +52,7 @@ const theme: Theme = {
   neutral: colors.gray,
   base: colors.lightGray,
   info: colors.lightBlue,
+  infoLight: `${colors.lightBlue}33`,
   success: colors.green,
   warning: colors.yellow,
   error: colors.red,

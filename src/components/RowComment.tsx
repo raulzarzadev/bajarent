@@ -66,6 +66,8 @@ export const CommentRow = ({
 
   if (!comment) return null
 
+  const itsLargerThanDefault = comment?.content.length > 40
+
   return (
     <View
       style={{
@@ -75,35 +77,44 @@ export const CommentRow = ({
         //marginBottom:
       }}
     >
-      <>
+      <View
+        style={{
+          backgroundColor: theme.infoLight,
+          padding: 4,
+          borderRadius: 8
+        }}
+      >
         {/* *************** COMMENT CONTENT  ************** */}
-        <Text
-          style={[
-            {
-              width: '100%',
-              textAlign: 'left'
-            }
-          ]}
-          numberOfLines={numberOfLines}
-        >
-          {comment?.content}{' '}
-        </Text>
-        {comment?.content.length > 40 && numberOfLines === LINES_DEFAULT && (
-          <Pressable onPress={() => setNumberOfLines(99)}>
-            <Text style={[{ color: theme.primary, fontWeight: 'bold' }]}>
-              ver
-            </Text>
-          </Pressable>
-        )}
-      </>
+        <View>
+          <View>
+            <Text style={[gStyles.tBold]}>{commentCreatedBy}</Text>{' '}
+          </View>
+          <View>
+            <Text numberOfLines={numberOfLines}>{comment?.content} </Text>
+          </View>
+        </View>
+        <View style={{ alignItems: 'flex-end' }}>
+          {itsLargerThanDefault && numberOfLines === LINES_DEFAULT && (
+            <Pressable onPress={() => setNumberOfLines(99)}>
+              <Text style={[{ color: theme.primary }]}>ver mas</Text>
+            </Pressable>
+          )}
+          {itsLargerThanDefault && numberOfLines !== LINES_DEFAULT && (
+            <Pressable onPress={() => setNumberOfLines(LINES_DEFAULT)}>
+              <Text style={[{ color: theme.primary }]}>ocultar</Text>
+            </Pressable>
+          )}
+        </View>
+      </View>
 
       {/* *************** COMMENT metadata  ************** */}
-      <View style={{ justifyContent: 'space-between' }}>
+      <View style={{ justifyContent: 'flex-end', marginBottom: 8 }}>
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'flex-start',
-            flexWrap: 'wrap'
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-end'
           }}
         >
           {comment.type === 'report' && (
@@ -131,9 +142,7 @@ export const CommentRow = ({
               }}
             />
           )}
-          <Text style={[{ marginRight: 4 }, gStyles.helper, gStyles.tBold]}>
-            {commentCreatedBy}
-          </Text>
+
           <View style={{ marginRight: 4 }}>
             <Text style={[gStyles.helper]}>
               <Text style={[gStyles.helper, { marginRight: 4 }]}>
