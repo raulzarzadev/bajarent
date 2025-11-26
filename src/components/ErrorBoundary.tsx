@@ -47,14 +47,30 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   logErrorToMyService = async () => {
-    const { error } = this.state
+    const { error, info } = this.state
     const { componentName } = this.props
     const userAgent = Platform.OS + ' ' + window?.navigator?.userAgent
+    const message =
+      (error && error.message) ||
+      (typeof error === 'string' ? error : '') ||
+      'Unknown error'
+
+    const stack =
+      (error && error.stack) ||
+      (typeof error === 'object' ? JSON.stringify(error, null, 2) : '')
+
+    const infoString =
+      info && typeof info === 'object'
+        ? JSON.stringify(info, null, 2)
+        : String(info || '')
+
     const newError = {
       code: 'ERROR_BOUNDARY',
-      message: error.message || '',
+      message,
       componentName: componentName || '',
-      userAgent
+      userAgent,
+      stack,
+      info: infoString
     }
     console.log('error sent', { newError })
     await ServiceAppErrors.create({
