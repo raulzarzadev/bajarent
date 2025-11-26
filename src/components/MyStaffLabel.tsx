@@ -35,6 +35,7 @@ const MyStaffLabel = () => {
               icon="refresh"
               onPress={() => {
                 setDisabledReload(true)
+                clearNavigationState()
                 window.location.reload()
               }}
               onLongPress={() => {
