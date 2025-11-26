@@ -1,4 +1,3 @@
-import React from 'react'
 import { BottomAppBarE } from './BottomAppBar'
 import StartupLoader from './StartupLoader'
 import StoreSelection from './StoreSelection'
@@ -7,7 +6,7 @@ import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
 
 const AppBootstrap = () => {
-  const { user, isAuthReady, storeId } = useAuth()
+  const { user, isAuthReady, storeId, clearStoreSelection } = useAuth()
   const { isStoreReady } = useStore()
   const { isEmployeeReady } = useEmployee()
 
@@ -42,6 +41,10 @@ const AppBootstrap = () => {
       <StartupLoader
         title="Aplicando permisos"
         description="Determinando roles y accesos para esta sesión..."
+        handleTimeout={() => {
+          console.warn('Employee loading timeout exceeded')
+          clearStoreSelection()
+        }}
       />
     )
   }

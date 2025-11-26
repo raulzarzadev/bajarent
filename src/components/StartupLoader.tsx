@@ -1,14 +1,29 @@
 import { ActivityIndicator, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { gStyles } from '../styles'
 import theme from '../theme'
+import Button from './Button'
 
 export type StartupLoaderProps = {
   title: string
   description?: string
+  handleTimeout?: () => void
 }
 
-const StartupLoader = ({ title, description }: StartupLoaderProps) => {
+const StartupLoader = ({
+  title,
+  description,
+  handleTimeout
+}: StartupLoaderProps) => {
+  const [hasTimedOut, setHasTimedOut] = React.useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHasTimedOut(true)
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <View
       style={{
@@ -27,6 +42,29 @@ const StartupLoader = ({ title, description }: StartupLoaderProps) => {
         <Text style={[gStyles.helper, { textAlign: 'center', marginTop: 4 }]}>
           {description}
         </Text>
+      )}
+      {hasTimedOut && (
+        <View>
+          <Text
+            style={[
+              gStyles.helper,
+              {
+                textAlign: 'center',
+                marginTop: 12,
+                color: theme.error,
+                marginBottom: 12
+              }
+            ]}
+          >
+            Ha tardado más de lo esperado. Por favor, verifica tu conexión a
+            internet.
+          </Text>
+          <Button
+            onPress={handleTimeout}
+            variant="ghost"
+            label="Cancelar"
+          ></Button>
+        </View>
       )}
     </View>
   )
