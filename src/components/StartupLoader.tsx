@@ -43,7 +43,7 @@ const StartupLoader = ({
           {description}
         </Text>
       )}
-      {hasTimedOut && (
+      {hasTimedOut && handleTimeout && (
         <View>
           <Text
             style={[
