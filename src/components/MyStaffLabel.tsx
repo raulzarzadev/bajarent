@@ -40,7 +40,9 @@ const MyStaffLabel = () => {
               }}
               onLongPress={() => {
                 setDisabledReload(true)
+                console.log('on long pressed')
                 clearNavigationState()
+
                 window.location.reload()
               }}
               justIcon
