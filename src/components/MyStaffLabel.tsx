@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { View, Modal, Pressable, Text, StyleSheet } from 'react-native'
 import Button from './Button'
 import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { useShop } from '../hooks/useShop'
 import { clearNavigationState } from '../utils/navigationPersistence'
 import Loading from './Loading'
+import StyledModal from './StyledModal'
+import useModal from '../hooks/useModal'
 
 const MyStaffLabel = () => {
   const { shop } = useShop()
@@ -23,8 +25,42 @@ const MyStaffLabel = () => {
 
   const showCreateOrder = !!shop && (orders?.canCreate || isAdmin)
 
+  const handleReload = () => {
+    setDisabledReload(true)
+    window.location.reload()
+  }
+
+  const handleClearHistory = () => {
+    setDisabledReload(true)
+    clearNavigationState()
+    // Opcional: también recargar después de limpiar
+    setTimeout(() => {
+      window.location.reload()
+    }, 100)
+  }
+  const modal = useModal({ title: 'Menú de recarga' })
+
   return (
     <View>
+      <StyledModal {...modal}>
+        <View
+          style={{
+            marginVertical: 12,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginHorizontal: 'auto'
+          }}
+        >
+          <Button
+            disabled={disabledReload}
+            size="small"
+            label="Recargar y borrar navegación"
+            icon="refresh"
+            onPress={handleClearHistory}
+          ></Button>
+        </View>
+      </StyledModal>
+
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View style={{ marginRight: 12 }}>
           {disabledReload ? (
@@ -33,18 +69,8 @@ const MyStaffLabel = () => {
             <Button
               disabled={disabledReload}
               icon="refresh"
-              onPress={() => {
-                setDisabledReload(true)
-                clearNavigationState()
-                window.location.reload()
-              }}
-              onLongPress={() => {
-                setDisabledReload(true)
-                console.log('on long pressed')
-                clearNavigationState()
-
-                window.location.reload()
-              }}
+              onPress={handleReload}
+              onLongPress={() => modal.toggleOpen()}
               justIcon
               variant="outline"
             ></Button>
