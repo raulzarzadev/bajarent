@@ -7,13 +7,11 @@ import dictionary from '../dictionary'
 import Button from './Button'
 import FormikInputValue from './FormikInputValue'
 import FormikInputImage from './FormikInputImage'
-import { gStyles } from '../styles'
 import FormikErrorsList from './FormikErrorsList'
 import { useEmployee } from '../contexts/employeeContext'
 import FormikInputSelect from './FormikInputSelect'
 import { useStore } from '../contexts/storeContext'
 import FormikInputDate from './FormikInputDate'
-import { dateFormat } from '../libs/utils-date'
 
 const FormPayment = ({
   onSubmit,
@@ -41,8 +39,9 @@ const FormPayment = ({
     value: method
   }))
   const references = store?.bankAccounts?.map((account) => {
-    const ref = `${account.label} ${account.value.substring(
-      account.value.length - 4
+    const accountValue = account.value || ''
+    const ref = `${account?.label} ${accountValue.substring(
+      accountValue.length - 4
     )}`
     return {
       label: ref,
