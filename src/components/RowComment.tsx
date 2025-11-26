@@ -67,19 +67,23 @@ export const CommentRow = ({
   if (!comment) return null
 
   const itsLargerThanDefault = comment?.content.length > 40
+  const itsUnsolvedReport = comment.type === 'report' && !comment.solved
 
   return (
     <View
       style={{
         width: '100%',
-        marginHorizontal: 'auto'
+        marginHorizontal: 'auto',
+        marginTop: 4
         // maxWidth: 500,
         //marginBottom:
       }}
     >
       <View
         style={{
-          backgroundColor: theme.infoLight,
+          backgroundColor: itsUnsolvedReport
+            ? theme.errorLight
+            : theme.infoLight,
           padding: 4,
           borderRadius: 8
         }}

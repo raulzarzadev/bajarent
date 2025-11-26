@@ -15,11 +15,12 @@ export type Theme = {
   placeholder?: string
   transparent: string
   infoLight?: string
+  errorLight?: string
 }
 
 export const colors = {
   green: '#65a30d',
-  red: '#f87171',
+  red: '#e38a8a',
   yellow: '#facc15',
   blue: '#547EE8',
   lightBlue: '#93c5fd',
@@ -56,6 +57,7 @@ const theme: Theme = {
   success: colors.green,
   warning: colors.yellow,
   error: colors.red,
+  errorLight: `${colors.red}33`,
   white: colors.white,
   black: colors.black,
   placeholder: '#555e',
