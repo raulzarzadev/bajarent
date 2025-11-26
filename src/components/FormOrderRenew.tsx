@@ -1,9 +1,7 @@
 import { Text, View } from 'react-native'
 import { useState } from 'react'
 import { Formik } from 'formik'
-import FormikSelectCategories, {
-  FormikSelectCategoriesE
-} from './FormikSelectCategories'
+import { FormikSelectCategoriesE } from './FormikSelectCategories'
 import Button from './Button'
 import OrderType from '../types/OrderType'
 import { expireDate2, translateTime } from '../libs/expireDate'

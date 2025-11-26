@@ -20,7 +20,7 @@ const StartupLoader = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasTimedOut(true)
-    }, 3000)
+    }, 15000)
     return () => clearTimeout(timer)
   }, [])
 
