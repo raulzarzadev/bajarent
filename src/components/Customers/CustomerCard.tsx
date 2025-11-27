@@ -19,14 +19,17 @@ const CustomerCard = (props?: CustomerCardProps) => {
   const navigation = useNavigation()
   const { update, remove } = useCustomers()
   const customer = props?.customer
-  const canViewActions = props?.canViewAcctions
+  const canViewActions = props?.canViewActions ?? true
   const { permissions } = useEmployee()
   const { toCustomers } = useMyNav()
   const customerId = customer?.id
 
-  const canRead = customerId && permissions?.customers?.read
-  const canEdit = customerId && permissions?.customers?.edit
-  const canDelete = customerId && permissions?.customers?.delete
+  const canRead =
+    customerId && (permissions?.customers?.read || permissions.isAdmin)
+  const canEdit =
+    customerId && (permissions?.customers?.edit || permissions.isAdmin)
+  const canDelete =
+    customerId && (permissions?.customers?.delete || permissions.isAdmin)
 
   if (!customer) return <Text>No hay cliente</Text>
   const handleUpdateLocation = async (location: CoordsType | string) => {
@@ -41,7 +44,7 @@ const CustomerCard = (props?: CustomerCardProps) => {
       setCustomerLocation(coords)
     })
   }, [customer.address.locationURL, customer.address.coords])
-
+  console.log({ canViewActions, canEdit })
   return (
     <View style={{ justifyContent: 'center' }}>
       {/* CUSTOMER ACTIONS SHOULD VERIFY EMPLOYEE PERMISSIOS */}
