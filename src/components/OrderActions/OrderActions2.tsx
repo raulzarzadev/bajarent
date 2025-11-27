@@ -29,7 +29,7 @@ import { useStore } from '../../contexts/storeContext'
 import InputTextStyled from '../InputTextStyled'
 import useMyNav from '../../hooks/useMyNav'
 import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
-import StyledModal from '../StyledModal'
+
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
 import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
