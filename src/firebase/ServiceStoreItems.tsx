@@ -262,6 +262,30 @@ export class ServiceStoreItemsClass {
     )
   }
 
+  async search({
+    storeId,
+    fields = [],
+    value
+  }: {
+    storeId: string
+    fields: (keyof ItemType)[]
+    value: string
+  }): Promise<Type[]> {
+    if (fields.length === 0) {
+      console.error('this query its empty')
+      return []
+    }
+    const queries = fields.map((field) => {
+      const collectionRef = collection(db, 'stores', storeId, SUB_COLLECTION)
+      return ServiceStores.getRefItems<Type>({
+        collectionRef,
+        filters: [where(field as string, '==', value)]
+      })
+    })
+    const results = await Promise.all(queries)
+    return results.flat()
+  }
+
   async customMethod() {
     // Implementa tu método personalizado
   }

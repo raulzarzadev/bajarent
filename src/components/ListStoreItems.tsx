@@ -169,6 +169,8 @@ const ListStoreItems = ({
     return res
   }
   const canCreateItems = permissions?.items?.canCreate || permissions.isAdmin
+
+  console.log({ items })
   return (
     <View>
       <ListE
@@ -300,6 +302,10 @@ const ListStoreItems = ({
         ComponentRow={({ item }) => {
           if (!item) return null
           return <RowItem item={item} />
+        }}
+        collectionSearch={{
+          collectionName: 'items',
+          fields: ['number', 'serial', 'brand', 'model', 'status']
         }}
       />
     </View>

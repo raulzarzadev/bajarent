@@ -12,6 +12,7 @@ import {
 } from './useFilterUtils'
 import { ServiceCustomers } from '../firebase/ServiceCustomers'
 import { useAuth } from '../contexts/authContext'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 export type CollectionSearch = {
   collectionName: string
@@ -73,6 +74,18 @@ export default function useFilter<T extends { id?: string }>({
     const { matchedData } = searchInLocalData(data, value, filtersBy)
     setFilteredData(matchedData)
     setSearchedData(matchedData)
+
+    if (collectionSearch.collectionName === 'items') {
+      console.log({ collectionSearch, value })
+      ServiceStoreItems.search({
+        storeId,
+        fields: collectionSearch?.fields,
+        value
+      }).then((items) => {
+        console.log({ items })
+        setCustomData(items as T[])
+      })
+    }
 
     if (collectionSearch?.collectionName === 'orders') {
       const collectionData = await ServiceOrders.search({
