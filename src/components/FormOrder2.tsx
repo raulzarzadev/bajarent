@@ -171,14 +171,12 @@ export const FormOrder2 = ({
                         canViewActions={false}
                       />
                     </ViewInputForm>
-                    <ViewInputForm
-                    //style={{ marginVertical: 8, justifyContent: 'center' }}
-                    >
+                    <ViewInputForm>
                       <Button
                         size="xs"
                         fullWidth={false}
-                        label="Omitir cliente"
-                        icon="sub"
+                        label="Cliente nuevo"
+                        icon="customerCard"
                         buttonStyles={{ margin: 'auto' }}
                         onPress={() => {
                           setFieldValue('customerId', null)

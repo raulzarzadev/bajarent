@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/authContext'
 import { orderExpireAt } from '../libs/orders'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import TextInfo from './TextInfo'
+import { FormOrder2E } from './FormOrder2'
 
 const ScreenOrderEdit = ({ route, navigation }) => {
   const orderId = route?.params?.orderId
@@ -28,7 +29,7 @@ const ScreenOrderEdit = ({ route, navigation }) => {
           text="Algunos campos NO se editaran correctamente. Edita al cliente directamente para cambiarlos."
         />
       )}
-      <FormOrder
+      <FormOrder2E
         defaultValues={order}
         onSubmit={async (values) => {
           if (order?.customerId) {

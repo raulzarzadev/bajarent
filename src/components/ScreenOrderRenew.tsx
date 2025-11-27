@@ -1,6 +1,5 @@
 import { ActivityIndicator } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import FormOrder from './FormOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../contexts/authContext'
@@ -8,6 +7,7 @@ import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useEffect, useState } from 'react'
 import { orderExpireAt } from '../libs/orders'
 import ErrorBoundary from './ErrorBoundary'
+import { FormOrder2E } from './FormOrder2'
 
 const ScreenOrderRenew = ({ route }) => {
   const orderId = route?.params?.orderId
@@ -49,8 +49,8 @@ const ScreenOrderRenew = ({ route }) => {
   if (!originalOrder) return <ActivityIndicator />
 
   return (
-    <FormOrder
-      renew={originalOrder.folio}
+    <FormOrder2E
+      title="Renovación"
       defaultValues={newOrder}
       onSubmit={async (order) => {
         //   .then(console.log)

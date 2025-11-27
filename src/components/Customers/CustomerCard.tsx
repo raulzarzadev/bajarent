@@ -44,7 +44,6 @@ const CustomerCard = (props?: CustomerCardProps) => {
       setCustomerLocation(coords)
     })
   }, [customer.address.locationURL, customer.address.coords])
-  console.log({ canViewActions, canEdit })
   return (
     <View style={{ justifyContent: 'center' }}>
       {/* CUSTOMER ACTIONS SHOULD VERIFY EMPLOYEE PERMISSIOS */}

@@ -1,12 +1,12 @@
 import { ActivityIndicator } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import FormOrder from './FormOrder'
 import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
+import { FormOrder2E } from './FormOrder2'
 
 const ScreenOrderReorder = ({ route }) => {
   const orderId = route?.params?.orderId
@@ -49,7 +49,7 @@ const ScreenOrderReorder = ({ route }) => {
   if (!originalOrder) return <ActivityIndicator />
 
   return (
-    <FormOrder
+    <FormOrder2E
       defaultValues={newOrder}
       onSubmit={async (order) => {
         //   .then(console.log)
