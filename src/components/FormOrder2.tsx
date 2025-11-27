@@ -15,7 +15,6 @@ import { gStyles } from '../styles'
 import FormikInputDate from './FormikInputDate'
 import { useEmployee } from '../contexts/employeeContext'
 import Loading from './Loading'
-import FormikInputImage from './FormikInputImage'
 import { FormikSelectCategoriesE } from './FormikSelectCategories'
 import FormikCheckbox from './FormikCheckbox'
 import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
@@ -23,11 +22,11 @@ import { ModalPaymentSale } from './ModalPaymentSale'
 import Button from './Button'
 import { useState } from 'react'
 import { CustomerOrderE } from './Customers/CustomerOrder'
-import { CustomerImagesE } from './Customers/CustomerImages'
 import FormikErrorsList from './FormikErrorsList'
+import catchError from '../libs/catchError'
 
 export type FormOrder2Props = {
-  onSubmit: (values: OrderType) => void
+  onSubmit: (values: OrderType) => Promise<any>
   defaultValues?: Partial<OrderType>
   title?: string
 }
@@ -49,8 +48,17 @@ export const FormOrder2 = ({
       ? new Date(defaultValues.scheduledAt)
       : null
   }
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     // Handle form submission here
+    setLoading(true)
+    const [err, res] = await catchError(onSubmit(values))
+    if (err) {
+      console.error('Error submitting form:', err)
+    }
+    if (res) {
+      //console.log('Form submitted successfully:', res)
+    }
+    setLoading(false)
   }
   const ordersTypesAllowed = Object.entries(shop?.orderTypes || {})
     .filter(([key, value]) => value)
@@ -71,7 +79,6 @@ export const FormOrder2 = ({
             //*<---- check if include customer
             //const isCustomerChosen = customerId || values?.customerId
             const isCustomerSet = !!values?.customerId
-            console.log({ isCustomerSet, values })
             if (!isCustomerSet) {
               if (!values.fullName) errors.fullName = 'Nombre necesario'
               if (!values.phone || values.phone.length < 12)
@@ -113,22 +120,24 @@ export const FormOrder2 = ({
             return errors
           }}
         >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            setFieldValue
-          }) => {
+          {({ handleSubmit, values, errors, setFieldValue }) => {
             const customerId = values.customerId
             const isCustomerSet = !!values?.customerId
             const excludeCustomer = values?.excludeCustomer
             return (
               <View>
                 {/* Your form fields go here */}
-                {/* Customer information */}
+                <View>
+                  {/* Order type selection */}
+                  <FormikInputRadios
+                    name="type"
+                    options={ordersTypesAllowed}
+                    label="Tipo de orden"
+                  />
 
+                  {/* RENT / REPAIR / SALE */}
+                </View>
+                {/* Customer information */}
                 {isCustomerSet && (
                   <>
                     <CustomerOrderE
@@ -200,16 +209,6 @@ export const FormOrder2 = ({
                   <FormikInputDate name={'scheduledAt'} withTime />
                 </View>
 
-                <View>
-                  {/* Order type selection */}
-                  <FormikInputRadios
-                    name="type"
-                    options={ordersTypesAllowed}
-                    label="Tipo de orden"
-                  />
-
-                  {/* RENT / REPAIR / SALE */}
-                </View>
                 {/* Order assigned to section */}
 
                 <View>

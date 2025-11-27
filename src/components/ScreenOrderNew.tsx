@@ -139,12 +139,7 @@ const ScreenOrderNew = (navigation) => {
   }
   return (
     <>
-      <FormOrder2E
-        onSubmit={(values) => {
-          console.log(values)
-        }}
-        defaultValues={{ customerId }}
-      />
+      <FormOrder2E onSubmit={handleSubmit} defaultValues={{ customerId }} />
     </>
   )
 }
