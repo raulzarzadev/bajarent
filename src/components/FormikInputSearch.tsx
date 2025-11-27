@@ -24,10 +24,11 @@ const FormikInputSearch = <T extends { id: string | number }>({
   maxSuggestions,
   style
 }: FormikInputSearchProps<T>) => {
-  const [field, meta, helpers] = useField(name)
   const formik = useFormikContext()
+  const [field, meta, helpers] = useField(name)
   return (
     <InputSearch
+      value={field.value}
       placeholder={placeholder}
       suggestions={suggestions}
       labelKey={labelKey}

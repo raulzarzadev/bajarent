@@ -70,6 +70,7 @@ const InputSearch = <T extends { id: string | number }>({
   }
 
   const handleSuggestionClick = (suggestion: T) => {
+    console.log('sugest')
     setValue(suggestion[labelKey]?.toString() || '')
     setShowSuggestions(false)
     setHoveredItem(null)
@@ -88,8 +89,8 @@ const InputSearch = <T extends { id: string | number }>({
           { opacity: 0.7 }
         ]}
         onPress={() => handleSuggestionClick(item)}
-        onPressIn={() => setHoveredItem(item.id)}
-        onPressOut={() => setHoveredItem(null)}
+        // onPressIn={() => setHoveredItem(item.id)}
+        // onPressOut={() => setHoveredItem(null)}
       >
         <Text style={styles.suggestionText}>{String(item[labelKey])}</Text>
       </Pressable>
@@ -127,18 +128,27 @@ const InputSearch = <T extends { id: string | number }>({
         />
       </View>
 
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <View style={styles.suggestionsContainer}>
-          <FlatList
-            data={filteredSuggestions}
-            renderItem={renderSuggestionItem}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled
-            scrollEnabled={filteredSuggestions.length > maxSuggestions - 1}
-          />
-        </View>
-      )}
+      <View
+        style={[
+          styles.suggestionsContainer
+          // {
+          //   display:
+          //     !!showSuggestions && filteredSuggestions.length > 0
+          //       ? 'flex'
+          //       : 'none'
+          // }
+        ]}
+      >
+        <FlatList
+          data={filteredSuggestions}
+          renderItem={renderSuggestionItem}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+          scrollEnabled={filteredSuggestions.length > maxSuggestions - 1}
+          keyboardShouldPersistTaps="handled"
+        />
+      </View>
     </View>
   )
 }

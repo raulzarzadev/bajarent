@@ -91,7 +91,7 @@ export const CommentRow = ({
         {/* *************** COMMENT CONTENT  ************** */}
         <View>
           <View>
-            <Text style={[gStyles.tBold]}>{commentCreatedBy}</Text>{' '}
+            <Text style={[gStyles.tBold]}>{commentCreatedBy}</Text>
           </View>
           <View>
             <Text numberOfLines={numberOfLines}>{comment?.content} </Text>
