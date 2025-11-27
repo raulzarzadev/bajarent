@@ -70,7 +70,6 @@ const InputSearch = <T extends { id: string | number }>({
   }
 
   const handleSuggestionClick = (suggestion: T) => {
-    console.log('sugest')
     setValue(suggestion[labelKey]?.toString() || '')
     setShowSuggestions(false)
     setHoveredItem(null)
@@ -89,8 +88,8 @@ const InputSearch = <T extends { id: string | number }>({
           { opacity: 0.7 }
         ]}
         onPress={() => handleSuggestionClick(item)}
-        // onPressIn={() => setHoveredItem(item.id)}
-        // onPressOut={() => setHoveredItem(null)}
+        onPressIn={() => setHoveredItem(item.id)}
+        onPressOut={() => setHoveredItem(null)}
       >
         <Text style={styles.suggestionText}>{String(item[labelKey])}</Text>
       </Pressable>
