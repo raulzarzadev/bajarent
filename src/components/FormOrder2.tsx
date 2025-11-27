@@ -18,7 +18,7 @@ import Loading from './Loading'
 import { FormikSelectCategoriesE } from './FormikSelectCategories'
 import FormikCheckbox from './FormikCheckbox'
 import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
-import { ModalPaymentSale } from './ModalPaymentSale'
+import { ModalPaymentSale } from './ModalPaymentSaleFormik'
 import Button from './Button'
 import { useState } from 'react'
 import { CustomerOrderE } from './Customers/CustomerOrder'
@@ -41,16 +41,15 @@ export const FormOrder2 = ({
   const { data: customers } = useCustomers()
   const { isEmployeeReady } = useEmployee()
   const { shop } = useShop()
-  const initialValues = {
+  const initialValues: Partial<OrderType> = {
     // Define your initial form values here
     ...defaultValues,
-    scheduledAt: defaultValues?.scheduledAt
-      ? new Date(defaultValues.scheduledAt)
-      : null
+    scheduledAt: null
   }
   const handleSubmit = async (values) => {
     // Handle form submission here
     setLoading(true)
+
     const [err, res] = await catchError(onSubmit(values))
     if (err) {
       console.error('Error submitting form:', err)
@@ -76,14 +75,18 @@ export const FormOrder2 = ({
           onSubmit={handleSubmit}
           validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
+
+            const isRent = values.type === order_type.RENT
+            const isRepair = values.type === order_type.REPAIR
             //*<---- check if include customer
             //const isCustomerChosen = customerId || values?.customerId
             const isCustomerSet = !!values?.customerId
-            if (!isCustomerSet) {
-              if (!values.fullName) errors.fullName = 'Nombre necesario'
-              if (!values.phone || values.phone.length < 12)
-                errors.phone = 'Teléfono valido es necesario'
-            }
+            if (isRent || isRepair)
+              if (!isCustomerSet) {
+                if (!values.fullName) errors.fullName = 'Nombre necesario'
+                if (!values.phone || values.phone.length < 12)
+                  errors.phone = 'Teléfono valido es necesario'
+              }
 
             const ITEMS_MAX_BY_ORDER =
               shop?.orderFields?.[values.type]?.itemsMax
@@ -127,25 +130,49 @@ export const FormOrder2 = ({
             return (
               <View>
                 {/* Your form fields go here */}
-                <View>
+                <ViewInputForm>
                   {/* Order type selection */}
                   <FormikInputRadios
                     name="type"
                     options={ordersTypesAllowed}
                     label="Tipo de orden"
                   />
+                  {values.type === order_type.SALE && (
+                    <ViewInputForm>
+                      {values.excludeCustomer ? (
+                        <Button
+                          label="Agregar cliente"
+                          onPress={() => {
+                            setFieldValue('excludeCustomer', false)
+                          }}
+                          size="xs"
+                        ></Button>
+                      ) : (
+                        <Button
+                          label="Orden sin cliente"
+                          onPress={() => {
+                            setFieldValue('excludeCustomer', true)
+                            setFieldValue('customerId', null)
+                          }}
+                          size="xs"
+                        ></Button>
+                      )}
+                    </ViewInputForm>
+                  )}
 
                   {/* RENT / REPAIR / SALE */}
-                </View>
+                </ViewInputForm>
                 {/* Customer information */}
                 {isCustomerSet && (
                   <>
-                    <CustomerOrderE
-                      customerId={customerId}
-                      canViewActions={false}
-                    />
-                    <View
-                      style={{ marginVertical: 8, justifyContent: 'center' }}
+                    <ViewInputForm>
+                      <CustomerOrderE
+                        customerId={customerId}
+                        canViewActions={false}
+                      />
+                    </ViewInputForm>
+                    <ViewInputForm
+                    //style={{ marginVertical: 8, justifyContent: 'center' }}
                     >
                       <Button
                         size="xs"
@@ -167,58 +194,89 @@ export const FormOrder2 = ({
                         * Al omitir cliente se borraran los datos y se podra
                         crear una orden sin cliente.
                       </Text>
-                    </View>
+                    </ViewInputForm>
                   </>
                 )}
                 {!isCustomerSet && !excludeCustomer && (
-                  <View>
+                  <>
                     {/* Customer name */}
-                    <FormikSearchCustomerE
-                      customers={customers}
-                      name={'fullName'}
-                      placeholder="Nombre completo y contactos"
-                    />
+                    <ViewInputForm>
+                      <FormikSearchCustomerE
+                        customers={customers}
+                        name={'fullName'}
+                        placeholder="Nombre completo y contactos"
+                      />
+                    </ViewInputForm>
                     {/* Customer phone */}
-                    <FormikInputPhoneE name={'phone'} />
+                    <ViewInputForm>
+                      <FormikInputPhoneE name={'phone'} />
+                    </ViewInputForm>
                     {/* Customer address */}
-                    <FormikInputValue
-                      name={'address'}
-                      placeholder="Dirección completa (calle, numero y entre calles)"
-                      helperText={`Ejemplo: Calle 1 #123 entre Calle 2 y Calle 3`}
-                    />
-                    <FormikInputValue
-                      name={'references'}
-                      placeholder="Referencias de la casa"
-                      helperText="Ejemplo: Casa blanca con portón rojo"
-                    />
-                    <InputLocationFormik
-                      name={'location'}
-                      neighborhood={values.neighborhood}
-                      address={values.address}
-                    />
-                  </View>
+                    <ViewInputForm>
+                      <FormikInputValue
+                        name={'address'}
+                        placeholder="Dirección completa (calle, numero y entre calles)"
+                        helperText={`Ejemplo: Calle 1 #123 entre Calle 2 y Calle 3`}
+                      />
+                    </ViewInputForm>
+                    <ViewInputForm>
+                      <FormikInputValue
+                        name={'references'}
+                        placeholder="Referencias de la casa"
+                        helperText="Ejemplo: Casa blanca con portón rojo"
+                      />
+                    </ViewInputForm>
+                    <ViewInputForm>
+                      <InputLocationFormik
+                        name={'location'}
+                        neighborhood={values.neighborhood}
+                        address={values.address}
+                      />
+                    </ViewInputForm>
+                  </>
                 )}
 
                 {/* Aditional data for this order order */}
-                <View>
+                <ViewInputForm>
                   <FormikInputValue
                     name={'note'}
                     placeholder="Contrato (opcional)"
                     helperText={'No. de contrato, nota, factura, etc.'}
                   />
-                  <FormikInputDate name={'scheduledAt'} withTime />
-                </View>
+                </ViewInputForm>
+
+                <ViewInputForm>
+                  {values.scheduledAt ? (
+                    <View>
+                      <Button
+                        onPress={() => setFieldValue('scheduledAt', null)}
+                        icon="close"
+                        label="Quitar fecha"
+                        size="xs"
+                        variant="ghost"
+                      ></Button>
+                      <FormikInputDate name={'scheduledAt'} withTime />
+                    </View>
+                  ) : (
+                    <Button
+                      onPress={() => setFieldValue('scheduledAt', new Date())}
+                      icon="calendar"
+                      variant="ghost"
+                      label="Programar fecha"
+                    ></Button>
+                  )}
+                </ViewInputForm>
 
                 {/* Order assigned to section */}
 
-                <View>
+                <ViewInputForm>
                   {/* Employee/Section assignment */}
                   <FormikAssignSection name={'assignToSection'} />
-                </View>
+                </ViewInputForm>
 
                 {/* Additional order details  */}
 
-                <View>
+                <>
                   {/* COMMON FIELDS */}
                   {/* SCHEDULED  DATE /  */}
                   {/* Additional order details RENT */}
@@ -226,90 +284,92 @@ export const FormOrder2 = ({
 
                   {values.type === order_type.RENT && (
                     <>
-                      <FormikSelectCategoriesE
-                        name="items"
-                        label="Selecciona un artículo"
-                        selectPrice
-                        startAt={values.scheduledAt}
-                      />
-                      <FormikCheckbox
-                        name="hasDelivered"
-                        label="Entregada en fecha"
-                      />
+                      <ViewInputForm>
+                        <FormikSelectCategoriesE
+                          name="items"
+                          label="Selecciona un artículo"
+                          selectPrice
+                          startAt={values.scheduledAt}
+                        />
+                      </ViewInputForm>
+                      <ViewInputForm>
+                        <FormikCheckbox
+                          name="hasDelivered"
+                          label="Entregada en fecha"
+                        />
+                      </ViewInputForm>
                     </>
                   )}
                   {/* Additional order details REPAIR */}
                   {values.type === order_type.REPAIR && (
                     <>
-                      <FormikInputValue
-                        name={'item.brand'}
-                        placeholder="Marca"
-                        helperText="Ejemplo: Maytag"
-                      />
-                      <FormikInputValue
-                        name={'item.serial'}
-                        placeholder="No. de serie"
-                      />
-                      <FormikInputValue
-                        name={'item.model'}
-                        placeholder="Modelo"
-                        helperText="Año, lote, etc."
-                      />
-                      <FormikInputValue
-                        multiline
-                        numberOfLines={3}
-                        name={'item.failDescription'}
-                        placeholder="Describe la falla"
-                        helperText="Ejemplo: Hace ruido, no enciende, etc."
-                      />
-                      <FormikInputValue
-                        multiline
-                        numberOfLines={3}
-                        name={'quote.description'}
-                        placeholder="Descripción de la cotización"
-                        helperText="Ejemplo: Cambio de tarjeta"
-                      />
-                      <FormikInputValue
-                        name={'quote.amount'}
-                        placeholder="Monto de la cotización"
-                        helperText="Ejemplo: 1500"
-                        type="number"
-                      />
+                      <ViewInputForm>
+                        <FormikInputValue
+                          name={'item.brand'}
+                          placeholder="Marca"
+                          helperText="Ejemplo: Maytag"
+                        />
+                      </ViewInputForm>
+                      <ViewInputForm>
+                        <FormikInputValue
+                          name={'item.serial'}
+                          placeholder="No. de serie"
+                        />{' '}
+                      </ViewInputForm>
+                      <ViewInputForm>
+                        <FormikInputValue
+                          name={'item.model'}
+                          placeholder="Modelo"
+                          helperText="Año, lote, etc."
+                        />{' '}
+                      </ViewInputForm>
+                      <ViewInputForm>
+                        <FormikInputValue
+                          multiline
+                          numberOfLines={3}
+                          name={'item.failDescription'}
+                          placeholder="Describe la falla"
+                          helperText="Ejemplo: Hace ruido, no enciende, etc."
+                        />{' '}
+                      </ViewInputForm>
+                      <ViewInputForm>
+                        <FormikInputValue
+                          multiline
+                          numberOfLines={3}
+                          name={'quote.description'}
+                          placeholder="Descripción de la cotización"
+                          helperText="Ejemplo: Cambio de tarjeta"
+                        />{' '}
+                      </ViewInputForm>
+                      <ViewInputForm>
+                        <FormikInputValue
+                          name={'quote.amount'}
+                          placeholder="Monto de la cotización"
+                          helperText="Ejemplo: 1500"
+                          type="number"
+                        />{' '}
+                      </ViewInputForm>
                     </>
                   )}
 
                   {/* Additional order details SALE */}
                   {values.type === order_type.SALE && (
                     <>
-                      {values.excludeCustomer ? (
-                        <Button
-                          label="Agregar cliente"
-                          onPress={() => {
-                            setFieldValue('excludeCustomer', false)
+                      <ViewInputForm>
+                        <FormikSaleOrderItemsE name="items" />
+                      </ViewInputForm>
+                      {/* <ViewInputForm>
+                        <ModalPaymentSale
+                          onSubmit={async () => {
+                            //const res = await submitForm()
+                            // @ts-ignore orderId can be used for others purposes
+                            return { orderId: res?.orderId || null }
                           }}
-                          size="xs"
-                        ></Button>
-                      ) : (
-                        <Button
-                          label="Orden sin cliente"
-                          onPress={() => {
-                            setFieldValue('excludeCustomer', true)
-                            setFieldValue('customerId', null)
-                          }}
-                          size="xs"
-                        ></Button>
-                      )}
-                      <FormikSaleOrderItemsE name="items" />
-                      <ModalPaymentSale
-                        onSubmit={async () => {
-                          //const res = await submitForm()
-                          // @ts-ignore orderId can be used for others purposes
-                          return { orderId: res?.orderId || null }
-                        }}
-                      />
+                        />
+                      </ViewInputForm> */}
                     </>
                   )}
-                </View>
+                </>
 
                 <FormikErrorsList />
 
@@ -335,3 +395,7 @@ export const FormOrder2E = (props: FormOrder2Props) => (
     <FormOrder2 {...props} />
   </ErrorBoundary>
 )
+
+export const ViewInputForm = ({ children }) => {
+  return <View style={{ marginVertical: 8 }}>{children}</View>
+}

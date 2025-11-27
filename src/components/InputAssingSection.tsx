@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ButtonConfirm from './ButtonConfirm'
 import { useStore } from '../contexts/storeContext'
 import InputRadios from './Inputs/InputRadios'
@@ -21,7 +21,7 @@ const InputAssignSection = ({
   }) => Promise<void>
 }) => {
   const { sections: storeSections = [] } = useStore()
-  const [sectionId, setSectionId] = React.useState<string | null>(null)
+  const [sectionId, setSectionId] = useState<string | null>(null)
 
   const assignedToSectionName =
     storeSections?.find((s) => s.id === currentSection)?.name || null
@@ -39,6 +39,7 @@ const InputAssignSection = ({
       value: id
     }
   })
+
   return (
     <ButtonConfirm
       openSize="small"
@@ -48,7 +49,7 @@ const InputAssignSection = ({
       openLabel={assignedToSectionName || 'Asignar'}
       icon="swap"
       openColor="success"
-      openVariant="filled"
+      openVariant={!!sectionId ? 'filled' : 'ghost'}
       confirmLabel="Cambiar"
       handleConfirm={async () => {
         return await setNewSection({

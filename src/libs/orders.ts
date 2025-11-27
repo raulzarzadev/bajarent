@@ -29,7 +29,7 @@ export const formatOrders = ({
 }): Partial<OrderType>[] => {
   const ordersWithExpireDate = orders
     .map((order) => {
-      const customer = customers.find((c) => c.id === order?.customerId)
+      const customer = customers?.find((c) => c.id === order?.customerId)
 
       const formattedOrder = formatOrder({
         order: order as OrderType,

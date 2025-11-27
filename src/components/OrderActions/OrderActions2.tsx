@@ -34,6 +34,7 @@ import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlic
 import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 import UserType from '../../types/UserType'
+import { ModalPaymentSale } from '../ModalPaymentSale'
 
 //* repaired
 function OrderActions() {
@@ -313,26 +314,10 @@ const ButtonRenew = ({ order, user }) => {
 
 const ButtonDeliverySale = () => {
   const { order } = useOrderDetails()
-  const { user } = useAuth()
-  const modalDeliverySale = useModal({ title: 'Entregar compra' })
-  const handleDelivery = () => {
-    ServiceOrders.update(order.id, {
-      status: order_status.DELIVERED,
-      deliveredAt: new Date(),
-      deliveredBy: user?.id
-    })
-  }
+
   return (
     <View>
-      <Button
-        label="Entregar"
-        onPress={modalDeliverySale.toggleOpen}
-        icon="home"
-        color="success"
-      />
-      <StyledModal {...modalDeliverySale}>
-        <Button label="Entregar" onPress={handleDelivery}></Button>
-      </StyledModal>
+      <ModalPaymentSale orderId={order.id} />
     </View>
   )
 }

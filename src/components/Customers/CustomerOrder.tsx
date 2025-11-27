@@ -42,8 +42,8 @@ const CustomerOrder = ({
 
   if (order?.excludeCustomer)
     return (
-      <View>
-        <Text>Orden sin cliente </Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
+        <Text style={gStyles.h2}>Orden sin cliente </Text>
         <ButtonAddCustomerE order={order} orderId={order?.id} />
       </View>
     )
