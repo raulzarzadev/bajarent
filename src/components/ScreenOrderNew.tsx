@@ -12,6 +12,7 @@ import { createUUID } from '../libs/createId'
 import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
 import { getFavoriteCustomerPhone } from './Customers/lib/lib'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
+import { FormOrder2E } from './FormOrder2'
 //
 const ScreenOrderNew = (navigation) => {
   const customerId = navigation?.route?.params?.customerId
@@ -138,7 +139,12 @@ const ScreenOrderNew = (navigation) => {
   }
   return (
     <>
-      <FormOrder onSubmit={handleSubmit} defaultValues={{ customerId }} />
+      <FormOrder2E
+        onSubmit={(values) => {
+          console.log(values)
+        }}
+        defaultValues={{ customerId }}
+      />
     </>
   )
 }

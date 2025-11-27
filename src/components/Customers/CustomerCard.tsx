@@ -19,6 +19,7 @@ const CustomerCard = (props?: CustomerCardProps) => {
   const navigation = useNavigation()
   const { update, remove } = useCustomers()
   const customer = props?.customer
+  const canViewActions = props?.canViewAcctions
   const { permissions } = useEmployee()
   const { toCustomers } = useMyNav()
   const customerId = customer?.id
@@ -44,72 +45,74 @@ const CustomerCard = (props?: CustomerCardProps) => {
   return (
     <View style={{ justifyContent: 'center' }}>
       {/* CUSTOMER ACTIONS SHOULD VERIFY EMPLOYEE PERMISSIOS */}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          maxWidth: 700,
-          minWidth: 400,
-          marginVertical: 8,
-          marginHorizontal: 'auto'
-        }}
-      >
-        {/* ELIMINAR */}
-        {canDelete && (
-          <ButtonConfirm
-            openLabel="Eliminar"
-            icon="delete"
-            handleConfirm={async () => {
-              remove(customer.id)
-              navigation.goBack()
-            }}
-            openColor="error"
-            openVariant="ghost"
-            openSize="xs"
-            confirmColor="error"
-            //justIcon
-          >
-            <Text style={{ textAlign: 'center', marginVertical: 12 }}>
-              ¡ Eliminar de forma permanente !
-            </Text>
-          </ButtonConfirm>
-        )}
+      {canViewActions && (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            maxWidth: 700,
+            minWidth: 400,
+            marginVertical: 8,
+            marginHorizontal: 'auto'
+          }}
+        >
+          {/* ELIMINAR */}
+          {canDelete && (
+            <ButtonConfirm
+              openLabel="Eliminar"
+              icon="delete"
+              handleConfirm={async () => {
+                remove(customer.id)
+                navigation.goBack()
+              }}
+              openColor="error"
+              openVariant="ghost"
+              openSize="xs"
+              confirmColor="error"
+              //justIcon
+            >
+              <Text style={{ textAlign: 'center', marginVertical: 12 }}>
+                ¡ Eliminar de forma permanente !
+              </Text>
+            </ButtonConfirm>
+          )}
 
-        {/* EDITAR */}
-        {canEdit && (
+          {/* EDITAR */}
+          {canEdit && (
+            <Button
+              label="Editar"
+              icon="edit"
+              variant="ghost"
+              size="xs"
+              onPress={() => {
+                toCustomers({ to: 'edit', id: customer.id })
+              }}
+            ></Button>
+          )}
+          {/* VER DETALLES */}
+          {canRead && (
+            <Button
+              label="ver"
+              icon="openEye"
+              size="xs"
+              color="secondary"
+              variant="ghost"
+              onPress={() => toCustomers({ to: 'details', id: customerId })}
+            ></Button>
+          )}
+          {/* CREAR NUEVA ORDEN */}
           <Button
-            label="Editar"
-            icon="edit"
+            label="Orden"
+            icon="orderAdd"
+            color="success"
             variant="ghost"
             size="xs"
             onPress={() => {
-              toCustomers({ to: 'edit', id: customer.id })
+              toCustomers({ customerId: customer?.id, to: 'newOrder' })
             }}
           ></Button>
-        )}
-        {/* VER DETALLES */}
-        {canRead && (
-          <Button
-            label="ver"
-            icon="openEye"
-            size="xs"
-            color="secondary"
-            variant="ghost"
-            onPress={() => toCustomers({ to: 'details', id: customerId })}
-          ></Button>
-        )}
-        {/* CREAR NUEVA ORDEN */}
-        <Button
-          label="Orden"
-          icon="orderAdd"
-          color="success"
-          variant="ghost"
-          size="xs"
-          onPress={() => {
-            toCustomers({ customerId: customer?.id, to: 'newOrder' })
-          }}
-        ></Button>
-      </View>
+        </View>
+      )}
 
       <Text style={gStyles.h2}>{customer?.name}</Text>
       <Text style={gStyles.h3}>Dirección</Text>
@@ -154,6 +157,7 @@ export default CustomerCard
 export type CustomerCardProps = {
   customer: Partial<CustomerType>
   canEdit?: boolean
+  canViewActions?: boolean
 }
 export const CustomerCardE = (props: CustomerCardProps) => (
   <ErrorBoundary componentName="CustomerCard">

@@ -15,18 +15,21 @@ import { useEffect, useState } from 'react'
 import { CustomerType } from '../../state/features/costumers/customerType'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 
-const CustomerOrder = (props?: CustomerOrderProps) => {
+const CustomerOrder = ({
+  customerId,
+  canViewActions = true
+}: CustomerOrderProps) => {
   const { order } = useOrderDetails()
   const { data: customers } = useCustomers()
   const [customer, setCustomer] = useState<CustomerType | undefined>()
 
   useEffect(() => {
-    const customerId = props?.customerId || order?.customerId
+    const currentCustomer = customerId || order?.customerId
     const customer = customers?.find((c) => c.id === customerId)
     if (customer) {
       setCustomer(customer)
     } else {
-      ServiceCustomers.get(customerId)
+      ServiceCustomers.get(currentCustomer)
         .then((c) => {
           setCustomer(c)
         })
@@ -54,7 +57,7 @@ const CustomerOrder = (props?: CustomerOrderProps) => {
       </Text>
 
       {customer ? (
-        <CustomerCardE customer={customer} canEdit />
+        <CustomerCardE customer={customer} canViewActions={canViewActions} />
       ) : (
         <OrderCustomerNotFound order={order} />
       )}
@@ -87,6 +90,7 @@ export const OrderCustomerNotFound = ({ order }: { order: OrderType }) => {
 export default CustomerOrder
 export type CustomerOrderProps = {
   customerId?: string
+  canViewActions?: boolean
 }
 export const CustomerOrderE = (props: CustomerOrderProps) => (
   <ErrorBoundary componentName="CustomerOrder">

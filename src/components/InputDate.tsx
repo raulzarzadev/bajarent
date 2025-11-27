@@ -34,7 +34,6 @@ export default function InputDate({
   const [open, setOpen] = React.useState(false)
 
   const [date, setDate] = React.useState(value || nowDate)
-
   const defaultTime = withTime
     ? {
         hours: date?.getHours(),
@@ -51,9 +50,11 @@ export default function InputDate({
     setOpen(false)
   }, [setOpen])
 
-  useEffect(() => {
-    setDate(asDate(value))
-  }, [value])
+  // FIXME: si activas esto, genera un cambio que provoca que el time picker no funcione bien
+  // useEffect(() => {
+
+  //   setDate(asDate(value))
+  // }, [value])
 
   const handleSetDate = ({ date }) => {
     setDate(date)

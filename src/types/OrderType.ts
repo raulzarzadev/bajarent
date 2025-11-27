@@ -158,14 +158,16 @@ export type OrderBase = {
 
   //* to repair orders
   /**
-   * @deprecated use failDescription instead
+   * @deprecated use item.failDescription instead
    */
   description?: string
   /**
-   * @deprecated use failDescription instead
+   * @deprecated use item.failDescription instead
    */
   repairInfo?: string
-
+  /**
+   * @deprecated use item.failDescription instead
+   */
   failDescription?: string
 
   quoteBy?: string

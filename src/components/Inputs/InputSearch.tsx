@@ -37,7 +37,6 @@ const InputSearch = <T extends { id: string | number }>({
 }: InputSearchProps<T>) => {
   const [value, setValue] = useState(defaultValue || '')
   const [filteredSuggestions, setFilteredSuggestions] = useState<T[]>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | number | null>(null)
   const inputRef = useRef<TextInput>(null)
 
@@ -50,15 +49,13 @@ const InputSearch = <T extends { id: string | number }>({
         )
         .slice(0, maxSuggestions)
       setFilteredSuggestions(filtered)
-      setShowSuggestions(true)
     } else {
-      setShowSuggestions(false)
+      setFilteredSuggestions([])
     }
   }, [value, suggestions, maxSuggestions, labelKey])
 
   const handleClearInput = () => {
     setValue('')
-    setShowSuggestions(false)
     setHoveredItem(null)
     onChange?.('')
     inputRef.current?.focus()
@@ -71,7 +68,6 @@ const InputSearch = <T extends { id: string | number }>({
 
   const handleSuggestionClick = (suggestion: T) => {
     setValue(suggestion[labelKey]?.toString() || '')
-    setShowSuggestions(false)
     setHoveredItem(null)
     onSelect?.(suggestion)
     Keyboard.dismiss()
@@ -103,10 +99,9 @@ const InputSearch = <T extends { id: string | number }>({
           ref={inputRef}
           value={value}
           onChangeText={handleInputChange}
-          onFocus={() => value.trim() && setShowSuggestions(true)}
+          onFocus={() => value.trim()}
           onBlur={() =>
             setTimeout(() => {
-              setShowSuggestions(false)
               setHoveredItem(null)
             }, 200)
           }

@@ -29,10 +29,9 @@ import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import { InputDateE } from './InputDate'
 import { ModalPaymentSale } from './ModalPaymentSale'
 import { CustomerOrderE } from './Customers/CustomerOrder'
-import FormikInputSearch from './FormikInputSearch'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { CustomerCardE } from './Customers/CustomerCard'
-import { CustomerType } from '../state/features/costumers/customerType'
+import FormikSearchCustomer from './FormikSearchCustomer'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
   'type',
@@ -260,16 +259,24 @@ const FormOrderA = ({
           validate={(values: Partial<OrderType>) => {
             const errors: Partial<OrderType> = {}
             //*<---- check if include customer
-            const customerChosen = customerId || values?.customerId
-            if (!values?.excludeCustomer) {
-              if (!values.fullName && !customerChosen)
-                errors.fullName = 'Nombre necesario'
-              if (
-                (!values.phone || values.phone.length < 12) &&
-                !customerChosen
-              )
+            //const isCustomerChosen = customerId || values?.customerId
+            const isCustomerSet = !!customerId || !!values?.customerId
+            console.log({ isCustomerSet, values })
+            if (!isCustomerSet) {
+              if (!values.fullName) errors.fullName = 'Nombre necesario'
+              if (!values.phone || values.phone.length < 12)
                 errors.phone = 'Teléfono valido es necesario'
             }
+            // if (!values?.excludeCustomer) {
+            //   if (!values.fullName && !customerChosen)
+            //     errors.fullName = 'Nombre necesario'
+            //   if (
+            //     (!values.phone || values.phone.length < 12) &&
+            //     !customerChosen
+            //   )
+            //     errors.phone = 'Teléfono valido es necesario'
+            // }
+
             const ITEMS_MAX_BY_ORDER =
               store?.orderFields?.[values.type]?.itemsMax
             const ITEMS_MIN_BY_ORDER =
@@ -315,8 +322,8 @@ const FormOrderA = ({
           }) => {
             useEffect(() => {
               setErrors({})
-              //setOrderFields(store?.orderFields?.[values.type] as OrderFields)
             }, [values])
+
             const orderFields: FormOrderFields[] = getOrderFields(
               store?.orderFields?.[values.type] as OrderFields,
               //@ts-ignore FIXME: as TypeOrder or TypeOrderKey
@@ -438,7 +445,7 @@ const FormFieldsA = ({
   const { employee } = useEmployee()
 
   // Formatear clientes para el search
-  const formattedCustomers = customers.map(formatCustomerForSearch)
+
   const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
     .filter(([key, value]) => value)
     .map((value) => {
@@ -528,12 +535,10 @@ const FormFieldsA = ({
     ),
 
     fullName: (
-      <FormikInputSearch
-        suggestions={formattedCustomers}
-        labelKey="contactsText"
+      <FormikSearchCustomer
+        customers={customers}
         name={'fullName'}
         placeholder="Nombre completo y contactos"
-        //helperText={!values.fullName && 'Nombre es requerido'}
       />
     ),
     phone: <FormikInputPhone name={'phone'} />,
@@ -679,6 +684,7 @@ const FormFieldsA = ({
 
   return (
     <View>
+      {/* FIXME: Este componente se duplica por alguna razon */}
       {customerId && (
         <View>
           <CustomerCardE
@@ -778,36 +784,4 @@ export const getOrderFields = (fields: OrderFields): FormOrderFields[] => {
   const removeDuplicates = [...new Set(res)]
   //console.log({ res })
   return removeDuplicates
-}
-
-export const formatCustomerForSearch = (customer: CustomerType) => {
-  // Formatear contactos para mostrar como {contacto1: valor, contacto2: valor}
-  let formattedContacts = {}
-  let contactsText = ''
-
-  if (customer.contacts && typeof customer.contacts === 'object') {
-    // Si contacts es un objeto con propiedades
-    const contactEntries = Object.entries(customer.contacts)
-    formattedContacts = contactEntries.reduce((acc, [key, contact], index) => {
-      const contactKey =
-        contact.label === 'Default'
-          ? `contacto${index + 1}`
-          : contact.label.toLowerCase().replace(/\s+/g, '')
-      acc[contactKey] = contact.value
-      return acc
-    }, {} as Record<string, string>)
-
-    // Crear una representación de texto de los contactos para búsqueda
-    contactsText = Object.entries(formattedContacts)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(', ')
-  }
-
-  return {
-    ...customer,
-    // Crear una representación de texto de los contactos para búsqueda
-    contactsText: `${customer.name} - ${contactsText}`,
-    // Mantener los contactos formateados para uso posterior
-    ...formattedContacts
-  }
 }
