@@ -128,17 +128,7 @@ const InputSearch = <T extends { id: string | number }>({
         />
       </View>
 
-      <View
-        style={[
-          styles.suggestionsContainer
-          // {
-          //   display:
-          //     !!showSuggestions && filteredSuggestions.length > 0
-          //       ? 'flex'
-          //       : 'none'
-          // }
-        ]}
-      >
+      <View style={[styles.suggestionsContainer]}>
         <FlatList
           data={filteredSuggestions}
           renderItem={renderSuggestionItem}
