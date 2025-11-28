@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import { ScreenOrdersE } from './ScreenOrders'
-import ScreenOrderDetail from './ScreenOrderDetail'
+import ScreenOrderDetail, { ScreenOrderDetailE } from './ScreenOrderDetail'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenAssignOrder from './ScreenAssignOrder'
 import ScreenOrderRenew from './ScreenOrderRenew2'
@@ -39,7 +39,7 @@ function StackOrders() {
         options={{
           title: 'Detalles de orden'
         }}
-        component={ScreenOrderDetail}
+        component={ScreenOrderDetailE}
       />
 
       <Stack.Screen
