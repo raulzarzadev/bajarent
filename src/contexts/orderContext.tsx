@@ -132,7 +132,7 @@ const OrderProvider = ({
         setCommentsCount,
         paymentsCount,
         commentsCount,
-        customer: customer || customers.find((c) => c.id === order?.customerId)
+        customer: customer || customers.find((c) => c?.id === order?.customerId)
       }}
     >
       {children}
