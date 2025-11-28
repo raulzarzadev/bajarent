@@ -12,6 +12,8 @@ import { useNavigation } from '@react-navigation/native'
 import { BalanceViewE } from './BalanceView'
 import Loading from '../Loading'
 import { getItem, setItem } from '../../libs/storage'
+import catchError from '../../libs/catchError'
+import { firebaseSafeSave } from '../../utils/firebaseSafeSave'
 
 const StoreBalance = () => {
   const { storeId } = useStore()
@@ -42,11 +44,24 @@ const StoreBalance = () => {
     })
 
     if (newBalance) {
-      await ServiceBalances.saveBalance({ ...newBalance, type: 'daily' }).catch(
-        (e) => {
-          console.error(e)
-        }
+      const [err, res] = await catchError(
+        firebaseSafeSave({
+          data: newBalance,
+          contextLabel: 'StoreBalance - update balance',
+          saveFn: ServiceBalances.saveBalance
+        })
       )
+      if (err) {
+        console.error('Error saving balance:', err)
+      }
+      if (res) {
+        console.log({ res })
+      }
+      // await ServiceBalances.saveBalance({ ...newBalance, type: 'daily' }).catch(
+      //   (e) => {
+      //     console.error(e)
+      //   }
+      // )
     }
 
     setLoading(false)
