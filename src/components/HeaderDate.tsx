@@ -14,7 +14,8 @@ const HeaderDate = ({
   documentDate,
   debounce = 0,
   defaultDate = new Date(),
-  styles
+  styles,
+  disabled
 }: {
   label?: string
   onChangeDate: (date: Date) => void
@@ -23,6 +24,7 @@ const HeaderDate = ({
   debounce?: number
   defaultDate?: Date
   styles?: ViewStyle
+  disabled?: boolean
 }) => {
   const [date, setDate] = React.useState(defaultDate)
 
@@ -34,14 +36,6 @@ const HeaderDate = ({
   const handleChangeDate = (newDate: Date) => {
     setDate(newDate)
     onChangeDate(newDate)
-  }
-  const [disabled, setDisabled] = React.useState(false)
-
-  const handleDebounce = () => {
-    setDisabled(true)
-    setTimeout(() => {
-      setDisabled(false)
-    }, debounce)
   }
 
   return (
@@ -91,16 +85,17 @@ const HeaderDate = ({
             handleMoveDate(+1)
           }}
         />
-
-        {!isToday(date) && (
-          <Button
-            label="hoy"
-            onPress={() => {
-              handleChangeDate(new Date())
-            }}
-            size="small"
-          ></Button>
-        )}
+        <View style={{ width: 40 }}>
+          {!isToday(date) && (
+            <Button
+              label="hoy"
+              onPress={() => {
+                handleChangeDate(new Date())
+              }}
+              size="small"
+            ></Button>
+          )}
+        </View>
       </View>
 
       {!!documentDate && (

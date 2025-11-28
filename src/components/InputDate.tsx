@@ -18,6 +18,12 @@ export type InputDateProps = {
   disabled?: boolean
 }
 type PickerTime = { hours: number; minutes: number }
+const DEFAULT_PICKER_TIME: PickerTime = { hours: 0, minutes: 0 }
+
+const getPickerTimeFromDate = (currentDate?: Date | null): PickerTime => ({
+  hours: currentDate?.getHours() ?? DEFAULT_PICKER_TIME.hours,
+  minutes: currentDate?.getMinutes() ?? DEFAULT_PICKER_TIME.minutes
+})
 export default function InputDate({
   label = '',
   value,
@@ -30,41 +36,48 @@ export default function InputDate({
   disabled
 }: InputDateProps) {
   const [open, setOpen] = React.useState(false)
-
-  const [date, setDate] = React.useState(value ? asDate(value) : null)
-  const defaultTime = withTime
-    ? {
-        hours: date?.getHours(),
-        minutes: date?.getMinutes()
-      }
-    : {
-        hours: 0,
-        minutes: 0
-      }
-
-  const [time, setTime] = React.useState<PickerTime>(defaultTime)
+  const initialDate = value ? asDate(value) : null
+  const [date, setDate] = React.useState<Date | null>(initialDate)
+  const [time, setTime] = React.useState<PickerTime>(
+    getPickerTimeFromDate(initialDate)
+  )
+  const externalValueRef = React.useRef<number | null>(
+    initialDate?.getTime() ?? null
+  )
 
   const onDismissSingle = React.useCallback(() => {
     setOpen(false)
   }, [setOpen])
 
-  // FIXME: si activas esto, genera un cambio que provoca que el time picker no funcione bien
-  // TODO: pero si no lo activas, el valor inicial no se setea bien cuando el value cambia desde afuera
+  useEffect(() => {
+    const normalizedValue = value ? asDate(value) : null
+    const nextTimestamp = normalizedValue?.getTime() ?? null
 
-  // useEffect(() => {
-  //   setDate(asDate(value))
-  // }, [value])
+    if (externalValueRef.current === nextTimestamp) return
 
-  const handleSetDate = ({ date }) => {
-    setDate(date)
+    externalValueRef.current = nextTimestamp
+    setDate(normalizedValue)
+    setTime(getPickerTimeFromDate(normalizedValue))
+  }, [value])
+
+  const handleSetDate = ({ date: selectedDate }) => {
+    if (!selectedDate) return
+    const nextDate = new Date(selectedDate)
+    nextDate.setHours(time.hours, time.minutes, 0, 0)
+    setDate(nextDate)
     setOpen(false)
-    setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
+    externalValueRef.current = nextDate.getTime()
+    setValue(nextDate)
   }
 
-  const handleSetTime = (time: PickerTime) => {
-    setTime(time)
+  const handleSetTime = (selectedTime: PickerTime) => {
+    const baseDate = date ? new Date(date) : new Date()
+    baseDate.setHours(selectedTime.hours, selectedTime.minutes, 0, 0)
+    setTime(selectedTime)
+    setDate(baseDate)
     setOpen(false)
-    setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
+    externalValueRef.current = baseDate.getTime()
+    setValue(baseDate)
   }
 
   return (
@@ -80,13 +93,7 @@ export default function InputDate({
         {`${label} ${!!date ? dateFormat(date, format) : ''}`}
       </Button>
       {withTime && (
-        <TimePicker
-          time={defaultTime}
-          setTime={(time) => {
-            handleSetTime(time)
-          }}
-          disabled={disabled}
-        />
+        <TimePicker time={time} setTime={handleSetTime} disabled={disabled} />
       )}
 
       <SafeAreaProvider>
@@ -124,9 +131,9 @@ const TimePicker = ({ time, setTime, disabled }: TimePickerProps) => {
   const onConfirm = React.useCallback(
     ({ hours, minutes }) => {
       setOpen(false)
-      setTime({ hours, minutes })
+      setTime?.({ hours, minutes })
     },
-    [setOpen, time]
+    [setOpen, setTime]
   )
 
   const numberToTime = (number: number) => {
