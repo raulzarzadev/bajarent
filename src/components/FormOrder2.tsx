@@ -210,6 +210,15 @@ export const FormOrder2 = ({
                       <FormikInputPhoneE name={'phone'} />
                     </ViewInputForm>
                     {/* Customer address */}
+
+                    <ViewInputForm>
+                      <FormikInputValue
+                        name={'neighborhood'}
+                        placeholder="Colonia / Barrio"
+                        helperText="Ejemplo: Centro, Roma, La Florida"
+                      />
+                    </ViewInputForm>
+
                     <ViewInputForm>
                       <FormikInputValue
                         name={'address'}
@@ -217,6 +226,8 @@ export const FormOrder2 = ({
                         helperText={`Ejemplo: Calle 1 #123 entre Calle 2 y Calle 3`}
                       />
                     </ViewInputForm>
+
+                    {/* Additional location info */}
                     <ViewInputForm>
                       <FormikInputValue
                         name={'references'}
