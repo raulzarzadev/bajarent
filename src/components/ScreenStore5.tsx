@@ -1,21 +1,15 @@
 import ErrorBoundary from './ErrorBoundary'
 import { ScrollView, Text, View } from 'react-native'
 import { StoreDetailsE } from './StoreDetails'
-import Button from './Button'
 import Tabs from './Tabs'
 import { useEmployee } from '../contexts/employeeContext'
 import { useAuth } from '../contexts/authContext'
-import { order_status } from '../types/OrderType'
-import { useNavigation } from '@react-navigation/native'
 import ScreenItems from './ScreenItems'
 import { gSpace, gStyles } from '../styles'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import ListMovements from './ListMovements'
 import { ScreenStaffE } from './ScreenStaff'
 import { useRef } from 'react'
-import { useStore } from '../contexts/storeContext'
 import Loading from './Loading'
-import ButtonDownloadCSV from './ButtonDownloadCSV'
 import DisabledView from './DisabledView'
 import TabStoreSections from './TabStoreSections'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
@@ -23,6 +17,7 @@ import { StoreBalanceE } from './StoreBalance/StoreBalance'
 import { CurrentWorkListE } from './CurrentWork/CurrentWorkList'
 import { ScreenChatbotE } from './ScreenChatbot'
 import { useShop } from '../hooks/useShop'
+import { TabStoreConfiguration } from './TabStoreConfigurationt'
 
 const ScreenStore = (props) => {
   const { user } = useAuth()
@@ -56,7 +51,7 @@ const ScreenStore = (props) => {
   const CheckedTabStaff = CheckedTab(TabStaff)
   const CheckedTabItems = CheckedTab(TabItems)
   const CheckedTabClients = CheckedTab(TabClients)
-  const CheckedTabOrders = CheckedTab(TabOrders)
+  const CheckedTabConfig = CheckedTab(TabStoreConfiguration)
   const CheckedStoreBalance = CheckedTab(StoreBalanceE)
 
   if (shop === undefined) return <Loading />
@@ -122,7 +117,7 @@ const ScreenStore = (props) => {
             },
             {
               title: 'Configuración',
-              content: <CheckedTabOrders />,
+              content: <CheckedTabConfig />,
               show: canViewOrders,
               icon: 'settings'
             }
@@ -138,80 +133,6 @@ const TabMovements = () => {
     <View>
       <CurrentWorkListE />
       <ListMovements />
-    </View>
-  )
-}
-
-const StoreNumbersRow = () => {
-  const { store } = useStore()
-  const { navigate } = useNavigation()
-  const { orders, reports } = useOrdersCtx()
-
-  const OrdersAuthorized = orders?.filter(
-    (order) => order.status === order_status.AUTHORIZED
-  )
-
-  const ordersExpired = orders?.filter((o) => o.isExpired)
-
-  const currentFolio = store?.currentFolio
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        flexWrap: 'wrap'
-      }}
-    >
-      <Button
-        label={`Folio: ${currentFolio || 0}`}
-        onPress={() => {
-          console.log('folio')
-        }}
-        variant="ghost"
-        disabled
-      />
-      <Button
-        label={`Vencidas: ${ordersExpired?.length || 0}`}
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'ScreenOrders',
-            params: {
-              title: 'Vencidas',
-              orders: ordersExpired?.map(({ id }) => id)
-            }
-          })
-        }}
-        variant="ghost"
-      />
-      <Button
-        label={`Pedidos: ${OrdersAuthorized?.length || 0}`}
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'ScreenOrders',
-            params: {
-              title: 'Pedidos',
-              orders: OrdersAuthorized?.map(({ id }) => id)
-            }
-          })
-        }}
-        variant="ghost"
-      />
-      <Button
-        label={`Reportes: ${reports?.length || 0}`}
-        onPress={() => {
-          //@ts-ignore
-          navigate('StackOrders', {
-            screen: 'ScreenOrders',
-            params: {
-              title: 'Reportes',
-              orders: reports.map(({ id, orderId }) => orderId)
-            }
-          })
-        }}
-        variant="ghost"
-      />
     </View>
   )
 }
@@ -234,40 +155,6 @@ const TabItems = () => {
       style={[gStyles.container, { marginBottom: gSpace(16), maxWidth: 1200 }]}
     >
       <ScreenItems />
-    </View>
-  )
-}
-
-const TabOrders = () => {
-  const { navigate } = useNavigation()
-  const {
-    permissions: { isAdmin, isOwner }
-  } = useEmployee()
-  return (
-    <View>
-      {<StoreNumbersRow />}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          flexWrap: 'wrap'
-        }}
-      >
-        {isAdmin || isOwner ? (
-          <>
-            <Button
-              label="Configurar"
-              onPress={() => {
-                //@ts-ignore
-                navigate('ScreenOrdersConfig')
-              }}
-              icon="settings"
-              variant="ghost"
-            />
-            <ButtonDownloadCSV />
-          </>
-        ) : null}
-      </View>
     </View>
   )
 }

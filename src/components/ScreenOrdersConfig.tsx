@@ -5,6 +5,7 @@ import { ServiceStores } from '../firebase/ServiceStore'
 import Loading from './Loading'
 import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
+import ErrorBoundary from './ErrorBoundary'
 
 const ScreenOrdersConfig = () => {
   const navigation = useNavigation()
@@ -39,3 +40,10 @@ const ScreenOrdersConfig = () => {
 }
 
 export default ScreenOrdersConfig
+
+export type ScreenOrdersConfigProps = {}
+export const ScreenOrdersConfigE = (props: ScreenOrdersConfigProps) => (
+  <ErrorBoundary componentName="ScreenOrdersConfig">
+    <ScreenOrdersConfig {...props} />
+  </ErrorBoundary>
+)

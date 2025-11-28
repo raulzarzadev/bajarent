@@ -1,9 +1,9 @@
 import { useStore } from '../contexts/storeContext'
-import ListOrders from './ListOrders'
+import { ListOrdersE } from './ListOrders'
 import useOrders from '../hooks/useOrders'
 import { useEffect, useState } from 'react'
 import { useEmployee } from '../contexts/employeeContext'
-import { ScrollView, Text } from 'react-native'
+import { ScrollView } from 'react-native'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import useMyNav from '../hooks/useMyNav'
 import { useOrdersRedux } from '../hooks/useOrdersRedux'
@@ -11,7 +11,6 @@ import HeaderDate from './HeaderDate'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { isToday } from 'date-fns'
 import catchError from '../libs/catchError'
-import Loading from './Loading'
 
 function ScreenOrders({ route, navigation: { navigate } }) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
@@ -95,7 +94,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
       )}
 
       {isOtherDateOrders && (
-        <ListOrders
+        <ListOrdersE
           loading={loading}
           orders={dateOrders}
           collectionSearch={{
@@ -146,7 +145,7 @@ function ScreenOrders({ route, navigation: { navigate } }) {
         />
       )}
       {!isOtherDateOrders && (
-        <ListOrders
+        <ListOrdersE
           orders={hasOrderList ? preOrders : orders}
           collectionSearch={{
             assignedSections: viewAllOrders ? 'all' : userSections,
