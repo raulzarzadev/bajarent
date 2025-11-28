@@ -58,7 +58,7 @@ const ListOrders = ({
         isAuthorized: o?.status === order_status.AUTHORIZED
         //  assignedToSection
       }
-      const customer = customers?.find((c) => c.id === o?.customerId)
+      const customer = customers?.find((c) => c?.id === o?.customerId)
       if (customer) {
         order.customerName = customer.name
         order.neighborhood = customer?.address?.neighborhood
