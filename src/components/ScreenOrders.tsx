@@ -11,8 +11,9 @@ import HeaderDate from './HeaderDate'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { isToday } from 'date-fns'
 import catchError from '../libs/catchError'
+import ErrorBoundary from './ErrorBoundary'
 
-function ScreenOrders({ route, navigation: { navigate } }) {
+function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
   const hasOrderList = !!route?.params?.orders
   const { employee, permissions } = useEmployee()
@@ -198,7 +199,14 @@ function ScreenOrders({ route, navigation: { navigate } }) {
   )
 }
 
-const ScreenOrdersWithCheck = withDisabledCheck(ScreenOrders)
+export type ScreenOrdersProps = { route: any; navigation: any }
+export const ScreenOrdersE = (props: ScreenOrdersProps) => (
+  <ErrorBoundary componentName="ScreenOrders">
+    <ScreenOrders {...props} />
+  </ErrorBoundary>
+)
+
+const ScreenOrdersWithCheck = withDisabledCheck(ScreenOrdersE)
 // @ts-ignore
 ScreenOrdersWithCheck.whyDidYouRender = true
 export default ScreenOrdersWithCheck
