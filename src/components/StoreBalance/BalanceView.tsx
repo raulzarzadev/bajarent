@@ -21,7 +21,7 @@ export const BalanceView = ({ balance }: BalanceViewProps) => {
       sectionName: s.name
     }))
   })
-  console.log({ balance })
+
   return (
     <View>
       <Text
