@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useEmployee } from '../contexts/employeeContext'
 import ButtonConfirm from './ButtonConfirm'
 import { BalanceViewE } from './StoreBalance/BalanceView'
+import Loading from './Loading'
 
 const ScreenBalance_v3 = ({ route }) => {
   const { permissions } = useEmployee()
@@ -32,7 +33,7 @@ const ScreenBalance_v3 = ({ route }) => {
     return
   }
 
-  if (!balance) return <View /> //*<-- this should be a loading spinner
+  if (!balance) return <Loading /> //*<-- this should be a loading spinner
   return (
     <ScrollView>
       <DocMetadata

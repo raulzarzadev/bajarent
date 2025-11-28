@@ -48,14 +48,12 @@ const StoreBalance = () => {
         firebaseSafeSave({
           data: newBalance,
           contextLabel: 'StoreBalance - update balance',
-          saveFn: ServiceBalances.saveBalance
+          saveFn: () =>
+            ServiceBalances.saveBalance({ ...newBalance, type: 'daily' })
         })
       )
       if (err) {
         console.error('Error saving balance:', err)
-      }
-      if (res) {
-        console.log({ res })
       }
       // await ServiceBalances.saveBalance({ ...newBalance, type: 'daily' }).catch(
       //   (e) => {
