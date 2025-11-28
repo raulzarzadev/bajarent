@@ -89,7 +89,7 @@ const OrderProvider = ({
 
         const customerIsSet = typeof order.customerId === 'string'
         if (customerIsSet) {
-          const ctxCustomer = customers.find((c) => c.id === order.customerId)
+          const ctxCustomer = customers.find((c) => c?.id === order.customerId)
           if (ctxCustomer) {
             plainOrder = {
               ...plainOrder,
