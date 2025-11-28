@@ -21,7 +21,7 @@ export type ModalPaymentSaleProps = {
 }
 export const ModalPaymentSale = ({ orderId }: ModalPaymentSaleProps) => {
   const { order } = useOrderDetails()
-  const [scheduledAt, setScheduledAt] = useState(null)
+  const [scheduledAt, setScheduledAt] = useState<Date | null>(null)
 
   const { storeId } = useStore()
   const { user } = useAuth()
@@ -76,7 +76,7 @@ export const ModalPaymentSale = ({ orderId }: ModalPaymentSaleProps) => {
 
       <StyledModal {...modalPayAndDelivery}>
         <ViewInputForm>
-          {scheduledAt ? (
+          {!!scheduledAt ? (
             <View>
               <Button
                 onPress={() => setScheduledAt(null)}

@@ -9,7 +9,7 @@ import ErrorBoundary from './ErrorBoundary'
 export type InputDateProps = {
   label?: string
   icon?: IconName
-  value: Date
+  value: Date | null
   setValue: (value: Date) => void
   format?: string
   withTime?: boolean
@@ -20,7 +20,7 @@ export type InputDateProps = {
 type PickerTime = { hours: number; minutes: number }
 export default function InputDate({
   label = '',
-  value = new Date(),
+  value,
   setValue,
   format = 'EE dd / MMM / yy',
   withTime = false,
@@ -29,11 +29,9 @@ export default function InputDate({
   openButtonProps,
   disabled
 }: InputDateProps) {
-  const nowDate = new Date()
-
   const [open, setOpen] = React.useState(false)
 
-  const [date, setDate] = React.useState(value || nowDate)
+  const [date, setDate] = React.useState(value ? asDate(value) : null)
   const defaultTime = withTime
     ? {
         hours: date?.getHours(),
@@ -51,8 +49,9 @@ export default function InputDate({
   }, [setOpen])
 
   // FIXME: si activas esto, genera un cambio que provoca que el time picker no funcione bien
-  // useEffect(() => {
+  // TODO: pero si no lo activas, el valor inicial no se setea bien cuando el value cambia desde afuera
 
+  // useEffect(() => {
   //   setDate(asDate(value))
   // }, [value])
 
@@ -67,6 +66,8 @@ export default function InputDate({
     setOpen(false)
     setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
   }
+
+  console.log({ date })
 
   return (
     <View>
@@ -116,15 +117,7 @@ export const InputDateE = (props: InputDateProps) => (
   </ErrorBoundary>
 )
 
-const TimePicker = ({
-  time,
-  setTime,
-  disabled
-}: {
-  time?: PickerTime
-  setTime?: (time: PickerTime) => void
-  disabled?: boolean
-}) => {
+const TimePicker = ({ time, setTime, disabled }: TimePickerProps) => {
   const [open, setOpen] = React.useState(false)
   const onDismiss = React.useCallback(() => {
     setOpen(false)
@@ -174,3 +167,13 @@ const TimePicker = ({
     </>
   )
 }
+export type TimePickerProps = {
+  time?: PickerTime
+  setTime?: (time: PickerTime) => void
+  disabled?: boolean
+}
+export const TimePickerE = (props: TimePickerProps) => (
+  <ErrorBoundary componentName="TimePicker">
+    <TimePicker {...props} />
+  </ErrorBoundary>
+)

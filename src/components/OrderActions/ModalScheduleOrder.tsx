@@ -21,17 +21,6 @@ const ModalScheduleOrder = ({ orderId = null }: { orderId: string | null }) => {
 
   return (
     <View>
-      {/* <InputDate
-        size="small"
-        openButtonProps={{
-          color: 'secondary',
-          variant: 'filled'
-        }}
-        setValue={(d) => {
-          handleSubmit(d)
-        }}
-        value={asDate(order?.scheduledAt) || new Date()}
-      /> */}
       {scheduledAt ? (
         <View>
           <Button
