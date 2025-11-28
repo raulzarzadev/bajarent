@@ -67,8 +67,6 @@ export default function InputDate({
     setValue(new Date(date.setHours(time.hours, time.minutes, 0, 0)))
   }
 
-  console.log({ date })
-
   return (
     <View>
       <Button
