@@ -1,7 +1,6 @@
 import { View } from 'react-native'
-import InputDate, { InputDateE } from '../InputDate'
+import { InputDateE } from '../InputDate'
 import { useOrderDetails } from '../../contexts/orderContext'
-import asDate from '../../libs/utils-date'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import Button from '../Button'
 import { useState } from 'react'
