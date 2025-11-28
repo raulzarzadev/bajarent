@@ -1,5 +1,5 @@
 import { View, ScrollView } from 'react-native'
-import OrderDetails, { OrderDetailsE } from './OrderDetails'
+import { OrderDetailsE } from './OrderDetails'
 import ErrorBoundary from './ErrorBoundary'
 import { OrderProvider, useOrderDetails } from '../contexts/orderContext'
 import Loading from './Loading'
