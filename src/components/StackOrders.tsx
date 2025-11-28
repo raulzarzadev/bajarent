@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenOrders from './ScreenOrders'
+import { ScreenOrdersE } from './ScreenOrders'
 import ScreenOrderDetail from './ScreenOrderDetail'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenAssignOrder from './ScreenAssignOrder'
@@ -31,7 +31,7 @@ function StackOrders() {
           //@ts-ignore
           title: route?.params?.title || 'Mis ordenes' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
-        component={ScreenOrders}
+        component={ScreenOrdersE}
       />
 
       <Stack.Screen
@@ -86,7 +86,7 @@ function StackOrders() {
           //@ts-ignore
           title: route?.params?.title || 'Ordenes seleccionadas'
         })}
-        component={ScreenOrders}
+        component={ScreenOrdersE}
       />
 
       {/* 
