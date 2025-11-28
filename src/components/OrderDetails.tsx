@@ -494,3 +494,8 @@ export default function OrderDetails(props: { order: Partial<OrderType> }) {
     </ErrorBoundary>
   )
 }
+export const OrderDetailsE = (props) => (
+  <ErrorBoundary componentName="OrderDetails">
+    <OrderDetails {...props} />
+  </ErrorBoundary>
+)
