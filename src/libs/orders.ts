@@ -17,7 +17,7 @@ import { CustomerType } from '../state/features/costumers/customerType'
 import { getFavoriteCustomerPhone } from '../components/Customers/lib/lib'
 
 export const formatOrders = ({
-  orders,
+  orders = [],
   reports = [],
   justActive = false,
   customers = []
