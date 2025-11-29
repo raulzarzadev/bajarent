@@ -5,6 +5,7 @@ import Tabs from './Tabs'
 import { useEmployee } from '../contexts/employeeContext'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import Button from './Button'
+import { AppErrorLogs } from './StoreBalance/AppErrorLogs'
 
 export const TabStoreConfiguration = () => {
   return (
@@ -22,6 +23,11 @@ export const TabStoreConfiguration = () => {
           content: <BackupsTab />,
           show: true,
           icon: 'backup'
+        },
+        {
+          title: 'Errores',
+          content: <AppErrorLogs />,
+          show: true
         }
       ]}
     ></Tabs>
