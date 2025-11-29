@@ -108,7 +108,8 @@ export const STATUS_COLOR: Record<order_status, string> = {
   [order_status.REPAIRED]: theme.warning,
   REPAIR_DELIVERED: theme.neutral,
   EXPIRE_TODAY: theme.error,
-  EXPIRED_TOMORROW: theme.warning
+  EXPIRED_TOMORROW: theme.warning,
+  [order_status.CREATED]: theme.transparent
 }
 export const ORDER_STATUS_COLOR = STATUS_COLOR
 
