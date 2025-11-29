@@ -170,7 +170,6 @@ const ListStoreItems = ({
   }
   const canCreateItems = permissions?.items?.canCreate || permissions.isAdmin
 
-  console.log({ items })
   return (
     <View>
       <ListE

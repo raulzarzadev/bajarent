@@ -248,13 +248,17 @@ export class FirebaseCRUD {
    * get a single document from the collection
    * @param itemId the id of the document to get
    */
-  async getItem(itemId: string) {
+  async getItem(itemId: string, ops?: GetItemsOps) {
     const ref = doc(this.db, this.collectionName, itemId)
     // const docSnap = await getDoc(ref)
 
     let docSnap: DocumentSnapshot<DocumentData>
     try {
-      docSnap = await getDocFromCache(ref)
+      if (ops?.fromCache) {
+        docSnap = await getDocFromCache(ref)
+      } else {
+        docSnap = await getDocFromServer(ref)
+      }
     } catch (error) {
       docSnap = await getDocFromServer(ref)
     }

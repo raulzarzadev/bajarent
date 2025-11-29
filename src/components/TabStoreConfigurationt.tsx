@@ -6,10 +6,9 @@ import { useEmployee } from '../contexts/employeeContext'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import { AppErrorLogs } from './StoreBalance/AppErrorLogs'
 import { useAuth } from '../contexts/authContext'
-import { useEffect } from 'react'
-import { ServiceUsers } from '../firebase/ServiceUser'
 
 export const TabStoreConfiguration = () => {
+  const { user } = useAuth()
   return (
     <Tabs
       tabId="tab-store-config"
@@ -28,9 +27,9 @@ export const TabStoreConfiguration = () => {
         },
         {
           title: 'Errores',
-          content: <AppErrorLogs />
+          content: <AppErrorLogs />,
           // @ts-ignore roles is added dynamically to employee object. this roles is different from user roles
-          // show: !!user?.roles?.includes('SUPER_ADMIN')
+          show: !!user?.roles?.includes('SUPER_ADMIN')
         }
       ]}
     ></Tabs>
