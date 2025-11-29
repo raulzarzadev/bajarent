@@ -17,12 +17,13 @@ const ORDER_PAGE_SIZE = 20
 
 const searchStatusOptions = {
   [order_status.DELIVERED]: 'Entregadas',
-  [order_status.PICKED_UP]: 'Recogidas'
+  [order_status.PICKED_UP]: 'Recogidas',
+  [order_status.CANCELLED]: 'Canceladas',
+  [order_status.CREATED]: 'Creadas'
 } as const
 
 type SearchStatusType = keyof typeof searchStatusOptions
-type SortField = 'deliveredAt' | 'pickedUpAt'
-
+type SortField = 'deliveredAt' | 'pickedUpAt' | 'cancelledAt' | 'createdAt'
 const getSortField = (status: SearchStatusType): SortField =>
   status === order_status.DELIVERED ? 'deliveredAt' : 'pickedUpAt'
 
@@ -51,12 +52,17 @@ export const BalanceRentOrders = ({
       }
       setError(null)
 
-      const filters: QueryConstraint[] = [
+      const filters = [
         where('storeId', '==', balance.storeId),
         where('type', '==', order_type.RENT),
-        where('status', '==', status),
         orderBy(sortField, 'desc')
-      ]
+      ] as QueryConstraint[]
+
+      if (!(status === order_status.CREATED)) {
+        // filter by status only if not CREATED
+        // Buscar en todas las ordenes sin importar el status, ordenalas por la fecha
+        filters.push(where('status', '==', status as order_status))
+      }
 
       if (isLoadMore && lastCursorRef.current) {
         filters.push(startAfter(lastCursorRef.current))

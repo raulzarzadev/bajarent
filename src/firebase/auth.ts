@@ -48,7 +48,7 @@ export function authStateChanged(cb: CallableFunction) {
         // rol: 'CLIENT',
         image: user.photoURL || '',
         phone: user.phoneNumber || '',
-        canCreateStore: true
+        canCreateStore: false
       }
       await ServiceUsers.set(user.uid, newUser)
       const userCreated = await ServiceUsers.get(user.uid)
