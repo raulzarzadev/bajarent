@@ -6,6 +6,7 @@ import Tabs from '../Tabs'
 import { useStore } from '../../contexts/storeContext'
 import { SectionBalanceRentsE } from './SectionBalanceRents'
 import BalanceItemsTable from './BalanceItemsTable'
+import { BalanceRentOrders } from './BalanceRentOrders'
 
 const RentsBalance = ({ balance }: RentsBalanceProps) => {
   const { sections: storeSections } = useStore()
@@ -65,6 +66,11 @@ const RentsBalance = ({ balance }: RentsBalanceProps) => {
           {
             title: 'Artículos',
             content: <BalanceItemsTable balance={balance} />,
+            show: true
+          },
+          {
+            title: 'Ordenes',
+            content: <BalanceRentOrders balance={balance} />,
             show: true
           },
           ...sectionsTabs

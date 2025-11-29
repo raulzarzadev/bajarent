@@ -1,0 +1,161 @@
+import { ActivityIndicator, Text, View } from 'react-native'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  limit,
+  orderBy,
+  startAfter,
+  where,
+  QueryConstraint
+} from 'firebase/firestore'
+import { StoreBalanceType } from '../../types/StoreBalance'
+import OrderType, { order_status, order_type } from '../../types/OrderType'
+import { ListOrdersE } from '../ListOrders'
+import Button from '../Button'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+
+const ORDER_PAGE_SIZE = 20
+
+const searchStatusOptions = {
+  [order_status.DELIVERED]: 'Entregadas',
+  [order_status.PICKED_UP]: 'Recogidas'
+} as const
+
+type SearchStatusType = keyof typeof searchStatusOptions
+type SortField = 'deliveredAt' | 'pickedUpAt'
+
+const getSortField = (status: SearchStatusType): SortField =>
+  status === order_status.DELIVERED ? 'deliveredAt' : 'pickedUpAt'
+
+export const BalanceRentOrders = ({
+  balance
+}: {
+  balance: StoreBalanceType
+}) => {
+  const [status, setStatus] = useState<SearchStatusType>()
+  const [orders, setOrders] = useState<OrderType[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isPaginating, setIsPaginating] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const lastCursorRef = useRef<any>(null)
+
+  const fetchOrders = useCallback(
+    async (mode: 'reset' | 'append' = 'reset') => {
+      const isLoadMore = mode === 'append'
+      const sortField = getSortField(status)
+
+      isLoadMore ? setIsPaginating(true) : setIsLoading(true)
+      if (mode === 'reset') {
+        lastCursorRef.current = null
+        setHasMore(true)
+      }
+      setError(null)
+
+      const filters: QueryConstraint[] = [
+        where('storeId', '==', balance.storeId),
+        where('type', '==', order_type.RENT),
+        where('status', '==', status),
+        orderBy(sortField, 'desc')
+      ]
+
+      if (isLoadMore && lastCursorRef.current) {
+        filters.push(startAfter(lastCursorRef.current))
+      }
+
+      filters.push(limit(ORDER_PAGE_SIZE))
+
+      try {
+        const result = await ServiceOrders.findMany(filters)
+        const lastItem = result[result.length - 1]
+        lastCursorRef.current = lastItem?.[sortField] ?? null
+        setHasMore(result.length === ORDER_PAGE_SIZE)
+        setOrders((prev) => (isLoadMore ? [...prev, ...result] : result))
+      } catch (err) {
+        console.error('Error loading rent orders', err)
+        setError('No se pudieron cargar las órdenes. Intenta de nuevo.')
+      } finally {
+        isLoadMore ? setIsPaginating(false) : setIsLoading(false)
+      }
+    },
+    [balance.storeId, status]
+  )
+
+  useEffect(() => {
+    fetchOrders('reset')
+  }, [fetchOrders])
+
+  const handleSelectStatus = (newStatus: SearchStatusType) => {
+    if (newStatus === status) {
+      fetchOrders('reset')
+      return
+    }
+    setStatus(newStatus)
+  }
+
+  const handleLoadMore = () => {
+    if (!hasMore || isPaginating || isLoading) return
+    fetchOrders('append')
+  }
+
+  const isInitialLoading = isLoading && orders.length === 0
+
+  return (
+    <View style={{ gap: 12 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 10,
+          justifyContent: 'center'
+        }}
+      >
+        {Object.entries(searchStatusOptions).map(([key, label]) => (
+          <Button
+            key={key}
+            variant={status === key ? 'filled' : 'ghost'}
+            size="xs"
+            label={label}
+            onPress={() => handleSelectStatus(key as SearchStatusType)}
+            disabled={isLoading && status === key}
+          />
+        ))}
+      </View>
+
+      {error && (
+        <Text style={{ color: '#DC2626', textAlign: 'center' }}>{error}</Text>
+      )}
+
+      {isInitialLoading ? (
+        <View style={{ paddingVertical: 32 }}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <>
+          <ListOrdersE orders={orders} />
+          {!orders.length && !error && (
+            <Text style={{ textAlign: 'center', color: '#6B7280' }}>
+              No hay órdenes para mostrar.
+            </Text>
+          )}
+        </>
+      )}
+      <View style={{ alignItems: 'center', marginVertical: 12 }}>
+        <Button
+          size="small"
+          icon="rowDown"
+          label={
+            hasMore
+              ? isPaginating
+                ? 'Cargando...'
+                : 'Cargar más'
+              : 'No hay más resultados'
+          }
+          variant="outline"
+          onPress={handleLoadMore}
+          disabled={
+            !hasMore || isPaginating || isInitialLoading || status === undefined
+          }
+        />
+      </View>
+    </View>
+  )
+}

@@ -240,6 +240,7 @@ export type OrderImagesType = Record<
   ImageDescriptionType['id'],
   Partial<ImageDescriptionType>
 >
+
 export enum order_status {
   PENDING = 'PENDING',
   AUTHORIZED = 'AUTHORIZED',
@@ -267,6 +268,8 @@ export type SentMessage = {
 
 // /**
 //  * @deprecated use TypeOrder instead
+//? is this a circular reference?  we should check it
+//*
 //  */
 export enum order_type {
   RENT = 'RENT',
@@ -330,6 +333,7 @@ export enum TypeOrder {
   SALE = 'SALE',
   REPAIR = 'REPAIR'
 }
+
 export type TypeOrderType = keyof typeof TypeOrder
 
 export const IconOrderType = {

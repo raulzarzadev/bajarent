@@ -3,7 +3,7 @@ import { ListOrdersE } from './ListOrders'
 import useOrders from '../hooks/useOrders'
 import { useEffect, useState } from 'react'
 import { useEmployee } from '../contexts/employeeContext'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
 import useMyNav from '../hooks/useMyNav'
 import { useOrdersRedux } from '../hooks/useOrdersRedux'
@@ -12,6 +12,8 @@ import { ServiceOrders } from '../firebase/ServiceOrders'
 import { isToday } from 'date-fns'
 import catchError from '../libs/catchError'
 import ErrorBoundary from './ErrorBoundary'
+import InputSelect from './InputSelect'
+import { order_status } from '../types/OrderType'
 
 function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
   const { store } = useStore() //*<---- FIXME: if you remove this everything will break
@@ -88,6 +90,8 @@ function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
   }
 
   const isOtherDateOrders = !(dateOrders === null)
+  const canViewOtherStatus = permissions.isAdmin
+
   return (
     <ScrollView>
       {canViewOtherDates && (
