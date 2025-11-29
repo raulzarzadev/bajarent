@@ -29,6 +29,7 @@ export const TabStoreConfiguration = () => {
         {
           title: 'Errores',
           content: <AppErrorLogs />,
+          // @ts-ignore roles is added dynamically to employee object. this roles is different from user roles
           show: !!user?.roles?.includes('SUPER_ADMIN')
         }
       ]}
