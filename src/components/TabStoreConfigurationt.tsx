@@ -6,8 +6,10 @@ import { useEmployee } from '../contexts/employeeContext'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import Button from './Button'
 import { AppErrorLogs } from './StoreBalance/AppErrorLogs'
+import { useAuth } from '../contexts/authContext'
 
 export const TabStoreConfiguration = () => {
+  const { user } = useAuth()
   return (
     <Tabs
       tabId="tab-store-config"
@@ -27,7 +29,7 @@ export const TabStoreConfiguration = () => {
         {
           title: 'Errores',
           content: <AppErrorLogs />,
-          show: true
+          show: !!user?.roles?.includes('SUPER_ADMIN')
         }
       ]}
     ></Tabs>

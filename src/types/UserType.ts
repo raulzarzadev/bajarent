@@ -9,6 +9,7 @@ export type UserBase = {
   // super_user?: boolean
   canCreateStore?: boolean
   permissions?: UserPermissions
+  roles?: 'SUPER_ADMIN'[]
 }
 
 /**
