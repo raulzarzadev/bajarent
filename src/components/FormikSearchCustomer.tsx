@@ -13,7 +13,7 @@ import { useField, useFormikContext } from 'formik'
 const FormikSearchCustomer = ({
   name,
   placeholder,
-  customers,
+  customers = [],
   maxSuggestions,
   style
 }: FormikSearchCustomerProps) => {
