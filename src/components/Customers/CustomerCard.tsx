@@ -30,7 +30,13 @@ const CustomerCard = (props?: CustomerCardProps) => {
     customerId && (permissions?.customers?.edit || permissions.isAdmin)
   const canDelete =
     customerId && (permissions?.customers?.delete || permissions.isAdmin)
-
+  const [customerLocation, setCustomerLocation] = useState<CoordsType>()
+  useEffect(() => {
+    if (!customer) return
+    getCoordinates(customer?.address?.locationURL).then((coords) => {
+      setCustomerLocation(coords)
+    })
+  }, [customer?.address?.locationURL, customer?.address?.coords])
   if (!customer) return <Text>No hay cliente</Text>
   const handleUpdateLocation = async (location: CoordsType | string) => {
     return await update(customerId, {
@@ -38,12 +44,7 @@ const CustomerCard = (props?: CustomerCardProps) => {
       ['address.locationURL']: location
     })
   }
-  const [customerLocation, setCustomerLocation] = useState<CoordsType>()
-  useEffect(() => {
-    getCoordinates(customer?.address?.locationURL).then((coords) => {
-      setCustomerLocation(coords)
-    })
-  }, [customer.address.locationURL, customer.address.coords])
+
   return (
     <View style={{ justifyContent: 'center' }}>
       {/* CUSTOMER ACTIONS SHOULD VERIFY EMPLOYEE PERMISSIOS */}

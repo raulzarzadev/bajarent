@@ -16,6 +16,7 @@ export const AppErrorLogs = () => {
   const [fetchError, setFetchError] = useState<string | null>(null)
   const lastCursorRef = useRef<any>(null)
   const userNamesRef = useRef<Record<string, string>>({})
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const loadUserNames = useCallback(async (entries: AppErrorType[]) => {
     const missingIds = entries
@@ -99,32 +100,20 @@ export const AppErrorLogs = () => {
     fetchErrors('append')
   }
 
+  const handleToggleExpanded = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id))
+  }
+
   const isInitialLoading = isLoading && !errors.length
 
-  type ExpandableFieldProps = { label: string; value?: string }
-  const ExpandableField = ({ label, value }: ExpandableFieldProps) => {
-    const [expanded, setExpanded] = useState(false)
+  type DetailRowProps = { label: string; value?: string }
+  const DetailRow = ({ label, value }: DetailRowProps) => {
     if (!value) return null
     return (
       <View style={{ marginTop: 10 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}
-        >
-          <Text style={{ fontWeight: '600', color: '#111827' }}>{label}</Text>
-          <Text
-            onPress={() => setExpanded((prev) => !prev)}
-            style={{ color: '#2563eb', fontSize: 12 }}
-          >
-            Ver {expanded ? 'menos' : 'más'}
-          </Text>
-        </View>
+        <Text style={{ fontWeight: '600', color: '#111827' }}>{label}</Text>
         <Text
           selectable
-          numberOfLines={expanded ? undefined : 3}
           style={{ marginTop: 4, fontSize: 12, color: '#374151' }}
         >
           {value}
@@ -132,7 +121,16 @@ export const AppErrorLogs = () => {
       </View>
     )
   }
-  const ErrorCard = ({ error }: { error: AppErrorType }) => {
+
+  const ErrorCard = ({
+    error,
+    isExpanded,
+    onToggle
+  }: {
+    error: AppErrorType
+    isExpanded: boolean
+    onToggle: () => void
+  }) => {
     const createdByLabel =
       (error.createdBy && userNames[error.createdBy]) ||
       error.createdBy ||
@@ -142,7 +140,7 @@ export const AppErrorLogs = () => {
       <View
         style={{
           backgroundColor: '#fff',
-          padding: 16,
+          padding: 12,
           borderRadius: 12,
           marginBottom: 12,
           shadowColor: '#000',
@@ -152,68 +150,71 @@ export const AppErrorLogs = () => {
           elevation: 3
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
-        >
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: '700',
+                color: '#111827',
+                marginRight: 8
+              }}
+            >
+              {error.code}
+            </Text>
+            {error.componentName && (
+              <View
+                style={{
+                  paddingHorizontal: 8,
+                  paddingVertical: 2,
+                  borderRadius: 999,
+                  backgroundColor: '#e0f2fe'
+                }}
+              >
+                <Text style={{ fontSize: 12, color: '#0369a1' }}>
+                  {error.componentName}
+                </Text>
+              </View>
+            )}
+          </View>
           <Text style={{ fontSize: 12, color: '#9ca3af' }}>
             {dateFormat(asDate(error.createdAt), 'dd/MMM/yy HH:mm') ??
               'Sin fecha'}
           </Text>
-          <Text style={{ fontSize: 12, color: '#6b7280' }}>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: 6
+          }}
+        >
+          <Text style={{ fontSize: 12, color: '#6b7280', flex: 1 }}>
             {createdByLabel}
           </Text>
+          <Button
+            size="xs"
+            variant="ghost"
+            label={isExpanded ? 'Ocultar' : 'Ver detalles'}
+            onPress={onToggle}
+          />
         </View>
-        <View
-          style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}
+
+        <Text
+          style={{ fontSize: 14, color: '#4b5563', marginTop: 8 }}
+          numberOfLines={isExpanded ? undefined : 2}
         >
-          <Text
-            style={{
-              fontSize: 12,
-              fontWeight: '700',
-              color: '#111827',
-              marginRight: 12
-            }}
-          >
-            {error.code}
-          </Text>
-          {error.componentName && (
-            <View
-              style={{
-                paddingHorizontal: 8,
-                paddingVertical: 2,
-                borderRadius: 999,
-                backgroundColor: '#e0f2fe'
-              }}
-            >
-              <Text style={{ fontSize: 12, color: '#0369a1' }}>
-                {error.componentName}
-              </Text>
-            </View>
-          )}
-        </View>
-        <Text style={{ fontSize: 14, color: '#4b5563', marginTop: 8 }}>
           {error.message}
         </Text>
 
-        <ExpandableField label="Info" value={error.info} />
-        <ExpandableField label="Stack" value={error.stack} />
-
-        {error.userAgent && (
-          <View style={{ marginTop: 10 }}>
-            <Text style={{ fontWeight: '600', color: '#111827' }}>
-              User Agent
-            </Text>
-            <Text
-              selectable
-              style={{ marginTop: 4, fontSize: 12, color: '#4b5563' }}
-            >
-              {error.userAgent}
-            </Text>
-          </View>
+        {isExpanded && (
+          <>
+            <DetailRow label="Info" value={error.info} />
+            <DetailRow label="Stack" value={error.stack} />
+            <DetailRow label="User Agent" value={error.userAgent} />
+          </>
         )}
       </View>
     )
@@ -237,7 +238,12 @@ export const AppErrorLogs = () => {
       ) : (
         <>
           {errors.map((error) => (
-            <ErrorCard key={error.id} error={error} />
+            <ErrorCard
+              key={error.id}
+              error={error}
+              isExpanded={expandedId === error.id}
+              onToggle={() => handleToggleExpanded(error.id)}
+            />
           ))}
           <Button
             label={
