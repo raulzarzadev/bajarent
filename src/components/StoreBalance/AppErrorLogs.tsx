@@ -106,9 +106,18 @@ export const AppErrorLogs = () => {
 
   const isInitialLoading = isLoading && !errors.length
 
-  type DetailRowProps = { label: string; value?: string }
+  type DetailValue = string | number | Record<string, unknown> | unknown[]
+  type DetailRowProps = { label: string; value?: DetailValue }
   const DetailRow = ({ label, value }: DetailRowProps) => {
-    if (!value) return null
+    if (value === undefined || value === null) return null
+
+    const formattedValue =
+      typeof value === 'string'
+        ? value
+        : typeof value === 'object'
+        ? JSON.stringify(value, null, 2)
+        : String(value)
+
     return (
       <View style={{ marginTop: 10 }}>
         <Text style={{ fontWeight: '600', color: '#111827' }}>{label}</Text>
@@ -116,7 +125,7 @@ export const AppErrorLogs = () => {
           selectable
           style={{ marginTop: 4, fontSize: 12, color: '#374151' }}
         >
-          {value}
+          {formattedValue}
         </Text>
       </View>
     )
