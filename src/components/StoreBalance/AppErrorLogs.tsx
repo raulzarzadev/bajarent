@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, Platform, Text, View } from 'react-native'
 import { limit, orderBy, QueryConstraint, startAfter } from 'firebase/firestore'
 import Button from '../Button'
 import { AppErrorType, ServiceAppErrors } from '../../firebase/ServiceAppErrors'
@@ -106,27 +106,130 @@ export const AppErrorLogs = () => {
 
   const isInitialLoading = isLoading && !errors.length
 
+  const monoFont =
+    Platform.select({
+      ios: 'Menlo',
+      android: 'monospace',
+      default: 'monospace'
+    }) || undefined
+
   type DetailValue = string | number | Record<string, unknown> | unknown[]
+
+  const tryParseJson = (value: string) => {
+    try {
+      return JSON.parse(value)
+    } catch {
+      return null
+    }
+  }
+
+  const normalizeDetailValue = (value: DetailValue) => {
+    if (typeof value === 'string') {
+      const trimmed = value.trim()
+      const parsed =
+        (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+        (trimmed.startsWith('[') && trimmed.endsWith(']'))
+          ? tryParseJson(trimmed)
+          : null
+      return parsed ?? value
+    }
+    return value
+  }
+
+  const StructuredValue = ({
+    value,
+    level = 0
+  }: {
+    value: any
+    level?: number
+  }) => {
+    const marginLeft = level * 12
+
+    if (Array.isArray(value)) {
+      return (
+        <View style={{ marginLeft }}>
+          {value.map((item, index) => (
+            <View key={`${level}-${index}`} style={{ marginTop: 6 }}>
+              <Text
+                style={{ fontSize: 12, color: '#6B7280', fontFamily: monoFont }}
+              >
+                [{index}]
+              </Text>
+              <StructuredValue value={item} level={level + 1} />
+            </View>
+          ))}
+        </View>
+      )
+    }
+
+    if (value && typeof value === 'object') {
+      return (
+        <View style={{ marginLeft }}>
+          {Object.entries(value).map(([key, nested]) => (
+            <View key={`${level}-${key}`} style={{ marginTop: 6 }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: '#111827',
+                  fontWeight: '600',
+                  fontFamily: monoFont
+                }}
+              >
+                {key}
+              </Text>
+              <StructuredValue value={nested} level={level + 1} />
+            </View>
+          ))}
+        </View>
+      )
+    }
+
+    return (
+      <Text
+        selectable
+        style={{
+          marginLeft,
+          fontSize: 12,
+          color: '#374151',
+          lineHeight: 18,
+          fontFamily: monoFont
+        }}
+      >
+        {String(value)}
+      </Text>
+    )
+  }
+
   type DetailRowProps = { label: string; value?: DetailValue }
   const DetailRow = ({ label, value }: DetailRowProps) => {
     if (value === undefined || value === null) return null
-
-    const formattedValue =
-      typeof value === 'string'
-        ? value
-        : typeof value === 'object'
-        ? JSON.stringify(value, null, 2)
-        : String(value)
+    const normalized = normalizeDetailValue(value)
+    const isStructured = typeof normalized === 'object' && normalized !== null
 
     return (
       <View style={{ marginTop: 10 }}>
         <Text style={{ fontWeight: '600', color: '#111827' }}>{label}</Text>
-        <Text
-          selectable
-          style={{ marginTop: 4, fontSize: 12, color: '#374151' }}
+        <View
+          style={{
+            marginTop: 6,
+            padding: isStructured ? 10 : 0,
+            borderRadius: 8,
+            backgroundColor: isStructured ? '#F9FAFB' : 'transparent',
+            borderWidth: isStructured ? 1 : 0,
+            borderColor: '#E5E7EB'
+          }}
         >
-          {formattedValue}
-        </Text>
+          {isStructured ? (
+            <StructuredValue value={normalized} />
+          ) : (
+            <Text
+              selectable
+              style={{ fontSize: 12, color: '#374151', lineHeight: 18 }}
+            >
+              {String(normalized)}
+            </Text>
+          )}
+        </View>
       </View>
     )
   }
