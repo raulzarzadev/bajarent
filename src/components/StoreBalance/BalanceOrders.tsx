@@ -27,11 +27,7 @@ type SortField = 'deliveredAt' | 'pickedUpAt' | 'cancelledAt' | 'createdAt'
 const getSortField = (status: SearchStatusType): SortField =>
   status === order_status.DELIVERED ? 'deliveredAt' : 'pickedUpAt'
 
-export const BalanceRentOrders = ({
-  balance
-}: {
-  balance: StoreBalanceType
-}) => {
+export const BalanceOrders = ({ balance }: { balance: StoreBalanceType }) => {
   const [status, setStatus] = useState<SearchStatusType>()
   const [orders, setOrders] = useState<OrderType[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -54,13 +50,12 @@ export const BalanceRentOrders = ({
 
       const filters = [
         where('storeId', '==', balance.storeId),
-        where('type', '==', order_type.RENT),
         orderBy(sortField, 'desc')
       ] as QueryConstraint[]
 
-      if (!(status === order_status.CREATED)) {
+      if (status !== order_status.CREATED) {
         // filter by status only if not CREATED
-        // Buscar en todas las ordenes sin importar el status, ordenalas por la fecha
+        //Si status diferente a created ,  Buscar en todas las ordenes sin importar el status, ordenalas por la fecha
         filters.push(where('status', '==', status as order_status))
       }
 

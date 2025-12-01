@@ -12,6 +12,7 @@ import SpanCopy from '../SpanCopy'
 import { payments_amount } from '../../libs/payments'
 import { order_type } from '../../types/OrderType'
 import { useStore } from '../../contexts/storeContext'
+import { BalanceOrders } from './BalanceOrders'
 
 export const BalanceView = ({ balance }: BalanceViewProps) => {
   const { sections } = useStore()
@@ -63,6 +64,11 @@ export const BalanceView = ({ balance }: BalanceViewProps) => {
             content: <SalesBalanceE balance={balance} />,
             show: true
             // disabled: true
+          },
+          {
+            title: 'Ordenes',
+            content: <BalanceOrders balance={balance} />,
+            show: true
           }
         ]}
       />
