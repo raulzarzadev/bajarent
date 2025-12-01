@@ -48,7 +48,7 @@ const OrderProvider = ({
   const route = useRoute()
   //@ts-ignore
   const _orderId = orderId || route?.params?.orderId
-  const [order, setOrder] = useState<Order>()
+  const [order, setOrder] = useState<Order | null>()
   const [paymentsCount, setPaymentsCount] = useState(2)
   const [payments, setPayments] = useState<PaymentType[]>([])
 
@@ -86,7 +86,9 @@ const OrderProvider = ({
         // Create a new object instead of mutating directly
         let plainOrder: OrderType = { ...order }
 
-        const customerIsSet = typeof order.customerId === 'string'
+        if (!order) return setOrder(null)
+
+        const customerIsSet = typeof order?.customerId === 'string'
         if (customerIsSet) {
           const ctxCustomer = customers.find((c) => c?.id === order.customerId)
           if (ctxCustomer) {
@@ -121,10 +123,12 @@ const OrderProvider = ({
   return (
     <OrderContext.Provider
       value={{
-        //@ts-ignore
-        order: !!order
-          ? { ...order, comments: orderComments, payments }
-          : undefined,
+        order: {
+          ...order,
+          comments: orderComments,
+          payments,
+          orderIsNull: order === null
+        },
         setOrder,
         payments,
         setPaymentsCount,

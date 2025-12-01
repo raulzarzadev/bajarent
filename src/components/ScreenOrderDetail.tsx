@@ -25,7 +25,6 @@ const ScreenOrderDetail = () => {
 
 const OrderDetailsContext = () => {
   const { order } = useOrderDetails()
-  if (!order) return <Loading></Loading>
   return <OrderDetailsE order={order} />
 }
 export const ScreenOrderDetailE = (props) => (

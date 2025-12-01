@@ -36,6 +36,7 @@ import { CustomerOrderE } from './Customers/CustomerOrder'
 import OrderBigStatus from './OrderBigStatus'
 import { OrderContractSignatureE } from './OrderContractSignature'
 import { OrderImagesUpdateE } from './OrderImagesUpdate'
+import TextInfo from './TextInfo'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   const { store } = useStore()
@@ -44,105 +45,116 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
   }
 
   const orderFields = store?.orderFields?.[order?.type]
+
   return (
     <View>
-      <OrderMetadata order={order} />
-
-      <View
-        style={{
-          justifyContent: 'center',
-          margin: 'auto',
-          maxWidth: 400,
-          width: '100%'
-        }}
-      >
-        <OrderDirectivesE order={order} />
-      </View>
-
-      <OrderDetailSection>
-        <CustomerOrderE />
-      </OrderDetailSection>
-
-      <OrderDetailSection>
-        {/*//* <-----Order actions flow */}
-        <OrderActionsE />
-        {/*//* <-----Order actions flow */}
-      </OrderDetailSection>
-
-      <OrderDetailSection>
-        {order.type === order_type.RENT && (
-          <ErrorBoundary componentName="RentItemsInfo">
-            <RentItemsInfo order={order} />
-            <Totals items={order.items} />
-            {order?.extensions ? (
-              <OrderExtensions order={order} />
-            ) : (
-              <View>
-                <OrderDates
-                  status={order.status}
-                  expireAt={order.expireAt}
-                  scheduledAt={order.scheduledAt}
-                  startedAt={order.deliveredAt}
-                  extendTime={order.extendTime}
-                  pickedUp={order.pickedUpAt}
-                />
-              </View>
-            )}
-          </ErrorBoundary>
+      <View>
+        <OrderMetadata order={order} />
+        <View
+          style={{
+            justifyContent: 'center',
+            margin: 'auto',
+            maxWidth: 400,
+            width: '100%'
+          }}
+        >
+          <OrderDirectivesE order={order} />
+        </View>
+        {order.orderIsNull && (
+          <View>
+            <TextInfo
+              type="warning"
+              text="No encotramos esta orden. ¡Parece que ha sido eliminada!"
+              defaultVisible
+            />
+          </View>
         )}
 
-        {order.type === order_type.SALE && <SaleItemsInfoE />}
-
-        {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
-
-        {/* Order images */}
-        <OrderImagesUpdateE />
-      </OrderDetailSection>
-
-      {orderFields?.contractSignature && (
         <OrderDetailSection>
-          {/*//* <-----Order signature ?*/}
-          <OrderContractSignatureE />
+          <CustomerOrderE />
         </OrderDetailSection>
-      )}
 
-      <OrderDetailSection>
-        <OrderPayments orderId={order.id} />
-      </OrderDetailSection>
+        <OrderDetailSection>
+          {/*//* <-----Order actions flow */}
+          <OrderActionsE />
+          {/*//* <-----Order actions flow */}
+        </OrderDetailSection>
 
-      <OrderDetailSection>
-        <ErrorBoundary componentName="OrderActions">
-          {[
-            order_type.RENT,
-            order_type.MULTI_RENT,
-            order_type.STORE_RENT,
-            order_type.DELIVERY_RENT
-          ].includes(order.type) && (
-            <OrderActions
-              orderId={order.id}
-              orderType={'RENT'}
-              orderStatus={order.status}
-              storeId={order.storeId}
-            />
+        <OrderDetailSection>
+          {order.type === order_type.RENT && (
+            <ErrorBoundary componentName="RentItemsInfo">
+              <RentItemsInfo order={order} />
+              <Totals items={order.items} />
+              {order?.extensions ? (
+                <OrderExtensions order={order} />
+              ) : (
+                <View>
+                  <OrderDates
+                    status={order.status}
+                    expireAt={order.expireAt}
+                    scheduledAt={order.scheduledAt}
+                    startedAt={order.deliveredAt}
+                    extendTime={order.extendTime}
+                    pickedUp={order.pickedUpAt}
+                  />
+                </View>
+              )}
+            </ErrorBoundary>
           )}
-          {order.type === order_type.SALE && (
-            <OrderActions
-              orderId={order.id}
-              orderType={'SALE'}
-              orderStatus={order.status}
-              storeId={order.storeId}
-            />
-          )}
-          {order.type === order_type.REPAIR && (
-            <OrderActions
-              orderId={order.id}
-              orderType={'REPAIR'}
-              orderStatus={order.status}
-              storeId={order.storeId}
-            />
-          )}
-        </ErrorBoundary>
-      </OrderDetailSection>
+
+          {order.type === order_type.SALE && <SaleItemsInfoE />}
+
+          {order?.type === order_type.REPAIR && <RepairItemConfigInfo />}
+
+          {/* Order images */}
+          <OrderImagesUpdateE />
+        </OrderDetailSection>
+
+        {orderFields?.contractSignature && (
+          <OrderDetailSection>
+            {/*//* <-----Order signature ?*/}
+            <OrderContractSignatureE />
+          </OrderDetailSection>
+        )}
+
+        <OrderDetailSection>
+          <OrderPayments orderId={order.id} />
+        </OrderDetailSection>
+
+        <OrderDetailSection>
+          <ErrorBoundary componentName="OrderActions">
+            {[
+              order_type.RENT,
+              order_type.MULTI_RENT,
+              order_type.STORE_RENT,
+              order_type.DELIVERY_RENT
+            ].includes(order.type) && (
+              <OrderActions
+                orderId={order.id}
+                orderType={'RENT'}
+                orderStatus={order.status}
+                storeId={order.storeId}
+              />
+            )}
+            {order.type === order_type.SALE && (
+              <OrderActions
+                orderId={order.id}
+                orderType={'SALE'}
+                orderStatus={order.status}
+                storeId={order.storeId}
+              />
+            )}
+            {order.type === order_type.REPAIR && (
+              <OrderActions
+                orderId={order.id}
+                orderType={'REPAIR'}
+                orderStatus={order.status}
+                storeId={order.storeId}
+              />
+            )}
+          </ErrorBoundary>
+        </OrderDetailSection>
+      </View>
 
       <OrderDetailSection>
         <ErrorBoundary componentName="OrderComments">

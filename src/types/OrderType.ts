@@ -217,6 +217,8 @@ export type OrderBase = {
   isDeleted?: boolean
   isExtended?: boolean
   [key: string]: any
+
+  orderIsNull?: boolean // * to know if order is null in context provably it was deleted
 }
 export type OrderExtensionType = {
   id: string
