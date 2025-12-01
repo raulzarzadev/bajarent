@@ -24,8 +24,12 @@ const searchStatusOptions = {
 
 type SearchStatusType = keyof typeof searchStatusOptions
 type SortField = 'deliveredAt' | 'pickedUpAt' | 'cancelledAt' | 'createdAt'
-const getSortField = (status: SearchStatusType): SortField =>
-  status === order_status.DELIVERED ? 'deliveredAt' : 'pickedUpAt'
+const getSortField = (status: SearchStatusType): SortField => {
+  if (status === order_status.DELIVERED) return 'deliveredAt'
+  if (status === order_status.PICKED_UP) return 'pickedUpAt'
+  if (status === order_status.CREATED) return 'createdAt'
+  if (status === order_status.CANCELLED) return 'cancelledAt'
+}
 
 export const BalanceOrders = ({ balance }: { balance: StoreBalanceType }) => {
   const [status, setStatus] = useState<SearchStatusType>()
@@ -40,7 +44,6 @@ export const BalanceOrders = ({ balance }: { balance: StoreBalanceType }) => {
     async (mode: 'reset' | 'append' = 'reset') => {
       const isLoadMore = mode === 'append'
       const sortField = getSortField(status)
-
       isLoadMore ? setIsPaginating(true) : setIsLoading(true)
       if (mode === 'reset') {
         lastCursorRef.current = null
@@ -48,22 +51,19 @@ export const BalanceOrders = ({ balance }: { balance: StoreBalanceType }) => {
       }
       setError(null)
 
-      const filters = [
-        where('storeId', '==', balance.storeId),
-        orderBy(sortField, 'desc')
-      ] as QueryConstraint[]
+      const filters = [] as QueryConstraint[]
 
-      if (status !== order_status.CREATED) {
-        // filter by status only if not CREATED
-        //Si status diferente a created ,  Buscar en todas las ordenes sin importar el status, ordenalas por la fecha
-        filters.push(where('status', '==', status as order_status))
-      }
-
+      //* ADD QUERY always ask for this shop
+      filters.push(where('storeId', '==', balance.storeId))
+      //* ADD QUERY In case of ask for more orders
       if (isLoadMore && lastCursorRef.current) {
         filters.push(startAfter(lastCursorRef.current))
       }
-
+      //* ADD QUERY always ask 20 by 20
       filters.push(limit(ORDER_PAGE_SIZE))
+
+      //* ADD QUERY sorting by status depending on the status selected
+      filters.push(orderBy(getSortField(status), 'desc'))
 
       try {
         const result = await ServiceOrders.findMany(filters)
@@ -82,6 +82,7 @@ export const BalanceOrders = ({ balance }: { balance: StoreBalanceType }) => {
   )
 
   useEffect(() => {
+    if (status === undefined) return
     fetchOrders('reset')
   }, [fetchOrders])
 
