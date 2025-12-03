@@ -10,6 +10,7 @@ import ItemType, { ItemStatuses } from '../types/ItemType'
 import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
 import { db } from './main'
 import { FormattedResponse, GetItemsOps } from './firebase.CRUD'
+import UserType from '../types/UserType'
 type Type = Partial<ItemType>
 type Field = keyof Type
 const SUB_COLLECTION = 'items'
@@ -106,7 +107,7 @@ export class ServiceStoreItemsClass {
     cb
   }: {
     storeId: string
-    userSections?: string[] | 'all'
+    userSections?: UserType['id'][] | 'all'
     cb: (items: Type[]) => void
   }) {
     if (Array.isArray(userSections) && userSections.length > 0) {

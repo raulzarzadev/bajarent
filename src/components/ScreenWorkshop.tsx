@@ -2,7 +2,6 @@ import { View, Text, ScrollView } from 'react-native'
 import { useEffect, useState } from 'react'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
-import { useItemsCtx } from '../contexts/itemsContext'
 import { RowWorkshopItemsE } from './RowWorkshopItems'
 import asDate from '../libs/utils-date'
 import ItemType from '../types/ItemType'
@@ -12,22 +11,32 @@ import Divider from './Divider'
 import { Switch } from 'react-native-elements'
 import useMyNav from '../hooks/useMyNav'
 import Button from './Button'
-import { useOrdersCtx } from '../contexts/ordersContext'
 import OrderType from '../types/OrderType'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useShop } from '../hooks/useShop'
 import { useEmployee } from '../contexts/employeeContext'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 
 const ScreenWorkshop = () => {
-  const { workshopItems } = useItemsCtx()
   const { shop } = useShop()
+  const { sections } = useStore()
   const { employee, permissions } = useEmployee()
+  const [shopItems, setShopItems] = useState<Partial<ItemType>[]>([])
   const [repairOrders, setRepairOrders] = useState<OrderType[]>([])
-
   useEffect(() => {
     if (!(employee?.roles?.technician || permissions?.isAdmin)) return
     let unsubscribe: any
     if (shop?.id) {
+      const storeWorkshops =
+        sections?.filter((s) => s.type === 'workshop').map((s) => s.id) || []
+
+      ServiceStoreItems.listenAvailableBySections({
+        storeId: shop.id,
+        userSections: storeWorkshops,
+        cb: (res) => {
+          setShopItems(res)
+        }
+      })
       ServiceOrders.listenRepairUnsolved({
         storeId: shop?.id,
         cb: setRepairOrders
@@ -35,14 +44,13 @@ const ScreenWorkshop = () => {
         unsubscribe = unsub
       })
     }
+
     return () => {
       unsubscribe && unsubscribe()
     }
   }, [shop?.id, employee, permissions])
 
-  const itemsPickedUp = workshopItems.filter(
-    (item) => item.status === 'pickedUp'
-  )
+  const itemsPickedUp = shopItems.filter((item) => item.status === 'pickedUp')
 
   const { toWorkshop } = useMyNav()
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
