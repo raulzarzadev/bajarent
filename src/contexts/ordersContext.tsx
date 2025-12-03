@@ -76,9 +76,9 @@ export const OrdersContextProvider = ({
   const [consolidatedOrders, setConsolidatedOrders] =
     useState<ConsolidatedStoreOrdersType>()
 
-  const handleGetConsolidates = async () => {
+  const handleGetConsolidates = () => {
     if (store)
-      ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
+      return ServiceConsolidatedOrders.listenByStore(storeId, async (res) => {
         // console.log('lisening chunks')
         const { orders } = await getChunks({
           chunks: res[0]?.consolidatedChunks || []
@@ -110,14 +110,18 @@ export const OrdersContextProvider = ({
   }
 
   useEffect(() => {
+    let unsubscribe: any
     if (isAuthenticated && (!disabledEmployee || permissions.isAdmin)) {
       handleGetOrders()
-      handleGetConsolidates()
+      unsubscribe = handleGetConsolidates()
     } else {
       setImportant([])
       setReports([])
       setOrders(null)
       setConsolidatedOrders(null)
+    }
+    return () => {
+      unsubscribe && unsubscribe()
     }
   }, [disabledEmployee, isAuthenticated])
 
