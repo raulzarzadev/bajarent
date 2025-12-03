@@ -56,17 +56,21 @@ const OrderProvider = ({
   const [commentsCount, setCommentsCount] = useState(4)
 
   useEffect(() => {
+    let unsubscribe: any
     if (_orderId) {
-      ServicePayments.listenByOrder(_orderId, setPayments, {
+      unsubscribe = ServicePayments.listenByOrder(_orderId, setPayments, {
         count: paymentsCount
       })
     }
-    return () => {}
+    return () => {
+      unsubscribe && unsubscribe()
+    }
   }, [_orderId, paymentsCount])
 
   useEffect(() => {
+    let unsubscribe: any
     if (_orderId) {
-      ServiceComments.listenLastByOrder({
+      unsubscribe = ServiceComments.listenLastByOrder({
         count: commentsCount,
         orderId: _orderId,
         cb: (comments) => {
@@ -74,15 +78,18 @@ const OrderProvider = ({
         }
       })
     }
-    return () => {}
+    return () => {
+      unsubscribe && unsubscribe()
+    }
   }, [_orderId, commentsCount])
 
   useEffect(() => {
+    let unsubscribe: any
     if (_orderId) {
       __DEV__ && console.log('orctx', { count, loadingCustomers, categories })
       count++
 
-      listenFullOrderData(_orderId, (order) => {
+      unsubscribe = listenFullOrderData(_orderId, (order) => {
         // Create a new object instead of mutating directly
         let plainOrder: OrderType = { ...order }
 
@@ -108,6 +115,9 @@ const OrderProvider = ({
 
         if (order) return setOrder({ ...plainOrder, items: orderItems })
       })
+    }
+    return () => {
+      unsubscribe && unsubscribe()
     }
   }, [_orderId])
 
