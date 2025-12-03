@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import { useItemsCtx } from '../contexts/itemsContext'
@@ -13,13 +13,37 @@ import { Switch } from 'react-native-elements'
 import useMyNav from '../hooks/useMyNav'
 import Button from './Button'
 import { useOrdersCtx } from '../contexts/ordersContext'
+import OrderType from '../types/OrderType'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { useShop } from '../hooks/useShop'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenWorkshop = () => {
   const { workshopItems } = useItemsCtx()
-  const { repairOrders } = useOrdersCtx()
+  const { shop } = useShop()
+  const { employee, permissions } = useEmployee()
+  const [repairOrders, setRepairOrders] = useState<OrderType[]>([])
+
+  useEffect(() => {
+    if (!(employee?.roles?.technician || permissions?.isAdmin)) return
+    let unsubscribe: any
+    if (shop?.id) {
+      ServiceOrders.listenRepairUnsolved({
+        storeId: shop?.id,
+        cb: setRepairOrders
+      }).then((unsub) => {
+        unsubscribe = unsub
+      })
+    }
+    return () => {
+      unsubscribe && unsubscribe()
+    }
+  }, [shop?.id, employee, permissions])
+
   const itemsPickedUp = workshopItems.filter(
     (item) => item.status === 'pickedUp'
   )
+
   const { toWorkshop } = useMyNav()
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
   const { categories, sections: storeSections } = useStore()

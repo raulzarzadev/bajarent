@@ -21,11 +21,7 @@ function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
   const { employee, permissions } = useEmployee()
   const [loading, setLoading] = useState(true)
 
-  const {
-    forceRefresh,
-    //* using unsolved orders its new but im not sure if its the best way
-    unsolvedOrders: orders
-  } = useOrdersRedux()
+  const { unsolvedOrders: orders } = useOrdersRedux()
   const { fetchOrders } = useOrders({
     ids: route?.params?.orders
   })
@@ -52,12 +48,6 @@ function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
   }, [])
 
   const [disabled, setDisabled] = useState(false)
-
-  const handleRefresh = () => {
-    setDisabled(true)
-    forceRefresh()
-    setTimeout(() => setDisabled(false), 4000)
-  }
 
   const viewAllOrders = permissions.orders.canViewAll
   const canViewOtherDates =
