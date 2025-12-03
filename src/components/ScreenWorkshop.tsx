@@ -26,17 +26,19 @@ const ScreenWorkshop = () => {
   useEffect(() => {
     if (!(employee?.roles?.technician || permissions?.isAdmin)) return
     let unsubscribe: any
+    let shopItemsUnsub: any
     if (shop?.id) {
       const storeWorkshops =
         sections?.filter((s) => s.type === 'workshop').map((s) => s.id) || []
 
-      ServiceStoreItems.listenAvailableBySections({
+      shopItemsUnsub = ServiceStoreItems.listenAvailableBySections({
         storeId: shop.id,
         userSections: storeWorkshops,
         cb: (res) => {
           setShopItems(res)
         }
       })
+
       ServiceOrders.listenRepairUnsolved({
         storeId: shop?.id,
         cb: setRepairOrders
@@ -47,6 +49,7 @@ const ScreenWorkshop = () => {
 
     return () => {
       unsubscribe && unsubscribe()
+      shopItemsUnsub && shopItemsUnsub()
     }
   }, [shop?.id, employee, permissions])
 
