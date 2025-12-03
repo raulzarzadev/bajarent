@@ -42,10 +42,14 @@ export const FormOrder2 = ({
   if (__DEV__) console.log({ customers })
   const { isEmployeeReady } = useEmployee()
   const { shop } = useShop()
+  const defaultOrderType = shop?.orderTypes.RENT
+    ? order_type.RENT
+    : order_type.REPAIR
+
   const initialValues: Partial<OrderType> = {
     // Define your initial form values here
     ...defaultValues,
-    type: order_type.RENT,
+    type: defaultOrderType,
     scheduledAt: null
   }
   const handleSubmit = async (values) => {
