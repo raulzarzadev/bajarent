@@ -45,6 +45,7 @@ export const FormOrder2 = ({
   const initialValues: Partial<OrderType> = {
     // Define your initial form values here
     ...defaultValues,
+    type: order_type.RENT,
     scheduledAt: null
   }
   const handleSubmit = async (values) => {
