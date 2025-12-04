@@ -2,6 +2,7 @@ import { View, Text, ViewStyle } from 'react-native'
 import React from 'react'
 import InputCheckbox from './InputCheckbox'
 import { IconName } from '../Icon'
+import { gStyles } from '../../styles'
 
 export type InputRadioOption<T = string> = {
   label: string
@@ -23,6 +24,8 @@ export type InputRadiosProps<T = string> = {
   stylesRow?: ViewStyle
   stylesOption?: ViewStyle
   variant?: 'ghost' | 'outline'
+  helperText?: string
+  errorText?: string
 }
 
 const InputRadios = <T extends string = string>({
@@ -36,7 +39,9 @@ const InputRadios = <T extends string = string>({
   stylesContainer,
   stylesRow,
   stylesOption,
-  variant = 'outline'
+  variant = 'outline',
+  helperText,
+  errorText
 }: InputRadiosProps<T>) => {
   const [_value, _setValue] = React.useState<T>(value)
   const handleChooseOpt = (value: T) => {
@@ -53,7 +58,9 @@ const InputRadios = <T extends string = string>({
         stylesContainer
       ]}
     >
-      {label && <Text>{label}</Text>}
+      {label && (
+        <Text style={[gStyles.tBold, { marginBottom: 2 }]}>{label}</Text>
+      )}
       <View
         style={[
           {
@@ -79,6 +86,16 @@ const InputRadios = <T extends string = string>({
           ></InputCheckbox>
         ))}
       </View>
+      {!!errorText && (
+        <Text style={[gStyles.helperError, { marginTop: 4, marginLeft: 4 }]}>
+          {errorText}
+        </Text>
+      )}
+      {!!helperText && !errorText && (
+        <Text style={[gStyles.helper, { marginTop: 4, marginLeft: 4 }]}>
+          {helperText}
+        </Text>
+      )}
     </View>
   )
 }

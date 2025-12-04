@@ -1,0 +1,86 @@
+import { View, Text } from 'react-native'
+import ErrorBoundary from './ErrorBoundary'
+import { gStyles } from '../styles'
+import InputRadios from './Inputs/InputRadios'
+import { useState } from 'react'
+import Button from './Button'
+import TextInfo from './TextInfo'
+
+const ConfigItemsView = (props?: ConfigItemsViewProps) => {
+  type DefaultValues = {
+    primaryIdentification: 'serialNumber' | 'economicNumber'
+  }
+  const [defaultValues, setDefaultValues] = useState<DefaultValues>({
+    primaryIdentification: 'serialNumber'
+  })
+  const [saving, setSaving] = useState(false)
+
+  const handleChange = (field: keyof DefaultValues, value: any) => {
+    setDefaultValues((prev) => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+  const handleSaveConfig = () => {
+    setSaving(true)
+    // Aquí iría la lógica para guardar la configuración, por ejemplo, una llamada a una API o actualización de estado global
+    console.log('Configuración guardada:', defaultValues)
+    setSaving(false)
+  }
+
+  return (
+    <View style={[gStyles.container, { gap: 16 }]}>
+      <Text style={gStyles.h2}>Configuración de items</Text>
+      {/* <Text style={[gStyles.helper, gStyles.tCenter]}>
+        Algunas configuraciones aún estan pendientes de implementación
+      </Text> */}
+      <TextInfo
+        text="  Algunas configuraciones aún estan pendientes de implementación"
+        defaultVisible
+      />
+      <InputRadios
+        disabled
+        label="Tipo de identificación PRINCIPAL para items"
+        options={[
+          {
+            label: 'Numero de serie',
+            value: 'serialNumber'
+          },
+          {
+            label: 'Numero economico',
+            value: 'economicNumber'
+          }
+        ]}
+        value={defaultValues.primaryIdentification}
+        onChange={(value) => handleChange('primaryIdentification', value)}
+        helperText="Esto define el tamaño con el que se muestran ciertos atributos de los items"
+      />
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginVertical: 16,
+          width: '100%',
+          marginHorizontal: 'auto'
+        }}
+      >
+        <Button
+          disabled={saving}
+          label="Guardar"
+          icon="save"
+          onPress={() => {
+            handleSaveConfig()
+          }}
+          size="small"
+        ></Button>
+      </View>
+    </View>
+  )
+}
+export default ConfigItemsView
+export type ConfigItemsViewProps = {}
+export const ConfigItemsViewE = (props: ConfigItemsViewProps) => (
+  <ErrorBoundary componentName="ConfigItemsView">
+    <ConfigItemsView {...props} />
+  </ErrorBoundary>
+)

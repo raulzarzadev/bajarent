@@ -6,6 +6,7 @@ import { useEmployee } from '../contexts/employeeContext'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
 import { AppErrorLogs } from './StoreBalance/AppErrorLogs'
 import { useAuth } from '../contexts/authContext'
+import { ConfigItemsViewE } from './ConfigItemsView'
 
 export const TabStoreConfiguration = () => {
   const { user } = useAuth()
@@ -13,6 +14,12 @@ export const TabStoreConfiguration = () => {
     <Tabs
       tabId="tab-store-config"
       tabs={[
+        {
+          title: 'Items',
+          content: <ConfigItemsViewE />,
+          show: true,
+          icon: 'camera'
+        },
         {
           title: 'Ordenes',
           content: <ScreenOrdersConfigE />,
@@ -53,111 +60,3 @@ const BackupsTab = () => {
     </View>
   )
 }
-
-// const TabConfig = () => {
-//   const { navigate } = useNavigation()
-//   const {
-//     permissions: { isAdmin, isOwner }
-//   } = useEmployee()
-//   return (
-//     <View>
-//       <StoreNumbersRow />
-//       <View
-//         style={{
-//           flexDirection: 'row',
-//           justifyContent: 'space-around',
-//           flexWrap: 'wrap'
-//         }}
-//       >
-//         {isAdmin || isOwner ? (
-//           <>
-//             <Button
-//               label="Configurar"
-//               onPress={() => {
-//                 //@ts-ignore
-//                 navigate('ScreenOrdersConfig')
-//               }}
-//               icon="settings"
-//               variant="ghost"
-//             />
-//             <ButtonDownloadCSV />
-//           </>
-//         ) : null}
-//       </View>
-//     </View>
-//   )
-// }
-
-// const StoreNumbersRow = () => {
-//   const { store } = useStore()
-//   const { navigate } = useNavigation()
-//   const { orders, reports } = useOrdersCtx()
-
-//   const OrdersAuthorized = orders?.filter(
-//     (order) => order.status === order_status.AUTHORIZED
-//   )
-
-//   const ordersExpired = orders?.filter((o) => o.isExpired)
-
-//   const currentFolio = store?.currentFolio
-//   return (
-//     <View
-//       style={{
-//         flexDirection: 'row',
-//         justifyContent: 'space-around',
-//         flexWrap: 'wrap'
-//       }}
-//     >
-//       <Button
-//         label={`Folio: ${currentFolio || 0}`}
-//         onPress={() => {
-//           console.log('folio')
-//         }}
-//         variant="ghost"
-//         disabled
-//       />
-//       <Button
-//         label={`Vencidas: ${ordersExpired?.length || 0}`}
-//         onPress={() => {
-//           //@ts-ignore
-//           navigate('StackOrders', {
-//             screen: 'ScreenOrders',
-//             params: {
-//               title: 'Vencidas',
-//               orders: ordersExpired?.map(({ id }) => id)
-//             }
-//           })
-//         }}
-//         variant="ghost"
-//       />
-//       <Button
-//         label={`Pedidos: ${OrdersAuthorized?.length || 0}`}
-//         onPress={() => {
-//           //@ts-ignore
-//           navigate('StackOrders', {
-//             screen: 'ScreenOrders',
-//             params: {
-//               title: 'Pedidos',
-//               orders: OrdersAuthorized?.map(({ id }) => id)
-//             }
-//           })
-//         }}
-//         variant="ghost"
-//       />
-//       <Button
-//         label={`Reportes: ${reports?.length || 0}`}
-//         onPress={() => {
-//           //@ts-ignore
-//           navigate('StackOrders', {
-//             screen: 'ScreenOrders',
-//             params: {
-//               title: 'Reportes',
-//               orders: reports.map(({ id, orderId }) => orderId)
-//             }
-//           })
-//         }}
-//         variant="ghost"
-//       />
-//     </View>
-//   )
-// }

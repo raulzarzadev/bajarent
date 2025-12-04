@@ -45,7 +45,7 @@ const ButtonX: React.FC<ButtonProps> = ({
   size = 'medium',
   icon,
   justIcon,
-  fullWidth = true,
+  fullWidth = false,
   progress,
   uppercase = true,
   autoFocus = false,
