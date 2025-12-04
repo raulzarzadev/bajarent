@@ -86,16 +86,18 @@ const InputRadios = <T extends string = string>({
           ></InputCheckbox>
         ))}
       </View>
-      {!!errorText && (
-        <Text style={[gStyles.helperError, { marginTop: 4, marginLeft: 4 }]}>
-          {errorText}
-        </Text>
-      )}
-      {!!helperText && !errorText && (
-        <Text style={[gStyles.helper, { marginTop: 4, marginLeft: 4 }]}>
-          {helperText}
-        </Text>
-      )}
+      <View>
+        {!!errorText && (
+          <Text style={[gStyles.helperError, { marginTop: 4, marginLeft: 4 }]}>
+            {errorText}
+          </Text>
+        )}
+        {!!helperText && !errorText && (
+          <Text style={[gStyles.helper, { marginTop: 4, marginLeft: 4 }]}>
+            {helperText}
+          </Text>
+        )}
+      </View>
     </View>
   )
 }

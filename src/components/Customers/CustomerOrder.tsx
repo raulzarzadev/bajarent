@@ -52,8 +52,14 @@ const CustomerOrder = ({
       <Text
         style={[gStyles.helper, { fontStyle: 'italic', textAlign: 'center' }]}
       >
-        {order?.fullName},{order?.neighborhood},{order?.address},{' '}
-        {order?.references}
+        {[
+          order?.fullName,
+          order?.neighborhood,
+          order?.address,
+          order?.references
+        ]
+          .filter(Boolean)
+          .join(', ')}
       </Text>
 
       {customer ? (
