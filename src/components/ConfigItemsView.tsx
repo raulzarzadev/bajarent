@@ -27,6 +27,9 @@ const ConfigItemsView = (props?: ConfigItemsViewProps) => {
     console.log('Configuración guardada:', defaultValues)
     setSaving(false)
   }
+  //TODO: Implementar esta funcion
+  //* TODO: Para hacer esto se requiere modificar las vistas donde se muestren los datos de items. POr ejemplo, en el
+  //* taller, en screen items, en la vista de ordenes. etc.
 
   return (
     <View style={[gStyles.container, { gap: 16 }]}>
