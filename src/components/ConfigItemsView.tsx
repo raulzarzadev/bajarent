@@ -28,8 +28,12 @@ const ConfigItemsView = (props?: ConfigItemsViewProps) => {
     setSaving(false)
   }
   //TODO: Implementar esta funcion
-  //* TODO: Para hacer esto se requiere modificar las vistas donde se muestren los datos de items. POr ejemplo, en el
-  //* taller, en screen items, en la vista de ordenes. etc.
+  //* TODO: Para hacer esto se requiere modificar las vistas donde se muestren los datos de items. POr ejemplO:
+  //* [ ] taller, en screen items, en la vista de ordenes. etc.
+  //* [ ] items list
+  //* [ ] item details
+  //* [ ] order details
+  //* [ ] orders list (para que muestre el numero economico o serial segun la configuracion)
 
   return (
     <View style={[gStyles.container, { gap: 16 }]}>
