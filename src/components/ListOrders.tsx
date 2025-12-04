@@ -35,7 +35,10 @@ const ListOrders = ({
   const customersIds = Array.from(
     new Set(orders.map((o) => o.customerId).filter((id) => !!id))
   ) as string[]
-  console.log({ customersIds, orders })
+  useEffect(() => {
+    fetch({ ids: customersIds })
+  }, [])
+
   const formatOrders = orders
     ?.map((o) => {
       const assignedToSection =
