@@ -1,6 +1,5 @@
 import { Text, ScrollView } from 'react-native'
 import ErrorBoundary from '../ErrorBoundary'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { CustomerOrdersE } from './CustomerOrders'
 import DocMetadata from '../DocMetadata'
 import { createContext, useContext, useEffect, useState } from 'react'
