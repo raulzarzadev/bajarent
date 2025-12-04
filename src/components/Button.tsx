@@ -86,6 +86,7 @@ const ButtonX: React.FC<ButtonProps> = ({
     borderRadius: 9999,
     width: sizes[size].padding * 2,
     height: sizes[size].padding * 2
+
     //margin: 'auto'
   }
 
@@ -100,16 +101,16 @@ const ButtonX: React.FC<ButtonProps> = ({
       onLongPress={onLongPress}
       role="button"
       style={({ pressed }) => [
-        !fullWidth && { flex: 1, alignSelf: 'flex-start' },
+        !fullWidth && { alignSelf: 'flex-start' },
         baseStyles.buttonX,
         buttonXColor,
         buttonXVariant,
         disabled && baseStyles.disabled,
         pressed && { opacity: 0.5 },
         sizes[size],
-        buttonStyles,
         justIcon && justIconStyles,
-        disabled && variant === 'ghost' && { backgroundColor: 'transparent' }
+        disabled && variant === 'ghost' && { backgroundColor: 'transparent' },
+        buttonStyles
       ]}
       onPress={onPress}
       disabled={disabled}

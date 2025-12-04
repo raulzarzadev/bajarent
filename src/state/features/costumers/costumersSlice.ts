@@ -102,7 +102,8 @@ export const selectCustomers = (state: { customers: CustomersState }) => {
 
 export const customersReducer = customersSlice.reducer
 
-export const useCustomers = () => {
+export const useCustomers = (props?: { customersIds?: string[] }) => {
+  const countCustomersIds = props?.customersIds || []
   const dispatch = useDispatch<AppDispatch>()
   const { storeId } = useAuth()
   const { permissions } = useEmployee()
@@ -113,7 +114,7 @@ export const useCustomers = () => {
       fetchCustomersThunk({
         storeId,
         readAll: permissions?.customers?.read,
-        onDemandList: props?.ids
+        onDemandList: countCustomersIds || props?.ids
       })
     )
   }

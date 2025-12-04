@@ -84,6 +84,7 @@ const StoreCategories = () => {
             // @ts-ignore
             navigate('CreateCategory')
           }}
+          fullWidth
         ></ButtonIcon>
         {selected && (
           <>

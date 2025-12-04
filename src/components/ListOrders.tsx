@@ -9,6 +9,7 @@ import theme from '../theme'
 import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { View } from 'react-native'
+import { useEffect } from 'react'
 
 export type ListOrderProps = {
   orders: OrderType[]
@@ -30,8 +31,11 @@ const ListOrders = ({
 }: ListOrderProps) => {
   const { toOrders } = useMyNav()
   const { sections: storeSections } = useStore()
-  const { data: customers } = useCustomers()
-
+  const { data: customers, fetch } = useCustomers()
+  const customersIds = Array.from(
+    new Set(orders.map((o) => o.customerId).filter((id) => !!id))
+  ) as string[]
+  console.log({ customersIds, orders })
   const formatOrders = orders
     ?.map((o) => {
       const assignedToSection =
