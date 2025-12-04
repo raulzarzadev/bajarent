@@ -29,11 +29,12 @@ const ScreenWorkshop = () => {
     let shopItemsUnsub: any
     if (shop?.id) {
       const storeWorkshops =
-        sections?.filter((s) => s.type === 'workshop').map((s) => s.id) || []
+        sections?.filter((s) => s.type === 'workshop') || []
+      const storeWorkshopsIds = storeWorkshops.map((s) => s.id)
 
       shopItemsUnsub = ServiceStoreItems.listenAvailableBySections({
         storeId: shop.id,
-        userSections: storeWorkshops,
+        userSections: storeWorkshopsIds,
         cb: (res) => {
           setShopItems(res)
         }
@@ -59,6 +60,7 @@ const ScreenWorkshop = () => {
   const [itemPressed, setItemPressed] = useState<Partial<ItemType['id']>>()
   const { categories, sections: storeSections } = useStore()
   const formattedItems = formatItems(itemsPickedUp, categories, storeSections)
+
   const formattedOrders = formatItemsFromRepair({
     repairOrders,
     categories,

@@ -56,66 +56,25 @@ export const OrdersContextProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const { storeId, isAuthenticated } = useAuth()
-  const { store } = useStore()
-  const { employee, permissions } = useEmployee()
-  const [orders, setOrders] = useState<Partial<OrderType>[]>(undefined)
-  const [orderTypeOptions, setOrderTypeOptions] = useState<OrderTypeOption[]>(
-    []
-  )
-
   const [fetchTypeOrders, setFetchTypeOrders] =
     useState<FetchTypeOrders>(undefined)
-
-  const [consolidatedOrders] = useState<ConsolidatedStoreOrdersType>()
-
-  const setOtherConsolidated = async ({
-    consolidated
-  }: {
-    consolidated: ConsolidatedStoreOrdersType
-  }) => {
-    console.log('esto no deberia ejecutarse')
-  }
-
-  const [payments, setPayments] = useState<PaymentType[]>([])
-
-  const getPayments = async ({ date = new Date() }: { date: Date }) => {
-    return await ServicePayments.findMany([
-      where('storeId', '==', store?.id),
-      where('createdAt', '>=', startDate(date)),
-      where('createdAt', '<=', endDate(date))
-    ])
-  }
-  // useEffect(() => {
-  //   if (store?.id && isAuthenticated) {
-  //     getPayments({ date: new Date() }).then((res) => setPayments(res))
-  //   }
-  // }, [store?.id && isAuthenticated])
-
-  const [repairOrders, setRepairOrders] = useState<unknown[]>([])
-
-  // useEffect(() => {
-  //   if (storeId && isAuthenticated) {
-  //     ServiceOrders.listenRepairUnsolved({ storeId, cb: setRepairOrders })
-  //   }
-  // }, [storeId, isAuthenticated])
 
   oc++
   if (__DEV__) console.log({ oc })
   const value = {
-    orders,
-    repairOrders,
+    orders: [],
+    repairOrders: [],
     setFetchTypeOrders,
     fetchTypeOrders,
-    orderTypeOptions,
+    orderTypeOptions: [],
     handleRefresh: () => console.error('handleRefresh no implementado'),
     reports: [],
-    consolidatedOrders,
-    payments,
-    setOtherConsolidated
+    consolidatedOrders: undefined,
+    payments: [],
+    setOtherConsolidated: () =>
+      console.error('setOtherConsolidated no implementado')
   }
 
-  console.log({ value })
   return (
     <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>
   )
