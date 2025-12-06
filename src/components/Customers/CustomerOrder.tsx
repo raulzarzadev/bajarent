@@ -29,11 +29,15 @@ const CustomerOrder = ({
     if (customer) {
       setCustomer(customer)
     } else {
+      if (!currentCustomer) {
+        setCustomer(undefined)
+        return
+      }
       ServiceCustomers.get(currentCustomer)
         .then((c) => {
           setCustomer(c)
         })
-        .catch(() => {
+        .catch((e) => {
           setCustomer(undefined)
           console.log('cliente no encontrado')
         })
