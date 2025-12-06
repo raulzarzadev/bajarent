@@ -51,7 +51,10 @@ export const ReduxInitializer = ({ children }) => {
   const { orders } = useOrdersCtx()
 
   useEffect(() => {
-    fetchCustomers({ ids: orders?.map((o) => o.customerId) })
+    const uniqueCustomerIds = Array.from(
+      new Set(orders?.map((o) => o.customerId).filter((id) => id))
+    )
+    if (uniqueCustomerIds.length) fetchCustomers({ ids: uniqueCustomerIds })
   }, [orders])
   //** ---- FETCHING CUSTOMERS ----- */
 
