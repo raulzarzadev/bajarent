@@ -21,7 +21,8 @@ const FormPriceA = ({ defaultPrice, handleSubmit }: FormPriceProps) => {
 
 	useEffect(() => {
 		if (defaultPrice) {
-			const [qty, unit] = defaultPrice?.time?.split(' ')
+			const defaultTime = defaultPrice?.time || ''
+			const [qty, unit] = defaultTime.split(' ')
 			setUnits(unit as TimeType)
 			setQuantity(parseFloat(qty))
 			setPrice(defaultPrice?.amount)
