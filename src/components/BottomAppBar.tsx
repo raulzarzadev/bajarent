@@ -36,6 +36,7 @@ const BottomAppBar = () => {
   const showCustomerButton = permissions?.customers?.read
   return (
     <Tab.Navigator
+      id="RootTabs"
       //initialRouteName="StackOrders"
       screenOptions={({ route }) => {
         return {

@@ -21,6 +21,7 @@ const Stack = createStackNavigator<StoreStackParamList>()
 function StackStore() {
   return (
     <Stack.Navigator
+      id="StackStore"
       screenOptions={() => {
         return {
           headerRight(props) {

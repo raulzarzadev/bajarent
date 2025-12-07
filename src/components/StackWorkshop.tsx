@@ -11,7 +11,7 @@ import StackItems from './StackItems'
 const Stack = createStackNavigator<WorkshopStackParamList>()
 function StackWorkshop() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id="StackWorkshop">
       <Stack.Screen
         name="Workshop"
         options={({ route }) => ({

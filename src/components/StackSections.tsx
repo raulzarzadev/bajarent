@@ -18,6 +18,7 @@ const Stack = createStackNavigator()
 function StackSections() {
   return (
     <Stack.Navigator
+      id="StackSections"
       screenOptions={() => {
         return {
           //headerShown: false

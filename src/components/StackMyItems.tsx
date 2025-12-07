@@ -9,7 +9,7 @@ import StackItems from './StackItems'
 const Stack = createStackNavigator<MyItemsStackParamList>()
 function StackMyItems() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id="StackMyItems">
       <Stack.Screen
         name="ScreenItems"
         options={{

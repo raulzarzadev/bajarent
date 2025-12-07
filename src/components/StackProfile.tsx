@@ -8,6 +8,7 @@ const Stack = createStackNavigator()
 function StackProfile() {
   return (
     <Stack.Navigator
+      id="StackProfile"
       screenOptions={() => {
         return {
           headerRight(props) {

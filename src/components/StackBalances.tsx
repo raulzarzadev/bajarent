@@ -14,6 +14,7 @@ const Stack = createStackNavigator<BalancesStackParamList>()
 function StackBalances() {
   return (
     <Stack.Navigator
+      id="StackBalances"
       screenOptions={() => {
         return {
           headerRight(props) {

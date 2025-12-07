@@ -9,6 +9,7 @@ const Stack = createStackNavigator<ItemsStackParamList>()
 function StackItems() {
   return (
     <Stack.Navigator
+      id="StackItems"
       screenOptions={() => {
         return {
           // headerRight(props) {

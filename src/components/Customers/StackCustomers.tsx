@@ -17,6 +17,7 @@ const StackOrdersLazy = (props) => {
 export function StackCustomers() {
   return (
     <Stack.Navigator
+      id="StackCustomers"
       screenOptions={() => {
         return {
           headerRight(props) {

@@ -9,6 +9,7 @@ const Stack = createStackNavigator<PaymentsStackParamList>()
 function StackPayments() {
   return (
     <Stack.Navigator
+      id="StackPayments"
       screenOptions={() => {
         return {
           // headerRight(props) { //*<-- Dont show in stack payments
