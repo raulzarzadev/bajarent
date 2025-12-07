@@ -2,56 +2,57 @@ import { isToday, isTomorrow } from 'date-fns'
 import dictionary from '../dictionary'
 import type OrderType from '../types/OrderType'
 import {
-	type OrderQuoteType,
-	order_status,
-	order_type,
-	type SaleOrderItem
+  order_status,
+  order_type,
+  type SaleOrderItem
 } from '../types/OrderType'
 import type PaymentType from '../types/PaymentType'
 import type StoreType from '../types/StoreType'
 import asDate, {
-	dateFormat,
-	endDate,
-	fromNow,
-	isAfterTomorrow,
-	isBeforeYesterday
+  dateFormat,
+  endDate,
+  fromNow,
+  isAfterTomorrow,
+  isBeforeYesterday
 } from './utils-date'
 
 export const expiredMessage = ({
-	order,
-	store
+  order,
+  store
 }: {
-	order: Partial<OrderType>
-	store: StoreType
+  order: Partial<OrderType>
+  store: StoreType
 }) => {
-	return `🚨 *ALERTA DE VENCIMIENTO* 
+  return `🚨 *ALERTA DE VENCIMIENTO* 
   \n${WELCOME({ customerName: order?.fullName })}
   \n${expireDateString(order, { feePerDay: 100 })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order: order
-	})}
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order: order
+  })}
  
   \n${BANK_INFO({ store })}
-  \nEnvíe su comprobante al Whatsapp  ${store?.contacts?.find(c => c.type === 'whatsapp')?.value} 
+  \nEnvíe su comprobante al Whatsapp  ${
+    store?.contacts?.find((c) => c.type === 'whatsapp')?.value
+  } 
   \n${AGRADECIMIENTOS({ storeName: store?.name })}
   ` //<--- remplace `\n` with \r to mark the end of the line
 }
 export const receiptMessage = ({
-	order,
-	storeName
+  order,
+  storeName
 }: {
-	order: Partial<OrderType>
-	storeName: string
+  order: Partial<OrderType>
+  storeName: string
 }) => {
-	return `🧾 *COMPROBANTE DE PAGO* 
+  return `🧾 *COMPROBANTE DE PAGO* 
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order
-	})}
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
   ${ORDER_ITEMS({ order })} 
   ${LAST_PAYMENT({ lastPayment: order?.payments?.[0] })}
   ${AGRADECIMIENTOS({ storeName })}
@@ -59,22 +60,22 @@ export const receiptMessage = ({
 }
 
 export const rentStarted = ({
-	order,
-	storeName,
-	lastPayment
+  order,
+  storeName,
+  lastPayment
 }: {
-	order: Partial<OrderType>
-	storeName: string
-	lastPayment?: Partial<PaymentType>
+  order: Partial<OrderType>
+  storeName: string
+  lastPayment?: Partial<PaymentType>
 }) => {
-	return `✅ *ARTÍCULO ENTREGADO* 
+  return `✅ *ARTÍCULO ENTREGADO* 
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order,
-		type: 'delivered'
-	})}
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order,
+    type: 'delivered'
+  })}
  
   ${expireDateString(order, { feePerDay: 100 })}
   ${LAST_PAYMENT({ lastPayment: lastPayment || order?.payments?.[0] })}
@@ -83,39 +84,39 @@ export const rentStarted = ({
 }
 
 export const rentFinished = ({
-	order,
-	storeName
+  order,
+  storeName
 }: {
-	order: Partial<OrderType>
-	storeName: string
+  order: Partial<OrderType>
+  storeName: string
 }) => {
-	return `🔚 *RENTA FINALIZADA* 
+  return `🔚 *RENTA FINALIZADA* 
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order
-	})} 
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })} 
   ${AGRADECIMIENTOS({ storeName })}
   `
 }
 
 export const rentRenewed = ({
-	order,
-	storeName,
-	lastPayment
+  order,
+  storeName,
+  lastPayment
 }: {
-	order: Partial<OrderType>
-	storeName: string
-	lastPayment?: Partial<PaymentType>
+  order: Partial<OrderType>
+  storeName: string
+  lastPayment?: Partial<PaymentType>
 }) => {
-	return `🔄 *RENOVACIÓN DE RENTA* 
+  return `🔄 *RENOVACIÓN DE RENTA* 
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order
-	})}
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
   ${expireDateString(order, { feePerDay: 100 })}
   \n${LAST_PAYMENT({ lastPayment: lastPayment || order?.payments?.[0] })}
   \n${AGRADECIMIENTOS({ storeName })}
@@ -124,50 +125,52 @@ export const rentRenewed = ({
 export const ORDER_SALE_ITEMS = (items: SaleOrderItem[]) => `
 *ARTÍCULOS* (${items.length})
   ${items
-		.map(i => {
-			return `*${i.quantity}* x *${i.categoryName || ''} *$${item_sale_amount(i).toFixed(2)}* `
-		})
-		.join('\n')}
+    .map((i) => {
+      return `*${i.quantity}* x *${i.categoryName || ''} *$${item_sale_amount(
+        i
+      ).toFixed(2)}* `
+    })
+    .join('\n')}
   \nTotal: *$${items_sale_total(items).toFixed(2)}*
 
 `
 
 const ORDER_SALE_PAYMENTS = (payments: PaymentType[] = []) => {
-	return `*PAGOS* (${payments?.length})
+  return `*PAGOS* (${payments?.length})
   ${payments
-		?.map(p => {
-			return `${dateFormat(asDate(p.createdAt), 'dd/MM/yy HH:mm')} *${
-				p?.amount
-			}* ${shortMethod(p.method)} `
-		})
-		.join('\n')}`
+    ?.map((p) => {
+      return `${dateFormat(asDate(p.createdAt), 'dd/MM/yy HH:mm')} *${
+        p?.amount
+      }* ${shortMethod(p.method)} `
+    })
+    .join('\n')}`
 }
 export const orderStatus = ({
-	order,
-	storeName
+  order,
+  storeName
 }: {
-	order: Partial<OrderType>
-	storeName: string
+  order: Partial<OrderType>
+  storeName: string
 }) => {
-	return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
+  return `ℹ️ *INFORMACIÓN DE SU SERVICIO*
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order
-	})}
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
   
   ${AGRADECIMIENTOS({ storeName })}
   `
 }
 export const newStoreOrder = ({ order, storeName }) => {
-	return `📝 *PEDIDO REALIZADO CON ÉXITO* 
+  return `📝 *PEDIDO REALIZADO CON ÉXITO* 
   \n${WELCOME({ customerName: order?.fullName })}
   ${ORDER_DETAILS({
-		orderType: order?.type,
-		orderFolio: order?.folio,
-		order
-	})}
+    orderType: order?.type,
+    orderFolio: order?.folio,
+    order
+  })}
   \n Pronto un asesor se pondrá en contacto para confirmar la fecha de entrega.*
   \n${AGRADECIMIENTOS({ storeName })}
   `
@@ -179,13 +182,13 @@ export const newStoreOrder = ({ order, storeName }) => {
  * @returns
  */
 export const newWebOrder = ({
-	order,
-	storeName
+  order,
+  storeName
 }: {
-	order: Partial<OrderType>
-	storeName: string
+  order: Partial<OrderType>
+  storeName: string
 }) => {
-	return `📝 PEDIDO REALIZADO CON ÉXITO
+  return `📝 PEDIDO REALIZADO CON ÉXITO
   \nEstimado ${order?.customerName || ''}:
   \n\n📦 Detalles del pedido:
   \nFolio: ${order?.folio}
@@ -196,13 +199,13 @@ export const newWebOrder = ({
 }
 
 export const authorizedOrder = ({
-	order,
-	store
+  order,
+  store
 }: {
-	order: Partial<OrderType>
-	store: StoreType
+  order: Partial<OrderType>
+  store: StoreType
 }) => {
-	return `📝 *PEDIDO AUTORIZADO* 
+  return `📝 *PEDIDO AUTORIZADO* 
   \n${AUTHORIZED_ORDER({ order })}
   \nℹ️ Puede realizar el pago a los siguientes números de cuenta:
   \n${BANK_INFO({ store })}
@@ -212,7 +215,8 @@ export const authorizedOrder = ({
   `
 }
 
-const AGRADECIMIENTOS = ({ storeName }) => `*${storeName}* agradece su preferencia 🙏🏼`
+const AGRADECIMIENTOS = ({ storeName }) =>
+  `*${storeName}* agradece su preferencia 🙏🏼`
 
 const WELCOME = ({ customerName }) => `Estimado *${customerName}* `
 
@@ -226,183 +230,168 @@ const WELCOME = ({ customerName }) => `Estimado *${customerName}* `
  * @returns {string} The order details message.
  */
 const ORDER_DETAILS = ({
-	orderType,
-	orderFolio,
-	order,
-	type
+  orderType,
+  orderFolio,
+  order,
+  type
 }: {
-	orderType: OrderType['type']
-	orderFolio: OrderType['folio']
-	order: Partial<OrderType>
-	type?: 'delivered' | 'rented' | 'repaired'
+  orderType: OrderType['type']
+  orderFolio: OrderType['folio']
+  order: Partial<OrderType>
+  type?: 'delivered' | 'rented' | 'repaired'
 }) => {
-	if (!order) return 'no order data'
-	return `\nFolio: *${orderFolio}*\nTipo: *${dictionary(orderType) || ''}*${
-		type === 'delivered' ? '' : defineOrderStatus(order) || ''
-	}`
+  if (!order) return 'no order data'
+  return `\nFolio: *${orderFolio}*\nTipo: *${dictionary(orderType) || ''}*${
+    type === 'delivered' ? '' : defineOrderStatus(order) || ''
+  }`
 }
 
 const ORDER_ITEMS = ({ order }) => {
-	if (order?.type === 'RENT') {
-		return `\nArtículo(s): *${order?.items
-			?.map(i => `${i.categoryName || ''} ${i.number || ''}`)
-			?.join(', ')}*`
-	} else {
-		return `Ⓜ️ Marca: *${order?.item?.brand || order?.itemBrand || ''}*\n #️⃣ Serie: *${
-			order?.item?.serial || order?.itemSerial || ''
-		}*\n ⚙️ Falla: *${order?.item?.failDescription || order?.failDescription || ''}*
+  if (order?.type === 'RENT') {
+    return `\nArtículo(s): *${order?.items
+      ?.map((i) => `${i.categoryName || ''} ${i.number || ''}`)
+      ?.join(', ')}*`
+  } else {
+    return `Ⓜ️ Marca: *${
+      order?.item?.brand || order?.itemBrand || ''
+    }*\n #️⃣ Serie: *${
+      order?.item?.serial || order?.itemSerial || ''
+    }*\n ⚙️ Falla: *${
+      order?.item?.failDescription || order?.failDescription || ''
+    }*
     `
-	}
+  }
 }
 const expireDateString = (order: Partial<OrderType>, { feePerDay }) => {
-	const expireDate = asDate(order?.expireAt)
+  const expireDate = asDate(order?.expireAt)
 
-	if (isToday(expireDate)) {
-		return `Vencimiento: *HOY* 😔. \n${FEE_ADVERT({
-			atTheEndOfDay: true,
-			expireDate,
-			feePerDay
-		})}`
-	}
-	if (isTomorrow(expireDate)) {
-		return `Vencimiento: *MAÑANA* 😔. \n${FEE_ADVERT({
-			atTheEndOfDay: true,
-			expireDate,
-			feePerDay
-		})}`
-	}
-	if (isAfterTomorrow(expireDate)) {
-		return `Vencimiento: *${dateFormat(expireDate, 'EEEE dd MMMM yy')}* (${fromNow(expireDate)})`
-	}
-	// Su servicio📄 de RENTA de Lavadora: 1706 tiene
-	// "X" dias de atraso y un adeudo de (X dias x $100)
+  if (isToday(expireDate)) {
+    return `Vencimiento: *HOY* 😔. \n${FEE_ADVERT({
+      atTheEndOfDay: true,
+      expireDate,
+      feePerDay
+    })}`
+  }
+  if (isTomorrow(expireDate)) {
+    return `Vencimiento: *MAÑANA* 😔. \n${FEE_ADVERT({
+      atTheEndOfDay: true,
+      expireDate,
+      feePerDay
+    })}`
+  }
+  if (isAfterTomorrow(expireDate)) {
+    return `Vencimiento: *${dateFormat(
+      expireDate,
+      'EEEE dd MMMM yy'
+    )}* (${fromNow(expireDate)})`
+  }
+  // Su servicio📄 de RENTA de Lavadora: 1706 tiene
+  // "X" dias de atraso y un adeudo de (X dias x $100)
 
-	if (isBeforeYesterday(expireDate)) {
-		return `Vencimiento: *${dateFormat(
-			expireDate,
-			'EEEE dd MMMM yy'
-		)}* (${fromNow(expireDate)})\n ${FEE_ADVERT({
-			atTheEndOfDay: true,
-			expireDate,
-			feePerDay
-		})}`
-	}
-	return ''
-}
-
-const repairORderStatus = ({ order }: { order: Partial<OrderType> }) => {
-	const orderQuotes = order?.quotes as OrderQuoteType[]
-	const orderStatus = order?.status
-	const quotesTotal = orderQuotes?.reduce((prev, curr) => prev + parseFloat(`${curr.amount}`), 0)
-	const stringTotal = `Total: *$${quotesTotal?.toFixed(2)}*`
-	const quotes = orderQuotes
-		?.map(q => {
-			return `${q.description} *$${parseFloat(`${q?.amount}`).toFixed(2)}* `
-		})
-		.join('\n')
-
-	let status = ''
-	if (orderStatus === order_status.AUTHORIZED) status = `*AUTORIZADA* _(agendad para revisión)_`
-
-	if (orderStatus === order_status.PENDING)
-		status = `*PENDIENTE* _(en espera de confirmación del técnico)_`
-
-	if (orderStatus === order_status.CANCELLED) status = `*CANCELADA*  `
-
-	if (orderStatus === order_status.REPAIRING)
-		status = `*EN REPARACIÓN* \n${quotes} \n$${stringTotal}`
-
-	if (orderStatus === order_status.PICKED_UP) status = `*RECOGIDA*  \n${quotes} \n$${stringTotal}`
-
-	if (orderStatus === order_status.REPAIRED)
-		status = `*TERMINADA* _(en espera de pago/entrega)_  \n${quotes} \n$${stringTotal}`
-
-	if (orderStatus === order_status.DELIVERED) status = `*ENTREGADA*`
-
-	return `Estado actual: ${status}`
+  if (isBeforeYesterday(expireDate)) {
+    return `Vencimiento: *${dateFormat(
+      expireDate,
+      'EEEE dd MMMM yy'
+    )}* (${fromNow(expireDate)})\n ${FEE_ADVERT({
+      atTheEndOfDay: true,
+      expireDate,
+      feePerDay
+    })}`
+  }
+  return ''
 }
 
 const FEE_ADVERT = ({ expireDate, feePerDay, atTheEndOfDay }) => {
-	const { amount, days } = getLateFee({ expireDate, feePerDay, atTheEndOfDay })
-	return amount > 0
-		? `\n*DEUDA actual $${amount}*  _($${feePerDay} x ${days} días vencidos)_`
-		: //: `\n\nRENOVAR o ENTREGAR a tiempo, evitara multas y recargos de *$${feePerDay}mxn x día* `
-			`\nEvite *RECARGOS* al renovar o entregar a tiempo (*$${feePerDay}mxn x día*) `
+  const { amount, days } = getLateFee({ expireDate, feePerDay, atTheEndOfDay })
+  return amount > 0
+    ? `\n*DEUDA actual $${amount}*  _($${feePerDay} x ${days} días vencidos)_`
+    : //: `\n\nRENOVAR o ENTREGAR a tiempo, evitara multas y recargos de *$${feePerDay}mxn x día* `
+      `\nEvite *RECARGOS* al renovar o entregar a tiempo (*$${feePerDay}mxn x día*) `
 }
 
 const getLateFee = ({
-	expireDate,
-	feePerDay = 100,
-	atTheEndOfDay
+  expireDate,
+  feePerDay = 100,
+  atTheEndOfDay
 }: {
-	expireDate: Date
-	feePerDay: number
-	atTheEndOfDay?: boolean
+  expireDate: Date
+  feePerDay: number
+  atTheEndOfDay?: boolean
 }): { days: number; amount: number } => {
-	const expireAt = atTheEndOfDay ? endDate(asDate(expireDate)) : asDate(expireDate)
-	const today = new Date()
-	const days = Math.ceil((today.getTime() - expireAt?.getTime()) / (1000 * 3600 * 24))
-	return {
-		days,
-		amount: feePerDay * days
-	}
+  const expireAt = atTheEndOfDay
+    ? endDate(asDate(expireDate))
+    : asDate(expireDate)
+  const today = new Date()
+  const days = Math.ceil(
+    (today.getTime() - expireAt?.getTime()) / (1000 * 3600 * 24)
+  )
+  return {
+    days,
+    amount: feePerDay * days
+  }
 }
 
-const LAST_PAYMENT = ({ lastPayment }: { lastPayment: Partial<PaymentType> }) => {
-	//TODO last valid payment
-	if (!lastPayment) return 'Sin pagos'
-	return `Último pago: *$${lastPayment.amount}* _${shortMethod(
-		lastPayment.method
-	)}_ ${dateFormat(asDate(lastPayment?.createdAt), 'dd/MM/yy HH:mm')} `
+const LAST_PAYMENT = ({
+  lastPayment
+}: {
+  lastPayment: Partial<PaymentType>
+}) => {
+  //TODO last valid payment
+  if (!lastPayment) return 'Sin pagos'
+  return `Último pago: *$${lastPayment.amount}* _${shortMethod(
+    lastPayment.method
+  )}_ ${dateFormat(asDate(lastPayment?.createdAt), 'dd/MM/yy HH:mm')} `
 }
-export const shortMethod = method => {
-	if (method === 'transfer') return 'Tr'
-	if (method === 'cash') return 'Ef'
-	if (method === 'card') return 'Tj'
-	return method
+export const shortMethod = (method) => {
+  if (method === 'transfer') return 'Tr'
+  if (method === 'cash') return 'Ef'
+  if (method === 'card') return 'Tj'
+  return method
 }
 
-const BANK_INFO = ({ store }) => `Transferir 💸  únicamente a las siguientes cuentas a nombre de ${
-	store?.name
+const BANK_INFO = ({
+  store
+}) => `Transferir 💸  únicamente a las siguientes cuentas a nombre de ${
+  store?.name
 } y/o ${store?.accountHolder || ''}:
 \n${store?.bankInfo
-	?.map(({ bank, clabe }) => {
-		if (!bank) return ''
-		return `🏦 ${bank} ${clabe}\n`
-	})
-	.join('')}`
+  ?.map(({ bank, clabe }) => {
+    if (!bank) return ''
+    return `🏦 ${bank} ${clabe}\n`
+  })
+  .join('')}`
 
 export const item_sale_amount = (item: SaleOrderItem) => {
-	const amount = Number(item?.price) * Number(item?.quantity)
-	return amount || 0
+  const amount = Number(item?.price) * Number(item?.quantity)
+  return amount || 0
 }
 export const items_sale_total = (items: SaleOrderItem[]) => {
-	const total = items.reduce((prev, curr) => {
-		return prev + item_sale_amount(curr)
-	}, 0)
-	return total
+  const total = items.reduce((prev, curr) => {
+    return prev + item_sale_amount(curr)
+  }, 0)
+  return total
 }
 
 export const defineOrderStatus = (order: Partial<OrderType>) => {
-	const status = order?.status
-	if (status === order_status.PENDING) {
-		return ` \nPENDIENTE DE AUTORIZACIÓN
+  const status = order?.status
+  if (status === order_status.PENDING) {
+    return ` \nPENDIENTE DE AUTORIZACIÓN
   \n*Su pedido aún esta por confirmarse*
   `
-	}
-	if (status === order_status.AUTHORIZED) {
-		return AUTHORIZED_ORDER({ order })
-	}
-	if (status === order_status.DELIVERED && order.type === order_type.RENT) {
-		return `${ORDER_ITEMS({ order })}`
-	}
+  }
+  if (status === order_status.AUTHORIZED) {
+    return AUTHORIZED_ORDER({ order })
+  }
+  if (status === order_status.DELIVERED && order.type === order_type.RENT) {
+    return `${ORDER_ITEMS({ order })}`
+  }
 }
 export const AUTHORIZED_ORDER = ({ order }: { order: Partial<OrderType> }) =>
-	`PENDIENTE DE ENTREGA\n${
-		order.scheduledAt
-			? `\nFecha estimada de entrega:\n*${dateFormat(
-					asDate(order?.scheduledAt),
-					'EEEE dd MMMM yy'
-				)}*`
-			: '\nSin fecha estimada de entrega'
-	}`
+  `PENDIENTE DE ENTREGA\n${
+    order.scheduledAt
+      ? `\nFecha estimada de entrega:\n*${dateFormat(
+          asDate(order?.scheduledAt),
+          'EEEE dd MMMM yy'
+        )}*`
+      : '\nSin fecha estimada de entrega'
+  }`
