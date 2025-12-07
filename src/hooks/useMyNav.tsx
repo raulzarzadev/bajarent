@@ -3,17 +3,7 @@ import {
   NavigatorScreenParams,
   useNavigation
 } from '@react-navigation/native'
-import {
-  BalancesStackParamList,
-  CustomersStackParamList,
-  ItemsStackParamList,
-  MyItemsStackParamList,
-  PaymentsStackParamList,
-  RootTabParamList,
-  OrdersStackParamList,
-  StoreStackParamList,
-  WorkshopStackParamList
-} from '../navigation/types'
+import { RootTabParamList, WorkshopStackParamList } from '../navigation/types'
 
 const useMyNav = () => {
   // combine because this hook navigates across stacks; fallback Record keeps other stacks permissive
