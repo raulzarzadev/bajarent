@@ -109,20 +109,26 @@ const useMyNav = () => {
     idsTitle?: string
   }) => {
     if (Array.isArray(ids) && ids.length > 0) {
-      navigate('StackPayments', {
-        screen: 'ScreenPayments',
+      navigate('StackOrders', {
+        screen: 'StackPayments',
         params: {
-          title: idsTitle || 'Pagos',
-          payments: ids
+          screen: 'ScreenPayments',
+          params: {
+            title: idsTitle || 'Pagos',
+            payments: ids
+          }
         }
       })
     }
 
     if (id) {
-      navigate('StackPayments', {
-        screen: 'ScreenPaymentsDetails',
+      navigate('StackOrders', {
+        screen: 'StackPayments',
         params: {
-          id
+          screen: 'ScreenPaymentsDetails',
+          params: {
+            id
+          }
         }
       })
       return

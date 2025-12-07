@@ -18,12 +18,7 @@ export type OrdersStackParamList = {
   StackCustomers:
     | { screen?: string; params?: Record<string, unknown> }
     | undefined
-  StackPayments:
-    | {
-        screen?: keyof PaymentsStackParamList
-        params?: PaymentsStackParamList[keyof PaymentsStackParamList]
-      }
-    | undefined
+  StackPayments: NavigatorScreenParams<PaymentsStackParamList> | undefined
   StackItems: { screen?: string; params?: Record<string, unknown> } | undefined
   ScreenMessages: { title?: string } | undefined
   StackCurrentWork:

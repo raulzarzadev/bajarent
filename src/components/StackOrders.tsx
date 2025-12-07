@@ -123,7 +123,6 @@ function StackOrders() {
       <Stack.Screen
         name="ScreenMessages"
         options={({ route }) => ({
-          //@ts-ignore
           title: route?.params?.title || 'Mensajería' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
         component={ScreenMessagesE}
