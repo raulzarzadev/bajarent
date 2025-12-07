@@ -321,7 +321,7 @@ const ButtonDeliveryRent = () => {
 	)
 }
 
-const ButtonPickUp = ({}) => {
+const ButtonPickUp = () => {
 	const { order } = useOrderDetails()
 	const modalRentFinish = useModal({ title: 'Terminar renta' })
 	const [allItemsExists, setAllItemsExists] = useState(false)

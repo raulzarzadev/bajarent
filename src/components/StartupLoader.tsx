@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import theme from '../theme'

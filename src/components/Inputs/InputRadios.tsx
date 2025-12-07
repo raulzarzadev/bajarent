@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Text, View, type ViewStyle } from 'react-native'
 import { gStyles } from '../../styles'
 import type { IconName } from '../Icon'
