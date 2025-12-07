@@ -12,518 +12,492 @@ import { ServicePayments } from './ServicePayments'
 import ItemType from '../types/ItemType'
 
 class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
-  constructor() {
-    super('balancesV3')
-  }
+	constructor() {
+		super('balancesV3')
+	}
 
-  async getLast(storeId: string) {
-    return this.getItems([
-      where('storeId', '==', storeId),
-      orderBy('createdAt', 'desc'),
-      limit(1)
-    ])
-  }
+	async getLast(storeId: string) {
+		return this.getItems([where('storeId', '==', storeId), orderBy('createdAt', 'desc'), limit(1)])
+	}
 
-  async getByStore(storeId: string) {
-    return this.getItems([where('storeId', '==', storeId)])
-  }
+	async getByStore(storeId: string) {
+		return this.getItems([where('storeId', '==', storeId)])
+	}
 
-  async getLastInDate({
-    storeId,
-    date,
-    type = 'daily'
-  }: {
-    storeId: string
-    date: Date
-    type?: StoreBalanceType['type']
-  }) {
-    let filters = [
-      where('storeId', '==', storeId),
-      where('type', '==', type),
-      where('createdAt', '<=', endDate(date)),
-      where('createdAt', '>=', startDate(date)),
-      orderBy('createdAt', 'desc'),
-      limit(1)
-    ]
+	async getLastInDate({
+		storeId,
+		date,
+		type = 'daily'
+	}: {
+		storeId: string
+		date: Date
+		type?: StoreBalanceType['type']
+	}) {
+		let filters = [
+			where('storeId', '==', storeId),
+			where('type', '==', type),
+			where('createdAt', '<=', endDate(date)),
+			where('createdAt', '>=', startDate(date)),
+			orderBy('createdAt', 'desc'),
+			limit(1)
+		]
 
-    return this.getItems(filters)
-  }
+		return this.getItems(filters)
+	}
 
-  listenLastInDate(
-    {
-      storeId,
-      date,
-      type
-    }: { storeId: string; date: Date; type: StoreBalanceType['type'] },
-    cb: (data: StoreBalanceType) => void
-  ) {
-    let filters = [
-      where('storeId', '==', storeId),
-      where('type', '==', type),
-      where('createdAt', '<=', endDate(date)),
-      where('createdAt', '>=', startDate(date)),
-      orderBy('createdAt', 'desc'),
-      limit(1)
-    ]
+	listenLastInDate(
+		{ storeId, date, type }: { storeId: string; date: Date; type: StoreBalanceType['type'] },
+		cb: (data: StoreBalanceType) => void
+	) {
+		let filters = [
+			where('storeId', '==', storeId),
+			where('type', '==', type),
+			where('createdAt', '<=', endDate(date)),
+			where('createdAt', '>=', startDate(date)),
+			orderBy('createdAt', 'desc'),
+			limit(1)
+		]
 
-    return this.listenMany(filters, (res) => {
-      cb(res?.[0] || null)
-    })
-  }
+		return this.listenMany(filters, res => {
+			cb(res?.[0] || null)
+		})
+	}
 
-  async getOrders({ type, storeId, fromDate, toDate }: GetBalanceOrders) {
-    if (type === 'canceled-date') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('status', '==', order_status.CANCELLED),
-        where('cancelledAt', '>=', startDate(fromDate)),
-        where('cancelledAt', '<=', endDate(toDate))
-      ])
-    }
-    if (type === 'rents-active') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.RENT),
-        where('status', '==', order_status.DELIVERED)
-      ])
-    }
-    if (type === 'rents-finished-date') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.RENT),
-        where('status', '==', order_status.PICKED_UP),
-        where('pickedUpAt', '>=', startDate(fromDate)),
-        where('pickedUpAt', '<=', endDate(toDate))
-      ])
-    }
-    if (type === 'repair-delivered-at') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.REPAIR),
-        where('status', '==', order_status.DELIVERED),
-        where('deliveredAt', '>=', startDate(fromDate)),
-        where('deliveredAt', '<=', endDate(toDate))
-      ])
-    }
+	async getOrders({ type, storeId, fromDate, toDate }: GetBalanceOrders) {
+		if (type === 'canceled-date') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('status', '==', order_status.CANCELLED),
+				where('cancelledAt', '>=', startDate(fromDate)),
+				where('cancelledAt', '<=', endDate(toDate))
+			])
+		}
+		if (type === 'rents-active') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('type', '==', order_type.RENT),
+				where('status', '==', order_status.DELIVERED)
+			])
+		}
+		if (type === 'rents-finished-date') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('type', '==', order_type.RENT),
+				where('status', '==', order_status.PICKED_UP),
+				where('pickedUpAt', '>=', startDate(fromDate)),
+				where('pickedUpAt', '<=', endDate(toDate))
+			])
+		}
+		if (type === 'repair-delivered-at') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('type', '==', order_type.REPAIR),
+				where('status', '==', order_status.DELIVERED),
+				where('deliveredAt', '>=', startDate(fromDate)),
+				where('deliveredAt', '<=', endDate(toDate))
+			])
+		}
 
-    if (type === 'repair-started-at') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.REPAIR),
-        //  where('status', '==', order_status.REPAIRED),
-        where('repairingAt', '>=', startDate(fromDate)),
-        where('repairingAt', '<=', endDate(toDate))
-      ])
-    }
+		if (type === 'repair-started-at') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('type', '==', order_type.REPAIR),
+				//  where('status', '==', order_status.REPAIRED),
+				where('repairingAt', '>=', startDate(fromDate)),
+				where('repairingAt', '<=', endDate(toDate))
+			])
+		}
 
-    if (type === 'sales-delivered-at') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.SALE),
-        // where('status', '==', order_status.DELIVERED),
-        where('deliveredAt', '>=', startDate(fromDate)),
-        where('deliveredAt', '<=', endDate(toDate))
-      ])
-    }
-    // if (type === 'sales-paid-at') {
-    //   return ServiceOrders.findMany([
-    //     where('storeId', '==', storeId),
-    //     where('type', '==', order_type.SALE),
-    //     // where('status', '==', order_status.DELIVERED),
-    //     where('paidAt', '>=', startDate(fromDate)),
-    //     where('paidAt', '<=', endDate(toDate))
-    //   ])
-    // }
-    if (type === 'sales-created-at') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('type', '==', order_type.SALE),
-        where('createdAt', '>=', startDate(fromDate)),
-        where('createdAt', '<=', endDate(toDate))
-      ])
-    }
-    if (type === 'paid-at') {
-      return ServiceOrders.findMany([
-        where('storeId', '==', storeId),
-        where('paidAt', '>=', startDate(fromDate)),
-        where('paidAt', '<=', endDate(toDate))
-      ])
-    }
-  }
+		if (type === 'sales-delivered-at') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('type', '==', order_type.SALE),
+				// where('status', '==', order_status.DELIVERED),
+				where('deliveredAt', '>=', startDate(fromDate)),
+				where('deliveredAt', '<=', endDate(toDate))
+			])
+		}
+		// if (type === 'sales-paid-at') {
+		//   return ServiceOrders.findMany([
+		//     where('storeId', '==', storeId),
+		//     where('type', '==', order_type.SALE),
+		//     // where('status', '==', order_status.DELIVERED),
+		//     where('paidAt', '>=', startDate(fromDate)),
+		//     where('paidAt', '<=', endDate(toDate))
+		//   ])
+		// }
+		if (type === 'sales-created-at') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('type', '==', order_type.SALE),
+				where('createdAt', '>=', startDate(fromDate)),
+				where('createdAt', '<=', endDate(toDate))
+			])
+		}
+		if (type === 'paid-at') {
+			return ServiceOrders.findMany([
+				where('storeId', '==', storeId),
+				where('paidAt', '>=', startDate(fromDate)),
+				where('paidAt', '<=', endDate(toDate))
+			])
+		}
+	}
 
-  async getBalanceOrders({ storeId, fromDate, toDate, payments }) {
-    const activeRentsPromises = this.getOrders({
-      type: 'rents-active',
-      storeId,
-      fromDate,
-      toDate
-    }).catch((e) => {
-      console.log(e)
-      return []
-    })
-    const rentsFinishedDatePromises = this.getOrders({
-      type: 'rents-finished-date',
-      storeId,
-      fromDate,
-      toDate
-    }).catch((e) => {
-      console.log(e)
-      return []
-    })
-    const canceledOrdersPromises = this.getOrders({
-      type: 'canceled-date',
-      storeId,
-      fromDate,
-      toDate
-    }).catch((e) => {
-      console.log(e)
-      return []
-    })
-    const repairStartedAtPromises = this.getOrders({
-      type: 'repair-started-at',
-      storeId,
-      fromDate,
-      toDate
-    }).catch((e) => {
-      console.log(e)
-      return []
-    })
-    const repairDeliveredAtPromises = this.getOrders({
-      type: 'repair-delivered-at',
-      storeId,
-      fromDate,
-      toDate
-    }).catch((e) => {
-      console.log(e)
-      return []
-    })
-    // const salesDeliveredPromises = this.getOrders({
-    //   type: 'sales-delivered-at',
-    //   storeId,
-    //   fromDate,
-    //   toDate
-    // })
-    // const paidPromises = this.getOrders({
-    //   type: 'paid-at',
-    //   storeId,
-    //   fromDate,
-    //   toDate
-    // })
-    const salesCreatedPromises = this.getOrders({
-      type: 'sales-created-at',
-      storeId,
-      fromDate,
-      toDate
-    }).catch((e) => {
-      console.log(e)
-      return []
-    })
+	async getBalanceOrders({ storeId, fromDate, toDate, payments }) {
+		const activeRentsPromises = this.getOrders({
+			type: 'rents-active',
+			storeId,
+			fromDate,
+			toDate
+		}).catch(e => {
+			console.log(e)
+			return []
+		})
+		const rentsFinishedDatePromises = this.getOrders({
+			type: 'rents-finished-date',
+			storeId,
+			fromDate,
+			toDate
+		}).catch(e => {
+			console.log(e)
+			return []
+		})
+		const canceledOrdersPromises = this.getOrders({
+			type: 'canceled-date',
+			storeId,
+			fromDate,
+			toDate
+		}).catch(e => {
+			console.log(e)
+			return []
+		})
+		const repairStartedAtPromises = this.getOrders({
+			type: 'repair-started-at',
+			storeId,
+			fromDate,
+			toDate
+		}).catch(e => {
+			console.log(e)
+			return []
+		})
+		const repairDeliveredAtPromises = this.getOrders({
+			type: 'repair-delivered-at',
+			storeId,
+			fromDate,
+			toDate
+		}).catch(e => {
+			console.log(e)
+			return []
+		})
+		// const salesDeliveredPromises = this.getOrders({
+		//   type: 'sales-delivered-at',
+		//   storeId,
+		//   fromDate,
+		//   toDate
+		// })
+		// const paidPromises = this.getOrders({
+		//   type: 'paid-at',
+		//   storeId,
+		//   fromDate,
+		//   toDate
+		// })
+		const salesCreatedPromises = this.getOrders({
+			type: 'sales-created-at',
+			storeId,
+			fromDate,
+			toDate
+		}).catch(e => {
+			console.log(e)
+			return []
+		})
 
-    const [
-      activeRents,
-      rentsFinishedDate,
-      repairStartedAt,
-      repairsDeliveredAt,
-      canceledOrders,
-      salesCreated
-      //paidOrders
-      //salesDate,
-    ] = await Promise.all([
-      activeRentsPromises,
-      rentsFinishedDatePromises,
-      repairStartedAtPromises,
-      repairDeliveredAtPromises,
-      canceledOrdersPromises,
-      salesCreatedPromises
-      // paidPromises
-      //  salesDeliveredPromises,
-    ])
+		const [
+			activeRents,
+			rentsFinishedDate,
+			repairStartedAt,
+			repairsDeliveredAt,
+			canceledOrders,
+			salesCreated
+			//paidOrders
+			//salesDate,
+		] = await Promise.all([
+			activeRentsPromises,
+			rentsFinishedDatePromises,
+			repairStartedAtPromises,
+			repairDeliveredAtPromises,
+			canceledOrdersPromises,
+			salesCreatedPromises
+			// paidPromises
+			//  salesDeliveredPromises,
+		])
 
-    //join orders
-    const allOrders = [
-      activeRents,
-      rentsFinishedDate,
-      repairStartedAt,
-      repairsDeliveredAt,
-      canceledOrders,
-      salesCreated
-      // paidOrders
-      //salesDate,
-    ].flat()
-    // remove duplicated orders
-    const unique = allOrders.filter(
-      (order, index, self) => index === self.findIndex((t) => t.id === order.id)
-    )
+		//join orders
+		const allOrders = [
+			activeRents,
+			rentsFinishedDate,
+			repairStartedAt,
+			repairsDeliveredAt,
+			canceledOrders,
+			salesCreated
+			// paidOrders
+			//salesDate,
+		].flat()
+		// remove duplicated orders
+		const unique = allOrders.filter(
+			(order, index, self) => index === self.findIndex(t => t.id === order.id)
+		)
 
-    //* get orders from payments avoid all in unique
-    //* ES NECESARIO TRAER LAS ORDENES QUE ESTEN EN PAYMENTS Y NO EN EXISTAN EN UNIQUE
+		//* get orders from payments avoid all in unique
+		//* ES NECESARIO TRAER LAS ORDENES QUE ESTEN EN PAYMENTS Y NO EN EXISTAN EN UNIQUE
 
-    const ordersFromPayments = payments
-      .filter(
-        (payment) => !unique.find((order) => order.id === payment.orderId)
-      )
-      .map((payment) => payment.orderId)
-      .filter((id) => !!id)
+		const ordersFromPayments = payments
+			.filter(payment => !unique.find(order => order.id === payment.orderId))
+			.map(payment => payment.orderId)
+			.filter(id => !!id)
 
-    const paidOrders = await ServiceOrders.getList(ordersFromPayments).catch(
-      (e) => {
-        console.log(e)
-        return []
-      }
-    )
-    return [...unique, ...paidOrders]
-  }
+		const paidOrders = await ServiceOrders.getList(ordersFromPayments).catch(e => {
+			console.log(e)
+			return []
+		})
+		return [...unique, ...paidOrders]
+	}
 
-  getPaymentsDate = async ({
-    storeId,
-    fromDate,
-    toDate
-  }: {
-    storeId: string
-    fromDate: Date
-    toDate: Date
-  }) => {
-    return ServicePayments.findMany([
-      where('storeId', '==', storeId),
-      where('createdAt', '>=', fromDate),
-      where('createdAt', '<=', toDate)
-    ]).catch((e) => {
-      console.log(e)
-      return []
-    })
-  }
+	getPaymentsDate = async ({
+		storeId,
+		fromDate,
+		toDate
+	}: {
+		storeId: string
+		fromDate: Date
+		toDate: Date
+	}) => {
+		return ServicePayments.findMany([
+			where('storeId', '==', storeId),
+			where('createdAt', '>=', fromDate),
+			where('createdAt', '<=', toDate)
+		]).catch(e => {
+			console.log(e)
+			return []
+		})
+	}
 
-  saveBalance = async (balance: Partial<StoreBalanceType>) => {
-    return this.create(balance)
-  }
+	saveBalance = async (balance: Partial<StoreBalanceType>) => {
+		return this.create(balance)
+	}
 
-  createV3 = async (
-    storeId: string,
-    ops?: {
-      fromDate?: Date
-      toDate?: Date
-      progress?: (progress: number) => void
-    }
-  ): Promise<StoreBalanceType> => {
-    console.time('createV3')
-    const { fromDate, toDate, progress } = ops || {}
+	createV3 = async (
+		storeId: string,
+		ops?: {
+			fromDate?: Date
+			toDate?: Date
+			progress?: (progress: number) => void
+		}
+	): Promise<StoreBalanceType> => {
+		console.time('createV3')
+		const { fromDate, toDate, progress } = ops || {}
 
-    try {
-      progress?.(1)
-      const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))
-      const TODAY_NIGHT = new Date(new Date().setHours(23, 59, 59, 999))
+		try {
+			progress?.(1)
+			const TODAY_MORNING = new Date(new Date().setHours(0, 0, 0, 0))
+			const TODAY_NIGHT = new Date(new Date().setHours(23, 59, 59, 999))
 
-      const FROM_DATE = fromDate || TODAY_MORNING
-      const TO_DATE = toDate || TODAY_NIGHT
+			const FROM_DATE = fromDate || TODAY_MORNING
+			const TO_DATE = toDate || TODAY_NIGHT
 
-      let balance: Partial<StoreBalanceType> = {}
-      balance.fromDate = FROM_DATE
-      balance.toDate = TO_DATE
-      balance.storeId = storeId
+			let balance: Partial<StoreBalanceType> = {}
+			balance.fromDate = FROM_DATE
+			balance.toDate = TO_DATE
+			balance.storeId = storeId
 
-      //* Get payments
-      const payments: PaymentType[] = await this.getPaymentsDate({
-        storeId,
-        fromDate: FROM_DATE,
-        toDate: TO_DATE
-      }).catch((e) => {
-        console.log(e)
-        return []
-      })
-      progress?.(10)
-      //* Get orders
+			//* Get payments
+			const payments: PaymentType[] = await this.getPaymentsDate({
+				storeId,
+				fromDate: FROM_DATE,
+				toDate: TO_DATE
+			}).catch(e => {
+				console.log(e)
+				return []
+			})
+			progress?.(10)
+			//* Get orders
 
-      const orders = await this.getBalanceOrders({
-        storeId,
-        fromDate: FROM_DATE,
-        toDate: TO_DATE,
-        payments
-      }).catch((e) => {
-        console.log(e)
-        return []
-      })
-      progress?.(40)
+			const orders = await this.getBalanceOrders({
+				storeId,
+				fromDate: FROM_DATE,
+				toDate: TO_DATE,
+				payments
+			}).catch(e => {
+				console.log(e)
+				return []
+			})
+			progress?.(40)
 
-      //* Get items
-      const availableItems: ItemType[] = await ServiceStoreItems.getAvailable({
-        storeId
-      }).catch((e) => {
-        console.log(e)
-        return []
-      })
+			//* Get items
+			const availableItems: ItemType[] = await ServiceStoreItems.getAvailable({
+				storeId
+			}).catch(e => {
+				console.log(e)
+				return []
+			})
 
-      const retiredItems: ItemType[] =
-        await ServiceStoreItems.getFieldBetweenDates({
-          storeId,
-          field: 'retiredAt',
-          fromDate: FROM_DATE,
-          toDate: TO_DATE
-        })
+			const retiredItems: ItemType[] = await ServiceStoreItems.getFieldBetweenDates({
+				storeId,
+				field: 'retiredAt',
+				fromDate: FROM_DATE,
+				toDate: TO_DATE
+			})
 
-      const createdItems = await ServiceStoreItems.getFieldBetweenDates({
-        storeId,
-        field: 'createdAt',
-        fromDate: FROM_DATE,
-        toDate: TO_DATE
-      })
-      progress?.(60)
+			const createdItems = await ServiceStoreItems.getFieldBetweenDates({
+				storeId,
+				field: 'createdAt',
+				fromDate: FROM_DATE,
+				toDate: TO_DATE
+			})
+			progress?.(60)
 
-      const formattedItems = [
-        ...availableItems,
-        ...retiredItems,
-        ...createdItems
-      ]
-        .map((item) => ({
-          itemId: item?.id || null,
-          itemEco: item?.number || null,
-          assignedSection: item?.assignedSection || null,
-          categoryId: item?.category || null,
-          retiredAt: item?.retiredAt || null,
-          createdAt: item?.createdAt || null,
-          status: item?.status || null
-        }))
-        //*remove duplicated items
-        .filter(
-          (item, index, self) =>
-            index === self.findIndex((t) => t.itemId === item.itemId)
-        )
+			const formattedItems = [...availableItems, ...retiredItems, ...createdItems]
+				.map(item => ({
+					itemId: item?.id || null,
+					itemEco: item?.number || null,
+					assignedSection: item?.assignedSection || null,
+					categoryId: item?.category || null,
+					retiredAt: item?.retiredAt || null,
+					createdAt: item?.createdAt || null,
+					status: item?.status || null
+				}))
+				//*remove duplicated items
+				.filter((item, index, self) => index === self.findIndex(t => t.itemId === item.itemId))
 
-      balance.items = formattedItems
+			balance.items = formattedItems
 
-      balance.payments = payments?.map((payment) => {
-        return {
-          id: payment.id,
-          orderId: payment.orderId || null,
-          amount: payment.amount,
-          method: payment.method,
-          verifiedAt: payment.verifiedAt || null,
-          canceledAt: payment.canceledAt || null,
-          createdBy: payment.createdBy,
-          type: payment?.type || null,
-          ...payment
-        }
-      })
+			balance.payments = payments?.map(payment => {
+				return {
+					id: payment.id,
+					orderId: payment.orderId || null,
+					amount: payment.amount,
+					method: payment.method,
+					verifiedAt: payment.verifiedAt || null,
+					canceledAt: payment.canceledAt || null,
+					createdBy: payment.createdBy,
+					type: payment?.type || null,
+					...payment
+				}
+			})
 
-      progress?.(70)
+			progress?.(70)
 
-      balance.orders = orders
-        //* format orders
-        .map((order) =>
-          formatAsBalanceOrder({
-            order,
-            payments: payments.filter((payment) => payment.orderId === order.id)
-          })
-        )
-        //* remove duplicated orders
-        .filter(
-          (order, index, self) =>
-            index === self.findIndex((t) => t.orderId === order.orderId)
-        )
+			balance.orders = orders
+				//* format orders
+				.map(order =>
+					formatAsBalanceOrder({
+						order,
+						payments: payments.filter(payment => payment.orderId === order.id)
+					})
+				)
+				//* remove duplicated orders
+				.filter((order, index, self) => index === self.findIndex(t => t.orderId === order.orderId))
 
-      //* Get reports
-      const solvedReports = await ServiceComments.getSolvedReportsByDate({
-        storeId,
-        fromDate: FROM_DATE,
-        toDate: TO_DATE
-      })
-      progress?.(80)
+			//* Get reports
+			const solvedReports = await ServiceComments.getSolvedReportsByDate({
+				storeId,
+				fromDate: FROM_DATE,
+				toDate: TO_DATE
+			})
+			progress?.(80)
 
-      balance.solvedReports = solvedReports
+			balance.solvedReports = solvedReports
 
-      console.timeEnd('createV3')
-      progress?.(100)
+			console.timeEnd('createV3')
+			progress?.(100)
 
-      return balance as StoreBalanceType
-    } catch (error) {
-      progress?.(-1)
-      console.timeEnd('createV3')
-      console.error('Error creating balance', error)
-    }
-  }
+			return balance as StoreBalanceType
+		} catch (error) {
+			progress?.(-1)
+			console.timeEnd('createV3')
+			console.error('Error creating balance', error)
+		}
+	}
 }
 
 //#region HELPERS
 const formatAsBalanceOrder = ({
-  order,
-  payments
+	order,
+	payments
 }: {
-  order: Partial<OrderType>
-  payments: PaymentType[]
+	order: Partial<OrderType>
+	payments: PaymentType[]
 }): StoreBalanceOrder => {
-  const items =
-    order?.items?.map((item) => {
-      return {
-        itemId: item?.id || null,
-        itemEco: item?.number || null,
-        categoryName: item?.categoryName || null,
-        priceId: item?.priceSelected?.id || null,
-        orderId: order.id || null,
-        assignedSection: order.assignToSection || null,
-        orderFolio: order.folio || null
-      }
-    }) || null
-  const time = order?.items?.[0]?.priceSelected?.time || null
+	const items =
+		order?.items?.map(item => {
+			return {
+				itemId: item?.id || null,
+				itemEco: item?.number || null,
+				categoryName: item?.categoryName || null,
+				priceId: item?.priceSelected?.id || null,
+				orderId: order.id || null,
+				assignedSection: order.assignToSection || null,
+				orderFolio: order.folio || null
+			}
+		}) || null
+	const time = order?.items?.[0]?.priceSelected?.time || null
 
-  //get last extension not renew
-  const lastExtension =
-    Object.values(order?.extensions || {})
-      .filter((ext) => ext.reason !== 'renew')
-      .sort((a, b) =>
-        isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1
-      )[0]?.createdAt || null
-  // get last renewal
-  const lastRenew =
-    Object.values(order?.extensions || {})
-      .filter((ext) => ext.reason === 'renew')
-      .sort((a, b) =>
-        isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1
-      )[0]?.createdAt || null
+	//get last extension not renew
+	const lastExtension =
+		Object.values(order?.extensions || {})
+			.filter(ext => ext.reason !== 'renew')
+			.sort((a, b) => (isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1))[0]?.createdAt ||
+		null
+	// get last renewal
+	const lastRenew =
+		Object.values(order?.extensions || {})
+			.filter(ext => ext.reason === 'renew')
+			.sort((a, b) => (isAfter(asDate(a.createdAt), asDate(b.createdAt)) ? -1 : 1))[0]?.createdAt ||
+		null
 
-  return {
-    orderId: order?.id,
-    orderType: order?.type,
-    orderStatus: order?.status,
-    orderFolio: order?.folio,
-    canceledAt:
-      order?.status === order_status?.CANCELLED ? order?.cancelledAt : null,
-    items,
-    renewedAt: lastRenew,
-    extendedAt: lastExtension,
-    deliveredAt: order?.deliveredAt || null,
-    time,
-    assignedSection: order?.assignToSection || null,
-    payments,
-    clientName: order?.fullName,
-    orderNote: order?.note || null,
-    repairingAt: order?.repairingAt || null,
-    paidAt: order?.paidAt || null,
-    createdAt: order?.createdAt || null
-  }
+	return {
+		orderId: order?.id,
+		orderType: order?.type,
+		orderStatus: order?.status,
+		orderFolio: order?.folio,
+		canceledAt: order?.status === order_status?.CANCELLED ? order?.cancelledAt : null,
+		items,
+		renewedAt: lastRenew,
+		extendedAt: lastExtension,
+		deliveredAt: order?.deliveredAt || null,
+		time,
+		assignedSection: order?.assignToSection || null,
+		payments,
+		clientName: order?.fullName,
+		orderNote: order?.note || null,
+		repairingAt: order?.repairingAt || null,
+		paidAt: order?.paidAt || null,
+		createdAt: order?.createdAt || null
+	}
 }
 
 const filterOutElements = (arr1: string[], arr2: string[]): string[] => {
-  const set2 = new Set(arr2)
-  const set1 = new Set(arr1)
-  return Array.from(set1).filter((item) => !set2.has(item))
+	const set2 = new Set(arr2)
+	const set1 = new Set(arr1)
+	return Array.from(set1).filter(item => !set2.has(item))
 }
 export const ServiceBalances = new ServiceBalancesClass()
 
 type GetBalanceOrders = {
-  type:
-    | 'rents-active'
-    | 'rents-finished-date'
-    //*<-- about repairs
-    | 'repair-started-at'
-    | 'repair-delivered-at'
+	type:
+		| 'rents-active'
+		| 'rents-finished-date'
+		//*<-- about repairs
+		| 'repair-started-at'
+		| 'repair-delivered-at'
 
-    //* <--- about sales
-    | 'sales-delivered-at'
-    | 'sales-paid-at'
-    | 'sales-created-at'
-    //* <-- general
-    | 'canceled-date'
-    | 'paid-at'
-  storeId: string
-  fromDate: Date
-  toDate: Date
+		//* <--- about sales
+		| 'sales-delivered-at'
+		| 'sales-paid-at'
+		| 'sales-created-at'
+		//* <-- general
+		| 'canceled-date'
+		| 'paid-at'
+	storeId: string
+	fromDate: Date
+	toDate: Date
 }

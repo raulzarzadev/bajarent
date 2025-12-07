@@ -15,152 +15,147 @@ import { OrderQuoteType } from '../types/OrderType'
 import ButtonConfirm from './ButtonConfirm'
 
 export const ModalRepairQuote = ({
-  orderId
+	orderId
 }: //quote
 {
-  orderId: string
-  quote?: {
-    info: string
-    total?: number
-    failDescription?: string
-    brand?: string
-    model?: string
-    serial?: string
-    category?: string
-  }
+	orderId: string
+	quote?: {
+		info: string
+		total?: number
+		failDescription?: string
+		brand?: string
+		model?: string
+		serial?: string
+		category?: string
+	}
 }) => {
-  const { order } = useOrderDetails()
-  const failDescription = order?.failDescription || order.description || ''
-  const quote = {
-    info: order?.repairInfo || order?.quote?.description || '',
-    total: order?.repairTotal || order?.quote?.amount || 0,
-    brand: order?.itemBrand || '',
-    serial: order?.itemSerial || '',
-    category:
-      order?.items?.[0]?.categoryName ||
-      order?.item?.categoryName ||
-      'Sin articulo',
-    failDescription
-  }
-  const quoteAlreadyExists = !quote || quote?.info || quote?.total
-  const label = quoteAlreadyExists ? 'Modificar cotización' : 'Cotización'
+	const { order } = useOrderDetails()
+	const failDescription = order?.failDescription || order.description || ''
+	const quote = {
+		info: order?.repairInfo || order?.quote?.description || '',
+		total: order?.repairTotal || order?.quote?.amount || 0,
+		brand: order?.itemBrand || '',
+		serial: order?.itemSerial || '',
+		category: order?.items?.[0]?.categoryName || order?.item?.categoryName || 'Sin articulo',
+		failDescription
+	}
+	const quoteAlreadyExists = !quote || quote?.info || quote?.total
+	const label = quoteAlreadyExists ? 'Modificar cotización' : 'Cotización'
 
-  const modal = useModal({ title: label })
+	const modal = useModal({ title: label })
 
-  const { user } = useAuth()
-  const [info, setInfo] = useState(quote?.info || '')
-  const [total, setTotal] = useState(quote?.total || 0)
-  const [saving, setSaving] = useState(false)
+	const { user } = useAuth()
+	const [info, setInfo] = useState(quote?.info || '')
+	const [total, setTotal] = useState(quote?.total || 0)
+	const [saving, setSaving] = useState(false)
 
-  const handleRepairFinished = async () => {
-    setSaving(true)
-    await ServiceOrders.update(orderId, {
-      repairInfo: info,
-      repairTotal: total,
-      quoteBy: user.id
-    })
-      .then((r) => {
-        console.log(r)
-        modal.toggleOpen()
-      })
-      .catch(console.error)
-  }
+	const handleRepairFinished = async () => {
+		setSaving(true)
+		await ServiceOrders.update(orderId, {
+			repairInfo: info,
+			repairTotal: total,
+			quoteBy: user.id
+		})
+			.then(r => {
+				console.log(r)
+				modal.toggleOpen()
+			})
+			.catch(console.error)
+	}
 
-  const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
-  return (
-    <>
-      <View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 8
-            }}
-          >
-            <Text style={gStyles.h2}>Cotización </Text>
-            <Button
-              variant="ghost"
-              size="small"
-              justIcon
-              icon="edit"
-              color="success"
-              onPress={modal.toggleOpen}
-            />
-          </View>
-          <ListOrderQuotes quotes={orderQuotes} />
+	const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
+	return (
+		<>
+			<View>
+				<View>
+					<View
+						style={{
+							flexDirection: 'row',
+							justifyContent: 'center',
+							alignItems: 'center',
+							marginBottom: 8
+						}}
+					>
+						<Text style={gStyles.h2}>Cotización </Text>
+						<Button
+							variant="ghost"
+							size="small"
+							justIcon
+							icon="edit"
+							color="success"
+							onPress={modal.toggleOpen}
+						/>
+					</View>
+					<ListOrderQuotes quotes={orderQuotes} />
 
-          {quote.info ? (
-            <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text>
-          ) : null}
-          {quote.total ? (
-            <Text style={[gStyles.p, gStyles.tCenter]}>
-              <CurrencyAmount style={gStyles.tBold} amount={quote.total} />
-            </Text>
-          ) : null}
-        </View>
-        {quote?.info || quote?.total ? (
-          <View style={{ justifyContent: 'center', margin: 'auto' }}>
-            <ButtonConfirm
-              justIcon
-              handleConfirm={() => {
-                return ServiceOrders.update(orderId, {
-                  quote: null,
-                  repairInfo: null,
-                  repairTotal: null
-                })
-              }}
-              text="IMPORTANTE. Asegurate de incluir esta cotización en la nueva lista de cotizaciones!"
-              icon="delete"
-              openColor="error"
-              confirmColor="error"
-              confirmVariant="outline"
-              confirmLabel="Eliminar"
-            ></ButtonConfirm>
-          </View>
-        ) : null}
-      </View>
+					{quote.info ? <Text style={[gStyles.p, gStyles.tCenter]}>{quote.info}</Text> : null}
+					{quote.total ? (
+						<Text style={[gStyles.p, gStyles.tCenter]}>
+							<CurrencyAmount style={gStyles.tBold} amount={quote.total} />
+						</Text>
+					) : null}
+				</View>
+				{quote?.info || quote?.total ? (
+					<View style={{ justifyContent: 'center', margin: 'auto' }}>
+						<ButtonConfirm
+							justIcon
+							handleConfirm={() => {
+								return ServiceOrders.update(orderId, {
+									quote: null,
+									repairInfo: null,
+									repairTotal: null
+								})
+							}}
+							text="IMPORTANTE. Asegurate de incluir esta cotización en la nueva lista de cotizaciones!"
+							icon="delete"
+							openColor="error"
+							confirmColor="error"
+							confirmVariant="outline"
+							confirmLabel="Eliminar"
+						></ButtonConfirm>
+					</View>
+				) : null}
+			</View>
 
-      <StyledModal {...modal}>
-        <ListOrderQuotes
-          quotes={orderQuotes}
-          handleRemoveQuote={(id) => {
-            const quote = orderQuotes.find((q) => q.id === id)
-            onRemoveQuote({
-              quote,
-              orderId
-            }).then((res) => {
-              console.log({ res })
-            })
-          }}
-        />
-        <FormQuote
-          onSubmit={async (newQuote) => {
-            console.log({ newQuote })
-            return await onAddQuote({ newQuote, orderId }).then((res) => {
-              console.log({ res })
-            })
-          }}
-        />
-      </StyledModal>
-    </>
-  )
+			<StyledModal {...modal}>
+				<ListOrderQuotes
+					quotes={orderQuotes}
+					handleRemoveQuote={id => {
+						const quote = orderQuotes.find(q => q.id === id)
+						onRemoveQuote({
+							quote,
+							orderId
+						}).then(res => {
+							console.log({ res })
+						})
+					}}
+				/>
+				<FormQuote
+					onSubmit={async newQuote => {
+						console.log({ newQuote })
+						return await onAddQuote({ newQuote, orderId }).then(res => {
+							console.log({ res })
+						})
+					}}
+				/>
+			</StyledModal>
+		</>
+	)
 }
 
 export default ModalRepairQuote
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between'
-  },
-  item: {
-    width: '48%', // for 2 items in a row
-    marginVertical: '1%' // spacing between items
-  },
-  repairItemForm: {
-    marginVertical: 4
-  }
+	container: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between'
+	},
+	item: {
+		width: '48%', // for 2 items in a row
+		marginVertical: '1%' // spacing between items
+	},
+	repairItemForm: {
+		marginVertical: 4
+	}
 })

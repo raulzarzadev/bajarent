@@ -15,95 +15,85 @@ import { useEffect, useState } from 'react'
 import { CustomerType } from '../../state/features/costumers/customerType'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
 
-const CustomerOrder = ({
-  customerId,
-  canViewActions = true
-}: CustomerOrderProps) => {
-  const { order } = useOrderDetails()
-  const { data: customers } = useCustomers()
-  const [customer, setCustomer] = useState<CustomerType | undefined>()
+const CustomerOrder = ({ customerId, canViewActions = true }: CustomerOrderProps) => {
+	const { order } = useOrderDetails()
+	const { data: customers } = useCustomers()
+	const [customer, setCustomer] = useState<CustomerType | undefined>()
 
-  useEffect(() => {
-    const currentCustomer = customerId || order?.customerId
-    const customer = customers?.find((c) => c.id === customerId)
-    if (customer) {
-      setCustomer(customer)
-    } else {
-      if (!currentCustomer) {
-        setCustomer(undefined)
-        return
-      }
-      ServiceCustomers.get(currentCustomer)
-        .then((c) => {
-          setCustomer(c)
-        })
-        .catch((e) => {
-          setCustomer(undefined)
-          console.log('cliente no encontrado')
-        })
-    }
-  }, [customers, order])
+	useEffect(() => {
+		const currentCustomer = customerId || order?.customerId
+		const customer = customers?.find(c => c.id === customerId)
+		if (customer) {
+			setCustomer(customer)
+		} else {
+			if (!currentCustomer) {
+				setCustomer(undefined)
+				return
+			}
+			ServiceCustomers.get(currentCustomer)
+				.then(c => {
+					setCustomer(c)
+				})
+				.catch(e => {
+					setCustomer(undefined)
+					console.log('cliente no encontrado')
+				})
+		}
+	}, [customers, order])
 
-  if (order?.excludeCustomer)
-    return (
-      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
-        <Text style={gStyles.h2}>Orden sin cliente </Text>
-        <ButtonAddCustomerE order={order} orderId={order?.id} />
-      </View>
-    )
-  return (
-    <View>
-      <Text
-        style={[gStyles.helper, { fontStyle: 'italic', textAlign: 'center' }]}
-      >
-        {[
-          order?.fullName,
-          order?.neighborhood,
-          order?.address,
-          order?.references
-        ]
-          .filter(Boolean)
-          .join(', ')}
-      </Text>
+	if (order?.excludeCustomer)
+		return (
+			<View style={{ flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
+				<Text style={gStyles.h2}>Orden sin cliente </Text>
+				<ButtonAddCustomerE order={order} orderId={order?.id} />
+			</View>
+		)
+	return (
+		<View>
+			<Text style={[gStyles.helper, { fontStyle: 'italic', textAlign: 'center' }]}>
+				{[order?.fullName, order?.neighborhood, order?.address, order?.references]
+					.filter(Boolean)
+					.join(', ')}
+			</Text>
 
-      {customer ? (
-        <CustomerCardE customer={customer} canViewActions={canViewActions} />
-      ) : (
-        <OrderCustomerNotFound order={order} />
-      )}
-    </View>
-  )
+			{customer ? (
+				<CustomerCardE customer={customer} canViewActions={canViewActions} />
+			) : (
+				<OrderCustomerNotFound order={order} />
+			)}
+		</View>
+	)
 }
 
 export const OrderCustomerNotFound = ({ order }: { order: OrderType }) => {
-  return (
-    <View>
-      <View
-        style={{
-          padding: 4,
-          flexDirection: 'row',
-          justifyContent: 'center'
-        }}
-      >
-        <ClientName order={order} style={gStyles.h1} />
-        <ButtonAddCustomerE order={order} orderId={order?.id} />
-      </View>
-      <OrderContacts />
-      <OrderImages order={order} />
-      <ErrorBoundary componentName="OrderAddress">
-        <OrderAddress order={order} />
-      </ErrorBoundary>
-    </View>
-  )
+	return (
+		<View>
+			<View
+				style={{
+					padding: 4,
+					flexDirection: 'row',
+					justifyContent: 'center'
+				}}
+			>
+				<ClientName order={order} style={gStyles.h1} />
+				<ButtonAddCustomerE order={order} orderId={order?.id} />
+			</View>
+			<OrderContacts />
+			<OrderImages order={order} />
+			<ErrorBoundary componentName="OrderAddress">
+				<OrderAddress order={order} />
+			</ErrorBoundary>
+		</View>
+	)
 }
 
 export default CustomerOrder
 export type CustomerOrderProps = {
-  customerId?: string
-  canViewActions?: boolean
+	customerId?: string
+	canViewActions?: boolean
 }
 export const CustomerOrderE = (props: CustomerOrderProps) => (
-  <ErrorBoundary componentName="CustomerOrder">
-    <CustomerOrder {...props} />
-  </ErrorBoundary>
+	<ErrorBoundary componentName="CustomerOrder">
+		<CustomerOrder {...props} />
+	</ErrorBoundary>
 )

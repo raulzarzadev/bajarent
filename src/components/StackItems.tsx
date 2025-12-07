@@ -7,48 +7,48 @@ import { ScreenItemEditE } from './ScreenItemEdit'
 
 const Stack = createStackNavigator<ItemsStackParamList>()
 function StackItems() {
-  return (
-    <Stack.Navigator
-      id="StackItems"
-      screenOptions={() => {
-        return {
-          // headerRight(props) {
-          //   return <MyStaffLabel />
-          // }
-        }
-      }}
-    >
-      <Stack.Screen
-        name="ScreenItems"
-        options={{
-          title: 'Artículos'
-        }}
-        component={ScreenItems}
-      />
+	return (
+		<Stack.Navigator
+			id="StackItems"
+			screenOptions={() => {
+				return {
+					// headerRight(props) {
+					//   return <MyStaffLabel />
+					// }
+				}
+			}}
+		>
+			<Stack.Screen
+				name="ScreenItems"
+				options={{
+					title: 'Artículos'
+				}}
+				component={ScreenItems}
+			/>
 
-      <Stack.Screen
-        name="ScreenItemNew"
-        options={{
-          title: 'Nuevo artículo'
-        }}
-        component={ScreenItemNew}
-      />
-      <Stack.Screen
-        name="ScreenItemsDetails"
-        options={{
-          title: 'Detalles de artículo'
-        }}
-        component={ScreenItemsDetails}
-      />
+			<Stack.Screen
+				name="ScreenItemNew"
+				options={{
+					title: 'Nuevo artículo'
+				}}
+				component={ScreenItemNew}
+			/>
+			<Stack.Screen
+				name="ScreenItemsDetails"
+				options={{
+					title: 'Detalles de artículo'
+				}}
+				component={ScreenItemsDetails}
+			/>
 
-      <Stack.Screen
-        name="ScreenItemEdit"
-        options={{
-          title: 'Editar artículo'
-        }}
-        component={ScreenItemEditE}
-      />
-    </Stack.Navigator>
-  )
+			<Stack.Screen
+				name="ScreenItemEdit"
+				options={{
+					title: 'Editar artículo'
+				}}
+				component={ScreenItemEditE}
+			/>
+		</Stack.Navigator>
+	)
 }
 export default StackItems

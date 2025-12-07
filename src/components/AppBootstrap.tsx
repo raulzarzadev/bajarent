@@ -6,50 +6,45 @@ import { useStore } from '../contexts/storeContext'
 import { useEmployee } from '../contexts/employeeContext'
 
 const AppBootstrap = () => {
-  const { user, isAuthReady, storeId, clearStoreSelection } = useAuth()
-  const { isStoreReady } = useStore()
-  const { isEmployeeReady } = useEmployee()
+	const { user, isAuthReady, storeId, clearStoreSelection } = useAuth()
+	const { isStoreReady } = useStore()
+	const { isEmployeeReady } = useEmployee()
 
-  if (!isAuthReady || user === undefined) {
-    return (
-      <StartupLoader
-        title="Autenticando"
-        description="Verificando tu sesión segura..."
-      />
-    )
-  }
+	if (!isAuthReady || user === undefined) {
+		return <StartupLoader title="Autenticando" description="Verificando tu sesión segura..." />
+	}
 
-  if (!user) {
-    return <BottomAppBarE />
-  }
+	if (!user) {
+		return <BottomAppBarE />
+	}
 
-  if (!storeId) {
-    return <StoreSelection />
-  }
+	if (!storeId) {
+		return <StoreSelection />
+	}
 
-  if (!isStoreReady) {
-    return (
-      <StartupLoader
-        title="Preparando la tienda"
-        description="Sincronizando catálogos, personal y balances..."
-      />
-    )
-  }
+	if (!isStoreReady) {
+		return (
+			<StartupLoader
+				title="Preparando la tienda"
+				description="Sincronizando catálogos, personal y balances..."
+			/>
+		)
+	}
 
-  if (!isEmployeeReady) {
-    return (
-      <StartupLoader
-        title="Aplicando permisos"
-        description="Determinando roles y accesos para esta sesión..."
-        handleTimeout={() => {
-          console.warn('Employee loading timeout exceeded')
-          clearStoreSelection()
-        }}
-      />
-    )
-  }
+	if (!isEmployeeReady) {
+		return (
+			<StartupLoader
+				title="Aplicando permisos"
+				description="Determinando roles y accesos para esta sesión..."
+				handleTimeout={() => {
+					console.warn('Employee loading timeout exceeded')
+					clearStoreSelection()
+				}}
+			/>
+		)
+	}
 
-  return <BottomAppBarE />
+	return <BottomAppBarE />
 }
 
 export default AppBootstrap

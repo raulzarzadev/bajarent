@@ -1,31 +1,31 @@
 export function flattenValues(data: any): (string | number)[] {
-  let result: (string | number)[] = []
-  const itemId = data?.id || null
-  if (itemId) result = [`${itemId}`] //<-- put the id Item in the array at very first
-  if (Array.isArray(data)) {
-    // Si es un array, iteramos sobre sus elementos y los aplanamos
-    for (const item of data) {
-      result = result.concat(flattenValues(item))
-    }
-  } else if (typeof data === 'object' && data !== null) {
-    // Si es un objeto, iteramos sobre sus claves y aplanamos los valores
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        result = result.concat(flattenValues(data[key]))
-      }
-    }
-  } else {
-    // Si es un valor primitivo, lo agregamos directamente
-    result.push(data)
-  }
+	let result: (string | number)[] = []
+	const itemId = data?.id || null
+	if (itemId) result = [`${itemId}`] //<-- put the id Item in the array at very first
+	if (Array.isArray(data)) {
+		// Si es un array, iteramos sobre sus elementos y los aplanamos
+		for (const item of data) {
+			result = result.concat(flattenValues(item))
+		}
+	} else if (typeof data === 'object' && data !== null) {
+		// Si es un objeto, iteramos sobre sus claves y aplanamos los valores
+		for (const key in data) {
+			if (data.hasOwnProperty(key)) {
+				result = result.concat(flattenValues(data[key]))
+			}
+		}
+	} else {
+		// Si es un valor primitivo, lo agregamos directamente
+		result.push(data)
+	}
 
-  return result
+	return result
 }
 
 export function processData(a: any): string {
-  return flattenValues(a)
-    .filter((i) => !!i && (typeof i === 'string' || typeof i === 'number'))
-    .join(' ')
+	return flattenValues(a)
+		.filter(i => !!i && (typeof i === 'string' || typeof i === 'number'))
+		.join(' ')
 }
 
 // Ejemplo de uso:

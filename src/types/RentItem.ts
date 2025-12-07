@@ -6,28 +6,28 @@ import { PriceType } from './PriceType'
 export type RentItem = ItemSelected & {}
 
 export type CategoryBase = {
-  name: string
-  description: string
-  prices: Partial<PriceType>[]
-  storeId: string
-  img?: string
-  marketVisible?: boolean
-  marketForm?: {
-    price?: boolean
-    fullName?: boolean
-    phone?: boolean
-    neighborhood?: boolean
-    address?: boolean
-    references?: boolean
-    imageId?: boolean
-    scheduledAt?: boolean
-    chooseBrand?: boolean
-  }
-  orderType?: {
-    repair?: boolean
-    rent?: boolean
-    sale?: boolean
-  }
+	name: string
+	description: string
+	prices: Partial<PriceType>[]
+	storeId: string
+	img?: string
+	marketVisible?: boolean
+	marketForm?: {
+		price?: boolean
+		fullName?: boolean
+		phone?: boolean
+		neighborhood?: boolean
+		address?: boolean
+		references?: boolean
+		imageId?: boolean
+		scheduledAt?: boolean
+		chooseBrand?: boolean
+	}
+	orderType?: {
+		repair?: boolean
+		rent?: boolean
+		sale?: boolean
+	}
 }
 
 export type CategoryType = CategoryBase & BaseType

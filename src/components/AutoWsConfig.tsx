@@ -4,17 +4,14 @@ import { FormChatbotE } from './FormChatbot'
 import { ServiceStores } from '../firebase/ServiceStore'
 
 export const AutoWSConfig = () => {
-  const { store } = useStore()
-  const handleUpdateChatbot = async (values: { chatbot: any }) => {
-    return await ServiceStores.update(store.id, { chatbot: values.chatbot })
-  }
-  return (
-    <>
-      <RandomMessage sender="builderbot" />
-      <FormChatbotE
-        values={store.chatbot}
-        onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
-      />
-    </>
-  )
+	const { store } = useStore()
+	const handleUpdateChatbot = async (values: { chatbot: any }) => {
+		return await ServiceStores.update(store.id, { chatbot: values.chatbot })
+	}
+	return (
+		<>
+			<RandomMessage sender="builderbot" />
+			<FormChatbotE values={store.chatbot} onSubmit={chatbot => handleUpdateChatbot({ chatbot })} />
+		</>
+	)
 }

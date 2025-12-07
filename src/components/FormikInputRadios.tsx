@@ -3,29 +3,29 @@ import { useField } from 'formik'
 import InputRadios, { InputRadioOption } from './Inputs/InputRadios'
 
 const FormikInputRadios = ({
-  name,
-  options = [],
-  label,
-  disabled
+	name,
+	options = [],
+	label,
+	disabled
 }: {
-  name: string
-  options: InputRadioOption[]
-  label?: string
-  disabled?: boolean
+	name: string
+	options: InputRadioOption[]
+	label?: string
+	disabled?: boolean
 }) => {
-  const [field, meta, helpers] = useField(name)
-  const value = useMemo(() => field.value, [field.value])
+	const [field, meta, helpers] = useField(name)
+	const value = useMemo(() => field.value, [field.value])
 
-  return (
-    <InputRadios
-      value={value}
-      onChange={helpers.setValue}
-      options={options}
-      label={label}
-      layout="row"
-      disabled={disabled}
-    />
-  )
+	return (
+		<InputRadios
+			value={value}
+			onChange={helpers.setValue}
+			options={options}
+			label={label}
+			layout="row"
+			disabled={disabled}
+		/>
+	)
 }
 
 export default FormikInputRadios

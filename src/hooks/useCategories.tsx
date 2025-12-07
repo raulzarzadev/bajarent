@@ -5,54 +5,51 @@ import { CategoryType } from '../types/RentItem'
 import usePrices from './usePrices'
 
 function useCategories() {
-  const { storeId } = useAuth()
-  const {  handleUpdateStore } = useStore()
-  const { createPrice, updatePrice, deletePrice } = usePrices()
+	const { storeId } = useAuth()
+	const { handleUpdateStore } = useStore()
+	const { createPrice, updatePrice, deletePrice } = usePrices()
 
-  const createCategory = async (values: Partial<CategoryType>) => {
-    values.storeId = storeId
-    await ServiceCategories.create(values)
-      .then((r) => {
-        console.log({ r })
-        handleUpdateStore()
-      })
-      .catch((e) => {
-        console.log({ e })
-      })
-  }
+	const createCategory = async (values: Partial<CategoryType>) => {
+		values.storeId = storeId
+		await ServiceCategories.create(values)
+			.then(r => {
+				console.log({ r })
+				handleUpdateStore()
+			})
+			.catch(e => {
+				console.log({ e })
+			})
+	}
 
-  const updateCategory = async (
-    categoryId: string,
-    values: Partial<CategoryType>
-  ) => {
-    await ServiceCategories.update(categoryId, values)
-      .then((r) => {
-        console.log({ r })
-        handleUpdateStore()
-      })
-      .catch((e) => {
-        console.log({ e })
-      })
-  }
-  const deleteCategory = async (categoryId: string) => {
-    await ServiceCategories.delete(categoryId)
-      .then((r) => {
-        console.log({ r })
-        handleUpdateStore()
-      })
-      .catch((e) => {
-        console.log({ e })
-      })
-  }
+	const updateCategory = async (categoryId: string, values: Partial<CategoryType>) => {
+		await ServiceCategories.update(categoryId, values)
+			.then(r => {
+				console.log({ r })
+				handleUpdateStore()
+			})
+			.catch(e => {
+				console.log({ e })
+			})
+	}
+	const deleteCategory = async (categoryId: string) => {
+		await ServiceCategories.delete(categoryId)
+			.then(r => {
+				console.log({ r })
+				handleUpdateStore()
+			})
+			.catch(e => {
+				console.log({ e })
+			})
+	}
 
-  return {
-    createCategory,
-    updateCategory,
-    deleteCategory,
-    createPrice,
-    updatePrice,
-    deletePrice
-  }
+	return {
+		createCategory,
+		updateCategory,
+		deleteCategory,
+		createPrice,
+		updatePrice,
+		deletePrice
+	}
 }
 
 export default useCategories

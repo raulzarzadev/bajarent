@@ -6,15 +6,15 @@ import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
 
 const ModalDeliverySale = ({ modal }: { modal: ReturnModal }) => {
-  const { store } = useStore()
-  const { order } = useOrderDetails()
-  const { user } = useAuth()
+	const { store } = useStore()
+	const { order } = useOrderDetails()
+	const { user } = useAuth()
 
-  return (
-    <View>
-      <StyledModal {...modal}></StyledModal>
-    </View>
-  )
+	return (
+		<View>
+			<StyledModal {...modal}></StyledModal>
+		</View>
+	)
 }
 
 export default ModalDeliverySale

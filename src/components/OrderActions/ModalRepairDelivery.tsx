@@ -8,27 +8,27 @@ import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
 
 const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
-  const { order } = useOrderDetails()
+	const { order } = useOrderDetails()
 
-  const { user, storeId } = useAuth()
+	const { user, storeId } = useAuth()
 
-  const handleRepairDelivery = async () => {
-    //*pickup items
-    modal.setOpen(false)
+	const handleRepairDelivery = async () => {
+		//*pickup items
+		modal.setOpen(false)
 
-    await onRepairDelivery({
-      orderId: order.id,
-      userId: user.id,
-      storeId
-    })
+		await onRepairDelivery({
+			orderId: order.id,
+			userId: user.id,
+			storeId
+		})
 
-    return
-  }
+		return
+	}
 
-  return (
-    <View>
-      <StyledModal {...modal}>
-        {/* <FormRepairDelivery
+	return (
+		<View>
+			<StyledModal {...modal}>
+				{/* <FormRepairDelivery
           initialValues={{
             address: order.address || '',
             location: order.location || '',
@@ -39,15 +39,15 @@ const ModalRepairDelivery = ({ modal }: { modal: ReturnModal }) => {
             return
           }}
         /> */}
-        <Button
-          label="Entregar reparación "
-          onPress={() => {
-            handleRepairDelivery()
-          }}
-        ></Button>
-      </StyledModal>
-    </View>
-  )
+				<Button
+					label="Entregar reparación "
+					onPress={() => {
+						handleRepairDelivery()
+					}}
+				></Button>
+			</StyledModal>
+		</View>
+	)
 }
 
 export default ModalRepairDelivery

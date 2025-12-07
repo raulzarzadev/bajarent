@@ -1,0 +1,49 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+	"formatter": {
+		"enabled": true,
+		"indentWidth": 2,
+		"lineWidth": 100,
+		"lineEnding": "lf",
+		"bracketSpacing": true
+	},
+	"linter": {
+		"enabled": true
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"trailingCommas": "none",
+			"arrowParentheses": "asNeeded",
+			"quoteProperties": "asNeeded",
+			"semicolons": "asNeeded"
+		}
+	},
+	"files": {
+		"includes": [
+			"./App.js",
+			"./src/**/*.{ts,tsx,js,jsx}",
+			"./Constants.ts/**/*.{ts,tsx,js,jsx}",
+			"!./cypress/**/*",
+			"!./android/**/*",
+			"!./ios/**/*",
+			"!./web-build/**/*",
+			"!./web/**/*",
+			"!./.expo/**/*",
+			"!./.vercel/**/*",
+			"!./.next/**/*",
+			"!./node_modules/**/*",
+			"!./.vscode/**/*",
+			"!./coverage/**/*",
+			"!./babel.config.js",
+			"!./webpack.config.js",
+			"!./tsconfig.json",
+			"!./react-native.config.js",
+			"!./cypress.config.ts",
+			"!./app.json",
+			"!./package.json",
+			"!./**/*.d.ts"
+		],
+		"ignoreUnknown": true
+	}
+}

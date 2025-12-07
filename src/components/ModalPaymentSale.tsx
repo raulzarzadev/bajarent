@@ -17,118 +17,118 @@ import { InputDateE } from './InputDate'
 import { ViewInputForm } from './FormOrder2'
 
 export type ModalPaymentSaleProps = {
-  orderId: string
+	orderId: string
 }
 export const ModalPaymentSale = ({ orderId }: ModalPaymentSaleProps) => {
-  const { order } = useOrderDetails()
-  const [scheduledAt, setScheduledAt] = useState<Date | null>(null)
+	const { order } = useOrderDetails()
+	const [scheduledAt, setScheduledAt] = useState<Date | null>(null)
 
-  const { storeId } = useStore()
-  const { user } = useAuth()
-  const defaultPaymentValues: PaymentBase = {
-    amount: orderAmount(order),
-    reference: '',
-    date: new Date(),
-    method: 'transfer',
-    storeId,
-    orderId: ''
-  }
+	const { storeId } = useStore()
+	const { user } = useAuth()
+	const defaultPaymentValues: PaymentBase = {
+		amount: orderAmount(order),
+		reference: '',
+		date: new Date(),
+		method: 'transfer',
+		storeId,
+		orderId: ''
+	}
 
-  const modalPayAndDelivery = useModal({ title: 'Cobrar' })
+	const modalPayAndDelivery = useModal({ title: 'Cobrar' })
 
-  const handleSavePayment = async ({ values }) => {
-    const amount = parseFloat(values.amount || 0)
-    await ServicePayments.orderPayment({
-      ...values,
-      amount
-    })
-      .then(console.log)
-      .catch(console.error)
-  }
+	const handleSavePayment = async ({ values }) => {
+		const amount = parseFloat(values.amount || 0)
+		await ServicePayments.orderPayment({
+			...values,
+			amount
+		})
+			.then(console.log)
+			.catch(console.error)
+	}
 
-  const handleSubmit = async ({ values }: { values: Partial<PaymentType> }) => {
-    //* first save order to get orderId
-    //* once saved get orderId and save payment
+	const handleSubmit = async ({ values }: { values: Partial<PaymentType> }) => {
+		//* first save order to get orderId
+		//* once saved get orderId and save payment
 
-    if (!orderId) return console.error('no orderId')
-    values.createdBy = user.id //* <-- is needed to update paid order
-    values.orderId = orderId || null //* <-- is needed to update paid order
-    values.storeId = storeId
-    await handleSavePayment({ values })
+		if (!orderId) return console.error('no orderId')
+		values.createdBy = user.id //* <-- is needed to update paid order
+		values.orderId = orderId || null //* <-- is needed to update paid order
+		values.storeId = storeId
+		await handleSavePayment({ values })
 
-    await ServiceOrders.update(orderId, {
-      status: order_status.DELIVERED,
-      scheduledAt
-    })
+		await ServiceOrders.update(orderId, {
+			status: order_status.DELIVERED,
+			scheduledAt
+		})
 
-    return
-  }
+		return
+	}
 
-  return (
-    <>
-      <Button
-        onPress={modalPayAndDelivery.toggleOpen}
-        icon="money"
-        size="small"
-        color="success"
-        label="Cobrar"
-      ></Button>
+	return (
+		<>
+			<Button
+				onPress={modalPayAndDelivery.toggleOpen}
+				icon="money"
+				size="small"
+				color="success"
+				label="Cobrar"
+			></Button>
 
-      <StyledModal {...modalPayAndDelivery}>
-        <ViewInputForm>
-          {!!scheduledAt ? (
-            <View>
-              <Button
-                onPress={() => setScheduledAt(null)}
-                icon="close"
-                label="Quitar fecha"
-                size="xs"
-                variant="ghost"
-              ></Button>
-              <InputDateE setValue={setScheduledAt} value={scheduledAt} />
-            </View>
-          ) : (
-            <Button
-              onPress={() => setScheduledAt(new Date())}
-              icon="calendar"
-              variant="ghost"
-              label="Programar fecha"
-            ></Button>
-          )}
-        </ViewInputForm>
-        <ViewInputForm>
-          <FormPayment
-            //  disabledSubmit={Object.keys(errors).length > 0}
-            values={defaultPaymentValues}
-            onSubmit={async (values) => {
-              return await handleSubmit({ values })
-            }}
-          />
-        </ViewInputForm>
-      </StyledModal>
-    </>
-  )
+			<StyledModal {...modalPayAndDelivery}>
+				<ViewInputForm>
+					{!!scheduledAt ? (
+						<View>
+							<Button
+								onPress={() => setScheduledAt(null)}
+								icon="close"
+								label="Quitar fecha"
+								size="xs"
+								variant="ghost"
+							></Button>
+							<InputDateE setValue={setScheduledAt} value={scheduledAt} />
+						</View>
+					) : (
+						<Button
+							onPress={() => setScheduledAt(new Date())}
+							icon="calendar"
+							variant="ghost"
+							label="Programar fecha"
+						></Button>
+					)}
+				</ViewInputForm>
+				<ViewInputForm>
+					<FormPayment
+						//  disabledSubmit={Object.keys(errors).length > 0}
+						values={defaultPaymentValues}
+						onSubmit={async values => {
+							return await handleSubmit({ values })
+						}}
+					/>
+				</ViewInputForm>
+			</StyledModal>
+		</>
+	)
 }
 
 export default (props: ModalPaymentSaleProps) => {
-  return (
-    <ErrorBoundary componentName="ModalPaymentSale">
-      <ModalPaymentSale {...props} />
-    </ErrorBoundary>
-  )
+	return (
+		<ErrorBoundary componentName="ModalPaymentSale">
+			<ModalPaymentSale {...props} />
+		</ErrorBoundary>
+	)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between'
-  },
-  item: {
-    width: '48%', // for 2 items in a row
-    marginVertical: '1%' // spacing between items
-  },
-  repairItemForm: {
-    marginVertical: 4
-  }
+	container: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between'
+	},
+	item: {
+		width: '48%', // for 2 items in a row
+		marginVertical: '1%' // spacing between items
+	},
+	repairItemForm: {
+		marginVertical: 4
+	}
 })

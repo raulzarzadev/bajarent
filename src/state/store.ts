@@ -6,13 +6,13 @@ import { ordersReducer } from './features/orders/ordersSlice'
 import { shopReducer } from './features/shop/shopSlice'
 
 export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-    customers: customersReducer,
-    currentWork: currentWorkReducer,
-    orders: ordersReducer,
-    shop: shopReducer
-  }
+	reducer: {
+		counter: counterReducer,
+		customers: customersReducer,
+		currentWork: currentWorkReducer,
+		orders: ordersReducer,
+		shop: shopReducer
+	}
 })
 
 export type RootState = ReturnType<typeof store.getState>

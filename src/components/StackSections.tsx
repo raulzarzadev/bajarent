@@ -5,60 +5,60 @@ import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
 
 export type StackStoreNavigationProps = {
-  Store: undefined
-  CreateStore: undefined
-  EditStore: undefined
-  Staff: undefined
-  StaffNew: undefined
-  StaffDetails: undefined
-  StaffEdit: undefined
+	Store: undefined
+	CreateStore: undefined
+	EditStore: undefined
+	Staff: undefined
+	StaffNew: undefined
+	StaffDetails: undefined
+	StaffEdit: undefined
 }
 
 const Stack = createStackNavigator()
 function StackSections() {
-  return (
-    <Stack.Navigator
-      id="StackSections"
-      screenOptions={() => {
-        return {
-          //headerShown: false
-        }
-      }}
-    >
-      {/* 
+	return (
+		<Stack.Navigator
+			id="StackSections"
+			screenOptions={() => {
+				return {
+					//headerShown: false
+				}
+			}}
+		>
+			{/* 
       ******************************************** 
             SECTIONS                
       *******************************************rz 
        */}
-      <Stack.Screen
-        name="ScreenSections"
-        options={{
-          title: 'Areas'
-        }}
-        component={ScreenSections}
-      />
-      <Stack.Screen
-        name="ScreenSectionsNew"
-        options={{
-          title: 'Crear area'
-        }}
-        component={ScreenSectionsNew}
-      />
-      <Stack.Screen
-        name="ScreenSectionsDetails"
-        options={{
-          title: 'Detalles de area'
-        }}
-        component={ScreenSectionsDetails}
-      />
-      <Stack.Screen
-        name="ScreenSectionsEdit"
-        options={{
-          title: 'Editar area'
-        }}
-        component={ScreenSectionsEdit}
-      />
-    </Stack.Navigator>
-  )
+			<Stack.Screen
+				name="ScreenSections"
+				options={{
+					title: 'Areas'
+				}}
+				component={ScreenSections}
+			/>
+			<Stack.Screen
+				name="ScreenSectionsNew"
+				options={{
+					title: 'Crear area'
+				}}
+				component={ScreenSectionsNew}
+			/>
+			<Stack.Screen
+				name="ScreenSectionsDetails"
+				options={{
+					title: 'Detalles de area'
+				}}
+				component={ScreenSectionsDetails}
+			/>
+			<Stack.Screen
+				name="ScreenSectionsEdit"
+				options={{
+					title: 'Editar area'
+				}}
+				component={ScreenSectionsEdit}
+			/>
+		</Stack.Navigator>
+	)
 }
 export default StackSections

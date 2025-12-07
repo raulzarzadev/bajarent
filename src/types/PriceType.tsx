@@ -4,15 +4,15 @@ export type TimeType = 'day' | 'month' | 'year' | 'week' | 'hour' | 'minute'
 export type TimePriceType = `${number} ${TimeType}`
 
 export type PriceBase = {
-  title: string
-  amount: number
-  time?: TimePriceType
+	title: string
+	amount: number
+	time?: TimePriceType
 
-  categoryId: string
-  storeId: string
+	categoryId: string
+	storeId: string
 
-  marketVisible?: boolean
-  itExpires?: boolean
+	marketVisible?: boolean
+	itExpires?: boolean
 }
 
 export type PriceType = PriceBase & BaseType

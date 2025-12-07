@@ -6,31 +6,25 @@ const webStorage = window.localStorage
 const appStorage = AsyncStorage
 
 export const getItem = async (key: string) => {
-  if (key) {
-    return os === 'web'
-      ? webStorage.getItem(key)
-      : await appStorage.getItem(key)
-  }
+	if (key) {
+		return os === 'web' ? webStorage.getItem(key) : await appStorage.getItem(key)
+	}
 
-  return null
+	return null
 }
 
 export const setItem = async (key: string, payload: string) => {
-  if (key && typeof payload === 'string') {
-    return os === 'web'
-      ? webStorage.setItem(key, payload)
-      : await appStorage.setItem(key, payload)
-  }
+	if (key && typeof payload === 'string') {
+		return os === 'web' ? webStorage.setItem(key, payload) : await appStorage.setItem(key, payload)
+	}
 
-  return null
+	return null
 }
 
 export const removeItem = async (key: string) => {
-  if (key) {
-    return os === 'web'
-      ? webStorage.removeItem(key)
-      : await appStorage.removeItem(key)
-  }
+	if (key) {
+		return os === 'web' ? webStorage.removeItem(key) : await appStorage.removeItem(key)
+	}
 
-  return null
+	return null
 }

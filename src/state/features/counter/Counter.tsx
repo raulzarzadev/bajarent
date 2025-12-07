@@ -6,18 +6,18 @@ import Button from '../../../components/Button'
 import { gStyles } from '../../../styles'
 
 const Counter: React.FC = () => {
-  const count = useSelector(selectCounter)
-  const dispatch = useDispatch()
+	const count = useSelector(selectCounter)
+	const dispatch = useDispatch()
 
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View>
-        <Button label="-" onPress={() => dispatch(decrement())} />
-        <Text style={gStyles.h3}>{count}</Text>
-        <Button label="+" onPress={() => dispatch(increment())} />
-      </View>
-    </View>
-  )
+	return (
+		<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+			<View>
+				<Button label="-" onPress={() => dispatch(decrement())} />
+				<Text style={gStyles.h3}>{count}</Text>
+				<Button label="+" onPress={() => dispatch(increment())} />
+			</View>
+		</View>
+	)
 }
 
 export default Counter

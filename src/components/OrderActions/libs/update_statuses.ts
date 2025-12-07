@@ -4,31 +4,31 @@ import { orderExpireAt } from '../../../libs/orders'
 import asDate from '../../../libs/utils-date'
 
 export const handleSetStatuses = ({
-  order
+	order
 }: {
-  order: Partial<OrderType>
+	order: Partial<OrderType>
 }): {
-  order: Partial<OrderType>
-  statuses: {
-    isExpired: boolean
-    isDelivered?: boolean
-    isAuthorized?: boolean
-  }
+	order: Partial<OrderType>
+	statuses: {
+		isExpired: boolean
+		isDelivered?: boolean
+		isAuthorized?: boolean
+	}
 } => {
-  const expireAt = orderExpireAt({ order })
+	const expireAt = orderExpireAt({ order })
 
-  const isDelivered = order?.status === 'DELIVERED'
-  const isAuthorized = order?.status === 'AUTHORIZED'
-  order = {
-    ...order,
-    expireAt: asDate(expireAt)
-  }
-  return {
-    order,
-    statuses: {
-      isExpired: !!expireAt && isAfter(new Date(), expireAt),
-      isDelivered,
-      isAuthorized
-    }
-  }
+	const isDelivered = order?.status === 'DELIVERED'
+	const isAuthorized = order?.status === 'AUTHORIZED'
+	order = {
+		...order,
+		expireAt: asDate(expireAt)
+	}
+	return {
+		order,
+		statuses: {
+			isExpired: !!expireAt && isAfter(new Date(), expireAt),
+			isDelivered,
+			isAuthorized
+		}
+	}
 }

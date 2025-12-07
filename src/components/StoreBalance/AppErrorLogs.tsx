@@ -7,370 +7,340 @@ import { ServiceUsers } from '../../firebase/ServiceUser'
 import asDate, { dateFormat } from '../../libs/utils-date'
 
 export const AppErrorLogs = () => {
-  const PAGE_SIZE = 20
-  const [errors, setErrors] = useState<AppErrorType[]>([])
-  const [userNames, setUserNames] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [isPaginating, setIsPaginating] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
-  const [fetchError, setFetchError] = useState<string | null>(null)
-  const lastCursorRef = useRef<any>(null)
-  const userNamesRef = useRef<Record<string, string>>({})
-  const [expandedId, setExpandedId] = useState<string | null>(null)
+	const PAGE_SIZE = 20
+	const [errors, setErrors] = useState<AppErrorType[]>([])
+	const [userNames, setUserNames] = useState<Record<string, string>>({})
+	const [isLoading, setIsLoading] = useState(false)
+	const [isPaginating, setIsPaginating] = useState(false)
+	const [hasMore, setHasMore] = useState(true)
+	const [fetchError, setFetchError] = useState<string | null>(null)
+	const lastCursorRef = useRef<any>(null)
+	const userNamesRef = useRef<Record<string, string>>({})
+	const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const loadUserNames = useCallback(async (entries: AppErrorType[]) => {
-    const missingIds = entries
-      .map((entry) => entry.createdBy)
-      .filter((id): id is string => typeof id === 'string' && id.length > 0)
-      .filter((id) => !userNamesRef.current[id])
+	const loadUserNames = useCallback(async (entries: AppErrorType[]) => {
+		const missingIds = entries
+			.map(entry => entry.createdBy)
+			.filter((id): id is string => typeof id === 'string' && id.length > 0)
+			.filter(id => !userNamesRef.current[id])
 
-    if (!missingIds.length) return
+		if (!missingIds.length) return
 
-    const uniqueIds = Array.from(new Set(missingIds))
-    const resolved = await Promise.all(
-      uniqueIds.map(async (userId): Promise<[string, string]> => {
-        try {
-          const user = await ServiceUsers.get(userId)
-          const label =
-            user?.name || user?.email || user?.phone || 'Usuario desconocido'
-          return [userId, label]
-        } catch (error) {
-          console.warn('No se pudo obtener el usuario', userId, error)
-          return [userId, 'Usuario desconocido']
-        }
-      })
-    )
+		const uniqueIds = Array.from(new Set(missingIds))
+		const resolved = await Promise.all(
+			uniqueIds.map(async (userId): Promise<[string, string]> => {
+				try {
+					const user = await ServiceUsers.get(userId)
+					const label = user?.name || user?.email || user?.phone || 'Usuario desconocido'
+					return [userId, label]
+				} catch (error) {
+					console.warn('No se pudo obtener el usuario', userId, error)
+					return [userId, 'Usuario desconocido']
+				}
+			})
+		)
 
-    setUserNames((prev) => {
-      const next = { ...prev }
-      resolved.forEach(([id, label]) => {
-        next[id] = label
-      })
-      userNamesRef.current = next
-      return next
-    })
-  }, [])
+		setUserNames(prev => {
+			const next = { ...prev }
+			resolved.forEach(([id, label]) => {
+				next[id] = label
+			})
+			userNamesRef.current = next
+			return next
+		})
+	}, [])
 
-  const fetchErrors = useCallback(
-    async (mode: 'reset' | 'append' = 'reset') => {
-      const isLoadMore = mode === 'append'
-      setFetchError(null)
-      isLoadMore ? setIsPaginating(true) : setIsLoading(true)
-      if (mode === 'reset') {
-        lastCursorRef.current = null
-        setHasMore(true)
-      }
+	const fetchErrors = useCallback(
+		async (mode: 'reset' | 'append' = 'reset') => {
+			const isLoadMore = mode === 'append'
+			setFetchError(null)
+			isLoadMore ? setIsPaginating(true) : setIsLoading(true)
+			if (mode === 'reset') {
+				lastCursorRef.current = null
+				setHasMore(true)
+			}
 
-      const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc')]
+			const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc')]
 
-      if (isLoadMore && lastCursorRef.current) {
-        constraints.push(startAfter(lastCursorRef.current))
-      }
+			if (isLoadMore && lastCursorRef.current) {
+				constraints.push(startAfter(lastCursorRef.current))
+			}
 
-      constraints.push(limit(PAGE_SIZE))
+			constraints.push(limit(PAGE_SIZE))
 
-      try {
-        const fetchedErrors =
-          (await ServiceAppErrors.getItems(constraints)) ?? []
-        setErrors((prev) =>
-          isLoadMore ? [...prev, ...fetchedErrors] : fetchedErrors
-        )
-        const lastFetched = fetchedErrors[fetchedErrors.length - 1]
-        lastCursorRef.current = lastFetched?.createdAt ?? lastCursorRef.current
-        setHasMore(fetchedErrors.length === PAGE_SIZE && !!lastFetched)
-        if (fetchedErrors.length) {
-          await loadUserNames(fetchedErrors)
-        }
-      } catch (error) {
-        console.error('Error loading app errors', error)
-        setFetchError('No se pudieron cargar los errores. Intenta nuevamente.')
-      } finally {
-        isLoadMore ? setIsPaginating(false) : setIsLoading(false)
-      }
-    },
-    [PAGE_SIZE, loadUserNames]
-  )
+			try {
+				const fetchedErrors = (await ServiceAppErrors.getItems(constraints)) ?? []
+				setErrors(prev => (isLoadMore ? [...prev, ...fetchedErrors] : fetchedErrors))
+				const lastFetched = fetchedErrors[fetchedErrors.length - 1]
+				lastCursorRef.current = lastFetched?.createdAt ?? lastCursorRef.current
+				setHasMore(fetchedErrors.length === PAGE_SIZE && !!lastFetched)
+				if (fetchedErrors.length) {
+					await loadUserNames(fetchedErrors)
+				}
+			} catch (error) {
+				console.error('Error loading app errors', error)
+				setFetchError('No se pudieron cargar los errores. Intenta nuevamente.')
+			} finally {
+				isLoadMore ? setIsPaginating(false) : setIsLoading(false)
+			}
+		},
+		[PAGE_SIZE, loadUserNames]
+	)
 
-  useEffect(() => {
-    fetchErrors('reset')
-  }, [fetchErrors])
+	useEffect(() => {
+		fetchErrors('reset')
+	}, [fetchErrors])
 
-  const handleLoadMore = () => {
-    if (!hasMore || isPaginating || isLoading) return
-    fetchErrors('append')
-  }
+	const handleLoadMore = () => {
+		if (!hasMore || isPaginating || isLoading) return
+		fetchErrors('append')
+	}
 
-  const handleToggleExpanded = (id: string) => {
-    setExpandedId((prev) => (prev === id ? null : id))
-  }
+	const handleToggleExpanded = (id: string) => {
+		setExpandedId(prev => (prev === id ? null : id))
+	}
 
-  const isInitialLoading = isLoading && !errors.length
+	const isInitialLoading = isLoading && !errors.length
 
-  const monoFont =
-    Platform.select({
-      ios: 'Menlo',
-      android: 'monospace',
-      default: 'monospace'
-    }) || undefined
+	const monoFont =
+		Platform.select({
+			ios: 'Menlo',
+			android: 'monospace',
+			default: 'monospace'
+		}) || undefined
 
-  type DetailValue = string | number | Record<string, unknown> | unknown[]
+	type DetailValue = string | number | Record<string, unknown> | unknown[]
 
-  const tryParseJson = (value: string) => {
-    try {
-      return JSON.parse(value)
-    } catch {
-      return null
-    }
-  }
+	const tryParseJson = (value: string) => {
+		try {
+			return JSON.parse(value)
+		} catch {
+			return null
+		}
+	}
 
-  const normalizeDetailValue = (value: DetailValue) => {
-    if (typeof value === 'string') {
-      const trimmed = value.trim()
-      const parsed =
-        (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-        (trimmed.startsWith('[') && trimmed.endsWith(']'))
-          ? tryParseJson(trimmed)
-          : null
-      return parsed ?? value
-    }
-    return value
-  }
+	const normalizeDetailValue = (value: DetailValue) => {
+		if (typeof value === 'string') {
+			const trimmed = value.trim()
+			const parsed =
+				(trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+				(trimmed.startsWith('[') && trimmed.endsWith(']'))
+					? tryParseJson(trimmed)
+					: null
+			return parsed ?? value
+		}
+		return value
+	}
 
-  const StructuredValue = ({
-    value,
-    level = 0
-  }: {
-    value: any
-    level?: number
-  }) => {
-    const marginLeft = level * 12
+	const StructuredValue = ({ value, level = 0 }: { value: any; level?: number }) => {
+		const marginLeft = level * 12
 
-    if (Array.isArray(value)) {
-      return (
-        <View style={{ marginLeft }}>
-          {value.map((item, index) => (
-            <View key={`${level}-${index}`} style={{ marginTop: 6 }}>
-              <Text
-                style={{ fontSize: 12, color: '#6B7280', fontFamily: monoFont }}
-              >
-                [{index}]
-              </Text>
-              <StructuredValue value={item} level={level + 1} />
-            </View>
-          ))}
-        </View>
-      )
-    }
+		if (Array.isArray(value)) {
+			return (
+				<View style={{ marginLeft }}>
+					{value.map((item, index) => (
+						<View key={`${level}-${index}`} style={{ marginTop: 6 }}>
+							<Text style={{ fontSize: 12, color: '#6B7280', fontFamily: monoFont }}>
+								[{index}]
+							</Text>
+							<StructuredValue value={item} level={level + 1} />
+						</View>
+					))}
+				</View>
+			)
+		}
 
-    if (value && typeof value === 'object') {
-      return (
-        <View style={{ marginLeft }}>
-          {Object.entries(value).map(([key, nested]) => (
-            <View key={`${level}-${key}`} style={{ marginTop: 6 }}>
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: '#111827',
-                  fontWeight: '600',
-                  fontFamily: monoFont
-                }}
-              >
-                {key}
-              </Text>
-              <StructuredValue value={nested} level={level + 1} />
-            </View>
-          ))}
-        </View>
-      )
-    }
+		if (value && typeof value === 'object') {
+			return (
+				<View style={{ marginLeft }}>
+					{Object.entries(value).map(([key, nested]) => (
+						<View key={`${level}-${key}`} style={{ marginTop: 6 }}>
+							<Text
+								style={{
+									fontSize: 12,
+									color: '#111827',
+									fontWeight: '600',
+									fontFamily: monoFont
+								}}
+							>
+								{key}
+							</Text>
+							<StructuredValue value={nested} level={level + 1} />
+						</View>
+					))}
+				</View>
+			)
+		}
 
-    return (
-      <Text
-        selectable
-        style={{
-          marginLeft,
-          fontSize: 12,
-          color: '#374151',
-          lineHeight: 18,
-          fontFamily: monoFont
-        }}
-      >
-        {String(value)}
-      </Text>
-    )
-  }
+		return (
+			<Text
+				selectable
+				style={{
+					marginLeft,
+					fontSize: 12,
+					color: '#374151',
+					lineHeight: 18,
+					fontFamily: monoFont
+				}}
+			>
+				{String(value)}
+			</Text>
+		)
+	}
 
-  type DetailRowProps = { label: string; value?: DetailValue }
-  const DetailRow = ({ label, value }: DetailRowProps) => {
-    if (value === undefined || value === null) return null
-    const normalized = normalizeDetailValue(value)
-    const isStructured = typeof normalized === 'object' && normalized !== null
+	type DetailRowProps = { label: string; value?: DetailValue }
+	const DetailRow = ({ label, value }: DetailRowProps) => {
+		if (value === undefined || value === null) return null
+		const normalized = normalizeDetailValue(value)
+		const isStructured = typeof normalized === 'object' && normalized !== null
 
-    return (
-      <View style={{ marginTop: 10 }}>
-        <Text style={{ fontWeight: '600', color: '#111827' }}>{label}</Text>
-        <View
-          style={{
-            marginTop: 6,
-            padding: isStructured ? 10 : 0,
-            borderRadius: 8,
-            backgroundColor: isStructured ? '#F9FAFB' : 'transparent',
-            borderWidth: isStructured ? 1 : 0,
-            borderColor: '#E5E7EB'
-          }}
-        >
-          {isStructured ? (
-            <StructuredValue value={normalized} />
-          ) : (
-            <Text
-              selectable
-              style={{ fontSize: 12, color: '#374151', lineHeight: 18 }}
-            >
-              {String(normalized)}
-            </Text>
-          )}
-        </View>
-      </View>
-    )
-  }
+		return (
+			<View style={{ marginTop: 10 }}>
+				<Text style={{ fontWeight: '600', color: '#111827' }}>{label}</Text>
+				<View
+					style={{
+						marginTop: 6,
+						padding: isStructured ? 10 : 0,
+						borderRadius: 8,
+						backgroundColor: isStructured ? '#F9FAFB' : 'transparent',
+						borderWidth: isStructured ? 1 : 0,
+						borderColor: '#E5E7EB'
+					}}
+				>
+					{isStructured ? (
+						<StructuredValue value={normalized} />
+					) : (
+						<Text selectable style={{ fontSize: 12, color: '#374151', lineHeight: 18 }}>
+							{String(normalized)}
+						</Text>
+					)}
+				</View>
+			</View>
+		)
+	}
 
-  const ErrorCard = ({
-    error,
-    isExpanded,
-    onToggle
-  }: {
-    error: AppErrorType
-    isExpanded: boolean
-    onToggle: () => void
-  }) => {
-    const createdByLabel =
-      (error.createdBy && userNames[error.createdBy]) ||
-      error.createdBy ||
-      'Usuario desconocido'
+	const ErrorCard = ({
+		error,
+		isExpanded,
+		onToggle
+	}: {
+		error: AppErrorType
+		isExpanded: boolean
+		onToggle: () => void
+	}) => {
+		const createdByLabel =
+			(error.createdBy && userNames[error.createdBy]) || error.createdBy || 'Usuario desconocido'
 
-    return (
-      <View
-        style={{
-          backgroundColor: '#fff',
-          padding: 12,
-          borderRadius: 12,
-          marginBottom: 12,
-          shadowColor: '#000',
-          shadowOpacity: 0.08,
-          shadowRadius: 6,
-          shadowOffset: { width: 0, height: 3 },
-          elevation: 3
-        }}
-      >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: '700',
-                color: '#111827',
-                marginRight: 8
-              }}
-            >
-              {error.code}
-            </Text>
-            {error.componentName && (
-              <View
-                style={{
-                  paddingHorizontal: 8,
-                  paddingVertical: 2,
-                  borderRadius: 999,
-                  backgroundColor: '#e0f2fe'
-                }}
-              >
-                <Text style={{ fontSize: 12, color: '#0369a1' }}>
-                  {error.componentName}
-                </Text>
-              </View>
-            )}
-          </View>
-          <Text style={{ fontSize: 12, color: '#9ca3af' }}>
-            {dateFormat(asDate(error.createdAt), 'dd/MMM/yy HH:mm') ??
-              'Sin fecha'}
-          </Text>
-        </View>
+		return (
+			<View
+				style={{
+					backgroundColor: '#fff',
+					padding: 12,
+					borderRadius: 12,
+					marginBottom: 12,
+					shadowColor: '#000',
+					shadowOpacity: 0.08,
+					shadowRadius: 6,
+					shadowOffset: { width: 0, height: 3 },
+					elevation: 3
+				}}
+			>
+				<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+					<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+						<Text
+							style={{
+								fontSize: 12,
+								fontWeight: '700',
+								color: '#111827',
+								marginRight: 8
+							}}
+						>
+							{error.code}
+						</Text>
+						{error.componentName && (
+							<View
+								style={{
+									paddingHorizontal: 8,
+									paddingVertical: 2,
+									borderRadius: 999,
+									backgroundColor: '#e0f2fe'
+								}}
+							>
+								<Text style={{ fontSize: 12, color: '#0369a1' }}>{error.componentName}</Text>
+							</View>
+						)}
+					</View>
+					<Text style={{ fontSize: 12, color: '#9ca3af' }}>
+						{dateFormat(asDate(error.createdAt), 'dd/MMM/yy HH:mm') ?? 'Sin fecha'}
+					</Text>
+				</View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: 6
-          }}
-        >
-          <Text style={{ fontSize: 12, color: '#6b7280', flex: 1 }}>
-            {createdByLabel}
-          </Text>
-          <Button
-            size="xs"
-            variant="ghost"
-            label={isExpanded ? 'Ocultar' : 'Ver detalles'}
-            onPress={onToggle}
-          />
-        </View>
+				<View
+					style={{
+						flexDirection: 'row',
+						alignItems: 'center',
+						justifyContent: 'space-between',
+						marginTop: 6
+					}}
+				>
+					<Text style={{ fontSize: 12, color: '#6b7280', flex: 1 }}>{createdByLabel}</Text>
+					<Button
+						size="xs"
+						variant="ghost"
+						label={isExpanded ? 'Ocultar' : 'Ver detalles'}
+						onPress={onToggle}
+					/>
+				</View>
 
-        <Text
-          style={{ fontSize: 14, color: '#4b5563', marginTop: 8 }}
-          numberOfLines={isExpanded ? undefined : 2}
-        >
-          {error.message}
-        </Text>
+				<Text
+					style={{ fontSize: 14, color: '#4b5563', marginTop: 8 }}
+					numberOfLines={isExpanded ? undefined : 2}
+				>
+					{error.message}
+				</Text>
 
-        {isExpanded && (
-          <>
-            <DetailRow label="Info" value={error.info} />
-            <DetailRow label="Stack" value={error.stack} />
-            <DetailRow label="User Agent" value={error.userAgent} />
-          </>
-        )}
-      </View>
-    )
-  }
+				{isExpanded && (
+					<>
+						<DetailRow label="Info" value={error.info} />
+						<DetailRow label="Stack" value={error.stack} />
+						<DetailRow label="User Agent" value={error.userAgent} />
+					</>
+				)}
+			</View>
+		)
+	}
 
-  return (
-    <View style={{ flex: 1, padding: 16, backgroundColor: '#f3f4f6' }}>
-      <Text style={{ fontSize: 20, fontWeight: '700', marginBottom: 12 }}>
-        App Error Logs
-      </Text>
-      {fetchError && (
-        <Text style={{ color: '#dc2626', marginBottom: 8 }}>{fetchError}</Text>
-      )}
+	return (
+		<View style={{ flex: 1, padding: 16, backgroundColor: '#f3f4f6' }}>
+			<Text style={{ fontSize: 20, fontWeight: '700', marginBottom: 12 }}>App Error Logs</Text>
+			{fetchError && <Text style={{ color: '#dc2626', marginBottom: 8 }}>{fetchError}</Text>}
 
-      {isInitialLoading ? (
-        <View style={{ paddingVertical: 32 }}>
-          <ActivityIndicator />
-        </View>
-      ) : errors.length === 0 ? (
-        <Text style={{ color: '#6b7280' }}>Sin errores recientes.</Text>
-      ) : (
-        <>
-          {errors.map((error) => (
-            <ErrorCard
-              key={error.id}
-              error={error}
-              isExpanded={expandedId === error.id}
-              onToggle={() => handleToggleExpanded(error.id)}
-            />
-          ))}
-          <Button
-            label={
-              hasMore
-                ? isPaginating
-                  ? 'Cargando...'
-                  : 'Cargar más'
-                : 'No hay más resultados'
-            }
-            variant="outline"
-            onPress={handleLoadMore}
-            disabled={!hasMore || isPaginating}
-          />
-        </>
-      )}
-    </View>
-  )
+			{isInitialLoading ? (
+				<View style={{ paddingVertical: 32 }}>
+					<ActivityIndicator />
+				</View>
+			) : errors.length === 0 ? (
+				<Text style={{ color: '#6b7280' }}>Sin errores recientes.</Text>
+			) : (
+				<>
+					{errors.map(error => (
+						<ErrorCard
+							key={error.id}
+							error={error}
+							isExpanded={expandedId === error.id}
+							onToggle={() => handleToggleExpanded(error.id)}
+						/>
+					))}
+					<Button
+						label={
+							hasMore ? (isPaginating ? 'Cargando...' : 'Cargar más') : 'No hay más resultados'
+						}
+						variant="outline"
+						onPress={handleLoadMore}
+						disabled={!hasMore || isPaginating}
+					/>
+				</>
+			)}
+		</View>
+	)
 }
