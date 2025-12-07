@@ -16,6 +16,7 @@ import {
   loadNavigationState,
   persistNavigationState
 } from './src/utils/navigationPersistence'
+import { logNavigationStateChange } from './src/utils/navigationLogger'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -48,6 +49,7 @@ export default function App() {
           initialState={initialState}
           onStateChange={(state) => {
             persistNavigationState(state)
+            logNavigationStateChange(state)
           }}
         >
           <AuthContextProvider>
