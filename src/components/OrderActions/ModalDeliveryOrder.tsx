@@ -142,7 +142,7 @@ const ModalDeliveryOrder = ({
                   disabled={
                     Object.keys(errors).length > 0 ||
                     isSubmitting ||
-                    !correctQtyOfItems(values?.items || [])
+                    !correctQtyOfItems()
                   }
                   label="Entregar"
                   onPress={() => {

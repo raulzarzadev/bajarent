@@ -215,11 +215,11 @@ const RentOrderActions = ({ order }: { order: OrderType }) => {
       >
         {authorize && <ButtonAuthorize order={order} user={user} />}
         {cancel && <ButtonCancel order={order} user={user} />}
-        {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
+        {cancelDelivery && <ButtonCancelDelivery order={order} />}
         {delivery && <ButtonDeliveryRent />}
         {pickUp && <ButtonPickUp />}
-        {renew && <ButtonRenew order={order} user={user} />}
-        {cancelPickUp && <ButtonCancelPickUp order={order} user={user} />}
+        {renew && <ButtonRenew order={order} />}
+        {cancelPickUp && <ButtonCancelPickUp order={order} />}
       </View>
     </ScrollView>
   )

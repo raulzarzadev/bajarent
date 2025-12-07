@@ -226,7 +226,10 @@ const ListStoreItems = ({
                 text={`Se daran de baja ${
                   ids?.length || 0
                 } artículos seleccionados`}
-                handleConfirm={async () => await handleRetireItem(ids)}
+                handleConfirm={async () => {
+                  await handleRetireItem(ids)
+                  return
+                }}
               />
             </View>
             <View style={{ marginVertical: 8 }}>
