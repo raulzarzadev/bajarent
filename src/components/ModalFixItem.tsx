@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { onFixItem, onReportItem } from '../firebase/actions/workshop-actions'
@@ -6,7 +7,6 @@ import { gStyles } from '../styles'
 import type ItemType from '../types/ItemType'
 import ButtonConfirm from './ButtonConfirm'
 import InputTextStyled from './InputTextStyled'
-import { useState } from 'react'
 
 const MIN_COMMENT_LENGTH = 10
 export type HandleFixProps = {

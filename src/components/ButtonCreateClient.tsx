@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
@@ -9,7 +10,6 @@ import ErrorBoundary from './ErrorBoundary'
 import ImagePreview from './ImagePreview'
 import ListRow from './ListRow'
 import TextInfo from './TextInfo'
-import { useState } from 'react'
 
 const ButtonCreateClient = ({ client, storeId, orderId, clientId }: ButtonCreateClientProps) => {
 	const [clients, setClients] = useState<Partial<ClientType>[]>([])

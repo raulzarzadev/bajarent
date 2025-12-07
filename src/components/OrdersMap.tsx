@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
 import dictionary from '../dictionary'
@@ -9,7 +10,6 @@ import ErrorBoundary from './ErrorBoundary'
 import { MarkerInfo } from './ItemsMap'
 import LinkLocation from './LinkLocation'
 import { ModalFilterListE, type ModalFilterOrdersProps } from './ModalFilterList'
-import { useState } from 'react'
 export type MapOrderType = {
 	fullName: string
 	coords?: [number, number]

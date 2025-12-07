@@ -1,8 +1,8 @@
+import { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import theme, { colors } from '../theme'
 import Icon, { type IconName } from './Icon'
-import { useState } from 'react'
 
 export type TextIconType = 'info' | 'error' | 'success' | 'warning'
 export type TextInfoProps = {

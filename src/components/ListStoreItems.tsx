@@ -14,6 +14,7 @@ import {
 } from '../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import useMyNav from '../hooks/useMyNav'
+import catchError from '../libs/catchError'
 import asDate from '../libs/utils-date'
 import { formatItems } from '../libs/workshop.libs'
 import { gStyles } from '../styles'
@@ -26,7 +27,6 @@ import InputAssignSection from './InputAssingSection'
 import { ItemFixDetails } from './ItemDetails'
 import { ListE } from './List'
 import ListRow, { type ListRowField } from './ListRow'
-import catchError from '../libs/catchError'
 
 const OPACITY_ROW_COLOR = '66'
 

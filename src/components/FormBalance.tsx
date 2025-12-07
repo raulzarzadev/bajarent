@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-
+import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import type { BalanceType } from '../types/BalanceType'
@@ -8,7 +8,6 @@ import ErrorBoundary from './ErrorBoundary'
 import Icon from './Icon'
 import InputDate from './InputDate'
 import TextInfo from './TextInfo'
-import { useState } from 'react'
 
 export type FormBalanceProps = {
 	defaultValues?: Partial<BalanceType>

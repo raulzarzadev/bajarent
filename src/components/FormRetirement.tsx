@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-
+import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
@@ -8,7 +8,6 @@ import FormikErrorsList from './FormikErrorsList'
 import FormikInputRadios from './FormikInputRadios'
 import FormikInputSelect from './FormikInputSelect'
 import FormikInputValue from './FormikInputValue'
-import { useState } from 'react'
 
 export enum type_of_retirement {
 	bonus = 'bono',

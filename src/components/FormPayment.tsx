@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-
+import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
@@ -13,7 +13,6 @@ import FormikInputImage from './FormikInputImage'
 import InputRadiosFormik from './FormikInputRadios'
 import FormikInputSelect from './FormikInputSelect'
 import FormikInputValue from './FormikInputValue'
-import { useState } from 'react'
 
 const FormPayment = ({
 	onSubmit,
