@@ -54,7 +54,7 @@ const ItemActions = ({
 	const { sections: storeSections, storeId } = useStore()
 	const { permissions } = useEmployee()
 	const { user } = useAuth()
-	const [sectionId, setSectionId] = React.useState<string | null>(itemSection || null)
+	const [sectionId, setSectionId] = useState<string | null>(itemSection || null)
 	const currentSection = storeSections.find(({ id }) => id === itemSection)?.name
 	const handleChangeItemSection = async ({ sectionId }) => {
 		return await onChangeItemSection({
@@ -83,8 +83,8 @@ const ItemActions = ({
 		await onCheckInInventory({ storeId, itemId, userId: user?.id })
 	}
 
-	const [comment, setComment] = React.useState('')
-	const [disabled, setDisabled] = React.useState(false)
+	const [comment, setComment] = useState('')
+	const [disabled, setDisabled] = useState(false)
 	const { toItems } = useMyNav()
 
 	const canEditItem = permissions.isAdmin || permissions.items.canEdit

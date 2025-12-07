@@ -10,7 +10,7 @@ const FormUser = ({
 		console.log(values)
 	}
 }) => {
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 
 	return (
 		<Formik

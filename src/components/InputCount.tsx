@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import Button from './Button'
@@ -14,7 +14,7 @@ const InputCount = ({
 	setValue?: (qty: number) => void
 	disabled?: boolean
 }) => {
-	const [qty, setQty] = React.useState(0)
+	const [qty, setQty] = useState(0)
 	const handleAdd = () => {
 		setQty(qty + 1)
 		setValue?.(qty + 1)

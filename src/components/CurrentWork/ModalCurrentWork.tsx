@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import useModal from '../../hooks/useModal'
 import Button from '../Button'
 import ErrorBoundary from '../ErrorBoundary'
@@ -6,7 +6,7 @@ import StyledModal from '../StyledModal'
 
 import { ViewCurrentWorkE } from './ViewCurrentWork'
 
-const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
+const ModalCurrentWork = () => {
 	const modal = useModal({ title: 'Trabajo actual' })
 
 	return (
@@ -20,9 +20,8 @@ const ModalCurrentWork = (props?: ModalCurrentWorkProps) => {
 	)
 }
 export default ModalCurrentWork
-export type ModalCurrentWorkProps = {}
-export const ModalCurrentWorkE = (props: ModalCurrentWorkProps) => (
+export const ModalCurrentWorkE = () => (
 	<ErrorBoundary componentName="ModalCurrentWork">
-		<ModalCurrentWork {...props} />
+		<ModalCurrentWork />
 	</ErrorBoundary>
 )

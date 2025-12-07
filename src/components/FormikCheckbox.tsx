@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import type { TextStyle, ViewStyle } from 'react-native'
 import InputCheckbox from './Inputs/InputCheckbox'
 

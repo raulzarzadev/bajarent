@@ -1,5 +1,5 @@
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import ups_text from '../../Constants.ts/ups_text'
 import { auth } from '../firebase/auth'
@@ -10,11 +10,11 @@ import InputCode from './InputCode2'
 import PhoneInput from './InputPhone'
 
 const PhoneLogin = () => {
-	const [phone, setPhone] = React.useState('')
-	const [code, setCode] = React.useState('')
-	const [msmSent, setMsmSent] = React.useState(false)
-	const [error, setError] = React.useState<string | null>(null)
-	const [sending, setSending] = React.useState(false)
+	const [phone, setPhone] = useState('')
+	const [code, setCode] = useState('')
+	const [msmSent, setMsmSent] = useState(false)
+	const [error, setError] = useState<string | null>(null)
+	const [sending, setSending] = useState(false)
 
 	useEffect(() => {
 		// @ts-expect-error

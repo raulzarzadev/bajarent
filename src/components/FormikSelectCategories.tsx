@@ -1,5 +1,5 @@
 import { useField, useFormikContext } from 'formik'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 import { v4 as uidGenerator } from 'uuid'
 import { useEmployee } from '../contexts/employeeContext'

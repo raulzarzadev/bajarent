@@ -6,8 +6,8 @@ import InputCheckbox from './Inputs/InputCheckbox'
 import InputRadios from './Inputs/InputRadios'
 
 const Inputs = () => {
-	const [checked, setChecked] = React.useState(false)
-	const [phone, setPhone] = React.useState('')
+	const [checked, setChecked] = useState(false)
+	const [phone, setPhone] = useState('')
 	return (
 		<View>
 			<View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>

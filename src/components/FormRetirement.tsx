@@ -34,7 +34,7 @@ const FormRetirement = ({
 		sectionId: '',
 		storeId
 	}
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 	return (
 		<View>
 			<Formik

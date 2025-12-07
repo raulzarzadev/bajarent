@@ -108,7 +108,7 @@ const ButtonX: React.FC<ButtonProps> = ({
 			onPress={onPress}
 			disabled={disabled}
 		>
-			{!!progress && progress != 100 && (
+			{!!progress && progress !== 100 && (
 				<View
 					style={{
 						position: 'absolute',

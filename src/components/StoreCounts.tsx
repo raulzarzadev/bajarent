@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import DateCounts from './DateCounts'
 import HeaderDate from './HeaderDate'

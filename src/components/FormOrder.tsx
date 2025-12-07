@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { type ReactNode, type SetStateAction, useEffect, useState } from 'react'
+import { type ReactNode, type SetStateAction, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
@@ -118,7 +118,7 @@ const FormOrderA = ({
 	const [customerId, setCustomerId] = useState<string | null>(defaultValues?.customerId || null)
 
 	const isRenew = !!renew
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 	const { store } = useStore()
 
 	const { employee } = useEmployee()

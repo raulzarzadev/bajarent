@@ -12,7 +12,7 @@ import Icon from '../Icon'
 import List from '../List'
 import type { CurrentWorkUpdate } from './CurrentWorkType'
 
-const CurrentWorkList = (props?: CurrentWorkListProps) => {
+const CurrentWorkList = () => {
 	const { data } = useCurrentWork()
 	const { staff } = useStore()
 	const { toOrders, toPayments } = useMyNav()
@@ -84,9 +84,9 @@ const CurrentWorkList = (props?: CurrentWorkListProps) => {
 	)
 }
 export default CurrentWorkList
-export type CurrentWorkListProps = {}
-export const CurrentWorkListE = (props: CurrentWorkListProps) => (
+
+export const CurrentWorkListE = () => (
 	<ErrorBoundary componentName="CurrentWorkList">
-		<CurrentWorkList {...props} />
+		<CurrentWorkList />
 	</ErrorBoundary>
 )

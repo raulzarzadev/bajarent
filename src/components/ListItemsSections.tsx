@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
@@ -17,7 +17,7 @@ export type ListItemsSectionsProps = {
 const ListItemsSections = ({ itemSelected, onPressItem }: ListItemsSectionsProps) => {
 	const { storeId, sections: storeSections, categories } = useStore()
 	const { toItems } = useMyNav()
-	const [groupedItems, setGroupedItems] = React.useState<Record<string, ItemType[]>>({})
+	const [groupedItems, setGroupedItems] = useState<Record<string, ItemType[]>>({})
 
 	useEffect(() => {
 		ServiceStoreItems.listenAvailableBySections({

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -5,14 +6,14 @@ import { gStyles } from '../styles'
 import ListOrders from './ListOrders'
 
 const ClientsOrders = ({ clientId }) => {
-	const [orders, setOrders] = React.useState([])
+	const [orders, setOrders] = useState([])
 	const { storeId } = useStore()
-	React.useEffect(() => {
+
+	useEffect(() => {
 		ServiceOrders.getClientOrders({ clientId, storeId }).then(res => {
 			setOrders(res)
 		})
-	}, [clientId])
-
+	}, [clientId, storeId])
 	return (
 		<ScrollView>
 			<Text style={[gStyles.h3, { marginTop: 16 }]}>Ordenes de cliente</Text>

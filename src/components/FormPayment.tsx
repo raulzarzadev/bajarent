@@ -47,7 +47,7 @@ const FormPayment = ({
 		}
 	})
 
-	const [submitting, setSubmitting] = React.useState(false)
+	const [submitting, setSubmitting] = useState(false)
 	return (
 		<Formik
 			initialValues={initialValues}

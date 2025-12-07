@@ -23,7 +23,7 @@ const FormCategoryA = ({
 		console.log(values)
 	}
 }: FormCategoryProps) => {
-	const [sending, setSending] = React.useState(false)
+	const [sending, setSending] = useState(false)
 
 	return (
 		<Formik

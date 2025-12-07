@@ -62,7 +62,7 @@ const ButtonConfirm = ({
 	openStyles?: ButtonProps['buttonStyles']
 }) => {
 	const modal = useModal({ title: modalTitle || openLabel })
-	const [sending, setSending] = React.useState(false)
+	const [sending, setSending] = useState(false)
 	return (
 		<View>
 			{justIcon ? (

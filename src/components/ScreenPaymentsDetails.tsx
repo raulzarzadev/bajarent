@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'

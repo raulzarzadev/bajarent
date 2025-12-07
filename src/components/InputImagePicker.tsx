@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker'
 import pica from 'pica'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Image, Text, View } from 'react-native'
 import { uploadFile } from '../firebase/files'
 import { gStyles } from '../styles'

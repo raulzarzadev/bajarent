@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { View } from 'react-native'
 import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
@@ -30,7 +30,7 @@ const FormRentDelivery = ({
 	submitLabel?: string
 }) => {
 	const { order } = useOrderDetails()
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 
 	const { store } = useStore()
 	const orderFields = store?.orderFields?.[order?.type]

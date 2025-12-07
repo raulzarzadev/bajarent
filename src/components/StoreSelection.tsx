@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FlatList, Modal, Pressable, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { reloadApp } from '../libs/reloadApp'

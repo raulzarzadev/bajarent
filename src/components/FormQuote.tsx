@@ -13,7 +13,7 @@ const FormQuote = ({
 	quote?: OrderQuoteType
 	onSubmit: (values: OrderQuoteType) => void | Promise<void>
 }) => {
-	const [disabled, setDisabled] = React.useState(false)
+	const [disabled, setDisabled] = useState(false)
 	const { isMobile } = useScreenSize()
 	return (
 		<View>

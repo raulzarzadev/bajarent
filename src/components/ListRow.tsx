@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { StyleSheet, View, type ViewStyle } from 'react-native'
 import theme from '../theme'
 export type ListRowField = {

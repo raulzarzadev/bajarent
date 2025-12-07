@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { ServiceStaff } from '../firebase/ServiceStaff'
 import { ServiceStores } from '../firebase/ServiceStore'
@@ -21,7 +21,7 @@ import P from './P'
 const ScreenStaffNew = ({ route }) => {
 	const { shop } = useShop()
 	const { goBack } = useNavigation()
-	const [user, setUser] = React.useState<UserType>()
+	const [user, setUser] = useState<UserType>()
 	const defaultValues: Partial<StaffType> = {
 		userId: user?.id,
 		position: user?.name,
@@ -80,12 +80,12 @@ const ScreenStaffNew = ({ route }) => {
 }
 
 const SearchStaff = ({ setUser }: { setUser?: (user: UserType) => any }) => {
-	const [text, setText] = React.useState('')
-	const [error, setError] = React.useState<string | null>('')
-	const [loading, setLoading] = React.useState(false)
+	const [text, setText] = useState('')
+	const [error, setError] = useState<string | null>('')
+	const [loading, setLoading] = useState(false)
 	const { shop } = useShop()
 	const shopStaff = shop?.staff || []
-	const [users, setUsers] = React.useState([])
+	const [users, setUsers] = useState([])
 	useEffect(() => {
 		if (text?.length <= 0) {
 			setUsers([])

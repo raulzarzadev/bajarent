@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
@@ -11,11 +11,11 @@ import Loading from './Loading'
 import { CommentRow } from './RowComment'
 
 const ListMovements = () => {
-	const [data, setData] = React.useState<Partial<FormattedComment[]>>([])
+	const [data, setData] = useState<Partial<FormattedComment[]>>([])
 	const { storeId } = useAuth()
 	const { staff } = useStore()
-	const [loading, setLoading] = React.useState(false)
-	const [date, setDate] = React.useState(new Date())
+	const [loading, setLoading] = useState(false)
+	const [date, setDate] = useState(new Date())
 	const handleChangeDate = async (newDate: Date) => {
 		try {
 			setLoading(true)

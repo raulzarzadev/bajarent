@@ -2,7 +2,7 @@ import type { FieldValue } from 'firebase/firestore'
 import type { FormOrderFields } from '../components/FormOrder'
 import type BaseType from './BaseType'
 import type ItemType from './ItemType'
-import { order_type, type TypeOrderKey } from './OrderType'
+import type { TypeOrderKey } from './OrderType'
 import type { SectionType } from './SectionType'
 import type StaffType from './StaffType'
 export type StoreItems = {

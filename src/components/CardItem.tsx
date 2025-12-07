@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import asDate, { dateFormat } from '../libs/utils-date'
 import { gSpace, gStyles } from '../styles'
 import { colors } from '../theme'
@@ -150,5 +150,3 @@ export const SquareItem = ({
 }
 
 export default CardItem
-
-const styles = StyleSheet.create({})

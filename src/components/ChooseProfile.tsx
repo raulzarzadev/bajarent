@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { reloadApp } from '../libs/reloadApp'
@@ -29,7 +29,7 @@ const ChooseProfile = () => {
 		return res
 	}
 
-	const [userStoresSorted, setUserStoresSorted] = React.useState<Partial<StoreType>[]>(userStores)
+	const [userStoresSorted, setUserStoresSorted] = useState<Partial<StoreType>[]>(userStores)
 
 	useEffect(() => {
 		const sortedUserStores = sortUserStore(userStores, storeSelected)

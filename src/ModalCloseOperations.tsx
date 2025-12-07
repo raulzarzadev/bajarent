@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Text, View } from 'react-native'
 import Button from './components/Button'
 import Loading from './components/Loading'
@@ -10,7 +11,7 @@ import { onDownloadBackup } from './libs/downloadOrders'
 const ModalCloseOperations = () => {
 	const modal = useModal({ title: 'Respaldos' })
 	const { storeId, staff, store } = useStore()
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 	const handleConfirmCloseOps = async () => {
 		setLoading(true)
 

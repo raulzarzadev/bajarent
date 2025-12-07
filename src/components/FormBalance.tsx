@@ -21,7 +21,7 @@ const FormBalanceE = ({
 		console.log(values)
 	}
 }: FormBalanceProps) => {
-	const [submitting, setSubmitting] = React.useState(false)
+	const [submitting, setSubmitting] = useState(false)
 
 	const handleSubmit = async (values: Partial<BalanceType>) => {
 		setSubmitting(true)

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Dimensions, Pressable, Text, View } from 'react-native'
 import { LineChart as RNChart } from 'react-native-chart-kit'
 import { gStyles } from '../styles'
@@ -18,7 +18,7 @@ const LineChart = ({ title, labels, datasets }: LineChartProps) => {
 	useEffect(() => {
 		setVisibleData(datasets.map(({ label }) => label))
 	}, [datasets])
-	const [visibleData, setVisibleData] = React.useState([])
+	const [visibleData, setVisibleData] = useState([])
 	return (
 		<View>
 			<Text style={gStyles.h2}>{title}</Text>

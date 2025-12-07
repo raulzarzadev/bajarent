@@ -55,7 +55,7 @@ class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
 					...doc.updates,
 					[newUpdate.id]: newUpdate
 				}
-			}).then(res => {
+			}).then(() => {
 				return { ...newUpdate }
 			})
 		} else {
@@ -68,7 +68,7 @@ class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
 				updates: {
 					[newUpdate.id]: newUpdate
 				}
-			}).then(res => {
+			}).then(() => {
 				return { ...newUpdate }
 			})
 		}
@@ -76,6 +76,3 @@ class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
 }
 
 export const ServiceCurrentWork = new ServiceCurrentWorkClass()
-
-const currentWorkId = (storeId: string, date: Date = new Date()) =>
-	`${storeId}_${date.toISOString().split('T')[0]}`

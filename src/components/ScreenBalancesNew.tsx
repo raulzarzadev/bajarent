@@ -15,7 +15,7 @@ import FormBalance from './FormBalance'
 const ScreenBalancesNew = ({ navigation }) => {
 	const { storeId, store, sections: storeSections } = useStore()
 	const { user } = useAuth()
-	const [balance, setBalance] = React.useState<Partial<BalanceType2>>()
+	const [balance, setBalance] = useState<Partial<BalanceType2>>()
 
 	const getSectionPayments = async ({ section, fromDate, toDate, type }) => {
 		/* ******************************************** 

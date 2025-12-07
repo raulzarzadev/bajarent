@@ -12,7 +12,7 @@ const FormSection = ({
 		console.log(values)
 	}
 }) => {
-	const [sending, setSending] = React.useState(false)
+	const [sending, setSending] = useState(false)
 	return (
 		<Formik
 			initialValues={{ name: '', ...defaultValues }}

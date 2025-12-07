@@ -26,8 +26,6 @@ const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
 			})
 	}, [user, userId])
 
-	const itsMyUser = userId === user?.id
-
 	if (!_user) return <ActivityIndicator />
 
 	return (

@@ -11,7 +11,10 @@
 		"enabled": true,
 		"rules": {
 			"correctness": {
-				"noUnusedVariables": "off"
+				"useExhaustiveDependencies": "info"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
 			}
 		}
 	},

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'

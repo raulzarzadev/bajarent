@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServiceItemHistory } from '../firebase/ServiceItemHistory'

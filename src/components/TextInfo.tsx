@@ -22,7 +22,7 @@ const TextInfo = ({ type = 'info', text, defaultVisible = false }: TextInfoProps
 		success: colors.white,
 		warning: colors.darkGray
 	}
-	const [visible, setVisible] = React.useState(!!defaultVisible)
+	const [visible, setVisible] = useState(!!defaultVisible)
 
 	return (
 		<View

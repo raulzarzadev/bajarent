@@ -1,5 +1,5 @@
 import { use } from 'chai'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
 import { useStore } from '../contexts/storeContext'

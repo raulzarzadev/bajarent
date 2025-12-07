@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Text, View, type ViewStyle } from 'react-native'
 import RNPhoneInput, { type ICountry } from 'react-native-international-phone-number'
 import { gStyles } from '../styles'

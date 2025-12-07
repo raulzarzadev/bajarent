@@ -1,5 +1,5 @@
 import type { NavigationProp } from '@react-navigation/native'
-import React, { Component, type ReactNode } from 'react'
+import { Component, type ReactNode } from 'react'
 import { Platform } from 'react-native'
 import ups_text from '../../Constants.ts/ups_text'
 import { ServiceAppErrors } from '../firebase/ServiceAppErrors'

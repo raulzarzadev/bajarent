@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
@@ -155,7 +155,7 @@ const ModalAssignOrders = ({ ordersIds }: { ordersIds: string[] }) => {
 
 const ModalExcelRows = ({ ordersIds }: { ordersIds: OrderType['id'][] }) => {
 	const modal = useModal({ title: 'Formato excel' })
-	const [orders, setOrders] = React.useState<OrderType[]>([])
+	const [orders, setOrders] = useState<OrderType[]>([])
 
 	useEffect(() => {
 		ServiceOrders.getList(ordersIds).then(res => {

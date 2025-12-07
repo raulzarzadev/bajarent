@@ -1,5 +1,5 @@
 import type { Timestamp } from 'firebase/firestore'
-import React, { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
@@ -79,7 +79,7 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
 		}
 	]
 
-	const [selectedRow, setSelectedRow] = React.useState<string | null>(null)
+	const [selectedRow, setSelectedRow] = useState<string | null>(null)
 	useEffect(() => {
 		getItem(BALANCE_ROW_SELECTED).then(selectedRow => {
 			setSelectedRow(selectedRow)
@@ -95,8 +95,8 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
 		}
 	}
 
-	const [createdItems, setCreatedItems] = React.useState<Partial<string>[]>()
-	const [retiredItems, setRetiredItems] = React.useState<Partial<string>[]>()
+	const [createdItems, setCreatedItems] = useState<Partial<string>[]>()
+	const [retiredItems, setRetiredItems] = useState<Partial<string>[]>()
 	useEffect(() => {
 		setCreatedItems(balance?.createdItems || [])
 		setRetiredItems(balance?.retiredItems || [])
@@ -357,7 +357,7 @@ export const CellItemsE = (props: { items: string[]; label: string }) => {
 export const CellItems = ({ items = [], label }: { items: string[]; label: string }) => {
 	const { storeId } = useAuth()
 	const { toItems } = useMyNav()
-	const [itemsData, setItemsData] = React.useState<Partial<ItemType>[]>()
+	const [itemsData, setItemsData] = useState<Partial<ItemType>[]>()
 
 	useEffect(() => {
 		ServiceStoreItems.getList({ storeId, ids: items }, { fromCache: true }).then(res =>

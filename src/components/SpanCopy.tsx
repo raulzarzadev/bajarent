@@ -3,7 +3,7 @@ import { colors } from '../theme'
 import Button from './Button'
 
 const SpanCopy = ({ label = '', copyValue, content = '' }) => {
-	const [copied, setCopied] = React.useState(false)
+	const [copied, setCopied] = useState(false)
 	return (
 		<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 			{/* <Text style={{ fontWeight: 'bold', marginRight: 4 }}>{label}</Text> */}

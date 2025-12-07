@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 import { v4 as uidGenerator } from 'uuid'
 import { gSpace, gStyles } from '../styles'

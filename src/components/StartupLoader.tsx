@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import theme from '../theme'
@@ -11,7 +11,7 @@ export type StartupLoaderProps = {
 }
 
 const StartupLoader = ({ title, description, handleTimeout }: StartupLoaderProps) => {
-	const [hasTimedOut, setHasTimedOut] = React.useState(false)
+	const [hasTimedOut, setHasTimedOut] = useState(false)
 
 	useEffect(() => {
 		const timer = setTimeout(() => {

@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 import PhoneInput from './InputPhone'
 export type InputPhoneProps = {
@@ -9,7 +9,7 @@ export type InputPhoneProps = {
 }
 const FormikInputPhone = ({ name, helperText, label }: InputPhoneProps) => {
 	const [field, meta, helpers] = useField(name)
-	const value = useMemo(() => field?.value, [])
+	const value = useMemo(() => field?.value, [field?.value])
 
 	return (
 		<PhoneInput

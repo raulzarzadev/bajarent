@@ -1,7 +1,6 @@
 import { addDays, isToday } from 'date-fns'
-
-import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
-import useDebounce from '../hooks/useDebunce'
+import { useState } from 'react'
+import { Text, View, type ViewStyle } from 'react-native'
 import { gStyles } from '../styles'
 import Button from './Button'
 import DateCell from './DateCell'
@@ -10,11 +9,8 @@ import InputDate from './InputDate'
 const HeaderDate = ({
 	label,
 	onChangeDate,
-	showTime = false,
 	documentDate,
-	debounce = 0,
 	defaultDate = new Date(),
-	styles,
 	disabled
 }: {
 	label?: string
@@ -26,7 +22,7 @@ const HeaderDate = ({
 	styles?: ViewStyle
 	disabled?: boolean
 }) => {
-	const [date, setDate] = React.useState(defaultDate)
+	const [date, setDate] = useState(defaultDate)
 
 	const handleMoveDate = (days = 0) => {
 		//handleDebounce()

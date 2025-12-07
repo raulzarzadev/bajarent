@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
@@ -88,7 +88,7 @@ export const ItemFixDetails = ({
 	showTime = true,
 	failDescription
 }: ItemFixDetailsProps) => {
-	const [lastFixEntry, setLastFixEntry] = React.useState<ItemHistoryType>()
+	const [lastFixEntry, setLastFixEntry] = useState<ItemHistoryType>()
 	const { storeId } = useStore()
 
 	useEffect(() => {

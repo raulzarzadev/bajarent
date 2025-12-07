@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { colors } from '../theme'
@@ -20,7 +20,7 @@ const OrderChangeLabel = ({
 		{ label: 'Amarillo', value: colors.yellow, color: colors.yellow },
 		{ label: 'sin', value: '' }
 	]
-	const [_color, _setColor] = React.useState(currentColor)
+	const [_color, _setColor] = useState(currentColor)
 	useEffect(() => {
 		_setColor(currentColor)
 	}, [currentColor])

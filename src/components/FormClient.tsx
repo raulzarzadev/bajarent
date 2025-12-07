@@ -18,7 +18,7 @@ const FormClient = ({ client, onSubmit }: FormCLientProps) => {
 		address: '',
 		...client
 	}
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 	return (
 		<View>
 			<Formik

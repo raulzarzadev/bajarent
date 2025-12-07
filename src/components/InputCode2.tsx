@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { InteractionManager, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 
 export type InputCodeProps = {

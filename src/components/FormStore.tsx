@@ -24,7 +24,7 @@ const FormStore = ({
 	defaultValues?: Partial<StoreType>
 	onSubmit?: (values: Partial<StoreType>) => Promise<any>
 }) => {
-	const [submitting, setSubmitting] = React.useState(false)
+	const [submitting, setSubmitting] = useState(false)
 	const handleSubmit = async (values: Partial<StoreType>) => {
 		setSubmitting(true)
 		return await onSubmit(values)

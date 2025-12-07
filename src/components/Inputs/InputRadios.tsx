@@ -42,7 +42,7 @@ const InputRadios = <T extends string = string>({
 	helperText,
 	errorText
 }: InputRadiosProps<T>) => {
-	const [_value, _setValue] = React.useState<T>(value)
+	const [_value, _setValue] = useState<T>(value)
 	const handleChooseOpt = (value: T) => {
 		_setValue(value)
 		onChange?.(value)

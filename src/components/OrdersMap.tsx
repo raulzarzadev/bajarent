@@ -25,7 +25,7 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
 	const INITIAL_POSITION: [number, number] = [24.145708, -110.311002]
 	const mapHeight = useWindowDimensions().height
 	const headerAndFooterHeight = 220
-	const [filteredOrders, setFilteredOrders] = React.useState<MapOrderType[]>([])
+	const [filteredOrders, setFilteredOrders] = useState<MapOrderType[]>([])
 
 	const handleFilter =
 		({ field, value }) =>

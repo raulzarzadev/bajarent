@@ -5,7 +5,7 @@ import { colors } from '../theme'
 import type UserType from '../types/UserType'
 import Button from './Button'
 import CardEmail from './CardEmail'
-import CardPhone, { CardPhoneE } from './CardPhone'
+import { CardPhoneE } from './CardPhone'
 import Chip from './Chip'
 
 const CardUser = ({ user, onEdit }: { user?: UserType; onEdit?: () => void }) => {

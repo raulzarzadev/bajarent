@@ -42,7 +42,7 @@ const FormOrder = ({
 	onSubmit?: (values: Partial<OrderType>) => Promise<any>
 	defaultValues?: Partial<OrderType>
 }) => {
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 	const { categories, store } = useStore()
 
 	const ordersTypesAllowed = Object.entries(store?.orderTypes || {})

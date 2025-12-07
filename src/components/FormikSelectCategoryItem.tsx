@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import type { Category } from '../types/RentItem'
 import FormSelectItem from './FormSelectItem'
 

@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import type OrderType from '../../types/OrderType'
 import Button from '../Button'
@@ -15,7 +15,7 @@ const FormRepairDelivery = ({
 	onSubmit: (values) => Promise<void> | void
 	setDirty?: (dirty: boolean) => void
 }) => {
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 
 	return (
 		<View>

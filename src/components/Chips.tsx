@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import theme from '../theme'
 import Chip from './Chip'
-import Icon from './Icon'
 
 const Chips = () => {
 	return (
@@ -55,5 +54,3 @@ const Chips = () => {
 }
 
 export default Chips
-
-const styles = StyleSheet.create({})

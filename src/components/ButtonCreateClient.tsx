@@ -11,8 +11,8 @@ import ListRow from './ListRow'
 import TextInfo from './TextInfo'
 
 const ButtonCreateClient = ({ client, storeId, orderId, clientId }: ButtonCreateClientProps) => {
-	const [clients, setClients] = React.useState<Partial<ClientType>[]>([])
-	const [selectedClient, setSelectedClient] = React.useState<Partial<ClientType['id']>>(clientId)
+	const [clients, setClients] = useState<Partial<ClientType>[]>([])
+	const [selectedClient, setSelectedClient] = useState<Partial<ClientType['id']>>(clientId)
 
 	const handleUpdateOrderClient = clientId => {
 		ServiceOrders.update(orderId, {

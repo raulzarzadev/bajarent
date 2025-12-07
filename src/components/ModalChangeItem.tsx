@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useOrderDetails } from '../contexts/orderContext'

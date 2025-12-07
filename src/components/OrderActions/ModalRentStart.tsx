@@ -25,8 +25,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
 	const { store, storeId } = useStore()
 	const { order, customer } = useOrderDetails()
 	const { user } = useAuth()
-	const [isDirty, setIsDirty] = React.useState(false)
-	const [isLoading, setIsLoading] = React.useState(false)
+	const [isDirty, setIsDirty] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 	const { create } = useCustomers()
 	const { addWork } = useCurrentWork()
 
@@ -60,8 +60,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
 
 	const disabledDelivery = isDirty || isLoading || disabledByCountItems
 
-	const [addPay, setAddPay] = React.useState(true)
-	const [paymentModal, setPaymentModal] = React.useState(false)
+	const [addPay, setAddPay] = useState(true)
+	const [paymentModal, setPaymentModal] = useState(false)
 	return (
 		<View>
 			<StyledModal {...modal}>

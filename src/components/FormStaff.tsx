@@ -31,7 +31,7 @@ const FormStaff = ({
 	defaultValues?: Partial<StaffType>
 	onSubmit?: (values: any) => Promise<void>
 }) => {
-	const [loading, setLoading] = React.useState(false)
+	const [loading, setLoading] = useState(false)
 	const { sections: storeSections } = useStore()
 
 	// * Transform array ['id1', 'id2'] to object { id1: true, id2: true } for the form

@@ -3,7 +3,7 @@ import asDate, { dateFormat } from '../../libs/utils-date'
 import Button from '../Button'
 
 const ButtonCopyRow = ({ orderId }: { orderId: string }) => {
-	const [disabled, setDisabled] = React.useState(false)
+	const [disabled, setDisabled] = useState(false)
 	const { order } = useOrderDetails()
 	return (
 		<Button

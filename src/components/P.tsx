@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { StyleSheet, Text, type TextStyle, View } from 'react-native'
 import theme, { FONT_SIZE } from '../theme'
 

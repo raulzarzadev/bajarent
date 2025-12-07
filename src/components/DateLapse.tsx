@@ -14,8 +14,8 @@ const DateLapse = ({
 	setFromDate: (date: Date) => void
 	setToDate: (date: Date) => void
 }) => {
-	const [_fromDate, _setFromDate] = React.useState(fromDate)
-	const [_toDate, _setToDate] = React.useState(toDate)
+	const [_fromDate, _setFromDate] = useState(fromDate)
+	const [_toDate, _setToDate] = useState(toDate)
 
 	const handleSetFromDate = (date: Date) => {
 		_setFromDate(date)

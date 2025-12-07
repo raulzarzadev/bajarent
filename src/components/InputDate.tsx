@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { View } from 'react-native'
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -35,13 +35,13 @@ export default function InputDate({
 	openButtonProps,
 	disabled
 }: InputDateProps) {
-	const [open, setOpen] = React.useState(false)
+	const [open, setOpen] = useState(false)
 	const initialDate = value ? asDate(value) : null
-	const [date, setDate] = React.useState<Date | null>(initialDate)
-	const [time, setTime] = React.useState<PickerTime>(getPickerTimeFromDate(initialDate))
-	const externalValueRef = React.useRef<number | null>(initialDate?.getTime() ?? null)
+	const [date, setDate] = useState<Date | null>(initialDate)
+	const [time, setTime] = useState<PickerTime>(getPickerTimeFromDate(initialDate))
+	const externalValueRef = useRef<number | null>(initialDate?.getTime() ?? null)
 
-	const onDismissSingle = React.useCallback(() => {
+	const onDismissSingle = useCallback(() => {
 		setOpen(false)
 	}, [setOpen])
 
@@ -115,12 +115,12 @@ export const InputDateE = (props: InputDateProps) => (
 )
 
 const TimePicker = ({ time, setTime, disabled }: TimePickerProps) => {
-	const [open, setOpen] = React.useState(false)
-	const onDismiss = React.useCallback(() => {
+	const [open, setOpen] = useState(false)
+	const onDismiss = useCallback(() => {
 		setOpen(false)
 	}, [setOpen])
 
-	const onConfirm = React.useCallback(
+	const onConfirm = useCallback(
 		({ hours, minutes }) => {
 			setOpen(false)
 			setTime?.({ hours, minutes })
