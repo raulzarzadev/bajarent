@@ -35,9 +35,8 @@ const ScreenCustomer = params => {
 	)
 }
 export default ScreenCustomer
-export type ScreenCustomerProps = {}
-export const ScreenCustomerE = (props: ScreenCustomerProps) => (
+export const ScreenCustomerE = () => (
 	<ErrorBoundary componentName="ScreenCustomer">
-		<ScreenCustomer {...props} />
+		<ScreenCustomer />
 	</ErrorBoundary>
 )

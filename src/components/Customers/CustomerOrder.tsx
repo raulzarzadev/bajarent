@@ -33,7 +33,7 @@ const CustomerOrder = ({ customerId, canViewActions = true }: CustomerOrderProps
 				.then(c => {
 					setCustomer(c)
 				})
-				.catch(e => {
+				.catch(() => {
 					setCustomer(undefined)
 					console.log('cliente no encontrado')
 				})

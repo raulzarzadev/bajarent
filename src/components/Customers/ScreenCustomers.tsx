@@ -11,9 +11,8 @@ const ScreenCustomers = () => {
 	)
 }
 export default ScreenCustomers
-export type ScreenCustomersProps = {}
-export const ScreenCustomersE = (props: ScreenCustomersProps) => (
+export const ScreenCustomersE = () => (
 	<ErrorBoundary componentName="ScreenCustomers">
-		<ScreenCustomers {...props} />
+		<ScreenCustomers />
 	</ErrorBoundary>
 )

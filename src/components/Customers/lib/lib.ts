@@ -6,6 +6,8 @@ export const getFavoriteCustomerPhone = (customerContacts: CustomerType['contact
 		.sort((a, b) => {
 			// set is favorite first
 			if (a.isFavorite) return -1
+			if (b.isFavorite) return 1
+			return 0
 		})
 		.map(a => a.value)
 	return phones?.[0] || null

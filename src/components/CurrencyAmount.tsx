@@ -1,4 +1,4 @@
-import { StyleSheet, Text, type TextStyle } from 'react-native'
+import { Text, type TextStyle } from 'react-native'
 
 const CurrencyAmount = ({ amount = 0, style }: { amount: number; style?: TextStyle }) => {
 	const _amount = parseFloat(`${amount}`)
@@ -18,5 +18,3 @@ const CurrencyAmount = ({ amount = 0, style }: { amount: number; style?: TextSty
 }
 
 export default CurrencyAmount
-
-const styles = StyleSheet.create({})

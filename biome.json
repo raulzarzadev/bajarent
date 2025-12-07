@@ -11,7 +11,7 @@
 		"enabled": true,
 		"rules": {
 			"correctness": {
-				"useExhaustiveDependencies": "info"
+				"useExhaustiveDependencies": "off"
 			},
 			"suspicious": {
 				"noExplicitAny": "off"

@@ -1,5 +1,5 @@
 import type { Timestamp } from 'firebase/firestore'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
@@ -217,8 +217,8 @@ const BusinessStatus = ({ balance }: BusinessStatusProps) => {
 											}
 
 											if (field === 'reported') {
-												const reports = balanceRow['reported']?.length || 0
-												const solved = balanceRow['solvedToday']?.length || 0
+												const reports = balanceRow.reported?.length || 0
+												const solved = balanceRow.solvedToday?.length || 0
 												return `${solved}/${reports}`
 											}
 											if (field === 'allItems') {

@@ -9,29 +9,27 @@ import ClientDetails from './ClientDetails'
 import ClientsOrders from './ClientsOrders'
 import Loading from './Loading'
 
-const ScreenClientDetails = props => {
-	const [client, setClient] = useState<Partial<ClientType>>()
-	const itemId = props?.route?.params?.id
+const ScreenClientDetails = (props) => {
+  const [client, setClient] = useState<Partial<ClientType>>()
+  const itemId = props?.route?.params?.id
 
-	const { storeId } = useStore()
-	useEffect(() => {
-		if (storeId)
-			ServiceStoreClients.get({
-				itemId,
-				storeId
-			}).then(res => {
-				setClient(res)
-			})
-	}, [storeId])
-	if (!client) return <Loading />
-	return (
-		<View>
-			<ClientDetails client={client} />
-			<ClientsOrders clientId={client.id} />
-		</View>
-	)
+  const { storeId } = useStore()
+  useEffect(() => {
+    if (storeId)
+      ServiceStoreClients.get({
+        itemId,
+        storeId
+      }).then((res) => {
+        setClient(res)
+      })
+  }, [storeId])
+  if (!client) return <Loading />
+  return (
+    <View>
+      <ClientDetails client={client} />
+      <ClientsOrders clientId={client.id} />
+    </View>
+  )
 }
 
 export default ScreenClientDetails
-
-const styles = StyleSheet.create({})

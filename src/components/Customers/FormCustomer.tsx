@@ -22,7 +22,7 @@ const FormCustomer = (props?: FormCustomerProps) => {
 		<View>
 			<Formik
 				initialValues={defaultCustomer}
-				onSubmit={async (values, actions) => {
+				onSubmit={async values => {
 					if (props?.onSubmit) {
 						setDisabled(true)
 						await props.onSubmit(values)
@@ -81,7 +81,7 @@ export const FormikCustomerContacts = () => {
 		<View>
 			<Text style={gStyles.h3}>Contactos</Text>
 			{Object.entries(values.contacts || {}).map(
-				([key, value]) =>
+				([key]) =>
 					!values.contacts[key].deletedAt && (
 						<View
 							key={key}
@@ -149,7 +149,6 @@ export const FormikCustomerContacts = () => {
 								color={values.contacts[key].isFavorite ? 'success' : 'info'}
 								variant="ghost"
 								onPress={() => {
-									debugger
 									handleMarkAsFavorite(
 										values?.contacts[key].id,
 										values?.contacts[key]?.isFavorite,

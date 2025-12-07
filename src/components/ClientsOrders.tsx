@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { gStyles } from '../styles'
@@ -23,5 +23,3 @@ const ClientsOrders = ({ clientId }) => {
 }
 
 export default ClientsOrders
-
-const styles = StyleSheet.create({})

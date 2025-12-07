@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { gSpace } from '../styles'
 import BadgeAdmin from './BadgeAdmin'
@@ -33,5 +33,3 @@ const BadgesStore = () => {
 }
 
 export default BadgesStore
-
-const styles = StyleSheet.create({})

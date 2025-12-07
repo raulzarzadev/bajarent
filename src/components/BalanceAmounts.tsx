@@ -178,7 +178,6 @@ const LinkPayments = ({
 	title,
 	paymentsIds = [],
 	amount = 0,
-	isTotal = false,
 	labelStyle,
 	disabled,
 	asModal = false

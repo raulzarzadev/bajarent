@@ -46,9 +46,8 @@ const AppVersion = () => {
 }
 export default AppVersion
 
-export type AppVersionProps = {}
-export const AppVersionE = (props: AppVersionProps) => (
+export const AppVersionE = () => (
 	<ErrorBoundary componentName="AppVersion">
-		<AppVersion {...props} />
+		<AppVersion />
 	</ErrorBoundary>
 )

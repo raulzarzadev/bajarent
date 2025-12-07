@@ -57,7 +57,7 @@ export const ExpandibleList = <T extends BasicExpandibleItemType>({
 							<View style={{ width: 20 }}>
 								{countItems > 1 && <Text style={[gStyles.tBold]}>{countItems}*</Text>}
 							</View>
-							<Text key={index}>{itemData?.content}</Text>
+							<Text key={itemData.id}>{itemData?.content}</Text>
 						</Pressable>
 					)
 				})}

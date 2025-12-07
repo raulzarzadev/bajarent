@@ -21,7 +21,7 @@ const FormItem = ({
 }: {
 	fromOrder?: boolean
 	values?: Partial<ItemType>
-	onSubmit?: (values: ItemType) => Promise<any> | void
+	onSubmit?: (values: ItemType) => Promise<any>
 	progress?: number
 }) => {
 	const { categories, sections: storeSections } = useStore()

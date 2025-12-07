@@ -205,11 +205,15 @@ export type PermissionsOrderType = keyof typeof permissions_orders
 export type PermissionsStoreType = keyof typeof permissions_store
 
 export const permissionsOrderKeys = Object.keys(permissions_orders).filter(key =>
-	isNaN(Number(key))
+	Number.isNaN(Number(key))
 )
 
-export const permissionsStoreKeys = Object.keys(permissions_store).filter(key => isNaN(Number(key)))
-export const permissionsItemsKeys = Object.keys(permissions_items).filter(key => isNaN(Number(key)))
+export const permissionsStoreKeys = Object.keys(permissions_store).filter(key =>
+	Number.isNaN(Number(key))
+)
+export const permissionsItemsKeys = Object.keys(permissions_items).filter(key =>
+	Number.isNaN(Number(key))
+)
 export const permissionsCustomersKeys = Object.keys(permissions_customers).filter(key =>
-	isNaN(Number(key))
+	Number.isNaN(Number(key))
 )

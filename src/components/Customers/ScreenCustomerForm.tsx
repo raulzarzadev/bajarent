@@ -50,9 +50,8 @@ const ScreenCustomerForm = navigate => {
 	)
 }
 export default ScreenCustomerForm
-export type ScreenCustomerFormProps = {}
-export const ScreenCustomerFormE = (props: ScreenCustomerFormProps) => (
+export const ScreenCustomerFormE = () => (
 	<ErrorBoundary componentName="ScreenCustomerForm">
-		<ScreenCustomerForm {...props} />
+		<ScreenCustomerForm />
 	</ErrorBoundary>
 )

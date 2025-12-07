@@ -6,7 +6,7 @@ import ErrorBoundary from './ErrorBoundary'
 import InputRadios from './Inputs/InputRadios'
 import TextInfo from './TextInfo'
 
-const ConfigItemsView = (props?: ConfigItemsViewProps) => {
+const ConfigItemsView = () => {
 	type DefaultValues = {
 		primaryIdentification: 'serialNumber' | 'economicNumber'
 	}
@@ -85,9 +85,8 @@ const ConfigItemsView = (props?: ConfigItemsViewProps) => {
 	)
 }
 export default ConfigItemsView
-export type ConfigItemsViewProps = {}
-export const ConfigItemsViewE = (props: ConfigItemsViewProps) => (
+export const ConfigItemsViewE = () => (
 	<ErrorBoundary componentName="ConfigItemsView">
-		<ConfigItemsView {...props} />
+		<ConfigItemsView />
 	</ErrorBoundary>
 )

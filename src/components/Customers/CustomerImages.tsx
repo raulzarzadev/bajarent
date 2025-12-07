@@ -1,10 +1,9 @@
 import { Formik } from 'formik'
 import { useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
 import dictionary from '../../dictionary'
-import useModal from '../../hooks/useModal'
 import { createUUID } from '../../libs/createId'
 import asDate from '../../libs/utils-date'
 import { useCustomers } from '../../state/features/costumers/costumersSlice'
@@ -21,7 +20,6 @@ import FormikInputSignature from '../FormikInputSignature'
 import FormikInputValue from '../FormikInputValue'
 import ImagePreview from '../ImagePreview'
 import { ModalEditImages } from '../ImagesInputAndPreview/ModalEditImages'
-import StyledModal from '../StyledModal'
 
 const CustomerImages = (props?: CustomerImagesProps) => {
 	const customerId = props?.customerId

@@ -112,7 +112,7 @@ const BottomAppBar = () => {
 			<Tab.Screen
 				name="StackCustomers"
 				component={StackCustomersE}
-				options={({ route }) => ({
+				options={() => ({
 					headerShown: false,
 					title: 'Clientes',
 					tabBarButton: showCustomerButton ? undefined : () => null
