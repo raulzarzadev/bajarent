@@ -161,6 +161,6 @@ const baseStyle = StyleSheet.create({
 		flex: 1,
 		padding: PADDING * 3,
 		paddingRight: 20,
-		placeholderTextColor: 'lightgrey' + placeholderOpacity // Set placeholder text color to transparent
+		placeholderTextColor: `lightgrey${placeholderOpacity}` // Set placeholder text color to transparent
 	}
 })

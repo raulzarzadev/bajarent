@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { View } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { colors } from '../theme'
 import InputRadios from './InputRadios'

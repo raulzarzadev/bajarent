@@ -27,7 +27,7 @@ export const ReduxInitializer = ({ children }) => {
 				handleSetStoreId(res)
 			}
 		})
-		return () => unsubscribe && unsubscribe()
+		return () => unsubscribe?.()
 	}, [])
 
 	// * ========================================
@@ -110,7 +110,11 @@ const useInitializeShop = () => {
 			const normalizeData = convertTimestamps({ ...store }, { to: 'string' })
 			dispatch(setShop(normalizeData))
 		})
-		return () => unsubscribe && unsubscribe()
+		return () => {
+			if (typeof unsubscribe === 'function') {
+				unsubscribe()
+			}
+		}
 	}, [storeId])
 	return null
 }

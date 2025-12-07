@@ -1,50 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
-import useModal from '../hooks/useModal'
-import { onAddContact, onMarkContactAsFavorite, onRemoveContact } from '../libs/order-actions'
-import { gStyles } from '../styles'
+import { onMarkContactAsFavorite, onRemoveContact } from '../libs/order-actions'
 import type { ContactType } from '../types/OrderType'
 import Button from './Button'
 import ButtonConfirm from './ButtonConfirm'
 import CardPhone from './CardPhone'
-import FormContacts from './FormContacts'
-import StyledModal from './StyledModal'
 
 /**
  * @deprecated now  contacnts is from customers
  * @returns
  */
 const OrderContacts = () => {
-	const { order } = useOrderDetails()
-	const modal = useModal({ title: 'Lista de contactos' })
-	const contacts = order?.contacts as ContactType[]
 	return null
-	return (
-		<View style={{ marginVertical: 16 }}>
-			<View
-				style={{
-					justifyContent: 'center',
-					flexDirection: 'row',
-					alignItems: 'center'
-				}}
-			>
-				<Text style={gStyles.h2}>Contactos </Text>
-
-				<Button justIcon icon="add" onPress={modal.toggleOpen} size="small" />
-			</View>
-
-			<ContactsList />
-			<StyledModal {...modal}>
-				<ContactsList />
-				<Text style={gStyles.h3}>Agregar contacto</Text>
-				<FormContacts
-					onSubmit={contact => {
-						onAddContact({ contact, orderId: order.id })
-					}}
-				/>
-			</StyledModal>
-		</View>
-	)
 }
 
 export const ContactsList = () => {
@@ -71,10 +38,10 @@ export const ContactsList = () => {
 	return (
 		<View>
 			<ContactRow contact={{ phone: order?.phone, name: '' }} />
-			{contacts?.sort(sortById).map((contact, i) => (
+			{contacts?.sort(sortById).map(contact => (
 				<ContactRow
 					contact={contact}
-					key={i}
+					key={contact.name}
 					handleDeleteContact={handleDeleteContact}
 					handleMarkAsFavorite={handleMarkAsFavorite}
 				/>

@@ -1,5 +1,5 @@
 import { isToday } from 'date-fns'
-
+import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
@@ -55,7 +55,6 @@ const ItemActions = ({
 	const { permissions } = useEmployee()
 	const { user } = useAuth()
 	const [sectionId, setSectionId] = useState<string | null>(itemSection || null)
-	const currentSection = storeSections.find(({ id }) => id === itemSection)?.name
 	const handleChangeItemSection = async ({ sectionId }) => {
 		return await onChangeItemSection({
 			storeId,

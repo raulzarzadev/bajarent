@@ -1,6 +1,4 @@
-import { useFormik, useFormikContext } from 'formik'
-
-import { StyleSheet } from 'react-native'
+import { useFormikContext } from 'formik'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -137,18 +135,3 @@ export default (props: ModalPaymentSaleProps) => {
 		</ErrorBoundary>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-between'
-	},
-	item: {
-		width: '48%', // for 2 items in a row
-		marginVertical: '1%' // spacing between items
-	},
-	repairItemForm: {
-		marginVertical: 4
-	}
-})

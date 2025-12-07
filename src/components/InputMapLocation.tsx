@@ -23,7 +23,6 @@ const customIcon = L.icon({
 
 const InputMapLocation = ({
 	setCoords,
-	coords,
 	defaultCoords,
 	defaultSearch
 }: {
@@ -190,8 +189,6 @@ const SearchAddressLocation = ({
 				setShowResponses(true)
 
 				setOptions?.(slicedResult)
-				const { lat, lon } = data[0]
-				const newCenter: CoordsType = [parseFloat(lat), parseFloat(lon)]
 				// setCoords(newCenter)
 			} else {
 				// alert('No se encontraron resultados')

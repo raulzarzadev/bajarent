@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
 import { useStore } from '../contexts/storeContext'
@@ -92,7 +92,7 @@ const InputComment = ({
 			content,
 			type: commentType
 		})
-			.then(res => {
+			.then(() => {
 				reset()
 				updateComments?.()
 			})

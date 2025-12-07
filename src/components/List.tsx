@@ -433,15 +433,15 @@ function MyList<T extends { id: string }>({
 											if (multiSelect) {
 												handleSelectRow(item?.id)
 											} else {
-												onPressRow && onPressRow(item?.id)
+												onPressRow?.(item?.id)
 											}
 										}}
 									>
 										<ComponentRow item={item} />
 									</Pressable>
-									{rowSideButtons?.map((button, index) => (
+									{rowSideButtons?.map(button => (
 										<View
-											key={index}
+											key={button.label}
 											style={{
 												marginHorizontal: 2,
 												justifyContent: 'center',
@@ -651,6 +651,7 @@ const SearchAndFilter = ({
 			{sideButtons?.map(
 				(button, index) =>
 					button.visible && (
+						// biome-ignore lint/suspicious/noArrayIndexKey: any
 						<View key={index} style={{ marginHorizontal: 2 }}>
 							<Button
 								icon={button?.icon}

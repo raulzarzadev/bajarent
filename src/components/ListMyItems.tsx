@@ -3,7 +3,7 @@ import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
 import { gStyles } from '../styles'
-import theme, { colors } from '../theme'
+import theme from '../theme'
 import type ItemType from '../types/ItemType'
 import type StoreType from '../types/StoreType'
 import ErrorBoundary from './ErrorBoundary'
@@ -42,17 +42,15 @@ const ListMyItems = ({ items }: ListMyItemsProps) => {
 
 	return (
 		<View
-			style={
-				(gStyles.container,
-				[
-					{
-						maxWidth: 800,
-						marginHorizontal: 'auto',
-						paddingTop: 6,
-						width: '100%'
-					}
-				])
-			}
+			style={[
+				gStyles.container,
+				{
+					maxWidth: 800,
+					marginHorizontal: 'auto',
+					paddingTop: 6,
+					width: '100%'
+				}
+			]}
 		>
 			{/* <Text style={[gStyles.h1, { marginBottom: 16 }]}>Artículos</Text> */}
 			<View style={{ marginBottom: 12 }}>

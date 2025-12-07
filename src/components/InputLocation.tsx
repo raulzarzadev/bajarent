@@ -50,7 +50,7 @@ const InputLocation = ({
 						value={coords}
 						defaultSearch={
 							neighborhood || address
-								? `${address || ''}${neighborhood ? ',' + neighborhood : ''}`
+								? `${address || ''}${neighborhood ? `,${neighborhood}` : ''}`
 								: ''
 						}
 					/>

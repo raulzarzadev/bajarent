@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import type StaffType from '../types/StaffType'
 import Button from './Button'
@@ -28,7 +28,7 @@ const ListStaff = ({
 }) => {
 	const { navigate } = useNavigation()
 	const {
-		permissions: { canEditStaff, isAdmin }
+		permissions: { canEditStaff }
 	} = useEmployee()
 	const disableAdd = !canEditStaff
 
@@ -65,7 +65,7 @@ const ListStaff = ({
 							})
 						},
 						label: 'Add',
-						visible: showNewStaff ? true : false,
+						visible: !!showNewStaff,
 						disabled: disableAdd
 					}
 				]}

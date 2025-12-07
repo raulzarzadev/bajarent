@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker'
 import pica from 'pica'
 import { useState } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { uploadFile } from '../firebase/files'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
@@ -23,7 +23,7 @@ export default function InputImagePicker({
 	setValue: any
 	onUploading?: (progress: number) => void
 }) {
-	const [image, setImage] = useState(value)
+	const [_, setImage] = useState(value)
 	const [progress, setProgress] = useState(null)
 
 	const pickImage = async () => {
@@ -121,56 +121,54 @@ export default function InputImagePicker({
 	}
 
 	return (
-		<>
+		<View
+			style={{
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				minHeight: 50,
+				backgroundColor: colors.transparent,
+				width: '100%',
+				position: 'relative'
+			}}
+		>
+			{progress === -1 && (
+				<Text
+					style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						right: 0,
+						textAlign: 'center'
+					}}
+				>
+					Error al subir archivo
+				</Text>
+			)}
+
+			<ImagePreview image={value} />
+			<ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
 			<View
 				style={{
-					flex: 1,
-					alignItems: 'center',
-					justifyContent: 'center',
-					minHeight: 50,
-					backgroundColor: colors.transparent,
-					width: '100%',
-					position: 'relative'
+					width: '100%'
 				}}
-			>
-				{progress === -1 && (
-					<Text
-						style={{
-							position: 'absolute',
-							top: 0,
-							left: 0,
-							right: 0,
-							textAlign: 'center'
-						}}
-					>
-						Error al subir archivo
-					</Text>
-				)}
-
-				<ImagePreview image={value} />
-				<ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
-				<View
-					style={{
-						width: '100%'
-					}}
-				></View>
-				<Text style={gStyles.helper}>{label}</Text>
-				<Button
-					onPress={() => {
-						pickImage()
-					}}
-					// label={label}
-					icon="addImage"
-					size="xs"
-					buttonStyles={{
-						minWidth: 50,
-						position: 'absolute',
-						left: '50%',
-						transform: [{ translateX: -25 }],
-						opacity: value ? 0.4 : 1
-					}}
-				/>
-			</View>
-		</>
+			></View>
+			<Text style={gStyles.helper}>{label}</Text>
+			<Button
+				onPress={() => {
+					pickImage()
+				}}
+				// label={label}
+				icon="addImage"
+				size="xs"
+				buttonStyles={{
+					minWidth: 50,
+					position: 'absolute',
+					left: '50%',
+					transform: [{ translateX: -25 }],
+					opacity: value ? 0.4 : 1
+				}}
+			/>
+		</View>
 	)
 }

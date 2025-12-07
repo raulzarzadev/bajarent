@@ -73,11 +73,8 @@ const ModalDeliveryOrder = ({
 			.then(r => console.log(r))
 			.catch(e => console.error(e))
 	}
-	const correctQtyOfItems = (items = []) => {
+	const correctQtyOfItems = () => {
 		return true
-		const MAX_ITEMS = 1
-		const MIN_ITEMS = 1
-		return items.length > MAX_ITEMS || items.length < MIN_ITEMS
 	}
 	// order.itemSerial = itemSerial || ''
 	return (

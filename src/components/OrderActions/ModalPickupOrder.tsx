@@ -26,7 +26,7 @@ const ModalPickupOrder = ({ modal, order }: { modal: ReturnModal; order: Partial
 		//*pickup items
 		modal.setOpen(false)
 		items.forEach(async item => {
-			const res = await onPickUpItem({
+			await onPickUpItem({
 				storeId,
 				itemId: item.id,
 				orderId: order.id,

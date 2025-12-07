@@ -8,7 +8,7 @@ import {
 	type InputContractSignatureValues
 } from './InputContractSignature'
 
-const OrderContractSignature = (props?: OrderContractSignatureProps) => {
+const OrderContractSignature = () => {
 	const { order } = useOrderDetails()
 	const { store } = useStore()
 	const handleSignOrder = async (values: InputContractSignatureValues) => {
@@ -28,9 +28,8 @@ const OrderContractSignature = (props?: OrderContractSignatureProps) => {
 	)
 }
 export default OrderContractSignature
-export type OrderContractSignatureProps = {}
-export const OrderContractSignatureE = (props: OrderContractSignatureProps) => (
+export const OrderContractSignatureE = () => (
 	<ErrorBoundary componentName="OrderContractSignature">
-		<OrderContractSignature {...props} />
+		<OrderContractSignature />
 	</ErrorBoundary>
 )

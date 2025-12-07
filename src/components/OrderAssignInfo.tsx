@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import asDate, { dateFormat } from '../libs/utils-date'
 import { gStyles } from '../styles'

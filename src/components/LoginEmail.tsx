@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import { signInWithPassword } from '../firebase/auth'
 import { gStyles } from '../styles'
 import Button from './Button'

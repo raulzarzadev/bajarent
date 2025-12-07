@@ -26,7 +26,8 @@ const FormRepairDelivery = ({
 					try {
 						await onSubmit(values)
 						resetForm({ values: values }) // Restablece el formulario a los valores iniciales
-					} catch (error) {
+					} catch (err) {
+						console.error(err)
 						// Manejo de errores, si es necesario
 					} finally {
 						setLoading(false)
@@ -35,6 +36,8 @@ const FormRepairDelivery = ({
 			>
 				{({ handleSubmit, dirty }) => {
 					//FIXME: posible loop infinito
+
+					// biome-ignore lint/correctness/useHookAtTopLevel: lo arreglo despues
 					useEffect(() => {
 						setDirty?.(dirty)
 					}, [dirty])

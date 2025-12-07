@@ -20,7 +20,7 @@ const PhoneLogin = () => {
 		// @ts-expect-error
 		window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
 			size: 'invisible',
-			callback: response => {
+			callback: () => {
 				console.log('sms sent')
 				//console.log({ response })
 				// reCAPTCHA solved, allow signInWithPhoneNumber.
@@ -37,7 +37,7 @@ const PhoneLogin = () => {
 		// @ts-expect-error
 		window.confirmationResult
 			.confirm(code)
-			.then(result => {
+			.then(() => {
 				console.log('code sent')
 				// User signed in successfully.
 				// console.log(result)

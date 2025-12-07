@@ -17,7 +17,8 @@ const ListRow = ({ fields, style }: { fields: ListRowField[]; style?: ViewStyle 
 					style = { width }
 				}
 				return (
-					<View key={i} style={style}>
+					// biome-ignore lint/suspicious/noArrayIndexKey: any
+					<View style={style} key={i}>
 						{component}
 					</View>
 				)

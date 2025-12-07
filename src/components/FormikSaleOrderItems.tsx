@@ -108,7 +108,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
 			<View>
 				<Text style={gStyles.tCenter}>
 					Articulos:{' '}
-					{values?.items?.reduce((acc, item) => acc + parseInt(`${item.quantity}`), 0) || 0}
+					{values?.items?.reduce((acc, item) => acc + parseInt(`${item.quantity}`, 10), 0) || 0}
 				</Text>
 				<Text style={gStyles.tCenter}>
 					Total: <CurrencyAmount amount={orderAmount(values)} style={gStyles.h2} />

@@ -18,7 +18,7 @@ export default function InputDocumentPicker({
 	mimeTypes = ['application/pdf'], // Tipos de documentos permitidos
 	fileName: initialFileName = ''
 }: InputDocumentPickerProps) {
-	const [document, setDocument] = useState(value)
+	const [_, setDocument] = useState(value)
 	const [progress, setProgress] = useState(null)
 	const [fileName, setFileName] = useState(initialFileName)
 	const pickDocument = async () => {
@@ -78,92 +78,90 @@ export default function InputDocumentPicker({
 	}
 
 	return (
-		<>
-			<View
-				style={{
-					flex: 1,
-					alignItems: 'center',
-					justifyContent: 'center',
-					minHeight: 50,
-					backgroundColor: colors.transparent,
-					width: '100%',
-					position: 'relative'
-				}}
-			>
-				{progress === -1 && (
-					<Text
-						style={{
-							position: 'absolute',
-							top: 0,
-							left: 0,
-							right: 0,
-							textAlign: 'center',
-							color: 'red'
-						}}
-					>
-						Error al subir archivo
-					</Text>
-				)}
+		<View
+			style={{
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				minHeight: 50,
+				backgroundColor: colors.transparent,
+				width: '100%',
+				position: 'relative'
+			}}
+		>
+			{progress === -1 && (
+				<Text
+					style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						right: 0,
+						textAlign: 'center',
+						color: 'red'
+					}}
+				>
+					Error al subir archivo
+				</Text>
+			)}
 
-				<View style={{ flexDirection: 'row' }}>
-					<Button
-						onPress={() => {
-							// Abrir el PDF si es posible
-							if (value) {
-								window.open(value, '_blank')
-							}
-						}}
-						disabled={!value}
-						// label="Ver PDF"
-						icon="openEye"
-						size="xs"
-						variant="ghost"
-					/>
-					{/* Botón para eliminar el PDF */}
-					<ButtonConfirm
-						openDisabled={!value}
-						icon="delete"
-						openColor="error"
-						openSize="xs"
-						openVariant="ghost"
-						handleConfirm={async () => {
-							handleDeleteContract()
-						}}
-					></ButtonConfirm>
-					<Button
-						onPress={pickDocument}
-						icon="upload"
-						//label="Archivo PDF"
-						size="xs"
-						variant="ghost"
-						buttonStyles={{
-							marginVertical: 'auto'
-						}}
-					/>
-				</View>
-				{/* Mostrar nombre del documento en lugar de vista previa */}
-				{value && (
-					<View
-						style={{
-							padding: 10,
-							backgroundColor: '#f0f0f0',
-							borderRadius: 5,
-							marginVertical: 8,
-							width: INPUT_WIDTH,
-							alignItems: 'center'
-						}}
-					>
-						<Text numberOfLines={1} ellipsizeMode="middle" style={{ maxWidth: INPUT_WIDTH }}>
-							{initialFileName || fileName || 'Documento PDF'}
-						</Text>
-						{/* Botón para abrir el PDF */}
-					</View>
-				)}
-
-				<ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
-				<Text style={gStyles.helper}>{label}</Text>
+			<View style={{ flexDirection: 'row' }}>
+				<Button
+					onPress={() => {
+						// Abrir el PDF si es posible
+						if (value) {
+							window.open(value, '_blank')
+						}
+					}}
+					disabled={!value}
+					// label="Ver PDF"
+					icon="openEye"
+					size="xs"
+					variant="ghost"
+				/>
+				{/* Botón para eliminar el PDF */}
+				<ButtonConfirm
+					openDisabled={!value}
+					icon="delete"
+					openColor="error"
+					openSize="xs"
+					openVariant="ghost"
+					handleConfirm={async () => {
+						handleDeleteContract()
+					}}
+				></ButtonConfirm>
+				<Button
+					onPress={pickDocument}
+					icon="upload"
+					//label="Archivo PDF"
+					size="xs"
+					variant="ghost"
+					buttonStyles={{
+						marginVertical: 'auto'
+					}}
+				/>
 			</View>
-		</>
+			{/* Mostrar nombre del documento en lugar de vista previa */}
+			{value && (
+				<View
+					style={{
+						padding: 10,
+						backgroundColor: '#f0f0f0',
+						borderRadius: 5,
+						marginVertical: 8,
+						width: INPUT_WIDTH,
+						alignItems: 'center'
+					}}
+				>
+					<Text numberOfLines={1} ellipsizeMode="middle" style={{ maxWidth: INPUT_WIDTH }}>
+						{initialFileName || fileName || 'Documento PDF'}
+					</Text>
+					{/* Botón para abrir el PDF */}
+				</View>
+			)}
+
+			<ProgressBar progress={progress} hideWhenFull size="lg" showPercent />
+			<Text style={gStyles.helper}>{label}</Text>
+		</View>
 	)
 }
 

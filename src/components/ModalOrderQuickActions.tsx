@@ -6,7 +6,6 @@ import ButtonConfirm from './ButtonConfirm'
 import { CustomerCardE } from './Customers/CustomerCard'
 import ErrorBoundary from './ErrorBoundary'
 import OrderChangeLabel from './OrderChangeLabel'
-import { ContactsList } from './OrderContacts'
 import TextInfo from './TextInfo'
 
 type ModalOrderQuickActionsProps = {

@@ -4,7 +4,7 @@ import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import { formatOrders, isUnsolvedOrder } from '../../../libs/orders'
 import type { CommentType } from '../../../types/CommentType'
 import type OrderType from '../../../types/OrderType'
-import { order_status, order_type } from '../../../types/OrderType'
+import { order_type } from '../../../types/OrderType'
 import { serializeObj } from '../../libs/serializeObj'
 
 // Types
@@ -153,7 +153,7 @@ export const fetchOrdersByType = createAsyncThunk(
 		{ dispatch, rejectWithValue }
 	) => {
 		try {
-			const { storeId, type, sections = [], employee, permissions, forceRefresh = false } = params
+			const { storeId, type, employee, permissions, forceRefresh = false } = params
 			const getExpireTomorrow = permissions.orders?.getExpireTomorrow || false
 
 			switch (type) {
@@ -436,7 +436,7 @@ const ordersSlice = createSlice({
 				state.refreshing = true
 				state.error = null
 			})
-			.addCase(fetchOrdersByType.fulfilled, (state, action) => {
+			.addCase(fetchOrdersByType.fulfilled, state => {
 				state.refreshing = false
 				// fetchOrdersByType delega a fetchUnsolvedOrders, así que el estado ya se actualiza
 				// en el reducer de fetchUnsolvedOrders.fulfilled

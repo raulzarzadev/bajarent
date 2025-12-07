@@ -97,7 +97,7 @@ export default function ModalSendWhatsapp({
   ➡ Inicio: ${orderStringDates(order).deliveredAt}
   🔚 Vencimiento: ${dateFormat(asDate(orderExpiresAt), 'EEEE dd MMMM yy')}`
 
-	const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
+	// const PRICE = `💲${order?.items?.[0]?.priceSelected?.amount?.toFixed(2) || 0}`
 	const PAYMENTS = ` ${orderPayments({ order: { ...order, payments } })}`
 	const ADDRESS = `📍${store?.address ? `Dirección: ${store.address}` : ''}`
 	const SCHEDULE = store?.schedule ? `🕒 Horario de atención: ${store?.schedule || ''}` : ''
@@ -515,25 +515,11 @@ const getReceiptDates = (order: OrderType): string => {
 		if (isPickedUp && order?.pickedUpAt) dates.push(`Recogida ${dFormat(order?.pickedUpAt)}`)
 	}
 	if (isRepair) {
-		const isRepairing = order?.status === order_status.REPAIRING
-		const isRepaired = order?.status === order_status.REPAIRED
-		const isDelivered = order?.status === order_status.DELIVERED
 		if (order.repairingAt) dates.push(`Comenzada ${dFormat(order.repairingAt)}`)
 		if (order.repairedAt) dates.push(`Terminada ${dFormat(order.repairedAt)}`)
 		if (order.deliveredAt) dates.push(`Entregada ${dFormat(order.deliveredAt)}`)
 	}
 	return dates.join('\n')
-	//
-	// const isRepairing = order?.status === order_status.REPAIRING
-	// const isDelivered = order?.status === order_status.DELIVERED
-	// const defaultDate = new Date()
-	// if (isRepair && isRepairing) {
-	//   return defaultDate
-	// }
-	// if (isRent && isDelivered) {
-	//   return asDate(order.deliveredAt)
-	// }
-	// return defaultDate
 }
 const orderStringDates = (order: Partial<OrderType>, format = 'EEEE dd MMMM yy') => {
 	if (order?.extensions) {
@@ -564,7 +550,7 @@ export const ModalSendWhatsappE = (props: ModalSendWhatsappType) => (
 const orderPayments = ({ order }: { order: OrderType }) => {
 	let res = ''
 	const payments = order?.payments
-	if (payments?.length == 0) return '*Sin pagos*'
+	if (payments?.length === 0) return '*Sin pagos*'
 	if (order?.payments?.length > 0) {
 		const lastPayment = payments.sort((a, b) => {
 			return asDate(a.createdAt) > asDate(b.createdAt) ? -1 : 1

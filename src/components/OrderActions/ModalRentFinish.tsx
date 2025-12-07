@@ -51,7 +51,7 @@ const ModalRentFinish = ({ modal }: { modal: ReturnModal }) => {
 					<TextInfo defaultVisible text="Asegurate de que RECOGES el siguiente artículo" />
 				</View>
 				<View style={{ marginVertical: gSpace(3) }}>
-					{items?.map((item, index) => (
+					{items?.map(item => (
 						<CardItem item={item} key={item.id} />
 					))}
 				</View>

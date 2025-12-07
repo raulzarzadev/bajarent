@@ -1,6 +1,6 @@
 import { deleteField } from 'firebase/firestore'
 import { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import dictionary, { asCapitalize } from '../dictionary'
 import { ServiceOrders } from '../firebase/ServiceOrders'

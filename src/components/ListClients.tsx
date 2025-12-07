@@ -117,9 +117,8 @@ const RowClient = ({ customer }: { customer: ListCustomerType }) => {
 
 export default ListCustomers
 
-export type ListCustomersProps = {}
-export const ListCustomersE = (props: ListCustomersProps) => (
+export const ListCustomersE = () => (
 	<ErrorBoundary componentName="ListCustomers">
-		<ListCustomers {...props} />
+		<ListCustomers />
 	</ErrorBoundary>
 )

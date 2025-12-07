@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
@@ -50,8 +51,14 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
 	}
 
 	const VALIDATE_ITEMS_QTY = store?.orderFields?.[order_type.RENT]?.validateItemsQty
-	const ITEMS_MAX_BY_ORDER = parseInt(`${store?.orderFields?.[order_type.RENT].itemsMax || '0'}`)
-	const ITEMS_MIN_BY_ORDER = parseInt(`${store?.orderFields?.[order_type.RENT]?.itemsMin || '0'}`)
+	const ITEMS_MAX_BY_ORDER = parseInt(
+		`${store?.orderFields?.[order_type.RENT].itemsMax || '0'}`,
+		10
+	)
+	const ITEMS_MIN_BY_ORDER = parseInt(
+		`${store?.orderFields?.[order_type.RENT]?.itemsMin || '0'}`,
+		10
+	)
 
 	const itemsCount = order?.items?.length || 0
 	const toMuchItems = itemsCount > ITEMS_MAX_BY_ORDER

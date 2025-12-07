@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import type { PriceType } from '../types/PriceType'
 import ButtonConfirm from './ButtonConfirm'
@@ -33,10 +33,6 @@ const ModalSelectCategoryPrice = ({
 					const itemPriceSelected = categoryPrices.find(
 						//* this is necessary to find the correct price
 						p => p.id === itemPriceSelectedId
-					)
-					const categoryPriceSelected = categoryPrices.find(
-						//* FIXME: this was moved in the past. we need to check if it's still necessary
-						p => p.categoryId === categoryId
 					)
 
 					// console.log({ categoryPriceSelected, itemPriceSelected })

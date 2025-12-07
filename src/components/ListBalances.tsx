@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import type { BalanceType } from '../types/BalanceType'
 import { ListE } from './List'
 import RowBalance from './RowBalace'

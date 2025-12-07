@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native'
 import { ServicePayments } from '../firebase/ServicePayments'
 import useModal from '../hooks/useModal'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
@@ -17,7 +16,6 @@ export type ModalPaymentProps = {
 }
 export const ModalPayment = ({
 	orderId,
-	paymentId,
 	storeId,
 	orderSectionId,
 	defaultAmount = 0
@@ -94,18 +92,3 @@ export default (props: ModalPaymentProps) => {
 		</ErrorBoundary>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-between'
-	},
-	item: {
-		width: '48%', // for 2 items in a row
-		marginVertical: '1%' // spacing between items
-	},
-	repairItemForm: {
-		marginVertical: 4
-	}
-})

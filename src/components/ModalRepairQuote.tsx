@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { useAuth } from '../contexts/authContext'
+import { Text, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import useModal from '../hooks/useModal'
@@ -43,25 +41,6 @@ export const ModalRepairQuote = ({
 	const label = quoteAlreadyExists ? 'Modificar cotización' : 'Cotización'
 
 	const modal = useModal({ title: label })
-
-	const { user } = useAuth()
-	const [info, setInfo] = useState(quote?.info || '')
-	const [total, setTotal] = useState(quote?.total || 0)
-	const [saving, setSaving] = useState(false)
-
-	const handleRepairFinished = async () => {
-		setSaving(true)
-		await ServiceOrders.update(orderId, {
-			repairInfo: info,
-			repairTotal: total,
-			quoteBy: user.id
-		})
-			.then(r => {
-				console.log(r)
-				modal.toggleOpen()
-			})
-			.catch(console.error)
-	}
 
 	const orderQuotes = (order?.quotes as OrderQuoteType[]) || []
 	return (
@@ -144,18 +123,3 @@ export const ModalRepairQuote = ({
 }
 
 export default ModalRepairQuote
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-between'
-	},
-	item: {
-		width: '48%', // for 2 items in a row
-		marginVertical: '1%' // spacing between items
-	},
-	repairItemForm: {
-		marginVertical: 4
-	}
-})

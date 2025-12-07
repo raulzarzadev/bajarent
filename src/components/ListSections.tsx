@@ -47,8 +47,8 @@ const ListSections = ({
 							<Text style={{ textAlign: 'center' }}>({item?.staff?.length || 0})</Text>
 							{item?.staff
 								?.map((staffId: string) => staff.find(s => s.id === staffId))
-								?.map((staff: StaffType, i: number) => (
-									<Text key={i}>{staff?.name}</Text>
+								?.map((staff: StaffType) => (
+									<Text key={staff.id}>{staff?.name}</Text>
 								))}
 						</View>
 					)}

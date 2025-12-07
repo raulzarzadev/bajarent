@@ -32,7 +32,9 @@ class OrdersSyncService {
 	}
 
 	stopListening() {
-		this.listeners.forEach(unsubscribe => unsubscribe())
+		this.listeners.forEach(unsubscribe => {
+			unsubscribe()
+		})
 		this.listeners.clear()
 		this.isListening = false
 	}

@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import type { OrderQuoteType } from '../types/OrderType'
-import Button from './Button'
 import ButtonConfirm from './ButtonConfirm'
 import CurrencyAmount from './CurrencyAmount'
 
@@ -15,8 +14,8 @@ const ListOrderQuotes = ({
 	const totalAmount = quotes.reduce((acc, quote) => acc + (parseFloat(`${quote?.amount}`) || 0), 0)
 	return (
 		<View>
-			{quotes?.map((quote, i) => (
-				<View key={i} style={{ flexDirection: 'row', padding: 6 }}>
+			{quotes?.map(quote => (
+				<View key={quote.id} style={{ flexDirection: 'row', padding: 6 }}>
 					<Text
 						style={{
 							flex: 1,
@@ -80,9 +79,3 @@ const ListOrderQuotes = ({
 }
 
 export default ListOrderQuotes
-
-const styles = StyleSheet.create({
-	cell: {
-		width: '33.3%'
-	}
-})

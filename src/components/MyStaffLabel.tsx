@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import useModal from '../hooks/useModal'
 import useMyNav from '../hooks/useMyNav'

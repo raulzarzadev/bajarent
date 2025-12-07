@@ -15,7 +15,6 @@ export type CommentType = OrderType['comments'][number]
 const ListComments = ({
 	comments,
 	style,
-	viewOrder,
 	refetch
 }: {
 	comments: FormattedComment[]

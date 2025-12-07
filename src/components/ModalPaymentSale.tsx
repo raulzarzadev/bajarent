@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useOrderDetails } from '../contexts/orderContext'
 import { useStore } from '../contexts/storeContext'
@@ -118,18 +118,3 @@ export default (props: ModalPaymentSaleProps) => {
 		</ErrorBoundary>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-between'
-	},
-	item: {
-		width: '48%', // for 2 items in a row
-		marginVertical: '1%' // spacing between items
-	},
-	repairItemForm: {
-		marginVertical: 4
-	}
-})

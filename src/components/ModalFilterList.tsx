@@ -15,7 +15,6 @@ import Chip from './Chip'
 import ErrorBoundary from './ErrorBoundary'
 import type { IconName } from './Icon'
 import InputSearch from './Inputs/InputSearch'
-import InputTextStyled from './InputTextStyled'
 import StyledModal from './StyledModal'
 
 export type FilterListType<T> = {
@@ -273,12 +272,12 @@ function ModalFilterList<T>({
 			<View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 				{filters
 					?.filter(f => f.boolean)
-					?.map(({ field, label, icon, color, titleColor, booleanValue = true }, i) => {
+					?.map(({ field, label, icon, color, titleColor, booleanValue = true }) => {
 						const count = filteredData?.filter(a => a?.[field] === booleanValue)?.length
 						if (!count) return null
 						return (
 							<Chip
-								key={i}
+								key={label}
 								icon={icon}
 								size="xs"
 								color={color}
@@ -371,10 +370,10 @@ function ModalFilterList<T>({
 
 				{filters
 					?.filter(f => !f?.isDate) //* <-- avoid show date filters
-					?.map(({ field, label, boolean }, i) => {
+					?.map(({ field, label, boolean }) => {
 						// if (boolean) return null //* hide from here and show in outside the modal
 						return (
-							<View key={i}>
+							<View key={label}>
 								<Text style={[gStyles.h3, { marginBottom: 0, marginTop: 6 }]}>{label}</Text>
 								<View style={styles.filters}>
 									{Object.keys(createFieldFilters(field as string, boolean)).map(value => {

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { View } from 'react-native'
 import theme from '../theme'
 import ErrorBoundary from './ErrorBoundary'
@@ -84,6 +85,7 @@ const Inputs = () => {
 					onChange={phone => {
 						setPhone(phone)
 					}}
+					defaultNumber={phone}
 				/>
 				<InputPhone onChange={phone => setPhone(phone)} defaultNumber={'+52554336e345'} />
 			</View>

@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import type OrderType from '../types/OrderType'
 

@@ -1,4 +1,4 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Pressable, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import useModal from '../hooks/useModal'

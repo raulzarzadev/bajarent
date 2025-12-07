@@ -1,4 +1,4 @@
-import { StyleSheet, Switch } from 'react-native'
+import { Switch } from 'react-native'
 import theme, { type Colors } from '../theme'
 
 const InputSwitch = ({

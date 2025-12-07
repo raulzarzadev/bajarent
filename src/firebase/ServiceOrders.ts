@@ -1,4 +1,4 @@
-import { addDays, endOfDay, isSaturday, isValid, startOfDay } from 'date-fns'
+import { addDays, endOfDay, isSaturday, startOfDay } from 'date-fns'
 import { documentId, increment, type QueryFieldFilterConstraint, where } from 'firebase/firestore'
 import { createUUID } from '../libs/createId'
 import { expireDate2 } from '../libs/expireDate'
@@ -59,8 +59,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 		storeId,
 		type,
 		content,
-		isOrderMovement = false,
-		variant = 'regular_comment'
+		isOrderMovement = false
 	}: {
 		storeId: string
 		orderId: string
@@ -303,7 +302,6 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 		storeId,
 		fields,
 		value,
-		avoidIds,
 		sections
 	}: {
 		storeId: string
@@ -315,7 +313,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 		const promises = fields
 			?.map(field => {
 				const asNumber = Number(value)
-				const itsValidNumber = !isNaN(asNumber)
+				const itsValidNumber = !Number.isNaN(asNumber)
 				//* search as number
 				const filters = [where('storeId', '==', storeId)]
 				if (Array.isArray(sections) && sections.length > 0) {
