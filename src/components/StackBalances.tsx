@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { BalancesStackParamList } from '../navigation/types'
 import MyStaffLabel from './MyStaffLabel'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenBalances from './ScreenBalances'
@@ -9,7 +10,7 @@ import { StackPaymentsE } from './StackPayments'
 import { CustomBalanceDateE } from './StoreBalance/CustomBalanceDate'
 import ScreenBalance_v3 from './ScreenBalance_v3'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<BalancesStackParamList>()
 function StackBalances() {
   return (
     <Stack.Navigator

@@ -1,7 +1,24 @@
-import { useNavigation } from '@react-navigation/native'
+import {
+  NavigationProp,
+  NavigatorScreenParams,
+  useNavigation
+} from '@react-navigation/native'
+import {
+  BalancesStackParamList,
+  CustomersStackParamList,
+  ItemsStackParamList,
+  MyItemsStackParamList,
+  PaymentsStackParamList,
+  RootTabParamList,
+  OrdersStackParamList,
+  StoreStackParamList,
+  WorkshopStackParamList
+} from '../navigation/types'
 
 const useMyNav = () => {
-  const { navigate } = useNavigation()
+  // combine because this hook navigates across stacks; fallback Record keeps other stacks permissive
+  const { navigate } =
+    useNavigation<NavigationProp<RootTabParamList & Record<string, any>>>()
   const toItems = ({
     id,
     screenNew,
@@ -22,14 +39,11 @@ const useMyNav = () => {
     ids?: string[]
   }) => {
     if (to === 'new' || screenNew) {
-      //@ts-ignore
-
       return navigate('StackItems', {
         screen: 'ScreenItemNew'
       })
     }
     if (to === 'details' && id) {
-      //@ts-ignore
       navigate('StackItems', {
         screen: 'ScreenItemsDetails',
         params: {
@@ -39,7 +53,6 @@ const useMyNav = () => {
       return
     }
     if (to === 'edit' && id) {
-      //@ts-ignore
       navigate('StackItems', {
         screen: 'ScreenItemEdit',
         params: {
@@ -49,7 +62,6 @@ const useMyNav = () => {
       return
     }
     if (Array.isArray(ids) && ids.length > 0) {
-      //@ts-ignore
       navigate('StackItems', {
         screen: 'ScreenItems',
         params: {
@@ -58,28 +70,30 @@ const useMyNav = () => {
       })
     }
     if (screenEdit && id) {
-      //@ts-ignore
       navigate('StackMyItems', {
-        screen: 'ScreenItemEdit',
+        screen: 'StackItems',
         params: {
-          id
+          screen: 'ScreenItemEdit',
+          params: { id }
         }
       })
       return
     }
 
     if (screenNew) {
-      //@ts-ignore
       navigate('StackMyItems', {
-        screen: 'ScreenItemNew'
+        screen: 'StackItems',
+        params: {
+          screen: 'ScreenItemNew'
+        }
       })
       return
     } else if (id) {
-      //@ts-ignore
       navigate('StackMyItems', {
-        screen: 'ScreenItemsDetails',
+        screen: 'StackItems',
         params: {
-          id
+          screen: 'ScreenItemsDetails',
+          params: { id }
         }
       })
       return
@@ -95,7 +109,6 @@ const useMyNav = () => {
     idsTitle?: string
   }) => {
     if (Array.isArray(ids) && ids.length > 0) {
-      //@ts-ignore
       navigate('StackPayments', {
         screen: 'ScreenPayments',
         params: {
@@ -106,7 +119,6 @@ const useMyNav = () => {
     }
 
     if (id) {
-      //@ts-ignore
       navigate('StackPayments', {
         screen: 'ScreenPaymentsDetails',
         params: {
@@ -117,13 +129,13 @@ const useMyNav = () => {
     }
   }
   const toWorkshop = () => {
-    //@ts-ignore
-    navigate('WorkshopHistory')
+    navigate('Workshop', {
+      screen: 'WorkshopHistory'
+    } as NavigatorScreenParams<WorkshopStackParamList>)
   }
 
   const toCustomers = (props: ToCustomersType) => {
     if (props.to === 'customerOrder' && props.orderId) {
-      //@ts-ignore
       navigate('StackOrders', {
         screen: 'OrderDetails',
         params: {
@@ -132,7 +144,6 @@ const useMyNav = () => {
       })
     }
     if (props?.to === 'newOrder' && props?.customerId) {
-      //@ts-ignore
       navigate('StackOrders', {
         screen: 'ScreenNewOrder',
         params: {
@@ -141,7 +152,6 @@ const useMyNav = () => {
       })
     }
     if (props.to === 'new') {
-      //@ts-ignore
       navigate('StackCustomers', {
         screen: 'ScreenCustomerNew'
       })
@@ -157,7 +167,6 @@ const useMyNav = () => {
       })
     }
     if (props.to === 'edit' && props.id) {
-      //@ts-ignore
       navigate('StackCustomers', {
         screen: 'ScreenCustomerEdit',
         params: {
@@ -186,7 +195,6 @@ const useMyNav = () => {
     to
   }: ToOrdersType = {}) => {
     if (to === 'new') {
-      //@ts-ignore
       navigate('StackOrders', {
         screen: 'ScreenNewOrder',
         params: {
@@ -196,7 +204,6 @@ const useMyNav = () => {
       return
     }
     if (screen === 'renew') {
-      //@ts-ignore
       navigate('StackOrders', {
         screen: 'RenewOrder',
         params: {
@@ -206,7 +213,6 @@ const useMyNav = () => {
       return
     }
     if (Array.isArray(ids) && ids.length > 0) {
-      //@ts-ignore
       navigate('StackOrders', {
         screen: 'ScreenSelectedOrders',
         params: {
@@ -217,14 +223,13 @@ const useMyNav = () => {
     }
 
     if (screenNew) {
-      //@ts-ignore
-      navigate('NewOrder', {
-        customerId
+      navigate('StackOrders', {
+        screen: 'ScreenNewOrder',
+        params: { customerId }
       })
       return
     }
     if (id) {
-      //@ts-ignore
       navigate('StackOrders', {
         screen: 'OrderDetails',
         params: {
@@ -235,7 +240,6 @@ const useMyNav = () => {
     }
   }
   const toProfile = () => {
-    //@ts-ignore
     navigate('Profile')
   }
 
@@ -249,45 +253,50 @@ const useMyNav = () => {
     screenEdit?: boolean
   }) => {
     if (screenEdit && id) {
-      //@ts-ignore
-      navigate('StackSections', {
-        screen: 'ScreenSectionsEdit',
+      navigate('Store', {
+        screen: 'StackSections',
         params: {
-          id
+          screen: 'ScreenSectionsEdit',
+          params: { id }
         }
       })
       return
     }
 
     if (screenNew) {
-      //@ts-ignore
-      navigate('StackSections', {
-        screen: 'ScreenSectionsNew'
+      navigate('Store', {
+        screen: 'StackSections',
+        params: {
+          screen: 'ScreenSectionsNew'
+        }
       })
       return
     } else if (id) {
-      //@ts-ignore
-      navigate('StackSections', {
-        screen: 'ScreenSectionSDetails',
+      navigate('Store', {
+        screen: 'StackSections',
         params: {
-          id
+          screen: 'ScreenSectionSDetails',
+          params: { id }
         }
       })
       return
     }
   }
   const toMessages = () => {
-    //@ts-ignore
-    navigate('ScreenMessages')
+    navigate('StackOrders', {
+      screen: 'ScreenMessages'
+    })
   }
 
   const toBalance = ({ to, id }: { to: 'details'; id: string }) => {
     if (to === 'details' && id) {
-      //@ts-ignore
-      navigate('StackBalances', {
-        screen: 'ScreenBalance_v3',
+      navigate('Store', {
+        screen: 'StackBalances',
         params: {
-          id
+          screen: 'ScreenBalance_v3',
+          params: {
+            balanceId: id
+          }
         }
       })
     }

@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { OrdersStackParamList } from '../navigation/types'
 import { ScreenOrdersE } from './ScreenOrders'
-import ScreenOrderDetail, { ScreenOrderDetailE } from './ScreenOrderDetail'
+import { ScreenOrderDetailE } from './ScreenOrderDetail'
 import ScreenOrderEdit from './ScreenOrderEdit'
 import ScreenAssignOrder from './ScreenAssignOrder'
 import ScreenOrderRenew from './ScreenOrderRenew2'
@@ -13,7 +14,7 @@ import ScreenOrderNew from './ScreenOrderNew'
 import { StackCustomersE } from './Customers/StackCustomers'
 import { StackCurrentWorkE } from './StackCurrentWork'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<OrdersStackParamList>()
 function StackOrders() {
   return (
     <Stack.Navigator
@@ -28,8 +29,7 @@ function StackOrders() {
       <Stack.Screen
         name="ScreenOrders"
         options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Mis ordenes' //*<-- Title change if is from pedidos, reportes, balance details and more
+          title: route?.params?.title ?? 'Mis ordenes' //*<-- Title change if is from pedidos, reportes, balance details and more
         })}
         component={ScreenOrdersE}
       />
@@ -83,8 +83,7 @@ function StackOrders() {
       <Stack.Screen
         name="ScreenSelectedOrders"
         options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Ordenes seleccionadas'
+          title: route?.params?.title ?? 'Ordenes seleccionadas'
         })}
         component={ScreenOrdersE}
       />

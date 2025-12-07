@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { CustomersStackParamList } from '../../navigation/types'
 import MyStaffLabel from '../MyStaffLabel'
 import ErrorBoundary from '../ErrorBoundary'
 import { ScreenCustomersE } from './ScreenCustomers'
@@ -6,7 +7,7 @@ import { ScreenCustomerE } from './ScreenCustomer'
 import { ScreenCustomerFormE } from './ScreenCustomerForm'
 // import StackOrders from '../StackOrders'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<CustomersStackParamList>()
 
 const StackOrdersLazy = (props) => {
   const StackOrders = require('../StackOrders').default
@@ -26,34 +27,30 @@ export function StackCustomers() {
     >
       <Stack.Screen
         name="ScreenCustomers"
-        options={({ route }) => ({
-          //@ts-ignore
-          title: `Clientes`
-        })}
+        options={{
+          title: 'Clientes'
+        }}
         component={ScreenCustomersE}
       />
       <Stack.Screen
         name="ScreenCustomer"
-        options={({ route }) => ({
-          //@ts-ignore
-          title: `Detalles de cliente`
-        })}
+        options={{
+          title: 'Detalles de cliente'
+        }}
         component={ScreenCustomerE}
       />
       <Stack.Screen
         name="ScreenCustomerNew"
-        options={({ route }) => ({
-          //@ts-ignore
-          title: `Nuevo cliente`
-        })}
+        options={{
+          title: 'Nuevo cliente'
+        }}
         component={ScreenCustomerFormE}
       />
       <Stack.Screen
         name="ScreenCustomerEdit"
-        options={({ route }) => ({
-          //@ts-ignore
-          title: `Editar cliente`
-        })}
+        options={{
+          title: 'Editar cliente'
+        }}
         component={ScreenCustomerFormE}
       />
       <Stack.Screen
