@@ -34,10 +34,6 @@ const ScreenAssignOrder = ({ route }) => {
                 assignTo === item.id ? theme.secondary : 'transparent'
             }}
             staffId={item.id}
-            //staff={item}
-            // onPress={() => {
-            //   handleAssignOrder(item.id)
-            // }}
             fields={['name', 'position', 'phone']}
           />
         )}
