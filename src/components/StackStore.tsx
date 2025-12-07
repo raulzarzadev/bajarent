@@ -31,7 +31,7 @@ function StackStore() {
       }}
     >
       <Stack.Screen
-        name="Store"
+        name="StoreHome"
         options={{
           title: 'Tienda'
         }}

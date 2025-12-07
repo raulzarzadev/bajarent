@@ -59,7 +59,7 @@ export type MyItemsStackParamList = {
 }
 
 export type StoreStackParamList = {
-  Store: undefined
+  StoreHome: { storeId?: string } | undefined
   CreateStore: undefined
   EditStore: undefined
   ScreenOrdersConfig: undefined
@@ -110,7 +110,7 @@ export type CustomersStackParamList = {
 }
 
 export type WorkshopStackParamList = {
-  Workshop: undefined
+  WorkshopHome: undefined
   WorkshopHistory: undefined
   StackOrders:
     | {

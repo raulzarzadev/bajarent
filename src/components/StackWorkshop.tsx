@@ -13,7 +13,7 @@ function StackWorkshop() {
   return (
     <Stack.Navigator id="StackWorkshop">
       <Stack.Screen
-        name="Workshop"
+        name="WorkshopHome"
         options={({ route }) => ({
           title: 'Taller'
         })}
