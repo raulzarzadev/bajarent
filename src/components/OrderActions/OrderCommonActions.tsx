@@ -208,7 +208,7 @@ const OrderCommonActions = ({
             )
         )}
         <View style={{ padding: 4, width: '50%' }}>
-          <ButtonDownloadOrderE order={order} />
+          <ButtonDownloadOrderE />
         </View>
 
         <View style={{ padding: 4, width: '50%' }}>

@@ -41,13 +41,12 @@ export const customerFromOrder = (
     storeId: order?.storeId || storeId || null,
     contactsList,
     address: {
-      //@ts-expect-error
       street: order?.address || '',
-      //@ts-expect-error
+
       references: order?.references || '',
       neighborhood: order?.neighborhood || '',
       locationURL: order?.location || '',
-      //@ts-expect-error
+
       coords: order?.coords
         ? //@ts-ignore
           (`${order?.coords[0]},${order?.coords[1]}` as `${number},${number}`)

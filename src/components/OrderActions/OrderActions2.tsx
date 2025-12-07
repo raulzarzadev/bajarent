@@ -171,7 +171,7 @@ const SaleOrderActions = ({ order }: { order: OrderType }) => {
           justifyContent: 'space-around'
         }}
       >
-        {cancelDelivery && <ButtonCancelDelivery order={order} user={user} />}
+        {cancelDelivery && <ButtonCancelDelivery order={order} />}
         {delivery && order.type === order_type.RENT && <ButtonDeliveryRent />}
         {delivery && order.type === order_type.SALE && <ButtonDeliverySale />}
       </View>

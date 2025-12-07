@@ -1,9 +1,3 @@
-// @ts-expect-error
-import { expect, test } from 'bun:test'
-
-import { orders } from '../DATA'
-import { groupDocsByMonth, groupDocsByType } from './chart-data'
-
 // test('group orders by month', () => {
 //   const result = groupDocsByMonth({ docs: orders })
 //   Object.entries(result).forEach(([key, value]) => {

@@ -16,130 +16,133 @@ import FormOrder from './FormOrder'
 import { FormOrder2E } from './FormOrder2'
 
 //
-const ScreenOrderNew = navigation => {
-	const customerId = navigation?.route?.params?.customerId
-	const { storeId, store } = useStore()
-	const { addWork } = useCurrentWork()
-	const { create } = useCustomers()
-	const { user } = useAuth()
-	const { toOrders } = useMyNav()
-	const handleSubmit = async (values: OrderType) => {
-		let newCustomerCreated = null
-		if (!values.customerId) {
-			const contactId = createUUID({ length: 8 })
-			const newCustomer: Partial<CustomerType> = {
-				name: values.fullName || '',
-				address: {
-					street: values.address || '',
-					references: values.references || '',
-					neighborhood: values.neighborhood || '',
-					locationURL: values.location || '',
-					coords: values.coords ? `${values.coords[0]},${values.coords[1]}` : null
-				},
-				contacts: {
-					[contactId]: {
-						label: 'Principal',
-						value: values.phone || '',
-						type: 'phone',
-						id: contactId
-					}
-				}
-			}
+const ScreenOrderNew = (navigation) => {
+  const customerId = navigation?.route?.params?.customerId
+  const { storeId, store } = useStore()
+  const { addWork } = useCurrentWork()
+  const { create } = useCustomers()
+  const { user } = useAuth()
+  const { toOrders } = useMyNav()
+  const handleSubmit = async (values: OrderType) => {
+    let newCustomerCreated = null
+    if (!values.customerId) {
+      const contactId = createUUID({ length: 8 })
+      const newCustomer: Partial<CustomerType> = {
+        name: values.fullName || '',
+        address: {
+          street: values.address || '',
+          references: values.references || '',
+          neighborhood: values.neighborhood || '',
+          locationURL: values.location || '',
+          coords: values.coords
+            ? `${values.coords[0]},${values.coords[1]}`
+            : null
+        },
+        contacts: {
+          [contactId]: {
+            label: 'Principal',
+            value: values.phone || '',
+            type: 'phone',
+            id: contactId
+          }
+        }
+      }
 
-			let customerCreated = null
-			if (!values?.excludeCustomer) {
-				const { payload } = await create(storeId, newCustomer)
-				customerCreated = payload
-			}
-			if (customerCreated) {
-				newCustomerCreated = customerCreated
-				//@ts-expect-error
-				values.customerId = customerCreated?.id
-			}
-		}
-		const defaultValues = {
-			//* Default values
-			storeId: storeId,
-			status: order_status.AUTHORIZED, //*****<--- always authorize
-			authorizedAt: new Date(), //****+++++++*<--- always authorize
-			authorizedBy: user?.id || '', //**++++***<--- always authorize
-			deliveredAt: null,
-			deliveredBy: null,
-			...values //********** <-- override default values
-		}
+      let customerCreated = null
+      if (!values?.excludeCustomer) {
+        const { payload } = await create(storeId, newCustomer)
+        customerCreated = payload
+      }
+      if (customerCreated) {
+        newCustomerCreated = customerCreated
+        values.customerId = customerCreated?.id
+      }
+    }
+    const defaultValues = {
+      //* Default values
+      storeId: storeId,
+      status: order_status.AUTHORIZED, //*****<--- always authorize
+      authorizedAt: new Date(), //****+++++++*<--- always authorize
+      authorizedBy: user?.id || '', //**++++***<--- always authorize
+      deliveredAt: null,
+      deliveredBy: null,
+      ...values //********** <-- override default values
+    }
 
-		/* ********************************************
-		 *  for repairs
-		 *******************************************rz */
-		if (defaultValues?.startRepair) {
-			defaultValues.status = order_status.REPAIRING
-			defaultValues.repairingAt = new Date()
-			defaultValues.repairingBy = user.id
-		}
-		/* ********************************************
-		 *  if has delivered is true
-		 *******************************************rz */
+    /* ********************************************
+     *  for repairs
+     *******************************************rz */
+    if (defaultValues?.startRepair) {
+      defaultValues.status = order_status.REPAIRING
+      defaultValues.repairingAt = new Date()
+      defaultValues.repairingBy = user.id
+    }
+    /* ********************************************
+     *  if has delivered is true
+     *******************************************rz */
 
-		defaultValues.expireAt = orderExpireAt({ order: values })
-		defaultValues.statuses = true //* it means is set with expireAt
+    defaultValues.expireAt = orderExpireAt({ order: values })
+    defaultValues.statuses = true //* it means is set with expireAt
 
-		//* remove spaces in each field before saving
-		Object.keys(defaultValues).forEach(key => {
-			if (typeof defaultValues[key] === 'string') {
-				const normalized = defaultValues[key].replace(/\s+/g, ' ')
-				defaultValues[key] = normalized.trim()
-			}
-		})
-		return await ServiceOrders.createSerialOrder(defaultValues).then(async orderId => {
-			if (orderId) {
-				addWork({
-					work: {
-						type: 'order',
-						action: 'created',
-						details: {
-							orderId: orderId,
-							sectionId: defaultValues.assignToSection || null
-						}
-					}
-				})
-				const shouldSendWhatsappWhenNewOrder =
-					!!store.chatbot?.enabled && !!store.chatbot.config.sendNewStoreOrder
+    //* remove spaces in each field before saving
+    Object.keys(defaultValues).forEach((key) => {
+      if (typeof defaultValues[key] === 'string') {
+        const normalized = defaultValues[key].replace(/\s+/g, ' ')
+        defaultValues[key] = normalized.trim()
+      }
+    })
+    return await ServiceOrders.createSerialOrder(defaultValues).then(
+      async (orderId) => {
+        if (orderId) {
+          addWork({
+            work: {
+              type: 'order',
+              action: 'created',
+              details: {
+                orderId: orderId,
+                sectionId: defaultValues.assignToSection || null
+              }
+            }
+          })
+          const shouldSendWhatsappWhenNewOrder =
+            !!store.chatbot?.enabled && !!store.chatbot.config.sendNewStoreOrder
 
-				if (shouldSendWhatsappWhenNewOrder && newCustomerCreated) {
-					await onSendOrderWhatsapp({
-						customer: newCustomerCreated,
-						store,
-						type: 'sendNewStoreOrder',
-						userId: user.id,
-						phone: getFavoriteCustomerPhone(newCustomerCreated?.contacts),
-						order: { ...defaultValues, id: orderId }
-					})
-						.then(res => console.log({ res }))
-						.catch(e => console.log({ e }))
-				}
+          if (shouldSendWhatsappWhenNewOrder && newCustomerCreated) {
+            await onSendOrderWhatsapp({
+              customer: newCustomerCreated,
+              store,
+              type: 'sendNewStoreOrder',
+              userId: user.id,
+              phone: getFavoriteCustomerPhone(newCustomerCreated?.contacts),
+              order: { ...defaultValues, id: orderId }
+            })
+              .then((res) => console.log({ res }))
+              .catch((e) => console.log({ e }))
+          }
 
-				if (defaultValues?.hasDelivered) {
-					// defaultValues.status = order_status.DELIVERED
-					// defaultValues.deliveredAt = values.scheduledAt
-					// defaultValues.deliveredBy = user.id
-					await onRentStart({
-						order: { ...defaultValues, id: orderId },
-						userId: user.id,
-						deliveredAt: values.scheduledAt,
-						store,
-						customer: newCustomerCreated
-					})
-				}
-			}
-			toOrders({ id: orderId })
-			return { orderId }
-		})
-	}
-	return (
-		<>
-			<FormOrder2E onSubmit={handleSubmit} defaultValues={{ customerId }} />
-		</>
-	)
+          if (defaultValues?.hasDelivered) {
+            // defaultValues.status = order_status.DELIVERED
+            // defaultValues.deliveredAt = values.scheduledAt
+            // defaultValues.deliveredBy = user.id
+            await onRentStart({
+              order: { ...defaultValues, id: orderId },
+              userId: user.id,
+              deliveredAt: values.scheduledAt,
+              store,
+              customer: newCustomerCreated
+            })
+          }
+        }
+        toOrders({ id: orderId })
+        return { orderId }
+      }
+    )
+  }
+  return (
+    <>
+      <FormOrder2E onSubmit={handleSubmit} defaultValues={{ customerId }} />
+    </>
+  )
 }
 
 export default ScreenOrderNew

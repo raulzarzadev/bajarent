@@ -207,11 +207,7 @@ export const OrderAddress = ({ order }: { order: Partial<OrderType> }) => {
   const address = order?.address || ''
   const references = order?.references || ''
 
-  const location =
-    order?.location ||
-    //@ts-expect-error typo in form generete this error
-    order?.Location ||
-    ''
+  const location = order?.location || order?.Location || ''
   if (!location) return null
   return (
     <View
