@@ -81,7 +81,10 @@ const MultiOrderActions = ({
         confirmVariant="outline"
         openColor="neutral"
         confirmColor="error"
-        handleConfirm={handleCancelOrders}
+        handleConfirm={async () => {
+          await handleCancelOrders()
+          return
+        }}
       >
         {rentOrdersDelivered.length > 0 ? (
           <Text style={[gStyles.h2, gStyles.tError, { marginVertical: 8 }]}>

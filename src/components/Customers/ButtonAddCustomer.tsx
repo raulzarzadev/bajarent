@@ -244,7 +244,6 @@ export const SimilarCustomersList = ({
           <View>
             <Text>{c.name}</Text>
             {Object.values(c.contacts || {}).map((contact, i) => (
-              //@ts-expect-error
               <Text key={contact.id || i}>{contact.value}</Text>
             ))}
           </View>
