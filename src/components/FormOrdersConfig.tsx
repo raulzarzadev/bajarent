@@ -46,7 +46,7 @@ const FormOrdersConfig = ({ onSubmit, defaultValues }: FormOrdersConfigProps) =>
 						<View style={[styles.input, styles.type]}>
 							{ordersTypes.sort().map(type => (
 								<View key={type} style={[styles.type, { flexDirection: 'column' }]}>
-									<FormikCheckbox name={'orderTypes.' + type} label={dictionary(type)} />
+									<FormikCheckbox name={`orderTypes.${type}`} label={dictionary(type)} />
 									{values?.orderTypes?.[type] && (
 										<FormikDocumentPickerE
 											fieldName={`${store?.name} ${type} Contrato `}

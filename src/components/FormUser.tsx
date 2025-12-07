@@ -1,6 +1,6 @@
 import { Formik } from 'formik'
-
-import { StyleSheet, Text, View } from 'react-native'
+import { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 import Button from './Button'
 import FormikInputValue from './FormikInputValue'
 
@@ -20,6 +20,7 @@ const FormUser = ({
 					setLoading(true)
 					await onSubmit(values).then(console.log).catch(console.error)
 				} catch (error) {
+					console.error(error)
 				} finally {
 					setTimeout(() => {
 						setLoading(false)

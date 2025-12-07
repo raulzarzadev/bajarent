@@ -1,11 +1,8 @@
 import { Formik } from 'formik'
-
+import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import dictionary from '../dictionary'
 import { gStyles } from '../styles'
-import theme from '../theme'
 import type StoreType from '../types/StoreType'
-import { bot_configs } from '../types/StoreType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
 import FormikCheckbox from './FormikCheckbox'

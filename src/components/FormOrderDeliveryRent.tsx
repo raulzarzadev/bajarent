@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-
+import { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
@@ -20,7 +20,6 @@ import InputDate from './InputDate'
 import InputLocationFormik from './InputLocationFormik'
 import ModalAssignOrder from './OrderActions/ModalAssignOrder'
 import P from './P'
-import TextInfo from './TextInfo'
 
 const initialValues: Partial<OrderType> = {
 	firstName: '',
@@ -46,7 +45,7 @@ const FormOrder = ({
 	const { categories, store } = useStore()
 
 	const ordersTypesAllowed = Object.entries(store?.orderTypes || {})
-		?.filter(([key, value]) => value)
+		?.filter(([_, value]) => value)
 		?.map(value => {
 			return { label: dictionary(value[0] as order_type), value: value[0] }
 		})
@@ -84,7 +83,7 @@ const FormOrder = ({
 				onSubmit={async values => {
 					setLoading(true)
 					await onSubmit(values)
-						.then(res => {
+						.then(() => {
 							// console.log(res)
 						})
 						.catch(console.error)

@@ -1,6 +1,6 @@
 import { Formik } from 'formik'
-
-import { StyleSheet, Text, View } from 'react-native'
+import { useState } from 'react'
+import { View } from 'react-native'
 import type { ClientType } from '../types/ClientType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'

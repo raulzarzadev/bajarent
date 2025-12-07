@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import InputAssignSection from './InputAssingSection'
 

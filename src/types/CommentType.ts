@@ -1,4 +1,3 @@
-import { ItemHistoryVariantType } from '../firebase/ServiceItemHistory'
 import type BaseType from './BaseType'
 import type { order_type } from './OrderType'
 

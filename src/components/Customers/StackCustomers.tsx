@@ -21,7 +21,7 @@ export function StackCustomers() {
 			id="StackCustomers"
 			screenOptions={() => {
 				return {
-					headerRight(props) {
+					headerRight() {
 						return <MyStaffLabel />
 					}
 				}

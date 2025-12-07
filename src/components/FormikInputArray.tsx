@@ -39,7 +39,11 @@ export const FormikFieldArray = ({
 								const inputType = typeExist ? typeExist?.type || 'text' : 'text'
 
 								return (
-									<View key={index} style={{ flexDirection: 'row', marginVertical: 6 }}>
+									<View
+										// biome-ignore lint/suspicious/noArrayIndexKey: no se que props tiene field
+										key={index}
+										style={{ flexDirection: 'row', marginVertical: 6 }}
+									>
 										<View
 											style={{
 												flexDirection: layoutRow ? 'row' : 'column',

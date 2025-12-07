@@ -2,7 +2,7 @@ import { useField } from 'formik'
 import InputSignature from './InputSignature'
 
 const FormikInputSignature = ({ name, disabled = false }: { name: string; disabled?: boolean }) => {
-	const [field, meta, helpers] = useField(name)
+	const [field, _, helpers] = useField(name)
 	return (
 		<InputSignature
 			setValue={value => {

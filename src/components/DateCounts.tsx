@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import { ServicePayments } from '../firebase/ServicePayments'

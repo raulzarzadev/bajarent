@@ -170,11 +170,9 @@ const FormOrderA = ({
 		)
 	if (ordersTypesAllowed.length === 0)
 		return (
-			<>
-				<Text style={{ textAlign: 'center', marginVertical: gSpace(4) }}>
-					Para crear ordenes, debes configurarlas primero en la tienda
-				</Text>
-			</>
+			<Text style={{ textAlign: 'center', marginVertical: gSpace(4) }}>
+				Para crear ordenes, debes configurarlas primero en la tienda
+			</Text>
 		)
 
 	/* ********************************************
@@ -656,8 +654,8 @@ const FormFieldsA = ({ fields, values, setValues, setLoading }: FormFieldsProps)
 					}
 					return true
 				})
-				.map((field, i) => (
-					<View key={i} style={[styles.item]}>
+				.map(field => (
+					<View key={field} style={[styles.item]}>
 						{inputFields[field]}
 					</View>
 				))}

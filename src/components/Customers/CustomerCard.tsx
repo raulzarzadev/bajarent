@@ -38,7 +38,7 @@ const CustomerCard = (props?: CustomerCardProps) => {
 	const handleUpdateLocation = async (location: CoordsType | string) => {
 		return await update(customerId, {
 			// @ts-expect-error
-			['address.locationURL']: location
+			'address.locationURL': location
 		})
 	}
 

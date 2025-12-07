@@ -1,4 +1,5 @@
-import { Text, View } from 'react-native'
+import { useState } from 'react'
+import { View } from 'react-native'
 import theme from '../theme'
 import Icon from './Icon'
 import InputDate from './InputDate'

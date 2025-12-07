@@ -8,6 +8,7 @@ import FormikCheckbox from './FormikCheckbox'
 
 const screenWidth = Dimensions.get('window').width
 
+import { useState } from 'react'
 import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
 import type StaffType from '../types/StaffType'
@@ -55,7 +56,7 @@ const FormStaff = ({
 					setLoading(true)
 					// * Transform object { id1: true, id2: false } back to array ['id1']
 					const sectionsArray = Object.entries(values.sectionsAssigned || {})
-						.filter(([key, value]) => value === true)
+						.filter(([_, value]) => value === true)
 						.map(([key]) => key)
 
 					const valuesToSend = {
@@ -133,7 +134,7 @@ const FormStaff = ({
 									justifyContent: 'space-evenly'
 								}}
 							>
-								{storeSections?.map(({ name, staff, id }) => (
+								{storeSections?.map(({ name, id }) => (
 									<View style={{ margin: 4 }} key={id}>
 										<FormikCheckbox
 											style={{ width: checkboxWidth, marginVertical: 4 }}

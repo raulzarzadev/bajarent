@@ -205,7 +205,7 @@ const ViewCurrentWork = () => {
 	const formatTimeSafe = (value: unknown): string => {
 		try {
 			const d: any = asDate(value as any)
-			return d && typeof d.getTime === 'function' && !isNaN(d.getTime())
+			return d && typeof d.getTime === 'function' && !Number.isNaN(d.getTime())
 				? dateFormat(d, 'HH:mm:ss')
 				: ''
 		} catch {
@@ -296,10 +296,9 @@ const ViewCurrentWork = () => {
 	)
 }
 export default ViewCurrentWork
-export type ViewCurrentWorkProps = {}
-export const ViewCurrentWorkE = (props: ViewCurrentWorkProps) => (
+export const ViewCurrentWorkE = () => (
 	<ErrorBoundary componentName="ViewCurrentWork">
-		<ViewCurrentWork {...props} />
+		<ViewCurrentWork />
 	</ErrorBoundary>
 )
 

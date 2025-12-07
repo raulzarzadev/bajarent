@@ -1,14 +1,11 @@
 import { Formik } from 'formik'
-
-import { StyleSheet, Text, View } from 'react-native'
+import { useState } from 'react'
+import { View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import type OrderType from '../types/OrderType'
 import Button from './Button'
-import FormChooseCategory from './FormChooseCategory'
 import FormikInputSelect from './FormikInputSelect'
 import FormikInputValue from './FormikInputValue'
-import FormikSelectCategories from './FormikSelectCategories'
-import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 
 const FormRepairItem = ({
 	onSubmit,
@@ -31,7 +28,7 @@ const FormRepairItem = ({
 					return
 				}}
 			>
-				{({ handleChange, handleBlur, handleSubmit, values }) => (
+				{({ handleSubmit }) => (
 					<View>
 						<FormikInputSelect
 							options={categories.map(cateogry => ({

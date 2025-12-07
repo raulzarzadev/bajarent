@@ -11,7 +11,7 @@ const FormikInputImage = ({
 	label?: string
 	onUploading?: (progress: number) => void
 }) => {
-	const [field, meta, helpers] = useField(name)
+	const [field, _, helpers] = useField(name)
 	const value = useMemo(() => field.value, [field.value])
 
 	return (

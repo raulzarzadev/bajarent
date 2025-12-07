@@ -68,7 +68,7 @@ const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
 							storeId: customer.storeId,
 							orderId: customer.orderId,
 							mergeCustomerId: customerId
-						}).then(res => {
+						}).then(() => {
 							modal.toggleOpen()
 						})
 					}}

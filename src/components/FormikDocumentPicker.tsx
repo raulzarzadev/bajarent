@@ -1,10 +1,10 @@
 import { useField } from 'formik'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import ErrorBoundary from './ErrorBoundary'
 import { InputDocumentPickerE } from './InputDocumentPicker'
 
 const FormikDocumentPicker = (props?: FormikDocumentPickerProps) => {
-	const [field, meta, helpers] = useField(props.name)
+	const [field, _, helpers] = useField(props.name)
 	return (
 		<View>
 			<InputDocumentPickerE

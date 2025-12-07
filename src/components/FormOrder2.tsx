@@ -60,7 +60,7 @@ export const FormOrder2 = ({ onSubmit, defaultValues, title }: FormOrder2Props) 
 		setLoading(false)
 	}
 	const ordersTypesAllowed = Object.entries(shop?.orderTypes || {})
-		.filter(([key, value]) => value)
+		.filter(([_, value]) => value)
 		.map(value => {
 			return { label: dictionary(value[0] as order_type), value: value[0] }
 		})
@@ -273,83 +273,82 @@ export const FormOrder2 = ({ onSubmit, defaultValues, title }: FormOrder2Props) 
 
 								{/* Additional order details  */}
 
-								<>
-									{/* COMMON FIELDS */}
-									{/* SCHEDULED  DATE /  */}
-									{/* Additional order details RENT */}
-									{/* ID, HOUSE, ITEMS,  ALREADY DELIVERED */}
+								{/* COMMON FIELDS */}
+								{/* SCHEDULED  DATE /  */}
+								{/* Additional order details RENT */}
+								{/* ID, HOUSE, ITEMS,  ALREADY DELIVERED */}
 
-									{values.type === order_type.RENT && (
-										<>
-											<ViewInputForm>
-												<FormikSelectCategoriesE
-													name="items"
-													label="Selecciona un artículo"
-													selectPrice
-													startAt={values.scheduledAt}
-												/>
-											</ViewInputForm>
-											<ViewInputForm>
-												<FormikCheckbox name="hasDelivered" label="Entregada en fecha" />
-											</ViewInputForm>
-										</>
-									)}
-									{/* Additional order details REPAIR */}
-									{values.type === order_type.REPAIR && (
-										<>
-											<ViewInputForm>
-												<FormikInputValue
-													name={'item.brand'}
-													placeholder="Marca"
-													helperText="Ejemplo: Maytag"
-												/>
-											</ViewInputForm>
-											<ViewInputForm>
-												<FormikInputValue name={'item.serial'} placeholder="No. de serie" />{' '}
-											</ViewInputForm>
-											<ViewInputForm>
-												<FormikInputValue
-													name={'item.model'}
-													placeholder="Modelo"
-													helperText="Año, lote, etc."
-												/>{' '}
-											</ViewInputForm>
-											<ViewInputForm>
-												<FormikInputValue
-													multiline
-													numberOfLines={3}
-													name={'item.failDescription'}
-													placeholder="Describe la falla"
-													helperText="Ejemplo: Hace ruido, no enciende, etc."
-												/>{' '}
-											</ViewInputForm>
-											<ViewInputForm>
-												<FormikInputValue
-													multiline
-													numberOfLines={3}
-													name={'quote.description'}
-													placeholder="Descripción de la cotización"
-													helperText="Ejemplo: Cambio de tarjeta"
-												/>{' '}
-											</ViewInputForm>
-											<ViewInputForm>
-												<FormikInputValue
-													name={'quote.amount'}
-													placeholder="Monto de la cotización"
-													helperText="Ejemplo: 1500"
-													type="number"
-												/>{' '}
-											</ViewInputForm>
-										</>
-									)}
+								{values.type === order_type.RENT && (
+									<>
+										<ViewInputForm>
+											<FormikSelectCategoriesE
+												name="items"
+												label="Selecciona un artículo"
+												selectPrice
+												startAt={values.scheduledAt}
+											/>
+										</ViewInputForm>
+										<ViewInputForm>
+											<FormikCheckbox name="hasDelivered" label="Entregada en fecha" />
+										</ViewInputForm>
+									</>
+								)}
+								{/* Additional order details REPAIR */}
+								{values.type === order_type.REPAIR && (
+									<>
+										<ViewInputForm>
+											<FormikInputValue
+												name={'item.brand'}
+												placeholder="Marca"
+												helperText="Ejemplo: Maytag"
+											/>
+										</ViewInputForm>
+										<ViewInputForm>
+											<FormikInputValue name={'item.serial'} placeholder="No. de serie" />{' '}
+										</ViewInputForm>
+										<ViewInputForm>
+											<FormikInputValue
+												name={'item.model'}
+												placeholder="Modelo"
+												helperText="Año, lote, etc."
+											/>{' '}
+										</ViewInputForm>
+										<ViewInputForm>
+											<FormikInputValue
+												multiline
+												numberOfLines={3}
+												name={'item.failDescription'}
+												placeholder="Describe la falla"
+												helperText="Ejemplo: Hace ruido, no enciende, etc."
+											/>{' '}
+										</ViewInputForm>
+										<ViewInputForm>
+											<FormikInputValue
+												multiline
+												numberOfLines={3}
+												name={'quote.description'}
+												placeholder="Descripción de la cotización"
+												helperText="Ejemplo: Cambio de tarjeta"
+											/>{' '}
+										</ViewInputForm>
+										<ViewInputForm>
+											<FormikInputValue
+												name={'quote.amount'}
+												placeholder="Monto de la cotización"
+												helperText="Ejemplo: 1500"
+												type="number"
+											/>{' '}
+										</ViewInputForm>
+									</>
+								)}
 
-									{/* Additional order details SALE */}
-									{values.type === order_type.SALE && (
-										<>
-											<ViewInputForm>
-												<FormikSaleOrderItemsE name="items" />
-											</ViewInputForm>
-											{/* <ViewInputForm>
+								{/* Additional order details SALE */}
+								{values.type === order_type.SALE && (
+									<>
+										<ViewInputForm>
+											<FormikSaleOrderItemsE name="items" />
+										</ViewInputForm>
+										{/* <ViewInputForm>
                         <ModalPaymentSale
                           onSubmit={async () => {
                             //const res = await submitForm()
@@ -358,9 +357,8 @@ export const FormOrder2 = ({ onSubmit, defaultValues, title }: FormOrder2Props) 
                           }}
                         />
                       </ViewInputForm> */}
-										</>
-									)}
-								</>
+									</>
+								)}
 
 								<FormikErrorsList />
 
