@@ -1,6 +1,6 @@
 import { Text } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import StoreType from '../types/StoreType'
+import type StoreType from '../types/StoreType'
 
 const SpanUser = ({ userId }) => {
 	const { staff } = useStore()

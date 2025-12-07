@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import Button, { ButtonProps } from './Button'
 import asDate, { dateFormat } from '../libs/utils-date'
-import { IconName } from './Icon'
+import Button, { type ButtonProps } from './Button'
 import ErrorBoundary from './ErrorBoundary'
+import type { IconName } from './Icon'
 export type InputDateProps = {
 	label?: string
 	icon?: IconName
@@ -86,7 +86,7 @@ export default function InputDate({
 				{...openButtonProps}
 				disabled={disabled}
 			>
-				{`${label} ${!!date ? dateFormat(date, format) : ''}`}
+				{`${label} ${date ? dateFormat(date, format) : ''}`}
 			</Button>
 			{withTime && <TimePicker time={time} setTime={handleSetTime} disabled={disabled} />}
 

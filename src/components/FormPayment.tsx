@@ -1,17 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import InputRadiosFormik from './FormikInputRadios'
-import PaymentType, { payment_methods } from '../types/PaymentType'
-import dictionary from '../dictionary'
-import Button from './Button'
-import FormikInputValue from './FormikInputValue'
-import FormikInputImage from './FormikInputImage'
-import FormikErrorsList from './FormikErrorsList'
+
+import { StyleSheet, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
-import FormikInputSelect from './FormikInputSelect'
 import { useStore } from '../contexts/storeContext'
+import dictionary from '../dictionary'
+import type PaymentType from '../types/PaymentType'
+import { payment_methods } from '../types/PaymentType'
+import Button from './Button'
+import FormikErrorsList from './FormikErrorsList'
 import FormikInputDate from './FormikInputDate'
+import FormikInputImage from './FormikInputImage'
+import InputRadiosFormik from './FormikInputRadios'
+import FormikInputSelect from './FormikInputSelect'
+import FormikInputValue from './FormikInputValue'
 
 const FormPayment = ({
 	onSubmit,
@@ -59,7 +60,7 @@ const FormPayment = ({
 			validate={values => {
 				const errors: Partial<PaymentType> = {}
 				if (!values.amount) {
-					// @ts-ignore
+					// @ts-expect-error
 					errors.amount = 'Ingresa un monto'
 				}
 				if (values.method === 'transfer' && !values.reference) {

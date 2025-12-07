@@ -1,11 +1,11 @@
-import { View } from 'react-native'
-import React from 'react'
-import FormItem from './FormItem'
-import { gStyles } from '../styles'
-import ItemType from '../types/ItemType'
-import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
+
+import { View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
 import { onCreateItem } from '../firebase/actions/item-actions'
+import { gStyles } from '../styles'
+import type ItemType from '../types/ItemType'
+import FormItem from './FormItem'
 
 const ScreenItemNew = () => {
 	const { goBack } = useNavigation()

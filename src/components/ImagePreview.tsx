@@ -1,9 +1,10 @@
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import Icon, { IconName } from './Icon'
+import type { ImageDescriptionType } from '../state/features/costumers/customerType'
 import ButtonConfirm from './ButtonConfirm'
-import { ImageDescriptionType } from '../state/features/costumers/customerType'
+import Icon, { type IconName } from './Icon'
+import StyledModal from './StyledModal'
+
 const { height: deviceHeight } = Dimensions.get('window')
 
 const ImagePreview = ({
@@ -137,7 +138,7 @@ const ImagePreview = ({
 						</Text>
 					</ButtonConfirm>
 				)}
-				{!!ComponentForm ? (
+				{ComponentForm ? (
 					<ComponentForm
 						handleSubmit={async values => {
 							const res = await handleSubmitForm(values)

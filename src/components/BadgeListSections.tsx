@@ -1,7 +1,7 @@
 import { View } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import Chip from './Chip'
 import theme from '../theme'
+import Chip from './Chip'
+import ErrorBoundary from './ErrorBoundary'
 
 export const BadgeListSections = ({
 	sections = [],

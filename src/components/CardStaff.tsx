@@ -1,13 +1,13 @@
-import { ActivityIndicator, Text, View } from 'react-native'
-import { useEffect, useState } from 'react'
-import { ServiceUsers } from '../firebase/ServiceUser'
-import CardPhone from './CardPhone'
-import CardEmail from './CardEmail'
-import UserType from '../types/UserType'
-import { gStyles } from '../styles'
-import Button from './Button'
 import { useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
+import { ServiceUsers } from '../firebase/ServiceUser'
+import { gStyles } from '../styles'
+import type UserType from '../types/UserType'
+import Button from './Button'
+import CardEmail from './CardEmail'
+import CardPhone from './CardPhone'
 
 export const StaffName = ({ userId }: { userId: string }) => {
 	const { staff } = useStore()
@@ -39,7 +39,7 @@ const CardUser = ({ userId, user }: { userId?: string; user?: UserType }) => {
 					icon="edit"
 					justIcon
 					onPress={() => {
-						//@ts-ignore
+						//@ts-expect-error
 						navigate('EditProfile')
 					}}
 					size="small"

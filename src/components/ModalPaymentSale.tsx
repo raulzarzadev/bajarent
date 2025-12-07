@@ -1,20 +1,21 @@
-import { StyleSheet, View } from 'react-native'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import Button from './Button'
-import PaymentType, { PaymentBase } from '../types/PaymentType'
-import ErrorBoundary from './ErrorBoundary'
-import { ServicePayments } from '../firebase/ServicePayments'
-import FormPayment from './FormPayment'
-import { useStore } from '../contexts/storeContext'
-import { orderAmount } from '../libs/order-amount'
-import { useAuth } from '../contexts/authContext'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { order_status } from '../types/OrderType'
-import { useOrderDetails } from '../contexts/orderContext'
 import { useState } from 'react'
-import { InputDateE } from './InputDate'
+import { StyleSheet, View } from 'react-native'
+import { useAuth } from '../contexts/authContext'
+import { useOrderDetails } from '../contexts/orderContext'
+import { useStore } from '../contexts/storeContext'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { ServicePayments } from '../firebase/ServicePayments'
+import useModal from '../hooks/useModal'
+import { orderAmount } from '../libs/order-amount'
+import { order_status } from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import type { PaymentBase } from '../types/PaymentType'
+import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
 import { ViewInputForm } from './FormOrder2'
+import FormPayment from './FormPayment'
+import { InputDateE } from './InputDate'
+import StyledModal from './StyledModal'
 
 export type ModalPaymentSaleProps = {
 	orderId: string
@@ -76,7 +77,7 @@ export const ModalPaymentSale = ({ orderId }: ModalPaymentSaleProps) => {
 
 			<StyledModal {...modalPayAndDelivery}>
 				<ViewInputForm>
-					{!!scheduledAt ? (
+					{scheduledAt ? (
 						<View>
 							<Button
 								onPress={() => setScheduledAt(null)}

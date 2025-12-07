@@ -1,24 +1,19 @@
 import { arrayRemove, arrayUnion } from 'firebase/firestore'
+import { ServiceCurrentWork } from '../components/CurrentWork/ServiceCurrentWork'
 import { handleSetStatuses } from '../components/OrderActions/libs/update_statuses'
 import { onPickUpItem, onRegistryEntry, onRentItem } from '../firebase/actions/item-actions'
-import { ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
+import { type ExtendReason, ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
-import { CommentType } from '../types/CommentType'
-import OrderType, {
-	ContactType,
-	order_status,
-	order_type,
-	OrderQuoteType
-} from '../types/OrderType'
-import PaymentType from '../types/PaymentType'
-import { PriceType, TimePriceType } from '../types/PriceType'
-import StoreType from '../types/StoreType'
-import { orderExpireAt } from './orders'
+import type { CustomerType } from '../state/features/costumers/customerType'
+import type { CommentType } from '../types/CommentType'
+import type OrderType from '../types/OrderType'
+import { type ContactType, type OrderQuoteType, order_status, order_type } from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import type { PriceType, TimePriceType } from '../types/PriceType'
+import type StoreType from '../types/StoreType'
 import { createUUID } from './createId'
-
+import { orderExpireAt } from './orders'
 import { onSendOrderWhatsapp } from './whatsapp/sendOrderMessage'
-import { CustomerType } from '../state/features/costumers/customerType'
-import { ServiceCurrentWork } from '../components/CurrentWork/ServiceCurrentWork'
 
 export const onComment = async ({
 	orderId,
@@ -573,7 +568,7 @@ export const onAssignOrder = async ({
 
 	onComment({
 		orderId,
-		content: `Asignada${!!fromSectionName ? ` de ${fromSectionName}` : ''} a ${sectionName}`,
+		content: `Asignada${fromSectionName ? ` de ${fromSectionName}` : ''} a ${sectionName}`,
 		type: 'comment',
 		storeId,
 		isOrderMovement: true
@@ -626,7 +621,7 @@ export const onMarkQuoteAsDone = async ({
 
 		const newQuotes: OrderQuoteType[] = quotes.map(quote => {
 			if (quote.id === quoteId) {
-				return { ...quote, doneAt: !!quote.doneAt ? null : new Date() }
+				return { ...quote, doneAt: quote.doneAt ? null : new Date() }
 			}
 			return quote
 		})

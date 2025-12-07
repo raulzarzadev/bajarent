@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { formatOrders } from '../libs/orders'
-import { useOrdersCtx } from '../contexts/ordersContext'
-import OrderType from '../types/OrderType'
-import { useEmployee } from '../contexts/employeeContext'
-import { Filter, filterDataByFields, handleFilterUpdate, searchInLocalData } from './useFilterUtils'
-import { ServiceCustomers } from '../firebase/ServiceCustomers'
 import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
+import { useOrdersCtx } from '../contexts/ordersContext'
+import { ServiceCustomers } from '../firebase/ServiceCustomers'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { formatOrders } from '../libs/orders'
+import type OrderType from '../types/OrderType'
+import {
+	type Filter,
+	filterDataByFields,
+	handleFilterUpdate,
+	searchInLocalData
+} from './useFilterUtils'
 
 export type CollectionSearch = {
 	collectionName: string

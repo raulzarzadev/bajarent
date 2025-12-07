@@ -1,9 +1,11 @@
 import { isToday } from 'date-fns'
-import ItemType, { ItemExternalRepairProps } from '../types/ItemType'
+import type ItemType from '../types/ItemType'
+import type { ItemExternalRepairProps } from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import { type ContactType, type OrderQuoteType, order_status } from '../types/OrderType'
+import type { CategoryType } from '../types/RentItem'
+import type { SectionType } from '../types/SectionType'
 import asDate from './utils-date'
-import { SectionType } from '../types/SectionType'
-import { CategoryType } from '../types/RentItem'
-import OrderType, { ContactType, order_status, OrderQuoteType } from '../types/OrderType'
 
 export const splitItems = ({ items = [] }: { items: Partial<ItemExternalRepairProps>[] }) => {
 	if (!items.length)
@@ -36,7 +38,7 @@ export const formatItems = (
 ) => {
 	return items?.map(item => {
 		const workshopStatus =
-			//@ts-ignore
+			//@ts-expect-error
 			['inProgress', 'pending'].includes(item?.workshopStatus) ? 'pickedUp' : item?.workshopStatus
 
 		return {
@@ -65,7 +67,7 @@ export const formatItemsFromRepair = ({
 }): Partial<ItemType>[] => {
 	const items: Partial<ItemExternalRepairProps>[] = repairOrders.map(order => {
 		const workshopStatus =
-			//@ts-ignore
+			//@ts-expect-error
 			order.workshopStatus === 'inProgress' ? 'pickedUp' : order.workshopStatus
 
 		const needFix =

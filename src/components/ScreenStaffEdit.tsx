@@ -1,14 +1,14 @@
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
-import { FormStaffE } from './FormStaff'
+import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStaff } from '../firebase/ServiceStaff'
-import CardUser from './CardUser'
-import { gStyles } from '../styles'
-import UserType from '../types/UserType'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { useShop } from '../hooks/useShop'
-import { useAuth } from '../contexts/authContext'
 import catchError from '../libs/catchError'
+import { gStyles } from '../styles'
+import type UserType from '../types/UserType'
+import CardUser from './CardUser'
+import { FormStaffE } from './FormStaff'
 
 const ScreenStaffEdit = ({ route }) => {
 	const { storeId } = useAuth()

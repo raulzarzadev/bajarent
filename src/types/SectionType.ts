@@ -1,5 +1,5 @@
-import { IconName } from '../components/Icon'
-import BaseType from './BaseType'
+import type { IconName } from '../components/Icon'
+import type BaseType from './BaseType'
 
 export type SectionBase = {
 	name: string

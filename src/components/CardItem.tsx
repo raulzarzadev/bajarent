@@ -1,12 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import ItemType from '../types/ItemType'
-import { gSpace, gStyles } from '../styles'
-import Icon, { IconName } from './Icon'
-import { colors } from '../theme'
-import { ItemFixDetailsE } from './ItemDetails'
 import asDate, { dateFormat } from '../libs/utils-date'
+import { gSpace, gStyles } from '../styles'
+import { colors } from '../theme'
+import type ItemType from '../types/ItemType'
 import ErrorBoundary from './ErrorBoundary'
+import Icon, { type IconName } from './Icon'
+import { ItemFixDetailsE } from './ItemDetails'
 export type CartItemType = {
 	item: Partial<ItemType & { scheduledAt?: Date }>
 	showAssignedSection?: boolean

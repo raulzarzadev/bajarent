@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import { expect, test } from 'bun:test'
 
 import { orders } from '../DATA'

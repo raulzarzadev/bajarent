@@ -1,13 +1,13 @@
-import { View, Modal, Pressable, Text, StyleSheet } from 'react-native'
-import Button from './Button'
-import { useEmployee } from '../contexts/employeeContext'
-import useMyNav from '../hooks/useMyNav'
 import { useEffect, useState } from 'react'
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
+import useModal from '../hooks/useModal'
+import useMyNav from '../hooks/useMyNav'
 import { useShop } from '../hooks/useShop'
 import { clearNavigationState } from '../utils/navigationPersistence'
+import Button from './Button'
 import Loading from './Loading'
 import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
 
 const MyStaffLabel = () => {
 	const { shop } = useShop()

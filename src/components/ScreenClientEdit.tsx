@@ -1,11 +1,11 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { ClientType } from '../types/ClientType'
-import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
+import { gStyles } from '../styles'
+import type { ClientType } from '../types/ClientType'
 import { FormClientE } from './FormClient'
 import Loading from './Loading'
-import { gStyles } from '../styles'
 
 const ScreenClientEdit = props => {
 	const [client, setClient] = useState<Partial<ClientType>>()

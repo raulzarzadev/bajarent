@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { PaymentsStackParamList } from '../navigation/types'
+import type { PaymentsStackParamList } from '../navigation/types'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenPayments from './ScreenPayments'
 import ScreenPaymentsDetails from './ScreenPaymentsDetails'

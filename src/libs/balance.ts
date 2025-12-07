@@ -1,13 +1,14 @@
 import { or, where } from 'firebase/firestore'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { BalanceOrders, BalanceType } from '../types/BalanceType'
-import OrderType, { order_status, order_type } from '../types/OrderType'
-import { payments_amount } from './payments'
+import type { GetItemsOps } from '../firebase/firebase.CRUD'
 import { ServiceComments } from '../firebase/ServiceComments'
-import asDate from './utils-date'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
-import PaymentType from '../types/PaymentType'
-import { GetItemsOps } from '../firebase/firebase.CRUD'
+import type { BalanceOrders, BalanceType } from '../types/BalanceType'
+import type OrderType from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import { payments_amount } from './payments'
+import asDate from './utils-date'
 
 export const balanceTotals = (balance: BalanceType) => {
 	return payments_amount(balance.payments)
@@ -259,7 +260,7 @@ export const getBalancePayments = async (
 
 		//* 3.- Need paid orders and payments in dates
 		const paidOrders = ordersWithPayments
-		const ordersPayments = ordersWithPayments.map(o => o.payments).flat()
+		const ordersPayments = ordersWithPayments.flatMap(o => o.payments)
 		return { paidOrders, payments: [...ordersPayments, ...sectionPayments] }
 	} catch (e) {
 		console.error(e)

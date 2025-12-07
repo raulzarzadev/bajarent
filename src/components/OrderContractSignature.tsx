@@ -1,9 +1,13 @@
 import { View } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import { InputContractSignatureE, InputContractSignatureValues } from './InputContractSignature'
 import { useOrderDetails } from '../contexts/orderContext'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import ErrorBoundary from './ErrorBoundary'
+import {
+	InputContractSignatureE,
+	type InputContractSignatureValues
+} from './InputContractSignature'
+
 const OrderContractSignature = (props?: OrderContractSignatureProps) => {
 	const { order } = useOrderDetails()
 	const { store } = useStore()

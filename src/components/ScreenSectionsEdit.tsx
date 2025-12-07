@@ -1,8 +1,7 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
-import FormSection from './FormSection'
-import { ServiceSections } from '../firebase/ServiceSections'
 import { useStore } from '../contexts/storeContext'
+import { ServiceSections } from '../firebase/ServiceSections'
+import FormSection from './FormSection'
 
 const ScreenSectionsEdit = ({ navigation, route }) => {
 	const sectionId = route.params.id

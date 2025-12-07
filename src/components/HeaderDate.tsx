@@ -1,10 +1,10 @@
-import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React from 'react'
-import Button from './Button'
 import { addDays, isToday } from 'date-fns'
-import { gStyles } from '../styles'
-import DateCell from './DateCell'
+
+import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import useDebounce from '../hooks/useDebunce'
+import { gStyles } from '../styles'
+import Button from './Button'
+import DateCell from './DateCell'
 import InputDate from './InputDate'
 
 const HeaderDate = ({

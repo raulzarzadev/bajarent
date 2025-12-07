@@ -1,9 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Chip from './Chip'
-import theme from '../theme'
-import Icon from './Icon'
 import { gStyles } from '../styles'
+import theme from '../theme'
+import Chip from './Chip'
+import Icon from './Icon'
 
 const Chips = () => {
 	return (

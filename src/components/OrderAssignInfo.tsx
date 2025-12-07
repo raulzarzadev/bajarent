@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { useStore } from '../contexts/storeContext'
-import { gStyles } from '../styles'
 import asDate, { dateFormat } from '../libs/utils-date'
+import { gStyles } from '../styles'
 
 const OrderAssignInfo = ({ orderId }: { orderId: string }) => {
 	const { sections: storeSections } = useStore()

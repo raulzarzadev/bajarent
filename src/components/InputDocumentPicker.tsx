@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { View, Text } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
+import { useState } from 'react'
+import { Text, View } from 'react-native'
 import { uploadFile } from '../firebase/files'
+import { gStyles } from '../styles'
 import { colors } from '../theme'
 import Button from './Button'
-import ProgressBar from './ProgressBar'
-import { gStyles } from '../styles'
-import ErrorBoundary from './ErrorBoundary'
 import ButtonConfirm from './ButtonConfirm'
+import ErrorBoundary from './ErrorBoundary'
+import ProgressBar from './ProgressBar'
 
 export default function InputDocumentPicker({
 	label,

@@ -1,12 +1,13 @@
 import { limit, orderBy, startAfter, startAt, where } from 'firebase/firestore'
-import BaseType from '../types/BaseType'
-import OrderType from '../types/OrderType'
-import { ServiceOrders } from './ServiceOrders'
-import { FirebaseGenericService } from './genericService'
 import asDate from '../libs/utils-date'
+import type BaseType from '../types/BaseType'
+import type OrderType from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import { FirebaseGenericService } from './genericService'
 import { ServiceChunks } from './ServiceChunks'
+import { ServiceOrders } from './ServiceOrders'
 import { ServicePayments } from './ServicePayments'
-import PaymentType from '../types/PaymentType'
+
 type Type = ConsolidatedStoreOrdersType
 
 const ORDER_QTY_BY_CHUNK = 500
@@ -136,18 +137,18 @@ const formatConsolidateOrder = (order: OrderType, payments: PaymentType[]) => {
 				?.join(', ') || '',
 		neighborhood: order?.neighborhood || '',
 		assignToSection: order?.assignToSection || '',
-		// @ts-ignore
+		// @ts-expect-error
 		expireAt: order?.expireAt ? asDate(order?.expireAt).getTime() : null,
-		// @ts-ignore
+		// @ts-expect-error
 		createdAt: order?.createdAt ? asDate(order?.createdAt).getTime() : null,
-		// @ts-ignore
+		// @ts-expect-error
 		pickedUpAt: order?.pickedUpAt ? asDate(order?.pickedUpAt).getTime() : null,
-		// @ts-ignore
+		// @ts-expect-error
 
 		deliveredAt: order?.deliveredAt ? asDate(order?.deliveredAt).getTime() : null,
-		// @ts-ignore
+		// @ts-expect-error
 		cancelledAt: order?.cancelledAt ? asDate(order?.cancelledAt).getTime() : null,
-		// @ts-ignore
+		// @ts-expect-error
 
 		scheduledAt: order?.scheduledAt ? asDate(order?.scheduledAt).getTime() : null,
 

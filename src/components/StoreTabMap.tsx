@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { MapOrderType, OrdersMapE } from './OrdersMap'
-import { useOrdersCtx } from '../contexts/ordersContext'
-import { order_status, order_type } from '../types/OrderType'
-import unShortUrl from '../libs/unShortUrl'
-import extractCoordsFromUrl from '../libs/extractCoordsFromUrl'
+import { StyleSheet, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
+import { useOrdersCtx } from '../contexts/ordersContext'
+import extractCoordsFromUrl from '../libs/extractCoordsFromUrl'
+import unShortUrl from '../libs/unShortUrl'
+import { order_status, order_type } from '../types/OrderType'
+import { type MapOrderType, OrdersMapE } from './OrdersMap'
 
 const testOrders: MapOrderType[] = [
 	{

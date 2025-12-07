@@ -1,14 +1,14 @@
-import { View, Text } from 'react-native'
 import React, { useState } from 'react'
-import ErrorBoundary from './ErrorBoundary'
-import ItemType from '../types/ItemType'
-import { gStyles } from '../styles'
-import { RowSectionItemsE } from './ListAssignedItems'
-import dictionary, { asCapitalize } from '../dictionary'
-import { ModalFilterListE } from './ModalFilterList'
-import theme, { colors } from '../theme'
+import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import StoreType from '../types/StoreType'
+import dictionary, { asCapitalize } from '../dictionary'
+import { gStyles } from '../styles'
+import theme, { colors } from '../theme'
+import type ItemType from '../types/ItemType'
+import type StoreType from '../types/StoreType'
+import ErrorBoundary from './ErrorBoundary'
+import { RowSectionItemsE } from './ListAssignedItems'
+import { ModalFilterListE } from './ModalFilterList'
 
 export type MyItem = Pick<
 	ItemType,

@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import { SectionDetailsE } from './SectionDetails'
 import Loading from './Loading'
+import { SectionDetailsE } from './SectionDetails'
 
 const ScreenSectionsDetails = ({ route }) => {
 	const { sections: storeSections } = useStore()

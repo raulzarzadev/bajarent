@@ -1,3 +1,4 @@
+import { setDayOfYear } from 'date-fns'
 import {
 	createDataset,
 	groupDocsByDay,
@@ -6,10 +7,9 @@ import {
 	weekLabels
 } from '../libs/chart-data'
 import asDate, { dateFormat, months } from '../libs/utils-date'
-import LineChart from './LineChart'
 import theme from '../theme'
-import { CommentType } from '../types/CommentType'
-import { setDayOfYear } from 'date-fns'
+import type { CommentType } from '../types/CommentType'
+import LineChart from './LineChart'
 
 export default function StatsReports({ view }: { view: string }) {
 	const comments = []

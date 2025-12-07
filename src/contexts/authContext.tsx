@@ -1,18 +1,18 @@
 import {
 	createContext,
-	useState,
-	SetStateAction,
-	useContext,
-	useMemo,
+	type SetStateAction,
 	useCallback,
-	useEffect
+	useContext,
+	useEffect,
+	useMemo,
+	useState
 } from 'react'
-import UserType from '../types/UserType'
 import { Platform } from 'react-native'
-import StaffType from '../types/StaffType'
-import StoreType from '../types/StoreType'
-import { removeItem, setItem } from '../libs/storage'
 import { ServiceStores } from '../firebase/ServiceStore'
+import { removeItem, setItem } from '../libs/storage'
+import type StaffType from '../types/StaffType'
+import type StoreType from '../types/StoreType'
+import type UserType from '../types/UserType'
 
 const STORE_ID_KEY = 'storeId'
 

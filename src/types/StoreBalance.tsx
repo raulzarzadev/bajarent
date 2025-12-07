@@ -1,9 +1,9 @@
-import BaseType from './BaseType'
-import { CommentType } from './CommentType'
-import ItemType from './ItemType'
-import OrderType from './OrderType'
-import PaymentType from './PaymentType'
-import { TimePriceType } from './PriceType'
+import type BaseType from './BaseType'
+import type { CommentType } from './CommentType'
+import type ItemType from './ItemType'
+import type OrderType from './OrderType'
+import type PaymentType from './PaymentType'
+import type { TimePriceType } from './PriceType'
 
 export type StoreBalanceBase = {
 	fromDate: Date

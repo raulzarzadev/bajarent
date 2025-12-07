@@ -1,11 +1,11 @@
 import { View } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { StoreBalanceType } from '../../types/StoreBalance'
-import { order_type } from '../../types/OrderType'
-import Tabs from '../Tabs'
 import { useStore } from '../../contexts/storeContext'
-import { SectionBalanceRentsE } from './SectionBalanceRents'
+import { order_type } from '../../types/OrderType'
+import type { StoreBalanceType } from '../../types/StoreBalance'
+import ErrorBoundary from '../ErrorBoundary'
+import Tabs from '../Tabs'
 import BalanceItemsTable from './BalanceItemsTable'
+import { SectionBalanceRentsE } from './SectionBalanceRents'
 
 const RentsBalance = ({ balance }: RentsBalanceProps) => {
 	const { sections: storeSections } = useStore()

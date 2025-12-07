@@ -1,11 +1,12 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
 import { useState } from 'react'
-import { gStyles } from '../../styles'
-import Button from '../Button'
+import { Text, View } from 'react-native'
 import { useEmployee } from '../../contexts/employeeContext'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import { gStyles } from '../../styles'
+import Button from '../Button'
+import ErrorBoundary from '../ErrorBoundary'
+
 const CustomersActions = (props?: CustomersActionsProps) => {
 	const ids = props?.ids
 

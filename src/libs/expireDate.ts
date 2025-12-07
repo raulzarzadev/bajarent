@@ -1,7 +1,7 @@
-import { Timestamp } from 'firebase/firestore'
-import asDate, { dateFormat } from './utils-date'
-import { PriceType, TimePriceType } from '../types/PriceType'
 import { addDays, addHours, addMinutes, addMonths, addWeeks } from 'date-fns'
+import type { Timestamp } from 'firebase/firestore'
+import type { PriceType, TimePriceType } from '../types/PriceType'
+import asDate, { dateFormat } from './utils-date'
 /**
  *
  * @param time its a string with the time and the unit of time
@@ -168,7 +168,7 @@ export const translateTime = (
 		year: 'A'
 	}
 	const amountNumber = parseInt(amount)
-	let unitCount = amountNumber === 1 ? units[unit] : units[unit] + 's'
+	const unitCount = amountNumber === 1 ? units[unit] : units[unit] + 's'
 	if (ops?.shortLabel) {
 		return `${amountNumber}${shortUnits[unit]}`
 	}

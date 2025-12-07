@@ -1,23 +1,23 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CustomerType } from './customerType'
-import {
-	createCustomer as createCustomerThunk,
-	fetchCustomers as fetchCustomersThunk,
-	updateCustomer as updateCustomerThunk,
-	deleteCustomer as deleteCustomerThunk
-} from './customersThunks'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../store'
-import StoreType from '../../../types/StoreType'
-import { ServiceOrders } from '../../../firebase/ServiceOrders'
-import { ServiceCustomers } from '../../../firebase/ServiceCustomers'
 import {
 	mergeCustomers,
 	normalizeCustomerName
 } from '../../../components/Customers/lib/customerFromOrder'
-import { useEmployee } from '../../../contexts/employeeContext'
-import { mergeObjs } from '../../../libs/mergeObjs'
 import { useAuth } from '../../../contexts/authContext'
+import { useEmployee } from '../../../contexts/employeeContext'
+import { ServiceCustomers } from '../../../firebase/ServiceCustomers'
+import { ServiceOrders } from '../../../firebase/ServiceOrders'
+import { mergeObjs } from '../../../libs/mergeObjs'
+import type StoreType from '../../../types/StoreType'
+import type { AppDispatch } from '../../store'
+import {
+	createCustomer as createCustomerThunk,
+	deleteCustomer as deleteCustomerThunk,
+	fetchCustomers as fetchCustomersThunk,
+	updateCustomer as updateCustomerThunk
+} from './customersThunks'
+import type { CustomerType } from './customerType'
 
 export type CustomersState = {
 	data: CustomerType[]
@@ -283,7 +283,7 @@ export const useCustomers = (props?: { customersIds?: string[] }) => {
 					return {
 						option: 'merge' as const, // explicitamos el literal "merge",
 						customer: newCustomer,
-						//@ts-ignore
+						//@ts-expect-error
 						orderUpdatedId: res?.res?.id,
 						statusOk: true
 					}

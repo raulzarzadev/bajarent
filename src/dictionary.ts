@@ -1,6 +1,7 @@
 import { WORK_ACTIONS } from './components/CurrentWork/CurrentWorkType'
 import { repair_order_types } from './types/OrderType'
 import { bot_configs } from './types/StoreType'
+
 const storeConfigLabels = Object.entries(bot_configs).reduce(
 	(acc, [key, value]) => {
 		acc[key] = value

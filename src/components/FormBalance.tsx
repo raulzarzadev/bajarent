@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import Button from './Button'
-import InputDate from './InputDate'
+
+import { StyleSheet, Text, View } from 'react-native'
 import { gStyles } from '../styles'
-import { BalanceType } from '../types/BalanceType'
+import type { BalanceType } from '../types/BalanceType'
+import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
-import TextInfo from './TextInfo'
 import Icon from './Icon'
+import InputDate from './InputDate'
+import TextInfo from './TextInfo'
 
 export type FormBalanceProps = {
 	defaultValues?: Partial<BalanceType>

@@ -1,21 +1,21 @@
-import { View, Text, Pressable, ViewStyle, FlatList } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import Button from '../Button'
-import StyledModal from '../StyledModal'
-import useModal from '../../hooks/useModal'
-import { gStyles } from '../../styles'
-import {
-	CreateCustomerChoiceType,
-	useCustomers
-} from '../../state/features/costumers/costumersSlice'
 import { useEffect, useState } from 'react'
-import OrderType from '../../types/OrderType'
-import { customerFromOrder } from './lib/customerFromOrder'
-import { CustomerCardE } from './CustomerCard'
-import { CustomerType } from '../../state/features/costumers/customerType'
+import { FlatList, Pressable, Text, View, type ViewStyle } from 'react-native'
 import { useEmployee } from '../../contexts/employeeContext'
 import { useOrdersCtx } from '../../contexts/ordersContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
+import useModal from '../../hooks/useModal'
+import {
+	type CreateCustomerChoiceType,
+	useCustomers
+} from '../../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../../state/features/costumers/customerType'
+import { gStyles } from '../../styles'
+import type OrderType from '../../types/OrderType'
+import Button from '../Button'
+import ErrorBoundary from '../ErrorBoundary'
+import StyledModal from '../StyledModal'
+import { CustomerCardE } from './CustomerCard'
+import { customerFromOrder } from './lib/customerFromOrder'
 
 const ButtonAddCustomer = (props?: ButtonAddCustomerProps) => {
 	const { orders } = useOrdersCtx()
@@ -135,7 +135,7 @@ export const AddOrMergeCustomer = ({
 						}}
 						disabled={disabled}
 					/>
-					{!!selectedSimilarCustomer ? (
+					{selectedSimilarCustomer ? (
 						<Button
 							label="Agregar "
 							icon="merge"
@@ -169,7 +169,7 @@ export const getSimilarCustomers = (
 			c?.name?.toLowerCase() === customer?.name?.toLowerCase() || c?.id === customer?.id
 		const someSameContact = Object.values(c.contacts || {}).some(contact => {
 			return Object.values(customer?.contacts || {}).some(contact2 => {
-				//@ts-ignore
+				//@ts-expect-error
 				if (contact2?.value === undefined) return false
 				return contact.value === contact2.value
 			})
@@ -241,7 +241,7 @@ export const SimilarCustomersList = ({
 					<View>
 						<Text>{c.name}</Text>
 						{Object.values(c.contacts || {}).map((contact, i) => (
-							//@ts-ignore
+							//@ts-expect-error
 							<Text key={contact.id || i}>{contact.value}</Text>
 						))}
 					</View>

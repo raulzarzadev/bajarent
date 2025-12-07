@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react'
 import { useField } from 'formik'
-import PhoneInput from './InputPhone'
+import React, { useMemo } from 'react'
 import ErrorBoundary from './ErrorBoundary'
+import PhoneInput from './InputPhone'
 export type InputPhoneProps = {
 	name: string
 	helperText?: string

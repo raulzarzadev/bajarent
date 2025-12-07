@@ -1,13 +1,13 @@
+import { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
-import { ListE } from './List'
-import ListRow from './ListRow'
+import { useEmployee } from '../contexts/employeeContext'
 import useMyNav from '../hooks/useMyNav'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
-import { useEffect, useState } from 'react'
-import ErrorBoundary from './ErrorBoundary'
-import { CustomersActionsE } from './Customers/CustomersActions'
-import { useEmployee } from '../contexts/employeeContext'
 import { gStyles } from '../styles'
+import { CustomersActionsE } from './Customers/CustomersActions'
+import ErrorBoundary from './ErrorBoundary'
+import { ListE } from './List'
+import ListRow from './ListRow'
 export type ListCustomerType = {
 	id: string
 	name: string
@@ -52,7 +52,7 @@ const ListCustomers = () => {
 						icon: 'add',
 						label: 'Nuevo Cliente',
 						onPress: () => {
-							//@ts-ignore
+							//@ts-expect-error
 							toCustomers({ to: 'new' })
 						},
 						visible: true,

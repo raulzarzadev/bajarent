@@ -1,25 +1,28 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
-import StoreType, { bot_configs, bot_configs_order_flow } from '../types/StoreType'
-import { useStore } from '../contexts/storeContext'
-import { messageOptions } from '../libs/whatsapp/sendOrderMessage'
-import OrderType, { order_type } from '../types/OrderType'
-import { Payment } from '../libs/paymentsUtils'
-import { FormChatbotE } from './FormChatbot'
-import { ServiceStores } from '../firebase/ServiceStore'
-import theme from '../theme'
-import Button from './Button'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import InputTextStyled from './InputTextStyled'
-import { useState } from 'react'
-import sendMessage, { WSSender } from '../libs/whatsapp/sendMessage'
-import Tabs from './Tabs'
-import FormikCheckbox from './FormikCheckbox'
-import dictionary from '../dictionary'
 import { Formik } from 'formik'
+import { useState } from 'react'
+import { Text, View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
+import dictionary from '../dictionary'
+import { ServiceStores } from '../firebase/ServiceStore'
+import useModal from '../hooks/useModal'
+import type { Payment } from '../libs/paymentsUtils'
+import sendMessage, { type WSSender } from '../libs/whatsapp/sendMessage'
+import { messageOptions } from '../libs/whatsapp/sendOrderMessage'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type OrderType from '../types/OrderType'
+import { order_type } from '../types/OrderType'
+import type StoreType from '../types/StoreType'
+import { bot_configs, bot_configs_order_flow } from '../types/StoreType'
+import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import { FormChatbotE } from './FormChatbot'
 import FormChatbotAutoWs from './FormChatbotAutoWs'
+import FormikCheckbox from './FormikCheckbox'
+import InputTextStyled from './InputTextStyled'
+import StyledModal from './StyledModal'
+import Tabs from './Tabs'
+
 const ScreenChatbot = (props?: ScreenChatbotProps) => {
 	const { store } = useStore()
 	const handleUpdateChatbot = async (values: { chatbot: any }) => {
@@ -235,7 +238,7 @@ export const RandomMessage = ({ sender }: { sender: WSSender }) => {
 	const handleSendMessage = () => {
 		setDisabled(true)
 		// console.log('send message', message, number)
-		let configDependOfSender = {
+		const configDependOfSender = {
 			phone: number,
 			message,
 			apiKey: store.chatbot.apiKey,

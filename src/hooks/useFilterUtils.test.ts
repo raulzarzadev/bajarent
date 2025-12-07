@@ -1,7 +1,7 @@
-import { expect, describe, test } from 'bun:test'
+import { describe, expect, test } from 'bun:test'
 import {
-	filterDataByFields,
 	filterByCustomIds,
+	filterDataByFields,
 	handleFilterUpdate,
 	searchInLocalData
 } from './useFilterUtils'

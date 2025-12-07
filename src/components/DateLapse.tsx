@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import InputDate from './InputDate'
-import Icon from './Icon'
+import { Text, View } from 'react-native'
 import theme from '../theme'
+import Icon from './Icon'
+import InputDate from './InputDate'
 
 const DateLapse = ({
 	fromDate = new Date(),

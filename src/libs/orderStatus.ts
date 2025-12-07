@@ -1,5 +1,6 @@
 import { isBefore, isToday, isTomorrow } from 'date-fns'
-import OrderType, { OrderStatus, order_status, orders_should_expire } from '../types/OrderType'
+import type OrderType from '../types/OrderType'
+import { type OrderStatus, order_status, orders_should_expire } from '../types/OrderType'
 import asDate from './utils-date'
 
 const orderStatus = (order: Partial<OrderType>): OrderStatus => {

@@ -1,11 +1,13 @@
-import { View, Text, Linking } from 'react-native'
+import { isToday, isTomorrow } from 'date-fns'
 import { useState } from 'react'
-import Button from './Button'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import { gStyles } from '../styles'
-import OrderType, { order_status, order_type, OrderQuoteType } from '../types/OrderType'
+import { Linking, Text, View } from 'react-native'
+import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
+import { useOrderDetails } from '../contexts/orderContext'
+import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
+import useModal from '../hooks/useModal'
+import { translateTime } from '../libs/expireDate'
 import asDate, {
 	dateFormat,
 	endDate,
@@ -13,20 +15,19 @@ import asDate, {
 	isAfterTomorrow,
 	isBeforeYesterday
 } from '../libs/utils-date'
-import { useStore } from '../contexts/storeContext'
-import { translateTime } from '../libs/expireDate'
-import SpanCopy from './SpanCopy'
-import { isToday, isTomorrow } from 'date-fns'
-import ErrorBoundary from './ErrorBoundary'
-import { useOrderDetails } from '../contexts/orderContext'
 import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
-import { useAuth } from '../contexts/authContext'
-import ButtonConfirm from './ButtonConfirm'
-import TextInfo from './TextInfo'
 import { orderStatus } from '../libs/whatsappMessages'
+import { gStyles } from '../styles'
+import type OrderType from '../types/OrderType'
+import { type OrderQuoteType, order_status, order_type } from '../types/OrderType'
+import Button from './Button'
+import ButtonConfirm from './ButtonConfirm'
 import { useCustomer } from './Customers/ScreenCustomer'
+import ErrorBoundary from './ErrorBoundary'
 import InputRadios from './Inputs/InputRadios'
-import { useEmployee } from '../contexts/employeeContext'
+import SpanCopy from './SpanCopy'
+import StyledModal from './StyledModal'
+import TextInfo from './TextInfo'
 
 //FIXME: This just works for orders, but it shows in profile:
 export default function ModalSendWhatsapp({
@@ -346,7 +347,7 @@ export default function ModalSendWhatsapp({
 	const [messageType, setMessageType] = useState<MessageType>(null)
 	const [message, setMessage] = useState<string>()
 	// messages.find((m) => m.type === messageType)?.content
-	let options: { label: string; value: MessageType }[] = [
+	const options: { label: string; value: MessageType }[] = [
 		{ label: 'Vacío', value: 'hello' },
 		{ label: 'Encuesta', value: 'rent-quality-survey' },
 		{ label: 'Información', value: 'store-info' },
@@ -506,7 +507,7 @@ const getReceiptDates = (order: OrderType): string => {
 	const isRent = order?.type === order_type.RENT
 	const isRepair = order?.type === order_type.REPAIR
 
-	let dates = [`Creada ${dFormat(order.createdAt)}`]
+	const dates = [`Creada ${dFormat(order.createdAt)}`]
 	if (isRent) {
 		const isDelivered = order?.status === order_status.DELIVERED
 		const isPickedUp = order?.status === order_status.PICKED_UP

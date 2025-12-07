@@ -1,9 +1,9 @@
 import { limit, serverTimestamp, where } from 'firebase/firestore'
-import { GetItemsOps } from '../../firebase/firebase.CRUD'
+import type { GetItemsOps } from '../../firebase/firebase.CRUD'
 import { FirebaseGenericService } from '../../firebase/genericService'
-import { CurrentWorkType, NewWorkUpdate } from './CurrentWorkType'
-import { planeDate, startDate } from '../../libs/utils-date'
 import { createUUID } from '../../libs/createId'
+import { planeDate, startDate } from '../../libs/utils-date'
+import type { CurrentWorkType, NewWorkUpdate } from './CurrentWorkType'
 
 class ServiceCurrentWorkClass extends FirebaseGenericService<CurrentWorkType> {
 	constructor() {

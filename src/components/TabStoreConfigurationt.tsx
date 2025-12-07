@@ -1,12 +1,12 @@
 import { View } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import { ScreenOrdersConfigE } from './ScreenOrdersConfig'
-import Tabs from './Tabs'
+import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
 import ButtonDownloadCSV from './ButtonDownloadCSV'
-import { AppErrorLogs } from './StoreBalance/AppErrorLogs'
-import { useAuth } from '../contexts/authContext'
 import { ConfigItemsViewE } from './ConfigItemsView'
+import ErrorBoundary from './ErrorBoundary'
+import { ScreenOrdersConfigE } from './ScreenOrdersConfig'
+import { AppErrorLogs } from './StoreBalance/AppErrorLogs'
+import Tabs from './Tabs'
 
 export const TabStoreConfiguration = () => {
 	const { user } = useAuth()
@@ -35,7 +35,7 @@ export const TabStoreConfiguration = () => {
 				{
 					title: 'Errores',
 					content: <AppErrorLogs />,
-					// @ts-ignore roles is added dynamically to employee object. this roles is different from user roles
+					// @ts-expect-error roles is added dynamically to employee object. this roles is different from user roles
 					show: !!user?.roles?.includes('SUPER_ADMIN')
 				}
 			]}

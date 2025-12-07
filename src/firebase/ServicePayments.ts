@@ -1,10 +1,11 @@
-import { where, documentId, limit, orderBy, QueryConstraint } from 'firebase/firestore'
-import { FirebaseGenericService } from './genericService'
-import PaymentType from '../types/PaymentType'
 import { subDays } from 'date-fns'
-import { RetirementType } from '../components/FormRetirement'
-import { GetItemsOps } from './firebase.CRUD'
+import { documentId, limit, orderBy, type QueryConstraint, where } from 'firebase/firestore'
+import type { RetirementType } from '../components/FormRetirement'
+import type PaymentType from '../types/PaymentType'
+import type { GetItemsOps } from './firebase.CRUD'
+import { FirebaseGenericService } from './genericService'
 import { ServiceOrders } from './ServiceOrders'
+
 class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
 	constructor() {
 		super('payments')
@@ -180,7 +181,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
 		},
 		ops?: GetItemsOps
 	) {
-		let filters = [
+		const filters = [
 			where('storeId', '==', storeId),
 			where('createdAt', '>=', fromDate),
 			where('createdAt', '<=', toDate)
@@ -209,7 +210,7 @@ class ServicePaymentsClass extends FirebaseGenericService<PaymentType> {
 		userId?: string
 		callback: (items: PaymentType[]) => void
 	}) {
-		let filters = [
+		const filters = [
 			where('storeId', '==', storeId),
 			where('createdAt', '>=', fromDate),
 			where('createdAt', '<=', toDate)

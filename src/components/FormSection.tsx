@@ -1,10 +1,10 @@
-import { StyleSheet, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
+
+import { StyleSheet, View } from 'react-native'
+import { store_section_icons, store_section_types } from '../types/SectionType'
 import Button from './Button'
 import FormikInputRadios from './FormikInputRadios'
-import { store_section_icons, store_section_types } from '../types/SectionType'
+import FormikInputValue from './FormikInputValue'
 
 const FormSection = ({
 	defaultValues = {},

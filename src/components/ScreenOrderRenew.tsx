@@ -1,11 +1,12 @@
-import { ActivityIndicator } from 'react-native'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
-import { useEffect, useState } from 'react'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { orderExpireAt } from '../libs/orders'
+import type OrderType from '../types/OrderType'
+import { order_status } from '../types/OrderType'
 import ErrorBoundary from './ErrorBoundary'
 import { FormOrder2E } from './FormOrder2'
 
@@ -68,11 +69,11 @@ const ScreenOrderRenew = ({ route }) => {
 				//* RENEWED SET EXPIRE DATE WITH THE NEW DELIVERED DATE AT
 				const expiredAt = orderExpireAt({ order: renewedOrder })
 				renewedOrder.expireAt = expiredAt
-				// @ts-ignore
+				// @ts-expect-error
 				return await ServiceOrders.createSerialOrder(renewedOrder)
 					.then(async newOrderId => {
 						if (newOrderId)
-							// @ts-ignore
+							// @ts-expect-error
 							navigate('OrderDetails', { orderId: newOrderId || '' })
 						//* update the ORIGINAL order status
 						ServiceOrders.update(orderId, {
@@ -101,7 +102,7 @@ const ScreenOrderRenew = ({ route }) => {
 							content: `Renovada con No. ${newOrder?.folio}`
 						})
 							.then(() => {
-								// @ts-ignore
+								// @ts-expect-error
 								navigate('OrderDetails', { orderId: newOrderId || '' })
 							})
 							.catch(console.error)

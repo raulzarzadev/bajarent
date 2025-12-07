@@ -1,20 +1,23 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
+
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import dictionary from '../dictionary'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
 import FormikCheckbox from './FormikCheckbox'
-import dictionary from '../dictionary'
+
 const screenWidth = Dimensions.get('window').width
-import StaffType, {
+
+import { useStore } from '../contexts/storeContext'
+import { gStyles } from '../styles'
+import type StaffType from '../types/StaffType'
+import {
+	permissionsCustomersKeys,
+	permissionsItemsKeys,
 	permissionsOrderKeys,
 	permissionsStoreKeys,
-	permissionsItemsKeys,
-	staff_roles,
-	permissionsCustomersKeys
+	staff_roles
 } from '../types/StaffType'
-import { gStyles } from '../styles'
-import { useStore } from '../contexts/storeContext'
 import FormikInputValue from './FormikInputValue'
 
 const checkboxWidth = screenWidth > 500 ? '33%' : '50%'

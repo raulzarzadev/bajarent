@@ -1,13 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import InputTextStyled from './InputTextStyled'
-import Button from './Button'
+import { StyleSheet, Text, View } from 'react-native'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import InputMapLocation from './InputMapLocation'
 import { getCoordinates } from '../libs/maps'
-import CoordsType from '../types/CoordsType'
+import type CoordsType from '../types/CoordsType'
+import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
+import InputMapLocation from './InputMapLocation'
+import InputTextStyled from './InputTextStyled'
+import StyledModal from './StyledModal'
+
 const InputLocation = ({
 	value,
 	setValue,

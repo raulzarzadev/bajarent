@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
+import { Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import Button from './Button'
 

@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import InputSelect from './InputSelect'
+import { StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
+import InputSelect from './InputSelect'
 
 const SelectStoreSection = ({
 	value,

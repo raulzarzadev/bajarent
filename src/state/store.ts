@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { counterReducer } from './features/counter/counterSlice'
 import { customersReducer } from './features/costumers/costumersSlice'
+import { counterReducer } from './features/counter/counterSlice'
 import { currentWorkReducer } from './features/currentWork/currentWorkSlice'
 import { ordersReducer } from './features/orders/ordersSlice'
 import { shopReducer } from './features/shop/shopSlice'

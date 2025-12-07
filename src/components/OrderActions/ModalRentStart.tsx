@@ -1,25 +1,25 @@
 import { View } from 'react-native'
-import React from 'react'
-import StyledModal from '../StyledModal'
-import useModal, { ReturnModal } from '../../hooks/useModal'
-import Button from '../Button'
-import { onRentStart } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
-import FormRentDelivery from './FormRentDelivery'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
-import { ErrorsList } from '../FormikErrorsList'
 import { useStore } from '../../contexts/storeContext'
-import OrderType, { order_type } from '../../types/OrderType'
-import InputCheckbox from '../Inputs/InputCheckbox'
-import FormPayment from '../FormPayment'
-import PaymentType, { PaymentBase } from '../../types/PaymentType'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ServicePayments } from '../../firebase/ServicePayments'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
-
-import { CustomerType } from '../../state/features/costumers/customerType'
+import useModal, { type ReturnModal } from '../../hooks/useModal'
 import { createUUID } from '../../libs/createId'
+import { onRentStart } from '../../libs/order-actions'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../../state/features/costumers/customerType'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
+import type OrderType from '../../types/OrderType'
+import { order_type } from '../../types/OrderType'
+import type PaymentType from '../../types/PaymentType'
+import type { PaymentBase } from '../../types/PaymentType'
+import Button from '../Button'
+import { ErrorsList } from '../FormikErrorsList'
+import FormPayment from '../FormPayment'
+import InputCheckbox from '../Inputs/InputCheckbox'
+import StyledModal from '../StyledModal'
+import FormRentDelivery from './FormRentDelivery'
 
 const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
 	const { store, storeId } = useStore()
@@ -92,7 +92,7 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
 							}
 							const { payload } = await create(storeId, newCustomer)
 							if (payload) {
-								//@ts-ignore
+								//@ts-expect-error
 								values.customerId = payload?.id
 							}
 						}

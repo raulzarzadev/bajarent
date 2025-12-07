@@ -1,5 +1,12 @@
-import { createContext, useContext, useEffect, useMemo, useState, useRef } from 'react'
-import StaffType, {
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { ServiceStaff } from '../firebase/ServiceStaff'
+import { ServiceStores } from '../firebase/ServiceStore'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { useShop } from '../hooks/useShop'
+import { formatItems } from '../libs/workshop.libs'
+import type ItemType from '../types/ItemType'
+import type StaffType from '../types/StaffType'
+import type {
 	PermissionsCustomers,
 	PermissionsItems,
 	PermissionsOrder,
@@ -7,12 +14,6 @@ import StaffType, {
 } from '../types/StaffType'
 import { useAuth } from './authContext'
 import { useStore } from './storeContext'
-import ItemType from '../types/ItemType'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import { ServiceStaff } from '../firebase/ServiceStaff'
-import { ServiceStores } from '../firebase/ServiceStore'
-import { formatItems } from '../libs/workshop.libs'
-import { useShop } from '../hooks/useShop'
 
 export type EmployeeContextType = {
 	employee: Partial<StaffType> | null

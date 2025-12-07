@@ -1,13 +1,13 @@
-import { Platform, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
-import Button from './Button'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
-import { auth } from '../firebase/auth'
-import PhoneInput from './InputPhone'
-import theme from '../theme'
-import { fbErrorToCode } from '../firebase/errors'
-import InputCode from './InputCode2'
+import React, { useEffect } from 'react'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import ups_text from '../../Constants.ts/ups_text'
+import { auth } from '../firebase/auth'
+import { fbErrorToCode } from '../firebase/errors'
+import theme from '../theme'
+import Button from './Button'
+import InputCode from './InputCode2'
+import PhoneInput from './InputPhone'
 
 const PhoneLogin = () => {
 	const [phone, setPhone] = React.useState('')
@@ -17,7 +17,7 @@ const PhoneLogin = () => {
 	const [sending, setSending] = React.useState(false)
 
 	useEffect(() => {
-		// @ts-ignore
+		// @ts-expect-error
 		window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
 			size: 'invisible',
 			callback: response => {
@@ -34,7 +34,7 @@ const PhoneLogin = () => {
 
 	const onSendCode = () => {
 		setSending(true)
-		// @ts-ignore
+		// @ts-expect-error
 		window.confirmationResult
 			.confirm(code)
 			.then(result => {
@@ -63,14 +63,14 @@ const PhoneLogin = () => {
 		setSending(true)
 		// TODO: CREATE SIGN IN FOR ANDROID AND IOS
 		if (Platform.OS === 'web') {
-			// @ts-ignore
+			// @ts-expect-error
 			const appVerifier = window.recaptchaVerifier
 			// console.log({ appVerifier })
 			signInWithPhoneNumber(auth, phone, appVerifier)
 				.then(confirmationResult => {
 					// SMS sent. Prompt user to type the code from the message, then sign the
 					// user in with confirmationResult.confirm(code).
-					// @ts-ignore
+					// @ts-expect-error
 					window.confirmationResult = confirmationResult
 					setMsmSent(true)
 					//  console.log({ confirmationResult })

@@ -1,16 +1,17 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
 import { Formik } from 'formik'
-import Button from './Button'
-import FormikInputValue from './FormikInputValue'
-import ItemType, { ItemStatuses } from '../types/ItemType'
-import FormikInputSelect from './FormikInputSelect'
+import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
-import { useEmployee } from '../contexts/employeeContext'
-import TextInfo from './TextInfo'
 import theme from '../theme'
+import type ItemType from '../types/ItemType'
+import { ItemStatuses } from '../types/ItemType'
+import Button from './Button'
 import FormikErrorsList from './FormikErrorsList'
+import FormikInputSelect from './FormikInputSelect'
+import FormikInputValue from './FormikInputValue'
+import TextInfo from './TextInfo'
 
 const FormItem = ({
 	fromOrder,
@@ -63,7 +64,7 @@ const FormItem = ({
 				await handleSubmit(values)
 			}}
 			validate={values => {
-				let errors: any = {}
+				const errors: any = {}
 				if (!values.status) {
 					errors.status = 'Selecciona un estado'
 				}

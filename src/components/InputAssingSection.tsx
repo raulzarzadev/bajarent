@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import ButtonConfirm from './ButtonConfirm'
 import { useStore } from '../contexts/storeContext'
+import ButtonConfirm from './ButtonConfirm'
 import InputRadios from './Inputs/InputRadios'
 
 const InputAssignSection = ({
@@ -47,7 +47,7 @@ const InputAssignSection = ({
 			openLabel={assignedToSectionName || 'Asignar'}
 			icon="swap"
 			openColor="success"
-			openVariant={!!sectionId ? 'filled' : 'ghost'}
+			openVariant={sectionId ? 'filled' : 'ghost'}
 			confirmLabel="Cambiar"
 			handleConfirm={async () => {
 				return await setNewSection({

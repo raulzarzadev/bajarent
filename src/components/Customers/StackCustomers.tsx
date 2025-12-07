@@ -1,10 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { CustomersStackParamList } from '../../navigation/types'
-import MyStaffLabel from '../MyStaffLabel'
+import type { CustomersStackParamList } from '../../navigation/types'
 import ErrorBoundary from '../ErrorBoundary'
-import { ScreenCustomersE } from './ScreenCustomers'
+import MyStaffLabel from '../MyStaffLabel'
 import { ScreenCustomerE } from './ScreenCustomer'
 import { ScreenCustomerFormE } from './ScreenCustomerForm'
+import { ScreenCustomersE } from './ScreenCustomers'
+
 // import StackOrders from '../StackOrders'
 
 const Stack = createStackNavigator<CustomersStackParamList>()

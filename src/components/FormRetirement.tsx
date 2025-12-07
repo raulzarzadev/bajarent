@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import Button from './Button'
-import { gStyles } from '../styles'
+
+import { StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import FormikInputSelect from './FormikInputSelect'
+import { gStyles } from '../styles'
+import Button from './Button'
 import FormikErrorsList from './FormikErrorsList'
 import FormikInputRadios from './FormikInputRadios'
+import FormikInputSelect from './FormikInputSelect'
+import FormikInputValue from './FormikInputValue'
 
 export enum type_of_retirement {
 	bonus = 'bono',
@@ -51,7 +51,7 @@ const FormRetirement = ({
 				validate={values => {
 					const errors: Partial<RetirementType> = {}
 					if (!values.amount) {
-						// @ts-ignore
+						// @ts-expect-error
 						errors.amount = 'El monto es requerido'
 					}
 

@@ -1,8 +1,8 @@
-import { ScrollView, View } from 'react-native'
-import StatsReports from './StatsReports'
-import StatsOrders from './StatsOrders'
 import { useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import InputSelect from './InputSelect'
+import StatsOrders from './StatsOrders'
+import StatsReports from './StatsReports'
 
 export default function Stats() {
 	const [view, setView] = useState('last7days')

@@ -1,14 +1,14 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import FormItem from './FormItem'
-import { useStore } from '../contexts/storeContext'
-import { gStyles } from '../styles'
-import ErrorBoundary from './ErrorBoundary'
-import ItemType from '../types/ItemType'
-import Loading from './Loading'
 import { useNavigation } from '@react-navigation/native'
+import React, { useEffect, useState } from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
 import { onUpdateItem } from '../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { gStyles } from '../styles'
+import type ItemType from '../types/ItemType'
+import ErrorBoundary from './ErrorBoundary'
+import FormItem from './FormItem'
+import Loading from './Loading'
 
 const ScreenItemEdit = ({ route }) => {
 	const itemId = route?.params?.id

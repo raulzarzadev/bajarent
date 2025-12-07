@@ -1,5 +1,5 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { type ReactNode } from 'react'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
 import theme from '../theme'
 export type ListRowField = {
 	width: ViewStyle['width'] | 'rest'

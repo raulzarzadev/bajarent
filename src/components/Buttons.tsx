@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, View } from 'react-native'
-import React from 'react'
-import Button, { ButtonProps } from './Button'
-import { IconName } from './Icon'
+import Button, { type ButtonProps } from './Button'
+import type { IconName } from './Icon'
+
 type ButtonType = {
 	variant: ButtonProps['variant']
 	color: ButtonProps['color']

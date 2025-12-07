@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import FormRetirement from './FormRetirement'
-import { gStyles } from '../styles'
-import { ServicePayments } from '../firebase/ServicePayments'
 import { useNavigation } from '@react-navigation/native'
+
+import { StyleSheet, Text, View } from 'react-native'
+import { ServicePayments } from '../firebase/ServicePayments'
+import { gStyles } from '../styles'
+import FormRetirement from './FormRetirement'
 
 const ScreenRetirementsNew = () => {
 	const { goBack } = useNavigation()

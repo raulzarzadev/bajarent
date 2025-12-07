@@ -1,6 +1,7 @@
 import { where } from 'firebase/firestore'
+import type { CategoryType } from '../types/RentItem'
 import { FirebaseGenericService } from './genericService'
-import { CategoryType } from '../types/RentItem'
+
 class ServiceCategoriesClass extends FirebaseGenericService<CategoryType> {
 	constructor() {
 		super('categories')

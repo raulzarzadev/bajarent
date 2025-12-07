@@ -1,18 +1,20 @@
-import FormOrder from './FormOrder'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { useStore } from '../contexts/storeContext'
-import OrderType, { order_status } from '../types/OrderType'
 import { useAuth } from '../contexts/authContext'
-import { orderExpireAt } from '../libs/orders'
-import { onRentStart } from '../libs/order-actions'
+import { useStore } from '../contexts/storeContext'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import useMyNav from '../hooks/useMyNav'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
-import { CustomerType } from '../state/features/costumers/customerType'
 import { createUUID } from '../libs/createId'
+import { onRentStart } from '../libs/order-actions'
+import { orderExpireAt } from '../libs/orders'
 import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
-import { getFavoriteCustomerPhone } from './Customers/lib/lib'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../state/features/costumers/customerType'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
+import type OrderType from '../types/OrderType'
+import { order_status } from '../types/OrderType'
+import { getFavoriteCustomerPhone } from './Customers/lib/lib'
+import FormOrder from './FormOrder'
 import { FormOrder2E } from './FormOrder2'
+
 //
 const ScreenOrderNew = navigation => {
 	const customerId = navigation?.route?.params?.customerId
@@ -51,7 +53,7 @@ const ScreenOrderNew = navigation => {
 			}
 			if (customerCreated) {
 				newCustomerCreated = customerCreated
-				//@ts-ignore
+				//@ts-expect-error
 				values.customerId = customerCreated?.id
 			}
 		}

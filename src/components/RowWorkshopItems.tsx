@@ -1,21 +1,20 @@
 import { Pressable, Text, View } from 'react-native'
-import ItemType, { ItemExternalRepairProps } from '../types/ItemType'
-import Button from './Button'
-import CardItem, { CardItemE } from './CardItem'
-import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
 import useMyNav from '../hooks/useMyNav'
-
-import { gStyles } from '../styles'
 import { onMarkQuoteAsDone } from '../libs/order-actions'
-import { ContactRow } from './OrderContacts'
-import LinkLocation from './LinkLocation'
-import InputCheckbox from './Inputs/InputCheckbox'
 import asDate, { dateFormat } from '../libs/utils-date'
-
+import { gStyles } from '../styles'
 import theme from '../theme'
-import WorkshopItemActions from './WorkshopItemActions'
+import type ItemType from '../types/ItemType'
+import type { ItemExternalRepairProps } from '../types/ItemType'
+import Button from './Button'
+import CardItem, { CardItemE } from './CardItem'
 import ErrorBoundary from './ErrorBoundary'
+import InputCheckbox from './Inputs/InputCheckbox'
+import LinkLocation from './LinkLocation'
+import { ContactRow } from './OrderContacts'
+import StyledModal from './StyledModal'
+import WorkshopItemActions from './WorkshopItemActions'
 
 const RowWorkshopItems = ({
 	items,

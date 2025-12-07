@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { InputDateE } from './InputDate'
-import Icon from './Icon'
 import { useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import Icon from './Icon'
+import { InputDateE } from './InputDate'
 
 const InputDatesRage = ({
 	defaultValues,

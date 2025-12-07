@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, Pressable, StyleSheet, TextInput } from 'react-native'
+import type React from 'react'
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 
 const Navbar: React.FC = () => {
 	return (

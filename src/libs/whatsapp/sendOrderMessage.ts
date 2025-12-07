@@ -1,8 +1,12 @@
 import { arrayUnion } from 'firebase/firestore'
+import { getFavoriteCustomerPhone } from '../../components/Customers/lib/lib'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
-import sendMessage from './sendMessage'
-import OrderType, { SentMessage } from '../../types/OrderType'
-import StoreType, { bot_configs_order_flow } from '../../types/StoreType'
+import type { CustomerType } from '../../state/features/costumers/customerType'
+import type OrderType from '../../types/OrderType'
+import type { SentMessage } from '../../types/OrderType'
+import type PaymentType from '../../types/PaymentType'
+import type StoreType from '../../types/StoreType'
+import type { bot_configs_order_flow } from '../../types/StoreType'
 import {
 	authorizedOrder,
 	expiredMessage,
@@ -14,9 +18,7 @@ import {
 	rentStarted
 } from '../whatsappMessages'
 import chooseOrderPhone from './chooseOrderPhone'
-import PaymentType from '../../types/PaymentType'
-import { CustomerType } from '../../state/features/costumers/customerType'
-import { getFavoriteCustomerPhone } from '../../components/Customers/lib/lib'
+import sendMessage from './sendMessage'
 
 export type OrderFlowMessages = keyof typeof bot_configs_order_flow
 
@@ -97,7 +99,7 @@ export const onSendOrderWhatsapp = async ({
 					sentBy: userId
 				}
 				ServiceOrders.update(orderWithCustomerName.id, {
-					//@ts-ignore
+					//@ts-expect-error
 					sentMessages: arrayUnion(sentMessage)
 				})
 				return { success: true }

@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import type {
 	CurrentWorkType,
 	CurrentWorkUpdate,
 	NewWorkUpdate
 } from '../../../components/CurrentWork/CurrentWorkType'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { ServiceCurrentWork } from '../../../components/CurrentWork/ServiceCurrentWork'
 import { useAuth } from '../../../contexts/authContext'
 import { convertTimestamps } from '../../../libs/utils-date'

@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
 import { useField } from 'formik'
-import InputAssignSection from './InputAssingSection'
+import { StyleSheet, Text, View } from 'react-native'
 import { gStyles } from '../styles'
+import InputAssignSection from './InputAssingSection'
 
 const FormikAssignSection = ({ name }) => {
 	const [field, meta, helpers] = useField(name)

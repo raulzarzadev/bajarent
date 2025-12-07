@@ -1,10 +1,10 @@
 import { View } from 'react-native'
-import Button, { ButtonProps } from './Button'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
+import type { PriceType } from '../types/PriceType'
+import Button, { type ButtonProps } from './Button'
 import FormPrice from './FormPrice'
-import { PriceType } from '../types/PriceType'
-import { IconName } from './Icon'
+import type { IconName } from './Icon'
+import StyledModal from './StyledModal'
 
 const ModalFormPrice = ({
 	handleSubmit,

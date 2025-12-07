@@ -1,4 +1,4 @@
-import { Platform, NativeModules } from 'react-native'
+import { NativeModules, Platform } from 'react-native'
 
 export const reloadApp = async () => {
 	if (Platform.OS === 'web') {

@@ -1,6 +1,6 @@
-import { Text, View } from 'react-native'
-import React from 'react'
 import { useFormikContext } from 'formik'
+
+import { Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import theme from '../theme'
 

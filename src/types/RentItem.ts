@@ -1,7 +1,7 @@
-import { ItemSelected } from '../components/FormSelectItem'
-import BaseType from './BaseType'
-import ItemType from './ItemType'
-import { PriceType } from './PriceType'
+import type { ItemSelected } from '../components/FormSelectItem'
+import type BaseType from './BaseType'
+import type ItemType from './ItemType'
+import type { PriceType } from './PriceType'
 
 export type RentItem = ItemSelected & {}
 

@@ -1,23 +1,22 @@
 import {
 	confirmPasswordReset,
 	createUserWithEmailAndPassword,
-	getAuth,
 	GoogleAuthProvider,
+	getAuth,
 	onAuthStateChanged,
 	sendPasswordResetEmail,
 	signInWithEmailAndPassword,
 	signInWithPopup,
 	signOut
 } from 'firebase/auth'
-
+import { where } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
+import { removeItem } from '../libs/storage'
+// import { findUserByEmail, getUser, setUser } from './users'
+import type UserType from '../types/UserType'
 import { FirebaseCRUD } from './firebase.CRUD'
 import { app, db } from './main'
-// import { findUserByEmail, getUser, setUser } from './users'
-import UserType from '../types/UserType'
 import { ServiceUsers } from './ServiceUser'
-import { where } from 'firebase/firestore'
-import { removeItem } from '../libs/storage'
 
 export const auth = getAuth(app)
 auth.languageCode = 'es'

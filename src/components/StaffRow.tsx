@@ -1,15 +1,15 @@
-import { Text, View, ViewStyle, StyleSheet } from 'react-native'
-import StaffType from '../types/StaffType'
-import { dateFormat } from '../libs/utils-date'
-import theme from '../theme'
-import { gStyles } from '../styles'
-import { ServiceSections } from '../firebase/ServiceSections'
 import { useNavigation } from '@react-navigation/native'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import ErrorBoundary from './ErrorBoundary'
-import Button from './Button'
+import { StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import { useStore } from '../contexts/storeContext'
+import { ServiceSections } from '../firebase/ServiceSections'
+import useModal from '../hooks/useModal'
+import { dateFormat } from '../libs/utils-date'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type StaffType from '../types/StaffType'
+import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import StyledModal from './StyledModal'
 
 export type StaffRowProps = {
 	staffId: StaffType['id']
@@ -89,7 +89,7 @@ const Row = ({
 												label="Editar"
 												onPress={() => {
 													modal.setOpen(false)
-													// @ts-ignore
+													// @ts-expect-error
 													navigation.navigate('StaffEdit', { staffId })
 												}}
 											></Button>
@@ -99,7 +99,7 @@ const Row = ({
 												label="Ver detalles"
 												onPress={() => {
 													modal.setOpen(false)
-													// @ts-ignore
+													// @ts-expect-error
 													navigation.navigate('StaffDetails', {
 														staffId
 													})

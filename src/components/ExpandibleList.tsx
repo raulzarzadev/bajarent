@@ -1,8 +1,7 @@
-import { View, Text, Pressable } from 'react-native'
-
-import { ReactNode, useState } from 'react'
-import Button from './Button'
+import { type ReactNode, useState } from 'react'
+import { Pressable, Text, View } from 'react-native'
 import { gStyles } from '../styles'
+import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
 export type BasicExpandibleItemType = {
 	id: string

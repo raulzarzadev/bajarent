@@ -1,40 +1,39 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import Button, { ButtonProps } from '../Button'
-import { useOrderDetails } from '../../contexts/orderContext'
-import OrderType, { order_status, order_type } from '../../types/OrderType'
-import useModal from '../../hooks/useModal'
-
-import ModalRentStart from './ModalRentStart'
-import ModalRentFinish from './ModalRentFinish'
-import { gSpace, gStyles } from '../../styles'
-import {
-	onComment,
-	onRepairDelivery,
-	onRepairFinish,
-	onRepairCancelPickup,
-	onAuthorize,
-	onCancel
-} from '../../libs/order-actions'
-import { useAuth } from '../../contexts/authContext'
 import { useEffect, useState } from 'react'
-import ModalStartRepair from './ModalRepairStart'
-import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
-import ButtonConfirm from '../ButtonConfirm'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useAuth } from '../../contexts/authContext'
 import { useEmployee } from '../../contexts/employeeContext'
-import { ItemStatuses } from '../../types/ItemType'
-import { onRegistryEntry } from '../../firebase/actions/item-actions'
+import { useOrderDetails } from '../../contexts/orderContext'
 import { useStore } from '../../contexts/storeContext'
-import InputTextStyled from '../InputTextStyled'
-import useMyNav from '../../hooks/useMyNav'
-import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
-
-import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
-import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
+import { onRegistryEntry } from '../../firebase/actions/item-actions'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
-import UserType from '../../types/UserType'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { ServiceStoreItems } from '../../firebase/ServiceStoreItems'
+import useModal from '../../hooks/useModal'
+import useMyNav from '../../hooks/useMyNav'
+import {
+	onAuthorize,
+	onCancel,
+	onComment,
+	onRepairCancelPickup,
+	onRepairDelivery,
+	onRepairFinish
+} from '../../libs/order-actions'
+import { onSendOrderWhatsapp } from '../../libs/whatsapp/sendOrderMessage'
+import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
+import { gSpace, gStyles } from '../../styles'
+import { ItemStatuses } from '../../types/ItemType'
+import type OrderType from '../../types/OrderType'
+import { order_status, order_type } from '../../types/OrderType'
+import type UserType from '../../types/UserType'
+import Button, { type ButtonProps } from '../Button'
+import ButtonConfirm from '../ButtonConfirm'
+import ErrorBoundary from '../ErrorBoundary'
+import InputTextStyled from '../InputTextStyled'
 import { ModalPaymentSale } from '../ModalPaymentSale'
+import checkIfAllItemsExists from './libs/checkIfAllItemsExists'
+import ModalRentFinish from './ModalRentFinish'
+import ModalRentStart from './ModalRentStart'
+import ModalStartRepair from './ModalRepairStart'
 
 //* repaired
 function OrderActions() {

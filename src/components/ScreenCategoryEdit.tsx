@@ -1,10 +1,9 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
-import FormCategory from './FormCategory'
-import { gStyles } from '../styles'
 import { useStore } from '../contexts/storeContext'
 import useCategories from '../hooks/useCategories'
+import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
+import FormCategory from './FormCategory'
 
 const ScreenCategoryEdit = ({ navigation, route }) => {
 	const categoryId = route.params.id

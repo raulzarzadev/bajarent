@@ -1,8 +1,8 @@
 import { View } from 'react-native'
-import Button from './Button'
-import { gSpace } from '../styles'
 import { useEmployee } from '../contexts/employeeContext'
 import ModalCloseOperations from '../ModalCloseOperations'
+import { gSpace } from '../styles'
+import Button from './Button'
 
 const ScreenCashbox = ({ navigation }) => {
 	const {

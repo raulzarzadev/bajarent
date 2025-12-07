@@ -1,4 +1,4 @@
-import { CustomerType } from '../../../state/features/costumers/customerType'
+import type { CustomerType } from '../../../state/features/costumers/customerType'
 
 export const getFavoriteCustomerPhone = (customerContacts: CustomerType['contacts']) => {
 	const phones = Object.values(customerContacts || {})

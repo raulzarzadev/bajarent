@@ -1,15 +1,16 @@
-import { View, Text, Linking } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
+import { Formik } from 'formik'
+import { useEffect, useState } from 'react'
+import { Linking, Text, View } from 'react-native'
+import useModal from '../../hooks/useModal'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../../state/features/costumers/customerType'
 import { gStyles } from '../../styles'
 import Button from '../Button'
-import useModal from '../../hooks/useModal'
+import CardPhone from '../CardPhone'
+import ErrorBoundary from '../ErrorBoundary'
 import StyledModal from '../StyledModal'
 import { FormikCustomerContacts } from './FormCustomer'
-import { Formik } from 'formik'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
-import CardPhone from '../CardPhone'
-import { CustomerType } from '../../state/features/costumers/customerType'
-import { useEffect, useState } from 'react'
+
 const CustomerContacts = (props?: CustomerContactsProps) => {
 	const cantAdd = props?.canAdd
 	const customerContacts = props?.customerContacts

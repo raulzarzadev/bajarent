@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
-import ButtonConfirm from '../ButtonConfirm'
 import { useState } from 'react'
-import InputPhone from '../InputPhone'
-import sendMessage from '../../libs/whatsapp/sendMessage'
+import { Text, View } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
+import sendMessage from '../../libs/whatsapp/sendMessage'
+import ButtonConfirm from '../ButtonConfirm'
+import InputPhone from '../InputPhone'
 
 const TestMessage = () => {
 	const [number, setNumber] = useState('')

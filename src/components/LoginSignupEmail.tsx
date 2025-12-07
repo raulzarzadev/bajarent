@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import InputTextStyled from './InputTextStyled'
-import Button from './Button'
+import { StyleSheet, Text, View } from 'react-native'
 import { createUserWithPassword, signInWithPassword } from '../firebase/auth'
 import { gStyles } from '../styles'
+import Button from './Button'
+import InputTextStyled from './InputTextStyled'
 
 const LoginSignUpEmail = () => {
 	const [form, setForm] = useState({ email: '', password: '', name: '' })

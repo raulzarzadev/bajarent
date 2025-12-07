@@ -1,31 +1,31 @@
-import { View, Text, Dimensions } from 'react-native'
-import { useEffect, useState } from 'react'
-import { ListE } from './List'
-import ItemType from '../types/ItemType'
-import ListRow, { ListRowField } from './ListRow'
 import { useRoute } from '@react-navigation/native'
-import ButtonConfirm from './ButtonConfirm'
-import dictionary from '../dictionary'
-import useMyNav from '../hooks/useMyNav'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import { useStore } from '../contexts/storeContext'
+import { isToday } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { Dimensions, Text, View } from 'react-native'
+import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
+import { useItemsCtx } from '../contexts/itemsContext'
+import { useStore } from '../contexts/storeContext'
+import dictionary from '../dictionary'
 import {
 	onChangeItemSection,
 	onCheckInInventory,
 	onRetireItem
 } from '../firebase/actions/item-actions'
-import theme, { colors } from '../theme'
-import Icon from './Icon'
-import { ItemFixDetails } from './ItemDetails'
-import { useAuth } from '../contexts/authContext'
-import { isToday } from 'date-fns'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import useMyNav from '../hooks/useMyNav'
 import asDate from '../libs/utils-date'
-import InputAssignSection from './InputAssingSection'
-import { SectionType } from '../types/SectionType'
-import { gStyles } from '../styles'
-import { useItemsCtx } from '../contexts/itemsContext'
 import { formatItems } from '../libs/workshop.libs'
+import { gStyles } from '../styles'
+import theme, { colors } from '../theme'
+import type ItemType from '../types/ItemType'
+import type { SectionType } from '../types/SectionType'
+import ButtonConfirm from './ButtonConfirm'
+import Icon from './Icon'
+import InputAssignSection from './InputAssingSection'
+import { ItemFixDetails } from './ItemDetails'
+import { ListE } from './List'
+import ListRow, { type ListRowField } from './ListRow'
 
 const OPACITY_ROW_COLOR = '66'
 
@@ -45,7 +45,7 @@ const ListStoreItems = ({
 	const { items } = useItemsCtx()
 	const { toItems } = useMyNav()
 
-	//@ts-ignore
+	//@ts-expect-error
 	const listItems = params?.ids
 
 	const filteredItems = items?.filter(item => {

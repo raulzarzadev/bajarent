@@ -1,8 +1,8 @@
+import { Text, View, type ViewStyle } from 'react-native'
 import RNPickerSelect from 'react-native-picker-select'
 import { gStyles } from '../styles'
-import { Text, View, ViewStyle } from 'react-native'
 import theme from '../theme'
-import { HelperTextColors } from './InputTextStyled'
+import type { HelperTextColors } from './InputTextStyled'
 export type SelectOption = {
 	label: string
 	value: string

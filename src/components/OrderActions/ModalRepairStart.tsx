@@ -1,15 +1,15 @@
-import { View } from 'react-native'
 import { useState } from 'react'
-import StyledModal from '../StyledModal'
-import { ReturnModal } from '../../hooks/useModal'
-import Button from '../Button'
-import { onRepairStart } from '../../libs/order-actions'
+import { View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
-import FormRepairDelivery from './FormRepairDelivery'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
-import { RepairItemConfigInfo } from '../OrderDetails'
+import type { ReturnModal } from '../../hooks/useModal'
+import { onRepairStart } from '../../libs/order-actions'
 import { useCurrentWork } from '../../state/features/currentWork/currentWorkSlice'
+import Button from '../Button'
+import { RepairItemConfigInfo } from '../OrderDetails'
+import StyledModal from '../StyledModal'
+import FormRepairDelivery from './FormRepairDelivery'
 
 const ModalStartRepair = ({ modal }: { modal: ReturnModal }) => {
 	const { order } = useOrderDetails()

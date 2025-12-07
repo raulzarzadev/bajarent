@@ -1,13 +1,13 @@
-import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
+import { Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import ErrorBoundary from './ErrorBoundary'
-import ItemType from '../types/ItemType'
-import { gStyles } from '../styles'
-import { RowSectionItemsE } from './ListAssignedItems'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
 import useMyNav from '../hooks/useMyNav'
 import { formatItems } from '../libs/workshop.libs'
+import { gStyles } from '../styles'
+import type ItemType from '../types/ItemType'
+import ErrorBoundary from './ErrorBoundary'
+import { RowSectionItemsE } from './ListAssignedItems'
 
 export type ListItemsSectionsProps = {
 	onPressItem?: (itemId: string) => void

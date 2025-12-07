@@ -2,8 +2,8 @@ import { ServiceComments } from '../../firebase/ServiceComments'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { ServicePayments } from '../../firebase/ServicePayments'
 import { formatOrder } from '../../libs/orders'
-import OrderType from '../../types/OrderType'
-import { CommentType } from '../../types/CommentType'
+import type { CommentType } from '../../types/CommentType'
+import type OrderType from '../../types/OrderType'
 
 export const getFullOrderData = async (orderId: string): Promise<OrderType> => {
 	const order = await ServiceOrders.get(orderId)
@@ -15,7 +15,7 @@ export const getFullOrderData = async (orderId: string): Promise<OrderType> => {
 }
 
 export const listenFullOrderData = (orderId: string, cb: CallableFunction) => {
-	let currentOrder: OrderType | undefined | null = undefined
+	let currentOrder: OrderType | undefined | null
 	let currentReports: CommentType[] = []
 	let orderLoaded = false
 

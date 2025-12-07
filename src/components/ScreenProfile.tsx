@@ -1,14 +1,14 @@
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
-import PhoneLogin from './LoginPhone'
-import Button from './Button'
 import { logout } from '../firebase/auth'
-import CardUser from './CardUser'
-import ErrorBoundary from './ErrorBoundary'
-import ChooseProfile from './ChooseProfile'
-import LoginSignUpEmail from './LoginSignupEmail'
-import { CardEmployeeE } from './CardEmployee'
 import { AppVersionE } from './AppVersion'
+import Button from './Button'
+import { CardEmployeeE } from './CardEmployee'
+import CardUser from './CardUser'
+import ChooseProfile from './ChooseProfile'
+import ErrorBoundary from './ErrorBoundary'
+import PhoneLogin from './LoginPhone'
+import LoginSignUpEmail from './LoginSignupEmail'
 
 const ScreenProfile = ({ navigation }) => {
 	const { user } = useAuth()

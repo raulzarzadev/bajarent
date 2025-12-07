@@ -1,19 +1,18 @@
 import { View } from 'react-native'
-import React from 'react'
-import { workshop_status } from '../types/WorkshopType'
-import Button from './Button'
+import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
+import { onChangeItemSection } from '../firebase/actions/item-actions'
 import {
 	onWorkshopDeliveryRepair,
 	onWorkshopRepairPending,
 	onWorkshopRepairPickUp,
 	onWorkshopRepairStart
 } from '../firebase/actions/workshop-actions'
-import { ItemExternalRepairProps } from '../types/ItemType'
-import { useStore } from '../contexts/storeContext'
-import { useAuth } from '../contexts/authContext'
-import InputAssignSection from './InputAssingSection'
 import { onAssignOrder, onRepairFinish, onRepairStart } from '../libs/order-actions'
-import { onChangeItemSection } from '../firebase/actions/item-actions'
+import type { ItemExternalRepairProps } from '../types/ItemType'
+import { workshop_status } from '../types/WorkshopType'
+import Button from './Button'
+import InputAssignSection from './InputAssingSection'
 import ModalFixItem from './ModalFixItem'
 
 const WorkshopItemActions = ({ item }: { item: Partial<ItemExternalRepairProps> }) => {

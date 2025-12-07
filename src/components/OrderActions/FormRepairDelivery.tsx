@@ -1,10 +1,10 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
 import { Formik } from 'formik'
+import React, { useEffect } from 'react'
+import { StyleSheet, View } from 'react-native'
+import type OrderType from '../../types/OrderType'
+import Button from '../Button'
 import FormikInputValue from '../FormikInputValue'
 import InputLocationFormik from '../InputLocationFormik'
-import OrderType from '../../types/OrderType'
-import Button from '../Button'
 
 const FormRepairDelivery = ({
 	initialValues,

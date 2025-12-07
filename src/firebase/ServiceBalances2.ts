@@ -1,17 +1,18 @@
-import { limit, orderBy, where } from 'firebase/firestore'
-import { FirebaseGenericService } from './genericService'
-import { BalanceType2 } from '../types/BalanceType'
-import { ServiceOrders } from './ServiceOrders'
-import OrderType, { order_status, order_type } from '../types/OrderType'
-import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isAfter, isBefore, isToday } from 'date-fns'
-import { getTodayRenews, isRenewedToday } from '../libs/orders'
-import { ServiceComments } from './ServiceComments'
-import { CommentType } from '../types/CommentType'
+import { limit, orderBy, where } from 'firebase/firestore'
 import { getBalancePayments } from '../libs/balance'
-import PaymentType from '../types/PaymentType'
+import { getTodayRenews, isRenewedToday } from '../libs/orders'
+import asDate, { endDate, startDate } from '../libs/utils-date'
+import type { BalanceType2 } from '../types/BalanceType'
+import type { CommentType } from '../types/CommentType'
+import type ItemType from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import { FirebaseGenericService } from './genericService'
+import { ServiceComments } from './ServiceComments'
+import { ServiceOrders } from './ServiceOrders'
 import { ServiceStoreItems } from './ServiceStoreItems'
-import ItemType from '../types/ItemType'
 
 class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 	constructor() {
@@ -101,18 +102,16 @@ class ServiceBalancesClass extends FirebaseGenericService<BalanceType2> {
 
 			//* GET ORDER EXTENSIONS IN DATES
 
-			const extensionsInDate = orders
-				.map(order => {
-					return Object.values(order?.extensions || {})
-						.map(e => ({ ...e, orderId: order?.id }))
-						.filter(
-							ext =>
-								ext.reason === 'extension' &&
-								isAfter(asDate(ext.createdAt), asDate(FROM_DATE)) &&
-								isBefore(asDate(ext.createdAt), asDate(TO_DATE))
-						)
-				})
-				.flat()
+			const extensionsInDate = orders.flatMap(order => {
+				return Object.values(order?.extensions || {})
+					.map(e => ({ ...e, orderId: order?.id }))
+					.filter(
+						ext =>
+							ext.reason === 'extension' &&
+							isAfter(asDate(ext.createdAt), asDate(FROM_DATE)) &&
+							isBefore(asDate(ext.createdAt), asDate(TO_DATE))
+					)
+			})
 
 			progress?.(10)
 

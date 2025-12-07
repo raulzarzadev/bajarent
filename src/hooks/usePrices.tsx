@@ -1,6 +1,6 @@
-import { PriceType } from '../types/PriceType'
-import { ServicePrices } from '../firebase/ServicePrices'
 import { useStore } from '../contexts/storeContext'
+import { ServicePrices } from '../firebase/ServicePrices'
+import type { PriceType } from '../types/PriceType'
 
 function usePrices() {
 	const { handleUpdateStore } = useStore()

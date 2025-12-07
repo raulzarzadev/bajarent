@@ -1,10 +1,10 @@
+import { limit, orderBy, type QueryConstraint, startAfter } from 'firebase/firestore'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Platform, Text, View } from 'react-native'
-import { limit, orderBy, QueryConstraint, startAfter } from 'firebase/firestore'
-import Button from '../Button'
-import { AppErrorType, ServiceAppErrors } from '../../firebase/ServiceAppErrors'
+import { type AppErrorType, ServiceAppErrors } from '../../firebase/ServiceAppErrors'
 import { ServiceUsers } from '../../firebase/ServiceUser'
 import asDate, { dateFormat } from '../../libs/utils-date'
+import Button from '../Button'
 
 export const AppErrorLogs = () => {
 	const PAGE_SIZE = 20

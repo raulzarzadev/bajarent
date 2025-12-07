@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import InputSwitch from './InputSwitch'
 import { useEmployee } from '../contexts/employeeContext'
-import { useShop } from '../hooks/useShop'
 import { ServiceStores } from '../firebase/ServiceStore'
+import { useShop } from '../hooks/useShop'
 import catchError from '../libs/catchError'
+import InputSwitch from './InputSwitch'
 
 const InputDisabledStaff = ({ staffId }) => {
 	const { shop } = useShop()

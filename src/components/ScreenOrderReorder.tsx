@@ -1,11 +1,12 @@
-import { ActivityIndicator } from 'react-native'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType, { order_status } from '../types/OrderType'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
+import { ActivityIndicator } from 'react-native'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
+import type OrderType from '../types/OrderType'
+import { order_status } from '../types/OrderType'
 import { FormOrder2E } from './FormOrder2'
 
 const ScreenOrderReorder = ({ route }) => {
@@ -59,7 +60,7 @@ const ScreenOrderReorder = ({ route }) => {
 					status: order_status.AUTHORIZED
 				}
 
-				// @ts-ignore
+				// @ts-expect-error
 				await ServiceOrders.createSerialOrder(reOrder)
 					.then(orderId => {
 						addWork({
@@ -73,7 +74,7 @@ const ScreenOrderReorder = ({ route }) => {
 							}
 						})
 						if (orderId) {
-							// @ts-ignore
+							// @ts-expect-error
 							navigate('OrderDetails', { orderId: orderId })
 						}
 					})

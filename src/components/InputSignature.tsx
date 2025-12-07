@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import SignatureScreen from 'react-signature-canvas'
-import Button from './Button'
-import StyledModal from './StyledModal'
 import useModal from '../hooks/useModal'
+import Button from './Button'
 import ImagePreview from './ImagePreview'
+import StyledModal from './StyledModal'
 
 const InputSignature = ({
 	setValue,

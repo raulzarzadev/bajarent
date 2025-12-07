@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { InputDateE } from './InputDate'
 import { useField } from 'formik'
-import { gStyles } from '../styles'
+
+import { Text, View } from 'react-native'
 import asDate from '../libs/utils-date'
+import { gStyles } from '../styles'
+import { InputDateE } from './InputDate'
 
 const FormikInputDate = ({ name, label = 'Fecha', withTime = false }) => {
 	const [field, meta, helpers] = useField(name)

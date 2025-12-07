@@ -1,6 +1,6 @@
-import BaseType from './BaseType'
-import { OrderExtensionType } from './OrderType'
-import PaymentType from './PaymentType'
+import type BaseType from './BaseType'
+import type { OrderExtensionType } from './OrderType'
+import type PaymentType from './PaymentType'
 
 export type BalanceOrders = {
 	ordersCreated?: string[]

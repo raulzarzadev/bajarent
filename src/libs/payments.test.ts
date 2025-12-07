@@ -1,6 +1,6 @@
+import { describe, expect, it } from 'bun:test'
 import { payment_methods } from '../types/PaymentType'
-import { expect, describe, it } from 'bun:test'
-import { Payments, payments_amount, PaymentsAmount } from './paymentsUtils'
+import { type Payments, type PaymentsAmount, payments_amount } from './paymentsUtils'
 
 describe('payments_amount', () => {
 	it('When are no payments should be 0', () => {

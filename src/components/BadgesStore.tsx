@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
-import BadgeOwner from './BadgeOwner'
-import BadgeAdmin from './BadgeAdmin'
 import { gSpace } from '../styles'
+import BadgeAdmin from './BadgeAdmin'
+import BadgeOwner from './BadgeOwner'
 
 const BadgesStore = () => {
 	const {

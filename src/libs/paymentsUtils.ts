@@ -1,4 +1,5 @@
-import PaymentType, { payment_methods } from '../types/PaymentType'
+import type PaymentType from '../types/PaymentType'
+import { payment_methods } from '../types/PaymentType'
 
 export type Payment = Partial<PaymentType>
 export type Payments = Payment[]

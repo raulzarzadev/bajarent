@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import { Linking, View } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
+import Button from './Button'
 import ButtonConfirm from './ButtonConfirm'
+import ErrorBoundary from './ErrorBoundary'
 import InputSignature from './InputSignature'
 import InputCheckbox from './Inputs/InputCheckbox'
-import { useState } from 'react'
-import Button from './Button'
+
 const InputContractSignature = (props?: InputContractSignatureProps) => {
 	const [accept, setAccept] = useState(props?.values?.accept || false)
 	const [sendCopy, setSendCopy] = useState(props?.values?.sendCopy || false)

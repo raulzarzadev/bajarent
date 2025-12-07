@@ -1,24 +1,25 @@
-import { View, Text, ScrollView } from 'react-native'
+import { isBefore, subDays } from 'date-fns'
+import { useState } from 'react'
+import { ScrollView, Text, View } from 'react-native'
+import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
+import { useStore } from '../contexts/storeContext'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
+import mapEnumToOptions from '../libs/mapEnumToOptions'
+import { sleep } from '../libs/sleep'
+import asDate, { endDate } from '../libs/utils-date'
+import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
+import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
+import { expiredMessage } from '../libs/whatsappMessages'
+import { gStyles } from '../styles'
+import type OrderType from '../types/OrderType'
+import { order_status } from '../types/OrderType'
+import ButtonConfirm from './ButtonConfirm'
 import ErrorBoundary from './ErrorBoundary'
 import InputRadios from './InputRadios'
-import { gStyles } from '../styles'
-import { useState } from 'react'
-import ButtonConfirm from './ButtonConfirm'
-import OrderType, { order_status } from '../types/OrderType'
-import { expiredMessage } from '../libs/whatsappMessages'
-import { useStore } from '../contexts/storeContext'
-import mapEnumToOptions from '../libs/mapEnumToOptions'
-import TestMessage from './WhatsappBot/TestMessage'
-import { useEmployee } from '../contexts/employeeContext'
-import { onSendOrderWhatsapp } from '../libs/whatsapp/sendOrderMessage'
-import { useAuth } from '../contexts/authContext'
-import chooseOrderPhone from '../libs/whatsapp/chooseOrderPhone'
 import ListOrders from './ListOrders'
-import asDate, { endDate } from '../libs/utils-date'
-import { isBefore, subDays } from 'date-fns'
 import Loading from './Loading'
-import { sleep } from '../libs/sleep'
-import { useOrdersRedux } from '../hooks/useOrdersRedux'
+import TestMessage from './WhatsappBot/TestMessage'
 
 export default function ScreenMessages() {
 	const { permissions, employee } = useEmployee()
@@ -74,7 +75,7 @@ export default function ScreenMessages() {
 		message: string
 		userId: string
 	}) => {
-		let sentList = []
+		const sentList = []
 		const TIME_OUT_SECONDS = 5
 		const TIME_BETWEEN_MESSAGES = 1000 * TIME_OUT_SECONDS //<--- IN SECONDS
 		setProgress(0)

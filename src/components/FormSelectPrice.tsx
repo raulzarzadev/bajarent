@@ -1,9 +1,10 @@
-import { View, Text, FlatList, Pressable, ViewStyle, StyleSheet } from 'react-native'
-import { PriceType } from '../types/PriceType'
-import P from './P'
-import theme, { colors } from '../theme'
-import CurrencyAmount from './CurrencyAmount'
+import { FlatList, Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import { sortPricesByTime } from '../libs/prices'
+import theme, { colors } from '../theme'
+import type { PriceType } from '../types/PriceType'
+import CurrencyAmount from './CurrencyAmount'
+import P from './P'
+
 const FormSelectPrice = ({
 	prices,
 	value,

@@ -1,8 +1,9 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { StoreBalanceType } from '../../types/StoreBalance'
-import { BalanceAmountsE } from '../BalanceAmounts'
+import { Text, View } from 'react-native'
 import { gStyles } from '../../styles'
+import type { StoreBalanceType } from '../../types/StoreBalance'
+import { BalanceAmountsE } from '../BalanceAmounts'
+import ErrorBoundary from '../ErrorBoundary'
+
 const GeneralBalance = (props: GeneralBalanceProps) => {
 	const balance = props?.balance
 	const payments = balance?.payments

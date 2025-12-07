@@ -1,13 +1,13 @@
-import { ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
-import FormOrder from './FormOrder'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { order_status, order_type } from '../types/OrderType'
+import { ActivityIndicator } from 'react-native'
 import { useAuth } from '../contexts/authContext'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { orderExpireAt } from '../libs/orders'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
-import TextInfo from './TextInfo'
+import { order_status, order_type } from '../types/OrderType'
+import FormOrder from './FormOrder'
 import { FormOrder2E } from './FormOrder2'
+import TextInfo from './TextInfo'
 
 const ScreenOrderEdit = ({ route, navigation }) => {
 	const orderId = route?.params?.orderId
@@ -35,7 +35,7 @@ const ScreenOrderEdit = ({ route, navigation }) => {
 					if (order?.customerId) {
 						await update(order?.customerId, {
 							name: values.fullName || '',
-							//@ts-ignore //* Just will update some basic values
+							//@ts-expect-error //* Just will update some basic values
 							address: {
 								street: values?.address || '',
 								references: values?.references || '',

@@ -1,31 +1,32 @@
-import React, { useEffect, useMemo, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
-import { ItemSelected } from './FormSelectItem'
-import { CategoryType } from '../types/RentItem'
-import Button from './Button'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
-import { gSpace } from '../styles'
 import { v4 as uidGenerator } from 'uuid'
-import theme from '../theme'
-import { useStore } from '../contexts/storeContext'
-import FormSelectPrice from './FormSelectPrice'
-import { PriceType } from '../types/PriceType'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import FormChooseCategory from './FormChooseCategory'
-import Totals from './ItemsTotals'
 import { useEmployee } from '../contexts/employeeContext'
-import { ListAssignedItemsE } from './ListAssignedItems'
-import ItemType from '../types/ItemType'
-import RowItem from './RowItem'
-import ButtonConfirm from './ButtonConfirm'
-import FormItem from './FormItem'
-import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import { ModalSelectCategoryPriceE } from './ModalSelectCategoryPrice'
-import { ErrorsList } from './FormikErrorsList'
-import OrderType, { order_type } from '../types/OrderType'
+import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
+import useModal from '../hooks/useModal'
+import { gSpace } from '../styles'
+import theme from '../theme'
+import type ItemType from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import { order_type } from '../types/OrderType'
+import type { PriceType } from '../types/PriceType'
+import type { CategoryType } from '../types/RentItem'
+import Button from './Button'
+import ButtonConfirm from './ButtonConfirm'
 import ErrorBoundary from './ErrorBoundary'
+import FormChooseCategory from './FormChooseCategory'
+import FormItem from './FormItem'
+import { ErrorsList } from './FormikErrorsList'
+import type { ItemSelected } from './FormSelectItem'
+import FormSelectPrice from './FormSelectPrice'
+import Totals from './ItemsTotals'
+import { ListAssignedItemsE } from './ListAssignedItems'
+import { ModalSelectCategoryPriceE } from './ModalSelectCategoryPrice'
+import RowItem from './RowItem'
+import StyledModal from './StyledModal'
 
 const FormikSelectCategories = ({
 	name,
@@ -171,7 +172,7 @@ FormikSelectCategoriesProps) => {
 
 					<ErrorsList
 						errors={(() => {
-							let errorList: Record<string, string> = {}
+							const errorList: Record<string, string> = {}
 							if (!itemSelected && shouldSelectAnItem)
 								errorList.itemSelected = 'Seleccione un artículo'
 							if (!price) errorList.priceSelected = 'Seleccione un precio'
@@ -298,7 +299,7 @@ export const ItemRow = ({
 
 	///console.log({ itemCategoryId, item, storeItem, _item })
 
-	//@ts-ignore //TODO: <--- this should be fixed
+	//@ts-expect-error //TODO: <--- this should be fixed
 	const priceSelectedId = item?.priceSelected?.id
 	//const priceSelectedId = item?.priceSelectedId
 	return (

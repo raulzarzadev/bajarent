@@ -1,10 +1,11 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { useEffect, useState } from 'react'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { where } from 'firebase/firestore'
-import ListOrders from '../ListOrders'
+import { useEffect, useState } from 'react'
+import { Text, View } from 'react-native'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
 import useMyNav from '../../hooks/useMyNav'
+import ErrorBoundary from '../ErrorBoundary'
+import ListOrders from '../ListOrders'
+
 const CustomerOrders = (props?: CustomerOrdersProps) => {
 	const [orders, setOrders] = useState([])
 	const { toCustomers } = useMyNav()

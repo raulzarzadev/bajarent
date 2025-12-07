@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import PaymentType from '../types/PaymentType'
+import { StyleSheet, Text, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
+import { useStore } from '../contexts/storeContext'
 import { ServicePayments } from '../firebase/ServicePayments'
 import { endDate, startDate } from '../libs/utils-date'
-import { useStore } from '../contexts/storeContext'
 import { gStyles } from '../styles'
+import type PaymentType from '../types/PaymentType'
 import BalanceAmounts from './BalanceAmounts'
-import { useEmployee } from '../contexts/employeeContext'
 
 const DateCounts = ({ date }: { date: Date }) => {
 	const [payments, setPayments] = useState<PaymentType[]>([])

@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { useState, useEffect } from 'react'
-import ListBalances from './ListBalances'
-import { ServiceBalances } from '../firebase/ServiceBalances'
 import { useStore } from '../contexts/storeContext'
+import { ServiceBalances } from '../firebase/ServiceBalances'
+import ListBalances from './ListBalances'
 
 const ScreenBalances = () => {
 	const [balances, setBalances] = useState([])

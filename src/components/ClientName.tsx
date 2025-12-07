@@ -1,5 +1,5 @@
-import { Text, TextStyle } from 'react-native'
-import OrderType from '../types/OrderType'
+import { Text, type TextStyle } from 'react-native'
+import type OrderType from '../types/OrderType'
 
 const ClientName = ({ order, style }: { order: Partial<OrderType>; style?: TextStyle }) => {
 	const clientName =

@@ -1,10 +1,9 @@
 import { View } from 'react-native'
-import React from 'react'
-import InputCheckbox from './Inputs/InputCheckbox'
+import theme from '../theme'
 import ErrorBoundary from './ErrorBoundary'
 import InputPhone from './InputPhone'
+import InputCheckbox from './Inputs/InputCheckbox'
 import InputRadios from './Inputs/InputRadios'
-import theme from '../theme'
 
 const Inputs = () => {
 	const [checked, setChecked] = React.useState(false)

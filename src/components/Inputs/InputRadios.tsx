@@ -1,8 +1,7 @@
-import { View, Text, ViewStyle } from 'react-native'
-import React from 'react'
-import InputCheckbox from './InputCheckbox'
-import { IconName } from '../Icon'
+import { Text, View, type ViewStyle } from 'react-native'
 import { gStyles } from '../../styles'
+import type { IconName } from '../Icon'
+import InputCheckbox from './InputCheckbox'
 
 export type InputRadioOption<T = string> = {
 	label: string

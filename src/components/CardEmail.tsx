@@ -1,5 +1,6 @@
 import { View } from 'react-native'
 import LinkEmail from './LinkEmail'
+
 const CardEma = ({ email }: { email: string }) => {
 	return (
 		<View style={{ justifyContent: 'center' }}>

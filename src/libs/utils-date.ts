@@ -1,4 +1,3 @@
-import { Timestamp } from 'firebase/firestore'
 import {
 	endOfWeek,
 	format as fnsFormat,
@@ -10,6 +9,7 @@ import {
 	subWeeks
 } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { Timestamp } from 'firebase/firestore'
 
 export const weekDays = {
 	0: 'Domingo',

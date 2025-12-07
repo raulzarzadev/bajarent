@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import Button from './Button'
-import { OrderQuoteType } from '../types/OrderType'
+
+import { StyleSheet, Text, View } from 'react-native'
 import useScreenSize from '../hooks/useScreenSize'
+import type { OrderQuoteType } from '../types/OrderType'
+import Button from './Button'
+import FormikInputValue from './FormikInputValue'
 
 const FormQuote = ({
 	quote,

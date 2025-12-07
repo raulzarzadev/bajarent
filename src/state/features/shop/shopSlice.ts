@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import StoreType from '../../../types/StoreType'
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { getFullStoreData } from '../../../contexts/libs/getFullStoreData'
+import type StoreType from '../../../types/StoreType'
 
-import { RootState } from '../../store'
+import type { RootState } from '../../store'
 
 // Define the initial state interface
 interface ShopState {

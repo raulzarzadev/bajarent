@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import InputTextStyled from '../InputTextStyled'
-import ItemType from '../../types/ItemType'
+import { StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
+import type ItemType from '../../types/ItemType'
 import InputSelect from '../InputSelect'
+import InputTextStyled from '../InputTextStyled'
 
 const FormItemPickUp = ({
 	item,

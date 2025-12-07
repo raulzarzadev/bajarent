@@ -1,17 +1,17 @@
-import { ScrollView, Text, View } from 'react-native'
 import { useState } from 'react'
-import Button from './Button'
-import ListStaff from './ListStaff2'
+import { ScrollView, Text, View } from 'react-native'
+import { useAuth } from '../contexts/authContext'
+import { ServiceStaff } from '../firebase/ServiceStaff'
+import { ServiceStores } from '../firebase/ServiceStore'
+import useModal from '../hooks/useModal'
+import { useShop } from '../hooks/useShop'
+import catchError from '../libs/catchError'
 import { gStyles } from '../styles'
+import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
+import ListStaff from './ListStaff2'
 import Loading from './Loading'
 import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import { ServiceStaff } from '../firebase/ServiceStaff'
-import { useShop } from '../hooks/useShop'
-import { ServiceStores } from '../firebase/ServiceStore'
-import catchError from '../libs/catchError'
-import { useAuth } from '../contexts/authContext'
 
 const ScreenStaff = ({ navigation }) => {
 	const { storeId } = useAuth()
@@ -50,7 +50,7 @@ const ScreenStaff = ({ navigation }) => {
 						modal.toggleOpen()
 					}}
 					handleEdit={
-						//@ts-ignore
+						//@ts-expect-error
 						(staffId: string) => {
 							navigation.navigate('StackStaff', {
 								screen: 'ScreenStaffEdit',

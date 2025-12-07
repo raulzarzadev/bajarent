@@ -1,9 +1,9 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment, selectCounter } from './counterSlice'
+import type React from 'react'
 import { Text, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import Button from '../../../components/Button'
 import { gStyles } from '../../../styles'
+import { decrement, increment, selectCounter } from './counterSlice'
 
 const Counter: React.FC = () => {
 	const count = useSelector(selectCounter)

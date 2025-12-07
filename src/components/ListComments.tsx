@@ -1,15 +1,14 @@
-import { Text, View, ViewStyle } from 'react-native'
-import React from 'react'
-import Button from './Button'
-import theme from '../theme'
-import OrderType from '../types/OrderType'
-import { gSpace, gStyles } from '../styles'
-import List from './List'
-import { FormattedComment } from '../types/CommentType'
-import StyledModal from './StyledModal'
+import { Text, View, type ViewStyle } from 'react-native'
 import useModal from '../hooks/useModal'
+import { gSpace, gStyles } from '../styles'
+import theme from '../theme'
+import type { FormattedComment } from '../types/CommentType'
+import type OrderType from '../types/OrderType'
+import Button from './Button'
 import Icon from './Icon'
+import List from './List'
 import { CommentRow } from './RowComment'
+import StyledModal from './StyledModal'
 
 export type CommentType = OrderType['comments'][number]
 

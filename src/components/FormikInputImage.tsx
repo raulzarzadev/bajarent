@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
 import { useField } from 'formik'
+import React, { useMemo } from 'react'
 import InputImagePicker from './InputImagePicker'
 
 const FormikInputImage = ({

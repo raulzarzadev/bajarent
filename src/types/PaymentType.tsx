@@ -1,5 +1,5 @@
-import { RetirementType } from '../components/FormRetirement'
-import BaseType from './BaseType'
+import type { RetirementType } from '../components/FormRetirement'
+import type BaseType from './BaseType'
 
 export type PaymentBase = {
 	amount: number

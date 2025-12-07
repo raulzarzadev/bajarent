@@ -1,12 +1,11 @@
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import React from 'react'
-import { FormStoreE } from './FormStore'
-import { ServiceStores } from '../firebase/ServiceStore'
-import { useStore } from '../contexts/storeContext'
-import ButtonConfirm from './ButtonConfirm'
-import { gStyles } from '../styles'
-import { clearStorage } from '../firebase/auth'
 import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
+import { clearStorage } from '../firebase/auth'
+import { ServiceStores } from '../firebase/ServiceStore'
+import { gStyles } from '../styles'
+import ButtonConfirm from './ButtonConfirm'
+import { FormStoreE } from './FormStore'
 
 const ScreenStoreEdit = ({ navigation }) => {
 	const { navigate } = navigation

@@ -1,6 +1,6 @@
-import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native'
-import Icon, { IconName } from '../Icon'
+import { Pressable, Text, type TextStyle, View, type ViewStyle } from 'react-native'
 import theme from '../../theme'
+import Icon, { type IconName } from '../Icon'
 export type InputCheckboxProps = {
 	label?: string
 	setValue: (value: boolean) => void

@@ -1,17 +1,16 @@
-import { Text, View } from 'react-native'
-import React from 'react'
-import { BalanceType } from '../types/BalanceType'
-import DateCell from './DateCell'
-import ErrorBoundary from './ErrorBoundary'
-import { gSpace, gStyles } from '../styles'
-import Button from './Button'
-import dictionary from '../dictionary'
-import SpanUser from './SpanUser'
-import SpanMetadata from './SpanMetadata'
 import { useNavigation } from '@react-navigation/native'
 
-import Icon from './Icon'
+import { Text, View } from 'react-native'
+import dictionary from '../dictionary'
+import { gSpace, gStyles } from '../styles'
+import type { BalanceType } from '../types/BalanceType'
 import BalanceAmounts from './BalanceAmounts'
+import Button from './Button'
+import DateCell from './DateCell'
+import ErrorBoundary from './ErrorBoundary'
+import Icon from './Icon'
+import SpanMetadata from './SpanMetadata'
+import SpanUser from './SpanUser'
 
 export type BalanceInfoProps = { balance: BalanceType; hideMetadata?: boolean }
 const BalanceInfoE = ({ balance, hideMetadata }: BalanceInfoProps) => {
@@ -136,7 +135,7 @@ const ModalOrders = ({
 					variant="ghost"
 					onPress={() => {
 						// navigate('ScreenOrders')
-						//@ts-ignore
+						//@ts-expect-error
 						navigate('StackOrders', {
 							screen: 'ScreenOrders',
 							params: {

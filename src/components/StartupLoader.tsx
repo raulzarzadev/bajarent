@@ -1,5 +1,5 @@
-import { ActivityIndicator, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { gStyles } from '../styles'
 import theme from '../theme'
 import Button from './Button'

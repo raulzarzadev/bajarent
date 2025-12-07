@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import ButtonConfirm from './ButtonConfirm'
-import FormSelectPrice from './FormSelectPrice'
+import { StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import { PriceType } from '../types/PriceType'
+import type { PriceType } from '../types/PriceType'
+import ButtonConfirm from './ButtonConfirm'
 import ErrorBoundary from './ErrorBoundary'
+import FormSelectPrice from './FormSelectPrice'
 
 export type ModalSelectCategoryPriceProps = {
 	categoryId: string

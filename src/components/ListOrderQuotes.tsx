@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { OrderQuoteType } from '../types/OrderType'
-import Button from './Button'
-import CurrencyAmount from './CurrencyAmount'
 import { gStyles } from '../styles'
+import type { OrderQuoteType } from '../types/OrderType'
+import Button from './Button'
 import ButtonConfirm from './ButtonConfirm'
+import CurrencyAmount from './CurrencyAmount'
 
 const ListOrderQuotes = ({
 	quotes = [],

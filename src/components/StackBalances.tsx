@@ -1,14 +1,14 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { BalancesStackParamList } from '../navigation/types'
-import MyStaffLabel from './MyStaffLabel'
+import type { BalancesStackParamList } from '../navigation/types'
 import ErrorBoundary from './ErrorBoundary'
+import MyStaffLabel from './MyStaffLabel'
+import ScreenBalance_v3 from './ScreenBalance_v3'
 import ScreenBalances from './ScreenBalances'
 import ScreenBalancesDetails from './ScreenBalancesDetails'
 import ScreenBalancesNew from './ScreenBalancesNew'
 import StackOrders from './StackOrders'
 import { StackPaymentsE } from './StackPayments'
 import { CustomBalanceDateE } from './StoreBalance/CustomBalanceDate'
-import ScreenBalance_v3 from './ScreenBalance_v3'
 
 const Stack = createStackNavigator<BalancesStackParamList>()
 function StackBalances() {

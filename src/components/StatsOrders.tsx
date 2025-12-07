@@ -1,3 +1,5 @@
+import { setDayOfYear } from 'date-fns'
+import dictionary from '../dictionary'
 import {
 	createDataset,
 	groupDocsByDay,
@@ -7,11 +9,9 @@ import {
 	weekLabels
 } from '../libs/chart-data'
 import asDate, { dateFormat, months } from '../libs/utils-date'
-import LineChart from './LineChart'
 import theme, { ORDER_TYPE_COLOR } from '../theme'
-import OrderType from '../types/OrderType'
-import dictionary from '../dictionary'
-import { setDayOfYear } from 'date-fns'
+import type OrderType from '../types/OrderType'
+import LineChart from './LineChart'
 
 export default function StatsOrders({ view }: { view: string }) {
 	const orders = []

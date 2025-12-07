@@ -1,5 +1,5 @@
-import { Timestamp } from 'firebase/firestore'
-import BaseType from './BaseType'
+import type { Timestamp } from 'firebase/firestore'
+import type BaseType from './BaseType'
 
 export type ClientBase = {
 	id?: string

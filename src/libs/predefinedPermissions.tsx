@@ -1,11 +1,11 @@
 import {
-	PermissionsOrder,
-	PermissionsOrderType,
-	PermissionsStore,
-	PermissionsStoreType,
-	StaffPermissions,
+	type PermissionsOrder,
+	type PermissionsOrderType,
+	type PermissionsStore,
+	type PermissionsStoreType,
 	permissionsOrderKeys,
-	permissionsStoreKeys
+	permissionsStoreKeys,
+	type StaffPermissions
 } from '../types/StaffType'
 
 export type PredefinedPermissions = {

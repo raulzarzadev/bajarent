@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import OrderType from '../types/OrderType'
+import type OrderType from '../types/OrderType'
 import ImagePreview from './ImagePreview'
 
 const OrderImages = ({ order }: { order: Partial<OrderType> }) => {

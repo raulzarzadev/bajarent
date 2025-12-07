@@ -1,4 +1,4 @@
-import { StaffPermissions, StaffPermissionsKeys } from '../../types/StaffType'
+import type { StaffPermissions, StaffPermissionsKeys } from '../../types/StaffType'
 
 export const hasPermissions = (
 	action: StaffPermissionsKeys,

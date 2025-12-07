@@ -1,10 +1,9 @@
 import { ActivityIndicator, View } from 'react-native'
-import React from 'react'
-import FormUser from './FormUser'
 import { useAuth } from '../contexts/authContext'
 import { ServiceUsers } from '../firebase/ServiceUser'
-import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
+import ErrorBoundary from './ErrorBoundary'
+import FormUser from './FormUser'
 
 const ScreenProfileEdit = ({ navigation }) => {
 	const { user } = useAuth()

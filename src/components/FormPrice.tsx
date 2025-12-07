@@ -1,11 +1,11 @@
-import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import InputTextStyled from './InputTextStyled'
-import InputRadios from './InputRadios'
+import { StyleSheet, View } from 'react-native'
+import type { PriceType, TimeType } from '../types/PriceType'
 import Button from './Button'
-import { PriceType, TimeType } from '../types/PriceType'
-import InputCheckbox from './Inputs/InputCheckbox'
 import ErrorBoundary from './ErrorBoundary'
+import InputRadios from './InputRadios'
+import InputCheckbox from './Inputs/InputCheckbox'
+import InputTextStyled from './InputTextStyled'
 export type FormPriceProps = {
 	defaultPrice: Partial<PriceType>
 	handleSubmit: ({ amount, title, time }: Partial<PriceType>) => Promise<any>

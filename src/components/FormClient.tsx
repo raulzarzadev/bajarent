@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import { FormikInputPhoneE } from './FormikInputPhone'
-import { ClientType } from '../types/ClientType'
+
+import { StyleSheet, Text, View } from 'react-native'
+import type { ClientType } from '../types/ClientType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
+import { FormikInputPhoneE } from './FormikInputPhone'
+import FormikInputValue from './FormikInputValue'
 export type FormCLientProps = {
 	client?: Partial<ClientType>
 	onSubmit: (values: Partial<ClientType>) => void | Promise<void>

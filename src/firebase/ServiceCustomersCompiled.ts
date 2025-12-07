@@ -1,7 +1,7 @@
 import { deleteField, where } from 'firebase/firestore'
+import type { CustomerCompiledType, CustomerType } from '../state/features/costumers/customerType'
+import type { GetItemsOps } from './firebase.CRUD'
 import { FirebaseGenericService } from './genericService'
-import { CustomerCompiledType, CustomerType } from '../state/features/costumers/customerType'
-import { GetItemsOps } from './firebase.CRUD'
 
 class ServiceCustomersCompiledClass extends FirebaseGenericService<{
 	id: string

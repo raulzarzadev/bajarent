@@ -1,7 +1,7 @@
-import BaseType from './BaseType'
-import { ContactType, OrderQuoteType } from './OrderType'
-import { CategoryType } from './RentItem'
-import { WorkshopFlow, WorkshopStatus } from './WorkshopType'
+import type BaseType from './BaseType'
+import type { ContactType, OrderQuoteType } from './OrderType'
+import type { CategoryType } from './RentItem'
+import type { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 
 export enum ItemStatuses {
 	rented = 'rented',

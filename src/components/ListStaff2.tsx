@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { ListE } from './List'
 import { useNavigation } from '@react-navigation/native'
-import StaffType from '../types/StaffType'
-import Button from './Button'
+import { StyleSheet, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
-import ListRow, { ListRowField } from './ListRow'
+import type StaffType from '../types/StaffType'
+import Button from './Button'
 import InputDisabledStaff from './InputDisabledStaff'
+import { ListE } from './List'
+import ListRow, { type ListRowField } from './ListRow'
 
 const ListStaff = ({
 	staff = [],
@@ -58,7 +58,7 @@ const ListStaff = ({
 					{
 						icon: 'add',
 						onPress: () => {
-							//@ts-ignore
+							//@ts-expect-error
 							navigate('StackStaff', {
 								screen: 'ScreenStaffNew',
 								params: { sectionId }

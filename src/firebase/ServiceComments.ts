@@ -1,7 +1,7 @@
-import { limit, orderBy, QueryConstraint, where } from 'firebase/firestore'
-import { comment_variant, CommentType } from '../types/CommentType'
+import { limit, orderBy, type QueryConstraint, where } from 'firebase/firestore'
+import { type CommentType, comment_variant } from '../types/CommentType'
+import type { GetItemsOps } from './firebase.CRUD'
 import { FirebaseGenericService } from './genericService'
-import { GetItemsOps } from './firebase.CRUD'
 
 type Type = CommentType
 
@@ -230,7 +230,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 		])
 	}
 	getWorkshopDateMovements({ fromDate, toDate, storeId }): Promise<Type[]> {
-		let commentFilters: QueryConstraint[] = [
+		const commentFilters: QueryConstraint[] = [
 			orderBy('createdAt', 'desc'),
 			where('storeId', '==', storeId),
 			where('createdAt', '>=', fromDate),
@@ -255,7 +255,7 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 		solvedToday?: boolean
 		solved?: boolean
 	}) {
-		let filters = [where('storeId', '==', storeId), where('type', '==', 'report')]
+		const filters = [where('storeId', '==', storeId), where('type', '==', 'report')]
 		if (solved !== undefined) {
 			filters.push(where('solved', '==', solved))
 		}

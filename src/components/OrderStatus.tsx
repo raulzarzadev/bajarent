@@ -1,10 +1,11 @@
-import React from 'react'
-import theme, { colors } from '../theme'
-import Chip, { Size } from './Chip'
-import { Text, ViewStyle } from 'react-native'
-import OrderType, { order_status } from '../types/OrderType'
 import { formatDate, isBefore, isToday } from 'date-fns'
+
+import { Text, type ViewStyle } from 'react-native'
 import asDate, { dateFormat, fromNow } from '../libs/utils-date'
+import theme, { colors } from '../theme'
+import type OrderType from '../types/OrderType'
+import { order_status } from '../types/OrderType'
+import Chip, { type Size } from './Chip'
 
 const OrderStatus = ({
 	order,

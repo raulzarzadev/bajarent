@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import { ReactNode } from 'react'
-import theme from '../theme'
-import { BalanceType } from '../types/BalanceType'
-import DateCell from './DateCell'
+import type { ReactNode } from 'react'
+import { StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import dictionary from '../dictionary'
-import SpanUser from './SpanUser'
-import CurrencyAmount from './CurrencyAmount'
 import { payments_amount } from '../libs/payments'
+import theme from '../theme'
+import type { BalanceType } from '../types/BalanceType'
+import CurrencyAmount from './CurrencyAmount'
+import DateCell from './DateCell'
+import SpanUser from './SpanUser'
 
 const RowBalance = ({ item }: { item: BalanceType }) => {
 	const balanceTotal = payments_amount(item?.payments).total

@@ -1,11 +1,11 @@
-import { Text, ScrollView } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { CustomerOrdersE } from './CustomerOrders'
-import DocMetadata from '../DocMetadata'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { CustomerCardE } from './CustomerCard'
+import { ScrollView, Text } from 'react-native'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
-import { CustomerType } from '../../state/features/costumers/customerType'
+import type { CustomerType } from '../../state/features/costumers/customerType'
+import DocMetadata from '../DocMetadata'
+import ErrorBoundary from '../ErrorBoundary'
+import { CustomerCardE } from './CustomerCard'
+import { CustomerOrdersE } from './CustomerOrders'
 
 export const CustomerContext = createContext({ customer: null })
 export const useCustomer = () => {

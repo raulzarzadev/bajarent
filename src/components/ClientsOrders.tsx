@@ -1,9 +1,8 @@
 import { ScrollView, StyleSheet, Text } from 'react-native'
-import React from 'react'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { useStore } from '../contexts/storeContext'
-import ListOrders from './ListOrders'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import { gStyles } from '../styles'
+import ListOrders from './ListOrders'
 
 const ClientsOrders = ({ clientId }) => {
 	const [orders, setOrders] = React.useState([])

@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
 import { useField } from 'formik'
-import InputRadios, { InputRadioOption } from './Inputs/InputRadios'
+import { useMemo } from 'react'
+import InputRadios, { type InputRadioOption } from './Inputs/InputRadios'
 
 const FormikInputRadios = ({
 	name,

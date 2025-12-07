@@ -1,12 +1,12 @@
 import { Text, View } from 'react-native'
-import CardPhone, { CardPhoneE } from './CardPhone'
-import CardEmail from './CardEmail'
-import UserType from '../types/UserType'
-import { gStyles } from '../styles'
-import Button from './Button'
-import Chip from './Chip'
-import { colors } from '../theme'
 import { useAuth } from '../contexts/authContext'
+import { gStyles } from '../styles'
+import { colors } from '../theme'
+import type UserType from '../types/UserType'
+import Button from './Button'
+import CardEmail from './CardEmail'
+import CardPhone, { CardPhoneE } from './CardPhone'
+import Chip from './Chip'
 
 const CardUser = ({ user, onEdit }: { user?: UserType; onEdit?: () => void }) => {
 	const _user = user
@@ -31,7 +31,7 @@ const CardUser = ({ user, onEdit }: { user?: UserType; onEdit?: () => void }) =>
 						icon="edit"
 						justIcon
 						onPress={() => {
-							//@ts-ignore
+							//@ts-expect-error
 							//navigate('EditProfile')
 							onEdit?.()
 						}}

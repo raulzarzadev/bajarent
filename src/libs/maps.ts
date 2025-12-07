@@ -1,8 +1,9 @@
-import { ItemMap } from '../components/ItemsMap'
+import type { ItemMap } from '../components/ItemsMap'
 import theme, { colors } from '../theme'
-import CoordsType from '../types/CoordsType'
-import { ItemBase } from '../types/ItemType'
-import OrderType, { order_status, order_type } from '../types/OrderType'
+import type CoordsType from '../types/CoordsType'
+import type { ItemBase } from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
 import containCoordinates from './containCoordinates'
 import unShortUrl from './unShortUrl'
 
@@ -47,7 +48,7 @@ export const getCoordinatesAsString = (coords: CoordsType): CoordsStringType => 
 export const formatItemsMaps = async (orders: Partial<OrderType>[]): Promise<ItemMap[]> => {
 	return await Promise.all(
 		orders?.map(async item => {
-			let coords = await getCoordinates(item.location)
+			const coords = await getCoordinates(item.location)
 			return {
 				itemId: item.id,
 				clientName: item.fullName,
@@ -69,7 +70,7 @@ export const formatOrderItemsMaps = async (orders: OrderType[]): Promise<ItemMap
 	return await Promise.all(
 		orders
 			?.map(async order => {
-				let coords = await getCoordinates(order.location)
+				const coords = await getCoordinates(order.location)
 
 				const items = order?.items?.map(item => ({
 					itemId: item.id,
@@ -92,7 +93,7 @@ export const formatOrderItemsMaps = async (orders: OrderType[]): Promise<ItemMap
 }
 
 export const createItemsFromOrders = (orders: OrderType[]): ItemBase[] => {
-	return orders.map(order => createItemsFromOrder(order)).flat()
+	return orders.flatMap(order => createItemsFromOrder(order))
 }
 
 export const createItemsFromOrder = (order: OrderType): ItemBase[] => {

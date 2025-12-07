@@ -1,7 +1,8 @@
 import { where } from 'firebase/firestore'
+import type { PriceType } from '../types/PriceType'
+import type { GetItemsOps } from './firebase.CRUD'
 import { FirebaseGenericService } from './genericService'
-import { PriceType } from '../types/PriceType'
-import { GetItemsOps } from './firebase.CRUD'
+
 class ServicePricesClass extends FirebaseGenericService<PriceType> {
 	constructor() {
 		super('prices')

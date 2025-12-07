@@ -1,12 +1,11 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import useModal from './hooks/useModal'
-import StyledModal from './components/StyledModal'
+import { Text, View } from 'react-native'
 import Button from './components/Button'
-import { useStore } from './contexts/storeContext'
-import { onDownloadBackup } from './libs/downloadOrders'
 import Loading from './components/Loading'
+import StyledModal from './components/StyledModal'
 import TextInfo from './components/TextInfo'
+import { useStore } from './contexts/storeContext'
+import useModal from './hooks/useModal'
+import { onDownloadBackup } from './libs/downloadOrders'
 
 const ModalCloseOperations = () => {
 	const modal = useModal({ title: 'Respaldos' })

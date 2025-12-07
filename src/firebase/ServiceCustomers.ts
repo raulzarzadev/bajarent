@@ -1,7 +1,8 @@
 import { where } from 'firebase/firestore'
+import type { CustomerType } from '../state/features/costumers/customerType'
+import type { GetItemsOps } from './firebase.CRUD'
 import { FirebaseGenericService } from './genericService'
-import { GetItemsOps } from './firebase.CRUD'
-import { CustomerType } from '../state/features/costumers/customerType'
+
 class ServiceCustomersClass extends FirebaseGenericService<CustomerType> {
 	constructor() {
 		super('customers')

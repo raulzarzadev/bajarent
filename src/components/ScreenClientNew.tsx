@@ -1,9 +1,8 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
-import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { useStore } from '../contexts/storeContext'
-import { FormClientE } from './FormClient'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
 import { gStyles } from '../styles'
+import { FormClientE } from './FormClient'
 
 const ScreenClientNew = props => {
 	const { storeId } = useStore()

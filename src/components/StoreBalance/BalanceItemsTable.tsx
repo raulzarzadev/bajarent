@@ -1,15 +1,15 @@
-import { View, Text, Pressable } from 'react-native'
-import ListRow, { ListRowField } from '../ListRow'
-import Divider from '../Divider'
-import { BalanceRowType } from '../../types/BalanceType'
 import { useEffect, useState } from 'react'
-import { getItem, setItem } from '../../libs/storage'
-import { gStyles } from '../../styles'
+import { Pressable, Text, View } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
-import { BalanceItems, StoreBalanceType } from '../../types/StoreBalance'
-import ErrorBoundary from '../ErrorBoundary'
-import { ExpandibleBalanceItems } from './SectionBalanceRents'
+import { getItem, setItem } from '../../libs/storage'
 import { isBetweenDates } from '../../libs/utils-date'
+import { gStyles } from '../../styles'
+import type { BalanceRowType } from '../../types/BalanceType'
+import type { BalanceItems, StoreBalanceType } from '../../types/StoreBalance'
+import Divider from '../Divider'
+import ErrorBoundary from '../ErrorBoundary'
+import ListRow, { type ListRowField } from '../ListRow'
+import { ExpandibleBalanceItems } from './SectionBalanceRents'
 
 const BALANCE_ROW_SELECTED = 'balanceRowSelected'
 
@@ -20,8 +20,7 @@ const BalanceItemsTable = ({ balance }: BalanceItemsTableProps) => {
 
 	const orderItems = balance.orders
 		.filter(order => order.orderType === 'RENT' && order.orderStatus === 'DELIVERED')
-		.map(o => o.items)
-		.flat()
+		.flatMap(o => o.items)
 	const allItems = [...availableItems, ...orderItems]
 
 	const groupedBySection = allItems.reduce(

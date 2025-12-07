@@ -1,3 +1,4 @@
+import { type FC, useEffect, useState } from 'react'
 import {
 	FlatList,
 	Pressable,
@@ -8,22 +9,20 @@ import {
 	View
 	//   Dimensions
 } from 'react-native'
-import useSort from '../hooks/useSort'
-import { FC, useEffect, useState } from 'react'
-import Icon, { IconName } from './Icon'
-
-import ErrorBoundary from './ErrorBoundary'
-import ModalFilterList, { FilterListType } from './ModalFilterList'
-import Button, { ButtonProps } from './Button'
-import InputCheckbox from './Inputs/InputCheckbox'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import Loading from './Loading'
-import { gStyles } from '../styles'
-import { getItem, setItem } from '../libs/storage'
-import { CollectionSearch } from '../hooks/useFilter'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import type { CollectionSearch } from '../hooks/useFilter'
+import useModal from '../hooks/useModal'
+import useSort from '../hooks/useSort'
+import { getItem, setItem } from '../libs/storage'
+import { gStyles } from '../styles'
 import theme from '../theme'
+import Button, { type ButtonProps } from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import Icon, { type IconName } from './Icon'
+import InputCheckbox from './Inputs/InputCheckbox'
+import Loading from './Loading'
+import ModalFilterList, { type FilterListType } from './ModalFilterList'
+import StyledModal from './StyledModal'
 
 export type ListSideButton = {
 	icon: IconName
@@ -196,7 +195,7 @@ function MyList<T extends { id: string }>({
 			setSelectedPages([])
 		} else {
 			setSelectedRows(sortedData.map(row => row?.id))
-			let allPages = []
+			const allPages = []
 			for (let i = 1; i < totalPages; i++) {
 				allPages.push(i)
 			}

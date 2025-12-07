@@ -1,9 +1,9 @@
 import { where } from 'firebase/firestore'
-import StoreType from '../types/StoreType'
+import { createUUID } from '../libs/createId'
+import type StaffType from '../types/StaffType'
+import type StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceStaff } from './ServiceStaff'
-import StaffType from '../types/StaffType'
-import { createUUID } from '../libs/createId'
 export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
 	constructor() {
 		super('stores')

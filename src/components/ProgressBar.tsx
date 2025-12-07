@@ -1,7 +1,6 @@
-import React from 'react'
 import { Text, View } from 'react-native'
-import theme, { Colors } from '../theme'
 import { gStyles } from '../styles'
+import theme, { type Colors } from '../theme'
 
 const ProgressBar = ({
 	progress = 0,

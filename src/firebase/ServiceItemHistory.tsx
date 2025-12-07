@@ -1,11 +1,11 @@
-import { QueryConstraint, collection, limit, orderBy, where } from 'firebase/firestore'
-import { db } from './main'
-import { FirebaseGenericService } from './genericService'
-import BaseType from '../types/BaseType'
+import { collection, limit, orderBy, type QueryConstraint, where } from 'firebase/firestore'
 import { endDate, startDate } from '../libs/utils-date'
+import type BaseType from '../types/BaseType'
+import type ItemType from '../types/ItemType'
+import type { GetItemsOps } from './firebase.CRUD'
+import { FirebaseGenericService } from './genericService'
+import { db } from './main'
 import { ServiceStoreItems } from './ServiceStoreItems'
-import ItemType from '../types/ItemType'
-import { GetItemsOps } from './firebase.CRUD'
 
 const COLLECTION = 'stores'
 const SUB_COLLECTION = 'items'
@@ -78,8 +78,8 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
 		count?: number
 		type?: Type['type']
 	}) {
-		let filters: QueryConstraint[] = [limit(count), orderBy('createdAt', 'desc')]
-		if (!!type) {
+		const filters: QueryConstraint[] = [limit(count), orderBy('createdAt', 'desc')]
+		if (type) {
 			filters.push(where('type', '==', type))
 		}
 		const collectionRef = collection(
@@ -108,8 +108,8 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
 		itemId: string
 		type?: Type['type']
 	}): Promise<Type[]> {
-		let filters: QueryConstraint[] = [limit(count), orderBy('createdAt', 'desc')]
-		if (!!type) {
+		const filters: QueryConstraint[] = [limit(count), orderBy('createdAt', 'desc')]
+		if (type) {
 			filters.push(where('type', '==', type))
 		}
 		const collectionRef = collection(
@@ -171,7 +171,7 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
 		storeId: string
 		items: Partial<ItemType>[]
 	}) {
-		let filters: QueryConstraint[] = [
+		const filters: QueryConstraint[] = [
 			orderBy('createdAt', 'desc'),
 			where('createdAt', '>=', fromDate),
 			where('createdAt', '<=', toDate)
@@ -214,12 +214,12 @@ export class ServiceItemHistoryClass extends FirebaseGenericService<
 		type?: Type['type']
 		//items: string[]
 	}): Promise<Type[]> {
-		let filters: QueryConstraint[] = [
+		const filters: QueryConstraint[] = [
 			orderBy('createdAt', 'desc'),
 			where('createdAt', '>=', startDate(date)),
 			where('createdAt', '<=', endDate(date))
 		]
-		if (!!type) {
+		if (type) {
 			filters.push(where('type', '==', type))
 		}
 		const items = await ServiceStoreItems.getAll({ storeId }, { justRefs: true }).then(res => {

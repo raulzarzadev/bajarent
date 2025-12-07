@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import ClientDetails from './ClientDetails'
-import { ClientType } from '../types/ClientType'
-import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
+import { StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
+import { ServiceStoreClients } from '../firebase/ServiceStoreClients2'
+import type { ClientType } from '../types/ClientType'
 import Button from './Button'
-import Loading from './Loading'
 import ButtonConfirm from './ButtonConfirm'
+import ClientDetails from './ClientDetails'
 import ClientsOrders from './ClientsOrders'
+import Loading from './Loading'
 
 const ScreenClientDetails = props => {
 	const [client, setClient] = useState<Partial<ClientType>>()

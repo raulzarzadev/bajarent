@@ -1,4 +1,5 @@
-import CoordsType from '../types/CoordsType'
+import type CoordsType from '../types/CoordsType'
+
 const containCoordinates = (
 	input: string
 ): {

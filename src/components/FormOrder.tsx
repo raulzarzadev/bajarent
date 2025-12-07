@@ -1,37 +1,38 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Formik } from 'formik'
-import InputValueFormik from './FormikInputValue'
-import OrderType, { order_type, repair_order_types } from '../types/OrderType'
-import Button from './Button'
-import FormikInputPhone from './FormikInputPhone'
-import asDate from '../libs/utils-date'
-import InputLocationFormik from './InputLocationFormik'
-import InputRadiosFormik from './FormikInputRadios'
-import FormikInputImage from './FormikInputImage'
-import P from './P'
-import FormikCheckbox from './FormikCheckbox'
-import ErrorBoundary from './ErrorBoundary'
-import { gSpace, gStyles } from '../styles'
+import React, { type ReactNode, type SetStateAction, useEffect, useState } from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import dictionary, { asCapitalize } from '../dictionary'
-import InputTextStyled from './InputTextStyled'
-import theme from '../theme'
-import { FormikSelectCategoriesE } from './FormikSelectCategories'
-import Loading from './Loading'
-import TextInfo from './TextInfo'
-import { useEmployee } from '../contexts/employeeContext'
-import FormikErrorsList from './FormikErrorsList'
-import FormikAssignSection from './FormikAssingSection'
-import FormikInputSignature from './FormikInputSignature'
-import FormikInputSelect from './FormikInputSelect'
-import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
-import { InputDateE } from './InputDate'
-import { ModalPaymentSale } from './ModalPaymentSaleFormik'
-import { CustomerOrderE } from './Customers/CustomerOrder'
+import asDate from '../libs/utils-date'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { gSpace, gStyles } from '../styles'
+import theme from '../theme'
+import type OrderType from '../types/OrderType'
+import { order_type, repair_order_types } from '../types/OrderType'
+import Button from './Button'
 import { CustomerCardE } from './Customers/CustomerCard'
+import { CustomerOrderE } from './Customers/CustomerOrder'
+import ErrorBoundary from './ErrorBoundary'
+import FormikAssignSection from './FormikAssingSection'
+import FormikCheckbox from './FormikCheckbox'
+import FormikErrorsList from './FormikErrorsList'
+import FormikInputImage from './FormikInputImage'
+import FormikInputPhone from './FormikInputPhone'
+import InputRadiosFormik from './FormikInputRadios'
+import FormikInputSelect from './FormikInputSelect'
+import FormikInputSignature from './FormikInputSignature'
+import InputValueFormik from './FormikInputValue'
+import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import FormikSearchCustomer from './FormikSearchCustomer'
+import { FormikSelectCategoriesE } from './FormikSelectCategories'
+import { InputDateE } from './InputDate'
+import InputLocationFormik from './InputLocationFormik'
+import InputTextStyled from './InputTextStyled'
+import Loading from './Loading'
+import { ModalPaymentSale } from './ModalPaymentSaleFormik'
+import P from './P'
+import TextInfo from './TextInfo'
 
 export const LIST_OF_FORM_ORDER_FIELDS = [
 	'type',
@@ -272,13 +273,13 @@ const FormOrderA = ({
 						const itemsCount = values?.items?.length || 0
 						if (VALIDATE_ITEMS_QTY) {
 							// if (itemsCount === 0)
-							//   //@ts-ignore
+							//   //@ts-expect-error
 							//   errors.items = 'Artículos necesarios'
 							if (ITEMS_MIN_BY_ORDER && itemsCount < ITEMS_MIN_BY_ORDER)
-								//@ts-ignore
+								//@ts-expect-error
 								errors.items = `Selecciona mínimo ${ITEMS_MIN_BY_ORDER} artículo(s)`
 							if (ITEMS_MAX_BY_ORDER && itemsCount > ITEMS_MAX_BY_ORDER)
-								//@ts-ignore
+								//@ts-expect-error
 								errors.items = `Selecciona máximo ${ITEMS_MAX_BY_ORDER} artículo(s)`
 						}
 						/* ********************************************
@@ -286,7 +287,7 @@ const FormOrderA = ({
 						 *******************************************rz */
 
 						if (values.hasDelivered && !values.scheduledAt)
-							//@ts-ignore
+							//@ts-expect-error
 							errors.scheduledAt = 'Fecha  necesaria'
 
 						return errors
@@ -299,7 +300,7 @@ const FormOrderA = ({
 
 						const orderFields: FormOrderFields[] = getOrderFields(
 							store?.orderFields?.[values.type] as OrderFields,
-							//@ts-ignore FIXME: as TypeOrder or TypeOrderKey
+							//@ts-expect-error FIXME: as TypeOrder or TypeOrderKey
 							values.type
 						)
 							// if customerId is set omit customer fields
@@ -356,7 +357,7 @@ const FormOrderA = ({
 									<ModalPaymentSale
 										onSubmit={async () => {
 											const res = await submitForm()
-											// @ts-ignore orderId can be used for others purposes
+											// @ts-expect-error orderId can be used for others purposes
 											return { orderId: res?.orderId || null }
 										}}
 									/>
@@ -691,7 +692,7 @@ export const getOrderFields = (fields: OrderFields): FormOrderFields[] => {
 	//* extra ops config
 	//* add extra ops config at the really first of the form
 	const mandatoryFieldsStart: FormOrderFields[] = ['fullName', 'phone']
-	let mandatoryFieldsEnd: FormOrderFields[] = []
+	const mandatoryFieldsEnd: FormOrderFields[] = []
 	let addedFields: FormOrderFields[] = []
 
 	const extraOpsStarts = ['sheetRow', 'note']?.filter(

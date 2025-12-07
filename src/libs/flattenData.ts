@@ -10,7 +10,7 @@ export function flattenValues(data: any): (string | number)[] {
 	} else if (typeof data === 'object' && data !== null) {
 		// Si es un objeto, iteramos sobre sus claves y aplanamos los valores
 		for (const key in data) {
-			if (data.hasOwnProperty(key)) {
+			if (Object.hasOwn(data, key)) {
 				result = result.concat(flattenValues(data[key]))
 			}
 		}

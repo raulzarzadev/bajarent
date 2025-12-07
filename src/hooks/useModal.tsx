@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyledModalProps } from '../components/StyledModal'
+import type { StyledModalProps } from '../components/StyledModal'
 export type Modal = {
 	title?: string
 }

@@ -1,7 +1,6 @@
 import { Text } from 'react-native'
-import React from 'react'
-import { FONT_SIZE } from '../theme'
 import { gStyles } from '../styles'
+import { FONT_SIZE } from '../theme'
 
 const H1 = ({ children, size = 'md' }: { children: string; size?: 'sm' | 'md' | 'lg' }) => {
 	const fontSize = {

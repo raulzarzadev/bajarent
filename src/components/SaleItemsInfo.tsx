@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
 import { useStore } from '../contexts/storeContext'
-import { SaleOrderItem } from '../types/OrderType'
-import ErrorBoundary from './ErrorBoundary'
-import CurrencyAmount from './CurrencyAmount'
 import { gStyles } from '../styles'
 import theme from '../theme'
+import type { SaleOrderItem } from '../types/OrderType'
+import CurrencyAmount from './CurrencyAmount'
+import ErrorBoundary from './ErrorBoundary'
 
 export const SaleItemsInfo = () => {
 	const { order } = useOrderDetails()

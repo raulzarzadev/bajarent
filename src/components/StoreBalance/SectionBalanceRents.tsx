@@ -1,15 +1,16 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { BalanceItems, StoreBalanceOrder, StoreBalanceType } from '../../types/StoreBalance'
 import { isWithinInterval } from 'date-fns'
+import { Text, View } from 'react-native'
+import { useStore } from '../../contexts/storeContext'
+import useMyNav from '../../hooks/useMyNav'
 import asDate, { dateFormat } from '../../libs/utils-date'
+import { gStyles } from '../../styles'
 import { order_status } from '../../types/OrderType'
+import type { BalanceItems, StoreBalanceOrder, StoreBalanceType } from '../../types/StoreBalance'
 import { BalanceAmountsE } from '../BalanceAmounts'
+import ErrorBoundary from '../ErrorBoundary'
 import { ExpandibleListE } from '../ExpandibleList'
 import { BalanceOrderRowE } from './BalanceOrderRow'
-import useMyNav from '../../hooks/useMyNav'
-import { gStyles } from '../../styles'
-import { useStore } from '../../contexts/storeContext'
+
 const SectionBalanceRents = ({
 	orders = [],
 	balance,
@@ -51,7 +52,7 @@ const SectionBalanceRents = ({
 		?.map(report => balance.orders.find(order => order.orderId === report.orderId))
 		.filter(order => (sectionId === 'all' ? true : order?.assignedSection === sectionId))
 
-	const orderPayment = orders?.map(order => order?.payments).flat()
+	const orderPayment = orders?.flatMap(order => order?.payments)
 
 	//* remove duplicates payments
 	const payments = orderPayment.reduce((acc, payment) => {
@@ -75,14 +76,13 @@ const SectionBalanceRents = ({
 		categoryName:
 			item?.categoryName ||
 			categories.find(
-				//@ts-ignore
+				//@ts-expect-error
 				category => category.id === item.categoryId
 			)?.name
 	})
 
 	const availableItems = balance?.items
-		.map(formatItemsWithSectionAndCategoryName)
-		.flat()
+		.flatMap(formatItemsWithSectionAndCategoryName)
 		.filter(item => (sectionId === 'all' ? true : item?.assignedSection === sectionId))
 		.filter(item => item?.status !== 'rented') //* keep out rented items (they are in the orders )
 		.sort(sortItemsByNumber)

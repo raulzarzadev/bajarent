@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import PaymentType from '../types/PaymentType'
-import SpanMetadata from './SpanMetadata'
-import ButtonConfirm from './ButtonConfirm'
-import { ServicePayments } from '../firebase/ServicePayments'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
+import { ServicePayments } from '../firebase/ServicePayments'
+import type PaymentType from '../types/PaymentType'
+import ButtonConfirm from './ButtonConfirm'
+import SpanMetadata from './SpanMetadata'
 
 const PaymentVerify = ({
 	payment,

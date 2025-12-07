@@ -1,9 +1,10 @@
-import { Linking, View, ViewStyle } from 'react-native'
-import P from './P'
+import { Linking, View, type ViewStyle } from 'react-native'
 import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
 
 import { ModalSendWhatsappE } from './ModalSendWhatsapp'
-import ErrorBoundary from './ErrorBoundary'
+import P from './P'
+
 const CardPhone = ({ phone, style }: CardPhoneType) => {
 	const formatPhoneNumber = (phone: string): string => {
 		// Remove any non-digit characters from the phone number

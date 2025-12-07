@@ -1,24 +1,24 @@
-import { useDispatch, useSelector } from 'react-redux'
 import { useCallback } from 'react'
-import { AppDispatch, RootState } from '../state/store'
-import {
-	fetchOrdersByType,
-	setFetchType,
-	resetOrders,
-	selectAllOrders,
-	selectMyOrders,
-	selectOrdersByType,
-	selectOrdersLoading,
-	selectOrdersError,
-	selectReports,
-	selectOrdersStats,
-	FetchTypeOrders,
-	fetchOrdersByIds
-} from '../state/features/orders/ordersSlice'
+import { useDispatch, useSelector } from 'react-redux'
 import { useAuth } from '../contexts/authContext'
 import { useEmployee } from '../contexts/employeeContext'
 import { formatOrders, isUnsolvedOrder } from '../libs/orders'
 import { useCustomers } from '../state/features/costumers/costumersSlice'
+import {
+	type FetchTypeOrders,
+	fetchOrdersByIds,
+	fetchOrdersByType,
+	resetOrders,
+	selectAllOrders,
+	selectMyOrders,
+	selectOrdersByType,
+	selectOrdersError,
+	selectOrdersLoading,
+	selectOrdersStats,
+	selectReports,
+	setFetchType
+} from '../state/features/orders/ordersSlice'
+import type { AppDispatch, RootState } from '../state/store'
 
 export const useOrdersRedux = (componentId?: string) => {
 	const dispatch = useDispatch<AppDispatch>()

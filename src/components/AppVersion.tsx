@@ -1,10 +1,10 @@
-import { View, Text, Pressable } from 'react-native'
-import { gStyles } from '../styles'
-import packageJson from '../../package.json'
-import { versionCompare } from '../libs/versionCompare'
-import ErrorBoundary from './ErrorBoundary'
 import { useEffect, useState } from 'react'
+import { Pressable, Text, View } from 'react-native'
+import packageJson from '../../package.json'
 import { ServiceInternalConfig } from '../firebase/ServiceInternalConfig'
+import { versionCompare } from '../libs/versionCompare'
+import { gStyles } from '../styles'
+import ErrorBoundary from './ErrorBoundary'
 
 const AppVersion = () => {
 	const [version, setVersion] = useState()

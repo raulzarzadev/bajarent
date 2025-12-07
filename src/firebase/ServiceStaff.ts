@@ -1,5 +1,5 @@
 import { deleteField, where } from 'firebase/firestore'
-import StaffType from '../types/StaffType'
+import type StaffType from '../types/StaffType'
 import { FirebaseGenericService } from './genericService'
 import { ServiceUsers } from './ServiceUser'
 

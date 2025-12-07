@@ -1,10 +1,10 @@
-import { FieldValue } from 'firebase/firestore'
-import { FormOrderFields } from '../components/FormOrder'
-import BaseType from './BaseType'
-import ItemType from './ItemType'
-import { TypeOrderKey, order_type } from './OrderType'
-import { SectionType } from './SectionType'
-import StaffType from './StaffType'
+import type { FieldValue } from 'firebase/firestore'
+import type { FormOrderFields } from '../components/FormOrder'
+import type BaseType from './BaseType'
+import type ItemType from './ItemType'
+import { order_type, type TypeOrderKey } from './OrderType'
+import type { SectionType } from './SectionType'
+import type StaffType from './StaffType'
 export type StoreItems = {
 	[key: string]: Partial<ItemType>
 }

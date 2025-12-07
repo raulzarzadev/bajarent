@@ -1,5 +1,13 @@
+import {
+	createContext,
+	type Dispatch,
+	type FC,
+	type ReactNode,
+	type SetStateAction,
+	useEffect,
+	useState
+} from 'react'
 import { useColorScheme } from 'react-native'
-import { Dispatch, FC, ReactNode, SetStateAction, createContext, useEffect, useState } from 'react'
 import { getItem, setItem } from '../libs/storage'
 
 export type ThemeOptions = 'light' | 'dark'

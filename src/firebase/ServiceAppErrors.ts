@@ -1,4 +1,4 @@
-import BaseType from '../types/BaseType'
+import type BaseType from '../types/BaseType'
 import { FirebaseGenericService } from './genericService'
 export type AppErrorType = {
 	code: string

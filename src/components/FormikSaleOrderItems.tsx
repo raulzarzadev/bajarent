@@ -1,15 +1,15 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
 import { FieldArray, useFormikContext } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import FormikInputSelect from './FormikInputSelect'
+import { useEffect, useState } from 'react'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
-import { SaleOrderItem } from '../types/OrderType'
-import Button from './Button'
-import CurrencyAmount from './CurrencyAmount'
 import { orderAmount } from '../libs/order-amount'
 import { gStyles } from '../styles'
-import { useEffect, useState } from 'react'
+import type { SaleOrderItem } from '../types/OrderType'
+import Button from './Button'
+import CurrencyAmount from './CurrencyAmount'
+import ErrorBoundary from './ErrorBoundary'
+import FormikInputSelect from './FormikInputSelect'
+import FormikInputValue from './FormikInputValue'
 
 const FormikSaleOrderItems = ({ name }: { name: string }) => {
 	const layoutRow = Dimensions.get('window').width > 500

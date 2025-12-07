@@ -1,4 +1,4 @@
-import { NavigatorScreenParams } from '@react-navigation/native'
+import type { NavigatorScreenParams } from '@react-navigation/native'
 
 export type PaymentsStackParamList = {
 	ScreenPayments: { title?: string; payments?: string[] } | undefined

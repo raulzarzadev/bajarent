@@ -1,4 +1,5 @@
 import { Dimensions } from 'react-native'
+
 function useScreenSize() {
 	const width = Dimensions.get('window').width
 	return {

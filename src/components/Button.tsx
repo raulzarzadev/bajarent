@@ -1,9 +1,9 @@
-import React from 'react'
-import { Text, Pressable, StyleSheet, ViewStyle, TextStyle, View } from 'react-native'
+import type React from 'react'
+import { Pressable, StyleSheet, Text, type TextStyle, View, type ViewStyle } from 'react-native'
 import useTheme from '../hooks/useTheme'
-import { colors, Colors } from '../theme'
-import Icon, { IconName } from './Icon'
+import { type Colors, colors } from '../theme'
 import ErrorBoundary from './ErrorBoundary'
+import Icon, { type IconName } from './Icon'
 
 export type ButtonProps = {
 	onPress: () => void

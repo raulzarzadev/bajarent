@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import ButtonConfirm from '../ButtonConfirm'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
 import { useEmployee } from '../../contexts/employeeContext'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import ButtonConfirm from '../ButtonConfirm'
 
 const ButtonDeleteOrder = ({ orderId, orderIds }: { orderId?: string; orderIds?: string[] }) => {
 	const {

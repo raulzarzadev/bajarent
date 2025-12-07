@@ -1,15 +1,15 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
-import OrderType from '../types/OrderType'
-import { listenFullOrderData } from './libs/getFullOrderData'
 import { useRoute } from '@react-navigation/native'
-import { ServicePayments } from '../firebase/ServicePayments'
-import PaymentType from '../types/PaymentType'
+import { createContext, type ReactNode, useContext, useEffect, useState } from 'react'
 import { ServiceComments } from '../firebase/ServiceComments'
-import { CommentType } from '../types/CommentType'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
-import { useStore } from './storeContext'
-import { CustomerType } from '../state/features/costumers/customerType'
 import { ServiceCustomers } from '../firebase/ServiceCustomers'
+import { ServicePayments } from '../firebase/ServicePayments'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../state/features/costumers/customerType'
+import type { CommentType } from '../types/CommentType'
+import type OrderType from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import { listenFullOrderData } from './libs/getFullOrderData'
+import { useStore } from './storeContext'
 
 // Define the shape of the order object
 type Order = OrderType
@@ -40,7 +40,7 @@ const OrderProvider = ({
 	const { categories } = useStore()
 	const { data: customers, loading: loadingCustomers } = useCustomers()
 	const route = useRoute()
-	//@ts-ignore
+	//@ts-expect-error
 	const _orderId = orderId || route?.params?.orderId
 	const [order, setOrder] = useState<Order | null>()
 	const [paymentsCount, setPaymentsCount] = useState(2)

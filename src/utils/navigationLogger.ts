@@ -21,7 +21,7 @@ function getActiveRoute(state: NavigationState): any {
 	const route = state.routes[state.index]
 	if (!route) return null
 	if (route.state) {
-		// @ts-ignore nested state may exist; recurse
+		// @ts-expect-error nested state may exist; recurse
 		return getActiveRoute(route.state)
 	}
 	return route

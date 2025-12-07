@@ -1,16 +1,16 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { StoreBalanceType } from '../../types/StoreBalance'
-import { order_type } from '../../types/OrderType'
-import { BalanceAmountsE } from '../BalanceAmounts'
-import { ExpandibleBalanceOrders } from './SectionBalanceRents'
+import { Text, View } from 'react-native'
 import { isBetweenDates } from '../../libs/utils-date'
+import { order_type } from '../../types/OrderType'
+import type { StoreBalanceType } from '../../types/StoreBalance'
+import { BalanceAmountsE } from '../BalanceAmounts'
+import ErrorBoundary from '../ErrorBoundary'
+import { ExpandibleBalanceOrders } from './SectionBalanceRents'
 
 const RepairsBalance = (props: RepairsBalanceProps) => {
 	const balance = props.balance
 
 	const repairsOrders = balance.orders.filter(order => order.orderType === order_type.REPAIR)
-	const payments = repairsOrders.map(order => order.payments).flat()
+	const payments = repairsOrders.flatMap(order => order.payments)
 	const repairStarted = repairsOrders.filter(order =>
 		isBetweenDates(order.repairingAt, {
 			startDate: balance.fromDate,

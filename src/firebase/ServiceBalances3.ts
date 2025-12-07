@@ -1,15 +1,16 @@
-import { limit, orderBy, where } from 'firebase/firestore'
-import { FirebaseGenericService } from './genericService'
-import { ServiceOrders } from './ServiceOrders'
-import OrderType, { order_status, order_type } from '../types/OrderType'
-import asDate, { endDate, startDate } from '../libs/utils-date'
 import { isAfter } from 'date-fns'
+import { limit, orderBy, where } from 'firebase/firestore'
+import asDate, { endDate, startDate } from '../libs/utils-date'
+import type ItemType from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import { order_status, order_type } from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
+import type { StoreBalanceOrder, StoreBalanceType } from '../types/StoreBalance'
+import { FirebaseGenericService } from './genericService'
 import { ServiceComments } from './ServiceComments'
-import PaymentType from '../types/PaymentType'
-import { ServiceStoreItems } from './ServiceStoreItems'
-import { StoreBalanceOrder, StoreBalanceType } from '../types/StoreBalance'
+import { ServiceOrders } from './ServiceOrders'
 import { ServicePayments } from './ServicePayments'
-import ItemType from '../types/ItemType'
+import { ServiceStoreItems } from './ServiceStoreItems'
 
 class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
 	constructor() {
@@ -33,7 +34,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
 		date: Date
 		type?: StoreBalanceType['type']
 	}) {
-		let filters = [
+		const filters = [
 			where('storeId', '==', storeId),
 			where('type', '==', type),
 			where('createdAt', '<=', endDate(date)),
@@ -49,7 +50,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
 		{ storeId, date, type }: { storeId: string; date: Date; type: StoreBalanceType['type'] },
 		cb: (data: StoreBalanceType) => void
 	) {
-		let filters = [
+		const filters = [
 			where('storeId', '==', storeId),
 			where('type', '==', type),
 			where('createdAt', '<=', endDate(date)),
@@ -304,7 +305,7 @@ class ServiceBalancesClass extends FirebaseGenericService<StoreBalanceType> {
 			const FROM_DATE = fromDate || TODAY_MORNING
 			const TO_DATE = toDate || TODAY_NIGHT
 
-			let balance: Partial<StoreBalanceType> = {}
+			const balance: Partial<StoreBalanceType> = {}
 			balance.fromDate = FROM_DATE
 			balance.toDate = TO_DATE
 			balance.storeId = storeId

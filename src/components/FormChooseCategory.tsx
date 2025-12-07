@@ -1,4 +1,3 @@
-import React from 'react'
 import InputRadios from './InputRadios'
 
 const FormChooseCategory = ({ categories, setValue, value }) => {

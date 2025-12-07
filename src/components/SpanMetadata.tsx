@@ -1,9 +1,9 @@
+import type { Timestamp } from 'firebase/firestore'
+
 import { Text, View } from 'react-native'
-import React from 'react'
 import { dateFormat, fromNow } from '../libs/utils-date'
 import { gStyles } from '../styles'
 import SpanUser from './SpanUser'
-import { Timestamp } from 'firebase/firestore'
 
 const SpanMetadata = ({
 	createdAt,

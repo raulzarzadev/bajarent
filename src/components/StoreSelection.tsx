@@ -1,12 +1,12 @@
-import { FlatList, Modal, Pressable, Text, View } from 'react-native'
 import React, { useMemo, useState } from 'react'
+import { FlatList, Modal, Pressable, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
+import { reloadApp } from '../libs/reloadApp'
 import { gStyles } from '../styles'
 import theme from '../theme'
 import Button from './Button'
-import StartupLoader from './StartupLoader'
 import ScreenStoreCreate from './ScreenStoreCreate'
-import { reloadApp } from '../libs/reloadApp'
+import StartupLoader from './StartupLoader'
 
 const StoreSelection = () => {
 	const {

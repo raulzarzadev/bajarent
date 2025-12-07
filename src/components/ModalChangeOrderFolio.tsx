@@ -1,9 +1,10 @@
-import { View, Text } from 'react-native'
-import ButtonConfirm from './ButtonConfirm'
 import { useState } from 'react'
+import { Text, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
-import InputTextStyled from './InputTextStyled'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import ButtonConfirm from './ButtonConfirm'
+import InputTextStyled from './InputTextStyled'
+
 const ModalChangeOrderFolio = () => {
 	const { order } = useOrderDetails()
 	const [currentFolio, setCurrentFolio] = useState(order.folio)

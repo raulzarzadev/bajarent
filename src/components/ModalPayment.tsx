@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import Button from './Button'
-import { PaymentBase } from '../types/PaymentType'
-import ErrorBoundary from './ErrorBoundary'
 import { ServicePayments } from '../firebase/ServicePayments'
-import FormPayment from './FormPayment'
+import useModal from '../hooks/useModal'
 import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
+import type { PaymentBase } from '../types/PaymentType'
+import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import FormPayment from './FormPayment'
+import StyledModal from './StyledModal'
 
 export type ModalPaymentProps = {
 	orderId: string

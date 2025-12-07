@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native'
 import { useField } from 'formik'
+import { StyleSheet } from 'react-native'
 import InputLocation from './InputLocation'
 
 const InputLocationFormik = ({ name, ...props }) => {

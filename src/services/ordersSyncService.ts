@@ -1,13 +1,13 @@
-import { AppDispatch } from '../state/store'
+import { ServiceComments } from '../firebase/ServiceComments'
+import { ServiceOrders } from '../firebase/ServiceOrders'
 import {
-	upsertOrder,
+	addComment,
 	removeOrder,
 	setReports,
-	addComment
+	upsertOrder
 } from '../state/features/orders/ordersSlice'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { ServiceComments } from '../firebase/ServiceComments'
-import OrderType from '../types/OrderType'
+import type { AppDispatch } from '../state/store'
+import type OrderType from '../types/OrderType'
 
 class OrdersSyncService {
 	private dispatch: AppDispatch | null = null

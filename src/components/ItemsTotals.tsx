@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native'
-import CurrencyAmount from './CurrencyAmount'
-import { ItemSelected } from './FormSelectItem'
 import { gSpace, gStyles } from '../styles'
+import CurrencyAmount from './CurrencyAmount'
+import type { ItemSelected } from './FormSelectItem'
 
 const Totals = ({ items = [] }: { items: ItemSelected[] }) => {
 	const total = items?.reduce((acc, item) => acc + (item.priceSelected?.amount || 0), 0)

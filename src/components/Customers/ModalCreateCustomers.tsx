@@ -1,14 +1,15 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import Button from '../Button'
-import useModal from '../../hooks/useModal'
-import StyledModal from '../StyledModal'
 import { useEffect, useState } from 'react'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
-import { customerFromOrder, findSimilarCustomer, mergeCustomers } from './lib/customerFromOrder'
+import { Text, View } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
-import { CustomerType } from '../../state/features/costumers/customerType'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import useModal from '../../hooks/useModal'
+import type { CustomerType } from '../../state/features/costumers/customerType'
+import Button from '../Button'
+import ErrorBoundary from '../ErrorBoundary'
+import StyledModal from '../StyledModal'
+import { customerFromOrder, findSimilarCustomer, mergeCustomers } from './lib/customerFromOrder'
+
 const ModalCreateCustomers = (props?: ModalCreateCustomersProps) => {
 	const modal = useModal()
 	return (
@@ -37,10 +38,10 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
 	}, [ordersIds])
 
 	const handleCreateCustomers = async () => {
-		let dbCustomers = [...storeCustomers]
-		let newCustomersCreated: Partial<CustomerType>[] = []
-		let omittedCustomer = []
-		let mergedCustomers = []
+		const dbCustomers = [...storeCustomers]
+		const newCustomersCreated: Partial<CustomerType>[] = []
+		const omittedCustomer = []
+		const mergedCustomers = []
 		let index = 1
 		for (const orderId of ordersIds) {
 			debugger
@@ -92,7 +93,7 @@ export const CreateCustomers = ({ ordersIds = [] }) => {
 					})
 					.catch(e => console.log({ e }))
 				// update order
-				//@ts-ignore
+				//@ts-expect-error
 				const newCustomerId = res?.res?.id
 				ServiceOrders.update(orderId, {
 					customerId: newCustomerId,

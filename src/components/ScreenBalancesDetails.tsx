@@ -1,10 +1,10 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { ServiceBalances } from '../firebase/ServiceBalances'
-import { BalanceType } from '../types/BalanceType'
+import { gStyles } from '../styles'
+import type { BalanceType } from '../types/BalanceType'
 import BalanceInfo from './BalanceInfo'
 import ButtonConfirm from './ButtonConfirm'
-import { gStyles } from '../styles'
 
 const ScreenBalancesDetails = ({ route, navigation }) => {
 	const [balance, setBalance] = React.useState<BalanceType>(null)

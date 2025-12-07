@@ -1,7 +1,7 @@
 import { createUUID } from '../../../libs/createId'
 import { replaceUndefinedWithNull } from '../../../libs/removeUndefinedValues'
-import { CustomerImages, CustomerType } from '../../../state/features/costumers/customerType'
-import OrderType from '../../../types/OrderType'
+import type { CustomerImages, CustomerType } from '../../../state/features/costumers/customerType'
+import type OrderType from '../../../types/OrderType'
 
 export const customerFromOrder = (
 	order: Partial<OrderType>,
@@ -11,7 +11,7 @@ export const customerFromOrder = (
 	orderFolio?: number | null
 	storeId?: string | null
 } => {
-	//@ts-ignore FIXME: this order some times is not a OrderType ej. ListOrdersConsolidated.tsx: 10
+	//@ts-expect-error FIXME: this order some times is not a OrderType ej. ListOrdersConsolidated.tsx: 10
 
 	const customerContacts: CustomerType['contacts'] = customerOrderContacts(order as OrderType)
 	const customerImages = customerImagesFromOrder({
@@ -34,13 +34,13 @@ export const customerFromOrder = (
 		storeId: order?.storeId || storeId || null,
 		contactsList,
 		address: {
-			//@ts-ignore
+			//@ts-expect-error
 			street: order?.address || '',
-			//@ts-ignore
+			//@ts-expect-error
 			references: order?.references || '',
 			neighborhood: order?.neighborhood || '',
 			locationURL: order?.location || '',
-			//@ts-ignore
+			//@ts-expect-error
 			coords: order?.coords
 				? //@ts-ignore
 					(`${order?.coords[0]},${order?.coords[1]}` as `${number},${number}`)
@@ -80,7 +80,7 @@ const customerOrderContacts = (order: OrderType) => {
 }
 
 export const customerImagesFromOrder = ({ houseImage, ID, signature }): CustomerImages => {
-	let customerImages: CustomerImages = {}
+	const customerImages: CustomerImages = {}
 	if (houseImage) {
 		const id = createUUID({ length: 8 })
 		customerImages[id] = {

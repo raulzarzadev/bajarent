@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native'
-import React from 'react'
 import { gStyles } from '../styles'
 
 const DisabledView = () => {

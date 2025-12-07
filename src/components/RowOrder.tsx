@@ -1,11 +1,11 @@
 import { Dimensions, Text, View } from 'react-native'
-import OrderType from '../types/OrderType'
-import ClientName from './ClientName'
 import { gStyles } from '../styles'
-import OrderDirectives from './OrderDirectives'
+import type OrderType from '../types/OrderType'
+import ClientName from './ClientName'
 import ErrorBoundary from './ErrorBoundary'
-import ListRow, { ListRowField } from './ListRow'
+import ListRow, { type ListRowField } from './ListRow'
 import { ModalOrderQuickActionsE } from './ModalOrderQuickActions'
+import OrderDirectives from './OrderDirectives'
 
 export type RowOrderType = OrderType & {
 	itemsNumbers?: string

@@ -1,18 +1,17 @@
-import { View, Text, Image, Linking } from 'react-native'
-import Button from '../Button'
-import ErrorBoundary from '../ErrorBoundary'
+import { Image, Linking, Text, View } from 'react-native'
+import generatePDF, { usePDF } from 'react-to-pdf'
 // Corregir la importación de RNHTMLtoPDF
 import { useOrderDetails } from '../../contexts/orderContext'
-import OrderType, { order_type } from '../../types/OrderType'
-import { usePDF } from 'react-to-pdf'
-import generatePDF from 'react-to-pdf'
-
-import StyledModal from '../StyledModal'
+import dictionary from '../../dictionary'
 import useModal from '../../hooks/useModal'
 import asDate, { dateFormat } from '../../libs/utils-date'
-import dictionary from '../../dictionary'
-import CurrencyAmount from '../CurrencyAmount'
 import { gStyles } from '../../styles'
+import type OrderType from '../../types/OrderType'
+import { order_type } from '../../types/OrderType'
+import Button from '../Button'
+import CurrencyAmount from '../CurrencyAmount'
+import ErrorBoundary from '../ErrorBoundary'
+import StyledModal from '../StyledModal'
 
 const ButtonDownloadOrder = (props?: ButtonDownloadOrderProps) => {
 	const modal = useModal({ title: 'Descargar PDF' })

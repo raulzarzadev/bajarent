@@ -1,5 +1,5 @@
-import { View, Text, ViewStyle } from 'react-native'
 import { useField } from 'formik'
+import { Text, View, type ViewStyle } from 'react-native'
 import InputSelect from './InputSelect'
 
 const FormikInputSelect = ({

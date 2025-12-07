@@ -1,92 +1,99 @@
-import { IoMdSwap, IoMdAdd } from 'react-icons/io'
-import { FaFileContract } from 'react-icons/fa6'
-import { TbMapShare } from 'react-icons/tb'
-
+import { BiCommentDots } from 'react-icons/bi'
+import { BsClipboardCheck, BsClipboardPlus, BsWhatsapp } from 'react-icons/bs'
+import { CgSmartHomeWashMachine } from 'react-icons/cg'
 import {
-	MdEdit,
-	MdClose,
+	FaBalanceScale,
+	FaCashRegister,
+	FaChevronDown,
+	FaChevronUp,
+	FaCloudDownloadAlt,
+	FaTools
+} from 'react-icons/fa'
+import {
+	FaAddressCard,
+	FaFileContract,
+	FaRegFilePdf,
+	FaRegWindowRestore,
+	FaTruckPickup,
+	FaWrench
+} from 'react-icons/fa6'
+import { FcCancel } from 'react-icons/fc'
+import { GiReceiveMoney } from 'react-icons/gi'
+import {
+	GoChevronDown,
+	GoChevronLeft,
+	GoChevronRight,
+	GoChevronUp,
+	GoHomeFill
+} from 'react-icons/go'
+import { GrFormSubtract } from 'react-icons/gr'
+import { HiDotsVertical } from 'react-icons/hi'
+import { IoIosGitMerge, IoMdAdd, IoMdSwap } from 'react-icons/io'
+import {
+	IoHammerOutline,
+	IoPersonAddOutline,
+	IoPersonOutline,
+	IoPersonSharp,
+	IoPricetagsOutline
+} from 'react-icons/io5'
+import { LiaBroomSolid, LiaToolsSolid } from 'react-icons/lia'
+import {
+	LuBot,
+	LuCalendar,
+	LuCalendarClock,
+	LuClipboard,
+	LuClipboardList,
+	LuClipboardMinus,
+	LuClipboardPaste,
+	LuClipboardPenLine,
+	LuComponent,
+	LuFolderCheck,
+	LuWarehouse
+} from 'react-icons/lu'
+import {
 	MdAttachMoney,
-	MdSave,
-	MdLocationPin,
-	MdOutlineStorefront,
-	MdListAlt,
-	MdFilterList,
-	MdDeleteOutline,
-	MdOutlineSearch,
-	MdLocationOff,
-	MdOutlineDone,
-	MdSettings,
-	MdDownload,
-	MdOutlinePhotoCamera,
-	MdInfoOutline,
-	MdWarningAmber,
-	MdOutlineUndo,
-	MdOutlineRefresh,
+	MdClose,
 	MdCopyAll,
-	MdUpload,
-	MdOutlineArrowForward,
-	MdOutlineRemoveRedEye,
+	MdDeleteOutline,
+	MdDownload,
+	MdEdit,
+	MdFilterList,
+	MdHome,
+	MdInfoOutline,
+	MdListAlt,
+	MdLocationOff,
+	MdLocationPin,
+	MdMoneyOff,
+	MdMyLocation,
 	MdOutlineAlarm,
-	MdOutlineTimerOff,
-	MdOutlineStarBorder,
-	MdOutlineStar,
-	MdStarHalf,
+	MdOutlineArrowForward,
+	MdOutlineDone,
 	MdOutlineHistory,
 	MdOutlineInventory,
-	MdMyLocation,
-	MdOutlineMailOutline
+	MdOutlineMailOutline,
+	MdOutlinePaid,
+	MdOutlinePhotoCamera,
+	MdOutlineRefresh,
+	MdOutlineRemoveRedEye,
+	MdOutlineSearch,
+	MdOutlineStar,
+	MdOutlineStarBorder,
+	MdOutlineStorefront,
+	MdOutlineTimerOff,
+	MdOutlineUndo,
+	MdPendingActions,
+	MdSave,
+	MdSettings,
+	MdStarHalf,
+	MdUpload,
+	MdWarningAmber
 } from 'react-icons/md'
-import { RiUnpinLine, RiPushpinLine } from 'react-icons/ri'
-import { IoPricetagsOutline } from 'react-icons/io5'
-import { FaAddressCard, FaTruckPickup } from 'react-icons/fa6'
-import { LuCalendarClock } from 'react-icons/lu'
-import { LuCalendar } from 'react-icons/lu'
-import { MdOutlinePaid } from 'react-icons/md'
-
-import { IoPersonOutline, IoPersonSharp, IoPersonAddOutline } from 'react-icons/io5'
-import { LuComponent } from 'react-icons/lu'
-import { PiArrowFatLinesUpFill, PiUserList } from 'react-icons/pi'
-import { FaRegWindowRestore } from 'react-icons/fa6'
-import { FaChevronDown, FaChevronUp, FaTools } from 'react-icons/fa'
-import { LiaBroomSolid } from 'react-icons/lia'
-import { TbMapSearch } from 'react-icons/tb'
-import { HiDotsVertical } from 'react-icons/hi'
-import { GrFormSubtract } from 'react-icons/gr'
-import { TiPhone } from 'react-icons/ti'
-import { BsWhatsapp } from 'react-icons/bs'
-import { RiImageAddLine } from 'react-icons/ri'
-import { IoHammerOutline } from 'react-icons/io5'
-import { FaWrench } from 'react-icons/fa6'
-import { MdHome, MdMoneyOff } from 'react-icons/md'
-import { FaCashRegister } from 'react-icons/fa'
-import { FcCancel } from 'react-icons/fc'
+import { PiArrowFatLinesUpFill, PiSignatureDuotone, PiSiren, PiUserList } from 'react-icons/pi'
+import { RiImageAddLine, RiPushpinLine, RiUnpinLine } from 'react-icons/ri'
 import { RxLapTimer } from 'react-icons/rx'
-import { PiSiren } from 'react-icons/pi'
-import { GoChevronUp, GoChevronDown, GoChevronLeft, GoChevronRight } from 'react-icons/go'
-import { LiaToolsSolid } from 'react-icons/lia'
-import { CgSmartHomeWashMachine } from 'react-icons/cg'
-import { GiReceiveMoney } from 'react-icons/gi'
-import { GoHomeFill } from 'react-icons/go'
-import { MdPendingActions } from 'react-icons/md'
+import { TbClipboardSearch, TbMapSearch, TbMapShare } from 'react-icons/tb'
 import { TfiWorld } from 'react-icons/tfi'
-import { PiSignatureDuotone } from 'react-icons/pi'
-import { BiCommentDots } from 'react-icons/bi'
-import { FaBalanceScale } from 'react-icons/fa'
-import { FaCloudDownloadAlt } from 'react-icons/fa'
-
-import { LuClipboardPenLine } from 'react-icons/lu'
-import { LuClipboardMinus } from 'react-icons/lu'
-import { LuClipboard } from 'react-icons/lu'
-import { LuClipboardList } from 'react-icons/lu'
-import { LuClipboardPaste } from 'react-icons/lu'
-import { TbClipboardSearch } from 'react-icons/tb'
-import { IoIosGitMerge } from 'react-icons/io'
-import { BsClipboardCheck } from 'react-icons/bs'
-import { BsClipboardPlus } from 'react-icons/bs'
-import { LuFolderCheck } from 'react-icons/lu'
-import { LuWarehouse } from 'react-icons/lu'
-import { FaRegFilePdf } from 'react-icons/fa6'
-import { LuBot } from 'react-icons/lu'
+import { TiPhone } from 'react-icons/ti'
 
 // https://react-icons.github.io/react-icons/
 const icons = {

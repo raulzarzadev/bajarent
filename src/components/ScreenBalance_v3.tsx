@@ -1,18 +1,16 @@
-import { ScrollView, View } from 'react-native'
-import { useEffect, useState } from 'react'
-
-import { ServiceBalances } from '../firebase/ServiceBalances3'
-import { StoreBalanceType } from '../types/StoreBalance'
-import asDate from '../libs/utils-date'
-
-import DocMetadata from './DocMetadata'
-import DateCell from './DateCell'
-import Icon from './Icon'
 import { useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
+import { ServiceBalances } from '../firebase/ServiceBalances3'
+import asDate from '../libs/utils-date'
+import type { StoreBalanceType } from '../types/StoreBalance'
 import ButtonConfirm from './ButtonConfirm'
-import { BalanceViewE } from './StoreBalance/BalanceView'
+import DateCell from './DateCell'
+import DocMetadata from './DocMetadata'
+import Icon from './Icon'
 import Loading from './Loading'
+import { BalanceViewE } from './StoreBalance/BalanceView'
 
 const ScreenBalance_v3 = ({ route }) => {
 	const { permissions } = useEmployee()

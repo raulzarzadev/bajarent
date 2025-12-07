@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
-import InputRadios from './InputRadios'
-import { colors } from '../theme'
+import { StyleSheet, Text, View } from 'react-native'
 import { ServiceOrders } from '../firebase/ServiceOrders'
+import { colors } from '../theme'
+import InputRadios from './InputRadios'
 
 const OrderChangeLabel = ({
 	orderId,

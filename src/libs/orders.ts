@@ -1,13 +1,14 @@
 import { formatDate, isBefore, isMonday, isSaturday, isToday, isTomorrow } from 'date-fns'
-import { CommentType } from '../types/CommentType'
-import OrderType, { order_status, OrderExtensionType } from '../types/OrderType'
-import { LabelRentType, expireDate2, translateTime } from './expireDate'
-import asDate from './utils-date'
-import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
-import { TimePriceType } from '../types/PriceType'
-import { ExtendReason } from '../firebase/ServiceOrders'
-import { CustomerType } from '../state/features/costumers/customerType'
 import { getFavoriteCustomerPhone } from '../components/Customers/lib/lib'
+import type { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
+import type { ExtendReason } from '../firebase/ServiceOrders'
+import type { CustomerType } from '../state/features/costumers/customerType'
+import type { CommentType } from '../types/CommentType'
+import type OrderType from '../types/OrderType'
+import { type OrderExtensionType, order_status } from '../types/OrderType'
+import type { TimePriceType } from '../types/PriceType'
+import { expireDate2, type LabelRentType, translateTime } from './expireDate'
+import asDate from './utils-date'
 
 export const formatOrders = ({
 	orders = [],
@@ -59,7 +60,7 @@ export const formatOrder = ({
 }) => {
 	const orderComments = comments?.filter(comment => comment?.orderId === order?.id)
 	const reportsNotSolved = orderComments?.some(({ type, solved }) => type === 'report' && !solved)
-	let formattedOrder = { ...order }
+	const formattedOrder = { ...order }
 	formattedOrder.comments = orderComments
 	formattedOrder.hasNotSolvedReports = reportsNotSolved
 	formattedOrder.pendingMarketOrder =
@@ -160,7 +161,7 @@ export const orderExpireAt = ({ order }: { order: Partial<OrderType> }): Date | 
 		return { ...item, expireAt }
 	})
 
-	if (!!order?.items?.length) {
+	if (order?.items?.length) {
 		//* sort items by expireAt and choose the nearest one as expire date for all order
 		expireAt = orderItemsExpireDate.sort((a, b) => {
 			return asDate(a?.expireAt)?.getTime() - asDate(b?.expireAt)?.getTime()
@@ -255,15 +256,12 @@ export const orderExtensionsBetweenDates = ({
 }
 
 export const getTodayRenews = ({ orders }: { orders: Partial<OrderType>[] }) => {
-	const renewsToday = orders
-		.map(order => {
-			const todayExtensions = Object.values(order?.extensions || {}).filter(
-				e => e.reason === 'renew' && isToday(asDate(e.createdAt))
-			)
-			return todayExtensions.map(e => ({ ...e, orderId: order.id }))
-		})
-
-		.flat()
+	const renewsToday = orders.flatMap(order => {
+		const todayExtensions = Object.values(order?.extensions || {}).filter(
+			e => e.reason === 'renew' && isToday(asDate(e.createdAt))
+		)
+		return todayExtensions.map(e => ({ ...e, orderId: order.id }))
+	})
 	return renewsToday
 }
 

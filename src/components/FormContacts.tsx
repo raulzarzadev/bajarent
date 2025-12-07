@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import { ContactType } from '../types/OrderType'
-import FormikInputValue from './FormikInputValue'
-import FormikInputPhone from './FormikInputPhone'
+
+import { StyleSheet, Text, View } from 'react-native'
+import type { ContactType } from '../types/OrderType'
 import Button from './Button'
+import FormikInputPhone from './FormikInputPhone'
+import FormikInputValue from './FormikInputValue'
 
 const FormContacts = ({
 	contact,

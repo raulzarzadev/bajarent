@@ -1,8 +1,8 @@
-import OrderType from '../types/OrderType'
+import { useAuth } from '../contexts/authContext'
+import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
-import { ServiceComments } from '../firebase/ServiceComments'
-import { useAuth } from '../contexts/authContext'
+import OrderType from '../types/OrderType'
 
 export default function useOrders({ ids = [] }: { ids: string[] }) {
 	const { storeId } = useAuth()

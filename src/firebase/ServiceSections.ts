@@ -1,6 +1,7 @@
 import { arrayRemove, arrayUnion, where } from 'firebase/firestore'
-import { SectionType } from '../types/SectionType'
+import type { SectionType } from '../types/SectionType'
 import { FirebaseGenericService } from './genericService'
+
 class ServiceSectionsClass extends FirebaseGenericService<SectionType> {
 	constructor() {
 		super('sections')
@@ -11,12 +12,12 @@ class ServiceSectionsClass extends FirebaseGenericService<SectionType> {
 	}
 
 	async addStaff(sectionId: string, staffId: string) {
-		// @ts-ignore
+		// @ts-expect-error
 		return this.update(sectionId, { staff: arrayUnion(staffId) })
 	}
 
 	async removeStaff(sectionId: string, staffId: string) {
-		// @ts-ignore
+		// @ts-expect-error
 		return this.update(sectionId, { staff: arrayRemove(staffId) })
 	}
 }

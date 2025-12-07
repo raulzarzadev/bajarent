@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Button from './Button'
 import { colors } from '../theme'
+import Button from './Button'
 
 const SpanCopy = ({ label = '', copyValue, content = '' }) => {
 	const [copied, setCopied] = React.useState(false)
@@ -17,7 +16,7 @@ const SpanCopy = ({ label = '', copyValue, content = '' }) => {
 					variant="ghost"
 					size="small"
 					onPress={() => {
-						//@ts-ignore
+						//@ts-expect-error
 						navigator.clipboard.writeText(copyValue)
 						setCopied(true)
 						setTimeout(() => {

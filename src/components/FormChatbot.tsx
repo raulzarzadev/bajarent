@@ -1,12 +1,14 @@
-import { View, Text, StyleSheet } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import theme from '../theme'
-import FormikCheckbox from './FormikCheckbox'
-import { gStyles } from '../styles'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import StoreType, { bot_configs } from '../types/StoreType'
+import { StyleSheet, Text, View } from 'react-native'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type StoreType from '../types/StoreType'
+import { bot_configs } from '../types/StoreType'
 import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import FormikCheckbox from './FormikCheckbox'
+import FormikInputValue from './FormikInputValue'
+
 const FormChatbot = (props?: FormChatbotProps) => {
 	const defaultValues: StoreType['chatbot'] = props.values || {
 		enabled: false,

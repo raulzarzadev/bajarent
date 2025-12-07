@@ -1,6 +1,6 @@
-import { Dispatch, SetStateAction, useContext } from 'react'
-import { Theme, dark, light } from '../theme'
+import { type Dispatch, type SetStateAction, useContext } from 'react'
 import { ThemeContext } from '../contexts/themeContext'
+import { dark, light, type Theme } from '../theme'
 
 interface UseThemeHook {
 	theme: Theme

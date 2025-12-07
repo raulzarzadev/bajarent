@@ -1,6 +1,6 @@
-import React from 'react'
-import InputSelect from './InputSelect'
 import { useNavigation } from '@react-navigation/native'
+
+import InputSelect from './InputSelect'
 
 const FormSelectCategory = ({ categories, setValue, value }) => {
 	const options = categories.map(category => ({

@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import ScreenSections from './ScreenSections'
-import ScreenSectionsNew from './ScreenSectionsNew'
 import ScreenSectionsDetails from './ScreenSectionsDetails'
 import ScreenSectionsEdit from './ScreenSectionsEdit'
+import ScreenSectionsNew from './ScreenSectionsNew'
 
 export type StackStoreNavigationProps = {
 	Store: undefined

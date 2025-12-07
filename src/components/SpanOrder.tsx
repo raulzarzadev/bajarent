@@ -1,19 +1,19 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { useEffect, useState } from 'react'
-import { useOrdersCtx } from '../contexts/ordersContext'
-import { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
-import { lastExtensionTime } from '../libs/orders'
-import { translateTime } from '../libs/expireDate'
-import CurrencyAmount from './CurrencyAmount'
-import { payments_amount } from '../libs/payments'
 import { isSameDay } from 'date-fns'
-import asDate from '../libs/utils-date'
-import { Timestamp } from 'firebase/firestore'
-import theme from '../theme'
-import { gStyles } from '../styles'
-import useMyNav from '../hooks/useMyNav'
+import type { Timestamp } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useOrdersCtx } from '../contexts/ordersContext'
+import type { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderType from '../types/OrderType'
+import useMyNav from '../hooks/useMyNav'
+import { translateTime } from '../libs/expireDate'
+import { lastExtensionTime } from '../libs/orders'
+import { payments_amount } from '../libs/payments'
+import asDate from '../libs/utils-date'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type OrderType from '../types/OrderType'
+import CurrencyAmount from './CurrencyAmount'
 
 const SpanOrder = ({
 	orderId,
@@ -73,7 +73,7 @@ const SpanOrder = ({
 					onRedirect()
 				}}
 			>
-				{!!order ? (
+				{order ? (
 					<OrderData
 						order={order}
 						showTime={showTime}
@@ -90,7 +90,7 @@ const SpanOrder = ({
 	}
 	return (
 		<>
-			{!!order ? (
+			{order ? (
 				<OrderData
 					order={order}
 					showTime={showTime}

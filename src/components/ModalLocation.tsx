@@ -1,10 +1,10 @@
 import { View } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
+import type CoordsType from '../types/CoordsType'
 import Button from './Button'
-import CoordsType from '../types/CoordsType'
+import ErrorBoundary from './ErrorBoundary'
 import InputMapLocation from './InputMapLocation'
+import StyledModal from './StyledModal'
 
 const ModalLocation = (props?: ModalLocationProps) => {
 	const defaultCoords = props?.coords

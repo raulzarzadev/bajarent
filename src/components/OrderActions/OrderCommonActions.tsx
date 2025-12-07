@@ -1,21 +1,21 @@
-import { View } from 'react-native'
-import ModalAssignOrder from './ModalAssignOrder'
-import Button from '../Button'
-import { onCancel, onSetStatuses } from '../../libs/order-actions'
-import ButtonConfirm from '../ButtonConfirm'
 import { useNavigation } from '@react-navigation/native'
+import { useState } from 'react'
+import { View } from 'react-native'
+import { useOrderDetails } from '../../contexts/orderContext'
+import { onCancel, onSetStatuses } from '../../libs/order-actions'
+import Button from '../Button'
+import ButtonConfirm from '../ButtonConfirm'
+import { ButtonChangeOrderCustomer } from '../Customers/ButtonChangeOrderCustomer'
+import ErrorBoundary from '../ErrorBoundary'
+import InputTextStyled from '../InputTextStyled'
+import TextInfo from '../TextInfo'
 import AddExtendExpire from './AddExtendExpire'
 import ButtonCopyRow from './ButtonCopyRow'
 import ButtonDeleteOrder from './ButtonDeleteOrder'
-import ModalScheduleOrder from './ModalScheduleOrder'
-import { useOrderDetails } from '../../contexts/orderContext'
-import ErrorBoundary from '../ErrorBoundary'
-import InputTextStyled from '../InputTextStyled'
-import { useState } from 'react'
-import ButtonSetOrderLocation from './ButtonSetOrderLocation'
-import TextInfo from '../TextInfo'
 import { ButtonDownloadOrderE } from './ButtonDownloadOrder'
-import { ButtonChangeOrderCustomer } from '../Customers/ButtonChangeOrderCustomer'
+import ButtonSetOrderLocation from './ButtonSetOrderLocation'
+import ModalAssignOrder from './ModalAssignOrder'
+import ModalScheduleOrder from './ModalScheduleOrder'
 
 export type OrderCommonActionsType = {
 	storeId: string
@@ -55,15 +55,15 @@ const OrderCommonActions = ({
 	const canCopy = true
 
 	const handleReorder = () => {
-		// @ts-ignore
+		// @ts-expect-error
 
 		navigate('ReorderOrder', { orderId })
 	}
 	const handleEdit = () => {
-		// @ts-ignore
+		// @ts-expect-error
 		navigate('Orders')
 		// navigate('Orders', { screen: 'EditOrder', params: { orderId } }) //! this ignore de Root stack
-		// @ts-ignore
+		// @ts-expect-error
 		navigate('EditOrder', { orderId })
 	}
 

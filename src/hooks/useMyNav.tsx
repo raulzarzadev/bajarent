@@ -1,5 +1,9 @@
-import { NavigationProp, NavigatorScreenParams, useNavigation } from '@react-navigation/native'
-import { RootTabParamList, WorkshopStackParamList } from '../navigation/types'
+import {
+	type NavigationProp,
+	type NavigatorScreenParams,
+	useNavigation
+} from '@react-navigation/native'
+import type { RootTabParamList, WorkshopStackParamList } from '../navigation/types'
 
 const useMyNav = () => {
 	// combine because this hook navigates across stacks; fallback Record keeps other stacks permissive
@@ -149,7 +153,7 @@ const useMyNav = () => {
 		}
 
 		if (props.to === 'details' && props.id) {
-			//@ts-ignore
+			//@ts-expect-error
 			navigate('StackCustomers', {
 				screen: 'ScreenCustomer',
 				params: {

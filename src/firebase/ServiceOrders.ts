@@ -1,25 +1,25 @@
-import { documentId, increment, QueryFieldFilterConstraint, where } from 'firebase/firestore'
-import OrderType, {
+import { addDays, endOfDay, isSaturday, isValid, startOfDay } from 'date-fns'
+import { documentId, increment, type QueryFieldFilterConstraint, where } from 'firebase/firestore'
+import { createUUID } from '../libs/createId'
+import { expireDate2 } from '../libs/expireDate'
+import type { CommentType, CreateCommentType } from '../types/CommentType'
+import type ItemType from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import {
 	ORDER_STATUS_SOLVED,
 	ORDER_STATUS_UNSOLVED,
-	OrderExtensionType,
-	TypeOrder,
-	TypeOrderType,
+	type OrderExtensionType,
 	order_status,
-	order_type
+	order_type,
+	TypeOrder,
+	type TypeOrderType
 } from '../types/OrderType'
-import { FirebaseGenericService } from './genericService'
-
-import { ServiceComments } from './ServiceComments'
-import { CommentType, CreateCommentType } from '../types/CommentType'
-import { ServiceStores } from './ServiceStore'
-import { addDays, isSaturday, isValid, startOfDay, endOfDay } from 'date-fns'
-import { createUUID } from '../libs/createId'
+import type { PriceType } from '../types/PriceType'
 import { auth } from './auth'
-import { expireDate2 } from '../libs/expireDate'
-import { PriceType } from '../types/PriceType'
-import ItemType from '../types/ItemType'
-import { GetItemsOps } from './firebase.CRUD'
+import type { GetItemsOps } from './firebase.CRUD'
+import { FirebaseGenericService } from './genericService'
+import { ServiceComments } from './ServiceComments'
+import { ServiceStores } from './ServiceStore'
 
 type Type = OrderType
 
@@ -767,7 +767,10 @@ class ServiceOrdersClass extends FirebaseGenericService<Type> {
 		},
 		ops?: GetItemsOps
 	): Promise<OrderType[]> => {
-		let filters = [where('storeId', '==', storeId), where('status', '==', order_status.AUTHORIZED)]
+		const filters = [
+			where('storeId', '==', storeId),
+			where('status', '==', order_status.AUTHORIZED)
+		]
 
 		if (orderType) {
 			filters.push(where('type', '==', orderType))

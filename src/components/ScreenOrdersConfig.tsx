@@ -1,11 +1,11 @@
-import { ScrollView, View } from 'react-native'
-import { FormOrdersConfigE } from './FormOrdersConfig'
-import { gStyles } from '../styles'
-import { ServiceStores } from '../firebase/ServiceStore'
-import Loading from './Loading'
-import { useStore } from '../contexts/storeContext'
 import { useNavigation } from '@react-navigation/native'
+import { ScrollView, View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
+import { ServiceStores } from '../firebase/ServiceStore'
+import { gStyles } from '../styles'
 import ErrorBoundary from './ErrorBoundary'
+import { FormOrdersConfigE } from './FormOrdersConfig'
+import Loading from './Loading'
 
 const ScreenOrdersConfig = () => {
 	const navigation = useNavigation()

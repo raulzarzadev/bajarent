@@ -1,13 +1,13 @@
+import { useNavigation } from '@react-navigation/native'
 import { View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
+import { onInvalidatePayment, onVerifyPayment } from '../libs/payments'
+import type OrderType from '../types/OrderType'
+import type PaymentType from '../types/PaymentType'
 import ButtonConfirm from './ButtonConfirm'
 import { ListE } from './List'
-import PaymentType from '../types/PaymentType'
-import { onInvalidatePayment, onVerifyPayment } from '../libs/payments'
-import { useStore } from '../contexts/storeContext'
 import RowPayment from './RowPayment'
-import { useNavigation } from '@react-navigation/native'
-import { useOrdersRedux } from '../hooks/useOrdersRedux'
-import OrderType from '../types/OrderType'
 
 export default function ListPayments({
 	payments,
@@ -62,7 +62,7 @@ export default function ListPayments({
 			defaultOrder="des"
 			onPressRow={paymentId => {
 				onPressRow?.(paymentId)
-				//@ts-ignore
+				//@ts-expect-error
 
 				navigation.navigate('StackPayments', {
 					screen: 'ScreenPaymentsDetails',

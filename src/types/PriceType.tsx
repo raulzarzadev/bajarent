@@ -1,4 +1,4 @@
-import BaseType from './BaseType'
+import type BaseType from './BaseType'
 
 export type TimeType = 'day' | 'month' | 'year' | 'week' | 'hour' | 'minute'
 export type TimePriceType = `${number} ${TimeType}`

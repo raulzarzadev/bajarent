@@ -1,12 +1,11 @@
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Button from './Button'
-import { useStore } from '../contexts/storeContext'
-import theme from '../theme'
-import { gSpace, gStyles } from '../styles'
-import StaffRow from './StaffRow'
-import Loading from './Loading'
 import { useEmployee } from '../contexts/employeeContext'
+import { useStore } from '../contexts/storeContext'
+import { gSpace, gStyles } from '../styles'
+import theme from '../theme'
+import Button from './Button'
+import Loading from './Loading'
+import StaffRow from './StaffRow'
 
 const ScreenSections = ({ navigation }) => {
 	const { sections: storeSections, store } = useStore()

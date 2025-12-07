@@ -1,11 +1,11 @@
-import ButtonConfirm from '../ButtonConfirm'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
-import { View } from 'react-native'
-import InputSearch from '../Inputs/InputSearch'
 import { useState } from 'react'
-import { CustomerType } from '../../state/features/costumers/customerType'
-import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { View } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
+import { ServiceOrders } from '../../firebase/ServiceOrders'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../../state/features/costumers/customerType'
+import ButtonConfirm from '../ButtonConfirm'
+import InputSearch from '../Inputs/InputSearch'
 
 export function ButtonChangeOrderCustomer({
 	orderId,

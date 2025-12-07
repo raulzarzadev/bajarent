@@ -1,13 +1,13 @@
-import { ScrollView, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
+import { ScrollView, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServicePayments } from '../firebase/ServicePayments'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import InputRadios from './InputRadios'
-import Button from './Button'
 import { gStyles } from '../styles'
+import Button from './Button'
+import InputRadios from './InputRadios'
 import ListPayments from './ListPayments'
+import StyledModal from './StyledModal'
 
 export default function ScreenPayments({ navigation, route }) {
 	const preList = route?.params?.payments || null

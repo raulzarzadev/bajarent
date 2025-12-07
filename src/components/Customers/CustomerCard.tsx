@@ -1,19 +1,19 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { CustomerType } from '../../state/features/costumers/customerType'
-import { gStyles } from '../../styles'
-import Button from '../Button'
+import { useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
+import { Text, View } from 'react-native'
+import { useEmployee } from '../../contexts/employeeContext'
 import useMyNav from '../../hooks/useMyNav'
+import { getCoordinates } from '../../libs/maps'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import type { CustomerType } from '../../state/features/costumers/customerType'
+import { gStyles } from '../../styles'
+import type CoordsType from '../../types/CoordsType'
+import Button from '../Button'
+import ButtonConfirm from '../ButtonConfirm'
+import ErrorBoundary from '../ErrorBoundary'
+import { ModalLocationE } from '../ModalLocation'
 import { CustomerContactsE } from './CustomerContacts'
 import { CustomerImagesE } from './CustomerImages'
-import { useEmployee } from '../../contexts/employeeContext'
-import { ModalLocationE } from '../ModalLocation'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
-import CoordsType from '../../types/CoordsType'
-import ButtonConfirm from '../ButtonConfirm'
-import { useNavigation } from '@react-navigation/native'
-import { getCoordinates } from '../../libs/maps'
-import { useEffect, useState } from 'react'
 
 const CustomerCard = (props?: CustomerCardProps) => {
 	const navigation = useNavigation()
@@ -37,7 +37,7 @@ const CustomerCard = (props?: CustomerCardProps) => {
 	if (!customer) return <Text>No hay cliente</Text>
 	const handleUpdateLocation = async (location: CoordsType | string) => {
 		return await update(customerId, {
-			// @ts-ignore
+			// @ts-expect-error
 			['address.locationURL']: location
 		})
 	}

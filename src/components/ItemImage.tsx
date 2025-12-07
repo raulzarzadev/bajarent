@@ -1,5 +1,4 @@
 import { Image, Pressable, StyleSheet, View } from 'react-native'
-import React from 'react'
 import useModal from '../hooks/useModal'
 
 const ItemImage = ({ style, src }) => {

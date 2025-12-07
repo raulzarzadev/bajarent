@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import type { Timestamp } from 'firebase/firestore'
+import { StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import asDate, { dateFormat } from '../libs/utils-date'
-import SpanUser from './SpanUser'
 import { gStyles } from '../styles'
-import { Timestamp } from 'firebase/firestore'
+import SpanUser from './SpanUser'
 export type DocMetadataType = {
 	id?: string
 	createdAt?: string | Date | Timestamp

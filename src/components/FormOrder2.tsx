@@ -1,29 +1,30 @@
 import { Formik } from 'formik'
-import { ScrollView, Text, View } from 'react-native'
-import { FormikSearchCustomerE } from './FormikSearchCustomer'
-import { useCustomers } from '../state/features/costumers/costumersSlice'
-import { FormikInputPhoneE } from './FormikInputPhone'
-import FormikInputValue from './FormikInputValue'
-import InputLocationFormik from './InputLocationFormik'
-import FormikInputRadios from './FormikInputRadios'
-import { useShop } from '../hooks/useShop'
-import dictionary from '../dictionary'
-import OrderType, { order_type } from '../types/OrderType'
-import FormikAssignSection from './FormikAssingSection'
-import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
-import FormikInputDate from './FormikInputDate'
-import { useEmployee } from '../contexts/employeeContext'
-import Loading from './Loading'
-import { FormikSelectCategoriesE } from './FormikSelectCategories'
-import FormikCheckbox from './FormikCheckbox'
-import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
-import { ModalPaymentSale } from './ModalPaymentSaleFormik'
-import Button from './Button'
 import { useState } from 'react'
-import { CustomerOrderE } from './Customers/CustomerOrder'
-import FormikErrorsList from './FormikErrorsList'
+import { ScrollView, Text, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
+import dictionary from '../dictionary'
+import { useShop } from '../hooks/useShop'
 import catchError from '../libs/catchError'
+import { useCustomers } from '../state/features/costumers/costumersSlice'
+import { gStyles } from '../styles'
+import type OrderType from '../types/OrderType'
+import { order_type } from '../types/OrderType'
+import Button from './Button'
+import { CustomerOrderE } from './Customers/CustomerOrder'
+import ErrorBoundary from './ErrorBoundary'
+import FormikAssignSection from './FormikAssingSection'
+import FormikCheckbox from './FormikCheckbox'
+import FormikErrorsList from './FormikErrorsList'
+import FormikInputDate from './FormikInputDate'
+import { FormikInputPhoneE } from './FormikInputPhone'
+import FormikInputRadios from './FormikInputRadios'
+import FormikInputValue from './FormikInputValue'
+import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
+import { FormikSearchCustomerE } from './FormikSearchCustomer'
+import { FormikSelectCategoriesE } from './FormikSelectCategories'
+import InputLocationFormik from './InputLocationFormik'
+import Loading from './Loading'
+import { ModalPaymentSale } from './ModalPaymentSaleFormik'
 
 export type FormOrder2Props = {
 	onSubmit: (values: OrderType) => Promise<any>
@@ -100,13 +101,13 @@ export const FormOrder2 = ({ onSubmit, defaultValues, title }: FormOrder2Props) 
 						const itemsCount = values?.items?.length || 0
 						if (VALIDATE_ITEMS_QTY) {
 							// if (itemsCount === 0)
-							//   //@ts-ignore
+							//   //@ts-expect-error
 							//   errors.items = 'Artículos necesarios'
 							if (ITEMS_MIN_BY_ORDER && itemsCount < ITEMS_MIN_BY_ORDER)
-								//@ts-ignore
+								//@ts-expect-error
 								errors.items = `Selecciona mínimo ${ITEMS_MIN_BY_ORDER} artículo(s)`
 							if (ITEMS_MAX_BY_ORDER && itemsCount > ITEMS_MAX_BY_ORDER)
-								//@ts-ignore
+								//@ts-expect-error
 								errors.items = `Selecciona máximo ${ITEMS_MAX_BY_ORDER} artículo(s)`
 						}
 						/* ********************************************
@@ -114,7 +115,7 @@ export const FormOrder2 = ({ onSubmit, defaultValues, title }: FormOrder2Props) 
 						 *******************************************rz */
 
 						if (values.hasDelivered && !values.scheduledAt)
-							//@ts-ignore
+							//@ts-expect-error
 							errors.scheduledAt = 'Fecha  necesaria'
 
 						return errors

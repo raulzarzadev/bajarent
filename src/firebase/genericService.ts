@@ -1,14 +1,14 @@
 import {
-	CollectionReference,
-	DocumentData,
-	QueryConstraint,
+	type CollectionReference,
 	collection,
+	type DocumentData,
 	doc,
+	type QueryConstraint,
 	where
 } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
-import { FirebaseCRUD, GetItemsOps } from './firebase.CRUD'
-import { db, app } from './main'
+import { FirebaseCRUD, type GetItemsOps } from './firebase.CRUD'
+import { app, db } from './main'
 
 type CreateItem<T> = Partial<T>
 

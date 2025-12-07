@@ -1,9 +1,10 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import OrderType, { order_status, order_type } from '../../../types/OrderType'
-import { ServiceOrders } from '../../../firebase/ServiceOrders'
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { ServiceComments } from '../../../firebase/ServiceComments'
+import { ServiceOrders } from '../../../firebase/ServiceOrders'
 import { formatOrders, isUnsolvedOrder } from '../../../libs/orders'
-import { CommentType } from '../../../types/CommentType'
+import type { CommentType } from '../../../types/CommentType'
+import type OrderType from '../../../types/OrderType'
+import { order_status, order_type } from '../../../types/OrderType'
 import { serializeObj } from '../../libs/serializeObj'
 
 // Types

@@ -1,17 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import Button from './Button'
 
-import { CategoryType } from '../types/RentItem'
-import FormikInputImage from './FormikInputImage'
-import FormikCheckbox from './FormikCheckbox'
+import { StyleSheet, Text, View } from 'react-native'
 import { gStyles } from '../styles'
-import ErrorBoundary from './ErrorBoundary'
-import FormikInputRadios from './FormikInputRadios'
 import { order_type } from '../types/OrderType'
+
+import type { CategoryType } from '../types/RentItem'
+import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import FormikCheckbox from './FormikCheckbox'
 import { FormikFieldArrayE } from './FormikInputArray'
+import FormikInputImage from './FormikInputImage'
+import FormikInputRadios from './FormikInputRadios'
+import FormikInputValue from './FormikInputValue'
 
 export type FormCategoryProps = {
 	defaultValues?: Partial<CategoryType>

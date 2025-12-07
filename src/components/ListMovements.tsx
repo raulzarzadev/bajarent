@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
-import { ListE } from './List'
-import { FormattedComment } from '../types/CommentType'
 import { View } from 'react-native'
-import HeaderDate from './HeaderDate'
-import { CommentRow } from './RowComment'
-import Loading from './Loading'
-import theme from '../theme'
-import { ServiceComments } from '../firebase/ServiceComments'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
+import { ServiceComments } from '../firebase/ServiceComments'
+import theme from '../theme'
+import type { FormattedComment } from '../types/CommentType'
+import HeaderDate from './HeaderDate'
+import { ListE } from './List'
+import Loading from './Loading'
+import { CommentRow } from './RowComment'
 
 const ListMovements = () => {
 	const [data, setData] = React.useState<Partial<FormattedComment[]>>([])

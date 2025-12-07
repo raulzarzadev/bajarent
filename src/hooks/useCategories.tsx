@@ -1,7 +1,7 @@
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { ServiceCategories } from '../firebase/ServiceCategories'
-import { CategoryType } from '../types/RentItem'
+import type { CategoryType } from '../types/RentItem'
 import usePrices from './usePrices'
 
 function useCategories() {

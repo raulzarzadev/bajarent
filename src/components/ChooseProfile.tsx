@@ -1,13 +1,13 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import theme from '../theme'
-import { gStyles } from '../styles'
-import Icon, { IconName } from './Icon'
 import { useNavigation } from '@react-navigation/native'
-import StoreType from '../types/StoreType'
+import React, { useEffect, useState } from 'react'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
-import Button from './Button'
 import { reloadApp } from '../libs/reloadApp'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type StoreType from '../types/StoreType'
+import Button from './Button'
+import Icon, { type IconName } from './Icon'
 
 const ChooseProfile = () => {
 	const { navigate } = useNavigation()
@@ -41,7 +41,7 @@ const ChooseProfile = () => {
 	const [storeSelectedId, setStoreSelectedId] = useState<string>()
 	const handleSelectStore = async id => {
 		if (id === 'createStore') {
-			// @ts-ignore
+			// @ts-expect-error
 			navigate('CreateStore')
 			return
 		}

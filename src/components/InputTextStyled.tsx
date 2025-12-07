@@ -1,18 +1,18 @@
+import type React from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import {
+	Pressable,
 	StyleSheet,
-	TextInput,
-	TextInputProps,
 	Text,
+	TextInput,
+	type TextInputProps,
 	View,
-	ViewStyle,
-	Pressable
+	type ViewStyle
 } from 'react-native'
-import theme, { BORDER_RADIUS, PADDING } from '../theme'
-import { useEffect, useState } from 'react'
-import Icon, { IconName } from './Icon'
 import { gStyles } from '../styles'
+import theme, { BORDER_RADIUS, PADDING } from '../theme'
+import Icon, { type IconName } from './Icon'
 import Loading from './Loading'
-import React, { forwardRef } from 'react'
 
 /**
  * Componente de entrada de texto estilizado.

@@ -1,12 +1,13 @@
 import { Text, View } from 'react-native'
-import StaffType, { staff_permissions } from '../types/StaffType'
-import Chip from './Chip'
-import theme from '../theme'
 import dictionary from '../dictionary'
-import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
-import Button from './Button'
 import { ServiceStaff } from '../firebase/ServiceStaff'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type StaffType from '../types/StaffType'
+import { staff_permissions } from '../types/StaffType'
+import Button from './Button'
+import Chip from './Chip'
+import ErrorBoundary from './ErrorBoundary'
 
 const StaffPermissions = ({ staff }: { staff: StaffType }) => {
 	const permissions = Object.keys(staff_permissions)

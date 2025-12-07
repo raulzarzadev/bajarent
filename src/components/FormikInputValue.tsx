@@ -1,5 +1,5 @@
-import StyledTextInput, { InputTextProps } from './InputTextStyled'
 import { useField } from 'formik'
+import StyledTextInput, { type InputTextProps } from './InputTextStyled'
 
 const FormikInputValue = ({ name, helperText, ...props }: InputTextProps & { name: string }) => {
 	const [field, meta, helpers] = useField(name)

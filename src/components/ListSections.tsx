@@ -1,10 +1,9 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { useStore } from '../contexts/storeContext'
 import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
-import { useStore } from '../contexts/storeContext'
-import StaffType from '../types/StaffType'
-import { SectionType } from '../types/SectionType'
+import type { SectionType } from '../types/SectionType'
+import type StaffType from '../types/StaffType'
 
 const ListSections = ({
 	sectionsSelected = [],

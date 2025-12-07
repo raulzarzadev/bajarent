@@ -1,12 +1,12 @@
+import { getAnalytics } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 import {
-	memoryLocalCache,
+	connectFirestoreEmulator,
 	initializeFirestore,
-	persistentLocalCache,
-	connectFirestoreEmulator
+	memoryLocalCache,
+	persistentLocalCache
 } from 'firebase/firestore'
 import { getPerformance } from 'firebase/performance'
-import { getAnalytics } from 'firebase/analytics'
 
 // use persistentLocalCache always
 const USE_PERSISTANCE_CACHE = true

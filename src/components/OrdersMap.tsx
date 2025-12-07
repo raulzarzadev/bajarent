@@ -1,14 +1,14 @@
-import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
-import React from 'react'
-import LinkLocation from './LinkLocation'
-import OrderType, { order_status } from '../types/OrderType'
-import { MarkerInfo } from './ItemsMap'
-import theme, { colors, ORDER_STATUS_COLOR } from '../theme'
-import { ModalFilterListE, ModalFilterOrdersProps } from './ModalFilterList'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
+import dictionary from '../dictionary'
+import theme, { colors, ORDER_STATUS_COLOR } from '../theme'
+import type OrderType from '../types/OrderType'
+import type { order_status } from '../types/OrderType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
-import dictionary from '../dictionary'
+import { MarkerInfo } from './ItemsMap'
+import LinkLocation from './LinkLocation'
+import { ModalFilterListE, type ModalFilterOrdersProps } from './ModalFilterList'
 export type MapOrderType = {
 	fullName: string
 	coords?: [number, number]
@@ -52,14 +52,14 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
 						maxWidth: 1200,
 						margin: 'auto'
 					}}
-					//@ts-ignore
+					//@ts-expect-error
 					center={INITIAL_POSITION}
 					zoom={12}
 					scrollWheelZoom={true}
 				>
 					<TileLayer
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-						//@ts-ignore
+						//@ts-expect-error
 						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					/>
 
@@ -69,7 +69,7 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
 							<Marker
 								key={order.itemId}
 								position={order.coords}
-								//@ts-ignore
+								//@ts-expect-error
 								icon={customSvgIcon(ORDER_STATUS_COLOR[order.status])}
 							>
 								<Popup>
@@ -86,7 +86,7 @@ const OrdersMap = ({ orders }: { orders: MapOrderType[] }) => {
 											variant="ghost"
 											label={'ver'}
 											onPress={() => {
-												//@ts-ignore
+												//@ts-expect-error
 												navigate('StackOrders', {
 													screen: 'OrderDetails',
 													params: {
@@ -167,7 +167,7 @@ export const OrdersMapE = props => (
 
 const styles = StyleSheet.create({})
 const customSvgIcon = color =>
-	//@ts-ignore
+	//@ts-expect-error
 	new L.DivIcon({
 		html: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="10" stroke="black" stroke-width="1" fill=${color} />

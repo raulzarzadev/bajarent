@@ -1,13 +1,13 @@
-import ButtonConfirm from './ButtonConfirm'
-import { OrderProvider, useOrderDetails } from '../contexts/orderContext'
-import { ContactsList } from './OrderContacts'
-import ErrorBoundary from './ErrorBoundary'
-import Button from './Button'
 import { View } from 'react-native'
+import { OrderProvider, useOrderDetails } from '../contexts/orderContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import OrderChangeLabel from './OrderChangeLabel'
-import TextInfo from './TextInfo'
+import Button from './Button'
+import ButtonConfirm from './ButtonConfirm'
 import { CustomerCardE } from './Customers/CustomerCard'
+import ErrorBoundary from './ErrorBoundary'
+import OrderChangeLabel from './OrderChangeLabel'
+import { ContactsList } from './OrderContacts'
+import TextInfo from './TextInfo'
 
 type ModalOrderQuickActionsProps = {
 	orderId: string

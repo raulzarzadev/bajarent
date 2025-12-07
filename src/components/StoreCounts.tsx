@@ -1,7 +1,7 @@
-import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
-import HeaderDate from './HeaderDate'
+import { StyleSheet, View } from 'react-native'
 import DateCounts from './DateCounts'
+import HeaderDate from './HeaderDate'
 
 const StoreCounts = () => {
 	const [date, setDate] = useState(new Date())

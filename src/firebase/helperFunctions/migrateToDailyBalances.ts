@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv'
-import { resolve } from 'path'
 import admin from 'firebase-admin'
+import { resolve } from 'path'
+
 //import { firebase_config_prod } from '../../../service_accounts/firebase_config_prod'
 //const serviceAccount = require('../../../service_accounts/service_account_prod.json')
 
@@ -31,7 +32,7 @@ async function migrateToDailyBalances() {
 	console.log(`Documentos encontrados: ${querySnapshot.size}`)
 
 	// Batch para actualizaciones
-	let docsToUpdate = []
+	const docsToUpdate = []
 
 	querySnapshot.forEach(document => {
 		const data = document.data()

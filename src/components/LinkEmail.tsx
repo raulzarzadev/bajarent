@@ -1,5 +1,4 @@
-import React from 'react'
-import { Text, TouchableOpacity, Linking } from 'react-native'
+import { Linking, Text, TouchableOpacity } from 'react-native'
 
 const LinkEmail = ({ email }) => {
 	const handlePress = () => {

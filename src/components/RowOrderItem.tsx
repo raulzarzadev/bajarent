@@ -1,19 +1,18 @@
-import { View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import RowItem from './RowItem'
-import ButtonConfirm from './ButtonConfirm'
-import FormItem from './FormItem'
+import { View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import Button from './Button'
 import { gSpace } from '../styles'
 import theme from '../theme'
-import { useStore } from '../contexts/storeContext'
-import { ItemSelected } from './FormSelectItem'
-import OrderType from '../types/OrderType'
-import ItemType from '../types/ItemType'
-
+import type ItemType from '../types/ItemType'
+import type OrderType from '../types/OrderType'
+import Button from './Button'
+import ButtonConfirm from './ButtonConfirm'
+import FormItem from './FormItem'
+import type { ItemSelected } from './FormSelectItem'
 import ModalChangeItem from './ModalChangeItem'
 import ModalCreateOrderItem from './ModalCreateOrderItem'
+import RowItem from './RowItem'
 
 export const RowOrderItem = ({
 	item,

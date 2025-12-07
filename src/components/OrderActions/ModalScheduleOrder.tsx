@@ -1,9 +1,9 @@
+import { useState } from 'react'
 import { View } from 'react-native'
-import { InputDateE } from '../InputDate'
 import { useOrderDetails } from '../../contexts/orderContext'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
 import Button from '../Button'
-import { useState } from 'react'
+import { InputDateE } from '../InputDate'
 
 const ModalScheduleOrder = ({ orderId = null }: { orderId: string | null }) => {
 	const { order } = useOrderDetails()

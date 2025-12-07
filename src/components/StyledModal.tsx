@@ -1,14 +1,14 @@
+import React, { type ReactNode } from 'react'
 import {
+	Dimensions,
+	Modal,
 	Pressable,
+	ScrollView,
 	StyleSheet,
 	Text,
-	View,
-	Modal,
-	ScrollView,
-	Dimensions,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	View
 } from 'react-native'
-import React, { ReactNode } from 'react'
 import Icon from './Icon'
 
 const { height: windowHeight, width: windowWidth } = Dimensions.get('window')

@@ -1,15 +1,15 @@
-import { Pressable, StyleSheet, Text, TextStyle, View } from 'react-native'
-import PaymentType from '../types/PaymentType'
+import { useNavigation } from '@react-navigation/native'
+import { useState } from 'react'
+import { Pressable, StyleSheet, Text, type TextStyle, View } from 'react-native'
+import { ServicePayments } from '../firebase/ServicePayments'
+import useModal from '../hooks/useModal'
 import { payments_amount } from '../libs/payments'
 import { gStyles } from '../styles'
+import type PaymentType from '../types/PaymentType'
 import CurrencyAmount from './CurrencyAmount'
-import { useNavigation } from '@react-navigation/native'
 import ErrorBoundary from './ErrorBoundary'
-import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
 import ListPayments from './ListPayments'
-import { ServicePayments } from '../firebase/ServicePayments'
-import { useState } from 'react'
+import StyledModal from './StyledModal'
 
 export type BalanceAmountsProps = {
 	payments: Partial<PaymentType>[]
@@ -202,7 +202,7 @@ const LinkPayments = ({
 				setPayments(res)
 			})
 		} else {
-			//@ts-ignore
+			//@ts-expect-error
 			navigate('StackPayments', {
 				screen: 'ScreenPayments',
 				params: {

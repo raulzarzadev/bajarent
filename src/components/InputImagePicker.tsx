@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Image, View, Text } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import pica from 'pica'
+import React, { useState } from 'react'
+import { Image, Text, View } from 'react-native'
 import { uploadFile } from '../firebase/files'
+import { gStyles } from '../styles'
 import { colors } from '../theme'
 import Button from './Button'
-import pica from 'pica'
 import ImagePreview from './ImagePreview'
 import ProgressBar from './ProgressBar'
-import { gStyles } from '../styles'
 
 const MIN_SIZE = 100000
 export default function InputImagePicker({

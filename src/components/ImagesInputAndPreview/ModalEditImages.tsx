@@ -1,5 +1,5 @@
 import useModal from '../../hooks/useModal'
-import { ImageDescriptionType } from '../../state/features/costumers/customerType'
+import type { ImageDescriptionType } from '../../state/features/costumers/customerType'
 import Button from '../Button'
 import { FormikImageDescription } from '../OrderImagesUpdate'
 import StyledModal from '../StyledModal'

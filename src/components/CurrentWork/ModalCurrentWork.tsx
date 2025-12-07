@@ -1,7 +1,7 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import Button from '../Button'
+import { Text, View } from 'react-native'
 import useModal from '../../hooks/useModal'
+import Button from '../Button'
+import ErrorBoundary from '../ErrorBoundary'
 import StyledModal from '../StyledModal'
 
 import { ViewCurrentWorkE } from './ViewCurrentWork'

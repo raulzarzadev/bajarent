@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Text, View, ViewStyle } from 'react-native'
-import RNPhoneInput, { ICountry } from 'react-native-international-phone-number'
+import { Text, View, type ViewStyle } from 'react-native'
+import RNPhoneInput, { type ICountry } from 'react-native-international-phone-number'
 import { gStyles } from '../styles'
-import { HelperTextColors } from './InputTextStyled'
 import theme from '../theme'
+import type { HelperTextColors } from './InputTextStyled'
 
 type PhoneInputProps = {
 	defaultNumber?: string

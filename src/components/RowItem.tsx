@@ -1,8 +1,8 @@
-import { Text, View, ViewStyle } from 'react-native'
-import { ItemSelected } from './FormSelectItem'
-import ListRow, { ListRowField } from './ListRow'
-import CurrencyAmount from './CurrencyAmount'
+import { Text, View, type ViewStyle } from 'react-native'
 import { gStyles } from '../styles'
+import CurrencyAmount from './CurrencyAmount'
+import type { ItemSelected } from './FormSelectItem'
+import ListRow, { type ListRowField } from './ListRow'
 
 const RowItem = ({ item, style }: { item: Partial<ItemSelected>; style?: ViewStyle }) => {
 	const fields: ListRowField[] = [

@@ -1,5 +1,5 @@
-import { ItemBase, ItemStatus } from '../types/ItemType'
-import { CategoryType } from '../types/RentItem'
+import type { ItemBase, ItemStatus } from '../types/ItemType'
+import type { CategoryType } from '../types/RentItem'
 
 const WASHER_CATEGORY_ID = 'washer'
 const DRYER_CATEGORY_ID = 'dryer'

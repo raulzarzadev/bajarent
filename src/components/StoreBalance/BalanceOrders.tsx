@@ -1,11 +1,12 @@
-import { ActivityIndicator, Text, View } from 'react-native'
+import { limit, orderBy, type QueryConstraint, startAfter, where } from 'firebase/firestore'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { limit, orderBy, startAfter, where, QueryConstraint } from 'firebase/firestore'
-import { StoreBalanceType } from '../../types/StoreBalance'
-import OrderType, { order_status, order_type } from '../../types/OrderType'
-import { ListOrdersE } from '../ListOrders'
-import Button from '../Button'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { ServiceOrders } from '../../firebase/ServiceOrders'
+import type OrderType from '../../types/OrderType'
+import { order_status, order_type } from '../../types/OrderType'
+import type { StoreBalanceType } from '../../types/StoreBalance'
+import Button from '../Button'
+import { ListOrdersE } from '../ListOrders'
 
 const ORDER_PAGE_SIZE = 20
 

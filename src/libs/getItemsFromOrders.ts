@@ -1,6 +1,7 @@
-import { Timestamp } from 'firebase/firestore'
-import { ItemSelected } from '../components/FormSelectItem'
-import OrderType from '../types/OrderType'
+import type { Timestamp } from 'firebase/firestore'
+import type { ItemSelected } from '../components/FormSelectItem'
+import type OrderType from '../types/OrderType'
+
 type Item = ItemSelected & {
 	id: string
 	orderId: string

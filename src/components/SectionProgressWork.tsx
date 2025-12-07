@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet, View } from 'react-native'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
+import type OrderType from '../types/OrderType'
+import type { IconName } from './Icon'
 import ListOrders from './ListOrders'
-import OrderType from '../types/OrderType'
-import { IconName } from './Icon'
+import StyledModal from './StyledModal'
 
 const SectionProgressWork = ({
 	authorized,

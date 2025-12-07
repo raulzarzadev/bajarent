@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
-import FormikSelectCategoryItem from './FormikSelectCategoryItem'
-import FormikSelectCategories from './FormikSelectCategories'
+
+import { StyleSheet, Text, View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
+import type OrderType from '../types/OrderType'
 import Button from './Button'
 import FormChooseCategory from './FormChooseCategory'
-import { useStore } from '../contexts/storeContext'
 import FormikInputSelect from './FormikInputSelect'
-import OrderType from '../types/OrderType'
+import FormikInputValue from './FormikInputValue'
+import FormikSelectCategories from './FormikSelectCategories'
+import FormikSelectCategoryItem from './FormikSelectCategoryItem'
 
 const FormRepairItem = ({
 	onSubmit,

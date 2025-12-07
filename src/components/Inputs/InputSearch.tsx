@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { View, TextInput, Text, FlatList, StyleSheet, Keyboard, Pressable } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { FlatList, Keyboard, Pressable, StyleSheet, Text, type TextInput, View } from 'react-native'
 import InputTextStyled from '../InputTextStyled'
 
 export type InputSearchProps<T extends { id: string | number }> = {

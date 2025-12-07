@@ -1,12 +1,13 @@
-import { View, Text, ScrollView } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { useEffect, useState } from 'react'
+import { ScrollView, Text, View } from 'react-native'
+import { useStore } from '../../contexts/storeContext'
+import { useCustomers } from '../../state/features/costumers/costumersSlice'
+import type { NewCustomer } from '../../state/features/costumers/customerType'
+import { gStyles } from '../../styles'
 import ErrorBoundary from '../ErrorBoundary'
 import { FormCustomerE } from './FormCustomer'
-import { NewCustomer } from '../../state/features/costumers/customerType'
-import { useStore } from '../../contexts/storeContext'
-import { useNavigation } from '@react-navigation/native'
-import { gStyles } from '../../styles'
-import { useCustomers } from '../../state/features/costumers/costumersSlice'
-import { useEffect, useState } from 'react'
+
 const ScreenCustomerForm = navigate => {
 	const customerId = navigate?.route?.params?.id
 	const navigation = useNavigation()

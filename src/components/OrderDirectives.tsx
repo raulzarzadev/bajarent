@@ -1,20 +1,21 @@
-import { StyleSheet, View } from 'react-native'
-import OrderStatus from './OrderStatus'
-import OrderType, { order_status, typeOrderIcon } from '../types/OrderType'
-import theme, { ORDER_TYPE_COLOR } from '../theme'
-import Chip from './Chip'
-import { useStore } from '../contexts/storeContext'
-import ErrorBoundary from './ErrorBoundary'
-import { currentRentPeriod } from '../libs/orders'
-import Icon from './Icon'
 import { isToday } from 'date-fns'
+import { StyleSheet, View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
+import { currentRentPeriod } from '../libs/orders'
 import asDate from '../libs/utils-date'
+import theme, { ORDER_TYPE_COLOR } from '../theme'
+import type OrderType from '../types/OrderType'
+import { order_status, typeOrderIcon } from '../types/OrderType'
+import Chip from './Chip'
+import ErrorBoundary from './ErrorBoundary'
+import Icon from './Icon'
+import OrderStatus from './OrderStatus'
 
 const OrderDirectives = ({ order }: { order: Partial<OrderType> }) => {
 	if (!order) return null
 	const { sections: storeSections } = useStore()
 	const assignedSectionLabel =
-		//@ts-ignore
+		//@ts-expect-error
 		order?.assignToSectionName ||
 		storeSections?.find(({ id }) => id === order?.assignToSection)?.name ||
 		false

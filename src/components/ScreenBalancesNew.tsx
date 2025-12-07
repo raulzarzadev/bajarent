@@ -1,16 +1,16 @@
+import { where } from 'firebase/firestore'
+
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import FormBalance from './FormBalance'
-import { useStore } from '../contexts/storeContext'
-import { BalanceType2 } from '../types/BalanceType'
 import { useAuth } from '../contexts/authContext'
-import { gStyles } from '../styles'
+import { useStore } from '../contexts/storeContext'
+import { ServiceBalances } from '../firebase/ServiceBalances2'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { ServicePayments } from '../firebase/ServicePayments'
-import { where } from 'firebase/firestore'
-import { ServiceBalances } from '../firebase/ServiceBalances2'
+import { gStyles } from '../styles'
+import type { BalanceType2 } from '../types/BalanceType'
 import { BalanceAmountsE } from './BalanceAmounts'
 import BusinessStatus from './BusinessStatus'
+import FormBalance from './FormBalance'
 
 const ScreenBalancesNew = ({ navigation }) => {
 	const { storeId, store, sections: storeSections } = useStore()
@@ -52,7 +52,7 @@ const ScreenBalancesNew = ({ navigation }) => {
 
 		//* 3.- Need paid orders and payments in dates
 		const paidOrders = ordersWithPayments
-		const payments = ordersWithPayments.map(o => o.payments).flat()
+		const payments = ordersWithPayments.flatMap(o => o.payments)
 		return { paidOrders, payments }
 	}
 	const handleCalculateBalance = async (values: { toDate: Date; fromDate: Date }) => {

@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
-import InputRadios from './Inputs/InputRadios'
 import { useState } from 'react'
+import { Text, View } from 'react-native'
+import { gStyles } from '../styles'
 import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import InputRadios from './Inputs/InputRadios'
 import TextInfo from './TextInfo'
 
 const ConfigItemsView = (props?: ConfigItemsViewProps) => {

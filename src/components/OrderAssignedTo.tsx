@@ -1,7 +1,7 @@
+import { View, type ViewStyle } from 'react-native'
 import useAssignOrder from '../hooks/useAssignOrder'
-import Chip, { Size } from './Chip'
 import theme from '../theme'
-import { View, ViewStyle } from 'react-native'
+import Chip, { type Size } from './Chip'
 
 const OrderAssignedTo = ({
 	orderId,

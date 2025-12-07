@@ -1,8 +1,8 @@
 import { ActivityIndicator, FlatList, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
-import H1 from './H1'
 import theme from '../theme'
+import H1 from './H1'
 import StaffRow from './StaffRow'
 
 const ScreenAssignOrder = ({ route, navigation }) => {

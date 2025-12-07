@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import ScreenCreateStore from './ScreenStoreCreate'
+import MyStaffLabel from './MyStaffLabel'
 import ScreenProfile from './ScreenProfile'
 import ScreenProfileEdit from './ScreenProfileEdit'
-import MyStaffLabel from './MyStaffLabel'
+import ScreenCreateStore from './ScreenStoreCreate'
 
 const Stack = createStackNavigator()
 function StackProfile() {

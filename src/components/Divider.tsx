@@ -1,5 +1,4 @@
-import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 const Divider = ({ mv = 8 }) => {
 	return <View style={{ ...styles.divider, marginVertical: mv }} />

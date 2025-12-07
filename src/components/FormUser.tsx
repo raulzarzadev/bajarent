@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Formik } from 'formik'
-import FormikInputValue from './FormikInputValue'
+
+import { StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
+import FormikInputValue from './FormikInputValue'
 
 const FormUser = ({
 	defaultValues,

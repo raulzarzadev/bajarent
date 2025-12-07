@@ -1,5 +1,5 @@
-import { ConsolidatedStoreOrdersType } from './ServiceConsolidatedOrders'
 import { FirebaseGenericService } from './genericService'
+import type { ConsolidatedStoreOrdersType } from './ServiceConsolidatedOrders'
 
 type Type = {
 	id: string

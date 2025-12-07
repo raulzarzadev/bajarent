@@ -1,7 +1,7 @@
 import { isAfter, isBefore } from 'date-fns'
-import OrderType from '../../../types/OrderType'
 import { orderExpireAt } from '../../../libs/orders'
 import asDate from '../../../libs/utils-date'
+import type OrderType from '../../../types/OrderType'
 
 export const handleSetStatuses = ({
 	order

@@ -1,9 +1,9 @@
+import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
+import { useStore } from '../contexts/storeContext'
 import { BottomAppBarE } from './BottomAppBar'
 import StartupLoader from './StartupLoader'
 import StoreSelection from './StoreSelection'
-import { useAuth } from '../contexts/authContext'
-import { useStore } from '../contexts/storeContext'
-import { useEmployee } from '../contexts/employeeContext'
 
 const AppBootstrap = () => {
 	const { user, isAuthReady, storeId, clearStoreSelection } = useAuth()

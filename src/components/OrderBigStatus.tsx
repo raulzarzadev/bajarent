@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native'
-import { order_status, order_type } from '../types/OrderType'
-import theme, { Colors } from '../theme'
-import asDate, { dateFormat, fromNow } from '../libs/utils-date'
+import { Text, View } from 'react-native'
 import { useOrderDetails } from '../contexts/orderContext'
-import Icon, { IconName } from './Icon'
+import asDate, { dateFormat, fromNow } from '../libs/utils-date'
+import theme, { type Colors } from '../theme'
+import { order_status, order_type } from '../types/OrderType'
+import Icon, { type IconName } from './Icon'
 
 const OrderBigStatus = () => {
 	const { order } = useOrderDetails()

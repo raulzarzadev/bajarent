@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { useStore } from '../contexts/storeContext'
-import OrderType from '../types/OrderType'
 import { gStyles } from '../styles'
+import type OrderType from '../types/OrderType'
 
 export const ItemOrderDetails = ({ item }: { item: OrderType['item'] }) => {
 	//const { items } = useStore()

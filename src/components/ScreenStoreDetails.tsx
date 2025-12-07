@@ -1,10 +1,10 @@
-import { Pressable, ScrollView, Text, View } from 'react-native'
-import StoreDetails from './StoreDetails'
-import { useStore } from '../contexts/storeContext'
-import { useAuth } from '../contexts/authContext'
-import theme from '../theme'
-import { gStyles } from '../styles'
 import { useNavigation } from '@react-navigation/native'
+import { Pressable, ScrollView, Text, View } from 'react-native'
+import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import StoreDetails from './StoreDetails'
 
 const ScreenStoreDetails = ({ navigation }) => {
 	const { navigate } = useNavigation()
@@ -20,7 +20,7 @@ const ScreenStoreDetails = ({ navigation }) => {
 						Selecciona o crea una tienda en tu{' '}
 						<Pressable
 							onPress={() => {
-								// @ts-ignore
+								// @ts-expect-error
 								navigate('Profile')
 							}}
 						>

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CustomerType } from './customerType'
 import { ServiceCustomers } from '../../../firebase/ServiceCustomers'
 import { convertTimestamps } from '../../../libs/utils-date'
+import type { CustomerType } from './customerType'
 
 export const fetchCustomers = createAsyncThunk(
 	'customers/fetchCustomers',

@@ -1,7 +1,7 @@
-import { ItemSelected } from '../../components/FormSelectItem'
+import type { ItemSelected } from '../../components/FormSelectItem'
 import { onComment, onDelivery } from '../../libs/order-actions'
-import ItemType from '../../types/ItemType'
-import { ItemHistoryType, ServiceItemHistory } from '../ServiceItemHistory'
+import type ItemType from '../../types/ItemType'
+import { type ItemHistoryType, ServiceItemHistory } from '../ServiceItemHistory'
 import { ServiceOrders } from '../ServiceOrders'
 import { ServiceStoreItems } from '../ServiceStoreItems'
 

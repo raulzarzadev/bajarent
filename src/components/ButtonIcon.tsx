@@ -1,7 +1,6 @@
-import React from 'react'
-import Button, { ButtonProps } from './Button'
+import Button, { type ButtonProps } from './Button'
 
-import { IconName } from './Icon'
+import type { IconName } from './Icon'
 export type IconButtonProps = {
 	icon: IconName
 	iconColor?: ButtonProps['color']

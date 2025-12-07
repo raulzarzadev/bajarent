@@ -1,9 +1,9 @@
 import { View } from 'react-native'
-import Tabs, { TabType } from './Tabs'
 import { useStore } from '../contexts/storeContext'
-import { SectionDetailsE } from './SectionDetails'
 import useMyNav from '../hooks/useMyNav'
 import { store_section_icons } from '../types/SectionType'
+import { SectionDetailsE } from './SectionDetails'
+import Tabs, { type TabType } from './Tabs'
 
 const TabStoreSections = () => {
 	const { sections: storeSections } = useStore()

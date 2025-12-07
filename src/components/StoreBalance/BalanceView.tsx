@@ -1,18 +1,18 @@
-import { View, Text } from 'react-native'
+import { Text, View } from 'react-native'
+import { useStore } from '../../contexts/storeContext'
+import { payments_amount } from '../../libs/payments'
+import asDate, { dateFormat } from '../../libs/utils-date'
 import { gStyles } from '../../styles'
-import { StoreBalanceType } from '../../types/StoreBalance'
+import { order_type } from '../../types/OrderType'
+import type { StoreBalanceType } from '../../types/StoreBalance'
+import ErrorBoundary from '../ErrorBoundary'
+import SpanCopy from '../SpanCopy'
+import Tabs from '../Tabs'
+import { BalanceOrders } from './BalanceOrders'
 import { GeneralBalanceE } from './GeneralBalance'
 import { RentsBalanceE } from './RentsBalance'
 import { RepairsBalanceE } from './RepairsBalance'
 import { SalesBalanceE } from './SalesBalance'
-import ErrorBoundary from '../ErrorBoundary'
-import asDate, { dateFormat } from '../../libs/utils-date'
-import Tabs from '../Tabs'
-import SpanCopy from '../SpanCopy'
-import { payments_amount } from '../../libs/payments'
-import { order_type } from '../../types/OrderType'
-import { useStore } from '../../contexts/storeContext'
-import { BalanceOrders } from './BalanceOrders'
 
 export const BalanceView = ({ balance }: BalanceViewProps) => {
 	const { sections } = useStore()
@@ -99,9 +99,9 @@ const generateBalanceCSV = (
 	const formatCurrency = value => (value || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 	const rentOrders = balance.orders.filter(order => order.orderType === order_type.RENT)
-	const rentPayments = rentOrders.map(o => o.payments).flat()
+	const rentPayments = rentOrders.flatMap(o => o.payments)
 
-	const rentedItems = rentOrders.map(o => o.items).flat()
+	const rentedItems = rentOrders.flatMap(o => o.items)
 	const unrentedItems = balance.items
 
 	const rentedItemsCount = rentedItems.length
@@ -180,7 +180,7 @@ const generateBalanceCSV = (
 	//#region areas
 	Object.keys(rentOrdersByArea).forEach(area => {
 		const orders = rentOrdersByArea[area]
-		const payments = orders.map(o => o.payments).flat()
+		const payments = orders.flatMap(o => o.payments)
 		const amounts = payments_amount(payments)
 		csv += `${JUM}${
 			sectionsNames?.find(s => s.sectionId === area)?.sectionName?.toUpperCase() || ''

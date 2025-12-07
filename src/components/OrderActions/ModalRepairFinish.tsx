@@ -1,10 +1,10 @@
 import { View } from 'react-native'
-import StyledModal from '../StyledModal'
-import { ReturnModal } from '../../hooks/useModal'
-import Button from '../Button'
-import { onRepairFinish } from '../../libs/order-actions'
 import { useAuth } from '../../contexts/authContext'
 import { useOrderDetails } from '../../contexts/orderContext'
+import type { ReturnModal } from '../../hooks/useModal'
+import { onRepairFinish } from '../../libs/order-actions'
+import Button from '../Button'
+import StyledModal from '../StyledModal'
 
 const ModalRepairFinish = ({ modal }: { modal: ReturnModal }) => {
 	const { order } = useOrderDetails()

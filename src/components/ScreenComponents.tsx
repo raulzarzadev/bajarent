@@ -1,16 +1,15 @@
-import { ScrollView, View } from 'react-native'
-import Buttons from './Buttons'
-import { InputsE } from './Inputs'
-import TextInfos from './TextInfos'
-import Chips from './Chips'
-import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import { Formik } from 'formik'
+import { useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import { gStyles } from '../styles'
 import { order_status, order_type } from '../types/OrderType'
-import { RowOrderE } from './RowOrder'
-
-import { useState } from 'react'
+import Buttons from './Buttons'
+import Chips from './Chips'
+import { FormikSaleOrderItemsE } from './FormikSaleOrderItems'
 import { InputContractSignatureE } from './InputContractSignature'
+import { InputsE } from './Inputs'
+import { RowOrderE } from './RowOrder'
+import TextInfos from './TextInfos'
 
 const ScreenComponents = () => {
 	const [values, setValues] = useState<any>()
@@ -35,7 +34,7 @@ const ScreenComponents = () => {
 			</View>
 			<View style={gStyles.container}>
 				<RowOrderE
-					//@ts-ignore
+					//@ts-expect-error
 					item={{
 						firstName: 'Manuel Trath',
 						type: order_type.SALE,
@@ -54,7 +53,7 @@ const ScreenComponents = () => {
 						markedToCharge: true,
 
 						comments: [
-							//@ts-ignore
+							//@ts-expect-error
 							{
 								type: 'important',
 								solved: false,
@@ -64,7 +63,7 @@ const ScreenComponents = () => {
 					}}
 				/>
 				<RowOrderE
-					//@ts-ignore
+					//@ts-expect-error
 					item={{
 						firstName: 'Manuel ',
 						type: order_type.RENT,
@@ -81,7 +80,7 @@ const ScreenComponents = () => {
 					}}
 				/>
 				<RowOrderE
-					//@ts-ignore
+					//@ts-expect-error
 					item={{
 						firstName: 'Manuel Direleret Graham ',
 						type: order_type.RENT,

@@ -1,4 +1,5 @@
-import OrderType, { order_type, SaleOrderItem } from '../types/OrderType'
+import type OrderType from '../types/OrderType'
+import { order_type, type SaleOrderItem } from '../types/OrderType'
 
 export const orderAmount = (order: Partial<OrderType>) => {
 	if (order.type === order_type.SALE) {

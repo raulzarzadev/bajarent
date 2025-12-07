@@ -1,5 +1,5 @@
-import { ClientType } from '../types/ClientType'
 import { where } from 'firebase/firestore'
+import type { ClientType } from '../types/ClientType'
 import { ServiceStores } from './ServiceStore'
 
 const SUB_COLLECTION = 'clients'

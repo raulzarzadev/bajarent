@@ -1,8 +1,8 @@
+import { useNavigation } from '@react-navigation/native'
 import { StyleSheet, View } from 'react-native'
+import type { BalanceType } from '../types/BalanceType'
 import { ListE } from './List'
 import RowBalance from './RowBalace'
-import { BalanceType } from '../types/BalanceType'
-import { useNavigation } from '@react-navigation/native'
 
 const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
 	const { navigate } = useNavigation()
@@ -13,12 +13,12 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
 				defaultSortBy="createdAt"
 				defaultOrder="des"
 				onPressRow={id => {
-					// @ts-ignore
+					// @ts-expect-error
 					navigate('ScreenBalancesDetails', { id })
 				}}
 				//TODO:add as side button if its needed
 				// onPressNew={() => {
-				//   // @ts-ignore
+				//   // @ts-expect-error
 				//   navigate('ScreenBalancesNew')
 				// }}
 				sideButtons={[
@@ -26,7 +26,7 @@ const ListBalances = ({ balances }: { balances: BalanceType[] }) => {
 						icon: 'add',
 						label: 'Nuevo',
 						onPress: () => {
-							// @ts-ignore
+							// @ts-expect-error
 							navigate('ScreenBalancesNew')
 						},
 						visible: true

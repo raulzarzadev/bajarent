@@ -1,15 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { useOrderDetails } from '../contexts/orderContext'
-import CardPhone from './CardPhone'
-import Button from './Button'
 import useModal from '../hooks/useModal'
-import StyledModal from './StyledModal'
-import { gStyles } from '../styles'
-import FormContacts from './FormContacts'
 import { onAddContact, onMarkContactAsFavorite, onRemoveContact } from '../libs/order-actions'
-import { ContactType } from '../types/OrderType'
+import { gStyles } from '../styles'
+import type { ContactType } from '../types/OrderType'
+import Button from './Button'
 import ButtonConfirm from './ButtonConfirm'
+import CardPhone from './CardPhone'
+import FormContacts from './FormContacts'
+import StyledModal from './StyledModal'
 
 /**
  * @deprecated now  contacnts is from customers

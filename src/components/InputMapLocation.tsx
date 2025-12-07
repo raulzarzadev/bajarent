@@ -1,15 +1,15 @@
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native'
+import L from 'leaflet'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { CircleMarker, MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
-import L from 'leaflet'
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native'
 import 'leaflet/dist/leaflet.css'
-import InputTextStyled from './InputTextStyled'
 import useDebounce from '../hooks/useDebunce'
-import Button from './Button'
 import useLocation from '../hooks/useLocation'
-import CoordsType from '../types/CoordsType'
-import Loading from './Loading'
 import theme from '../theme'
+import type CoordsType from '../types/CoordsType'
+import Button from './Button'
+import InputTextStyled from './InputTextStyled'
+import Loading from './Loading'
 
 // Define el tipo de icono personalizado
 const customIcon = L.icon({
@@ -56,20 +56,20 @@ const InputMapLocation = ({
 				<View style={styles.container}>
 					<MapContainer
 						style={styles.map}
-						//@ts-ignore
+						//@ts-expect-error
 						center={mapCenter}
 						zoom={mapZoom}
 						key={mapCenter.toString()}
 					>
 						<TileLayer
-							//@ts-ignore
+							//@ts-expect-error
 							attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 							url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						/>
 						{defaultCoords && (
 							<CircleMarker
 								center={defaultCoords}
-								//@ts-ignore
+								//@ts-expect-error
 								radius={10}
 								pathOptions={{
 									color: theme.primary,
@@ -333,7 +333,7 @@ function DraggableMarker({
 
 	return (
 		<Marker
-			//@ts-ignore
+			//@ts-expect-error
 			draggable={true}
 			eventHandlers={eventHandlers}
 			position={position}

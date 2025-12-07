@@ -1,19 +1,19 @@
-import { View } from 'react-native'
-import Button from '../Button'
-import { ServiceBalances } from '../../firebase/ServiceBalances3'
-import { useStore } from '../../contexts/storeContext'
+import { useNavigation } from '@react-navigation/native'
+import { isToday, toDate } from 'date-fns'
 import { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import { useStore } from '../../contexts/storeContext'
+import { ServiceBalances } from '../../firebase/ServiceBalances3'
+import catchError from '../../libs/catchError'
+import { getItem, setItem } from '../../libs/storage'
+import ModalCloseOperations from '../../ModalCloseOperations'
+import type { StoreBalanceType } from '../../types/StoreBalance'
+import { firebaseSafeSave } from '../../utils/firebaseSafeSave'
+import Button from '../Button'
 import ErrorBoundary from '../ErrorBoundary'
 import HeaderDate from '../HeaderDate'
-import { StoreBalanceType } from '../../types/StoreBalance'
-import { isToday, toDate } from 'date-fns'
-import ModalCloseOperations from '../../ModalCloseOperations'
-import { useNavigation } from '@react-navigation/native'
-import { BalanceViewE } from './BalanceView'
 import Loading from '../Loading'
-import { getItem, setItem } from '../../libs/storage'
-import catchError from '../../libs/catchError'
-import { firebaseSafeSave } from '../../utils/firebaseSafeSave'
+import { BalanceViewE } from './BalanceView'
 
 const StoreBalance = () => {
 	const { storeId } = useStore()
@@ -100,7 +100,7 @@ const StoreBalance = () => {
 					variant="ghost"
 					label="Custom"
 					onPress={() => {
-						//@ts-ignore
+						//@ts-expect-error
 						navigate('StackBalances', {
 							screen: 'CustomBalanceDate'
 						})
@@ -125,7 +125,7 @@ const StoreBalance = () => {
 					icon="moneyOff"
 					size="xs"
 					onPress={() => {
-						//@ts-ignore
+						//@ts-expect-error
 						navigate('StackPayments', {
 							screen: 'ScreenRetirementsNew'
 						})

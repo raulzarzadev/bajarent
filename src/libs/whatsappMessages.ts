@@ -1,12 +1,14 @@
 import { isToday, isTomorrow } from 'date-fns'
 import dictionary from '../dictionary'
-import OrderType, {
+import type OrderType from '../types/OrderType'
+import {
+	type OrderQuoteType,
 	order_status,
 	order_type,
-	OrderQuoteType,
-	SaleOrderItem
+	type SaleOrderItem
 } from '../types/OrderType'
-import StoreType from '../types/StoreType'
+import type PaymentType from '../types/PaymentType'
+import type StoreType from '../types/StoreType'
 import asDate, {
 	dateFormat,
 	endDate,
@@ -14,7 +16,6 @@ import asDate, {
 	isAfterTomorrow,
 	isBeforeYesterday
 } from './utils-date'
-import PaymentType from '../types/PaymentType'
 
 export const expiredMessage = ({
 	order,

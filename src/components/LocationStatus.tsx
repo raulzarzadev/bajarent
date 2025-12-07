@@ -1,10 +1,9 @@
 import { Text, View } from 'react-native'
-import React from 'react'
 import useLocation from '../hooks/useLocation'
-import Icon from './Icon'
+import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
 import Button from './Button'
-import { gSpace, gStyles } from '../styles'
+import Icon from './Icon'
 
 const LocationStatus = () => {
 	const { location } = useLocation()

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TextStyle, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { type ReactNode } from 'react'
+import { StyleSheet, Text, type TextStyle, View } from 'react-native'
 import theme, { FONT_SIZE } from '../theme'
 
 const P = ({

@@ -1,4 +1,4 @@
-import { ContactType } from '../../types/OrderType'
+import type { ContactType } from '../../types/OrderType'
 
 const chooseOrderPhone = order => {
 	const orderContacts = order?.contacts as ContactType[]

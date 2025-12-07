@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import * as Location from 'expo-location'
+import { useState } from 'react'
 
 export type PermissionState = 'granted' | 'denied' | 'prompt'
 export type LocationRes = {
@@ -30,7 +30,7 @@ export default function useLocation() {
 			console.log({ status })
 
 			if (status === 'granted') {
-				let coords = (await Location.getCurrentPositionAsync({})).coords
+				const coords = (await Location.getCurrentPositionAsync({})).coords
 				const res: LocationRes = {
 					status: 'granted',
 					coords: {

@@ -1,7 +1,7 @@
-import { Timestamp } from 'firebase/firestore'
-import asDate, { dateFormat } from './utils-date'
-import groupBy from './groupBy'
 import { endOfWeek, getDayOfYear, setWeek, startOfWeek } from 'date-fns'
+import type { Timestamp } from 'firebase/firestore'
+import groupBy from './groupBy'
+import asDate, { dateFormat } from './utils-date'
 
 export type ChartDocType<T> = T & { createdAt: Date | Timestamp }
 

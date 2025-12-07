@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { ItemsStackParamList } from '../navigation/types'
-import ScreenItems from './ScreenItems'
-import ScreenItemNew from './ScreenItemNew'
-import ScreenItemsDetails from './ScreenItemsDetails'
+import type { ItemsStackParamList } from '../navigation/types'
 import { ScreenItemEditE } from './ScreenItemEdit'
+import ScreenItemNew from './ScreenItemNew'
+import ScreenItems from './ScreenItems'
+import ScreenItemsDetails from './ScreenItemsDetails'
 
 const Stack = createStackNavigator<ItemsStackParamList>()
 function StackItems() {

@@ -1,11 +1,11 @@
+import { FieldArray } from 'formik'
 import { Dimensions, Text, View } from 'react-native'
+import { gStyles } from '../styles'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
-import FormikInputValue from './FormikInputValue'
 import { FormikInputPhoneE } from './FormikInputPhone'
 import FormikInputSelect from './FormikInputSelect'
-import { FieldArray } from 'formik'
-import { gStyles } from '../styles'
+import FormikInputValue from './FormikInputValue'
 export type FormikFieldArrayProps = {
 	label?: string
 	name: string

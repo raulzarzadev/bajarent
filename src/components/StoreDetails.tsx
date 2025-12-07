@@ -1,15 +1,15 @@
-import { Text, View } from 'react-native'
-import P from './P'
-import { gStyles } from '../styles'
-import Button from './Button'
-import { useEmployee } from '../contexts/employeeContext'
-import BadgesStore from './BadgesStore'
-import ErrorBoundary from './ErrorBoundary'
 import { useNavigation } from '@react-navigation/native'
-import SpanCopy from './SpanCopy'
-import LinkLocation from './LinkLocation'
-import { Separator } from './Separator'
+import { Text, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
 import { useShop } from '../hooks/useShop'
+import { gStyles } from '../styles'
+import BadgesStore from './BadgesStore'
+import Button from './Button'
+import ErrorBoundary from './ErrorBoundary'
+import LinkLocation from './LinkLocation'
+import P from './P'
+import { Separator } from './Separator'
+import SpanCopy from './SpanCopy'
 
 const StoreDetails = () => {
 	const { navigate } = useNavigation()
@@ -37,7 +37,7 @@ const StoreDetails = () => {
 						justIcon
 						icon="settings"
 						onPress={() => {
-							//@ts-ignore
+							//@ts-expect-error
 							navigate('EditStore')
 						}}
 						id="editStore"

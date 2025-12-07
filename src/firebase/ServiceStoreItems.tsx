@@ -1,10 +1,12 @@
 import { collection, documentId, increment, query, where } from 'firebase/firestore'
-import { ServiceStores } from './ServiceStore'
-import ItemType, { ItemStatuses } from '../types/ItemType'
-import { ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
+import type ItemType from '../types/ItemType'
+import { ItemStatuses } from '../types/ItemType'
+import type UserType from '../types/UserType'
+import type { FormattedResponse, GetItemsOps } from './firebase.CRUD'
 import { db } from './main'
-import { FormattedResponse, GetItemsOps } from './firebase.CRUD'
-import UserType from '../types/UserType'
+import { type ItemHistoryBase, ServiceItemHistory } from './ServiceItemHistory'
+import { ServiceStores } from './ServiceStore'
+
 type Type = Partial<ItemType>
 type Field = keyof Type
 const SUB_COLLECTION = 'items'
@@ -203,7 +205,7 @@ export class ServiceStoreItemsClass {
 		ops?: GetItemsOps
 	): Promise<Type[]> {
 		const ref = collection(db, 'stores', storeId, SUB_COLLECTION)
-		let promises = []
+		const promises = []
 		const MAX_BATCH_SIZE = 30
 		for (let i = 0; i < ids.length; i += MAX_BATCH_SIZE) {
 			const chunk = ids.slice(i, i + MAX_BATCH_SIZE)

@@ -1,6 +1,7 @@
 import { deleteField } from 'firebase/firestore'
 import { ServiceStores } from '../firebase/ServiceStore'
-import ItemType from '../types/ItemType'
+import type ItemType from '../types/ItemType'
+
 // * GENERIC TYPE
 type ValueOfKey<T, K extends keyof T> = T[K]
 

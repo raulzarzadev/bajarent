@@ -1,8 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Icon, { IconName } from './Icon'
-import theme, { colors } from '../theme'
 import { gStyles } from '../styles'
+import theme, { colors } from '../theme'
+import Icon, { type IconName } from './Icon'
 
 export type TextIconType = 'info' | 'error' | 'success' | 'warning'
 export type TextInfoProps = {

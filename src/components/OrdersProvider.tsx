@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import type React from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../state/store'
 import { useAuth } from '../contexts/authContext'
 import { useOrdersSync } from '../services/ordersSyncService'
+import type { AppDispatch } from '../state/store'
 
 /**
  * OrdersProvider - Component that initializes the Redux orders state

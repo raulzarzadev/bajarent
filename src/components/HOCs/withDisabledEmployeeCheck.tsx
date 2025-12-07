@@ -1,12 +1,10 @@
-import React from 'react'
-import DisabledEmployee from '../DisabledEmployee'
+import type React from 'react'
 import { useEmployee } from '../../contexts/employeeContext'
-import TextInfo from '../TextInfo'
+import DisabledEmployee from '../DisabledEmployee'
 import Loading from '../Loading'
+import TextInfo from '../TextInfo'
 
-interface WithDisabledCheckProps {
-	// isDisabled: boolean
-}
+type WithDisabledCheckProps = {}
 
 const withDisabledCheck = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
 	const ComponentWithDisabledCheck: React.FC<P & WithDisabledCheckProps> = props => {

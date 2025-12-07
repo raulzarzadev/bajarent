@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { CustomerType } from '../../../state/features/costumers/customerType'
+import type { CustomerType } from '../../../state/features/costumers/customerType'
 import { mergeCustomers } from './customerFromOrder'
 
 describe('mergeCustomers', () => {

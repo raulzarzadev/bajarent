@@ -1,8 +1,9 @@
+import { isToday } from 'date-fns'
+
 import { Text, View } from 'react-native'
-import React from 'react'
-import Button from './Button'
+import { useAuth } from '../contexts/authContext'
+import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
-import ButtonConfirm from './ButtonConfirm'
 import {
 	onChangeItemSection,
 	onCheckInInventory,
@@ -10,22 +11,21 @@ import {
 	onRetireItem
 } from '../firebase/actions/item-actions'
 import { ServiceStoreItems } from '../firebase/ServiceStoreItems'
-import ItemType from '../types/ItemType'
-import { gStyles } from '../styles'
 import useMyNav from '../hooks/useMyNav'
-import InputTextStyled from './InputTextStyled'
-import ButtonDeleteItem from './ButtonDeleteItem'
-import { useAuth } from '../contexts/authContext'
-import { isToday } from 'date-fns'
-import asDate, { dateFormat } from '../libs/utils-date'
-import Icon from './Icon'
-import theme from '../theme'
-import SpanUser from './SpanUser'
-import { SquareItem } from './CardItem'
-import ModalFixItem from './ModalFixItem'
-import InputAssignSection from './InputAssingSection'
-import { useEmployee } from '../contexts/employeeContext'
 import { hasPermissions } from '../libs/permissions/hasPermissions'
+import asDate, { dateFormat } from '../libs/utils-date'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import type ItemType from '../types/ItemType'
+import Button from './Button'
+import ButtonConfirm from './ButtonConfirm'
+import ButtonDeleteItem from './ButtonDeleteItem'
+import { SquareItem } from './CardItem'
+import Icon from './Icon'
+import InputAssignSection from './InputAssingSection'
+import InputTextStyled from './InputTextStyled'
+import ModalFixItem from './ModalFixItem'
+import SpanUser from './SpanUser'
 
 type Actions =
 	| 'details'

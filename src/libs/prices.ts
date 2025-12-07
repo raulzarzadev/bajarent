@@ -1,4 +1,4 @@
-import { PriceType } from '../types/PriceType'
+import type { PriceType } from '../types/PriceType'
 import { priceTimeInSeconds } from './expireDate'
 
 export const sortPricesByTime = (a: PriceType, b: PriceType) => {

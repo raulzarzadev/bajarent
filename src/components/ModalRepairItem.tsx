@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import StyledModal from './StyledModal'
-import useModal from '../hooks/useModal'
-import Button from './Button'
-import { ServiceOrders } from '../firebase/ServiceOrders'
-import { gStyles } from '../styles'
-import { useOrderDetails } from '../contexts/orderContext'
-import FormRepairItem from './FormRepairItem'
-import { useStore } from '../contexts/storeContext'
-import OrderType from '../types/OrderType'
 import { use } from 'chai'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { useOrderDetails } from '../contexts/orderContext'
+import { useStore } from '../contexts/storeContext'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import useModal from '../hooks/useModal'
+import { gStyles } from '../styles'
+import type OrderType from '../types/OrderType'
+import Button from './Button'
+import FormRepairItem from './FormRepairItem'
+import StyledModal from './StyledModal'
 
 export const ModalRepairItem = ({}) => {
 	const { order } = useOrderDetails()
@@ -46,7 +46,7 @@ export const ModalRepairItem = ({}) => {
 						onPress={modal.toggleOpen}
 					/>
 				</View>
-				{!!formattedItem ? (
+				{formattedItem ? (
 					<RepairItemDetails item={formattedItem} />
 				) : (
 					<Text style={{ justifyContent: 'center', textAlign: 'center' }}>No hay artículo</Text>

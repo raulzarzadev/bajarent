@@ -1,8 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
-import FormCategory from './FormCategory'
-import { gStyles } from '../styles'
 import useCategories from '../hooks/useCategories'
+import { gStyles } from '../styles'
+import FormCategory from './FormCategory'
 
 const ScreenCategoryNew = ({ navigation }) => {
 	const { createCategory } = useCategories()

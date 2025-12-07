@@ -1,14 +1,14 @@
-import { Text, View, StyleSheet } from 'react-native'
-import CurrencyAmount from './CurrencyAmount'
+import { StyleSheet, Text, View } from 'react-native'
+import { useEmployee } from '../contexts/employeeContext'
 import dictionary from '../dictionary'
-import DateCell from './DateCell'
 import { gStyles } from '../styles'
 import { colors } from '../theme'
-import PaymentVerify from './PaymentVerify'
-import PaymentType from '../types/PaymentType'
-import SpanStoreSection from './SpanStoreSection'
+import type PaymentType from '../types/PaymentType'
+import CurrencyAmount from './CurrencyAmount'
+import DateCell from './DateCell'
 import ImagePreview from './ImagePreview'
-import { useEmployee } from '../contexts/employeeContext'
+import PaymentVerify from './PaymentVerify'
+import SpanStoreSection from './SpanStoreSection'
 export type PaymentTypeList = PaymentType & { createdByName?: string }
 const RowPayment = ({ item, onVerified }: { item: PaymentTypeList; onVerified?: () => void }) => {
 	const isRetirement = !!item?.isRetirement

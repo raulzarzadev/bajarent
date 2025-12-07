@@ -1,26 +1,25 @@
-import { View, Text } from 'react-native'
-import ErrorBoundary from '../ErrorBoundary'
-import { StoreBalanceOrder } from '../../types/StoreBalance'
-import CurrencyAmount from '../CurrencyAmount'
-import React from 'react'
-import { gStyles } from '../../styles'
-import theme, { colors } from '../../theme'
+import { Text, View } from 'react-native'
 import { useStore } from '../../contexts/storeContext'
 import { translateTime } from '../../libs/expireDate'
+import { gStyles } from '../../styles'
+import theme, { colors } from '../../theme'
 import { order_type } from '../../types/OrderType'
+import type { StoreBalanceOrder } from '../../types/StoreBalance'
+import CurrencyAmount from '../CurrencyAmount'
+import ErrorBoundary from '../ErrorBoundary'
+
 const BalanceOrderRow = (props: BalanceOrderRowProps) => {
 	const order = props.order
 	const { categories } = useStore()
 	const paymentAmount = order?.payments?.reduce((acc, payment) => {
 		// omit canclations
-		if (!!payment.canceledAt) return acc
+		if (payment.canceledAt) return acc
 		return acc + payment.amount
 	}, 0)
 
 	const itemNumber = order?.items?.map(item => item?.itemEco).join(', ')
 	const matchedPrice = categories
-		?.map(cat => cat.prices)
-		?.flat()
+		?.flatMap(cat => cat.prices)
 		?.find(price => price?.id === order?.items?.[0]?.priceId)
 	//TODO: some times this will not match becaouse payemnts will be more if the balance is for more time
 	const paymentAndPriceMatches = matchedPrice?.amount === paymentAmount

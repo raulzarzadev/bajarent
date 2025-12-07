@@ -1,8 +1,8 @@
-// @ts-ignore
-import { expect, test, describe } from 'bun:test'
-import orderStatus from './orderStatus'
-import { order_status, order_type, orders_should_expire } from '../types/OrderType'
+// @ts-expect-error
+import { describe, expect, test } from 'bun:test'
 import { subDays } from 'date-fns'
+import { order_status, order_type, orders_should_expire } from '../types/OrderType'
+import orderStatus from './orderStatus'
 
 const lasWeek = subDays(new Date(), 7)
 const yesterday = subDays(new Date(), 1)

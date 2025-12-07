@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { MyItemsStackParamList } from '../navigation/types'
+import type { MyItemsStackParamList } from '../navigation/types'
+import { ScreenItemEditE } from './ScreenItemEdit'
 import ScreenItemNew from './ScreenItemNew'
 import ScreenItemsDetails from './ScreenItemsDetails'
-import { ScreenItemEditE } from './ScreenItemEdit'
 import ScreenMyItems from './ScreenMyItems'
 import StackItems from './StackItems'
 

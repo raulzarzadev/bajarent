@@ -1,10 +1,10 @@
-import { ReactNode, useEffect, useState } from 'react'
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
-import ErrorBoundary from './ErrorBoundary'
-import theme from '../theme'
-import { gStyles } from '../styles'
-import Icon, { IconName } from './Icon'
+import { type ReactNode, useEffect, useState } from 'react'
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { getItem, setItem } from '../libs/storage'
+import { gStyles } from '../styles'
+import theme from '../theme'
+import ErrorBoundary from './ErrorBoundary'
+import Icon, { type IconName } from './Icon'
 
 export type Tab = {
 	title: string

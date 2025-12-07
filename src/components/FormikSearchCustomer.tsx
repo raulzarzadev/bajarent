@@ -1,7 +1,7 @@
-import { CustomerType } from '../state/features/costumers/customerType'
+import { useField, useFormikContext } from 'formik'
+import type { CustomerType } from '../state/features/costumers/customerType'
 import ErrorBoundary from './ErrorBoundary'
 import InputSearch from './Inputs/InputSearch'
-import { useField, useFormikContext } from 'formik'
 
 /**
  * Formik wrapper for the InputSearch Client component

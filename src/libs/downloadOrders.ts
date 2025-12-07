@@ -1,16 +1,16 @@
 import { where } from 'firebase/firestore'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import { json2csv } from 'json-2-csv'
-import { currentRentPeriod } from './orders'
-import asDate, { dateFormat } from './utils-date'
+import JSZip from 'jszip'
 import { getUserName } from '../components/SpanUser'
-import OrderType, { ContactType } from '../types/OrderType'
 import dictionary from '../dictionary'
-import StoreType from '../types/StoreType'
 import { ServiceBalances } from '../firebase/ServiceBalances2'
 import { ServiceBalances as ServiceBalance3 } from '../firebase/ServiceBalances3'
-
-import JSZip from 'jszip'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import type OrderType from '../types/OrderType'
+import type { ContactType } from '../types/OrderType'
+import type StoreType from '../types/StoreType'
+import { currentRentPeriod } from './orders'
+import asDate, { dateFormat } from './utils-date'
 
 export const rentsCSVFile = async ({
 	storeId,

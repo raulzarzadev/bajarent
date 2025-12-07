@@ -1,7 +1,7 @@
 import { useStore } from '../contexts/storeContext'
-import { RandomMessage, SampleMessages } from './ScreenChatbot'
-import { FormChatbotE } from './FormChatbot'
 import { ServiceStores } from '../firebase/ServiceStore'
+import { FormChatbotE } from './FormChatbot'
+import { RandomMessage, SampleMessages } from './ScreenChatbot'
 
 export const AutoWSConfig = () => {
 	const { store } = useStore()

@@ -1,15 +1,15 @@
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
-import OrderType from '../types/OrderType'
 import { useEffect, useState } from 'react'
-import ErrorBoundary from './ErrorBoundary'
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { getFullOrderData } from '../contexts/libs/getFullOrderData'
+import { ServiceOrders } from '../firebase/ServiceOrders'
+import { getCoordinatesAsString } from '../libs/maps'
 import { gStyles } from '../styles'
+import type OrderType from '../types/OrderType'
+import { CustomerOrderE } from './Customers/CustomerOrder'
+import ErrorBoundary from './ErrorBoundary'
 import FormOrderRenew, { FormOrderRenewE } from './FormOrderRenew'
 import InputImagePicker from './InputImagePicker'
-import { ServiceOrders } from '../firebase/ServiceOrders'
 import InputLocation from './InputLocation'
-import { getCoordinatesAsString } from '../libs/maps'
-import { CustomerOrderE } from './Customers/CustomerOrder'
 
 const ScreenOrderRenew = ({ route }) => {
 	const orderId = route?.params?.orderId

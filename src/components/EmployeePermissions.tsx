@@ -1,10 +1,10 @@
 import { Text, View } from 'react-native'
-import StaffType from '../types/StaffType'
-import Chip from './Chip'
-import theme from '../theme'
 import dictionary from '../dictionary'
-import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
+import theme from '../theme'
+import type StaffType from '../types/StaffType'
+import Chip from './Chip'
+import ErrorBoundary from './ErrorBoundary'
 
 const EmployeePermissions = ({ staff }: { staff: Partial<StaffType> }) => {
 	const orderPermissions = staff?.permissions?.order || {}

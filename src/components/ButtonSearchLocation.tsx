@@ -1,8 +1,7 @@
 import { Linking } from 'react-native'
-import React from 'react'
-import Icon from './Icon'
 import theme from '../theme'
 import Button from './Button'
+import Icon from './Icon'
 
 export type Coordinates = `${number},${number},${number}`
 

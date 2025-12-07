@@ -1,6 +1,6 @@
-import { FieldValue, Timestamp } from 'firebase/firestore'
-import BaseType from '../../types/BaseType'
-import { PlaneDateType } from '../../libs/utils-date'
+import type { FieldValue, Timestamp } from 'firebase/firestore'
+import type { PlaneDateType } from '../../libs/utils-date'
+import type BaseType from '../../types/BaseType'
 
 export type CurrentWorkBase = {
 	storeId: string

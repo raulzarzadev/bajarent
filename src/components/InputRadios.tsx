@@ -1,5 +1,5 @@
-import { Dimensions, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React, { useMemo } from 'react'
+import { Dimensions, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import RadioGroup from 'react-native-radio-buttons-group'
 
 export type InputRadioOption<T = string> = {

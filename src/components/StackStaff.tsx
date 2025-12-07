@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import MyStaffLabel from './MyStaffLabel'
 import ErrorBoundary from './ErrorBoundary'
+import MyStaffLabel from './MyStaffLabel'
 import { ScreenStaffE } from './ScreenStaff'
-import ScreenStaffNew from './ScreenStaffNew'
 import ScreenStaffEdit from './ScreenStaffEdit'
+import ScreenStaffNew from './ScreenStaffNew'
 
 const Stack = createStackNavigator()
 function StackStaff() {
@@ -21,7 +21,7 @@ function StackStaff() {
 			<Stack.Screen
 				name="ScreenStaff"
 				options={({ route }) => ({
-					//@ts-ignore
+					//@ts-expect-error
 					title: `${route?.params?.sectionName || 'Staff'}`
 				})}
 				component={ScreenStaffE}

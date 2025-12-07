@@ -1,13 +1,11 @@
 import { ScrollView, View } from 'react-native'
-import React from 'react'
-
-import { FormStoreE } from './FormStore'
-import { ServiceStores } from '../firebase/ServiceStore'
-import ErrorBoundary from './ErrorBoundary'
-import { gStyles } from '../styles'
-import { useStore } from '../contexts/storeContext'
 import { useAuth } from '../contexts/authContext'
+import { useStore } from '../contexts/storeContext'
+import { ServiceStores } from '../firebase/ServiceStore'
 import { reloadApp } from '../libs/reloadApp'
+import { gStyles } from '../styles'
+import ErrorBoundary from './ErrorBoundary'
+import { FormStoreE } from './FormStore'
 
 const ScreenCreateStore = ({ navigation }) => {
 	const { handleSetStoreId } = useAuth()

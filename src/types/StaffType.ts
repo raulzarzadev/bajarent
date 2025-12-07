@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { FieldValue } from 'firebase/firestore'
-import BaseType from './BaseType'
-import StoreType from './StoreType'
+import type { FieldValue } from 'firebase/firestore'
+import type BaseType from './BaseType'
+import type StoreType from './StoreType'
 
 /**
  * @deprecated use staff_permissions_orders_v2 or staff_permissions_store_v2 instead

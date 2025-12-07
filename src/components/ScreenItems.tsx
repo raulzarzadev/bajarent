@@ -1,18 +1,18 @@
+import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useStore } from '../contexts/storeContext'
+import useCategories from '../hooks/useCategories'
+import { sortPricesByTime } from '../libs/prices'
 import { gSpace, gStyles } from '../styles'
 import theme from '../theme'
-import { CategoryType } from '../types/RentItem'
-import ButtonIcon from './ButtonIcon'
-import { useNavigation } from '@react-navigation/native'
+import type { PriceType } from '../types/PriceType'
+import type { CategoryType } from '../types/RentItem'
 import ButtonConfirm from './ButtonConfirm'
-import { PriceType } from '../types/PriceType'
-import { useStore } from '../contexts/storeContext'
-import ModalFormPrice from './ModalFormPrice'
-import useCategories from '../hooks/useCategories'
-import StoreItems from './StoreItems'
-import { sortPricesByTime } from '../libs/prices'
+import ButtonIcon from './ButtonIcon'
 import { CardPrice } from './FormSelectPrice'
+import ModalFormPrice from './ModalFormPrice'
+import StoreItems from './StoreItems'
 
 const ScreenItems = () => {
 	return (
@@ -72,7 +72,7 @@ const StoreCategories = () => {
 					icon="add"
 					variant="ghost"
 					onPress={() => {
-						// @ts-ignore
+						// @ts-expect-error
 						navigate('CreateCategory')
 					}}
 					fullWidth
@@ -95,7 +95,7 @@ const StoreCategories = () => {
 							variant="ghost"
 							color="secondary"
 							onPress={() => {
-								// @ts-ignore
+								// @ts-expect-error
 								navigate('EditCategory', { id: selected })
 							}}
 						></ButtonIcon>

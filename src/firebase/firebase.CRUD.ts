@@ -1,16 +1,13 @@
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
 import { getAuth } from 'firebase/auth'
-import { v4 as uidGenerator } from 'uuid'
-
 import {
 	addDoc,
+	type CollectionReference,
 	collection,
 	collectionGroup,
-	CollectionReference,
+	type DocumentData,
+	DocumentSnapshot,
 	deleteDoc,
 	doc,
-	DocumentData,
-	DocumentSnapshot,
 	getDoc,
 	getDocFromCache,
 	getDocFromServer,
@@ -18,16 +15,18 @@ import {
 	getDocsFromCache,
 	getDocsFromServer,
 	onSnapshot,
-	Query,
-	query,
+	type Query,
 	QueryConstraint,
-	QuerySnapshot,
+	type QuerySnapshot,
+	query,
 	setDoc,
 	Timestamp,
 	updateDoc,
 	where,
 	writeBatch
 } from 'firebase/firestore'
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { v4 as uidGenerator } from 'uuid'
 import { dateFormat } from '../libs/utils-date'
 
 export type GetItemsOps = {
@@ -696,7 +695,7 @@ export class FirebaseCRUD {
 			totalSize += docSize
 		})
 		//console.log(querySnapshot.query._query.filters.map((f) => f))
-		//@ts-ignore
+		//@ts-expect-error
 		const filters = querySnapshot.query._query.filters.map(f => {
 			const formattedDate = f?.value?.timestampValue
 				? dateFormat(f.value.timestampValue, 'ddMMMyy', true)
@@ -713,7 +712,7 @@ export class FirebaseCRUD {
 				stringValues || formattedDate || booleanValue || arrayValues
 			}`
 		})
-		//@ts-ignore
+		//@ts-expect-error
 		const segments = querySnapshot?.query?._query?.path?.segments?.join('/')
 
 		console.log([

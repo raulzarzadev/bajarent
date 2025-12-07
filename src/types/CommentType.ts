@@ -1,6 +1,6 @@
 import { ItemHistoryVariantType } from '../firebase/ServiceItemHistory'
-import BaseType from './BaseType'
-import { order_type } from './OrderType'
+import type BaseType from './BaseType'
+import type { order_type } from './OrderType'
 
 export enum comment_types {
 	report = 'report',

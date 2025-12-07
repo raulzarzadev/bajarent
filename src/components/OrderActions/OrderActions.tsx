@@ -1,9 +1,10 @@
 import { View } from 'react-native'
 import { useAuth } from '../../contexts/authContext'
-import OrderType, { order_status } from '../../types/OrderType'
-import { OrderCommonActionsE } from './OrderCommonActions'
 import { useEmployee } from '../../contexts/employeeContext'
+import type OrderType from '../../types/OrderType'
+import { order_status } from '../../types/OrderType'
 import ErrorBoundary from '../ErrorBoundary'
+import { OrderCommonActionsE } from './OrderCommonActions'
 
 // #region ENUM ACTIONS
 enum acts {
