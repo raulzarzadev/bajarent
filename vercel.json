@@ -1,0 +1,10 @@
+{
+  "outputDirectory": "web-build",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ],
+  "cleanUrls": true
+}
