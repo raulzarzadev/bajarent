@@ -8,27 +8,27 @@ import type ItemType from '../types/ItemType'
 import FormItem from './FormItem'
 
 const ScreenItemNew = () => {
-  const { goBack } = useNavigation()
-  const { storeId } = useStore()
-  const handleCreateItem = async (values: ItemType) => {
-    return await onCreateItem({ storeId, item: values })
-      .then(() => {
-        goBack()
-      })
-      .catch((err) => {
-        console.log({ err })
-      })
-  }
+	const { goBack } = useNavigation()
+	const { storeId } = useStore()
+	const handleCreateItem = async (values: ItemType) => {
+		return await onCreateItem({ storeId, item: values })
+			.then(() => {
+				goBack()
+			})
+			.catch(err => {
+				console.log({ err })
+			})
+	}
 
-  return (
-    <View style={gStyles.container}>
-      <FormItem
-        onSubmit={async (values) => {
-          return await handleCreateItem(values)
-        }}
-      />
-    </View>
-  )
+	return (
+		<View style={gStyles.container}>
+			<FormItem
+				onSubmit={async values => {
+					return await handleCreateItem(values)
+				}}
+			/>
+		</View>
+	)
 }
 
 export default ScreenItemNew
