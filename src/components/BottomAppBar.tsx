@@ -37,7 +37,6 @@ const BottomAppBar = () => {
   return (
     <Tab.Navigator
       id="RootTabs"
-      //initialRouteName="StackOrders"
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
@@ -138,15 +137,6 @@ const BottomAppBar = () => {
           title: 'Componentes',
           tabBarButton: !__DEV__ ? () => null : undefined
         }}
-      />
-      <Tab.Screen
-        name="StackItems"
-        options={{
-          title: 'Items',
-          headerShown: false,
-          tabBarButton: () => null
-        }}
-        component={StackItems}
       />
     </Tab.Navigator>
   )
