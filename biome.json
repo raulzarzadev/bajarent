@@ -8,7 +8,12 @@
 		"bracketSpacing": true
 	},
 	"linter": {
-		"enabled": true
+		"enabled": true,
+		"rules": {
+			"correctness": {
+				"noUnusedVariables": "off"
+			}
+		}
 	},
 	"javascript": {
 		"formatter": {
