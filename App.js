@@ -17,6 +17,7 @@ import {
   persistNavigationState
 } from './src/utils/navigationPersistence'
 import { logNavigationStateChange } from './src/utils/navigationLogger'
+import { linking } from './src/navigation/linking'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -46,6 +47,7 @@ export default function App() {
     <ErrorBoundary componentName="App">
       <Provider store={store}>
         <NavigationContainer
+          linking={linking}
           initialState={initialState}
           onStateChange={(state) => {
             persistNavigationState(state)
