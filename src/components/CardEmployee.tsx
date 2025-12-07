@@ -4,18 +4,19 @@ import ErrorBoundary from './ErrorBoundary'
 import { gStyles } from '../styles'
 import BadgesStore from './BadgesStore'
 import Button from './Button'
-import { useNavigation } from '@react-navigation/native'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { useStore } from '../contexts/storeContext'
 import { staff_roles } from '../types/StaffType'
 import Chip from './Chip'
 import theme from '../theme'
 import { BadgeListSectionsE } from './BadgeListSections'
+import { RootTabParamList } from '../navigation/types'
 
 const CardEmployee = () => {
   const { store } = useStore()
 
   const { employee } = useEmployee()
-  const { navigate } = useNavigation()
+  const { navigate } = useNavigation<NavigationProp<RootTabParamList>>()
   const staffRoles = Object.entries(employee?.roles || {}).reduce(
     (acc, [key, value]) => {
       if (value) {
@@ -37,8 +38,10 @@ const CardEmployee = () => {
               size="xs"
               icon="arrowForward"
               onPress={() => {
-                //@ts-ignore
-                navigate('Store', { storeId: store.id })
+                navigate('Store', {
+                  screen: 'StoreHome',
+                  params: { storeId: store.id }
+                })
               }}
             ></Button>
           </View>

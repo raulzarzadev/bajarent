@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { RootTabParamList } from '../navigation/types'
 import StackOrders from './StackOrders'
 import StackProfile from './StackProfile'
 import { StackStoreE } from './StackStore'
@@ -13,7 +14,7 @@ import { StackWorkshopE } from './StackWorkshop'
 import { useStore } from '../contexts/storeContext'
 import { StackCustomersE } from './Customers/StackCustomers'
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator<RootTabParamList>()
 
 const BottomAppBar = () => {
   const { store } = useStore()
@@ -35,21 +36,19 @@ const BottomAppBar = () => {
   const showCustomerButton = permissions?.customers?.read
   return (
     <Tab.Navigator
-      //initialRouteName="StackOrders"
+      id="RootTabs"
       screenOptions={({ route }) => {
         return {
           tabBarIcon: ({ focused, color, size }) => {
-            const icons: Record<string, IconName> = {
+            const icons: Record<keyof RootTabParamList, IconName> = {
               Store: 'store',
-              Orders: 'orders',
-              Profile: 'profile',
-              NewOrder: 'add',
-              Components: 'components',
-              MyOrders: 'myOrders',
-              StackOrders: 'orders',
               StackMyItems: 'washMachine',
               Workshop: 'tools',
-              StackCustomers: 'customerCard'
+              StackOrders: 'orders',
+              StackCustomers: 'customerCard',
+              Profile: 'profile',
+              Components: 'components',
+              StackItems: 'washMachine'
             }
             return (
               <Icon
@@ -138,15 +137,6 @@ const BottomAppBar = () => {
           title: 'Componentes',
           tabBarButton: !__DEV__ ? () => null : undefined
         }}
-      />
-      <Tab.Screen
-        name="StackItems"
-        options={{
-          title: 'Items',
-          headerShown: false,
-          tabBarButton: () => null
-        }}
-        component={StackItems}
       />
     </Tab.Navigator>
   )

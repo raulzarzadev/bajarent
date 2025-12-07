@@ -9,6 +9,7 @@ const Stack = createStackNavigator()
 function StackStaff() {
   return (
     <Stack.Navigator
+      id="StackStaff"
       screenOptions={() => {
         return {
           headerRight(props) {

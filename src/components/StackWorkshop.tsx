@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { WorkshopStackParamList } from '../navigation/types'
 import ErrorBoundary from './ErrorBoundary'
 import { ScreenWorkshopE } from './ScreenWorkshop'
 import { ScreenWorkshopHistoryE } from './ScreenWorkshopHistory'
@@ -7,12 +8,12 @@ import StackOrders from './StackOrders'
 import StackMyItems from './StackMyItems'
 import StackItems from './StackItems'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<WorkshopStackParamList>()
 function StackWorkshop() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id="StackWorkshop">
       <Stack.Screen
-        name="Workshop"
+        name="WorkshopHome"
         options={({ route }) => ({
           title: 'Taller'
         })}

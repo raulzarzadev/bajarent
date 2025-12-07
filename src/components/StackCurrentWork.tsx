@@ -8,7 +8,7 @@ const Stack = createStackNavigator()
 
 function StackCurrentWork() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id="StackCurrentWork">
       <Stack.Screen
         name="ScreenCurrentWork"
         options={{

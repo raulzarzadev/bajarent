@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { StoreStackParamList } from '../navigation/types'
 import ScreenCreateStore from './ScreenStoreCreate'
 import ScreenStoreEdit from './ScreenStoreEdit'
 import MyStaffLabel from './MyStaffLabel'
@@ -15,21 +16,12 @@ import ScreenItemsMap from './ScreenItemsMap'
 import ErrorBoundary from './ErrorBoundary'
 import StackItems from './StackItems'
 
-export type StackStoreNavigationProps = {
-  Store: undefined
-  CreateStore: undefined
-  EditStore: undefined
-  Staff: undefined
-  StaffNew: undefined
-  StaffDetails: undefined
-  StaffEdit: undefined
-}
-
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<StoreStackParamList>()
 
 function StackStore() {
   return (
     <Stack.Navigator
+      id="StackStore"
       screenOptions={() => {
         return {
           headerRight(props) {
@@ -39,7 +31,7 @@ function StackStore() {
       }}
     >
       <Stack.Screen
-        name="Store"
+        name="StoreHome"
         options={{
           title: 'Tienda'
         }}

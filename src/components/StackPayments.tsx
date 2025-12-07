@@ -1,13 +1,15 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { PaymentsStackParamList } from '../navigation/types'
 import ErrorBoundary from './ErrorBoundary'
 import ScreenPayments from './ScreenPayments'
 import ScreenPaymentsDetails from './ScreenPaymentsDetails'
 import ScreenRetirementsNew from './ScreenRetirementsNew'
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator<PaymentsStackParamList>()
 function StackPayments() {
   return (
     <Stack.Navigator
+      id="StackPayments"
       screenOptions={() => {
         return {
           // headerRight(props) { //*<-- Dont show in stack payments
@@ -19,24 +21,21 @@ function StackPayments() {
       <Stack.Screen
         name="ScreenPayments"
         options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Pagos'
+          title: route?.params?.title ?? 'Pagos'
         })}
         component={ScreenPayments}
       />
       <Stack.Screen
         name="ScreenPaymentsDetails"
         options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Detalles de pago'
+          title: route?.params?.title ?? 'Detalles de pago'
         })}
         component={ScreenPaymentsDetails}
       />
       <Stack.Screen
         name="ScreenRetirementsNew"
         options={({ route }) => ({
-          //@ts-ignore
-          title: route?.params?.title || 'Retiros'
+          title: route?.params?.title ?? 'Retiros'
         })}
         component={ScreenRetirementsNew}
       />
