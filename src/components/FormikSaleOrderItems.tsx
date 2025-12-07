@@ -1,6 +1,6 @@
 import { FieldArray, useFormikContext } from 'formik'
 import { useEffect, useState } from 'react'
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Text, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { orderAmount } from '../libs/order-amount'
 import { gStyles } from '../styles'
@@ -47,7 +47,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
 						{values.items && values.items.length > 0 ? (
 							values?.items?.map((item, index) => (
 								<View
-									key={index}
+									key={item.id}
 									style={{
 										flexDirection: layoutRow ? 'row' : 'column',
 										marginVertical: 6,

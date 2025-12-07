@@ -18,7 +18,7 @@ const FormikSearchCustomer = ({
 	style
 }: FormikSearchCustomerProps) => {
 	const { setValues, values } = useFormikContext()
-	const [field, meta, helpers] = useField(name)
+	const [field, _, helpers] = useField(name)
 	const suggestions = customers.map(formatCustomerForSearch)
 	return (
 		<InputSearch
@@ -34,7 +34,7 @@ const FormikSearchCustomer = ({
 			onSelect={selectedItem => {
 				setValues(
 					{
-						...(values as Object),
+						...(values as CustomerType),
 						customerId: selectedItem.id,
 						fullName: selectedItem.name
 					},
@@ -56,7 +56,7 @@ export const formatCustomerForSearch = (customer: CustomerType) => {
 		// Si contacts es un objeto con propiedades
 		const contactEntries = Object.entries(customer.contacts)
 		formattedContacts = contactEntries.reduce(
-			(acc, [key, contact], index) => {
+			(acc, [_, contact], index) => {
 				const contactKey =
 					contact.label === 'Default'
 						? `contacto${index + 1}`

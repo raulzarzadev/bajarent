@@ -6,8 +6,7 @@ import {
 	FaCashRegister,
 	FaChevronDown,
 	FaChevronUp,
-	FaCloudDownloadAlt,
-	FaTools
+	FaCloudDownloadAlt
 } from 'react-icons/fa'
 import {
 	FaAddressCard,
@@ -58,7 +57,6 @@ import {
 	MdDownload,
 	MdEdit,
 	MdFilterList,
-	MdHome,
 	MdInfoOutline,
 	MdListAlt,
 	MdLocationOff,
