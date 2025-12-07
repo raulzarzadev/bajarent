@@ -24,12 +24,13 @@ const CustomerContacts = (props?: CustomerContactsProps) => {
 		isFavorite: boolean,
 		{ customerContacts }
 	) => {
-		const restContactsAsNotFavorite = Object.keys(customerContacts).reduce((acc, curr) => {
-			return {
-				...acc,
-				[`contacts.${curr}.isFavorite`]: contactId === curr ? !isFavorite : false
-			}
-		}, {})
+		const restContactsAsNotFavorite = Object.keys(customerContacts).reduce(
+			(acc, curr) => {
+				acc[`contacts.${curr}.isFavorite`] = contactId === curr ? !isFavorite : false
+				return acc
+			},
+			{} as Record<string, boolean>
+		)
 
 		setDisabled(true)
 		await updateCustomer(customerId, {

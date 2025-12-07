@@ -24,7 +24,7 @@ export type RetirementType = {
 const FormRetirement = ({
 	onSubmit
 }: {
-	onSubmit: (retirement: RetirementType) => Promise<any> | void
+	onSubmit: (retirement: RetirementType) => Promise<any> | undefined
 }) => {
 	const { sections: storeSections, storeId } = useStore()
 	const initialValues: RetirementType = {

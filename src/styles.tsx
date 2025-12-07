@@ -3,7 +3,6 @@ import theme, { BORDER_RADIUS, PADDING } from './theme'
 
 // global styles
 export const gSpace = (space = 1) => space * 4
-const placeholderOpacity = 'ee'
 
 export const gStyles = StyleSheet.create({
 	guide: {

@@ -30,8 +30,7 @@ import StyledModal from './StyledModal'
 
 const FormikSelectCategories = ({
 	name,
-	selectPrice,
-	startAt //? TODO: <--- Should be add?
+	selectPrice
 }: //choseEmptyCategory = true //*<--- this will alow you choose category with out specific item
 FormikSelectCategoriesProps) => {
 	const { categories } = useStore()
@@ -42,7 +41,7 @@ FormikSelectCategoriesProps) => {
 
 	const { values } = useFormikContext<Partial<OrderType>>()
 	const orderType = values.type
-	const [field, meta, helpers] = useField(name)
+	const [field, _, helpers] = useField(name)
 	const ALLOW_CHOOSE_EMPTY_CATEGORY = !shouldChooseExactItem
 
 	const [availableCategories, setAvailableCategories] = useState<Partial<CategoryType>[]>([])
@@ -57,6 +56,7 @@ FormikSelectCategoriesProps) => {
 			if (orderType === order_type.RENT && !isRentOrder) return false
 			if (orderType === order_type.REPAIR && !isRepairOrder) return false
 			if (orderType === order_type.SALE && !isSaleOrder) return false
+			return true
 		})
 		setAvailableCategories(filteredCategories)
 	}, [employeeItems, categories])
@@ -228,7 +228,7 @@ const ListItems = ({
 	return (
 		<FlatList
 			data={items}
-			renderItem={({ item, index }) => (
+			renderItem={({ item }) => (
 				<ItemRow
 					item={item as ItemType}
 					onPressDelete={() => handleRemoveItem(item.id)}
@@ -269,7 +269,7 @@ export const ItemRow = ({
 					setStoreItem(res)
 					setShouldCreateItem(false)
 				})
-				.catch(e => {
+				.catch(() => {
 					// console.log({ e })
 					setShouldCreateItem(true)
 					_setItem({ ...item })
@@ -354,10 +354,10 @@ export const ItemRow = ({
 							}}
 							onSubmit={async values => {
 								//* create item
-								const res = await ServiceStoreItems.add({
+								await ServiceStoreItems.add({
 									item: values,
 									storeId
-								}).then(({ res, newItem }) => {
+								}).then(({ res }) => {
 									if (res.id) {
 										ServiceOrders.updateItemId({
 											orderId: orderId,

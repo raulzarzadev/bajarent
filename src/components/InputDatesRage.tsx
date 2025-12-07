@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import Icon from './Icon'
 import { InputDateE } from './InputDate'
 

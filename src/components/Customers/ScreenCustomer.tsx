@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { ScrollView, Text } from 'react-native'
 import { ServiceCustomers } from '../../firebase/ServiceCustomers'
@@ -11,8 +12,9 @@ export const CustomerContext = createContext({ customer: null })
 export const useCustomer = () => {
 	return useContext(CustomerContext)
 }
-const ScreenCustomer = params => {
-	const customerId = params.route.params.id
+const ScreenCustomer = () => {
+	const route = useRoute()
+	const customerId = (route.params as { id?: string } | undefined)?.id
 	const [customer, setCustomer] = useState<CustomerType | null>()
 	useEffect(() => {
 		if (customerId)
@@ -21,6 +23,7 @@ const ScreenCustomer = params => {
 			})
 	}, [customerId])
 
+	if (!customerId) return <Text>Cliente no encontrado</Text>
 	if (customer === undefined) return <Text>Cargando...</Text>
 	if (customer === null) return <Text>Cliente no encontrado</Text>
 

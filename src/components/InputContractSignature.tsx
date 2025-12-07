@@ -8,7 +8,7 @@ import InputCheckbox from './Inputs/InputCheckbox'
 
 const InputContractSignature = (props?: InputContractSignatureProps) => {
 	const [accept, setAccept] = useState(props?.values?.accept || false)
-	const [sendCopy, setSendCopy] = useState(props?.values?.sendCopy || false)
+	const [sendCopy] = useState(props?.values?.sendCopy || false)
 	const [signature, setSignature] = useState(props?.values?.signature || '')
 
 	const handleSetValues = async () => {

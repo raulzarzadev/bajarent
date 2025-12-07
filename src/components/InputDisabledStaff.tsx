@@ -18,7 +18,7 @@ const InputDisabledStaff = ({ staffId }) => {
 	const toggleDisabled = async value => {
 		setInputDisabled(true)
 		setStaffDisabled(value)
-		const [err, res] = await catchError(
+		const [err] = await catchError(
 			ServiceStores.updateStaff({
 				storeId: shop.id,
 				staffId: staff.id,
