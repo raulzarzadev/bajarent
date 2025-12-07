@@ -1,4 +1,5 @@
 import * as Linking from 'expo-linking'
+import StackPayments from '../components/StackPayments'
 
 type LinkingConfig = {
   prefixes: string[]
@@ -81,6 +82,12 @@ export const linking: LinkingConfig = {
           ScreenItems: 'items',
           ScreenItemNew: 'items/new',
           ScreenItemsDetails: 'items/:id'
+        }
+      },
+      StackPayments: {
+        screens: {
+          ScreenPayments: 'payments',
+          ScreenPaymentsDetails: 'payments/:id'
         }
       }
     }
