@@ -299,7 +299,7 @@ export const ItemRow = ({
 
 	///console.log({ itemCategoryId, item, storeItem, _item })
 
-	//@ts-expect-error //TODO: <--- this should be fixed
+	// //TODO: <--- this should be fixed
 	const priceSelectedId = item?.priceSelected?.id
 	//const priceSelectedId = item?.priceSelectedId
 	return (
