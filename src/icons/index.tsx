@@ -12,8 +12,8 @@ import IconCalendarTime from './icon-calendar-time'
 import IconCamera from './icon-camera'
 import IconCancel from './icon-cancel'
 import IconCashbox from './icon-cashbox'
-import IconChatbot from './icon-chatbot'
 import IconChargeIt from './icon-charge-it'
+import IconChatbot from './icon-chatbot'
 import IconClose from './icon-close'
 import IconComment from './icon-comment'
 import IconComponents from './icon-components'
@@ -22,8 +22,8 @@ import IconCopy from './icon-copy'
 import IconCustomerCard from './icon-customer-card'
 import IconDelete from './icon-delete'
 import IconDone from './icon-done'
-import IconDownload from './icon-download'
 import IconDown from './icon-down'
+import IconDownload from './icon-download'
 import IconEdit from './icon-edit'
 import IconEmail from './icon-email'
 import IconFilter from './icon-filter'
@@ -51,8 +51,8 @@ import IconOrderList from './icon-order-list'
 import IconOrderRemove from './icon-order-remove'
 import IconOrderSearch from './icon-order-search'
 import IconOrders from './icon-orders'
-import IconPdf from './icon-pdf'
 import IconPayment from './icon-payment'
+import IconPdf from './icon-pdf'
 import IconPending from './icon-pending'
 import IconPhone from './icon-phone'
 import IconPickUpIt from './icon-pick-up-it'
@@ -88,8 +88,8 @@ import IconUnpin from './icon-unpin'
 import IconUp from './icon-up'
 import IconUpload from './icon-upload'
 import IconVerticalDots from './icon-vertical-dots'
-import IconWarning from './icon-warning'
 import IconWarehouse from './icon-warehouse'
+import IconWarning from './icon-warning'
 import IconWashMachine from './icon-wash-machine'
 import IconWhatsapp from './icon-whatsapp'
 import IconWindows from './icon-windows'
@@ -97,118 +97,118 @@ import IconWrench from './icon-wrench'
 import IconWww from './icon-www'
 
 const icons = {
-  filePDF: IconPdf,
-  navigate: IconNavigate,
-  folderCheck: IconFolderCheck,
-  merge: IconMerge,
-  orderAdd: IconOrderAdd,
-  orderDone: IconOrderDone,
-  orderSearch: IconOrderSearch,
-  orderEdit: IconOrderEdit,
-  orderGo: IconOrderGo,
-  orderList: IconOrderList,
-  order: IconOrder,
-  orderRemove: IconOrderRemove,
-  contract: IconContract,
-  email: IconEmail,
-  customerCard: IconCustomerCard,
-  backup: IconBackup,
-  balance: IconBalance,
-  www: IconWww,
-  signature: IconSignature,
-  pending: IconPending,
-  pickUpIt: IconPickUpIt,
-  chargeIt: IconChargeIt,
-  washMachine: IconWashMachine,
-  inventory: IconInventory,
-  history: IconHistory,
-  alarm: IconAlarm,
-  alarmOff: IconAlarmOff,
-  rent: IconRent,
-  cashbox: IconCashbox,
-  up: IconUp,
-  down: IconDown,
-  close: IconClose,
-  store: IconStore,
-  orders: IconOrders,
-  profile: IconProfile,
-  profileFill: IconProfileFill,
-  profileAdd: IconProfileAdd,
-  components: IconComponents,
-  myOrders: IconMyOrders,
-  list: IconList,
-  add: IconAdd,
-  edit: IconEdit,
-  money: IconMoney,
-  moneyOff: IconMoneyOff,
-  save: IconSave,
-  location: IconLocation,
-  locationOff: IconLocationOff,
-  filter: IconFilter,
-  windows: IconWindows,
-  broom: IconBroom,
-  swap: IconSwap,
-  delete: IconDelete,
-  search: IconSearch,
-  map: IconMap,
-  calendar: IconCalendar,
-  verticalDots: IconVerticalDots,
-  sub: IconSub,
-  phone: IconPhone,
-  whatsapp: IconWhatsapp,
-  done: IconDone,
-  rowLeft: IconRowLeft,
-  rowRight: IconRowRight,
-  rowDown: IconRowDown,
-  rowUp: IconRowUp,
-  settings: IconSettings,
-  download: IconDownload,
-  upload: IconUpload,
-  camera: IconCamera,
-  addImage: IconAddImage,
-  info: IconInfo,
-  warning: IconWarning,
-  undo: IconUndo,
-  cancel: IconCancel,
-  refresh: IconRefresh,
-  copy: IconCopy,
-  arrowForward: IconArrowForward,
-  openEye: IconOpenEye,
-  pin: IconPin,
-  unPin: IconUnpin,
-  repair: IconRepair,
-  sale: IconSale,
-  wrench: IconWrench,
-  truck: IconTruck,
-  home: IconHome,
-  calendarTime: IconCalendarTime,
-  siren: IconSiren,
-  report: IconReport,
-  payment: IconPayment,
-  starFilled: IconStarFilled,
-  starHalf: IconStarHalf,
-  starEmpty: IconStarEmpty,
-  target: IconTarget,
-  tools: IconTools,
-  comment: IconComment,
-  warehouse: IconWarehouse,
-  none: null,
-  chatbot: IconChatbot
+	filePDF: IconPdf,
+	navigate: IconNavigate,
+	folderCheck: IconFolderCheck,
+	merge: IconMerge,
+	orderAdd: IconOrderAdd,
+	orderDone: IconOrderDone,
+	orderSearch: IconOrderSearch,
+	orderEdit: IconOrderEdit,
+	orderGo: IconOrderGo,
+	orderList: IconOrderList,
+	order: IconOrder,
+	orderRemove: IconOrderRemove,
+	contract: IconContract,
+	email: IconEmail,
+	customerCard: IconCustomerCard,
+	backup: IconBackup,
+	balance: IconBalance,
+	www: IconWww,
+	signature: IconSignature,
+	pending: IconPending,
+	pickUpIt: IconPickUpIt,
+	chargeIt: IconChargeIt,
+	washMachine: IconWashMachine,
+	inventory: IconInventory,
+	history: IconHistory,
+	alarm: IconAlarm,
+	alarmOff: IconAlarmOff,
+	rent: IconRent,
+	cashbox: IconCashbox,
+	up: IconUp,
+	down: IconDown,
+	close: IconClose,
+	store: IconStore,
+	orders: IconOrders,
+	profile: IconProfile,
+	profileFill: IconProfileFill,
+	profileAdd: IconProfileAdd,
+	components: IconComponents,
+	myOrders: IconMyOrders,
+	list: IconList,
+	add: IconAdd,
+	edit: IconEdit,
+	money: IconMoney,
+	moneyOff: IconMoneyOff,
+	save: IconSave,
+	location: IconLocation,
+	locationOff: IconLocationOff,
+	filter: IconFilter,
+	windows: IconWindows,
+	broom: IconBroom,
+	swap: IconSwap,
+	delete: IconDelete,
+	search: IconSearch,
+	map: IconMap,
+	calendar: IconCalendar,
+	verticalDots: IconVerticalDots,
+	sub: IconSub,
+	phone: IconPhone,
+	whatsapp: IconWhatsapp,
+	done: IconDone,
+	rowLeft: IconRowLeft,
+	rowRight: IconRowRight,
+	rowDown: IconRowDown,
+	rowUp: IconRowUp,
+	settings: IconSettings,
+	download: IconDownload,
+	upload: IconUpload,
+	camera: IconCamera,
+	addImage: IconAddImage,
+	info: IconInfo,
+	warning: IconWarning,
+	undo: IconUndo,
+	cancel: IconCancel,
+	refresh: IconRefresh,
+	copy: IconCopy,
+	arrowForward: IconArrowForward,
+	openEye: IconOpenEye,
+	pin: IconPin,
+	unPin: IconUnpin,
+	repair: IconRepair,
+	sale: IconSale,
+	wrench: IconWrench,
+	truck: IconTruck,
+	home: IconHome,
+	calendarTime: IconCalendarTime,
+	siren: IconSiren,
+	report: IconReport,
+	payment: IconPayment,
+	starFilled: IconStarFilled,
+	starHalf: IconStarHalf,
+	starEmpty: IconStarEmpty,
+	target: IconTarget,
+	tools: IconTools,
+	comment: IconComment,
+	warehouse: IconWarehouse,
+	none: null,
+	chatbot: IconChatbot
 } as const
 
 export type IconName = keyof typeof icons
 const Icon2 = ({
-  name,
-  size = 30,
-  ...props
+	name,
+	size = 30,
+	...props
 }: {
-  name: IconName | 'none'
-  color?: string
-  size?: number
+	name: IconName | 'none'
+	color?: string
+	size?: number
 }) => {
-  if (name === 'none') return null
-  const Component = icons[name]
-  if (!Component) return <>Icon</>
-  return <Component size={size} {...props} style={{ fontSize: size }} />
+	if (name === 'none') return null
+	const Component = icons[name]
+	if (!Component) return <>Icon</>
+	return <Component size={size} {...props} style={{ fontSize: size }} />
 }
 export default Icon2
