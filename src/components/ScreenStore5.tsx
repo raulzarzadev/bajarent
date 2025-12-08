@@ -26,7 +26,6 @@ const ScreenStore = (props) => {
     permissions: {
       isAdmin,
       isOwner,
-      orders,
       store: storePermissions,
       canManageItems,
       canEditStaff
@@ -36,11 +35,9 @@ const ScreenStore = (props) => {
   const scrollViewRef = useRef(null)
 
   const canViewSections = isAdmin || isOwner || canEditStaff
-  const canViewOrders = isAdmin || isOwner || orders.canViewAll
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
 
-  //&& (canViewCashbox || canViewSections || canViewOrders)
   const CheckedTab = <P extends object>(Tab: React.ComponentType<P>) => {
     const Component = withDisabledCheck(Tab)
     return Component
