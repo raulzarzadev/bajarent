@@ -1,4 +1,5 @@
 const createExpoWebpackConfigAsync = require('@expo/webpack-config');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(env, argv);
@@ -11,6 +12,19 @@ module.exports = async function (env, argv) {
     // Specific alias to silence the warning in react-native-paper
     '@react-native-vector-icons/material-design-icons': '@expo/vector-icons/MaterialCommunityIcons',
   };
+
+  // Activa `ANALYZE=true` para generar un reporte estático del bundle web.
+  if (process.env.ANALYZE) {
+    config.plugins = config.plugins || [];
+    config.plugins.push(
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: false,
+        reportFilename: 'bundle-report.html',
+        defaultSizes: 'gzip',
+      }),
+    );
+  }
 
   return config;
 };

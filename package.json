@@ -96,7 +96,8 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-native": "^4.1.0",
-    "react-native-dotenv": "^3.4.9"
+    "react-native-dotenv": "^3.4.9",
+    "webpack-bundle-analyzer": "^4.9.0"
   },
   "private": true,
   "proxy": "https://localhost:19006"

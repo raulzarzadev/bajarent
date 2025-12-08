@@ -1,186 +1,201 @@
 import type React from 'react'
-import { Pressable, StyleSheet, Text, type TextStyle, View, type ViewStyle } from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle
+} from 'react-native'
 import useTheme from '../hooks/useTheme'
 import { type Colors, colors } from '../theme'
 import ErrorBoundary from './ErrorBoundary'
 import Icon, { type IconName } from './Icon'
+import Icon2 from '../icons'
 
 export type ButtonProps = {
-	onPress: () => void
-	label?: string
-	size?: 'xs' | 'small' | 'medium' | 'large'
-	color?: Colors
-	variant?: 'filled' | 'outline' | 'ghost'
-	disabled?: boolean
-	children?: string | React.ReactNode
-	buttonStyles?: ViewStyle
-	textStyles?: TextStyle
-	icon?: IconName
-	justIcon?: boolean
-	id?: string
-	fullWidth?: boolean
-	progress?: number
-	uppercase?: boolean
-	autoFocus?: boolean
-	onLongPress?: () => void
+  onPress: () => void
+  label?: string
+  size?: 'xs' | 'small' | 'medium' | 'large'
+  color?: Colors
+  variant?: 'filled' | 'outline' | 'ghost'
+  disabled?: boolean
+  children?: string | React.ReactNode
+  buttonStyles?: ViewStyle
+  textStyles?: TextStyle
+  icon?: IconName
+  justIcon?: boolean
+  id?: string
+  fullWidth?: boolean
+  progress?: number
+  uppercase?: boolean
+  autoFocus?: boolean
+  onLongPress?: () => void
 }
 
 const ButtonX: React.FC<ButtonProps> = ({
-	onPress,
-	onLongPress,
-	label,
-	disabled = false,
-	children,
-	buttonStyles,
-	textStyles,
-	variant = 'filled',
-	color = 'primary',
-	size = 'medium',
-	icon,
-	justIcon,
-	fullWidth = false,
-	progress,
-	uppercase = true,
-	autoFocus = false,
-	...props
+  onPress,
+  onLongPress,
+  label,
+  disabled = false,
+  children,
+  buttonStyles,
+  textStyles,
+  variant = 'filled',
+  color = 'primary',
+  size = 'medium',
+  icon,
+  justIcon,
+  fullWidth = false,
+  progress,
+  uppercase = true,
+  autoFocus = false,
+  ...props
 }) => {
-	const { theme } = useTheme()
-	const buttonXColor = {
-		backgroundColor: theme[color],
-		borderColor: 'transparent'
-	}
-	const buttonXVariants = {
-		filled: {
-			backgroundColor: theme[color],
-			borderColor: 'transparent'
-		},
-		outline: {
-			backgroundColor: 'transparent',
-			borderColor: theme[color]
-		},
-		ghost: {
-			backgroundColor: 'transparent',
-			borderColor: 'transparent'
-		}
-	}
-	const buttonXVariant = buttonXVariants[variant]
-	const textColor = {
-		color: variant === 'filled' ? theme.white : theme[color]
-	}
+  const { theme } = useTheme()
+  const buttonXColor = {
+    backgroundColor: theme[color],
+    borderColor: 'transparent'
+  }
+  const buttonXVariants = {
+    filled: {
+      backgroundColor: theme[color],
+      borderColor: 'transparent'
+    },
+    outline: {
+      backgroundColor: 'transparent',
+      borderColor: theme[color]
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderColor: 'transparent'
+    }
+  }
+  const buttonXVariant = buttonXVariants[variant]
+  const textColor = {
+    color: variant === 'filled' ? theme.white : theme[color]
+  }
 
-	const sizes = {
-		xs: { padding: 4 },
-		small: { padding: 8 },
-		medium: { padding: 15 },
-		large: { padding: 20 }
-	}
-	const justIconStyles = {
-		padding: sizes[size].padding,
-		borderRadius: 9999,
-		width: sizes[size].padding * 2,
-		height: sizes[size].padding * 2
+  const sizes = {
+    xs: { padding: 4 },
+    small: { padding: 8 },
+    medium: { padding: 15 },
+    large: { padding: 20 }
+  }
+  const justIconStyles = {
+    padding: sizes[size].padding,
+    borderRadius: 9999,
+    width: sizes[size].padding * 2,
+    height: sizes[size].padding * 2
 
-		//margin: 'auto'
-	}
+    //margin: 'auto'
+  }
 
-	if (justIcon) {
-		label = ''
-		children = null
-	}
+  if (justIcon) {
+    label = ''
+    children = null
+  }
 
-	return (
-		<Pressable
-			{...props}
-			onLongPress={onLongPress}
-			role="button"
-			style={({ pressed }) => [
-				!fullWidth && { alignSelf: 'flex-start' },
-				baseStyles.buttonX,
-				buttonXColor,
-				buttonXVariant,
-				disabled && baseStyles.disabled,
-				pressed && { opacity: 0.5 },
-				sizes[size],
-				justIcon && justIconStyles,
-				disabled && variant === 'ghost' && { backgroundColor: 'transparent' },
-				buttonStyles
-			]}
-			onPress={onPress}
-			disabled={disabled}
-		>
-			{!!progress && progress !== 100 && (
-				<View
-					style={{
-						position: 'absolute',
-						top: 0,
-						left: 0,
-						bottom: 0,
-						backgroundColor: colors.black,
-						opacity: 0.5,
-						borderRadius: 5,
-						width: `${progress}%`
-					}}
-				/>
-			)}
-			{!justIcon && !children && (
-				<Text
-					style={[
-						baseStyles.text,
-						textColor,
-						textStyles,
-						disabled && baseStyles.disabled,
-						uppercase && { textTransform: 'uppercase' }
-					]}
-				>
-					{label}
-				</Text>
-			)}
-			{!justIcon && typeof children === 'string' && !label ? (
-				<Text style={[baseStyles.text, textColor, textStyles, disabled && baseStyles.disabled]}>
-					{uppercase ? children?.toUpperCase() : children}
-				</Text>
-			) : (
-				children
-			)}
-			{!!icon && (
-				<View style={{ marginLeft: label || children ? 4 : 0 }}>
-					<Icon
-						icon={icon}
-						color={textColor.color}
-						size={size === 'xs' ? 16 : 24}
-						//  size={sizes[size].padding * 2}
-					/>
-				</View>
-			)}
-		</Pressable>
-	)
+  return (
+    <Pressable
+      {...props}
+      onLongPress={onLongPress}
+      role="button"
+      style={({ pressed }) => [
+        !fullWidth && { alignSelf: 'flex-start' },
+        baseStyles.buttonX,
+        buttonXColor,
+        buttonXVariant,
+        disabled && baseStyles.disabled,
+        pressed && { opacity: 0.5 },
+        sizes[size],
+        justIcon && justIconStyles,
+        disabled && variant === 'ghost' && { backgroundColor: 'transparent' },
+        buttonStyles
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      {!!progress && progress !== 100 && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            backgroundColor: colors.black,
+            opacity: 0.5,
+            borderRadius: 5,
+            width: `${progress}%`
+          }}
+        />
+      )}
+      {!justIcon && !children && (
+        <Text
+          style={[
+            baseStyles.text,
+            textColor,
+            textStyles,
+            disabled && baseStyles.disabled,
+            uppercase && { textTransform: 'uppercase' }
+          ]}
+        >
+          {label}
+        </Text>
+      )}
+      {!justIcon && typeof children === 'string' && !label ? (
+        <Text
+          style={[
+            baseStyles.text,
+            textColor,
+            textStyles,
+            disabled && baseStyles.disabled
+          ]}
+        >
+          {uppercase ? children?.toUpperCase() : children}
+        </Text>
+      ) : (
+        children
+      )}
+      {!!icon && (
+        <View style={{ marginLeft: label || children ? 4 : 0 }}>
+          <Icon2
+            name={icon}
+            color={textColor.color}
+            size={size === 'xs' ? 16 : 24}
+            //  size={sizes[size].padding * 2}
+          />
+        </View>
+      )}
+    </Pressable>
+  )
 }
 
 const baseStyles = StyleSheet.create({
-	buttonX: {
-		padding: 10,
-		borderRadius: 5,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flexDirection: 'row',
-		borderWidth: 1,
-		borderColor: 'transparent'
-	},
-	text: {
-		textAlign: 'center',
-		fontWeight: 'bold'
-	},
-	disabled: {
-		//backgroundColor,
-		opacity: 0.4,
-		borderColor: 'transparent'
-	}
+  buttonX: {
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: 'transparent'
+  },
+  text: {
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  disabled: {
+    //backgroundColor,
+    opacity: 0.4,
+    borderColor: 'transparent'
+  }
 })
 
 export default function Button(props: ButtonProps) {
-	return (
-		<ErrorBoundary componentName={`Button-${props.label}`}>
-			<ButtonX {...props} />
-		</ErrorBoundary>
-	)
+  return (
+    <ErrorBoundary componentName={`Button-${props.label}`}>
+      <ButtonX {...props} />
+    </ErrorBoundary>
+  )
 }
