@@ -48,8 +48,8 @@ const ScreenWorkshop = () => {
 		}
 
 		return () => {
-			unsubscribe && unsubscribe()
-			shopItemsUnsub && shopItemsUnsub()
+			unsubscribe?.()
+			shopItemsUnsub?.()
 		}
 	}, [shop?.id, employee, permissions])
 

@@ -69,7 +69,7 @@ export const onSendOrderWhatsapp = async ({
 	const customerPhone = getFavoriteCustomerPhone(customer?.contacts)
 
 	if (store?.chatbot?.config?.includeSender && staffName)
-		message = message + `👤 ${staffName || ''}`
+		message = `${message}👤 ${staffName || ''}`
 
 	const phone = customerPhone || defaultPhone || chooseOrderPhone(orderWithCustomerName)
 

@@ -109,7 +109,6 @@ const SpanOrder = ({
 const OrderData = ({
 	order,
 	showName,
-	showTime,
 	showLastExtension,
 	showDatePaymentsAmount,
 	showItems

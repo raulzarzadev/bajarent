@@ -133,11 +133,7 @@ const ScreenOrderNew = navigation => {
 			return { orderId }
 		})
 	}
-	return (
-		<>
-			<FormOrder2E onSubmit={handleSubmit} defaultValues={{ customerId }} />
-		</>
-	)
+	return <FormOrder2E onSubmit={handleSubmit} defaultValues={{ customerId }} />
 }
 
 export default ScreenOrderNew

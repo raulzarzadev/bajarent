@@ -72,7 +72,6 @@ const SectionProgressWork = ({
 const ModalOrdersListOfProgressWork = ({
 	// progress,
 	label,
-	pendingOrders = [],
 	doneOrders = [],
 	modalTitle = '',
 	onPressRow

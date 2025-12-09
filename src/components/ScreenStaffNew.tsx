@@ -67,7 +67,7 @@ const ScreenStaffNew = ({ route }) => {
 							)
 							console.log({ err, res })
 							//*TODO:   Remove after migration staff is completely removed from store
-							ServiceStaff.addStaffToStore(shop?.id, newStaff).then(res => {
+							ServiceStaff.addStaffToStore(shop?.id, newStaff).then(() => {
 								setUser(undefined)
 								goBack()
 							})

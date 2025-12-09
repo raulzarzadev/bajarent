@@ -2,8 +2,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ErrorBoundary from './ErrorBoundary'
 import { ScreenCurrentWorkE } from './ScreenCurrentWortk'
 
-export type StackCurrentWorkNavigationProps = {}
-
 const Stack = createStackNavigator()
 
 function StackCurrentWork() {

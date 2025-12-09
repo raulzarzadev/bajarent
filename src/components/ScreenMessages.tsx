@@ -68,7 +68,6 @@ export default function ScreenMessages() {
 
 	const handleSendWhatsappToOrders = async ({
 		orders,
-		message,
 		userId
 	}: {
 		orders: any[]
@@ -251,9 +250,9 @@ export default function ScreenMessages() {
 							<View style={{ marginVertical: 12 }}>
 								{!doneMessage && <Text style={gStyles.h3}>Enviando mensajes...</Text>}
 							</View>
-							{sentList?.map((sent, i) => (
-								<View style={{ justifyContent: 'center' }}>
-									<Text key={i}>
+							{sentList?.map(sent => (
+								<View style={{ justifyContent: 'center' }} key={sent.phone}>
+									<Text>
 										{sent.customerName} {sent.phone} {sent.success ? '✅' : '❌'}
 									</Text>
 								</View>

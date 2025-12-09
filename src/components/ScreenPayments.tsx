@@ -49,7 +49,7 @@ export default function ScreenPayments({ route }) {
 						]}
 						label="Mostrar pagos registrados desde hace"
 						setValue={value => {
-							setDays(parseInt(value))
+							setDays(parseInt(value, 10))
 						}}
 					/>
 					<Button
