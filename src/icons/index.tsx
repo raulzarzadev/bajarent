@@ -22,7 +22,6 @@ import IconCopy from './icon-copy'
 import IconCustomerCard from './icon-customer-card'
 import IconDelete from './icon-delete'
 import IconDone from './icon-done'
-import IconDown from './icon-down'
 import IconDownload from './icon-download'
 import IconEdit from './icon-edit'
 import IconEmail from './icon-email'
@@ -62,7 +61,6 @@ import IconProfileAdd from './icon-profile-add'
 import IconProfileFill from './icon-profile-fill'
 import IconRefresh from './icon-refresh'
 import IconRent from './icon-rent'
-import IconRepair from './icon-repair'
 import IconRowDown from './icon-row-down'
 import IconRowLeft from './icon-row-left'
 import IconRowRight from './icon-row-right'
@@ -126,7 +124,7 @@ const icons = {
   rent: IconRent,
   cashbox: IconCashbox,
   up: IconUp,
-  down: IconDown,
+  down: IconRowDown,
   close: IconClose,
   store: IconStore,
   orders: IconOrders,

@@ -1,8 +1,25 @@
-import type { ComponentProps } from 'react'
-import { MdInfoOutline } from 'react-icons/md'
+import React from 'react'
 
-export function IconInfo(props: ComponentProps<typeof MdInfoOutline>) {
-	return <MdInfoOutline {...props} />
+export function Info(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+    >
+      <title xmlns="">info</title>
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10.5 10.5h2V18m0 0H15m-2.5 0H10m1.5-11V6h1v1z"
+      />
+    </svg>
+  )
 }
 
-export default IconInfo
+export default Info

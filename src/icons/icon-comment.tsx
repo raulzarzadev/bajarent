@@ -1,8 +1,25 @@
-import type { ComponentProps } from 'react'
-import { BiCommentDots } from 'react-icons/bi'
+import React from 'react'
 
-export function IconComment(props: ComponentProps<typeof BiCommentDots>) {
-	return <BiCommentDots {...props} />
+export function Comment(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+    >
+      <title xmlns="">comment</title>
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M7.09 2.75a4 4 0 0 0-4 4v6.208a4 4 0 0 0 4 4h.093v3.792a.5.5 0 0 0 .839.368l4.52-4.16h4.369a4 4 0 0 0 4-4V6.75a4 4 0 0 0-4-4z"
+      />
+    </svg>
+  )
 }
 
-export default IconComment
+export default Comment
