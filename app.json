@@ -4,10 +4,10 @@
     "slug": "lavarenta",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/lavarenta_icon.jpeg",
+    "icon": "./assets/lavarenta-icon-transparent.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/lavarenta_icon.jpeg",
+      "image": "./assets/lavarenta-icon-wite.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,12 +19,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/lavarenta_icon.jpeg",
+        "foregroundImage": "./assets/lavarenta-icon-transparent.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/lavarenta_icon.jpeg"
+      "favicon": "./assets/favicon-96x96.png"
     },
     "extra": {
       "eas": {
