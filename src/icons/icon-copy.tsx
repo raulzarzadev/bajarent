@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Copy(props) {
   return (
@@ -9,7 +8,7 @@ export function Copy(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">copy</title>
+      <title>copy</title>
       <g
         fill="none"
         stroke="currentColor"

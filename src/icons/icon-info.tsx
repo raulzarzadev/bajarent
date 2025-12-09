@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Info(props) {
   return (
@@ -9,7 +8,7 @@ export function Info(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">info</title>
+      <title>info</title>
       <path
         fill="none"
         stroke="currentColor"

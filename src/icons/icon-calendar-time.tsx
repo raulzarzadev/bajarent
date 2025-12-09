@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function CalendarTime(props) {
   return (
@@ -9,7 +8,7 @@ export function CalendarTime(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">calendar-time</title>
+      <title>calendar-time</title>
       <g
         fill="none"
         stroke="currentColor"

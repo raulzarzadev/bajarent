@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function SettingsBold(props) {
   return (
@@ -9,7 +8,7 @@ export function SettingsBold(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">settings-bold</title>
+      <title>settings-bold</title>
       <path
         fill="currentColor"
         fill-rule="evenodd"

@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Search(props) {
   return (
@@ -9,7 +8,7 @@ export function Search(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">search</title>
+      <title>search</title>
       <path
         fill="none"
         stroke="currentColor"

@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Profile(props) {
   return (
@@ -9,7 +8,7 @@ export function Profile(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">profile</title>
+      <title>profile</title>
       <g fill="none" stroke="currentColor" stroke-width="2">
         <path
           stroke-linejoin="round"

@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Signature(props) {
   return (
@@ -9,7 +8,7 @@ export function Signature(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">signature</title>
+      <title>signature</title>
       <path
         fill="none"
         stroke="currentColor"

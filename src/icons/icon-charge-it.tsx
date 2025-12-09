@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function CashHand4(props) {
   return (
@@ -9,7 +8,7 @@ export function CashHand4(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">cash-hand-4</title>
+      <title>cash-hand-4</title>
       <g
         fill="none"
         stroke="currentColor"

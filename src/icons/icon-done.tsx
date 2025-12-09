@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function DoneRingRoundFill(props) {
   return (
@@ -9,7 +8,7 @@ export function DoneRingRoundFill(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">done-ring-round-fill</title>
+      <title>done-ring-round-fill</title>
       <path
         fill="currentColor"
         fill-rule="evenodd"

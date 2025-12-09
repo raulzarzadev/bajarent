@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function MapLine(props) {
   return (
@@ -9,7 +8,7 @@ export function MapLine(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">map-line</title>
+      <title>map-line</title>
       <path
         fill="none"
         stroke="currentColor"

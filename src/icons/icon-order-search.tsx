@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function WorkOrderCheckOutline(props) {
   return (
@@ -9,7 +8,7 @@ export function WorkOrderCheckOutline(props) {
       height="1em"
       viewBox="0 0 16 16"
     >
-      <title xmlns="">work-order-check-outline</title>
+      <title>work-order-check-outline</title>
       <path
         fill="none"
         stroke="currentColor"

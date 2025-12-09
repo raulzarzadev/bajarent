@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function PhoneRemix(props) {
   return (
@@ -9,7 +8,7 @@ export function PhoneRemix(props) {
       height="1em"
       viewBox="0 0 48 48"
     >
-      <title xmlns="">phone-remix</title>
+      <title>phone-remix</title>
       <path
         fill="currentColor"
         fill-rule="evenodd"

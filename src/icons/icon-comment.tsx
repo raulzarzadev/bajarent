@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Comment(props) {
   return (
@@ -9,7 +8,7 @@ export function Comment(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">comment</title>
+      <title>comment</title>
       <path
         fill="none"
         stroke="currentColor"

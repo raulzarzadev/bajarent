@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function UpArrow(props) {
   return (
@@ -9,7 +8,7 @@ export function UpArrow(props) {
       height="1em"
       viewBox="0 0 32 32"
     >
-      <title xmlns="">up-arrow</title>
+      <title>up-arrow</title>
       <g fill="none">
         <path
           fill="#00A6ED"

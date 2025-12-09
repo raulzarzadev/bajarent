@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Location(props) {
   return (
@@ -9,7 +8,7 @@ export function Location(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">location</title>
+      <title>location</title>
       <g fill="none">
         <path
           d="M12 2a8 8 0 0 1 8 8c0 6.5-8 12-8 12s-8-5.5-8-12a8 8 0 0 1 8-8m0 5a3 3 0 1 0 0 6a3 3 0 0 0 0-6"

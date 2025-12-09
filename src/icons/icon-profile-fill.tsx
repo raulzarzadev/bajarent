@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function ProfileFill(props) {
   return (
@@ -9,7 +8,7 @@ export function ProfileFill(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">profile-fill</title>
+      <title>profile-fill</title>
       <path
         fill="currentColor"
         fill-rule="evenodd"

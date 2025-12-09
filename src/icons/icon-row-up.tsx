@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Up(props) {
   return (
@@ -9,7 +8,7 @@ export function Up(props) {
       height="1em"
       viewBox="0 0 48 48"
     >
-      <title xmlns="">up</title>
+      <title>up</title>
       <path
         fill="none"
         stroke="currentColor"

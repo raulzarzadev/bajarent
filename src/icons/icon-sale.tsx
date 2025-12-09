@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function SaleTag02(props) {
   return (
@@ -9,7 +8,7 @@ export function SaleTag02(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">sale-tag-02</title>
+      <title>sale-tag-02</title>
       <g fill="none" stroke="currentColor" stroke-width="1.5">
         <path
           stroke-linecap="round"

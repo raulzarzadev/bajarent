@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function BackupOutlineBadged(props) {
   return (
@@ -9,7 +8,7 @@ export function BackupOutlineBadged(props) {
       height="1em"
       viewBox="0 0 36 36"
     >
-      <title xmlns="">backup-outline-badged</title>
+      <title>backup-outline-badged</title>
       <path
         fill="currentColor"
         d="M6 22h24v2H6z"

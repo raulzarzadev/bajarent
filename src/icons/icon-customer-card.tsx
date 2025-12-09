@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function UserIdentifierCard(props) {
   return (
@@ -9,7 +8,7 @@ export function UserIdentifierCard(props) {
       height="1em"
       viewBox="0 0 14 14"
     >
-      <title xmlns="">user-identifier-card</title>
+      <title>user-identifier-card</title>
       <g
         fill="none"
         stroke="currentColor"

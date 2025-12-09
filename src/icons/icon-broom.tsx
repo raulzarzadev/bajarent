@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function Broom(props) {
   return (
@@ -9,7 +8,7 @@ export function Broom(props) {
       height="1em"
       viewBox="0 0 24 24"
     >
-      <title xmlns="">broom</title>
+      <title>broom</title>
       <path
         fill="none"
         stroke="currentColor"

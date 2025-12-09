@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function ListTwo(props) {
   return (
@@ -9,7 +8,7 @@ export function ListTwo(props) {
       height="1em"
       viewBox="0 0 48 48"
     >
-      <title xmlns="">list-two</title>
+      <title>list-two</title>
       <g
         fill="none"
         stroke="currentColor"

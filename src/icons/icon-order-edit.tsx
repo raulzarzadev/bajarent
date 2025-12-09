@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function OrderEditOutline(props) {
   return (
@@ -9,7 +8,7 @@ export function OrderEditOutline(props) {
       height="1em"
       viewBox="0 0 16 16"
     >
-      <title xmlns="">order-edit-outline</title>
+      <title>order-edit-outline</title>
       <path
         fill="none"
         stroke="currentColor"
