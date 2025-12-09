@@ -12,7 +12,6 @@ import { useCurrentWork } from '../state/features/currentWork/currentWorkSlice'
 import type OrderType from '../types/OrderType'
 import { order_status } from '../types/OrderType'
 import { getFavoriteCustomerPhone } from './Customers/lib/lib'
-import FormOrder from './FormOrder'
 import { FormOrder2E } from './FormOrder2'
 
 //

@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { logout } from '../firebase/auth'
 import { AppVersionE } from './AppVersion'
@@ -62,10 +62,3 @@ export default function (props) {
 		</ErrorBoundary>
 	)
 }
-
-const styles = StyleSheet.create({
-	store: {
-		marginVertical: 6
-	},
-	buttons: { justifyContent: 'center', alignItems: 'center', marginVertical: 6 }
-})

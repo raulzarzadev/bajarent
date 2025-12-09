@@ -1,6 +1,6 @@
 import { isToday } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import { ServiceOrders } from '../firebase/ServiceOrders'
@@ -8,11 +8,9 @@ import useMyNav from '../hooks/useMyNav'
 import useOrders from '../hooks/useOrders'
 import { useOrdersRedux } from '../hooks/useOrdersRedux'
 import catchError from '../libs/catchError'
-import { order_status } from '../types/OrderType'
 import ErrorBoundary from './ErrorBoundary'
 import HeaderDate from './HeaderDate'
 import withDisabledCheck from './HOCs/withDisabledEmployeeCheck'
-import InputSelect from './InputSelect'
 import { ListOrdersE } from './ListOrders'
 
 function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
@@ -47,7 +45,7 @@ function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
 		}
 	}, [])
 
-	const [disabled, setDisabled] = useState(false)
+	const [_, setDisabled] = useState(false)
 
 	const viewAllOrders = permissions.orders.canViewAll
 	const canViewOtherDates = permissions.orders.canViewOtherDates || permissions.isAdmin
@@ -80,7 +78,6 @@ function ScreenOrders({ route, navigation: { navigate } }: ScreenOrdersProps) {
 	}
 
 	const isOtherDateOrders = !(dateOrders === null)
-	const canViewOtherStatus = permissions.isAdmin
 
 	return (
 		<ScrollView>

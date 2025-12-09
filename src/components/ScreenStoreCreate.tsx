@@ -1,6 +1,5 @@
 import { ScrollView, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
-import { useStore } from '../contexts/storeContext'
 import { ServiceStores } from '../firebase/ServiceStore'
 import { reloadApp } from '../libs/reloadApp'
 import { gStyles } from '../styles'

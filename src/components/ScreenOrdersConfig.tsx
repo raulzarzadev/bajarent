@@ -38,9 +38,8 @@ const ScreenOrdersConfig = () => {
 
 export default ScreenOrdersConfig
 
-export type ScreenOrdersConfigProps = {}
-export const ScreenOrdersConfigE = (props: ScreenOrdersConfigProps) => (
+export const ScreenOrdersConfigE = () => (
 	<ErrorBoundary componentName="ScreenOrdersConfig">
-		<ScreenOrdersConfig {...props} />
+		<ScreenOrdersConfig />
 	</ErrorBoundary>
 )

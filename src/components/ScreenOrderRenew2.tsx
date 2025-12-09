@@ -7,7 +7,7 @@ import { gStyles } from '../styles'
 import type OrderType from '../types/OrderType'
 import { CustomerOrderE } from './Customers/CustomerOrder'
 import ErrorBoundary from './ErrorBoundary'
-import FormOrderRenew, { FormOrderRenewE } from './FormOrderRenew'
+import { FormOrderRenewE } from './FormOrderRenew'
 import InputImagePicker from './InputImagePicker'
 import InputLocation from './InputLocation'
 
@@ -33,44 +33,42 @@ const ScreenOrderRenew = ({ route }) => {
 				</View>
 				{customerIsSet && <CustomerOrderE customerId={order.customerId} />}
 				{!customerIsSet && (
-					<>
-						<View style={{ position: 'relative' }}>
-							<InputImagePicker
-								label={'Fachada'}
-								name={'imageHouse'}
-								value={order?.imageHouse}
-								setValue={async value => {
-									const res = await ServiceOrders.update(orderId, {
-										imageHouse: value
-									})
-									console.log({ res })
-								}}
-							/>
-							<InputImagePicker
-								name={'imageID'}
-								label={'Identificación'}
-								value={order?.imageID}
-								setValue={async value => {
-									const res = await ServiceOrders.update(orderId, {
-										imageID: value
-									})
-									console.log({ res })
-								}}
-							/>
+					<View style={{ position: 'relative' }}>
+						<InputImagePicker
+							label={'Fachada'}
+							name={'imageHouse'}
+							value={order?.imageHouse}
+							setValue={async value => {
+								const res = await ServiceOrders.update(orderId, {
+									imageHouse: value
+								})
+								console.log({ res })
+							}}
+						/>
+						<InputImagePicker
+							name={'imageID'}
+							label={'Identificación'}
+							value={order?.imageID}
+							setValue={async value => {
+								const res = await ServiceOrders.update(orderId, {
+									imageID: value
+								})
+								console.log({ res })
+							}}
+						/>
 
-							<InputLocation
-								helperText={'Ubicación de la casa'}
-								value={order?.location}
-								setValue={value => {
-									ServiceOrders.update(orderId, {
-										location: getCoordinatesAsString(value)
-									})
-										.then(console.log)
-										.catch(console.error)
-								}}
-							/>
-						</View>
-					</>
+						<InputLocation
+							helperText={'Ubicación de la casa'}
+							value={order?.location}
+							setValue={value => {
+								ServiceOrders.update(orderId, {
+									location: getCoordinatesAsString(value)
+								})
+									.then(console.log)
+									.catch(console.error)
+							}}
+						/>
+					</View>
 				)}
 				<FormOrderRenewE order={order} />
 			</View>

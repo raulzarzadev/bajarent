@@ -9,7 +9,7 @@ import InputRadios from './InputRadios'
 import ListPayments from './ListPayments'
 import StyledModal from './StyledModal'
 
-export default function ScreenPayments({ navigation, route }) {
+export default function ScreenPayments({ route }) {
 	const preList = route?.params?.payments || null
 	const { storeId } = useStore()
 	const [days, setDays] = useState(1)

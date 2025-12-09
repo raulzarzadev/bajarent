@@ -6,7 +6,7 @@ import { gStyles } from '../styles'
 import theme from '../theme'
 import StoreDetails from './StoreDetails'
 
-const ScreenStoreDetails = ({ navigation }) => {
+const ScreenStoreDetails = () => {
 	const { navigate } = useNavigation()
 	const { store } = useStore()
 	const { user } = useAuth()
@@ -56,11 +56,7 @@ const ScreenStoreDetails = ({ navigation }) => {
 						</Text>
 					</View>
 				)}
-				{store && (
-					<>
-						<StoreDetails />
-					</>
-				)}
+				{store && <StoreDetails />}
 			</View>
 		</ScrollView>
 	)
