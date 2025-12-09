@@ -1,25 +1,18 @@
-
 export function MapLine(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-    >
-      <title>map-line</title>
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit="10"
-        strokeWidth="1.5"
-        d="M9 3v16M9 3L2 5v16l7-2M9 3l6 2M9 19l6 2m0-16v16m0-16l7-2v16l-7 2"
-      />
-    </svg>
-  )
+	return (
+		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+			<title>map-line</title>
+			<path
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeMiterlimit="10"
+				strokeWidth="1.5"
+				d="M9 3v16M9 3L2 5v16l7-2M9 3l6 2M9 19l6 2m0-16v16m0-16l7-2v16l-7 2"
+			/>
+		</svg>
+	)
 }
 
 export default MapLine
