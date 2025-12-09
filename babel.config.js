@@ -4,6 +4,15 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       ['module:react-native-dotenv'],
+      [
+        'module-resolver',
+        {
+          alias: {
+            '@react-native-vector-icons/material-design-icons': './src/shims/material-community-icons',
+            '@expo/vector-icons/MaterialCommunityIcons': './src/shims/material-community-icons',
+          },
+        },
+      ],
     ],
   }
 }
