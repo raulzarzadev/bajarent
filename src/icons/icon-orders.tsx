@@ -12,7 +12,7 @@ export function WorkOrderOutline(props) {
       <path
         fill="none"
         stroke="currentColor"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
         d="M5 8h6M5 5h6m-6 6h4M3.5 1.5v13h9v-13z"
       />
     </svg>

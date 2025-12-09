@@ -12,9 +12,9 @@ export function Up(props) {
       <path
         fill="none"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="4"
         d="m13 30l12-12l12 12"
       />
     </svg>
