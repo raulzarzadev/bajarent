@@ -6,40 +6,42 @@ import Button from '../Button'
 import { InputDateE } from '../InputDate'
 
 const ModalScheduleOrder = ({ orderId = null }: { orderId: string | null }) => {
-	const { order } = useOrderDetails()
-	const [scheduledAt, setScheduledAt] = useState(order.scheduledAt)
+  const { order } = useOrderDetails()
+  const [scheduledAt, setScheduledAt] = useState(order.scheduledAt)
 
-	const handleSubmit = async (date: Date | null) => {
-		setScheduledAt(date)
-		try {
-			await ServiceOrders.update(orderId, { scheduledAt: date })
-		} catch (e) {
-			console.error({ e })
-		}
-	}
+  const handleSubmit = async (date: Date | null) => {
+    setScheduledAt(date)
+    try {
+      await ServiceOrders.update(orderId, { scheduledAt: date })
+    } catch (e) {
+      console.error({ e })
+    }
+  }
 
-	return (
-		<View>
-			{scheduledAt ? (
-				<View>
-					<Button
-						onPress={() => handleSubmit(null)}
-						icon="close"
-						label="Quitar fecha"
-						size="xs"
-						variant="ghost"
-					></Button>
-					<InputDateE setValue={handleSubmit} value={scheduledAt} />
-				</View>
-			) : (
-				<Button
-					onPress={() => handleSubmit(new Date())}
-					icon="calendar"
-					variant="ghost"
-					label="Programar fecha"
-				></Button>
-			)}
-		</View>
-	)
+  return (
+    <View>
+      {scheduledAt ? (
+        <View>
+          <Button
+            onPress={() => handleSubmit(null)}
+            icon="close"
+            label="Quitar fecha"
+            size="xs"
+            variant="ghost"
+            fullWidth
+          ></Button>
+          <InputDateE setValue={handleSubmit} value={scheduledAt} />
+        </View>
+      ) : (
+        <Button
+          onPress={() => handleSubmit(new Date())}
+          icon="calendar"
+          variant="ghost"
+          label="Programar fecha"
+          fullWidth
+        ></Button>
+      )}
+    </View>
+  )
 }
 export default ModalScheduleOrder
