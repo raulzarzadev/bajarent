@@ -57,9 +57,8 @@ const styles = StyleSheet.create({
 	}
 })
 
-export type SaleItemsInfoProps = {}
-export const SaleItemsInfoE = (props: SaleItemsInfoProps) => (
+export const SaleItemsInfoE = () => (
 	<ErrorBoundary componentName="SaleItemsInfo">
-		<SaleItemsInfo {...props} />
+		<SaleItemsInfo />
 	</ErrorBoundary>
 )

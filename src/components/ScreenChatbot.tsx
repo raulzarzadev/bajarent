@@ -17,13 +17,12 @@ import { bot_configs, bot_configs_order_flow } from '../types/StoreType'
 import Button from './Button'
 import ErrorBoundary from './ErrorBoundary'
 import { FormChatbotE } from './FormChatbot'
-import FormChatbotAutoWs from './FormChatbotAutoWs'
 import FormikCheckbox from './FormikCheckbox'
 import InputTextStyled from './InputTextStyled'
 import StyledModal from './StyledModal'
 import Tabs from './Tabs'
 
-const ScreenChatbot = (props?: ScreenChatbotProps) => {
+const ScreenChatbot = () => {
 	const { store } = useStore()
 	const handleUpdateChatbot = async (values: { chatbot: any }) => {
 		return await ServiceStores.update(store.id, { chatbot: values.chatbot })
@@ -39,26 +38,15 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
 						title: 'BuilderBot',
 						show: true,
 						content: (
-							<>
-								<FormChatbotE
-									values={store.chatbot}
-									onSubmit={chatbot => handleUpdateChatbot({ chatbot })}
-								/>
-							</>
+							<FormChatbotE
+								values={store.chatbot}
+								onSubmit={chatbot => handleUpdateChatbot({ chatbot })}
+							/>
 						)
 					},
 					{
 						title: 'Auto-ws',
-						content: (
-							<>
-								<Text>Este sender no esta configurado aún</Text>
-								{/* <RandomMessage sender="auto-ws" />
-                <FormChatbotAutoWs
-                  values={store.chatbot}
-                  onSubmit={(chatbot) => handleUpdateChatbot({ chatbot })}
-                /> */}
-							</>
-						),
+						content: <Text>Este sender no esta configurado aún</Text>,
 
 						show: false
 					},
@@ -82,7 +70,7 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
 											handleUpdateChatbot({ chatbot: values })
 										}}
 									>
-										{({ values, handleSubmit, isSubmitting }) => (
+										{({ handleSubmit, isSubmitting }) => (
 											<View
 												style={{
 													padding: 4,
@@ -91,13 +79,9 @@ const ScreenChatbot = (props?: ScreenChatbotProps) => {
 												}}
 											>
 												<Text style={gStyles.h3}>Chatbot</Text>
-												{/* <FormikCheckbox
-                          name="enabled"
-                          label="Activar chatbot"
-                        ></FormikCheckbox> */}
 
 												<View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-													{Object.entries(bot_configs).map(([key, value]) => (
+													{Object.entries(bot_configs).map(([key]) => (
 														<FormikCheckbox
 															key={key}
 															name={`config.${key}`}
@@ -216,10 +200,9 @@ const mockPayment: Partial<Payment> = {
 	method: 'cash'
 }
 export default ScreenChatbot
-export type ScreenChatbotProps = {}
-export const ScreenChatbotE = (props: ScreenChatbotProps) => (
+export const ScreenChatbotE = () => (
 	<ErrorBoundary componentName="ScreenChatbot">
-		<ScreenChatbot {...props} />
+		<ScreenChatbot />
 	</ErrorBoundary>
 )
 

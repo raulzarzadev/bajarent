@@ -39,10 +39,10 @@ export const CommentRow = ({
 			solvedAt: !solved ? new Date() : null,
 			solvedBy: !solved ? user?.id : null
 		})
-			.then(res => {
+			.then(() => {
 				// console.log(res)
 			})
-			.catch(res => {
+			.catch(() => {
 				//console.error(res)
 			})
 

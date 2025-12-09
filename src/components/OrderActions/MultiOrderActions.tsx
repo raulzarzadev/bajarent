@@ -45,10 +45,8 @@ const MultiOrderActions = ({ ordersIds = [], data }: { ordersIds: string[]; data
 
 	const rentOrdersDelivered = data.filter(
 		// FIXME: fix this
-		o =>
-			o['status'] === order_status.DELIVERED &&
-			o['type'] === order_type.RENT &&
-			ordersIds.includes(o['id'])
+		(o: OrderType) =>
+			o?.status === order_status.DELIVERED && o.type === order_type.RENT && ordersIds.includes(o.id)
 	)
 	const temId = useId()
 	const buttons = [

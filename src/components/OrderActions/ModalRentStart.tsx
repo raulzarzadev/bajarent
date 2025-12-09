@@ -118,7 +118,8 @@ const ModalRentStart = ({ modal }: { modal: ReturnModal }) => {
 						const errors = {}
 						if (VALIDATE_ITEMS_QTY) {
 							if (toMuchItems) {
-								errors['items'] = `Selecciona máximo ${ITEMS_MAX_BY_ORDER} artículo(s)`
+								//@ts-expect-error
+								errors.items = `Selecciona máximo ${ITEMS_MAX_BY_ORDER} artículo(s)`
 							}
 
 							if (toLittleItems) {

@@ -4,7 +4,7 @@ import useTheme from '../hooks/useTheme'
 import Icon2 from '../icons'
 import { type Colors, colors } from '../theme'
 import ErrorBoundary from './ErrorBoundary'
-import Icon, { type IconName } from './Icon'
+import type { IconName } from './Icon'
 
 export type ButtonProps = {
 	onPress: () => void

@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import { ServiceComments } from '../firebase/ServiceComments'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import { formatOrders } from '../libs/orders'
 import type OrderType from '../types/OrderType'
 import { ItemMapE } from './ItemsMap'
-import LinkLocation from './LinkLocation'
-import ListRow, { type ListRowField } from './ListRow'
 import { ModalFilterListE } from './ModalFilterList'
 
 const ScreenItemsMap = () => {

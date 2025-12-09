@@ -1,6 +1,5 @@
 import { View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
-import ModalCloseOperations from '../ModalCloseOperations'
 import { gSpace } from '../styles'
 import Button from './Button'
 
