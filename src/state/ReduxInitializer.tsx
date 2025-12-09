@@ -132,10 +132,12 @@ const useInitializeCustomers = () => {
 
   console.log({ orders, loading })
   useEffect(() => {
-    const uniqueCustomerIds = Array.from(
-      new Set(orders?.map((o) => o.customerId).filter((id) => id))
-    )
-    if (uniqueCustomerIds.length) fetchCustomers({ ids: uniqueCustomerIds })
-  }, [])
+    if (loading === false) {
+      const uniqueCustomerIds = Array.from(
+        new Set(orders?.map((o) => o.customerId).filter((id) => id))
+      )
+      if (uniqueCustomerIds.length) fetchCustomers({ ids: uniqueCustomerIds })
+    }
+  }, [loading])
   return null
 }

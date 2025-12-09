@@ -22,7 +22,7 @@ export type FetchTypeOrders =
 
 export interface OrdersState {
   // Entities - normalized data
-  orders: Record<string, Partial<OrderType>>
+  orders?: Partial<OrderType>[] | null
   orderIds: string[]
 
   // Filtered lists for performance
@@ -313,6 +313,11 @@ const ordersSlice = createSlice({
     },
 
     // Real-time updates
+    /**
+     * @deprecated this method is using deprecated orders state structure Record<string, Partial<OrderType>> but now orders is Partial<OrderType>[] | null
+     * @param state
+     * @param action
+     */
     upsertOrder: (state, action: PayloadAction<OrderType>) => {
       const order = action.payload
       if (order.id) {
@@ -335,7 +340,11 @@ const ordersSlice = createSlice({
         })
       }
     },
-
+    /**
+     *  @deprecated this method is using deprecated orders state structure Record<string, Partial<OrderType>> but now orders is Partial<OrderType>[] | null
+     * @param state
+     * @param action
+     */
     removeOrder: (state, action: PayloadAction<string>) => {
       const orderId = action.payload
       delete state.orders[orderId]
@@ -374,7 +383,7 @@ const ordersSlice = createSlice({
 
     // Reset state - útil cuando cambias de tienda o necesitas limpiar todo
     resetOrders: (state) => {
-      state.orders = {}
+      state.orders = undefined
       state.orderIds = []
       state.unsolvedOrders = []
       state.solvedOrders = []
@@ -420,10 +429,10 @@ const ordersSlice = createSlice({
         if (orders && orders.length > 0) {
           // Normalizar las nuevas órdenes
           const { entities: newEntities, ids: newIds } = normalizeOrders(orders)
-
+          const ordersArray = Object.values(state.orders || {}).concat(orders)
           if (isForceRefresh) {
             // ForceRefresh: reemplazar completamente las órdenes
-            state.orders = newEntities
+            state.orders = ordersArray
             state.orderIds = newIds
           } else {
             // Refresh normal: combinar con las órdenes existentes sin sobrescribir
@@ -462,9 +471,11 @@ const ordersSlice = createSlice({
       .addCase(fetchOrdersByType.pending, (state) => {
         state.refreshing = true
         state.error = null
+        state.loading = false
       })
       .addCase(fetchOrdersByType.fulfilled, (state) => {
         state.refreshing = false
+
         // fetchOrdersByType delega a fetchUnsolvedOrders, así que el estado ya se actualiza
         // en el reducer de fetchUnsolvedOrders.fulfilled
       })
