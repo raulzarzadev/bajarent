@@ -10,6 +10,7 @@
     "build:web": "npx expo export:web",
     "type-check": "tsc --noEmit ",
     "lint:biome": "biome check --files-ignore-unknown=true .",
+    "format:fix": "tsc --noEmit &&biome check --files-ignore-unknown=true . && biome format --write --files-ignore-unknown=true .  ",
     "format:biome": "biome format --write --files-ignore-unknown=true .",
     "merge:main": "git switch main && git merge dev && git switch dev",
     "push:main": "git push origin main",
