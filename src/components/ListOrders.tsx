@@ -82,7 +82,7 @@ const ListOrders = ({
       })
       ?.filter((order) => !!order)
     setFormattedOrders(formatOrders as RowOrderType[])
-  }, [customers])
+  }, [customers, orders])
 
   return (
     <View style={{ paddingLeft: 2 }}>
