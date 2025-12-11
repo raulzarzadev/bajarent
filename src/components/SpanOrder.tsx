@@ -5,6 +5,7 @@ import { Pressable, Text, View } from 'react-native'
 import type { ConsolidatedOrderType } from '../firebase/ServiceConsolidatedOrders'
 import { ServiceOrders } from '../firebase/ServiceOrders'
 import useMyNav from '../hooks/useMyNav'
+import { useOrdersRedux } from '../hooks/useOrdersRedux'
 import { translateTime } from '../libs/expireDate'
 import { lastExtensionTime } from '../libs/orders'
 import { payments_amount } from '../libs/payments'
@@ -13,7 +14,6 @@ import { gStyles } from '../styles'
 import theme from '../theme'
 import type OrderType from '../types/OrderType'
 import CurrencyAmount from './CurrencyAmount'
-import { useOrdersRedux } from '../hooks/useOrdersRedux'
 
 const SpanOrder = ({
   orderId,
