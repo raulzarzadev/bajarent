@@ -178,7 +178,7 @@ const WorkshopItem = ({
                 <Text style={[gStyles.h3, { textAlign: 'left' }]}>
                   Contactos:
                 </Text>
-                {item?.repairDetails?.contacts?.map((contact, i) => (
+                {item?.repairDetails?.contacts?.map((contact) => (
                   <ContactRow
                     contact={contact}
                     key={contact.name + contact.phone}
