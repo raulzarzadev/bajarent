@@ -237,7 +237,7 @@ function MyList<T extends { id: string }>({
   if (!data) return <Loading />
 
   const slicedData = sortedData.slice(startIndex, endIndex)
-  console.log({ pinnedRowsData })
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <View
