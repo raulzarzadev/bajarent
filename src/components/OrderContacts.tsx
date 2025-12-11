@@ -67,7 +67,7 @@ export const ContactRow = ({
 				alignItems: 'center'
 			}}
 		>
-			{handleMarkAsFavorite && (
+			{!!handleMarkAsFavorite && (
 				<Button
 					justIcon
 					icon={contact.isFavorite ? 'starFilled' : 'starEmpty'}
@@ -78,9 +78,9 @@ export const ContactRow = ({
 					}}
 				/>
 			)}
-			<Text>{contact.name} </Text>
+			<Text>{contact.name}</Text>
 			<CardPhone phone={contact.phone} />
-			{handleDeleteContact && (
+			{!!handleDeleteContact && (
 				<ButtonConfirm
 					justIcon
 					icon={'delete'}
