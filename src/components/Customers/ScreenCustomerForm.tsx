@@ -9,7 +9,10 @@ import { gStyles } from '../../styles'
 import ErrorBoundary from '../ErrorBoundary'
 import { FormCustomerE } from './FormCustomer'
 
-type ScreenCustomerFormRouteProp = RouteProp<Record<string, { id?: string }>, string>
+type ScreenCustomerFormRouteProp = RouteProp<
+  Record<string, { id?: string }>,
+  string
+>
 
 const ScreenCustomerForm = () => {
   const { params } = useRoute<ScreenCustomerFormRouteProp>()
