@@ -10,37 +10,37 @@ import CardUser from './CardUser'
 import { FormStaffE } from './FormStaff'
 
 const ScreenStaffEdit = ({ route }) => {
-  const { storeId } = useAuth()
-  const { shop } = useShop()
-  const shopStaff = shop?.staff || []
-  const { staff } = useStore() // <--Buscar staff
-  if (!staff?.length) return <ActivityIndicator />
+	const { storeId } = useAuth()
+	const { shop } = useShop()
+	const shopStaff = shop?.staff || []
+	const { staff } = useStore() // <--Buscar staff
+	if (!staff?.length) return <ActivityIndicator />
 
-  const staffId = route.params.staffId
-  const employee = shopStaff?.find(({ id }) => id === staffId)
-  return (
-    <ScrollView>
-      <View style={gStyles.container}>
-        <CardUser user={employee as UserType} />
+	const staffId = route.params.staffId
+	const employee = shopStaff?.find(({ id }) => id === staffId)
+	return (
+		<ScrollView>
+			<View style={gStyles.container}>
+				<CardUser user={employee as UserType} />
 
-        <FormStaffE
-          defaultValues={employee}
-          onSubmit={async (values) => {
-            const [err, res] = await catchError(
-              ServiceStores.updateStaff({
-                staffId,
-                storeId,
-                staff: {
-                  ...values
-                }
-              })
-            )
-            console.log({ err, res })
-          }}
-        />
-      </View>
-    </ScrollView>
-  )
+				<FormStaffE
+					defaultValues={employee}
+					onSubmit={async values => {
+						const [err, res] = await catchError(
+							ServiceStores.updateStaff({
+								staffId,
+								storeId,
+								staff: {
+									...values
+								}
+							})
+						)
+						console.log({ err, res })
+					}}
+				/>
+			</View>
+		</ScrollView>
+	)
 }
 
 export default ScreenStaffEdit
