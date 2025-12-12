@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { useAuth } from '../contexts/authContext'
 import { useStore } from '../contexts/storeContext'
 import { ServiceStores } from '../firebase/ServiceStore'
@@ -25,7 +25,11 @@ const ScreenStaffEdit = ({ route }) => {
     <ScrollView>
       <View style={gStyles.container}>
         <EmployeeDetailsE employee={employee} shop={shop} />
-
+        {!canEditStaff && (
+          <Text style={gStyles.tCenter}>
+            No tienes permisos para editar el personal.
+          </Text>
+        )}
         {canEditStaff && (
           <FormStaffE
             defaultValues={employee}

@@ -35,7 +35,8 @@ const ScreenStore = (props) => {
 
   const scrollViewRef = useRef(null)
 
-  const canViewSections = isAdmin || isOwner || canEditStaff
+  const canViewSections =
+    isAdmin || isOwner || canEditStaff || storePermissions.disabledStaff
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
 
@@ -157,11 +158,7 @@ const TabClients = () => {
 }
 
 const TabStaff = (props) => {
-  return (
-    <View>
-      <ScreenStaffE {...props} />
-    </View>
-  )
+  return <ScreenStaffE {...props} />
 }
 
 const TabItems = () => {
