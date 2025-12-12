@@ -20,10 +20,10 @@ import {
 } from '../state/features/orders/ordersSlice'
 import type { AppDispatch, RootState } from '../state/store'
 
-export const useOrdersRedux = (componentId?: string) => {
+export const useOrdersRedux = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { storeId } = useAuth()
-  const { employee, permissions, disabledEmployee } = useEmployee()
+  const { employee, permissions } = useEmployee()
 
   // Selectors
   const allOrders = useSelector(selectAllOrders)
