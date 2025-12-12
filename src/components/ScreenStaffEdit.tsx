@@ -5,42 +5,47 @@ import { ServiceStores } from '../firebase/ServiceStore'
 import { useShop } from '../hooks/useShop'
 import catchError from '../libs/catchError'
 import { gStyles } from '../styles'
-import type UserType from '../types/UserType'
-import CardUser from './CardUser'
 import { FormStaffE } from './FormStaff'
+import { EmployeeDetailsE } from './EmployeeDetails'
+import { useEmployee } from '../contexts/employeeContext'
 
 const ScreenStaffEdit = ({ route }) => {
-	const { storeId } = useAuth()
-	const { shop } = useShop()
-	const shopStaff = shop?.staff || []
-	const { staff } = useStore() // <--Buscar staff
-	if (!staff?.length) return <ActivityIndicator />
+  const { storeId } = useAuth()
+  const { shop } = useShop()
+  const { permissions } = useEmployee()
+  const canEditStaff = permissions.canEditStaff || false
+  const shopStaff = shop?.staff || []
+  const { staff } = useStore() // <--Buscar staff
+  if (!staff?.length) return <ActivityIndicator />
 
-	const staffId = route.params.staffId
-	const employee = shopStaff?.find(({ id }) => id === staffId)
-	return (
-		<ScrollView>
-			<View style={gStyles.container}>
-				<CardUser user={employee as UserType} />
+  const staffId = route.params.staffId
+  const employee = shopStaff?.find(({ id }) => id === staffId)
 
-				<FormStaffE
-					defaultValues={employee}
-					onSubmit={async values => {
-						const [err, res] = await catchError(
-							ServiceStores.updateStaff({
-								staffId,
-								storeId,
-								staff: {
-									...values
-								}
-							})
-						)
-						console.log({ err, res })
-					}}
-				/>
-			</View>
-		</ScrollView>
-	)
+  return (
+    <ScrollView>
+      <View style={gStyles.container}>
+        <EmployeeDetailsE employee={employee} shop={shop} />
+
+        {canEditStaff && (
+          <FormStaffE
+            defaultValues={employee}
+            onSubmit={async (values) => {
+              const [err, res] = await catchError(
+                ServiceStores.updateStaff({
+                  staffId,
+                  storeId,
+                  staff: {
+                    ...values
+                  }
+                })
+              )
+              console.log({ err, res })
+            }}
+          />
+        )}
+      </View>
+    </ScrollView>
+  )
 }
 
 export default ScreenStaffEdit
