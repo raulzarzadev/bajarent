@@ -36,7 +36,7 @@ const FormStaff = ({
 	const { sections: storeSections } = useStore()
 
 	// * Transform array ['id1', 'id2'] to object { id1: true, id2: true } for the form
-	const initialSections = (defaultValues.sectionsAssigned || []).reduce(
+	const initialSections = (defaultValues?.sectionsAssigned || []).reduce(
 		(acc, curr) => {
 			acc[curr] = true
 			return acc
