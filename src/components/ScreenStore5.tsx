@@ -35,8 +35,11 @@ const ScreenStore = (props) => {
 
   const scrollViewRef = useRef(null)
 
-  const canViewSections =
+  const canViewStaff =
     isAdmin || isOwner || canEditStaff || storePermissions.disabledStaff
+
+  const canViewSections = isAdmin || isOwner
+
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
 
@@ -85,7 +88,7 @@ const ScreenStore = (props) => {
             {
               title: 'Staff',
               content: <CheckedTabStaff {...props} />,
-              show: canViewSections,
+              show: canViewStaff,
               icon: 'profile'
               //icon: 'profile'
             },
