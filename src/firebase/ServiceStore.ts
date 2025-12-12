@@ -4,7 +4,6 @@ import { createUUID } from '../libs/createId'
 import type StaffType from '../types/StaffType'
 import type StoreType from '../types/StoreType'
 import { FirebaseGenericService } from './genericService'
-import { ServiceStaff } from './ServiceStaff'
 export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
   constructor() {
     super('stores')
@@ -65,6 +64,45 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     const updatedStaff = currentStaff.map((s) =>
       s.id === staffId ? { ...s, ...staff } : s
     )
+
+    return this.update(storeId, { staff: updatedStaff })
+  }
+
+  async removeOldPermissions({
+    storeId,
+    staffId
+  }: {
+    storeId: string
+    staffId: string
+  }) {
+    const store = await this.get(storeId)
+    if (!store) throw new Error('Store not found')
+    const currentStaff = store.staff || []
+
+    const permissionsToRemove = [
+      'canAssignOrder',
+      'canAuthorizeOrder',
+      'canCancelOrder',
+      'canCreateOrder',
+      'canDeleteOrder',
+      'canDeliveryOrder',
+      'canEditOrder',
+      'canPickupOrder',
+      'canRenewOrder',
+      'canRepairOrder',
+      'canViewMyOrders',
+      'canViewOrders',
+      'isAdmin'
+    ]
+
+    const updatedStaff = currentStaff.map((s) => {
+      if (s.id === staffId) {
+        const newS = { ...s }
+        permissionsToRemove.forEach((p) => delete newS[p])
+        return newS
+      }
+      return s
+    })
 
     return this.update(storeId, { staff: updatedStaff })
   }
