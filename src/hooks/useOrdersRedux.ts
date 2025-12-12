@@ -161,8 +161,8 @@ export const useOrdersRedux = () => {
 }
 
 // Specialized hooks for specific use cases
-export const useMyOrders = (componentId?: string) => {
-  const hook = useOrdersRedux(componentId)
+export const useMyOrders = () => {
+  const hook = useOrdersRedux()
   return {
     orders: hook.myOrders,
     loading: hook.loading,
@@ -175,8 +175,8 @@ export const useMyOrders = (componentId?: string) => {
   }
 }
 
-export const useUnsolvedOrders = (componentId?: string) => {
-  const hook = useOrdersRedux(componentId)
+export const useUnsolvedOrders = () => {
+  const hook = useOrdersRedux()
   return {
     orders: hook.unsolvedOrders,
     loading: hook.loading,
@@ -204,7 +204,7 @@ export const useOrdersStats = () => {
 
 // Migration helper - provides same interface as old context
 export const useOrdersCtxCompatible = () => {
-  const hook = useOrdersRedux('compatibility-layer')
+  const hook = useOrdersRedux()
 
   return {
     orders: hook.orders,
