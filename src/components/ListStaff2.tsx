@@ -109,7 +109,8 @@ const StaffRow = ({
     setDisabled(false)
   }
 
-  const isStaffOwner = staff?.permissions?.isOwner || staff?.roles?.admin
+  const isStaffOwner = staff?.permissions?.isOwner
+  const isStaffAdmin = staff?.permissions?.isAdmin
 
   const fields: ListRowField[] = [
     {
@@ -140,10 +141,21 @@ const StaffRow = ({
             gap: 16
           }}
         >
-          <InputDisabledStaff staffId={staff?.id} />
-          {isStaffOwner && (
+          {isStaffAdmin && (
             <Chip
               title="Admin"
+              buttonStyle={{
+                backgroundColor: theme.secondary,
+                paddingVertical: 2,
+                paddingHorizontal: 4
+              }}
+              titleStyle={{ fontSize: 10 }}
+            />
+          )}
+
+          {isStaffOwner && (
+            <Chip
+              title="Dueño"
               buttonStyle={{
                 backgroundColor: theme.primary,
                 paddingVertical: 2,
@@ -152,6 +164,8 @@ const StaffRow = ({
               titleStyle={{ fontSize: 10 }}
             />
           )}
+
+          <InputDisabledStaff staffId={staff?.id} />
           <Button
             size="small"
             icon="edit"
