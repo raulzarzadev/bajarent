@@ -6,11 +6,11 @@ import {
   StyleSheet,
   Text,
   Pressable,
-  View
+  View,
+  useWindowDimensions
 } from 'react-native'
 import Icon from './Icon'
-
-const { height: windowHeight, width: windowWidth } = Dimensions.get('window')
+import { pad } from 'cypress/types/lodash'
 
 export type StyledModalProps = {
   open?: boolean
@@ -28,11 +28,33 @@ const StyledModal = ({
   size = 'md',
   onclose = () => {}
 }: StyledModalProps) => {
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
   const handleClose = () => {
     setOpen(!open)
     onclose()
   }
+
+  // Define max widths based on size prop
+  const maxWidths = {
+    md: 500,
+    full: windowWidth * 0.95
+  }
+
+  const maxWidth = maxWidths[size] || maxWidths.md
   const isSmallView = windowWidth < 600
+
+  const modalStyles = {
+    margin: isSmallView ? 10 : 20,
+    paddingVertical: isSmallView ? 5 : 20,
+    paddingHorizontal: isSmallView ? 8 : 24,
+    paddingTop: isSmallView ? 12 : 12,
+    paddingBottom: isSmallView ? 10 : 20,
+    maxHeight: windowHeight - (isSmallView ? 20 : 40),
+    width: Math.min(windowWidth - (isSmallView ? 0 : 40), maxWidth),
+    borderRadius: 20
+  }
+
   return (
     <View>
       <View style={styles.centeredView}>
@@ -54,21 +76,19 @@ const StyledModal = ({
               ]}
             >
               <Pressable onPress={(e) => e.stopPropagation()}>
-                <View
-                  style={[
-                    styles.modalView,
-                    isSmallView ? styles.fullSizeModal : styles.mdSizeModal
-                    // size === 'full' && styles.fullSizeModal,
-                    // size === 'md' && styles.mdSizeModal
-                  ]}
-                >
+                <View style={[styles.modalView, modalStyles]}>
                   <View style={styles.topBar}>
                     <Text style={styles.title}>{title}</Text>
                     <Pressable onPress={() => handleClose()}>
                       <Icon icon="close" />
                     </Pressable>
                   </View>
-                  <ScrollView style={{ width: '100%' }}>{children}</ScrollView>
+                  <ScrollView
+                    style={{ width: '100%', flex: 1 }}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                  >
+                    {children}
+                  </ScrollView>
                 </View>
               </Pressable>
             </View>
@@ -85,7 +105,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-    // marginTop: 22
   },
   modalView: {
     backgroundColor: 'white',
@@ -97,25 +116,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
-  },
-  mdSizeModal: {
-    margin: 20,
-    maxWidth: 500,
-    maxHeight: windowHeight,
-    width: '90%',
-    borderRadius: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 12
-  },
-  fullSizeModal: {
-    margin: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 8,
-    height: windowHeight,
-    width: '100%',
-    maxWidth: 'auto',
-    paddingTop: 28
+    elevation: 5,
+    borderRadius: 20
   },
   topBar: {
     flexDirection: 'row',
