@@ -35,21 +35,6 @@ const ItemDetails = ({
       />
       <ItemDetailsResumed item={item} />
 
-      {/* <Text
-        style={[
-          gStyles.tCenter,
-          {
-            marginVertical: 6,
-            backgroundColor: theme.info,
-            borderRadius: 99,
-            margin: 'auto',
-            paddingVertical: 2,
-            paddingHorizontal: 8
-          }
-        ]}
-      >
-        <Text style={gStyles.h1}>{asCapitalize(dictionary(item.status))}</Text>
-      </Text> */}
       <Text
         style={{
           textAlign: 'center',
@@ -110,44 +95,63 @@ export const ItemDetailsResumed = ({
   const preferView = shop?.preferences?.itemIdentifier || 'economicNumber'
 
   const getPreferredIdentifier = () => {
-    if (preferView === 'serialNumber') return item.serial || 'Sin serie'
-    if (preferView === 'sku') return item.sku || 'Sin SKU'
-    return item.number || 'Sin número'
+    if (preferView === 'serialNumber') return item.serial.trim() || 'Sin SERIE'
+    if (preferView === 'sku') return item.sku.trim() || 'Sin SKU'
+    return item.number.trim() || 'Sin ECO'
   }
 
   const getSecondaryInfo = () => {
     const info: string[] = []
     if (preferView !== 'economicNumber' && item.number) {
-      info.push(`#${item.number}`)
+      info.push(`#${item.number.trim()}`)
     }
     if (preferView !== 'serialNumber' && item.serial) {
-      info.push(`Serie: ${item.serial}`)
+      info.push(`Serie: ${item.serial.trim()}`)
     }
     if (preferView !== 'sku' && item.sku) {
-      info.push(`SKU: ${item.sku}`)
+      info.push(`SKU: ${item.sku.trim()}`)
     }
     return info.join(' • ')
   }
 
   return (
     <View>
-      {showStatus && (
-        <Chip
-          title={dictionary(item.status)}
-          color={item_color_status[item.status]}
-        />
-      )}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 8,
+          height: 18
+        }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          {!!showStatus && (
+            <Chip
+              title={dictionary(item.status)}
+              color={item_color_status[item.status]}
+              size="xs"
+              style={{ flex: 1, paddingHorizontal: 16 }}
+            />
+          )}
+        </View>
+        <View>
+          {!!item?.needFix && (
+            <Chip icon="wrench" color={theme.error} size="xs" />
+          )}
+        </View>
+      </View>
 
       <Text
         style={[
           gStyles.h1,
-          { fontSize: 32, textAlign: 'center', marginVertical: 8 }
+          { fontSize: 22, textAlign: 'center', marginVertical: 2 }
         ]}
       >
         {getPreferredIdentifier()}
       </Text>
 
-      <Text style={gStyles.h2}>
+      <Text style={gStyles.h3}>
         {item?.categoryName} <Text style={gStyles.helper}>{item.brand}</Text>
       </Text>
 
