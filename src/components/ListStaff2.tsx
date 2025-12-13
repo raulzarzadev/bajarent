@@ -203,6 +203,7 @@ const StaffRow = ({
               if (__DEV__) console.log({ err, res })
               setLoading(false)
             }}
+            disabled={disabled || !employeeCanEditStaff}
           />
           <Button
             size="small"

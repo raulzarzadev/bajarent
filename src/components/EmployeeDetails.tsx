@@ -10,7 +10,7 @@ import ErrorBoundary from './ErrorBoundary'
 export const EmployeeDetails = (props: EmployeeDetailsProps) => {
   const { employee, shop } = props
   if (!employee) return null
-
+  console.log({ employee, shop })
   const sections = shop?.sections || []
   const assignedSections = employee.sectionsAssigned || []
   const assignedSectionsNames = sections
@@ -63,53 +63,55 @@ export const EmployeeDetails = (props: EmployeeDetailsProps) => {
           </View>
         </View>
 
-        {activeRoles.length > 0 && (
-          <View style={{ marginVertical: 8 }}>
-            <Text style={gStyles.h3}>Roles</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'center'
-              }}
-            >
-              {activeRoles.map((role) => (
-                <View key={role} style={{ margin: 4 }}>
-                  <Chip
-                    title={dictionary(role as any) || role}
-                    color={theme.primary}
-                    titleColor="white"
-                    size="sm"
-                  />
-                </View>
-              ))}
-            </View>
+        <View style={{ marginVertical: 8 }}>
+          <Text style={gStyles.h3}>Roles</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}
+          >
+            {!activeRoles.length && (
+              <Text style={gStyles.p}>Ningún rol asignado</Text>
+            )}
+            {activeRoles.map((role) => (
+              <View key={role} style={{ margin: 4 }}>
+                <Chip
+                  title={dictionary(role as any) || role}
+                  color={theme.primary}
+                  titleColor="white"
+                  size="sm"
+                />
+              </View>
+            ))}
           </View>
-        )}
+        </View>
 
-        {assignedSectionsNames.length > 0 && (
-          <View style={{ marginVertical: 8 }}>
-            <Text style={gStyles.h3}>Secciones Asignadas</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'center'
-              }}
-            >
-              {assignedSectionsNames.map((sectionName) => (
-                <View key={sectionName} style={{ margin: 4 }}>
-                  <Chip
-                    title={sectionName}
-                    color={theme.secondary}
-                    titleColor="white"
-                    size="sm"
-                  />
-                </View>
-              ))}
-            </View>
+        <View style={{ marginVertical: 8 }}>
+          <Text style={gStyles.h3}>Secciones Asignadas</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}
+          >
+            {!assignedSectionsNames.length && (
+              <Text style={gStyles.p}>Ninguna sección asignada</Text>
+            )}
+            {assignedSectionsNames.map((sectionName) => (
+              <View key={sectionName} style={{ margin: 4 }}>
+                <Chip
+                  title={sectionName}
+                  color={theme.secondary}
+                  titleColor="white"
+                  size="sm"
+                />
+              </View>
+            ))}
           </View>
-        )}
+        </View>
       </View>
     </ScrollView>
   )
