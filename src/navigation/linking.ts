@@ -52,7 +52,9 @@ export const linking: LinkingConfig = {
           ScreenOrders: 'orders',
           OrderDetails: 'orders/:orderId',
           ScreenNewOrder: 'orders/new',
-          ScreenSelectedOrders: 'orders/selected'
+          ScreenSelectedOrders: 'orders/selected',
+          EditOrder: 'orders/:orderId/edit',
+          ReorderOrder: 'orders/:orderId/reorder'
         }
       },
       StackCustomers: {
