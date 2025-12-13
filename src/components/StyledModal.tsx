@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import {
   Dimensions,
   Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -47,14 +46,14 @@ const StyledModal = ({
             setOpen(!open)
           }}
         >
-          <Pressable onPress={handleClose}>
+          <Pressable onPress={handleClose} style={{ flex: 1 }}>
             <View
               style={[
                 styles.centeredView,
                 open ? { backgroundColor: 'rgba(0,0,0,0.5)' } : {}
               ]}
             >
-              <Pressable>
+              <Pressable onPress={(e) => e.stopPropagation()}>
                 <View
                   style={[
                     styles.modalView,
