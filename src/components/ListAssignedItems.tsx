@@ -2,6 +2,7 @@ import { FlatList, Pressable, Text, View } from 'react-native'
 import { useEmployee } from '../contexts/employeeContext'
 import { useStore } from '../contexts/storeContext'
 import useModal from '../hooks/useModal'
+import { useShop } from '../hooks/useShop'
 import { formatItems } from '../libs/workshop.libs'
 import { gSpace, gStyles } from '../styles'
 import theme, { colors } from '../theme'
@@ -64,8 +65,36 @@ const RowSectionItems = ({
   layout = 'row',
   openModal = true
 }: RowSectionItemsProps) => {
-  const sortByNumber = (a: ItemType, b: ItemType) =>
-    parseFloat(a.number) - parseFloat(b.number)
+  const { shop } = useShop()
+  const preferView = shop?.preferences?.itemIdentifier || 'economicNumber'
+
+  const sortByNumber = (a: ItemType, b: ItemType) => {
+    let aValue: string | number
+    let bValue: string | number
+
+    if (preferView === 'serialNumber') {
+      aValue = a.serial || a.number || ''
+      bValue = b.serial || b.number || ''
+    } else if (preferView === 'sku') {
+      aValue = a.sku || a.number || ''
+      bValue = b.sku || b.number || ''
+    } else {
+      // economicNumber (default)
+      aValue = a.number || ''
+      bValue = b.number || ''
+    }
+
+    // Try numeric comparison first
+    const numA = parseFloat(String(aValue))
+    const numB = parseFloat(String(bValue))
+
+    if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
+      return numA - numB
+    }
+
+    // Fall back to string comparison
+    return String(aValue).localeCompare(String(bValue))
+  }
 
   if (layout === 'flex')
     return (
