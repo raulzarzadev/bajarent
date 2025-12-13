@@ -4,60 +4,67 @@ import type { CategoryType } from './RentItem'
 import type { WorkshopFlow, WorkshopStatus } from './WorkshopType'
 
 export enum ItemStatuses {
-	rented = 'rented',
-	pickedUp = 'pickedUp',
-	retired = 'retired'
+  rented = 'rented',
+  pickedUp = 'pickedUp',
+  retired = 'retired'
 }
 export type ItemStatus = keyof typeof ItemStatuses
 
 export type ItemBase = {
-	number: string
-	serial: string
-	brand: string
-	status: ItemStatus
-	createdOrderId?: string //* when item is created in a order. This is the order id
-	eco?: number
-	/**
-	 * @description category id
-	 */
-	category: CategoryType['id']
-	assignedSection?: string
-	categoryName?: string
-	assignedSectionName?: string
-	currentOrderId?: string
-	currentLocation?: string
-	needFix?: boolean
-	isRented?: boolean
-	isPickedUp?: boolean
-	retiredAt?: Date
-	retiredBy?: string
-	lastInventoryAt?: Date
-	lastInventoryBy?: string
-	workshopStatus?: WorkshopStatus
-	isExternalRepair?: boolean
-	/**
-	 * @deprecated use repairDescription
-	 */
-	repairInfo?: string
-	repairDetails?: RepairDetails
-	workshopFlow?: WorkshopFlow
-	[key: string]: any
+  number: string
+  serial: string
+  brand: string
+  status: ItemStatus
+  createdOrderId?: string //* when item is created in a order. This is the order id
+  eco?: number
+  /**
+   * @description category id
+   */
+  sku: string //* inventory id this can be changed by the user admin
+  category: CategoryType['id']
+  assignedSection?: string
+  categoryName?: string
+  assignedSectionName?: string
+  currentOrderId?: string
+  currentLocation?: string
+  needFix?: boolean
+  isRented?: boolean
+  isPickedUp?: boolean
+  retiredAt?: Date
+  retiredBy?: string
+  lastInventoryAt?: Date
+  lastInventoryBy?: string
+  workshopStatus?: WorkshopStatus
+  isExternalRepair?: boolean
+  /**
+   * @deprecated use repairDescription
+   */
+  repairInfo?: string
+  repairDetails?: RepairDetails
+  workshopFlow?: WorkshopFlow
+  [key: string]: any
 }
 export type RepairDetails = {
-	failDescription?: string
-	quotes?: OrderQuoteType[]
-	clientName?: string
-	contacts: ContactType[]
-	address?: string
-	location?: string
+  failDescription?: string
+  quotes?: OrderQuoteType[]
+  clientName?: string
+  contacts: ContactType[]
+  address?: string
+  location?: string
 }
 type ItemType = BaseType & ItemBase
 export type ExternalRepairItemsProps = {
-	repairDetails: RepairDetails
-	orderId: string
-	workshopStatus: ItemBase['workshopStatus']
+  repairDetails: RepairDetails
+  orderId: string
+  workshopStatus: ItemBase['workshopStatus']
 
-	scheduledAt?: Date
+  scheduledAt?: Date
+}
+
+export const item_color_status = {
+  [ItemStatuses.rented]: '#9ac6eaff',
+  [ItemStatuses.pickedUp]: '#d0efafff',
+  [ItemStatuses.retired]: '#b7b3b3ff'
 }
 
 export type ItemExternalRepairProps = ItemType & ExternalRepairItemsProps
