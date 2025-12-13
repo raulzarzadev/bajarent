@@ -9,10 +9,13 @@ import { ItemDetailsResumed, ItemFixDetailsE } from './ItemDetails'
 export type CartItemType = {
   item: Partial<ItemType & { scheduledAt?: Date }>
   showAssignedSection?: boolean
-  showSerialNumber?: boolean
   showFixTime?: boolean
   showFixNeeded?: boolean
   showScheduledTime?: boolean
+  /**
+   * @deprecated
+   */
+  showSerialNumber?: boolean
   /**
    * @deprecated
    */
@@ -21,7 +24,6 @@ export type CartItemType = {
 const CardItem = ({
   item,
   showAssignedSection,
-  showSerialNumber,
   showFixNeeded,
   showFixTime = true,
   showScheduledTime

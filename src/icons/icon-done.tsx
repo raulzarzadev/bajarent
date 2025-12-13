@@ -1,15 +1,40 @@
-export function DoneRingRoundFill(props) {
-	return (
-		<svg {...props} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-			<title>done-ring-round-fill</title>
-			<path
-				fill="currentColor"
-				fillRule="evenodd"
-				d="M12 21a9 9 0 0 0 7.51-13.961l-7.155 7.95a2 2 0 0 1-2.687.262L6.4 12.8a1 1 0 0 1 1.2-1.6l3.268 2.451l7.346-8.161A9 9 0 1 0 12 21"
-				clipRule="evenodd"
-			/>
-		</svg>
-	)
+export function DoneFill(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+    >
+      <title>done-fill</title>
+      <mask
+        id="SVGDM1w6dIU"
+        width="21"
+        height="19"
+        x=".774"
+        y="2.367"
+        fill="#000"
+        maskUnits="userSpaceOnUse"
+      >
+        <path fill="#fff" d="M.774 2.367h21v19h-21z" />
+        <path
+          fill="currentColor"
+          fill-rule="evenodd"
+          d="M18.774 6.633L9.167 18.375L4.4 14.8l1.2-1.6l3.233 2.425l8.393-10.258z"
+          clip-rule="evenodd"
+        />
+      </mask>
+      <path
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="4"
+        d="M18.774 6.633L9.167 18.375L4.4 14.8l1.2-1.6l3.233 2.425l8.393-10.258z"
+        clip-rule="evenodd"
+        mask="url(#SVGDM1w6dIU)"
+      />
+    </svg>
+  )
 }
 
-export default DoneRingRoundFill
+export default DoneFill
