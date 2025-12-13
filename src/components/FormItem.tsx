@@ -122,7 +122,7 @@ const FormItem = ({
               label="Id de inventario"
               name={'sku'}
               placeholder="Id de inventario"
-              helperText="Este campo es opcional pero debe ser único"
+              helperText="Este campo es opcional pero debe ser único (aún trabajamos en esta verificación)"
             />
           </View>
           <View style={styles.input}>
