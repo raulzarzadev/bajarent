@@ -24,12 +24,16 @@ const ScreenStaff = () => {
         width: '100%'
       }}
     >
-      <View style={gStyles.container}>
+      <View
+        style={{
+          padding: 16
+        }}
+      >
         <Text style={gStyles.h2}>Lista de empleados</Text>
         <ListStaff shop={shop} staff={shopStaff} />
         {canViewSections && (
           <View style={{ marginTop: 16 }}>
-            <Text style={gStyles.h2}>Areas</Text>
+            <Text style={gStyles.h2}>Empleados por area</Text>
             <TabStoreSections />
           </View>
         )}

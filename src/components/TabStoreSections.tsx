@@ -1,4 +1,3 @@
-import { View } from 'react-native'
 import { useStore } from '../contexts/storeContext'
 import useMyNav from '../hooks/useMyNav'
 import { store_section_icons } from '../types/SectionType'
@@ -11,12 +10,8 @@ const TabStoreSections = () => {
   const sections: TabType[] = storeSections
     ?.sort(sortSectionsByType)
     ?.map((section) => ({
-      content: (
-        <View style={{ marginTop: 16 }}>
-          <SectionDetailsE section={section} />
-        </View>
-      ),
-      title: section.name,
+      content: <SectionDetailsE section={section} />,
+      title: `${section.name} `,
       icon: store_section_icons[section.type],
       show: true
     }))

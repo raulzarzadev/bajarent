@@ -15,8 +15,8 @@ import { ListE } from './List'
 import ListRow, { type ListRowField } from './ListRow'
 import Loading from './Loading'
 import StyledModal from './StyledModal'
-import InputAssignSection, { InputAssignSections } from './InputAssingSection'
-import { set } from 'cypress/types/lodash'
+import { InputAssignSections } from './InputAssingSection'
+import dictionary from '../dictionary'
 
 const ListStaff = ({
   staff = [],
@@ -114,6 +114,10 @@ const StaffRow = ({
   const isStaffOwner = staff?.permissions?.isOwner
   const isStaffAdmin = staff?.permissions?.isAdmin
 
+  const roles = Object.entries(staff?.roles || {})
+    .filter(([, value]) => value)
+    .map(([key]) => key)
+
   if (loading) return <Loading id="staff details" />
 
   const fields: ListRowField[] = [
@@ -145,6 +149,19 @@ const StaffRow = ({
             gap: 16
           }}
         >
+          {roles.map((role) => (
+            <Chip
+              key={role}
+              title={dictionary(role)}
+              buttonStyle={{
+                backgroundColor: theme.neutral,
+                paddingVertical: 2,
+                paddingHorizontal: 4
+              }}
+              titleStyle={{ fontSize: 10 }}
+            />
+          ))}
+
           {isStaffAdmin && (
             <Chip
               title="Admin"
@@ -211,7 +228,7 @@ const StaffRow = ({
               setStaffId(staff?.id)
               modal.toggleOpen()
             }}
-            disabled={disabled || !employeeCanEditStaff}
+            disabled={disabled || !employeeCanEditStaff || isStaffOwner}
           />
           {handleAdd && (
             <Button
