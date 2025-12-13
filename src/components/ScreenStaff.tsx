@@ -8,44 +8,44 @@ import Loading from './Loading'
 import TabStoreSections from './TabStoreSections'
 
 const ScreenStaff = () => {
-  const { shop } = useShop()
-  const shopStaff = shop?.staff || []
-  const {
-    permissions: { isAdmin, isOwner, store: storePermissions }
-  } = useEmployee()
+	const { shop } = useShop()
+	const shopStaff = shop?.staff || []
+	const {
+		permissions: { isAdmin, isOwner, store: storePermissions }
+	} = useEmployee()
 
-  const canViewSections = isAdmin || isOwner || storePermissions.canEditStaff
+	const canViewSections = isAdmin || isOwner || storePermissions.canEditStaff
 
-  if (!shop) return <Loading id="ScreenStaff" />
+	if (!shop) return <Loading id="ScreenStaff" />
 
-  return (
-    <ScrollView
-      style={{
-        width: '100%'
-      }}
-    >
-      <View
-        style={{
-          padding: 16
-        }}
-      >
-        <Text style={gStyles.h2}>Lista de empleados</Text>
-        <ListStaff shop={shop} staff={shopStaff} />
-        {canViewSections && (
-          <View style={{ marginTop: 16 }}>
-            <Text style={gStyles.h2}>Empleados por area</Text>
-            <TabStoreSections />
-          </View>
-        )}
-      </View>
-    </ScrollView>
-  )
+	return (
+		<ScrollView
+			style={{
+				width: '100%'
+			}}
+		>
+			<View
+				style={{
+					padding: 16
+				}}
+			>
+				<Text style={gStyles.h2}>Lista de empleados</Text>
+				<ListStaff shop={shop} staff={shopStaff} />
+				{canViewSections && (
+					<View style={{ marginTop: 16 }}>
+						<Text style={gStyles.h2}>Empleados por area</Text>
+						<TabStoreSections />
+					</View>
+				)}
+			</View>
+		</ScrollView>
+	)
 }
 
 export const ScreenStaffE = () => (
-  <ErrorBoundary componentName="ScreenStaff">
-    <ScreenStaff />
-  </ErrorBoundary>
+	<ErrorBoundary componentName="ScreenStaff">
+		<ScreenStaff />
+	</ErrorBoundary>
 )
 
 export default ScreenStaff

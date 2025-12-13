@@ -5,107 +5,101 @@ import type { IconName } from '../Icon'
 import InputCheckbox from './InputCheckbox'
 
 export type InputRadioOption<T = string> = {
-  label: string
-  value: T
-  color?: string
-  disabled?: boolean
-  iconLabel?: IconName
-  iconCheck?: IconName
+	label: string
+	value: T
+	color?: string
+	disabled?: boolean
+	iconLabel?: IconName
+	iconCheck?: IconName
 }
 export type InputCheckboxesProps<T = string> = {
-  label?: string
-  options: InputRadioOption<T>[]
-  textStyle?: any
-  layout?: 'row' | 'column'
-  value?: T[]
-  onChange?: (value: T[]) => void
-  disabled?: boolean
-  stylesContainer?: ViewStyle
-  stylesRow?: ViewStyle
-  stylesOption?: ViewStyle
-  variant?: 'ghost' | 'outline'
-  helperText?: string
-  errorText?: string
+	label?: string
+	options: InputRadioOption<T>[]
+	textStyle?: any
+	layout?: 'row' | 'column'
+	value?: T[]
+	onChange?: (value: T[]) => void
+	disabled?: boolean
+	stylesContainer?: ViewStyle
+	stylesRow?: ViewStyle
+	stylesOption?: ViewStyle
+	variant?: 'ghost' | 'outline'
+	helperText?: string
+	errorText?: string
 }
 
 const InputCheckboxes = <T extends string = string>({
-  label,
-  options,
-  textStyle,
-  layout = 'row',
-  onChange,
-  value,
-  disabled,
-  stylesContainer,
-  stylesRow,
-  stylesOption,
-  variant = 'outline',
-  helperText,
-  errorText
+	label,
+	options,
+	textStyle,
+	layout = 'row',
+	onChange,
+	value,
+	disabled,
+	stylesContainer,
+	stylesRow,
+	stylesOption,
+	variant = 'outline',
+	helperText,
+	errorText
 }: InputCheckboxesProps<T>) => {
-  const [_value, _setValue] = useState<T[]>(value || [])
-  const handleChooseOpt = (value: T) => {
-    const newValue = [..._value]
-    if (newValue.includes(value)) {
-      newValue.splice(newValue.indexOf(value), 1)
-    } else {
-      newValue.push(value)
-    }
-    _setValue(newValue)
-    onChange?.(newValue)
-  }
+	const [_value, _setValue] = useState<T[]>(value || [])
+	const handleChooseOpt = (value: T) => {
+		const newValue = [..._value]
+		if (newValue.includes(value)) {
+			newValue.splice(newValue.indexOf(value), 1)
+		} else {
+			newValue.push(value)
+		}
+		_setValue(newValue)
+		onChange?.(newValue)
+	}
 
-  return (
-    <View
-      style={[
-        {
-          width: '100%'
-        },
-        stylesContainer
-      ]}
-    >
-      {label && (
-        <Text style={[gStyles.tBold, { marginBottom: 2 }]}>{label}</Text>
-      )}
-      <View
-        style={[
-          {
-            flexDirection: layout === 'row' ? 'row' : 'column',
-            flexWrap: 'wrap'
-          },
-          stylesRow
-        ]}
-      >
-        {options.map((option) => (
-          <InputCheckbox
-            key={option.label}
-            value={_value.includes(option.value)}
-            label={option.label}
-            setValue={() => handleChooseOpt(option.value)}
-            color={option.color}
-            disabled={option.disabled || disabled}
-            iconLabel={option.iconLabel}
-            style={stylesOption}
-            textStyle={textStyle}
-            iconCheck={option.iconCheck}
-            variant={variant}
-          ></InputCheckbox>
-        ))}
-      </View>
-      <View>
-        {!!errorText && (
-          <Text style={[gStyles.helperError, { marginTop: 4, marginLeft: 4 }]}>
-            {errorText}
-          </Text>
-        )}
-        {!!helperText && !errorText && (
-          <Text style={[gStyles.helper, { marginTop: 4, marginLeft: 4 }]}>
-            {helperText}
-          </Text>
-        )}
-      </View>
-    </View>
-  )
+	return (
+		<View
+			style={[
+				{
+					width: '100%'
+				},
+				stylesContainer
+			]}
+		>
+			{label && <Text style={[gStyles.tBold, { marginBottom: 2 }]}>{label}</Text>}
+			<View
+				style={[
+					{
+						flexDirection: layout === 'row' ? 'row' : 'column',
+						flexWrap: 'wrap'
+					},
+					stylesRow
+				]}
+			>
+				{options.map(option => (
+					<InputCheckbox
+						key={option.label}
+						value={_value.includes(option.value)}
+						label={option.label}
+						setValue={() => handleChooseOpt(option.value)}
+						color={option.color}
+						disabled={option.disabled || disabled}
+						iconLabel={option.iconLabel}
+						style={stylesOption}
+						textStyle={textStyle}
+						iconCheck={option.iconCheck}
+						variant={variant}
+					></InputCheckbox>
+				))}
+			</View>
+			<View>
+				{!!errorText && (
+					<Text style={[gStyles.helperError, { marginTop: 4, marginLeft: 4 }]}>{errorText}</Text>
+				)}
+				{!!helperText && !errorText && (
+					<Text style={[gStyles.helper, { marginTop: 4, marginLeft: 4 }]}>{helperText}</Text>
+				)}
+			</View>
+		</View>
+	)
 }
 
 export default InputCheckboxes
