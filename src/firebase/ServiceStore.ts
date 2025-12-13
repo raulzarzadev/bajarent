@@ -230,6 +230,24 @@ export class ServiceStoresClass extends FirebaseGenericService<StoreType> {
     return this.update(storeId, { staff: updatedStaff })
   }
 
+  async updateStaffSectionsAssigned({
+    storeId,
+    staffId,
+    sectionsAssigned
+  }: {
+    storeId: string
+    staffId: string
+    sectionsAssigned: string[]
+  }) {
+    const store = await this.get(storeId)
+    if (!store) throw new Error('Store not found')
+    const currentStaff = store.staff || []
+    const updatedStaff = currentStaff.map((s) =>
+      s.id === staffId ? { ...s, sectionsAssigned } : s
+    )
+    return this.update(storeId, { staff: updatedStaff })
+  }
+
   // Agrega tus métodos aquí
   async customMethod() {
     // Implementa tu método personalizado

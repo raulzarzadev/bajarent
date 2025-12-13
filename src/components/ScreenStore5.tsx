@@ -17,7 +17,6 @@ import { BalanceOrders } from './StoreBalance/BalanceOrders'
 import { StoreBalanceE } from './StoreBalance/StoreBalance'
 import { StoreDetailsE } from './StoreDetails'
 import { TabStoreConfiguration } from './TabStoreConfigurationt'
-import TabStoreSections from './TabStoreSections'
 import Tabs from './Tabs'
 
 const ScreenStore = (props) => {
@@ -38,8 +37,6 @@ const ScreenStore = (props) => {
   const canViewStaff =
     isAdmin || isOwner || canEditStaff || storePermissions.disabledStaff
 
-  const canViewSections = isAdmin || isOwner
-
   const canViewCashbox = isAdmin || isOwner || storePermissions.canViewCashbox
   const canViewMovements = isAdmin || isOwner || storePermissions.canViewCashbox
 
@@ -49,7 +46,6 @@ const ScreenStore = (props) => {
   }
 
   const CheckedTabMovements = CheckedTab(TabMovements)
-  const CheckedTabSections = CheckedTab(TabStoreSections)
   const CheckedTabStaff = CheckedTab(TabStaff)
   const CheckedTabItems = CheckedTab(TabItems)
   const CheckedTabClients = CheckedTab(TabClients)
@@ -58,6 +54,7 @@ const ScreenStore = (props) => {
 
   if (shop === undefined) return <Loading />
   if (shop === null) return <Text>Store not found</Text>
+
   return (
     <ScrollView ref={scrollViewRef}>
       {!!user && (
@@ -91,13 +88,6 @@ const ScreenStore = (props) => {
               show: canViewStaff,
               icon: 'profile'
               //icon: 'profile'
-            },
-            {
-              title: 'Areas',
-              content: <CheckedTabSections />,
-              show: canViewSections,
-              icon: 'list'
-              // icon: 'windows'
             },
             {
               title: 'Clientes',

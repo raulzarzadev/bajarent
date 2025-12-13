@@ -15,6 +15,8 @@ import { ListE } from './List'
 import ListRow, { type ListRowField } from './ListRow'
 import Loading from './Loading'
 import StyledModal from './StyledModal'
+import InputAssignSection, { InputAssignSections } from './InputAssingSection'
+import { set } from 'cypress/types/lodash'
 
 const ListStaff = ({
   staff = [],
@@ -51,7 +53,6 @@ const ListStaff = ({
         ComponentRow={({ item }) => <StaffRow staff={item} shop={shop} />}
         data={staff}
         onPressRow={(itemId) => {
-          console.log({ itemId })
           toStaff?.({
             to: 'edit',
             id: itemId
@@ -87,6 +88,7 @@ const StaffRow = ({
   const {
     permissions: { canEditStaff, isAdmin, isOwner }
   } = useEmployee()
+  const [loading, setLoading] = useState(false)
 
   const [staffId, setStaffId] = useState('')
   const [disabled, setDisabled] = useState(false)
@@ -111,6 +113,8 @@ const StaffRow = ({
 
   const isStaffOwner = staff?.permissions?.isOwner
   const isStaffAdmin = staff?.permissions?.isAdmin
+
+  if (loading) return <Loading id="staff details" />
 
   const fields: ListRowField[] = [
     {
@@ -166,6 +170,23 @@ const StaffRow = ({
           )}
 
           <InputDisabledStaff staffId={staff?.id} />
+          <InputAssignSections
+            justIcon
+            currentSections={staff?.sectionsAssigned}
+            setNewSections={async ({ sectionIds }) => {
+              setLoading(true)
+
+              const [err, res] = await catchError(
+                ServiceStores.updateStaffSectionsAssigned({
+                  storeId: shop.id,
+                  staffId: staff?.id,
+                  sectionsAssigned: sectionIds
+                })
+              )
+              if (__DEV__) console.log({ err, res })
+              setLoading(false)
+            }}
+          />
           <Button
             size="small"
             icon="edit"
@@ -228,6 +249,7 @@ const StaffRow = ({
       width: 'rest'
     }
   ]
+
   return <ListRow fields={fields} style={{ marginVertical: 2 }} />
 }
 

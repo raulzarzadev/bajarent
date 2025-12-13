@@ -12,13 +12,13 @@ export type InputRadioOption<T = string> = {
   iconLabel?: IconName
   iconCheck?: IconName
 }
-export type InputRadiosProps<T = string> = {
+export type InputCheckboxesProps<T = string> = {
   label?: string
   options: InputRadioOption<T>[]
   textStyle?: any
   layout?: 'row' | 'column'
-  value?: T
-  onChange?: (value: T) => void
+  value?: T[]
+  onChange?: (value: T[]) => void
   disabled?: boolean
   stylesContainer?: ViewStyle
   stylesRow?: ViewStyle
@@ -28,7 +28,7 @@ export type InputRadiosProps<T = string> = {
   errorText?: string
 }
 
-const InputRadios = <T extends string = string>({
+const InputCheckboxes = <T extends string = string>({
   label,
   options,
   textStyle,
@@ -42,11 +42,17 @@ const InputRadios = <T extends string = string>({
   variant = 'outline',
   helperText,
   errorText
-}: InputRadiosProps<T>) => {
-  const [_value, _setValue] = useState<T>(value)
+}: InputCheckboxesProps<T>) => {
+  const [_value, _setValue] = useState<T[]>(value || [])
   const handleChooseOpt = (value: T) => {
-    _setValue(value)
-    onChange?.(value)
+    const newValue = [..._value]
+    if (newValue.includes(value)) {
+      newValue.splice(newValue.indexOf(value), 1)
+    } else {
+      newValue.push(value)
+    }
+    _setValue(newValue)
+    onChange?.(newValue)
   }
 
   return (
@@ -73,7 +79,7 @@ const InputRadios = <T extends string = string>({
         {options.map((option) => (
           <InputCheckbox
             key={option.label}
-            value={_value === option.value}
+            value={_value.includes(option.value)}
             label={option.label}
             setValue={() => handleChooseOpt(option.value)}
             color={option.color}
@@ -102,4 +108,4 @@ const InputRadios = <T extends string = string>({
   )
 }
 
-export default InputRadios
+export default InputCheckboxes
