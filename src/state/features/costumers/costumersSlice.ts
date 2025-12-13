@@ -110,11 +110,12 @@ export const useCustomers = (props?: { customersIds?: string[] }) => {
   const customers = useSelector(selectCustomers)
 
   const fetch = async (props?: { ids?: string[] }) => {
+    const onDemandCustomers = countCustomersIds || props?.ids || []
     return await dispatch(
       fetchCustomersThunk({
         storeId,
         readAll: permissions?.customers?.read,
-        onDemandList: countCustomersIds || props?.ids
+        onDemandList: onDemandCustomers
       })
     )
   }

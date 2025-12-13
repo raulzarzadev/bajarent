@@ -132,7 +132,7 @@ const useInitializeShop = () => {
 }
 
 const useInitializeCustomers = () => {
-  const { fetch: fetchCustomers, data } = useCustomers()
+  const { fetch: fetchCustomers } = useCustomers()
   const { orders, loading } = useOrdersRedux()
 
   useEffect(() => {
@@ -141,10 +141,8 @@ const useInitializeCustomers = () => {
       const uniqueCustomerIds = Array.from(
         new Set(orders?.map((o) => o.customerId).filter((id) => id))
       )
-      console.log({ orders: uniqueCustomerIds, loading })
       if (uniqueCustomerIds.length) fetchCustomers({ ids: uniqueCustomerIds })
     }
   }, [loading])
-  console.log({ data })
   return null
 }
