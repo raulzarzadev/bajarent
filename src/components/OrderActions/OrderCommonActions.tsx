@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
 import { View } from 'react-native'
 import { useOrderDetails } from '../../contexts/orderContext'
@@ -44,7 +43,6 @@ const OrderCommonActions = ({
   userId
 }: OrderCommonActionsType) => {
   const { order } = useOrderDetails()
-  const { navigate } = useNavigation()
   const { toOrders } = useMyNav()
   const [cancelledReason, setCancelledReason] = useState('')
 
@@ -57,9 +55,6 @@ const OrderCommonActions = ({
   const canCopy = true
 
   const handleReorder = () => {
-    // // @ts-expect-error
-
-    // navigate('ReorderOrder', { orderId })
     toOrders({ to: 'reorder', id: orderId })
   }
   const handleEdit = () => {
