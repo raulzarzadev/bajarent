@@ -13,7 +13,8 @@ const iconMap: Record<string, IconName> = {
   close: 'close',
   check: 'done',
   'pencil-outline': 'pencil',
-  'menu-down': 'menuDown'
+  'menu-down': 'menuDown',
+  'calendar-blank': 'calendar'
 }
 
 const MaterialCommunityIcon = (
