@@ -16,148 +16,145 @@ import { StackWorkshopE } from './StackWorkshop'
 const Tab = createBottomTabNavigator<RootTabParamList>()
 
 const BottomAppBar = () => {
-  const { store } = useStore()
-  const { permissions, employee } = useEmployee()
-  const viewWorkshop =
-    employee?.roles?.technician ||
-    employee?.rol === 'technician' ||
-    permissions?.isAdmin ||
-    permissions?.isOwner
+	const { store } = useStore()
+	const { permissions, employee } = useEmployee()
+	const viewWorkshop =
+		employee?.roles?.technician ||
+		employee?.rol === 'technician' ||
+		permissions?.isAdmin ||
+		permissions?.isOwner
 
-  const showProfileButton = true
-  const showOrdersButton =
-    permissions.orders.canViewMy ||
-    permissions.orders.canViewAll ||
-    permissions.isAdmin
+	const showProfileButton = true
+	const showOrdersButton =
+		permissions.orders.canViewMy || permissions.orders.canViewAll || permissions.isAdmin
 
-  const showStoreButton = !!store
-  const viewItemsTab =
-    permissions.items.canViewAllItems ||
-    permissions.items.canViewMyItems ||
-    permissions.isAdmin ||
-    permissions.isOwner
-  const showCustomerButton = permissions?.customers?.read
-  return (
-    <Tab.Navigator
-      id="RootTabs"
-      screenOptions={({ route }) => {
-        return {
-          tabBarIcon: ({ color }) => {
-            const icons: Record<keyof RootTabParamList, IconName> = {
-              Store: 'store',
-              StackMyItems: 'washMachine',
-              Workshop: 'tools',
-              StackOrders: 'orders',
-              StackCustomers: 'customerCard',
-              Profile: 'profile',
-              Components: 'components',
-              StackItems: 'washMachine'
-            }
-            return (
-              <Icon
-                icon={icons[route.name]}
-                // size={size}
-                color={color}
-              />
-            )
-          },
+	const showStoreButton = !!store
+	const viewItemsTab =
+		permissions.items.canViewAllItems ||
+		permissions.items.canViewMyItems ||
+		permissions.isAdmin ||
+		permissions.isOwner
+	const showCustomerButton = permissions?.customers?.read
+	return (
+		<Tab.Navigator
+			id="RootTabs"
+			screenOptions={({ route }) => {
+				return {
+					tabBarIcon: ({ color }) => {
+						const icons: Record<keyof RootTabParamList, IconName> = {
+							Store: 'store',
+							StackMyItems: 'washMachine',
+							Workshop: 'tools',
+							StackOrders: 'orders',
+							StackCustomers: 'customerCard',
+							Profile: 'profile',
+							Components: 'components',
+							StackItems: 'washMachine'
+						}
+						return (
+							<Icon
+								icon={icons[route.name]}
+								// size={size}
+								color={color}
+							/>
+						)
+					},
 
-          tabBarIconStyle: {
-            marginTop: 0 //* <- Avoid the scroll small scroll in all  app
-          },
-          //* shows the staff label on the right side of the header specially for __DEV__ components
-          headerRight() {
-            return <MyStaffLabel />
-          }
-        }
-      }}
-    >
-      {showStoreButton && (
-        <Tab.Screen
-          name="Store"
-          component={StackStoreE}
-          options={{
-            title: 'Tienda ',
-            headerShown: false
-          }}
-        />
-      )}
+					tabBarIconStyle: {
+						marginTop: 0 //* <- Avoid the scroll small scroll in all  app
+					},
+					//* shows the staff label on the right side of the header specially for __DEV__ components
+					headerRight() {
+						return <MyStaffLabel />
+					}
+				}
+			}}
+		>
+			{showStoreButton && (
+				<Tab.Screen
+					name="Store"
+					component={StackStoreE}
+					options={{
+						title: 'Tienda ',
+						headerShown: false
+					}}
+				/>
+			)}
 
-      {viewItemsTab && (
-        <Tab.Screen
-          name="StackMyItems"
-          options={{
-            title: 'Artículos',
-            headerShown: false
-          }}
-          component={StackMyItems}
-        />
-      )}
+			{viewItemsTab && (
+				<Tab.Screen
+					name="StackMyItems"
+					options={{
+						title: 'Artículos',
+						headerShown: false
+					}}
+					component={StackMyItems}
+				/>
+			)}
 
-      {viewWorkshop && (
-        <Tab.Screen
-          name="Workshop"
-          options={{
-            headerShown: false,
-            title: 'Taller'
-          }}
-          component={StackWorkshopE}
-        />
-      )}
+			{viewWorkshop && (
+				<Tab.Screen
+					name="Workshop"
+					options={{
+						headerShown: false,
+						title: 'Taller'
+					}}
+					component={StackWorkshopE}
+				/>
+			)}
 
-      {showOrdersButton && (
-        <Tab.Screen
-          name="StackOrders"
-          component={StackOrders}
-          options={() => ({
-            headerShown: false,
-            title: 'Ordenes'
-          })}
-        />
-      )}
+			{showOrdersButton && (
+				<Tab.Screen
+					name="StackOrders"
+					component={StackOrders}
+					options={() => ({
+						headerShown: false,
+						title: 'Ordenes'
+					})}
+				/>
+			)}
 
-      {showCustomerButton && (
-        <Tab.Screen
-          name="StackCustomers"
-          component={StackCustomersE}
-          options={() => ({
-            headerShown: false,
-            title: 'Clientes'
-          })}
-        />
-      )}
+			{showCustomerButton && (
+				<Tab.Screen
+					name="StackCustomers"
+					component={StackCustomersE}
+					options={() => ({
+						headerShown: false,
+						title: 'Clientes'
+					})}
+				/>
+			)}
 
-      {showProfileButton && (
-        <Tab.Screen
-          name="Profile"
-          component={StackProfile}
-          options={{
-            title:
-              employee?.name?.split(' ')?.[0]?.substring(0, 12) || 'Perfil',
-            headerShown: false
-          }}
-        />
-      )}
+			{showProfileButton && (
+				<Tab.Screen
+					name="Profile"
+					component={StackProfile}
+					options={{
+						title: employee?.name?.split(' ')?.[0]?.substring(0, 12) || 'Perfil',
+						headerShown: false
+					}}
+				/>
+			)}
 
-      {__DEV__ && (
-        <Tab.Screen
-          name="Components"
-          component={ScreenComponents}
-          options={{
-            title: 'Componentes'
-          }}
-        />
-      )}
-    </Tab.Navigator>
-  )
+			{__DEV__ && (
+				<Tab.Screen
+					name="Components"
+					component={ScreenComponents}
+					options={{
+						title: 'Componentes'
+					}}
+				/>
+			)}
+		</Tab.Navigator>
+	)
 }
 
 export const BottomAppBarE = () => {
-  return (
-    <ErrorBoundary componentName="NotUserTabs">
-      <BottomAppBar />
-    </ErrorBoundary>
-  )
+	return (
+		<ErrorBoundary componentName="NotUserTabs">
+			<BottomAppBar />
+		</ErrorBoundary>
+	)
 }
 
 export default BottomAppBar

@@ -36,7 +36,7 @@ const customSvgIcon = color =>
 	//@ts-expect-error
 	new L.DivIcon({
 		html: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="10" stroke="black" stroke-width="1" fill=${color} />
+    <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="1" fill=${color} />
   </svg>`,
 		className: 'custom-svg-icon', // Optional: Add a custom class for additional styling
 		iconSize: [14, 14], // size of the icon

@@ -5,6 +5,7 @@ import { useOrderDetails } from '../contexts/orderContext'
 import { useStore } from '../contexts/storeContext'
 import dictionary from '../dictionary'
 import useMyNav from '../hooks/useMyNav'
+import { useShop } from '../hooks/useShop'
 import { translateTime } from '../libs/expireDate'
 import asDate, { dateFormat } from '../libs/utils-date'
 import { gSpace, gStyles } from '../styles'
@@ -40,13 +41,12 @@ import SpanUser from './SpanUser'
 import TextInfo from './TextInfo'
 
 const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
-	const { store } = useStore()
+	const { shop } = useShop()
 	if (order?.isConsolidated) {
 		return <View>Ordenes consolidadas ya no son validas</View>
 	}
-
-	const orderFields = store?.orderFields?.[order?.type]
-
+	const orderFields = shop?.orderFields?.[order?.type]
+	const shopId = shop.id
 	return (
 		<View>
 			<View>
@@ -61,7 +61,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 				>
 					<OrderDirectivesE order={order} />
 				</View>
-				{order.orderIsNull && (
+				{order?.orderIsNull && (
 					<View>
 						<TextInfo
 							type="warning"
@@ -82,7 +82,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 				</OrderDetailSection>
 
 				<OrderDetailSection>
-					{order.type === order_type.RENT && (
+					{order?.type === order_type.RENT && (
 						<ErrorBoundary componentName="RentItemsInfo">
 							<RentItemsInfo order={order} />
 							<Totals items={order.items} />
@@ -134,7 +134,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 								orderId={order.id}
 								orderType={'RENT'}
 								orderStatus={order.status}
-								storeId={order.storeId}
+								storeId={shopId}
 							/>
 						)}
 						{order.type === order_type.SALE && (
@@ -142,7 +142,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 								orderId={order.id}
 								orderType={'SALE'}
 								orderStatus={order.status}
-								storeId={order.storeId}
+								storeId={shopId}
 							/>
 						)}
 						{order.type === order_type.REPAIR && (
@@ -150,7 +150,7 @@ const OrderDetailsA = ({ order }: { order: Partial<OrderType> }) => {
 								orderId={order.id}
 								orderType={'REPAIR'}
 								orderStatus={order.status}
-								storeId={order.storeId}
+								storeId={shopId}
 							/>
 						)}
 					</ErrorBoundary>

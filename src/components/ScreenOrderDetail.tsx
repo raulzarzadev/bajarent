@@ -1,6 +1,7 @@
 import { ScrollView, View } from 'react-native'
 import { OrderProvider, useOrderDetails } from '../contexts/orderContext'
 import ErrorBoundary from './ErrorBoundary'
+import Loading from './Loading'
 import { OrderDetailsE } from './OrderDetails'
 
 const ScreenOrderDetail = () => {
@@ -24,6 +25,8 @@ const ScreenOrderDetail = () => {
 
 const OrderDetailsContext = () => {
 	const { order } = useOrderDetails()
+	if (order === undefined) return <Loading />
+
 	return <OrderDetailsE order={order} />
 }
 export const ScreenOrderDetailE = props => (

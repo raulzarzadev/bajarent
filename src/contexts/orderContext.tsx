@@ -127,12 +127,14 @@ const OrderProvider = ({
 	return (
 		<OrderContext.Provider
 			value={{
-				order: {
-					...order,
-					comments: orderComments,
-					payments,
-					orderIsNull: order === null
-				},
+				order: order
+					? {
+							...order,
+							comments: orderComments,
+							payments,
+							orderIsNull: order === null
+						}
+					: undefined,
 				setOrder,
 				payments,
 				setPaymentsCount,
