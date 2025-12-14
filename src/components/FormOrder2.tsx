@@ -39,7 +39,7 @@ export const FormOrder2 = ({
   const [loading, setLoading] = useState(false)
 
   const { data: customers } = useCustomers()
-  if (__DEV__) console.log({ customers })
+  if (__DEV__) console.log('DEV:', { customers })
   const { isEmployeeReady } = useEmployee()
   const { shop } = useShop()
   const defaultOrderType = shop?.orderTypes.RENT
