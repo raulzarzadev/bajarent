@@ -121,8 +121,23 @@ const AddExtendExpire = ({
                 style={{ textAlign: 'center' }}
               >{` ${newExpireDate()}`}</Text>
             </View>
+            {/* <View style={{ marginVertical: 8 }}>
+              <InputRadios
+                layout="row"
+                label="Motivo"
+                options={[
+                  { label: 'Renovación', value: 'order_renew' },
+                  { label: 'Artículo', value: 'item_issues' },
+                  { label: 'Pagos', value: 'payment_issues' },
+                  { label: 'Tiempos', value: 'product_issues' },
+                  { label: 'Otro', value: 'other' }
+                ]}
+                // onChange={(value) => setUnit(value)}
+                // value={unit}
+              />
+            </View> */}
             <InputTextStyled
-              placeholder="Motivo"
+              placeholder="Comentarios"
               onChangeText={setReason}
               value={reason}
             />
