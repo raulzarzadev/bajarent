@@ -26,7 +26,7 @@ const InputCheckbox = ({
   value = false,
   style,
   textStyle,
-  color = theme.success,
+  color = theme.accent,
   disabled,
   iconLabel,
   iconCheck,
@@ -63,8 +63,7 @@ const InputCheckbox = ({
           width: 24,
           height: 24,
           justifyContent: 'center',
-          alignItems: 'center',
-          flex: 1
+          alignItems: 'center'
         }}
       >
         {iconCheck ? (
@@ -89,7 +88,7 @@ const InputCheckbox = ({
         style={[
           {
             textDecorationLine: 'none',
-            marginLeft: 2,
+            marginLeft: 4,
             opacity: disabled ? 0.4 : 1
             //  textTransform: 'capitalize'
           },
