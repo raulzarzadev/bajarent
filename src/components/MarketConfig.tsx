@@ -88,7 +88,7 @@ export const MarketConfig = (props: MarketConfigProps) => {
 
             {values.marketVisible && (
               <View style={styles.section}>
-                <Text style={[gStyles.h3, { marginBottom: gSpace(1) }]}>
+                <Text style={[gStyles.h2, { marginBottom: gSpace(1) }]}>
                   Áreas de servicio
                 </Text>
                 <Text style={[{ marginBottom: gSpace(2) }]}>
