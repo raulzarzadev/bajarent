@@ -98,12 +98,15 @@ export const MarketConfig = (props: MarketConfigProps) => {
                 </Text>
                 <Text style={[{ marginBottom: gSpace(2) }]}>
                   * Ejemplo: Estado: Baja California, Municipio: Tijuana,
-                  Colonia: Centro, Notas: Solo fines de semana.
+                  Colonia: Centro y Norte hasta Chametla , Notas: Solo fines de
+                  semana.
                 </Text>
                 <Text style={[{ marginBottom: gSpace(2) }]}>
                   * Recuerda que las personas rara vez buscan por áreas muy
                   específicas, así que no es necesario agregar demasiadas áreas
-                  detalladas. Con 1 o 2 áreas generales suele ser suficiente.
+                  detalladas. Con 1 o 2 áreas generales suele ser suficiente
+                  pero esto debe ajustarse a las necesidades de tu negocio y
+                  operación.
                 </Text>
                 <FieldArray
                   name="serviceAreas"
@@ -134,13 +137,14 @@ export const MarketConfig = (props: MarketConfigProps) => {
                               />
                               <FormikInputValue
                                 name={`serviceAreas.${index}.neighborhood`}
-                                placeholder="Colonia"
-                                style={{ marginBottom: gSpace(1) }}
+                                placeholder="Colonia (s) "
+                                containerStyle={{ marginBottom: gSpace(1) }}
+                                helperText="Puede especificar varias colonias separadas por comas o areas populares"
                               />
                               <FormikInputValue
                                 name={`serviceAreas.${index}.notes`}
                                 placeholder="Notas"
-                                style={{ marginBottom: gSpace(1) }}
+                                containerStyle={{ marginBottom: gSpace(1) }}
                                 multiline
                                 numberOfLines={2}
                               />
