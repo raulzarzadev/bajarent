@@ -384,6 +384,9 @@ export const FormOrder2 = ({
                     handleSubmit()
                   }}
                   label={'Guardar'}
+                  icon="save"
+                  color="success"
+                  buttonStyles={{ marginHorizontal: 'auto', marginVertical: 8 }}
                 />
               </View>
             )
