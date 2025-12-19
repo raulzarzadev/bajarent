@@ -12,6 +12,7 @@ import Button from '../Button'
 import CurrencyAmount from '../CurrencyAmount'
 import ErrorBoundary from '../ErrorBoundary'
 import StyledModal from '../StyledModal'
+import { useStore } from '../../contexts/storeContext'
 
 const ButtonDownloadOrder = () => {
   const modal = useModal({ title: 'Descargar PDF' })
@@ -44,6 +45,7 @@ export const ButtonDownloadOrderE = () => (
 
 export const OrderPDF = () => {
   const { order, customer, payments } = useOrderDetails()
+  const { categories } = useStore()
   const { toPDF, targetRef } = usePDF({
     filename: `orden-${order?.folio}-${customer.name.split(' ').join('-')}.pdf`,
     page: {
@@ -58,7 +60,12 @@ export const OrderPDF = () => {
     //   method: 'open'
   })
 
-  console.log({ orderItems: order?.items })
+  console.log({
+    items: order.items,
+    createdAt: order?.createdAt,
+    delivederd: order?.deliveredAt
+  })
+  const printedAt = new Date()
 
   return (
     <>
@@ -113,6 +120,17 @@ export const OrderPDF = () => {
             <Text style={{ fontSize: 14, color: '#666', textAlign: 'center' }}>
               Fecha de inicio:{' '}
               {dateFormat(asDate(order?.repairingAt), 'EE dd/MMM/yy HH:mm')}
+            </Text>
+          )}
+          {!!order?.createdAt && (
+            <Text style={{ fontSize: 14, color: '#666', textAlign: 'center' }}>
+              Creada:{' '}
+              {dateFormat(asDate(order?.createdAt), 'EE dd/MMM/yy HH:mm')}
+            </Text>
+          )}
+          {!!printedAt && (
+            <Text style={{ fontSize: 14, color: '#666', textAlign: 'center' }}>
+              Impresa: {dateFormat(asDate(printedAt), 'EE dd/MMM/yy HH:mm')}
             </Text>
           )}
           {!!order?.deliveredAt && (
@@ -233,6 +251,10 @@ export const OrderPDF = () => {
               const itemPrice =
                 saleItem.priceSelected?.amount || saleItem.price || 0
               const itemQty = saleItem.quantity || saleItem.priceQty || 1
+              const brand = saleItem.brand || ''
+              const category =
+                categories.find((c) => c.id === saleItem.category).name || ''
+
               return (
                 <View
                   key={saleItem?.id || index}
@@ -245,7 +267,10 @@ export const OrderPDF = () => {
                   }}
                 >
                   <Text style={{ fontSize: 16, marginBottom: 5 }}>
-                    Producto: {saleItem.categoryName || saleItem.brand || 'N/A'}
+                    Producto: {category}
+                  </Text>
+                  <Text style={{ fontSize: 16, marginBottom: 5 }}>
+                    Marca: {brand}
                   </Text>
                   <Text style={{ fontSize: 16, marginBottom: 5 }}>
                     Cantidad: {itemQty}
@@ -261,6 +286,17 @@ export const OrderPDF = () => {
                   <Text style={{ fontSize: 16, marginBottom: 5 }}>
                     Total: <CurrencyAmount amount={itemPrice * itemQty} />
                   </Text>
+                  {saleItem.guaranteeMonths && (
+                    <View>
+                      <Text style={{ fontSize: 16, marginBottom: 5 }}>
+                        Este producto cuenta con una Garantía de{' '}
+                        <Text style={gStyles.tBold}>
+                          {saleItem.guaranteeMonths}
+                        </Text>{' '}
+                        meses.
+                      </Text>
+                    </View>
+                  )}
                 </View>
               )
             })}

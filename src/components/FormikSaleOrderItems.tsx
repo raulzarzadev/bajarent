@@ -81,7 +81,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                         />
 
                         <FormikInputValue
-                          name={`items.${index}.name`}
+                          name={`items.${index}.brand`}
                           placeholder="Marca"
                           type="text"
                           style={{ marginVertical: 4, flex: 1 }}
