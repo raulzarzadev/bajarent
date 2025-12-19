@@ -1,5 +1,5 @@
 import { Image, Text, View } from 'react-native'
-import generatePDF, { usePDF } from 'react-to-pdf'
+import { usePDF } from 'react-to-pdf'
 // Corregir la importación de RNHTMLtoPDF
 import { useOrderDetails } from '../../contexts/orderContext'
 import dictionary from '../../dictionary'
