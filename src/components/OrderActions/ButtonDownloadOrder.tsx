@@ -485,7 +485,7 @@ export const OrderPDF = () => {
               />
             </View>
           ) : (
-            <Text style={{ fontSize: 16, marginBottom: 5 }}>Son firma ❌</Text>
+            <Text style={{ fontSize: 16, marginBottom: 5 }}>Sin firma</Text>
           )}
         </View>
       </View>
