@@ -27,7 +27,6 @@ export type ItemSelected = {
   serial?: string
   number?: string
   sku?: string
-  guaranteeMonths?: number
   // priceId?: string
   // timestamp?: Date
 }
