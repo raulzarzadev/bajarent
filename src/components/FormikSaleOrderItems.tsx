@@ -14,7 +14,7 @@ import FormikInputMoney from './FormikInputMoney'
 import { FormikInputCountE } from './FormikInputCount'
 
 const FormikSaleOrderItems = ({ name }: { name: string }) => {
-  const layoutRow = Dimensions.get('window').width > 600
+  const bigScreen = Dimensions.get('window').width > 600
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
 
   const { values } = useFormikContext<{
@@ -48,7 +48,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                 <View
                   key={item.id || index}
                   style={{
-                    flexDirection: layoutRow ? 'row' : 'column',
+                    flexDirection: bigScreen ? 'row' : 'column',
                     marginVertical: 6,
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -68,7 +68,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                     >
                       <View
                         style={{
-                          flexDirection: 'row',
+                          flexDirection: bigScreen ? 'row' : 'column',
                           gap: 8,
                           justifyContent: 'space-around'
                         }}
@@ -96,7 +96,7 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                       </View>
                       <View
                         style={{
-                          flexDirection: 'row',
+                          flexDirection: bigScreen ? 'row' : 'column',
                           gap: 8,
                           justifyContent: 'space-around'
                         }}
@@ -130,22 +130,6 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                         }}
                       >
                         <Button
-                          icon="save"
-                          label="Guardar"
-                          size="small"
-                          color="primary"
-                          variant="filled"
-                          onPress={() => setEditingIndex(null)}
-                        />
-                        <Button
-                          icon="close"
-                          label="Cancelar"
-                          size="small"
-                          color="error"
-                          variant="ghost"
-                          onPress={() => setEditingIndex(null)}
-                        />
-                        <Button
                           icon="delete"
                           size="small"
                           label="Eliminar"
@@ -156,14 +140,29 @@ const FormikSaleOrderItems = ({ name }: { name: string }) => {
                             setEditingIndex(null)
                           }}
                         />
+                        <Button
+                          icon="cancel"
+                          label="Cancelar"
+                          size="small"
+                          variant="ghost"
+                          onPress={() => setEditingIndex(null)}
+                        />
+                        <Button
+                          icon="save"
+                          label="Guardar"
+                          size="small"
+                          color="primary"
+                          variant="filled"
+                          onPress={() => setEditingIndex(null)}
+                        />
                       </View>
                     </View>
                   ) : (
                     <View
                       style={{
                         flex: 1,
-                        flexDirection: layoutRow ? 'row' : 'column',
-                        alignItems: layoutRow ? 'center' : 'flex-start',
+                        flexDirection: bigScreen ? 'row' : 'column',
+                        alignItems: bigScreen ? 'center' : 'flex-start',
                         justifyContent: 'space-between'
                       }}
                     >
